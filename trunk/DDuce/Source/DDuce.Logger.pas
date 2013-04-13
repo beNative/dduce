@@ -16,11 +16,17 @@
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
+{
+  The Original Code is part of the LuiPack library for Freepascal/Lazarus.
+  The Initial Developer of the Original Code (multilog.pas) is Luiz Américo
+  Pereira Câmara (pascalive@bol.com.br). Portions created by the Initial
+  Developer are Copyright (C) 2006. All Rights Reserved. You may obtain a copy
+  of the original code at http://code.google.com/p/luipack/
+}
+
 unit DDuce.Logger;
 
-{ Simple logger based on the Multilog logging system for Lazarus by
-  Luiz Américo Pereira Câmara.
-
+{
   LogChannels are implemented as follows:
     TCustomLogChannel
       TIPCChannel - TWinIPCClient
@@ -385,7 +391,6 @@ const
     'WATCH',
     'COUNTER'
   );
-
 
 //=============================================================================
 

@@ -27,12 +27,9 @@ uses
   SysUtils, Classes, Rtti, DB,
 
   DDuce.ScopedReference;
-  //CIM.System.Nullable;
 
 {$REGION 'Documentation'}
 {
-  Author: Tim Sinaeve
-
   TRecord holds a set of key-value pairs which can be assigned from/to any
   object or record instance. Extended RTTI is used to map the object or
   record properties to the field values of the record.
@@ -42,7 +39,7 @@ uses
     - No field initialisation required.
     - No boilerplate code. No Create/Try/Finally/Free blocks needed as
       memory management is done behind the scenes.
-    - Supports assignments from/to and convertion to Nullable types.
+    - Supports assignments from/to and convertion to Nullable types (cfr. Spring).
     - Easy assignment from and to object/record properties as well as other
       TRecord instances using the Assign and AssignTo overloads.
     - Enumeration support (so we can use it in "for..in" statements) in D2006+
@@ -101,13 +98,13 @@ uses
 
   TRecord<T> allows typed access to contained data. In that respect it behaves
   as a managed object wrapper while remaining compatible with the basic
-  insstance type.
+  instance type.
 
   Future enhancements:
-    - Add events
+    - Add more events
     - Control/data binding support
     - lazy instantiation of IDynamicRecord
-      - track changes + event support?
+      - track changes
       - specialized assignments using TAssignOptions
           TAssignOption = (
             aoProperties,  // assigns properties from the source instance
@@ -118,6 +115,10 @@ uses
           );
 
           TAssignOptions = set of TAssignOption;
+  Remarks:
+    - To be able to compile the generic version it was necessary to move some of
+      the internal types from the implementation section to the interface
+      section of the unit.
 }
 {$ENDREGION}
 

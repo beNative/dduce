@@ -38,21 +38,14 @@ type
 
     class function Fields<T>(const AArg: T): IDynamicRecord; static;
     class function Properties<T: class, constructor>(const AArg: T): IDynamicRecord; static;
-
   end;
 
 //*****************************************************************************
 
-
-
 implementation
 
 uses
-  System.TypInfo,
-
-  Dialogs;
-
-
+  System.TypInfo, Dialogs;
 
 class function Reflect.EnumName<T>(const AArg: T): string;
 begin
