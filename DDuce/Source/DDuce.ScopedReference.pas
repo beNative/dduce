@@ -25,9 +25,8 @@ unit DDuce.ScopedReference;
   object is stored in a scoped reference, it is guaranteed to be released when
   the reference goes out of scope.
 
-  Original concept based on DeHL library by Ciobanu Alexandru.
-
-  Changes by Tim Sinaeve:
+  Original concept based on DeHL library by Ciobanu Alexandru. You may obtain a
+  copy of this library at http://code.google.com/p/delphilhlplib/
 
   This simplified version only supports a fully managed instance and does not
   allow for shared or weak references to the enclosed object.
@@ -81,10 +80,6 @@ unit DDuce.ScopedReference;
         ShowMessage(P.Ref.ClassName);
         ShowMessage(L.Ref.ClassName);
       end;
-
-
-  TODO:
-    - access properties using extended RTTI
 }
 
 //*****************************************************************************
