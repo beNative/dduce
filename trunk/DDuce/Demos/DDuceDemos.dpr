@@ -32,7 +32,9 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   DDuce.Components.XMLTree.NodeAttributes in '..\Source\Components\DDuce.Components.XMLTree.NodeAttributes.pas',
-  DDuce.Components.XMLTree.Editors in '..\Source\Components\DDuce.Components.XMLTree.Editors.pas';
+  DDuce.Components.XMLTree.Editors in '..\Source\Components\DDuce.Components.XMLTree.Editors.pas',
+  DDuce.Components.VirtualDBGrid in '..\Source\Components\DDuce.Components.VirtualDBGrid.pas',
+  DDuce.Demos.VirtualDBGrid in 'DDuce.Demos.VirtualDBGrid.pas' {frmVirtualDBGrid};
 
 {$R *.res}
 
@@ -40,6 +42,7 @@ begin
   ReportMemoryLeaksOnShutdown := DebugHook > 0;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Smokey Quartz Kamri');
   RegisterDemos;
   if DemoManager.ItemList.Count = 1 then
   begin
@@ -47,8 +50,7 @@ begin
   end
   else
   begin
-    TStyleManager.TrySetStyle('Smokey Quartz Kamri');
-  Application.Title := 'DDuce Demos';
+    Application.Title := 'DDuce Demos';
     Application.CreateForm(TfrmMainMenu, frmMainMenu);
   end;
   Application.Run;

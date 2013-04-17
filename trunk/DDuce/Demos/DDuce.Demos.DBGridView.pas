@@ -27,12 +27,12 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, StdCtrls, ActnList, ExtCtrls, CheckLst, Menus,
-  System.Actions,
+  System.Actions, Vcl.ImgList,
 
   DB, DBClient, DBCtrls,
 
   DDuce.Components.GridView, DDuce.Components.DBGridView,
-  DDuce.Components.LogTree, Vcl.ImgList;
+  DDuce.Components.LogTree;
 
 //=============================================================================
 

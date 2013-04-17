@@ -20,7 +20,6 @@ object frmXMLTree: TfrmXMLTree
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 652
     object btnExpand: TButton
       Left = 8
       Top = 4
@@ -55,10 +54,6 @@ object frmXMLTree: TfrmXMLTree
     BevelOuter = bvNone
     Caption = 'pnlMain'
     TabOrder = 1
-    ExplicitLeft = 8
-    ExplicitTop = 38
-    ExplicitWidth = 561
-    ExplicitHeight = 443
     object spl1: TSplitter
       Left = 361
       Top = 0
@@ -85,8 +80,6 @@ object frmXMLTree: TfrmXMLTree
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 376
-      ExplicitWidth = 548
       object mmoXML: TMemo
         Left = 0
         Top = 0
@@ -101,10 +94,6 @@ object frmXMLTree: TfrmXMLTree
         ParentFont = False
         TabOrder = 0
         OnChange = mmoXMLChange
-        ExplicitLeft = 184
-        ExplicitTop = 192
-        ExplicitWidth = 185
-        ExplicitHeight = 89
       end
     end
   end

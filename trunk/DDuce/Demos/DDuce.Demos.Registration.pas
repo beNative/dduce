@@ -36,6 +36,7 @@ uses
   DDuce.Demos.ScopedReferences,
   DDuce.Demos.DynamicRecord,
   DDuce.Demos.XMLTree,
+  DDuce.Demos.VirtualDBGrid,
   DDuce.Demos.DBGridView;
 
 {$REGION 'interfaced routines'}
@@ -45,11 +46,13 @@ uses
 
 procedure RegisterDemos;
 begin
-  DemoManager.Register(TfrmXMLTree, 'XMLTree');
+  DemoManager.Register(TfrmXMLTree, 'DDuce XMLTree Demo');
+  DemoManager.Register(TfrmListDataSet, 'DDuce ListDataSet Demo');
+  DemoManager.Register(TfrmVirtualDBGrid, 'DDuce VirtualDBGrid Demo');
 //  DemoManager.Register(TfrmScopedReferences, 'Scoped references');
 //  DemoManager.Register(TfrmDynamicRecords, 'Dynamic records');
 //  DemoManager.Register(TfrmDBGridView, 'DBGridView');
-  DemoManager.Register(TfrmListDataSet, 'DDuce ListDataSet Demo');
+
 end;
 
 //*****************************************************************************
