@@ -34,7 +34,6 @@ object frmDBGridView: TfrmDBGridView
     BevelOuter = bvNone
     FullRepaint = False
     TabOrder = 0
-    ExplicitWidth = 884
   end
   object pgcMain: TPageControl
     Left = 0
@@ -44,14 +43,9 @@ object frmDBGridView: TfrmDBGridView
     ActivePage = tsDBGridView
     Align = alClient
     TabOrder = 2
-    ExplicitWidth = 884
     object tsDBGridView: TTabSheet
       Caption = 'DBGridView'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 876
-      ExplicitHeight = 0
     end
     object tsDBGridViewEvents: TTabSheet
       Caption = 'DBGridView Events'
@@ -159,7 +153,6 @@ object frmDBGridView: TfrmDBGridView
             'OnSetEditText'
             'OnStartDrag')
           TabOrder = 0
-          ExplicitWidth = 870
         end
       end
     end
@@ -193,7 +186,6 @@ object frmDBGridView: TfrmDBGridView
             'OnStateChange'
             'OnUpdateData')
           TabOrder = 0
-          ExplicitWidth = 870
         end
       end
     end
@@ -206,7 +198,6 @@ object frmDBGridView: TfrmDBGridView
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 884
     DesignSize = (
       845
       41)
@@ -221,7 +212,6 @@ object frmDBGridView: TfrmDBGridView
       State = cbChecked
       TabOrder = 0
       OnClick = chkActiveClick
-      ExplicitLeft = 780
     end
     object btnAutoSizeDisplayWidths: TButton
       Left = 162
@@ -248,7 +238,6 @@ object frmDBGridView: TfrmDBGridView
       Caption = 'Multiselect'
       TabOrder = 3
       OnClick = chkMultiselectClick
-      ExplicitLeft = 677
     end
     object btnInspectComponent: TButton
       Left = 6
@@ -269,7 +258,6 @@ object frmDBGridView: TfrmDBGridView
       State = cbChecked
       TabOrder = 5
       OnClick = chkConnectEventsClick
-      ExplicitLeft = 563
     end
   end
   object dscMain: TDataSource

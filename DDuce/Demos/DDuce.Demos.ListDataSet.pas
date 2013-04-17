@@ -26,7 +26,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, DB, Grids, DBGrids, Contnrs, Vcl.ActnList,
+  Dialogs, DB, Grids, DBGrids, Contnrs, Vcl.ActnList, Vcl.Mask, Vcl.StdCtrls,
   System.Actions, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.ComCtrls,
 
   VirtualTrees,
@@ -37,7 +37,7 @@ uses
   DDuce.Components.ListDataSet, DDuce.Components.GridView,
   DDuce.Components.DBGridView,
 
-  DDuce.Demos.Contact, Vcl.Mask, Vcl.StdCtrls;
+  DDuce.Demos.Contact;
 
 //=============================================================================
 

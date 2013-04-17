@@ -33,6 +33,7 @@ uses
 
   DDuce.Components.PropertyInspector, DDuce.Components.LogTree,
   DDuce.Components.GridView, DDuce.Components.DBGridView,
+  DDuce.Components.VirtualDBGrid,
 
   DDuce.Demos.Contact;
 
@@ -85,6 +86,13 @@ function CreateDBGrid(
         ADataSource : TDataSource = nil;
   const AName       : string = ''
 ): TDBGrid;
+
+function CreateVirtualDBGrid(
+        AOwner      : TComponent;
+        AParent     : TWinControl;
+        ADataSource : TDataSource = nil;
+  const AName       : string = ''
+): TVirtualDBGrid;
 
 procedure FillObjectListWithContacts(
   AList  : TObjectList;
@@ -467,6 +475,20 @@ begin
   DBG.Align            := alClient;
   DBG.DataSource       := ADataSource;
   Result := DBG;
+end;
+
+function CreateVirtualDBGrid(AOwner: TComponent; AParent: TWinControl;
+  ADataSource: TDataSource = nil; const AName: string = ''): TVirtualDBGrid;
+var
+  VDBG: TVirtualDBGrid;
+begin
+  VDBG                      := TVirtualDBGrid.Create(AOwner);
+  VDBG.AlignWithMargins     := True;
+  VDBG.Parent               := AParent;
+  VDBG.Align                := alClient;
+  VDBG.DBOptions.DataSource := ADataSource;
+  VDBG.DBOptions.AdvOptions := VDBG.DBOptions.AdvOptions - [aoStrippedRows];
+  Result := VDBG;
 end;
 
 procedure FillObjectListWithContacts(AList: TObjectList; ACount : Integer);
