@@ -50,16 +50,19 @@ uses
 var
   FData: TdmData;
 
+{$REGION 'interfaced routines'}
 function Data: TdmData;
 begin
   if not Assigned(FData) then
     FData := TdmData.Create(Application);
   Result := FData;
 end;
+{$ENDREGION}
 
+{$REGION 'property access methods'}
 function TdmData.GetDataSet: TDataSet;
 begin
   Result := cdsMain;
 end;
-
+{$ENDREGION}
 end.

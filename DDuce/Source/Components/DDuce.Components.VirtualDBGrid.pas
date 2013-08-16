@@ -30,11 +30,17 @@
 
 unit DDuce.Components.VirtualDBGrid;
 
+{$I ..\DDuce.inc}
+
 interface
 
 uses
   Windows, types, SysUtils, Classes, Controls, DB, Dialogs, Variants, ImgList,
   Forms, Graphics, ExtCtrls, Buttons, Messages, Generics.Collections,
+
+{$IFDEF HAS_UNIT_SYSTEM_UITYPES}
+  System.UITypes,
+{$ENDIF}
 
   VirtualTrees;
 
@@ -80,7 +86,7 @@ type
     aoEditOnDblClick, // Editing mode can be entered with a double click
     aoAddDefaultColumns
     // Add default columns even if one or more column(s) are added at design time
-    );
+  );
 
   TVTDBAdvOptions = set of TVTDBAdvOption;
 
@@ -1487,6 +1493,7 @@ procedure TVirtualDBTreeColumn.SetColumnType(Value: TColumnType);
 var
   OwnerTree: TCustomVirtualDBGrid;
 begin
+  OwnerTree := nil;
   if Value <> FColumnType then
   begin
     if Value = ctIndicator then
@@ -1597,6 +1604,7 @@ var
   FieldFlag  : Byte;
   ColumnType : TColumnType;
 begin
+  ColumnType := ctIndicator;
   BeginUpdate;
   try
     Run := GetFirst;
@@ -2298,10 +2306,16 @@ procedure TCustomVirtualDBGrid.DoAfterCellPaint(Canvas: TCanvas;
   Node: PVirtualNode;
   Column: TColumnIndex; CellRect: TRect);
 var
-  X, Y, IconWidth, IconHeight, ImageIndex: Integer;
-  R                                      : TRect;
-  GridColumn                             : TVirtualDBTreeColumn;
+  X          : Integer;
+  Y          : Integer;
+  IconWidth  : Integer;
+  IconHeight : Integer;
+  ImageIndex : Integer;
+  R          : TRect;
+  GridColumn : TVirtualDBTreeColumn;
 begin
+  X := 0;
+  Y := 0;
   GridColumn := TVirtualDBTreeColumn(Header.Columns[Column]);
   if GridColumn.ColumnType = ctIndicator then
   begin
@@ -2930,8 +2944,7 @@ var
   Count: Integer;
   Max  : Integer;
 begin
-  Result := False;
-
+  Node := nil;
   case FromPosition of
     nfpBegin:
       Node := GetFirstVisible;
@@ -3298,6 +3311,7 @@ var
   RefreshGrid      : Boolean;
   ColumnType       : TColumnType;
 begin
+  OldCursor := Screen.Cursor;
   if (AColumn > NoColumn) and (AColumn < Header.Columns.Count) then
   begin
     ColumnType := TVirtualDBTreeColumn(Header.Columns[AColumn]).ColumnType;
@@ -3347,7 +3361,6 @@ begin
         if (aoHourGlassCursor in DBOptions.AdvOptions)
         then
         begin
-          OldCursor := Screen.Cursor;
           Screen.Cursor := crHourGlass;
         end;
 

@@ -24,6 +24,8 @@
 
 unit DDuce.Components.LogTree;
 
+{$I ..\DDuce.inc}
+
 interface
 
 uses
@@ -166,7 +168,10 @@ type
 implementation
 
 uses
-  Dialogs, Clipbrd, System.UITypes;
+{$IF CompilerVersion > 21}
+  System.UITypes,
+{$IFEND}
+  Dialogs, Clipbrd;
 
 resourcestring
   SSaveLog         = '&Save';

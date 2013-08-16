@@ -65,10 +65,6 @@ var
   FRtti: TRttiContext;
 
 {$REGION 'interfaced routines'}
-//*****************************************************************************
-// interfaced routines                                                   BEGIN
-//*****************************************************************************
-
 procedure AppendLine(var AToString : string; const ALine : string); overload;
 begin
   if ALine <> '' then
@@ -426,10 +422,6 @@ begin
   if ABrackets and (Result <> '') then
     Result := '(' + Result + ')';
 end;
-
-//*****************************************************************************
-// interfaced routines                                                     END
-//*****************************************************************************
 {$ENDREGION}
 
 end.

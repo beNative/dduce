@@ -1,8 +1,6 @@
 unit DDuce.Components.XMLTree.NodeAttributes;
 
-{$ifdef FPC}
-{$mode delphi}
-{$endif}
+{$I ..\DDuce.inc}
 
 //*****************************************************************************
 
@@ -42,8 +40,6 @@ type
     constructor Create(ACollection: Classes.TCollection); override;
     procedure BeforeDestruction; override;
 
-
-
   published
     property Name: string
       read FName write FName;
@@ -74,10 +70,6 @@ implementation
 
 {$region 'TNodeAttributesItem' /fold}
 {$region 'construction and destruction' /fold}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 constructor TNodeAttributesItem.Create(ACollection: Classes.TCollection);
 begin
   inherited Create(ACollection);
@@ -95,17 +87,9 @@ begin
   FFont.Free;
   inherited BeforeDestruction;
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$endregion}
 
 {$region 'property access mehods' /fold}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 procedure TNodeAttributesItem.SetBackGroundColor(AValue: TColor);
 begin
   if AValue <> BackGroundColor then
@@ -129,19 +113,11 @@ begin
     Changed(False);
   end;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$endregion}
 {$endregion}
 
 {$region 'TNodeAttributes' /fold}
 {$region 'property access mehods' /fold}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 function TNodeAttributes.GetItemByType(Index: TNodeType): TNodeAttributesItem;
 var
   I : Integer;
@@ -160,10 +136,6 @@ begin
     Inc(I);
   end;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$endregion}
 {$endregion}
 end.

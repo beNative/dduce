@@ -25,6 +25,8 @@
 
 unit DDuce.Components.VirtualDataSet;
 
+{$I ..\DDuce.inc}
+
 //*****************************************************************************
 
 interface
@@ -101,6 +103,11 @@ Marco Cantu : http://www.marcocantu.com/code/md6htm/MdDataPack.htm
 type
   TCustomVirtualDataset = class;
   TVirtualDataset       = class;
+
+{$IF CompilerVersion <= 21}
+  TValueBuffer = Pointer;
+  NativeInt    = LongInt;
+{$IFEND}
 
   EVirtualDatasetError = class(Exception);
   PVariantList         = ^TVariantList;
@@ -281,8 +288,11 @@ type
     procedure InternalCreateFields; virtual;
     procedure InternalDelete; override;
     procedure InternalFirst; override;
+{$IF CompilerVersion > 21}
     procedure InternalGotoBookmark(Bookmark: TBookmark); override;
-
+{$ELSE}
+    procedure InternalGotoBookmark(Bookmark: Pointer); override;
+{$IFEND}
     procedure InternalInitRecord(Buffer: TRecordBuffer); override;
     procedure InternalLast; override;
     procedure InternalPost; override;
@@ -428,10 +438,6 @@ resourcestring
   SIndexOutOfRange = 'Index out of range';
 
 {$REGION 'interfaced routines'}
-//*****************************************************************************
-// interfaced routines                                                   BEGIN
-//*****************************************************************************
-
 procedure VirtualDatasetError(const AMessage: string;
   ADataset: TCustomVirtualDataset = nil);
 begin
@@ -446,17 +452,9 @@ procedure VirtualDatasetErrorFmt(const AMessage: string;
 begin
   VirtualDatasetError(Format(AMessage, AArgs), ADataset);
 end;
-
-//*****************************************************************************
-// interfaced routines                                                     END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'non-interfaced routines'}
-//*****************************************************************************
-// non-interfaced routines                                               BEGIN
-//*****************************************************************************
-
 function FieldListCheckSum(Dataset: TDataSet): Integer;
 var
   I: Integer;
@@ -465,10 +463,6 @@ begin
   for I    := 0 to Dataset.Fields.Count - 1 do
     Result := Result + (Integer(Dataset.Fields[I]) shr (I mod 16));
 end;
-
-//*****************************************************************************
-// non-interfaced routines                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'TBlobStream'}
@@ -620,10 +614,6 @@ end;
 
 {$REGION 'TCustomVirtualDataset'}
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 procedure TCustomVirtualDataset.AfterConstruction;
 begin
   inherited;
@@ -641,17 +631,9 @@ begin
   FMasterDataLink.Free;
   inherited;
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 function TCustomVirtualDataset.GetRecordCount: Integer;
 begin
   Result := -1;
@@ -727,10 +709,6 @@ function TCustomVirtualDataset.GetCanModify: Boolean;
 begin
   Result := not FReadOnly;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 function TCustomVirtualDataset.AllocRecordBuffer: TRecordBuffer;
@@ -841,10 +819,6 @@ begin
 end;
 
 {$REGION 'event dispatch methods'}
-//*****************************************************************************
-// event dispatch methods                                                BEGIN
-//*****************************************************************************
-
 procedure TCustomVirtualDataset.DoDeleteRecord(AIndex: Integer);
 begin
   if Assigned(FOnDeleteRecord) then
@@ -875,17 +849,9 @@ begin
   if Assigned(FOnPostData) then
     FOnPostData(Self, AIndex);
 end;
-
-//*****************************************************************************
-// event dispatch methods                                                  END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'private methods'}
-//*****************************************************************************
-// private methods                                                       BEGIN
-//*****************************************************************************
-
 procedure TCustomVirtualDataset.DateTimeToNative(ADataType: TFieldType;
   AData: TDateTime; ABuffer: Pointer);
 var
@@ -899,10 +865,6 @@ begin
     TDateTime(ABuffer^) := TimeStampToMSecs(TimeStamp);
   end;
 end;
-
-//*****************************************************************************
-// private methods                                                         END
-//*****************************************************************************
 {$ENDREGION}
 
 procedure TCustomVirtualDataset.FreeRecordBuffer(var Buffer: TRecordBuffer);
@@ -1166,7 +1128,11 @@ begin
   Logger.ExitMethod(Self, 'InternalGetRecord');
 end;
 
+{$IF CompilerVersion > 21}
 procedure TCustomVirtualDataset.InternalGotoBookmark(Bookmark: TBookmark);
+{$ELSE}
+procedure TCustomVirtualDataset.InternalGotoBookmark(Bookmark: Pointer);
+{$IFEND}
 begin
   FCurrentRecord := PInteger(Bookmark)^;
 end;

@@ -78,13 +78,14 @@
 
 unit DDuce.Components.DBGridView;
 
+{$I ..\DDuce.inc}
+
 interface
 
 uses
   Windows, Messages, SysUtils, CommCtrl, Classes, Controls, Graphics, Forms,
   StdCtrls, Math, ImgList, Dialogs, Db, DBTables, DBCtrls, Generics.Collections,
   Grids,
-
 
   DDuce.Components.GridView;
 
@@ -888,7 +889,11 @@ type
 implementation
 
 uses
-  DBConsts, System.Types, Vcl.Themes;
+{$IF CompilerVersion > 21}
+  System.Types,
+{$IFEND}
+
+  DBConsts, Themes;
 
 {$R *.RES}
 
@@ -2644,11 +2649,15 @@ begin
   R.Bottom := GetIndicatorFixedRect.Bottom;
   with Canvas do
   begin
+{$IF CompilerVersion > 21}
     LDetails := StyleServices.GetElementDetails(tgFixedCellNormal);
+{$ELSE}
+    LDetails := StyleServices.GetElementDetails(thHeaderItemNormal);
+{$IFEND}
     if not (IsFixedVisible or (gsListViewLike in GridStyle)) then
       Brush.Color := Color;
     StyleServices.DrawElement(Canvas.Handle, LDetails, R);
-    //FillRect(R);
+    FillRect(R);
   end;
   if Fixed.Flat then
   begin

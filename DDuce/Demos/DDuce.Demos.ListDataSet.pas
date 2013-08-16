@@ -18,6 +18,8 @@
 
 unit DDuce.Demos.ListDataSet;
 
+{$I ..\Source\DDuce.inc}
+
 { Demonstrates TListDataSet }
 
 //*****************************************************************************
@@ -26,13 +28,24 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, DB, Grids, DBGrids, Contnrs, Vcl.ActnList, Vcl.Mask, Vcl.StdCtrls,
-  System.Actions, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.ComCtrls,
+  Dialogs, DB, Grids, DBGrids, Contnrs, ActnList, Mask, StdCtrls, ExtCtrls,
+
+  DBCtrls, ComCtrls,
 
   VirtualTrees,
 
+{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
+  System.Actions,
+{$ENDIF}
+
+{$IFDEF SPRING}
+  Spring, Spring.Collections,
+{$ENDIF}
+
+{$IFDEF DSHARP}
   DSharp.Collections, DSharp.Bindings, DSharp.Bindings.VCLControls,
   DSharp.Windows.TreeViewPresenter,
+{$ENDIF}
 
   DDuce.Components.ListDataSet, DDuce.Components.GridView,
   DDuce.Components.DBGridView,
@@ -111,9 +124,11 @@ type
     FList        : IList<TContact>;
     FVST         : TVirtualStringTree;
     FDBGV        : TDBGridView;
+{$IFDEF DSHARP}
     FTVP         : TTreeViewPresenter;
-    FListDataSet : TListDataSet<TContact>;
     FBG          : TBindingGroup;
+{$ENDIF}
+    FListDataSet : TListDataSet<TContact>;
 
     function GetDataSet: TDataSet;
     function GetDataSetEnabled: Boolean;
@@ -156,15 +171,13 @@ implementation
 uses
   Rtti, Math,
 
+{$IFDEF DSHARP}
   DSharp.Core.Reflection,
+{$ENDIF}
 
   DDuce.Demos.Helpers;
 
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//****************************************************************************
-
 procedure TfrmListDataSet.AfterConstruction;
 begin
   inherited AfterConstruction;
@@ -172,7 +185,9 @@ begin
   FVST         := CreateVST(Self, pnlRight);
   FDBGV        := CreateDBGridView(Self, pnlLeft, dscMain);
   FListDataSet := TListDataset<TContact>.Create(Self, FList);
+  {$IFDEF DSHARP}
   FBG          := TBindingGroup.Create(Self);
+  {$ENDIF}
   FDBGV.OnHeaderClick := FDBGVHeaderClick;
   //FDBGV.OnGetSortDirection := FDBGVGe
 end;
@@ -183,17 +198,9 @@ begin
   FList := nil;
   inherited BeforeDestruction;
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'action handlers'}
-//*****************************************************************************
-// action handlers                                                       BEGIN
-//*****************************************************************************
-
 procedure TfrmListDataSet.actConnectDataSetExecute(Sender: TObject);
 begin
   ConnectDataSet;
@@ -225,17 +232,9 @@ procedure TfrmListDataSet.actInspectComponentsExecute(Sender: TObject);
 begin
   //InspectComponents([DataSet, FVST, FDBGV, FTVP]);
 end;
-
-//*****************************************************************************
-// action handlers                                                         END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'event handlers'}
-//*****************************************************************************
-// event handlers                                                        BEGIN
-//*****************************************************************************
-
 procedure TfrmListDataSet.FormResize(Sender: TObject);
 begin
   pnlLeft.Width := ClientWidth div 2;
@@ -245,17 +244,9 @@ procedure TfrmListDataSet.dscMainUpdateData(Sender: TObject);
 begin
   FVST.Invalidate;
 end;
-
-//*****************************************************************************
-// event handlers                                                          END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 function TfrmListDataSet.GetDataSet: TDataSet;
 begin
   Result := FListDataSet;
@@ -276,7 +267,10 @@ end;
 
 function TfrmListDataSet.GetPresenterEnabled: Boolean;
 begin
+  Result := False;
+  {$IFDEF DSHARP}
   Result := Assigned(FTVP);
+  {$ENDIF}
 end;
 
 procedure TfrmListDataSet.SetPresenterEnabled(const Value: Boolean);
@@ -289,21 +283,13 @@ begin
       DisconnectPresenter;
   end;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'private methods'}
-//*****************************************************************************
-// private methods                                                       BEGIN
-//*****************************************************************************
-
 procedure TfrmListDataSet.FDBGVHeaderClick(Sender: TObject;
   Section: TGridHeaderSection);
 var
-  bDesc : Boolean;
+//  bDesc : Boolean;
   Field : TField;
 begin
   Screen.Cursor := crSQLWait;
@@ -311,30 +297,30 @@ begin
     Field := FDBGV.Columns[Section.ColumnIndex].Field;
     if Assigned(Field) and (Field.FieldKind = fkData) then
     begin
-      FList.Sort(
-        function(const Left, Right: TContact): Integer
-        var
-          V1 : TValue;
-          V2 : TValue;
-        begin
-          V1 := Left.GetProperty(Field.FieldName).GetValue(Left);
-          V2 := Right.GetProperty(Field.FieldName).GetValue(Right);
-          if V1.IsOrdinal and V2.IsOrdinal then
-          begin
-            Result := Math.CompareValue(V1.AsOrdinal, V2.AsOrdinal);
-          end else
-          if V1.IsFloat and V2.IsFloat then
-          begin
-            Result := Math.CompareValue(V1.AsFloat, V2.AsFloat);
-          end else
-          if V1.IsString and V2.IsString then
-          begin
-            Result := SysUtils.CompareStr(V1.AsString, V2.AsString);
-          end else
-          begin
-            Result := 0;
-          end;
-        end);
+//      FList.Sort(
+//        function(const Left, Right: TContact): Integer
+//        var
+//          V1 : TValue;
+//          V2 : TValue;
+//        begin
+//          V1 := Left.GetProperty(Field.FieldName).GetValue(Left);
+//          V2 := Right.GetProperty(Field.FieldName).GetValue(Right);
+//          if V1.IsOrdinal and V2.IsOrdinal then
+//          begin
+//            Result := Math.CompareValue(V1.AsOrdinal, V2.AsOrdinal);
+//          end else
+//          if V1.IsFloat and V2.IsFloat then
+//          begin
+//            Result := Math.CompareValue(V1.AsFloat, V2.AsFloat);
+//          end else
+//          if V1.IsString and V2.IsString then
+//          begin
+//            Result := SysUtils.CompareStr(V1.AsString, V2.AsString);
+//          end else
+//          begin
+//            Result := 0;
+//          end;
+//        end);
     DataSet.Refresh;
 //      FSortedFieldName := Field.FieldName;
 //      if SortDataSet(FSortedFieldName, bDesc) then
@@ -376,6 +362,7 @@ end;
 
 procedure TfrmListDataSet.ConnectPresenter;
 begin
+  {$IFDEF DSHARP}
   if not Assigned(FTVP) then
   begin
     FTVP := CreateTVP(Self, FVST, FList.AsList);
@@ -388,6 +375,7 @@ begin
     AddControlBinding(FBG, FTVP, 'View.CurrentItem.Country', edtCountry);
     AddControlBinding(FBG, FTVP, 'View.CurrentItem.Number', edtNumber);
   end;
+  {$ENDIF}
 end;
 
 procedure TfrmListDataSet.DisconnectDataSet;
@@ -399,20 +387,14 @@ end;
 procedure TfrmListDataSet.DisconnectPresenter;
 begin
   FVST.Clear;
+  {$IFDEF DSHARP}
   FBG.Bindings.Clear;
   FreeAndNil(FTVP);
+  {$ENDIF}
 end;
-
-//*****************************************************************************
-// private methods                                                         END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-//*****************************************************************************
-// protected methods                                                     BEGIN
-//*****************************************************************************
-
 procedure TfrmListDataSet.UpdateActions;
 begin
   inherited;
@@ -421,10 +403,6 @@ begin
   actConnectPresenter.Enabled       := not PresenterEnabled;
   actDisconnectPresenter.Enabled    := PresenterEnabled;
 end;
-
-//*****************************************************************************
-// protected methods                                                       END
-//*****************************************************************************
 {$ENDREGION}
 
 end.

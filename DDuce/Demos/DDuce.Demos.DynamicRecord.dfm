@@ -56,7 +56,7 @@ object frmDynamicRecords: TfrmDynamicRecords
     Top = 8
     Width = 409
     Height = 273
-    ActivePage = tsDataSet
+    ActivePage = tsContactObject
     TabOrder = 2
     object tsContactObject: TTabSheet
       Caption = 'TContact object'

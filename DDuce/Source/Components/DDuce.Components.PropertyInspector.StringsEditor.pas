@@ -18,12 +18,17 @@
 
 unit DDuce.Components.PropertyInspector.StringsEditor;
 
+{$I ..\DDuce.inc}
+
 interface
 
 uses
+{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
+  System.Actions,
+{$ENDIF}
+
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ComCtrls, ExtCtrls, StdActns, ActnList, Menus, ImgList,
-  Actions;
+  Dialogs, StdCtrls, ComCtrls, ExtCtrls, StdActns, ActnList, Menus, ImgList;
 
 resourcestring
   SCaption            = 'String List Editor';

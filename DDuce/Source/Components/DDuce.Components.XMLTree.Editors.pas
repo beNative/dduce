@@ -18,9 +18,7 @@
 
 unit DDuce.Components.XMLTree.Editors;
 
-{$ifdef FPC}
-{$mode delphi}
-{$endif}
+{$I ..\DDuce.inc}
 
 //*****************************************************************************
 
@@ -29,7 +27,9 @@ interface
 uses
   Messages, SysUtils, Classes, Controls, Forms, StdCtrls, Types,
 
-  {$ifdef FPC}EditBtn, LCLIntf, LCLType,{$endif}
+{$IFDEF FPC}
+  EditBtn, LCLIntf, LCLType,
+{$ENDIF}
 
   VirtualTrees;
 
@@ -200,6 +200,5 @@ begin
   TXMLTree(FTree).Header.Columns.GetColumnBounds(FColumn, Dummy, R.Right);
   FEdit.BoundsRect := R;
 end;
-
 
 end.

@@ -18,6 +18,8 @@
 
 unit DDuce.Demos.Helpers;
 
+{$I ..\Source\DDuce.inc}
+
 //*****************************************************************************
 
 interface
@@ -27,9 +29,15 @@ uses
 
   VirtualTrees,
 
+{$IFDEF DSHARP}
   DSharp.Windows.TreeViewPresenter, DSharp.Collections, DSharp.Bindings,
   DSharp.Bindings.Collections, DSharp.Core.DataTemplates, DSharp.Core.Events,
   DSharp.Core.Validations,
+{$ENDIF}
+
+{$IFDEF SPRING}
+  Spring, Spring.Collections, Spring.Collections.Lists,
+{$ENDIF}
 
   DDuce.Components.PropertyInspector, DDuce.Components.LogTree,
   DDuce.Components.GridView, DDuce.Components.DBGridView,
@@ -54,6 +62,7 @@ function CreateVST(
   const AName   : string = ''
 ): TVirtualStringTree;
 
+{$IFDEF DSHARP}
 function CreateTVP(
         AOwner    : TComponent;
         AVST      : TVirtualStringTree = nil;
@@ -70,6 +79,16 @@ procedure InitializeTVP(
   ATemplate : IDataTemplate = nil;
   AFilter   : TFilterEvent = nil
 );
+
+procedure AddControlBinding(
+        ABindingGroup   : TBindingGroup;
+        ASource         : TObject;
+  const ASourceProp     : string;
+        AControl        : TControl;
+  const AControlProp    : string = 'Text';
+        AValidationRule : IValidationRule = nil
+);
+{$ENDIF}
 
 function CreateDBGridView(
         AOwner      : TComponent;
@@ -109,15 +128,6 @@ function CreateContactList(
 ): IList<TContact>; overload;
 
 function CreateRandomContact: TContact;
-
-procedure AddControlBinding(
-        ABindingGroup   : TBindingGroup;
-        ASource         : TObject;
-  const ASourceProp     : string;
-        AControl        : TControl;
-  const AControlProp    : string = 'Text';
-        AValidationRule : IValidationRule = nil
-);
 
 //*****************************************************************************
 
@@ -402,6 +412,7 @@ begin
   Result := VST;
 end;
 
+{$IFDEF DSHARP}
 function CreateTVP(AOwner: TComponent; AVST: TVirtualStringTree;
   ASource: IList; ATemplate: IDataTemplate; AFilter: TFilterEvent;
   const AName: string): TTreeViewPresenter;
@@ -438,6 +449,26 @@ begin
   if Assigned(AFilter) then
     ATVP.View.Filter.Add(AFilter);
 end;
+
+procedure AddControlBinding(ABindingGroup: TBindingGroup; ASource: TObject;
+  const ASourceProp: string; AControl: TControl; const AControlProp: string;
+  AValidationRule : IValidationRule);
+begin
+  with ABindingGroup.Bindings.Add do
+  begin
+    Source                := ASource;
+    SourcePropertyName    := ASourceProp;
+    Target                := AControl;
+    TargetPropertyName    := AControlProp;
+    BindingMode           := bmTwoWay;
+
+    NotifyOnSourceUpdated := False;
+    NotifyOnTargetUpdated := False;
+    if Assigned(AValidationRule) then
+      ValidationRules.Add(AValidationRule);
+  end;
+end;
+{$ENDIF}
 
 function CreateDBGridView(AOwner: TComponent; AParent: TWinControl;
   ADataSource: TDataSource; const AName: string): TDBGridView;
@@ -585,25 +616,6 @@ begin
 //        end;
   end;
   Result := C;
-end;
-
-procedure AddControlBinding(ABindingGroup: TBindingGroup; ASource: TObject;
-  const ASourceProp: string; AControl: TControl; const AControlProp: string;
-  AValidationRule : IValidationRule);
-begin
-  with ABindingGroup.Bindings.Add do
-  begin
-    Source                := ASource;
-    SourcePropertyName    := ASourceProp;
-    Target                := AControl;
-    TargetPropertyName    := AControlProp;
-    BindingMode           := bmTwoWay;
-
-    NotifyOnSourceUpdated := False;
-    NotifyOnTargetUpdated := False;
-    if Assigned(AValidationRule) then
-      ValidationRules.Add(AValidationRule);
-  end;
 end;
 
 end.

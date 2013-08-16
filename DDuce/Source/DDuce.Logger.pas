@@ -26,6 +26,8 @@
 
 unit DDuce.Logger;
 
+{$I DDuce.inc}
+
 {
   LogChannels are implemented as follows:
     TCustomLogChannel
@@ -396,10 +398,6 @@ const
 
 {$REGION 'TLogger'}
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 procedure TLogger.AfterConstruction;
 begin
   inherited;
@@ -428,17 +426,9 @@ begin
   FCounterList.Free;
   inherited;
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 procedure TLogger.SetMaxStackCount(const AValue: Integer);
 begin
   if AValue < 256 then
@@ -446,17 +436,9 @@ begin
   else
     FMaxStackCount := 256;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'private methods'}
-//*****************************************************************************
-// private methods                                                       BEGIN
-//*****************************************************************************
-
 function TLogger.RectToStr(const ARect: TRect): string;
 begin
   Result := Format('(Left: %d; Top: %d; Right: %d; Bottom: %d)',
@@ -467,17 +449,9 @@ function TLogger.PointToStr(const APoint: TPoint): string;
 begin
   Result := Format('(X: %d; Y: %d)', [APoint.X, APoint.Y]);
 end;
-
-//*****************************************************************************
-// private methods                                                         END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-//*****************************************************************************
-// protected methods                                                     BEGIN
-//*****************************************************************************
-
 procedure TLogger.InternalSendStream(AMsgType: TLogMessageType; const AText: string;
   AStream: TStream);
 var
@@ -911,19 +885,11 @@ procedure TLogger.Watch(const AName: string; AValue: Boolean);
 begin
   InternalSend(lmtWatch, AName + '=' + BoolToStr(AValue));
 end;
-
-//*****************************************************************************
-// protected methods                                                       END
-//*****************************************************************************
 {$ENDREGION}
 {$ENDREGION}
 
 {$REGION 'TWinIPCClient'}
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 procedure TWinIPCClient.SetActive(const AValue: Boolean);
 begin
   if AValue <> Active then
@@ -947,17 +913,9 @@ begin
   FWindowName := AValue;
   UpdateWindowName;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'private methods'}
-//*****************************************************************************
-// private methods                                                       BEGIN
-//*****************************************************************************
-
 procedure TWinIPCClient.UpdateWindowName;
 begin
   if FServerInstance <> '' then
@@ -965,17 +923,9 @@ begin
   else
     FWindowName := FServerID;
 end;
-
-//*****************************************************************************
-// private methods                                                         END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'public methods'}
-//*****************************************************************************
-// public methods                                                        BEGIN
-//*****************************************************************************
-
 procedure TWinIPCClient.Connect;
 begin
   FHWND := FindWindow(MsgWndClassName, PChar(FWindowName));
@@ -1022,19 +972,11 @@ begin
     FreeAndNil(FMemStr);
   end;
 end;
-
-//*****************************************************************************
-// public methods                                                          END
-//*****************************************************************************
 {$ENDREGION}
 {$ENDREGION}
 
 {$REGION 'TIPCChannel'}
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 procedure TIPCChannel.AfterConstruction;
 begin
   inherited;
@@ -1066,17 +1008,9 @@ begin
   FBuffer.Free;
   inherited;
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'public methods'}
-//*****************************************************************************
-// public methods                                                        BEGIN
-//*****************************************************************************
-
 procedure TIPCChannel.Clear;
 begin
   Write(FClearMessage);
@@ -1111,19 +1045,11 @@ begin
   end;
   FClient.SendStream(FBuffer);
 end;
-
-//*****************************************************************************
-// public methods                                                          END
-//*****************************************************************************
 {$ENDREGION}
 {$ENDREGION}
 
 {$REGION 'TFileChannel'}
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 constructor TFileChannel.Create(const AFileName: String);
 begin
   FShowPrefix   := True;
@@ -1139,33 +1065,17 @@ begin
   FStreamWriter.Free;
   inherited;
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 procedure TFileChannel.SetShowTime(const AValue: Boolean);
 begin
   FShowTime := AValue;
   UpdateIdentation;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'private methods'}
-//*****************************************************************************
-// private methods                                                       BEGIN
-//*****************************************************************************
-
 procedure TFileChannel.UpdateIdentation;
 var
   S : string;
@@ -1203,17 +1113,9 @@ begin
   AStream.Seek(0, soFromBeginning);
   ObjectBinaryToText(AStream, FStreamWriter.BaseStream);
 end;
-
-//*****************************************************************************
-// private methods                                                         END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'public methods'}
-//*****************************************************************************
-// public methods                                                        BEGIN
-//*****************************************************************************
-
 procedure TFileChannel.Clear;
 begin
   FStreamWriter.BaseStream.Position := 0;
@@ -1251,10 +1153,6 @@ begin
         + ' by ' + Application.name + ' ===');
   UpdateIdentation;
 end;
-
-//*****************************************************************************
-// public methods                                                          END
-//*****************************************************************************
 {$ENDREGION}
 {$ENDREGION}
 

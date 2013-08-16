@@ -29,35 +29,30 @@ procedure RegisterDemos;
 implementation
 
 uses
-  SysUtils, StrUtils,
+  SysUtils,
 
-  DDuce.Demos.DemoManager,
   DDuce.Demos.ListDataSet,
   DDuce.Demos.ScopedReferences,
   DDuce.Demos.DynamicRecord,
   DDuce.Demos.XMLTree,
   DDuce.Demos.VirtualDBGrid,
-  DDuce.Demos.DBGridView;
+  DDuce.Demos.DBGridView,
+  DDuce.Demos.PropertyInspector,
+  DDuce.Demos.Reflect,
+  DDuce.Demos.DemoManager;
 
 {$REGION 'interfaced routines'}
-//*****************************************************************************
-// interfaced routines                                                   BEGIN
-//*****************************************************************************
-
 procedure RegisterDemos;
 begin
-  DemoManager.Register(TfrmXMLTree, 'DDuce XMLTree Demo');
-  DemoManager.Register(TfrmListDataSet, 'DDuce ListDataSet Demo');
-  DemoManager.Register(TfrmVirtualDBGrid, 'DDuce VirtualDBGrid Demo');
-//  DemoManager.Register(TfrmScopedReferences, 'Scoped references');
-//  DemoManager.Register(TfrmDynamicRecords, 'Dynamic records');
-//  DemoManager.Register(TfrmDBGridView, 'DBGridView');
-
+  DemoManager.Register(TfrmListDataSet, 'ListDataSet');
+  DemoManager.Register(TfrmXMLTree, 'XMLTree');
+  DemoManager.Register(TfrmReflect, 'Reflect');
+  DemoManager.Register(TfrmVirtualDBGrid, 'VirtualDBGrid');
+  DemoManager.Register(TfrmScopedReferences, 'Scoped references');
+  DemoManager.Register(TfrmDBGridView, 'DBGridView');
+  DemoManager.Register(TfrmDynamicRecords, 'Dynamic records');
+  DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
 end;
-
-//*****************************************************************************
-// interfaced routines                                                     END
-//*****************************************************************************
 {$ENDREGION}
 
 end.

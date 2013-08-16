@@ -1,8 +1,8 @@
 object frmXMLTree: TfrmXMLTree
   Left = 0
   Top = 0
-  ClientHeight = 507
-  ClientWidth = 924
+  ClientHeight = 548
+  ClientWidth = 790
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,7 +15,7 @@ object frmXMLTree: TfrmXMLTree
   object pnlTop: TPanel
     Left = 0
     Top = 0
-    Width = 924
+    Width = 790
     Height = 32
     Align = alTop
     BevelOuter = bvNone
@@ -36,20 +36,12 @@ object frmXMLTree: TfrmXMLTree
       Action = actCollapse
       TabOrder = 1
     end
-    object btnInspectComponent: TButton
-      Left = 320
-      Top = 4
-      Width = 150
-      Height = 25
-      Action = actInspectComponent
-      TabOrder = 2
-    end
   end
   object pnlMain: TPanel
     Left = 0
     Top = 32
-    Width = 924
-    Height = 475
+    Width = 790
+    Height = 516
     Align = alClient
     BevelOuter = bvNone
     Caption = 'pnlMain'
@@ -58,7 +50,7 @@ object frmXMLTree: TfrmXMLTree
       Left = 361
       Top = 0
       Width = 7
-      Height = 475
+      Height = 516
       ExplicitLeft = 306
       ExplicitTop = 1
       ExplicitHeight = 441
@@ -67,7 +59,7 @@ object frmXMLTree: TfrmXMLTree
       Left = 0
       Top = 0
       Width = 361
-      Height = 475
+      Height = 516
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
@@ -75,16 +67,16 @@ object frmXMLTree: TfrmXMLTree
     object pnlEditor: TPanel
       Left = 368
       Top = 0
-      Width = 556
-      Height = 475
+      Width = 422
+      Height = 516
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
       object mmoXML: TMemo
         Left = 0
         Top = 0
-        Width = 556
-        Height = 475
+        Width = 124
+        Height = 516
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -94,6 +86,15 @@ object frmXMLTree: TfrmXMLTree
         ParentFont = False
         TabOrder = 0
         OnChange = mmoXMLChange
+      end
+      object pnlInspector: TPanel
+        Left = 124
+        Top = 0
+        Width = 298
+        Height = 516
+        Align = alRight
+        BevelOuter = bvNone
+        TabOrder = 1
       end
     end
   end
@@ -107,10 +108,6 @@ object frmXMLTree: TfrmXMLTree
     object actCollapse: TAction
       Caption = 'Collapse'
       OnExecute = actCollapseExecute
-    end
-    object actInspectComponent: TAction
-      Caption = 'Inspect component'
-      OnExecute = actInspectComponentExecute
     end
   end
 end
