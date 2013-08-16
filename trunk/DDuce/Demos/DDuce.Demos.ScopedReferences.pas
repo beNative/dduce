@@ -19,53 +19,60 @@
 unit DDuce.Demos.ScopedReferences;
 
 { Form demonstrating the use of scoped references in Delphi (or smart pointers
-  how they are called in C++). }
+  as they are called in C++). }
 
 //*****************************************************************************
 
 interface
 
+{$I ..\Source\DDuce.inc}
+
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ActnList, StdCtrls, System.Actions,
+  Dialogs, ActnList, StdCtrls, ExtCtrls,
 
-  ts.ScopedReference;
+{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
+  System.Actions,
+{$ENDIF}
+
+  DDuce.ScopedReference;
 
 type
   TfrmScopedReferences = class(TForm)
-    aclMain           : TActionList;
-    actShowClassNames : TAction;
-    btnShowClassNames : TButton;
-    lblCode: TLabel;
+    aclMain               : TActionList;
+    actShowClassNames     : TAction;
+    btnShowClassNames     : TButton;
+    lblCode               : TLabel;
+    pnlScopedButton       : TPanel;
+    btnCreateScopedButton : TButton;
+    actCreateScopedButton : TAction;
 
     procedure actShowClassNamesExecute(Sender: TObject);
+    procedure actCreateScopedButtonExecute(Sender: TObject);
 
   private
     procedure ShowClassNames;
+    procedure CreateScopedButton;
   end;
 
 //*****************************************************************************
 
 implementation
 
+uses
+  Spring;
+
 {$R *.dfm}
 
-//*****************************************************************************
-// action handlers                                                       BEGIN
-//*****************************************************************************
+procedure TfrmScopedReferences.actCreateScopedButtonExecute(Sender: TObject);
+begin
+  CreateScopedButton;
+end;
 
 procedure TfrmScopedReferences.actShowClassNamesExecute(Sender: TObject);
 begin
   ShowClassNames;
 end;
-
-//*****************************************************************************
-// action handlers                                                         END
-//*****************************************************************************
-
-//*****************************************************************************
-// private methods                                                       BEGIN
-//*****************************************************************************
 
 procedure TfrmScopedReferences.ShowClassNames;
 var
@@ -78,9 +85,22 @@ begin
   ShowMessage(L.Ref.ClassName);
 end;
 
-//*****************************************************************************
-// private methods                                                         END
-//*****************************************************************************
+procedure TfrmScopedReferences.CreateScopedButton;
+var
+  B : Scoped<TButton>;
+begin
+  B.Create(
+    function: TButton
+    begin
+      Result := TButton.Create(Self);
+      Result.Parent  := pnlScopedButton;
+      Result.Caption := 'I''m a scoped button!';
+      Result.Align   := alClient;
+      ShowMessage('Scoped button created.');
+    end
+  );
+  ShowMessage('Scoped button will be destroyed.');
+end;
 
 end.
 

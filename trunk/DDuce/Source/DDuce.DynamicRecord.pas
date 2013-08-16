@@ -18,6 +18,7 @@
 
 unit DDuce.DynamicRecord;
 
+{$I DDuce.inc}
 
 //*****************************************************************************
 
@@ -39,7 +40,8 @@ uses
     - No field initialisation required.
     - No boilerplate code. No Create/Try/Finally/Free blocks needed as
       memory management is done behind the scenes.
-    - Supports assignments from/to and convertion to Nullable types (cfr. Spring).
+    - Supports assignments from/to and convertion to Nullable types (cfr.
+      Spring library).
     - Easy assignment from and to object/record properties as well as other
       TRecord instances using the Assign and AssignTo overloads.
     - Enumeration support (so we can use it in "for..in" statements) in D2006+
@@ -99,6 +101,7 @@ uses
   TRecord<T> allows typed access to contained data. In that respect it behaves
   as a managed object wrapper while remaining compatible with the basic
   instance type.
+  The Data property is of type T.
 
   Future enhancements:
     - Add more events
@@ -936,10 +939,6 @@ type
 //=============================================================================
 
 {$REGION 'non-interfaced routines'}
-//*****************************************************************************
-// non-interfaced routines                                               BEGIN
-//*****************************************************************************
-
 function WordCount(const AString: string; const AWordDelims: TSysCharSet)
   : Integer;
 var
@@ -1079,6 +1078,7 @@ var
   T : TRttiType;
   F : TRttiField;
   H : TRttiField;
+  V : TValue;
 begin
   T := FContext.GetType(AValue.TypeInfo);
   F := T.GetField('FValue');
@@ -1086,7 +1086,8 @@ begin
 
   if Assigned(F) and Assigned(H) then
   begin
-    if H.GetValue(AValue.GetReferenceToRawData).AsBoolean then
+    V := H.GetValue(AValue.GetReferenceToRawData);
+    if (V.IsOrdinal and V.AsBoolean) or (V.AsString <> '') then
       AInnerValue := F.GetValue(AValue.GetReferenceToRawData)
     else
       AInnerValue := TValue.Empty;
@@ -1131,18 +1132,10 @@ begin
     A.SetValue(AValue.GetReferenceToRawData, '');
   end;
 end;
-
-//*****************************************************************************
-// non-interfaced routines                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'TVarDataRecordType'}
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 class constructor TVarDataRecordType.Create;
 begin
   FVarDataRecordType := TVarDataRecordType.Create;
@@ -1152,17 +1145,9 @@ class destructor TVarDataRecordType.Destroy;
 begin
  FreeAndNil(FVarDataRecordType);
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'public methods'}
-//*****************************************************************************
-// public methods                                                        BEGIN
-//*****************************************************************************
-
 procedure TVarDataRecordType.Clear(var V: TVarData);
 begin
   { We are only holding a referece to a TDynamicRecord instance and we are
@@ -1237,19 +1222,11 @@ begin
   if not Result then
     raise Exception.CreateFmt(SValueConversionError, [Name, VarTypeAsText(AValue.VType)]);
 end;
-
-//*****************************************************************************
-// public methods                                                          END
-//*****************************************************************************
 {$ENDREGION}
 {$ENDREGION}
 
 {$REGION 'TDynamicRecord'}
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 constructor TDynamicRecord.Create;
 begin
   inherited Create(TDynamicField);
@@ -1272,17 +1249,9 @@ begin
     SL.Free;
   end;
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 function TDynamicRecord.GetCount: Integer;
 begin
   Result := inherited Count;
@@ -1403,17 +1372,9 @@ begin
       Result := ADefaultValue
     end;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-//*****************************************************************************
-// protected methods                                                     BEGIN
-//*****************************************************************************
-
 { Overridden method from TCollection to make any necessary changes when the
   items in the collection change. This method is called automatically when an
   update is issued.
@@ -1457,17 +1418,9 @@ begin
   else
     Result := False;
 end;
-
-//*****************************************************************************
-// protected methods                                                       END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'public methods'}
-//*****************************************************************************
-// public methods                                                        BEGIN
-//*****************************************************************************
-
 {$REGION 'assignment methods'}
 procedure TDynamicRecord.Assign(Source: TPersistent);
 begin
@@ -2012,19 +1965,11 @@ begin
   end;
 end;
 {$ENDREGION}
-
-//*****************************************************************************
-// public methods                                                          END
-//*****************************************************************************
 {$ENDREGION}
 {$ENDREGION}
 
 {$REGION 'TDynamicField'}
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 function TDynamicField.GetName: string;
 begin
   Result := FName;
@@ -2052,17 +1997,9 @@ begin
     FValue := AValue;
   end;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'public methods'}
-//*****************************************************************************
-// public methods                                                        BEGIN
-//*****************************************************************************
-
 procedure TDynamicField.Assign(Source: TPersistent);
 var
   DF : TDynamicField;
@@ -2112,19 +2049,11 @@ begin
   Result := -1;
 end;
 {$ENDREGION}
-
-//*****************************************************************************
-// public methods                                                          END
-//*****************************************************************************
 {$ENDREGION}
 {$ENDREGION}
 
 {$REGION 'TRecord'}
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 class function TRecord.Create: TRecord;
 begin
   // can be used as a fake parameterless constructor
@@ -2155,17 +2084,9 @@ procedure TRecord.Create(const AInstance: TValue;
 begin
   Assign(AInstance, ANames);
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 function TRecord.GetCount: Integer;
 begin
   Result := DynamicRecord.Count;
@@ -2227,17 +2148,9 @@ procedure TRecord.SetItemValue(AName: string; const AValue: TValue);
 begin
   DynamicRecord.Values[AName] := AValue;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'operator overloads'}
-//*****************************************************************************
-// operator overloads                                                    BEGIN
-//*****************************************************************************
-
 class operator TRecord.Implicit(const ARecord: TRecord): Variant;
 begin
   Result := ARecord.Data;
@@ -2247,17 +2160,9 @@ class operator TRecord.Implicit(const ARecord: TRecord): IDynamicRecord;
 begin
   Result := ARecord.DynamicRecord;
 end;
-
-//*****************************************************************************
-// operator overloads                                                      END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'public methods'}
-//*****************************************************************************
-// public methods                                                        BEGIN
-//*****************************************************************************
-
 { Assigns an object or record instance to the TRecord. Depending on
   AAssignProperties and AAssignFields the dynamic record will contain all
   properties or fields for which RTTI information is generated. }
@@ -2450,34 +2355,18 @@ end;
 //  else
 //    Result := V.AsType<BaseType>;
 //end;
-
-//*****************************************************************************
-// public methods                                                          END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'TRecord.TRecordEnumerator'}
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 constructor TRecord.TRecordEnumerator.Create(ARecord: IDynamicRecord);
 begin
   FIndex  := -1;
   FRecord := ARecord;
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'public methods'}
-//*****************************************************************************
-// public methods                                                        BEGIN
-//*****************************************************************************
-
 function TRecord.TRecordEnumerator.GetCurrent: IDynamicField;
 begin
   Result := FRecord.Items[FIndex];
@@ -2489,20 +2378,12 @@ begin
   if Result then
     Inc(FIndex);
 end;
-
-//*****************************************************************************
-// public methods                                                          END
-//*****************************************************************************
 {$ENDREGION}
 {$ENDREGION}
 {$ENDREGION}
 
 {$REGION 'TDynamicRecord<T>'}
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 constructor TDynamicRecord<T>.Create;
 begin
   inherited Create(TDynamicField<T>);
@@ -2519,17 +2400,9 @@ begin
   inherited Create(TDynamicField<T>);
   Data := AInstance;
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 function TDynamicRecord<T>.GetCount: Integer;
 begin
   Result := Length(RttiContext.GetType(TypeInfo(T)).GetProperties);
@@ -2564,9 +2437,28 @@ begin
 end;
 
 function TDynamicRecord<T>.GetItemValue(AName: string): TValue;
+var
+  V         : TValue;
+  LType     : TRttiType;
+  LProperty : TRttiProperty;
 begin
   //Result := inherited GetItemValue(AName);
-  Result := RttiContext.GetType(TypeInfo(T)).GetProperty(AName).GetValue(TObject(FData));
+  try
+//    V := TValue.From(FData);
+
+    LType := RttiContext.GetType(TypeInfo(T));
+    if Assigned(LType) then
+    begin
+      LProperty :=  LType.GetProperty(AName);
+      if Assigned(LProperty) then
+        Result := LProperty.GetValue(TObject(FData));
+    end;
+
+//    Result := RttiContext.GetType(TypeInfo(T)).GetProperty(AName).GetValue(TObject(FData));
+    //Result := RttiContext.GetType(TypeInfo(T)).GetProperty(AName).GetValue(V.AsObject);
+  except
+    Result := TValue.Empty;
+  end;
 end;
 
 procedure TDynamicRecord<T>.SetItemValue(AName: string; const AValue: TValue);
@@ -2595,6 +2487,7 @@ begin
 //        N := IfThen(L > N, L, N);
 //      end;
 //    end;
+    N := 30;
     for I := 0 to Count - 1 do
     begin
       if AAlignValues then
@@ -2603,6 +2496,7 @@ begin
         //T := GetItemValue(
         S := RttiContext.GetType(TypeInfo(T)).GetProperties[I].Name;
         U := GetItemValue(S).ToString;
+
 
         //T := RttiContext.GetType(TypeInfo(T)).GetProperties[I].GetValue(TObject(Data)).ToString;
         if U = #0 then
@@ -2618,20 +2512,12 @@ begin
     SL.Free;
   end;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$ENDREGION}
 
 {$REGION 'TDynamicField<T>'}
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 procedure TDynamicField<T>.BeforeDestruction;
 begin
   Collection := nil;
@@ -2668,17 +2554,9 @@ begin
   if Supports(Collection, IDynamicRecord, DR) then
     DR.Values[Name] :=  AValue;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-//*****************************************************************************
-// protected methods                                                     BEGIN
-//*****************************************************************************
-
 function TDynamicField<T>.QueryInterface(const IID: TGUID; out Obj): HResult;
 begin
   if GetInterface(IID, Obj) then
@@ -2698,10 +2576,6 @@ begin
   if Result = 0 then
     Destroy;
 end;
-
-//*****************************************************************************
-// protected methods                                                       END
-//*****************************************************************************
 {$ENDREGION}
 
 {$ENDREGION}

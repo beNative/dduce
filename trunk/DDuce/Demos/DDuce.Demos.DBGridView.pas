@@ -18,7 +18,9 @@
 
 unit DDuce.Demos.DBGridView;
 
-{ Unit demonstrating the TDBGridView component by Roman M. Mochalov. }
+{$I ..\Source\DDuce.inc}
+
+{ Unit demonstrating the TDBGridView component. }
 
 //*****************************************************************************
 
@@ -26,8 +28,11 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ComCtrls, StdCtrls, ActnList, ExtCtrls, CheckLst, Menus,
-  System.Actions, Vcl.ImgList,
+  Dialogs, ComCtrls, StdCtrls, ActnList, ExtCtrls, CheckLst, Menus, ImgList,
+
+{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
+  System.Actions,
+{$ENDIF}
 
   DB, DBClient, DBCtrls,
 
@@ -78,8 +83,8 @@ type
     procedure actClearLogExecute(Sender: TObject);
 
   private
-    FDBGV    : TDBGridView;
-    FVLT     : TLogTree;
+    FDBGV : TDBGridView;
+    FVLT  : TLogTree;
 
     procedure ConnectEvents;
     procedure DisconnectEvents;
@@ -245,21 +250,16 @@ implementation
 {$R *.dfm}
 
 uses
-  JclDebug, JclStrings,
-
   TypInfo,
 
-  ts.DBUtils,
-
-  ts.Modules.ComponentInspector,
+//  DDuce.ComponentInspector,
 
   DDuce.Demos.Data;
 
-{$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
+var
+  ProcByLevel: string;
 
+{$REGION 'construction and destruction'}
 procedure TfrmDBGridView.AfterConstruction;
 begin
   inherited;
@@ -276,20 +276,12 @@ begin
   FVLT.Images := imlMain;
   FVLT.Log('Application started', llDebug);
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'action handlers'}
-//*****************************************************************************
-// action handlers                                                       BEGIN
-//*****************************************************************************
-
 procedure TfrmDBGridView.actAutoSizeColumnsExecute(Sender: TObject);
 begin
-  AutoSizeDisplayWidths(DataSet);
+//  AutoSizeDisplayWidths(DataSet);
 end;
 
 procedure TfrmDBGridView.actClearLogExecute(Sender: TObject);
@@ -299,19 +291,11 @@ end;
 
 procedure TfrmDBGridView.actInspectComponentExecute(Sender: TObject);
 begin
-  InspectComponent(FDBGV);
+//  InspectComponent(FDBGV);
 end;
-
-//*****************************************************************************
-// action handlers                                                         END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'event handlers'}
-//*****************************************************************************
-// event handlers                                                        BEGIN
-//*****************************************************************************
-
 procedure TfrmDBGridView.grdDBGVCellAcceptCursor(Sender: TObject; Cell: TGridCell;
   var Accept: Boolean);
 var
@@ -904,32 +888,16 @@ procedure TfrmDBGridView.chkMultiselectClick(Sender: TObject);
 begin
   FDBGV.MultiSelect := (Sender as TCheckBox).Checked;
 end;
-
-//*****************************************************************************
-// event handlers                                                          END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 function TfrmDBGridView.GetDataSet: TDataSet;
 begin
   Result := dscMain.DataSet;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-//*****************************************************************************
-// protected methods                                                     BEGIN
-//*****************************************************************************
-
 procedure TfrmDBGridView.ConnectEvents;
 begin
   with FDBGV do
@@ -1133,37 +1101,37 @@ end;
 
 procedure TfrmDBGridView.AddToLog(const AString, AInfo: string; AColor: TColor;
   AObject: TObject);
-var
-  S : string;
-  T : string;
-  B : Boolean;
+//var
+//  S : string;
+//  T : string;
+//  B : Boolean;
 begin
-  T := ExtractMethodName(AString);
-  T := StrAfter('.', T);
-
-  if not Assigned(AObject) then
-  begin
-    T := StrAfter('grdDBGV', T);
-    T := StrBefore('$', T);
-    T := 'On' + T;
-    B := IsChecked(T, lbxDBGridViewEvents)
-  end
-  else
-  begin
-    T := StrAfter('dscMain', T);
-    T := 'On' + T;
-    B := IsChecked(T, lbxDataSourceEvents);
-  end;
-
-  T := T + AInfo;
-
-  if B then
-  begin
-    S := Format('<font-color=%s><b> %s',
-      [ColorToString(AColor), T]);
-
-    FVLT.Log(S);
-  end;
+//  T := ExtractMethodName(AString);
+//  T := StrAfter('.', T);
+//
+//  if not Assigned(AObject) then
+//  begin
+//    T := StrAfter('grdDBGV', T);
+//    T := StrBefore('$', T);
+//    T := 'On' + T;
+//    B := IsChecked(T, lbxDBGridViewEvents)
+//  end
+//  else
+//  begin
+//    T := StrAfter('dscMain', T);
+//    T := 'On' + T;
+//    B := IsChecked(T, lbxDataSourceEvents);
+//  end;
+//
+//  T := T + AInfo;
+//
+//  if B then
+//  begin
+//    S := Format('<font-color=%s><b> %s',
+//      [ColorToString(AColor), T]);
+//
+//    FVLT.Log(S);
+//  end;
 end;
 
 function TfrmDBGridView.IsChecked(const AName: string; AListBox : TCheckListBox): Boolean;
@@ -1180,10 +1148,6 @@ begin
   end;
   Result := B;
 end;
-
-//*****************************************************************************
-// protected methods                                                       END
-//*****************************************************************************
 {$ENDREGION}
 
 end.

@@ -51,6 +51,7 @@
     - Removed compiler directives to keep compatibility with older compiler
       versions.
     - Code ported to support unicode and later versions of Delphi.
+    - Added theming support
 
   TODO:
     * Columns (or sections?) :
@@ -79,6 +80,8 @@
 }
 
 unit DDuce.Components.GridView;
+
+{$I ..\DDuce.inc}
 
 interface
 
@@ -2541,83 +2544,72 @@ type
   end;
 
   // XE2+ VCL Style
-{$if CompilerVersion >= 23 }
+{$IF CompilerVersion >= 23}
   TGridViewVclStyleScrollBarsHook = class(TMouseTrackControlStyleHook)
   strict private type
   {$REGION 'TVclStyleScrollBarWindow'}
-      TVclStyleScrollBarWindow = class(TWinControl)strict private FScrollBarWindowOwner: TGridViewVclStyleScrollBarsHook;
-    FScrollBarVertical: Boolean;
-    FScrollBarVisible: Boolean;
-    FScrollBarEnabled: Boolean;
-    procedure WMNCHitTest(var Msg: TWMNCHitTest);
-    message WM_NCHITTEST;
-    procedure WMEraseBkgnd(var Msg: TMessage);
-    message WM_ERASEBKGND;
-    procedure WMPaint(var Msg: TWMPaint);
-    message WM_PAINT;
-  strict protected
-    procedure CreateParams(var Params: TCreateParams);
-    override;
-  public
-    constructor Create(AOwner: TComponent);
-    override;
-    property ScrollBarWindowOwner: TGridViewVclStyleScrollBarsHook read FScrollBarWindowOwner write FScrollBarWindowOwner;
-    property ScrollBarVertical: Boolean read FScrollBarVertical write FScrollBarVertical;
-    property ScrollBarVisible: Boolean read FScrollBarVisible write FScrollBarVisible;
-    property ScrollBarEnabled: Boolean read FScrollBarEnabled write FScrollBarEnabled;
+    TVclStyleScrollBarWindow = class(TWinControl)
+    strict private
+      FScrollBarWindowOwner: TGridViewVclStyleScrollBarsHook;
+      FScrollBarVertical: Boolean;
+      FScrollBarVisible: Boolean;
+      FScrollBarEnabled: Boolean;
+      procedure WMNCHitTest(var Msg: TWMNCHitTest); message WM_NCHITTEST;
+      procedure WMEraseBkgnd(var Msg: TMessage); message WM_ERASEBKGND;
+      procedure WMPaint(var Msg: TWMPaint); message WM_PAINT;
+
+    strict protected
+      procedure CreateParams(var Params: TCreateParams); override;
+
+    public
+      constructor Create(AOwner: TComponent); override;
+      property ScrollBarWindowOwner: TGridViewVclStyleScrollBarsHook
+        read FScrollBarWindowOwner write FScrollBarWindowOwner;
+      property ScrollBarVertical: Boolean
+        read FScrollBarVertical write FScrollBarVertical;
+      property ScrollBarVisible: Boolean
+        read FScrollBarVisible write FScrollBarVisible;
+      property ScrollBarEnabled: Boolean
+        read FScrollBarEnabled write FScrollBarEnabled;
     end;
   {$ENDREGION}
   private
-    FHorzScrollBarDownButtonRect: TRect;
-    FHorzScrollBarDownButtonState: TThemedScrollBar;
-    FHorzScrollBarRect: TRect;
-    FHorzScrollBarSliderState: TThemedScrollBar;
-    FHorzScrollBarSliderTrackRect: TRect;
-    FHorzScrollBarUpButtonRect: TRect;
-    FHorzScrollBarUpButtonState: TThemedScrollBar;
-    FHorzScrollBarWindow: TVclStyleScrollBarWindow;
-    FLeftMouseButtonDown: Boolean;
-    FPrevScrollPos: Integer;
-    FScrollPos: Single;
-    FVertScrollBarDownButtonRect: TRect;
-    FVertScrollBarDownButtonState: TThemedScrollBar;
-    FVertScrollBarRect: TRect;
-    FVertScrollBarSliderState: TThemedScrollBar;
-    FVertScrollBarSliderTrackRect: TRect;
-    FVertScrollBarUpButtonRect: TRect;
-    FVertScrollBarUpButtonState: TThemedScrollBar;
-    FVertScrollBarWindow: TVclStyleScrollBarWindow;
+    FHorzScrollBarDownButtonRect  : TRect;
+    FHorzScrollBarDownButtonState : TThemedScrollBar;
+    FHorzScrollBarRect            : TRect;
+    FHorzScrollBarSliderState     : TThemedScrollBar;
+    FHorzScrollBarSliderTrackRect : TRect;
+    FHorzScrollBarUpButtonRect    : TRect;
+    FHorzScrollBarUpButtonState   : TThemedScrollBar;
+    FHorzScrollBarWindow          : TVclStyleScrollBarWindow;
+    FLeftMouseButtonDown          : Boolean;
+    FPrevScrollPos                : Integer;
+    FScrollPos                    : Single;
+    FVertScrollBarDownButtonRect  : TRect;
+    FVertScrollBarDownButtonState : TThemedScrollBar;
+    FVertScrollBarRect            : TRect;
+    FVertScrollBarSliderState     : TThemedScrollBar;
+    FVertScrollBarSliderTrackRect : TRect;
+    FVertScrollBarUpButtonRect    : TRect;
+    FVertScrollBarUpButtonState   : TThemedScrollBar;
+    FVertScrollBarWindow          : TVclStyleScrollBarWindow;
 
-    procedure WMKeyDown(var Msg: TMessage);
-    message WM_KEYDOWN;
-    procedure WMKeyUp(var Msg: TMessage);
-    message WM_KEYUP;
-    procedure WMLButtonDown(var Msg: TWMMouse);
-    message WM_LBUTTONDOWN;
-    procedure WMLButtonUp(var Msg: TWMMouse);
-    message WM_LBUTTONUP;
-    procedure WMNCLButtonDown(var Msg: TWMMouse);
-    message WM_NCLBUTTONDOWN;
-    procedure WMNCMouseMove(var Msg: TWMMouse);
-    message WM_NCMOUSEMOVE;
-    procedure WMNCLButtonUp(var Msg: TWMMouse);
-    message WM_NCLBUTTONUP;
-    procedure WMNCPaint(var Msg: TMessage);
-    message WM_NCPAINT;
-    procedure WMMouseMove(var Msg: TWMMouse);
-    message WM_MOUSEMOVE;
-    procedure WMMouseWheel(var Msg: TMessage);
-    message WM_MOUSEWHEEL;
-    procedure WMVScroll(var Msg: TMessage);
-    message WM_VSCROLL;
-    procedure WMHScroll(var Msg: TMessage);
-    message WM_HSCROLL;
-    procedure WMCaptureChanged(var Msg: TMessage);
-    message WM_CAPTURECHANGED;
-    procedure WMNCLButtonDblClk(var Msg: TWMMouse);
-    message WM_NCLBUTTONDBLCLK;
-    procedure WMSize(var Msg: TMessage);
-    message WM_SIZE;
+    procedure WMKeyDown(var Msg: TMessage); message WM_KEYDOWN;
+    procedure WMKeyUp(var Msg: TMessage); message WM_KEYUP;
+    procedure WMLButtonDown(var Msg: TWMMouse); message WM_LBUTTONDOWN;
+    procedure WMLButtonUp(var Msg: TWMMouse); message WM_LBUTTONUP;
+    procedure WMNCLButtonDown(var Msg: TWMMouse); message WM_NCLBUTTONDOWN;
+    procedure WMNCMouseMove(var Msg: TWMMouse); message WM_NCMOUSEMOVE;
+    procedure WMNCLButtonUp(var Msg: TWMMouse); message WM_NCLBUTTONUP;
+    procedure WMNCPaint(var Msg: TMessage); message WM_NCPAINT;
+    procedure WMMouseMove(var Msg: TWMMouse); message WM_MOUSEMOVE;
+    procedure WMMouseWheel(var Msg: TMessage); message WM_MOUSEWHEEL;
+    procedure WMVScroll(var Msg: TMessage); message WM_VSCROLL;
+    procedure WMHScroll(var Msg: TMessage); message WM_HSCROLL;
+    procedure WMCaptureChanged(var Msg: TMessage); message WM_CAPTURECHANGED;
+    procedure WMNCLButtonDblClk(var Msg: TWMMouse); message WM_NCLBUTTONDBLCLK;
+    procedure WMSize(var Msg: TMessage); message WM_SIZE;
+
   protected
     procedure CalcScrollBarsRect; virtual;
     procedure DrawHorzScrollBar(DC: HDC); virtual;
@@ -2628,11 +2620,39 @@ type
     procedure PaintScrollBars; virtual;
     function PointInTreeHeader(const P: TPoint): Boolean;
     procedure UpdateScrollBarWindow;
+
   public
     constructor Create(AControl: TWinControl); override;
     destructor Destroy; override;
   end;
-{$ifend}
+{$IFEND}
+
+{$IF CompilerVersion <= 21}
+type
+  StyleServices = record
+  strict private
+    class function GetEnabled: Boolean; static;
+
+  public
+    class function GetElementDetails(
+      Detail: TThemedHeader
+    ): TThemedElementDetails; overload; static;
+    class function GetElementDetails(
+      Detail: TThemedComboBox
+    ): TThemedElementDetails; overload; static;
+    class function GetElementDetails(
+      Detail: TThemedButton
+    ): TThemedElementDetails; overload; static;
+    class procedure DrawElement(
+            DC      : HDC;
+            Details : TThemedElementDetails;
+      const R       : TRect
+    ); static;
+
+    class property Enabled: Boolean
+      read GetEnabled;
+  end;
+{$IFEND}
 
 { Several utility routines }
 
@@ -2643,6 +2663,7 @@ function IsCellEqual(Cell1, Cell2: TGridCell): Boolean;
 function IsCellEmpty(Cell: TGridCell): Boolean;
 
 function OffsetCell(Cell: TGridCell; C, R: Integer): TGridCell;
+
 { The standard Windows scrollbar has limitation to the the maximum position
   (32768, it can not be under WinNT), but in the table of records it can be
   it is more, then for the installation of the parameters of their scroller one
@@ -2662,7 +2683,11 @@ procedure FillDWord(var Dest; Count, Value: Integer); register;
 implementation
 
 uses
-  Types, System.UITypes;
+{$IFDEF HAS_UNIT_SYSTEM_UITYPES}
+  System.UITypes,
+{$ENDIF}
+
+  Types;
 
 {$R *.RES}
 
@@ -2731,40 +2756,56 @@ end;
 
 procedure PaintToolBarBtnFrameEx(DC: HDC; Rect: TRect; Pressed: Boolean; SideFlags: Integer);
 begin
-  if not Pressed then
+
+  if StyleServices.Enabled then
   begin
-    DrawEdge(DC, Rect, BDR_RAISEDOUTER, SideFlags and (not BF_TOPLEFT));
-    if SideFlags and BF_BOTTOM <> 0 then Dec(Rect.Bottom);
-    if SideFlags and BF_RIGHT <> 0 then Dec(Rect.Right);
-    DrawEdge(DC, Rect, BDR_RAISEDINNER, SideFlags and (not BF_BOTTOMRIGHT));
-    if SideFlags and BF_TOP <> 0 then Inc(Rect.Top);
-    if SideFlags and BF_LEFT <> 0 then Inc(Rect.Left);
-    DrawEdge(DC, Rect, BDR_RAISEDINNER, SideFlags and (not BF_TOPLEFT));
-    if SideFlags and BF_BOTTOM <> 0 then Dec(Rect.Bottom);
-    if SideFlags and BF_RIGHT <> 0 then Dec(Rect.Right);
-    DrawEdge(DC, Rect, BDR_RAISEDOUTER, SideFlags and (not BF_BOTTOMRIGHT));
+
   end
   else
   begin
-    DrawEdge(DC, Rect, BDR_SUNKENOUTER, SideFlags and (not BF_TOPLEFT));
-    if SideFlags and BF_BOTTOM <> 0 then Dec(Rect.Bottom);
-    if SideFlags and BF_RIGHT <> 0 then Dec(Rect.Right);
-    DrawEdge(DC, Rect, BDR_SUNKENINNER, SideFlags and (not BF_BOTTOMRIGHT));
-    if SideFlags and BF_TOP <> 0 then Inc(Rect.Top);
-    if SideFlags and BF_LEFT <> 0 then Inc(Rect.Left);
-    DrawEdge(DC, Rect, BDR_SUNKENINNER, SideFlags and (not BF_TOPLEFT));
-    if SideFlags and BF_BOTTOM <> 0 then Dec(Rect.Bottom);
-    if SideFlags and BF_RIGHT <> 0 then Dec(Rect.Right);
-    DrawEdge(DC, Rect, BDR_SUNKENOUTER, SideFlags and (not BF_BOTTOMRIGHT));
-  end
+    if not Pressed then
+    begin
+      DrawEdge(DC, Rect, BDR_RAISEDOUTER, SideFlags and (not BF_TOPLEFT));
+      if SideFlags and BF_BOTTOM <> 0 then Dec(Rect.Bottom);
+      if SideFlags and BF_RIGHT <> 0 then Dec(Rect.Right);
+      DrawEdge(DC, Rect, BDR_RAISEDINNER, SideFlags and (not BF_BOTTOMRIGHT));
+      if SideFlags and BF_TOP <> 0 then Inc(Rect.Top);
+      if SideFlags and BF_LEFT <> 0 then Inc(Rect.Left);
+      DrawEdge(DC, Rect, BDR_RAISEDINNER, SideFlags and (not BF_TOPLEFT));
+      if SideFlags and BF_BOTTOM <> 0 then Dec(Rect.Bottom);
+      if SideFlags and BF_RIGHT <> 0 then Dec(Rect.Right);
+      DrawEdge(DC, Rect, BDR_RAISEDOUTER, SideFlags and (not BF_BOTTOMRIGHT));
+    end
+    else
+    begin
+      DrawEdge(DC, Rect, BDR_SUNKENOUTER, SideFlags and (not BF_TOPLEFT));
+      if SideFlags and BF_BOTTOM <> 0 then Dec(Rect.Bottom);
+      if SideFlags and BF_RIGHT <> 0 then Dec(Rect.Right);
+      DrawEdge(DC, Rect, BDR_SUNKENINNER, SideFlags and (not BF_BOTTOMRIGHT));
+      if SideFlags and BF_TOP <> 0 then Inc(Rect.Top);
+      if SideFlags and BF_LEFT <> 0 then Inc(Rect.Left);
+      DrawEdge(DC, Rect, BDR_SUNKENINNER, SideFlags and (not BF_TOPLEFT));
+      if SideFlags and BF_BOTTOM <> 0 then Dec(Rect.Bottom);
+      if SideFlags and BF_RIGHT <> 0 then Dec(Rect.Right);
+      DrawEdge(DC, Rect, BDR_SUNKENOUTER, SideFlags and (not BF_BOTTOMRIGHT));
+    end
+  end;
 end;
 
 procedure PaintScrollBtnFrameEx(DC: HDC; Rect: TRect; Pressed: Boolean; SideFlags: Integer);
 begin
-  if not Pressed then
-    PaintToolBarBtnFrameEx(DC, Rect, Pressed, SideFlags)
+  if StyleServices.Enabled then
+  begin
+//    StyleServices.
+
+  end
   else
-    DrawEdge(DC, Rect, BDR_SUNKENOUTER, SideFlags or BF_FLAT);
+  begin
+    if not Pressed then
+      PaintToolBarBtnFrameEx(DC, Rect, Pressed, SideFlags)
+    else
+      DrawEdge(DC, Rect, BDR_SUNKENOUTER, SideFlags or BF_FLAT);
+  end;
 end;
 
 function GetTextWidth(const AText: string; AFont: TFont): Integer;
@@ -2783,29 +2824,55 @@ end;
 procedure PaintBtnComboBox2(DC: HDC; Rect: TRect; Pressed: Boolean);
 var
   Flags, DX: Integer;
+  Details: TThemedElementDetails;
 begin
-  Flags := 0;
-  if Pressed then Flags := DFCS_FLAT;
-  DrawEdge(DC, Rect, EDGE_RAISED, BF_RECT or BF_MIDDLE or Flags);
-  Flags := (Rect.Right - Rect.Left) div 2 - 1 + Ord(Pressed);
-  DX := (Rect.Right - Rect.Left) mod 2 - 1;
-  PatBlt(DC, Rect.Left + Flags - 2 + DX, Rect.Top + Flags - 1, 7, 1, BLACKNESS);
-  PatBlt(DC, Rect.Left + Flags - 1 + DX, Rect.Top + Flags + 0, 5, 1, BLACKNESS);
-  PatBlt(DC, Rect.Left + Flags - 0 + DX, Rect.Top + Flags + 1, 3, 1, BLACKNESS);
-  PatBlt(DC, Rect.Left + Flags + 1 + DX, Rect.Top + Flags + 2, 1, 1, BLACKNESS);
+  if StyleServices.Enabled then
+  begin
+    if Pressed then
+      Details := StyleServices.GetElementDetails(tcDropDownButtonPressed)
+    else
+      Details := StyleServices.GetElementDetails(tcDropDownButtonNormal);
+
+    StyleServices.DrawElement(DC, Details, Rect);
+  end
+  else
+  begin
+    Flags := 0;
+    if Pressed then Flags := DFCS_FLAT;
+    DrawEdge(DC, Rect, EDGE_RAISED, BF_RECT or BF_MIDDLE or Flags);
+    Flags := (Rect.Right - Rect.Left) div 2 - 1 + Ord(Pressed);
+    DX := (Rect.Right - Rect.Left) mod 2 - 1;
+    PatBlt(DC, Rect.Left + Flags - 2 + DX, Rect.Top + Flags - 1, 7, 1, BLACKNESS);
+    PatBlt(DC, Rect.Left + Flags - 1 + DX, Rect.Top + Flags + 0, 5, 1, BLACKNESS);
+    PatBlt(DC, Rect.Left + Flags - 0 + DX, Rect.Top + Flags + 1, 3, 1, BLACKNESS);
+    PatBlt(DC, Rect.Left + Flags + 1 + DX, Rect.Top + Flags + 2, 1, 1, BLACKNESS);
+  end;
 end;
 
 procedure PaintBtnEllipsis(DC: HDC; Rect: TRect; Pressed: Boolean);
 var
+  Details: TThemedElementDetails;
   Flags: Integer;
 begin
-  Flags := 0;
-  if Pressed then Flags := BF_FLAT;
-  DrawEdge(DC, Rect, EDGE_RAISED, BF_RECT or BF_MIDDLE or Flags);
-  Flags := (Rect.Right - Rect.Left) div 2 - 1 + Ord(Pressed);
-  PatBlt(DC, Rect.Left + Flags, Rect.Top + Flags, 2, 2, BLACKNESS);
-  PatBlt(DC, Rect.Left + Flags - 3, Rect.Top + Flags, 2, 2, BLACKNESS);
-  PatBlt(DC, Rect.Left + Flags + 3, Rect.Top + Flags, 2, 2, BLACKNESS);
+  if StyleServices.Enabled then
+  begin
+    if Pressed then
+      Details := StyleServices.GetElementDetails(tbPushButtonPressed)
+    else
+      Details := StyleServices.GetElementDetails(tbPushButtonNormal);
+    StyleServices.DrawElement(DC, Details, Rect);
+  end
+  else
+  begin
+    Flags := 0;
+    if Pressed then
+      Flags := BF_FLAT;
+    DrawEdge(DC, Rect, EDGE_RAISED, BF_RECT or BF_MIDDLE or Flags);
+    Flags := (Rect.Right - Rect.Left) div 2 - 1 + Ord(Pressed);
+    PatBlt(DC, Rect.Left + Flags, Rect.Top + Flags, 2, 2, BLACKNESS);
+    PatBlt(DC, Rect.Left + Flags - 3, Rect.Top + Flags, 2, 2, BLACKNESS);
+    PatBlt(DC, Rect.Left + Flags + 3, Rect.Top + Flags, 2, 2, BLACKNESS);
+  end;
 end;
 
 function GetTextLineCount(const S: string): Integer;
@@ -4370,12 +4437,10 @@ end;
 
 procedure TCustomGridFixed.SetCount(Value: Integer);
 begin
-  { correct value}
   if (Grid <> nil) and (Value > Grid.Columns.Count - 1) then
     Value := Grid.Columns.Count - 1;
   if Value < 0 then
     Value := 0;
-  { establish}
   if FCount <> Value then
   begin
     FCount := Value;
@@ -4535,14 +4600,12 @@ var
   end;
 
 begin
-  { check position}
   UpdatePosition;
   if Value <> FPosition then
   begin
     Scroll(ScrollCode, Value);
     UpdatePosition;
   end;
-  { did change position after the reaction of user }
   if Value <> FPosition then
   begin
     with FGrid do
@@ -4833,13 +4896,11 @@ var
   P: TPoint;
 begin
   GetCursorPos(P);
-  {did not fall mouse on button}
   if (FEditStyle <> geSimple) and PtInRect(GetButtonRect, ScreenToClient(P)) then
   begin
     Windows.SetCursor(LoadCursor(0, IDC_ARROW));
     Exit;
   end;
-  {working on silence}
   inherited;
 end;
 
@@ -4915,13 +4976,13 @@ end;
 
 procedure TCustomGridEdit.DblClick;
 begin
-  {the event of table}
   if Grid <> nil then
     Grid.DblClick;
-  {dual flick - emulation of pressure on the button}
+
   case EditStyle of
     geEllipsis: Press;
-    gePickList, geDataList: if not FDropListVisible then
+    gePickList, geDataList:
+      if not FDropListVisible then
         SelectNext;
   end;
 end;
@@ -5045,16 +5106,12 @@ end;
 
 procedure TCustomGridEdit.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  { check pressure on the button}
   if (Button = mbLeft) and (EditStyle <> geSimple) and PtInrect(ButtonRect, Point(X, Y)) then
   begin
-    { do see list}
     if FDropListVisible then
-      { shut it}
       CloseUp(False)
     else
     begin
-      { begin pressure on the button and, if it is necessary, is discovered list}
       StartButtonTracking(X, Y);
       if EditStyle <> geEllipsis then
         DropDown;
@@ -5070,26 +5127,19 @@ var
 begin
   if FButtonTracking then
   begin
-    {pressure on the button}
     StepButtonTracking(X, Y);
-    {for the open list}
     if FDropListVisible then
     begin
-      { obtain point on the list}
       P := FActiveList.ScreenToClient(ClientToScreen(Point(X, Y)));
-      {if burn on list}
       if PtInRect(FActiveList.ClientRect, P) then
       begin
-        { cease pressure on the button}
         StopButtonTracking;
-        { emulate pressure on the list}
         M := PointToSmallPoint(P);
         SendMessage(FActiveList.Handle, WM_LBUTTONDOWN, 0, Integer(M));
         Exit;
       end;
     end;
   end;
-  {working on silence}
   inherited MouseMove(Shift, X, Y);
 end;
 
@@ -5098,31 +5148,25 @@ var
   P: Boolean;
 begin
   P := FButtonPressed;
-  { complete pressure}
   StopButtonTracking;
-  {pressure on the button}
   if (Button = mbLeft) and (EditStyle = geEllipsis) and P then
     Press;
-  {working on silence}
   inherited MouseUp(Button, Shift, X, Y);
 end;
+
+{TODO: Theming support}
 
 procedure TCustomGridEdit.PaintButton(DC: HDC);
 var
   R: TRect;
 begin
-  { draw button}
   if EditStyle <> geSimple then
   begin
-    { obtain the rectangle of button}
     R := GetButtonRect;
-    { draw button}
     case EditStyle of
       geEllipsis:
-        {button with the dots}
         PaintBtnEllipsis(DC, R, FButtonPressed);
       gePickList, geDataList:
-        {the button of list}
         PaintBtnComboBox2(DC, R, FButtonPressed);
     end;
   end;
@@ -5132,7 +5176,6 @@ procedure TCustomGridEdit.PaintWindow(DC: HDC);
 var
   R: TRect;
 begin
-  { draw button}
   PaintButton(DC);
   { remove the rectangle of button from the region of painting}
   if (EditStyle <> geSimple) then
@@ -5187,10 +5230,8 @@ var
 begin
   if Grid <> nil then
   begin
-    { determine the rectangle of the cell of the line of vvoa}
     R := Grid.GetEditRect(Grid.EditCell);
     F := R;
-    { correct line in sootvestvii with those fixed}
     with Grid.GetFixedRect do
     begin
       if R.Left < Right then
@@ -5198,7 +5239,6 @@ begin
       if R.Right < Right then
         R.Right := Right;
     end;
-    { correct line in sootvestvii with the title}
     with Grid.GetHeaderRect do
     begin
       if R.Top < Bottom then
@@ -5206,26 +5246,20 @@ begin
       if R.Bottom < Bottom then
         R.Bottom := Bottom;
     end;
-    { establish position}
     W := R.Right - R.Left;
     H := R.Bottom - R.Top;
     SetWindowPos(Handle, HWND_TOP, R.Left, R.Top, W, H, Flags);
-    { calculate the new boundaries of taksta}
     L := F.Left - R.Left;
     T := F.Top - R.Top;
     W := F.Right - F.Left;
     H := F.Bottom - F.Top;
-    {the displacement of text}
     TI := Grid.GetCellTextIndent(Grid.EditCell);
-    { consider button}
     if EditStyle <> geSimple then
       Dec(W, ButtonWidth + 1)
     else
       Dec(W, Grid.TextRightIndent);
-    { establish the boundaries of text}
     R := Bounds(L + TI.X, T + TI.Y, W - TI.X + Ord(Alignment = taRightJustify), H);
     SendMessage(Handle, EM_SETRECTNP, 0, LongInt(@R));
-    {cursor into the end of the line}
     if ScrollCaret then
       SendMessage(Handle, EM_SCROLLCARET, 0, 0);
   end
@@ -5239,9 +5273,7 @@ begin
   begin
     Canvas := TCanvas.Create;
     try
-      { obtain the colors of cell}
       Grid.GetCellColors(Grid.EditCell, Canvas);
-      { memorize them}
       Color := Canvas.Brush.Color;
       Font := Canvas.Font;
     finally
@@ -5254,7 +5286,6 @@ procedure TCustomGridEdit.UpdateContents;
 begin
   if (Grid = nil) or (not Grid.IsCellValid(Grid.EditCell)) then
     Exit;
-  {it is renovated the parameters of line}
   with Grid do
   begin
     Self.MaxLength := Columns[EditCell.Col].MaxLength;
@@ -5288,7 +5319,6 @@ var
   I, X, W: Integer;
   R: TRect;
 begin
-  {but there is whether table}
   if (Grid = nil) or (FActiveList = nil) then
     Exit;
   {for the standard list we determine width and height in the lines}
@@ -5340,13 +5370,10 @@ procedure TCustomGridEdit.UpdateListItems;
 begin
   if (Grid = nil) or (FActiveList = nil) or (not (FActiveList is TGridListBox)) then
     Exit;
-  {is renovated the falling out list}
   with TGridListBox(FActiveList) do
   begin
-    { clean old list, we fill new}
     Items.Clear;
     Grid.GetEditList(Grid.EditCell, Items);
-    { establish the chosen position}
     SendMessage(Handle, LB_SELECTSTRING, WORD(-1), Longint(PChar(Self.Text)));
   end;
 end;
@@ -5399,7 +5426,6 @@ procedure TCustomGridEdit.WndProc(var Message: TMessage);
   begin
     case Key of
       VK_UP, VK_DOWN:
-        {discovery or closing}
         if ssAlt in Shift then
         begin
           if FDropListVisible then
@@ -5409,7 +5435,6 @@ procedure TCustomGridEdit.WndProc(var Message: TMessage);
           Key := 0;
         end;
       VK_RETURN, VK_ESCAPE:
-        {closing list}
         if (not (ssAlt in Shift)) and FDropListVisible then
         begin
           KillMessage(Handle, WM_CHAR);
@@ -5425,7 +5450,6 @@ procedure TCustomGridEdit.WndProc(var Message: TMessage);
     begin
       KillMessage(Handle, WM_CHAR);
       Key := 0;
-      {emulation of pressure on the button}
       case EditStyle of
         geEllipsis: Press;
         gePickList, geDataList: if not FDropListVisible then
@@ -5441,11 +5465,9 @@ begin
       WM_CHAR:
       with TWMKey(Message) do
       begin
-        {the discovery list}
         if EditStyle in [gePickList, geDataList] then
         begin
           DoDropDownKeys(CharCode, KeyDataToShiftState(KeyData));
-          { transfer the remained event to list}
           if (CharCode <> 0) and FDropListVisible then
           begin
             with TMessage(Message) do
@@ -5453,7 +5475,6 @@ begin
             Exit;
           end;
         end;
-        {emulation of pressure on the button}
         if not WantReturns then
         begin
           DoButtonKeys(CharCode, KeyDataToShiftState(KeyData));
@@ -5468,14 +5489,10 @@ begin
         Exit;
       end;
     WM_LBUTTONDOWN:
-      {the dual pressure of mouse}
       with TWMLButtonDown(Message) do
       begin
-        {to the pressure on the button we do not react}
         if (EditStyle = geSimple) or (not PtInrect(ButtonRect, Point(XPos, YPos))) then
-          { look the time of repeated flick}
           if UINT(GetMessageTime - FClickTime) < GetDoubleClickTime then
-            { change communication by the dual flick}
             Message.Msg := WM_LBUTTONDBLCLK;
         FClickTime := 0;
       end;
@@ -5491,11 +5508,10 @@ begin
   begin
     if GetCapture <> 0 then
       SendMessage(GetCapture, WM_CANCELMODE, 0, 0);
-    { hide list}
+    { hide list }
     SetWindowPos(FActiveList.Handle, 0, 0, 0, 0, 0, Flags);
     FDropListVisible := False;
     Invalidate;
-    { establish the selected value}
     UpdateListValue(Accept);
   end;
 end;
@@ -5511,19 +5527,15 @@ const
 begin
   if (not FDropListVisible) and (Grid <> nil) and (EditStyle in [gePickList, geDataList]) then
   begin
-    { obtain the falling out list}
     FActiveList := GetDropList;
     if FActiveList <> nil then
     begin
-      {zapolyaem list, we establish sizes}
       UpdateList;
       UpdateListItems;
       UpdateListBounds;
-      { show list}
       SetWindowPos(FActiveList.Handle, HWND_TOP, FActiveList.Left, FActiveList.Top, 0, 0, Flags);
       FDropListVisible := True;
       Invalidate;
-      { establish on it focus}
       Windows.SetFocus(Handle);
     end;
   end;
@@ -5552,12 +5564,9 @@ const
 begin
   if (Grid <> nil) and HandleAllocated and Visible then
   begin
-    { discard the flag of editing}
     Grid.FEditing := False;
-    { hide the line of introduction}
     Invalidate;
     SetWindowPos(Handle, 0, 0, 0, 0, 0, Flags);
-    { move away focus}
     if Focused then
     begin
       FDefocusing := True;
@@ -5584,9 +5593,7 @@ begin
   begin
     OldText := Text;
     NewText := OldText;
-    { cause the method of table}
     Grid.EditSelectNext(Grid.EditCell, NewText);
-    { establish new value}
     if NewText <> OldText then
     begin
       Text := NewText;
@@ -5608,15 +5615,12 @@ begin
   if Grid <> nil then
   begin
     ScrollCaret := not Grid.FEditing;
-    { raise the flag of editing}
     Grid.FEditing := True;
     Grid.FCellSelected := True;
     { correct colors (one should make before the installation of boundaries, since
       they are advanced depending on the size of type)}
     UpdateColors;
-    { obtain sizes}
     UpdateBounds(ScrollCaret);
-    { establish focus}
     if Grid.Focused then
       Windows.SetFocus(Handle);
   end;
@@ -5648,18 +5652,14 @@ var
   WR, WW: Boolean;
   T: string;
 begin
-  {but there is whether table}
   if FGrid = nil then
   begin
     inherited Paint;
     Exit;
   end;
-  { obtain type of cell}
   FGrid.GetCellColors(FGrid.FTipsCell, Canvas);
-  { correct colors}
   Canvas.Brush.Color := Color;
   Canvas.Font.Color := clInfoText;
-  {the parameters of painting}
   with FGrid do
   begin
     TI := GetCellTextIndent(FTipsCell);
@@ -5668,7 +5668,6 @@ begin
     WW := Columns[FTipsCell.Col].WordWrap;
     T := FTipsText;
   end;
-  { draw text}
   FGrid.PaintText(Canvas, ClientRect, TI.X, TI.Y, A, WR, WW, T);
 end;
 
@@ -5692,17 +5691,13 @@ function TGridTipsWindow.CalcHintRect(MaxWidth: Integer; const AHint: string; AD
 var
   R: TRect;
 begin
-  {reference to the table}
   FGrid := AData;
-  {there is whether table}
   if FGrid = nil then
   begin
     Result := inherited CalcHintRect(MaxWidth, AHint, AData);
     Exit;
   end;
-  {the rectangle of prompt}
   R := FGrid.GetTipsRect(FGrid.FTipsCell);
-  { correct position, we consider border}
   OffsetRect(R, -R.Left, -R.Top);
   Result := R;
 end;
@@ -5712,7 +5707,7 @@ end;
 constructor TCustomGridView.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  TCustomStyleEngine.RegisterStyleHook(TCustomGridView, TGridViewVclStyleScrollBarsHook);
+//  TCustomStyleEngine.RegisterStyleHook(TCustomGridView, TGridViewVclStyleScrollBarsHook);
   ControlStyle := ControlStyle + [csOpaque, csNeedsBorderPaint];
   Width                   := 185;
   Height                  := 105;
@@ -5790,7 +5785,6 @@ begin
   FreeandNil(FCheckBitmapRB);
   FreeandNil(FCheckBitmapCB);
   FreeandNil(FImagesLink);
-  // TSI::   inherited Destroy;
   FreeandNil(FFixed);
   FreeandNil(FRows);
   FreeandNil(FColumns);
@@ -5885,10 +5879,8 @@ procedure TCustomGridView.ColumnsChange(Sender: TObject);
 begin
   if [csReading, csLoading] * ComponentState = [] then
   begin
-    { correct those fixed and title}
     UpdateFixed;
     UpdateHeader;
-    { discard the flag of the synchronization of title}
     if not Header.AutoSynchronize then
       Header.Synchronized := False;
   end;
@@ -5946,7 +5938,6 @@ end;
 
 procedure TCustomGridView.RowsChange(Sender: TObject);
 begin
-  {with a change in the quantity of lines we dissipate prompt}
   CancelCellTips;
   UpdateScrollBars;
   UpdateVisOriginSize;
@@ -6110,15 +6101,12 @@ begin
     if AcquireFocus then
       ShowEdit;
   end
-    { look the completion of introduction}
   else if (not Value) and FEditing then
   begin
-    { check text, dissipate line}
     UpdateEditText;
     if not AlwaysEdit then
       HideEdit;
   end;
-  {event}
   if WasEditing <> Editing then
     ChangeEditing;
 end;
@@ -6391,10 +6379,8 @@ begin
   if (FVisOrigin.Col <> Value.Col) or (FVisOrigin.Row <> Value.Row) then
   begin
     FVisOrigin := Value;
-    { correct the position of the cursors of scrollers}
     UpdateScrollPos;
     UpdateVisOriginSize;
-    { draw again table}
     Invalidate;
   end;
 end;
@@ -6436,14 +6422,10 @@ begin
     OldBitmap := SelectObject(MemDC, MemBitmap);
     try
       DC := BeginPaint(Handle, PS);
-      //Perform(WM_ERASEBKGND, MemDC, MemDC);
       Perform(WM_ERASEBKGND, MemDC, 0);
       Message.DC := MemDC;
       WMPaint(Message);
       Message.DC := 0;
-      {with bufferizirovannoy otrisovke it is necessary to intercept the rectangle
-        the line of introduction, otherwise it will paint by the line of introduction, that
-        it leads to the "winking"}
       if Editing then
         with GetEditRect(EditCell) do
           ExcludeClipRect(DC, Left, Top, Right, Bottom);
@@ -6458,6 +6440,7 @@ begin
   else
     inherited;
 end;
+
 procedure TCustomGridView.WMGetDlgCode(var Message: TWMGetDlgCode);
 begin
   with Message do
@@ -6545,15 +6528,14 @@ begin
   with Message, FHitTest do
     if not (csDesigning in ComponentState) then
     begin
-      {does occur a change in the size of column}
       if FColResizing then
       begin
         Windows.SetCursor(Screen.Cursors[crHSplit]);
         Exit;
       end;
-      { check entry against the rezdelitel'nuyu line of title}
       if (HitTest = HTCLIENT) and ShowHeader then
-        if PtInRect(GetHeaderRect, FHitTest) and (GetResizeSectionAt(X, Y) <> nil) then
+        if PtInRect(GetHeaderRect, FHitTest)
+          and (GetResizeSectionAt(X, Y) <> nil) then
         begin
           Windows.SetCursor(Screen.Cursors[crHSplit]);
           Exit;
@@ -6589,22 +6571,16 @@ end;
 
 procedure TCustomGridView.CMFontChanged(var Message: TMessage);
 begin
-  { memorize type}
   Canvas.Font := Font;
-  { correct type in title and fixed, the height of lines}
   UpdateFonts;
   UpdateRows;
-  {working on silence}
   inherited;
 end;
 
 procedure TCustomGridView.CMColorChanged(var Message: TMessage);
 begin
-  { memorize color}
   Brush.Color := Color;
-  { correct color in title and fixed}
   UpdateColors;
-  {working on silence}
   inherited;
 end;
 
@@ -6626,27 +6602,22 @@ begin
       inherited;
       Exit;
     end;
-    {if do not burn into the table - output}
     if not PtInRect(GetGridRect, CursorPos) then
     begin
       Result := 1;
       Exit;
     end;
-    { search for the cell, which indicates the cursor}
     FTipsCell := GetCellAt(CursorPos.X, CursorPos.Y);
-    {if do not burn - there is no prompt, output}
     if IsCellEmpty(FTipsCell) then
     begin
       Result := 1;
       Exit;
     end;
-    {but does not go the editing of this cell}
     if IsCellEqual(EditCell, FTipsCell) and Editing then
     begin
       Result := 1;
       Exit;
     end;
-    {but are necessary prompts for the cell}
     CellTips(FTipsCell, AllowTips);
     if not AllowTips then
     begin
@@ -6657,7 +6628,6 @@ begin
     R := GetCellHintRect(FTipsCell);
     { obtain the rectangle of the text of cell}
     TR := GetCellTextBounds(FTipsCell);
-    { displace it in sootvestvii with the levelling off}
     W := TR.Right - TR.Left;
     case Columns[FTipsCell.Col].Alignment of
       taCenter:
@@ -6680,21 +6650,16 @@ begin
       SubtractRect(R, R, GetHeaderRect);
     if FTipsCell.Col >= Fixed.Count then
       SubtractRect(R, R, GetFixedRect);
-    {but does come out text for the cell (to the left, to the right or on the height)}
     if (TR.Left >= R.Left) and (TR.Right <= R.Right) and
       (TR.Bottom - TR.Top <= R.Bottom - R.Top) then
     begin
       Result := 1;
       Exit;
     end;
-    { obtain the text of prompt}
     FTipsText := GetTipsText(FTipsCell);
-    { obtain the rectangle of prompt}
     R := GetTipsRect(FTipsCell);
-    { tune position and text of prompt}
     HintPos := ClientToScreen(R.TopLeft);
     HintStr := FTipsText;
-    { tune the rectangle of the reaction of mouse}
     R := GetCellRect(FTipsCell);
     if FTipsCell.Col < Fixed.Count then
     begin
@@ -6810,12 +6775,10 @@ var
   I: Integer;
 begin
   inherited ChangeScale(M, D);
-  {but did change scale}
   if M <> D then
   begin
     S := Header.Synchronized;
     try
-      { correct the width of columns}
       with Columns do
       begin
         BeginUpdate;
@@ -6832,17 +6795,14 @@ begin
           EndUpdate;
         end;
       end;
-      { correct the height of lines}
       with Rows do
         Height := MulDiv(Height, M, D);
-      { correct the height of the section of title and type}
       with Header do
       begin
         SectionHeight := MulDiv(SectionHeight, M, D);
         if not GridFont then
           Font.Size := MulDiv(Font.Size, M, D);
       end;
-      { correct the height of type of those fixed}
       with Fixed do
         if not GridFont then
           Font.Size := MulDiv(Font.Size, M, D);
@@ -7029,13 +6989,11 @@ end;
 
 function TCustomGridView.EditCanShow(Cell: TGridCell): Boolean;
 begin
-  { check the regime of design and load}
   if [csReading, csLoading, csDesigning, csDestroying] * ComponentState <> [] then
   begin
     Result := False;
     Exit;
   end;
-  {but there are whether cells}
   if (Columns.Count - Fixed.Count = 0) or (Rows.Count = 0) then
   begin
     Result := False;
@@ -7074,7 +7032,6 @@ end;
 
 procedure TCustomGridView.GetCellColors(Cell: TGridCell; Canvas: TCanvas);
 begin
-  {the fixed cells}
   if (Cell.Col >= 0) and (Cell.Col < Fixed.Count) then
   begin
     Canvas.Brush.Color := Fixed.Color;
@@ -7082,21 +7039,18 @@ begin
   end
   else
   begin
-    {usual cell}
     Canvas.Brush.Color := Self.Color;
     Canvas.Font := Self.Font;
-    { consider property Enabled for the color of text}
+
     if not Enabled then
       Canvas.Font.Color := clGrayText;
-    {the chosen cell}
+
     if Enabled and IsFocusAllowed and IsCellHighlighted(Cell) then
-      {there is whether focus on the table}
       if Focused then
       begin
         Canvas.Brush.Color := clHighlight;
         Canvas.Font.Color := clHighlightText;
       end
-        {it is necessary whether to dissipate the chosen cell}
       else if not HideSelection then
       begin
         Canvas.Brush.Color := clBtnFace;
@@ -7109,13 +7063,11 @@ end;
 
 function TCustomGridView.GetCellImage(Cell: TGridCell): Integer;
 begin
-  {but there are whether pictures}
   if not Assigned(Images) then
   begin
     Result := -1;
     Exit;
   end;
-  {for the first picture there is an index, for the rest no}
   if Cell.Col = GetFirstImageColumn then
     Result := ImageIndexDef
   else
@@ -7138,18 +7090,14 @@ function TCustomGridView.GetCellImageRect(Cell: TGridCell): TRect;
 var
   R: TRect;
 begin
-  {but there is whether picture}
   if not IsCellHasImage(Cell) then
   begin
     Result := Classes.Rect(0, 0, 0, 0);
     Exit;
   end;
-  { obtain the rectangle of cell}
   R := GetCellRect(Cell);
-  { consider flag}
   if IsCellHasCheck(Cell) then
     Inc(R.Left, CheckWidth + GetCheckIndent(Cell).X);
-  {the rectangle of picture}
   with Result do
   begin
     Left := R.Left + GetCellImageIndent(Cell).X;
@@ -7181,20 +7129,17 @@ var
   WR, WW: Boolean;
   T: string;
 begin
-  { check the column of cell}
   if (Cell.Col < 0) or (Cell.Col > Columns.Count - 1) then
   begin
     Result := Classes.Rect(0, 0, 0, 0);
     Exit;
   end;
-  { determine colors}
   if (Cell.Row >= 0) and (Cell.Row < Rows.Count) then
   begin
     GetCellColors(Cell, Canvas);
     TI := GetCellTextIndent(Cell);
     T := GetCellText(Cell);
   end;
-  {the parameters of painting}
   R := Classes.Rect(0, 0, 0, 0);
   if Columns[Cell.Col].WordWrap then
   begin
@@ -7205,9 +7150,7 @@ begin
   A := Columns[Cell.Col].Alignment;
   WR := Columns[Cell.Col].WantReturns;
   WW := Columns[Cell.Col].WordWrap;
-  { calculate the rectangle of text}
   Result := GetTextRect(Canvas, R, TI.X, TI.Y, A, WR, WW, T);
-  { establish left upper angle in (0, 0)}
   OffsetRect(Result, -Result.Left, -Result.Top);
 end;
 
@@ -7246,13 +7189,10 @@ function TCustomGridView.GetCheckIndent(Cell: TGridCell): TPoint;
 begin
   Result.X := CheckLeftIndent;
   Result.Y := CheckTopIndent;
-  { consider 3D effect}
   if (Fixed.Count > 0) and (not Fixed.Flat) then
     Inc(Result.Y, 1);
-  { consider the levelling off of flag}
   if GetCheckAlignment(Cell) = taCenter then
     Result.X := (Columns[Cell.Col].Width - CheckWidth) div 2 - 1;
-  {the event of user}
   if Assigned(FOnGetCheckIndent) then
     FOnGetCheckIndent(Self, Cell, Result);
 end;
@@ -7277,9 +7217,7 @@ begin
     Result := Classes.Rect(0, 0, 0, 0);
     Exit;
   end;
-  { obtain the rectangle of cell}
   R := GetCellRect(Cell);
-  {the rectangle of flag}
   with Result do
   begin
     Left := R.Left + GetCheckIndent(Cell).X;
@@ -7325,13 +7263,10 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
     I: Integer;
     C: TGridCell;
   begin
-    {new active column}
     I := MaxIntValue([Cell.Col - O, Fixed.Count]);
-    { sort out columns to those fixed, until not ustanvitsya active}
     while I >= Fixed.Count do
     begin
       C := GridCell(I, Cell.Row);
-      { attempt to establish cursor}
       if IsCellAcceptCursor(C) then
       begin
         Result := C;
@@ -7347,13 +7282,10 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
     I: Integer;
     C: TGridCell;
   begin
-    {new active column}
     I := MinIntValue([Cell.Col + O, Columns.Count - 1]);
-    { sort out columns to the latter, until not ustanvitsya active}
     while I <= Columns.Count - 1 do
     begin
       C := GridCell(I, Cell.Row);
-      { attempt to establish cursor}
       if IsCellAcceptCursor(C) then
       begin
         Result := C;
@@ -7389,7 +7321,6 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
     J: Integer;
     C: TGridCell;
   begin
-    { only trigger the OnAppendRowEvent if we move 1 position down }
     if Append and ((Cell.Row + O) - (Rows.Count - 1) = 1) then
     begin
       B := False;
@@ -7443,16 +7374,13 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
     I, J: Integer;
     C: TGridCell;
   begin
-    {new active column}
     I := Fixed.Count;
     while I <= Cell.Col do
     begin
-      {new active line}
       J := 0;
       while J <= Cell.Row do
       begin
         C := GridCell(I, J);
-        { attempt to establish cursor}
         if IsCellAcceptCursor(C) then
         begin
           Result := C;
@@ -7470,26 +7398,20 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
     I, J: Integer;
     C: TGridCell;
   begin
-    {new active column}
     I := Columns.Count - 1;
-    { sort out columns to that flowing, until not ustanvitsya active}
     while I >= Cell.Col do
     begin
       J := Rows.Count - 1;
-      { sort out lines to that flowing, until not ustanvitsya active}
       while J >= Cell.Row do
       begin
         C := GridCell(I, J);
-        { attempt to establish cursor}
         if IsCellAcceptCursor(C) then
         begin
           Result := C;
           Exit;
         end;
-        {the previous line}
         Dec(J);
       end;
-      {the previous column}
       Dec(I);
     end;
     Result := Cell;
@@ -7503,20 +7425,16 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
       C: TGridCell;
     begin
       I := MaxIntValue([Cell.Col, Fixed.Count]);
-      { sort out columns to that flowing, until not ustanvitsya active}
       while I <= CellFocused.Col do
       begin
         C := GridCell(I, Cell.Row);
-        { attempt to establish cursor}
         if IsCellAcceptCursor(C) then
         begin
           Result := C;
           Exit;
         end;
-        {the following column}
         Inc(I);
       end;
-      {cell is not found}
       Result := Cell;
     end;
 
@@ -7526,20 +7444,16 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
       C: TGridCell;
     begin
       I := MinIntValue([Cell.Col, Columns.Count - 1]);
-      { sort out columns to that flowing, until not ustanvitsya active}
       while I >= CellFocused.Col do
       begin
         C := GridCell(I, Cell.Row);
-        { attempt to establish cursor}
         if IsCellAcceptCursor(C) then
         begin
           Result := C;
           Exit;
         end;
-        {the previous column}
         Dec(I);
       end;
-      {cell is not found}
       Result := Cell;
     end;
 
@@ -7549,20 +7463,16 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
       C: TGridCell;
     begin
       J := MaxIntValue([Cell.Row, 0]);
-      { sort out lines to that flowing, until not ustanvitsya active}
       while J <= CellFocused.Row do
       begin
         C := GridCell(Cell.Col, J);
-        { attempt to establish cursor}
         if IsCellAcceptCursor(C) then
         begin
           Result := C;
           Exit;
         end;
-        {the following line}
         Inc(J);
       end;
-      {cell is not found}
       Result := Cell;
     end;
 
@@ -7572,58 +7482,48 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
       C: TGridCell;
     begin
       J := MinIntValue([Cell.Row, Rows.Count - 1]);
-      { sort out lines to that flowing, until not ustanvitsya active}
       while J >= CellFocused.Row do
       begin
         C := GridCell(Cell.Col, J);
-        { attempt to establish cursor}
         if IsCellAcceptCursor(C) then
         begin
           Result := C;
           Exit;
         end;
-        {the previous line}
         Dec(J);
       end;
-      {cell is not found}
       Result := Cell;
     end;
   begin
-    {but is accessible the cell}
     if IsCellAcceptCursor(Cell) then
     begin
       Result := Cell;
       Exit;
     end;
-    {if isolation to the left of the cursor - we search for to the left}
     if Cell.Col < CellFocused.Col then
     begin
       Result := DoSelectLeft;
       if IsCellAcceptCursor(Result) then
         Exit;
     end;
-    {if isolation to the right of cursor - we search for to the right}
     if Cell.Col > CellFocused.Col then
     begin
       Result := DoSelectRight;
       if IsCellAcceptCursor(Result) then
         Exit;
     end;
-    {if isolation above the cursor - we search for from above}
     if Cell.Row < CellFocused.Row then
     begin
       Result := DoSelectUp;
       if IsCellAcceptCursor(Result) then
         Exit;
     end;
-    {isolation under the cursor - we search for from below}
     if Cell.Row > CellFocused.Row then
     begin
       Result := DoSelectDown;
       if IsCellAcceptCursor(Result) then
         Exit;
     end;
-    {nothing it changed}
     Result := CellFocused;
   end;
 
@@ -7633,15 +7533,12 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
     I, J: Integer;
   begin
     J := 0;
-    { sort out lines to that flowing, until not ustanvitsya active}
     while J <= Rows.Count - 1 do
     begin
       I := Fixed.Count;
-      { sort out columns to the latter, until not ustanvitsya active}
       while I <= Columns.Count - 1 do
       begin
         C := GridCell(I, J);
-        { attempt to establish cursor}
         if IsCellAcceptCursor(C) then
         begin
           Result := C;
@@ -7649,10 +7546,8 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
         end;
         Inc(I);
       end;
-      {the following line}
       Inc(J);
     end;
-    {result on silence}
     Result := CellFocused;
   end;
 
@@ -7696,27 +7591,21 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
   begin
     I := Cell.Col - 1;
     J := Cell.Row;
-    { sort out lines to the first, until not ustanvitsya active}
     while J >= 0 do
     begin
-      { sort out columns to the latter, until not ustanvitsya active}
       while I >= Fixed.Count do
       begin
         C := GridCell(I, J);
-        { attempt to establish cursor, we consider line-by-line isolation}
         if IsCellAcceptCursor(C) and ((not RowSelect) or (C.Row <> Cell.Row)) then
         begin
           Result := C;
           Exit;
         end;
-        {the previous column}
         Dec(I);
       end;
-      {the previous line from the last column}
       I := Columns.Count - 1;
       Dec(J);
     end;
-    {result on silence}
     Result := CellFocused;
   end;
 
@@ -7769,7 +7658,6 @@ begin
       {to select the previous possible cell}
       Result := DoPrev;
   else
-    {rest we ignore}
     Result := Cell;
   end;
 end;
@@ -7800,7 +7688,6 @@ end;
 function TCustomGridView.GetEditMask(Cell: TGridCell): string;
 begin
   Result := '';
-  { check column}
   if (Cell.Col >= 0) and (Cell.Col < Columns.Count) then
   begin
     Result := Columns[Cell.Col].EditMask;
@@ -7812,7 +7699,6 @@ end;
 function TCustomGridView.GetEditStyle(Cell: TGridCell): TGridEditStyle;
 begin
   Result := geSimple;
-  { check column}
   if (Cell.Col >= 0) and (Cell.Col < Columns.Count) then
   begin
     Result := Columns[Cell.Col].EditStyle;
@@ -7831,10 +7717,8 @@ end;
 procedure TCustomGridView.GetHeaderColors(Section: TGridHeaderSection;
   Canvas: TCanvas);
 begin
-  {standard colors}
   Canvas.Brush.Color := Header.Color;
   Canvas.Font := Header.Font;
-  {the event of user}
   if Assigned(FOnGetHeaderColors) then
     FOnGetHeaderColors(Self, Section, Canvas);
 end;
@@ -7850,15 +7734,12 @@ end;
 
 function TCustomGridView.GetHeaderImage(Section: TGridHeaderSection): Integer;
 begin
-  {but there are whether pictures}
   if not Assigned(Header.Images) then
   begin
     Result := -1;
     Exit;
   end;
-  {on silence the number of picture - number of column}
   Result := Section.ColumnIndex;
-  {the event of user}
   if Assigned(FOnGetHeaderImage) then
     FOnGetHeaderImage(Self, Section, Result);
 end;
@@ -8527,10 +8408,8 @@ procedure TCustomGridView.PaintCell(Cell: TGridCell; Rect: TRect);
 var
   DefDraw: Boolean;
 begin
-  { establish colors and type of cell}
 // TS TEST (required?)
   GetCellColors(Cell, Canvas);
-  { user defined drawing }
   DefDraw := True;
   try
     if Assigned(FOnDrawCell) then
@@ -8538,7 +8417,6 @@ begin
   except
     Application.HandleException(Self);
   end;
-  {is necessary drawing on silence}
   if DefDraw then
     DefaultDrawCell(Cell, Rect);
 end;
@@ -8617,6 +8495,8 @@ begin
   end;
 end;
 
+{TODO -oTS -cGeneral : Add theming support}
+
 procedure TCustomGridView.PaintFixed;
 var
   I, J, W: Integer;
@@ -8679,7 +8559,6 @@ begin
         LineTo(R.Right - 1, R.Top - 1);
       end;
   end;
-  {the line of a change in the width of column}
   if FColResizing and (FColResizeCount > 0) and not FColumnsFullDrag then
     PaintResizeLine;
 end;
@@ -9438,7 +9317,6 @@ begin
     PaintFocus;
 end;
 
-// TSN
 
 procedure TCustomGridView.SizeColumnsToClient;
 const
@@ -9574,7 +9452,6 @@ begin
   { calculate boundary rectangle for changing the size}
   with FColResizeSection do
   begin
-    {horizontal boundaries}
     if FColResizeIndex <= Columns.Count - 1 then
     begin
       FColResizeRect := GetColumnRect(FColResizeIndex);
@@ -9746,20 +9623,15 @@ procedure TCustomGridView.StartHeaderClick(Section: TGridHeaderSection;
 var
   AllowClick: Boolean;
 begin
-  { do check, is it possible to press section}
   AllowClick := True;
   HeaderClicking(Section, AllowClick);
-  { check result}
   if AllowClick then
   begin
-    { memorize the parameters}
     FHeaderClickSection := Section;
     FHeaderClickRect := Section.BoundsRect;
     FHeaderClickState := False;
     FHeaderClicking := True;
-    { seize mouse}
     MouseCapture := True;
-    { press button}
     StepHeaderClick(X, Y);
   end;
 end;
@@ -9768,12 +9640,9 @@ procedure TCustomGridView.StepHeaderClick(X, Y: Integer);
 var
   P: Boolean;
 begin
-  {but will go pressure in the section}
   if FHeaderClicking then
   begin
-    { determine the sign of pressure}
     P := PtInRect(FHeaderClickRect, Point(X, Y));
-    {did change anything}
     if FHeaderClickState <> P then
     begin
       FHeaderClickState := P;
@@ -9786,17 +9655,12 @@ procedure TCustomGridView.StopHeaderClick(Abort: Boolean);
 var
   P: Boolean;
 begin
-  {but will go pressure in the section}
   if FHeaderClicking then
   begin
     P := FHeaderClickState;
-    { wring out button}
     StepHeaderClick(-1, -1);
-
-    { complete pressure, we release mouse}
     FHeaderClicking := False;
     MouseCapture := False;
-    { cause event}
     if (not Abort) and P then
       HeaderClick(FHeaderClickSection);
   end;
@@ -9861,7 +9725,6 @@ var
 begin
   if Editing then
   begin
-    { dissipate line or we restore value}
     Cell := EditCell;
     if not AlwaysEdit then
     begin
@@ -9892,12 +9755,14 @@ begin
      (Columns[ACol].Width < Columns[ACol].MaxWidth));
 end;
 
+{TODO -oTS -cGeneral : Add theming support}
+
 procedure TCustomGridView.DefaultDrawCell(Cell: TGridCell; Rect: TRect);
 const
   DS: array[Boolean] of Integer = (ILD_NORMAL, ILD_SELECTED);
 var
   DefRect        : TRect;
-  CK: TGridCheckKind;
+  CK             : TGridCheckKind;
   CB             : TBitmap;
   CR             : TRect;
   CI, X, Y, W, H: Integer;
@@ -9910,9 +9775,7 @@ var
   WR, WW         : Boolean;
   T              : string;
 begin
-  { memorize the rectangle of painting}
   DefRect := Rect;
-  { displace edge in order not to flood the line of grid}
   if GridLines then
   begin
     if gsVertLine in GridStyle then
@@ -9920,7 +9783,6 @@ begin
     if gsHorzLine in GridStyle then
       Dec(Rect.Bottom, FGridLineWidth);
   end;
-  { obtain the type of flag and the number of picture}
   CK := GetCheckKind(Cell);
   CI := GetCellImage(Cell);
   { determine the sign of the illumination of the picture: picture is not illuminated,
@@ -9975,9 +9837,7 @@ begin
           CB.Width := CheckWidth;
           CB.Height := CheckHeight;
           GetCheckImage(Cell, CB);
-          { pour background}
           FillRect(R);
-          { draw}
           if not (CB.Empty or (CB.Width < 1) or (CB.Height < 1)) then
           begin
             CR := Bounds(0, 0, W, H);
@@ -9993,14 +9853,13 @@ begin
   if CI <> -1 then
   begin
     {for the illuminated picture we restore the color of background}
-    if IH then Canvas.Brush.Color := Color;
+    if IH then
+      Canvas.Brush.Color := Color;
     { obtain the rectangle of picture}
     R := Rect;
     R.Right := MinIntValue([R.Left + Images.Width + GetCellImageIndent(Cell).X, Rect.Right]);
-    {but is visible picture}
     if R.Left < DefRect.Right then
     begin
-      {the position of picture}
       X := R.Left + GetCellImageIndent(Cell).X;
       Y := R.Top + GetCellImageIndent(Cell).Y;
       {the size of the picture (necessarily for the cutting off of the pictures of narrow columns)}
@@ -10014,10 +9873,8 @@ begin
       IDS := DS[IsCellHighlighted(Cell) and Focused and IH];
       BKC := GetRGBColor(Images.BkColor);
       BLC := GetRGBColor(Images.BlendColor);
-      { draw picture}
       Canvas.FillRect(R);
       ImageList_DrawEx(Images.Handle, CI, Canvas.Handle, X, Y, W, H, BKC, BLC, IDS);
-      { displace the left edge of initial rectangle}
       Rect.Left := R.Right;
     end;
   end;
@@ -10082,17 +9939,14 @@ begin
   if IsHeaderPressed(Section) then
     OffsetRect(Rect, 1, 1);
   I := GetHeaderImage(Section);
-  { draw picture, if it there is }
   if I <> -1 then
   begin
-    { obtain the rectangle of picture}
     R := Rect;
     R.Right := MinIntValue([R.Left + Header.Images.Width + 2, Rect.Right]);
     if R.Left < Rect.Right then
     begin
       with Canvas do
       begin
-        {the position of picture}
         X := R.Left + 2;
         Y := R.Top + 1 + Ord(not Header.Flat);
         {the size of the picture (necessarily for the cutting off of the pictures of narrow sections)}
@@ -10315,7 +10169,6 @@ begin
     Inc(J, D);
     Dec(C);
   end;
-  {they did not find}
   ResultCell := GridCell(-1, -1);
   Result := False;
 end;
@@ -10347,13 +10200,11 @@ function TCustomGridView.GetCellsRect(Cell1, Cell2: TGridCell): TRect;
 var
   CR, RR: TRect;
 begin
-  { check boundaries}
   if (Cell2.Col < Cell1.Col) or (Cell2.Row < Cell1.Row) then
   begin
     Result := Rect(0, 0, 0, 0);
     Exit;
   end;
-  {left and right boundaries}
   CR := GetColumnRect(Cell1.Col);
   if Cell2.Col > Cell1.Col then
     CR.Right := GetColumnRect(Cell2.Col).Right;
@@ -10372,7 +10223,6 @@ var
   L, R: Integer;
 begin
   Result := 0;
-  { search for among those fixed}
   L := GetClientRect.Left;
   while Result <= Fixed.Count - 1 do
   begin
@@ -10382,7 +10232,6 @@ begin
     L := R;
     Inc(Result);
   end;
-  { search for among the the usual}
   L := L + GetGridOrigin.X;
   while Result <= Columns.Count - 1 do
   begin
@@ -10397,28 +10246,23 @@ end;
 
 function TCustomGridView.GetColumnLeftRight(Column: Integer): TRect;
 begin
-  { check column}
   if Columns.Count = 0 then
   begin
-    {there are no columns generally}
     Result.Left := GetGridRect.Left;
     Result.Right := Result.Left;
   end
   else if Column < 0 then
   begin
-    {column is more left than the very first}
     Result := GetColumnLeftRight(0);
     Result.Right := Result.Left;
   end
   else if Column > Columns.Count - 1 then
   begin
-    {the column of more to the right quite posledey}
     Result := GetColumnLeftRight(Columns.Count - 1);
     Result.Left := Result.Right;
   end
   else
   begin
-    {usual column}
     Result.Left := GetClientRect.Left + GetColumnsWidth(0, Column - 1);
     if Column >= Fixed.Count then
       Inc(Result.Left, GetGridOrigin.X);
@@ -10506,10 +10350,8 @@ var
   I: Integer;
 begin
   Result := 0;
-  { correct indices}
   Column1 := MaxIntValue([Column1, 0]);
   Column2 := MinIntValue([Column2, Columns.Count - 1]);
-  { count}
   for I := Column1 to Column2 do
     Inc(Result, Columns[I].Width);
 end;
@@ -10519,10 +10361,8 @@ begin
   Result := GetCellRect(Cell);
   if IsCellHasCheck(Cell) then
     Inc(Result.Left, CheckWidth + GetCheckIndent(Cell).X);
-  {place under the picture}
   if IsCellHasImage(Cell) then
     Inc(Result.Left, Images.Width + GetCellImageIndent(Cell).X);
-  { consider grid}
   if GridLines then
   begin
     if gsVertLine in GridStyle then
@@ -10588,19 +10428,14 @@ begin
   begin
     C := CellFocused;
     Result := GetCellRect(CellFocused);
-    { obtain the extreme left column of focus}
   end;
-  {is separated the picture of cell}
   if not ImageHighlight then
   begin
-    {place under the flag}
     if IsCellHasCheck(C) then
       Inc(Result.Left, CheckWidth + GetCheckIndent(C).X);
-    {place under the picture}
     if IsCellHasImage(C) then
       Inc(Result.Left, Images.Width + GetCellImageIndent(C).X);
   end;
-  { check the right edge of result}
   L := GetCellRect(C).Right;
   if Result.Left > L then
     Result.Left := L;
@@ -10700,10 +10535,8 @@ function TCustomGridView.GetResizeSectionAt(X, Y: Integer): TGridHeaderSection;
             Left := Right - DL;
           Right := Right + DR;
         end;
-        {did fall point in it}
         if PtInRect(R, Point(X, Y)) then
         begin
-          { check kolnku against the fixed size}
           if (C < Columns.Count) and
             (Columns[C].FixedSize or (not ColumnsSizing)) then
           begin
@@ -10715,7 +10548,6 @@ function TCustomGridView.GetResizeSectionAt(X, Y: Integer): TGridHeaderSection;
             Section := S;
             Result := True;
           end;
-          {section they found - output}
           Exit;
         end;
         { search for section in the subtitles}
@@ -10938,7 +10770,6 @@ begin
     end;
     H := GetParent(H);
   end;
-  { nothing found }
   Result := False;
 end;
 
@@ -11205,9 +11036,7 @@ procedure TCustomGridView.UpdateEdit(Activate: Boolean);
   var
     EditClass: TGridEditClass;
   begin
-    { obtain the class of the line of editing}
     EditClass := GetEditClass(FCellFocused);
-    { create or change line}
     if (FEdit = nil) or (FEdit.ClassType <> EditClass) then
     begin
       FreeAndNil(FEdit);
@@ -11256,11 +11085,8 @@ begin
   if Editing then
   begin
     EditText := Edit.Text;
-    {so that the line would renew completely, it must be extinguished}
     HideEdit;
-    {it is renovated and we again show line}
     UpdateEdit(True);
-    { restore text}
     if SaveText then
       Edit.Text := EditText;
   end;
@@ -11274,7 +11100,6 @@ begin
   if (not ReadOnly) and (Edit <> nil) and (not IsCellReadOnly(EditCell)) then
   begin
     EditFocused := Editing;
-    { check the text of the line of introduction}
     try
       EditText := Edit.Text;
       try
@@ -11308,8 +11133,6 @@ procedure TCustomGridView.UpdateFocus;
 begin
   if csDesigning in ComponentState then
     Exit;
-  {if table is already active, then we place focus on it again by force,
-    t.k. otherwise can be Glucks with MDI forms}
   if IsActiveControl then
   begin
     Windows.SetFocus(Handle);
@@ -11373,7 +11196,6 @@ begin
     end;
     VertScrollBar.SetLineSize(Rows.Height);
     VertScrollBar.SetParams(0, R, P, L);
-    {the parameters of horizontal scroller}
     if Columns.Count > 0 then
     begin
       R := GetColumnsWidth(0, Columns.Count - 1) - GetFixedWidth;
@@ -11403,7 +11225,6 @@ end;
 procedure TCustomGridView.UpdateSelection(var Cell: TGridCell;
   var Selected: Boolean);
 begin
-  { Update the Selected flag }
   Selected := Selected or FAlwaysSelected;
   Selected := Selected and (Rows.Count > 0) and (Columns.Count > 0);
   { Check if the cell position is valid and update it if needed. }
@@ -11421,7 +11242,6 @@ begin
     if Row > Rows.Count - 1 then
       Row := Rows.Count - 1;
   end;
-  { Check focus }
   Cell := GetCursorCell(Cell, goSelect);
 end;
 
@@ -11487,7 +11307,7 @@ begin
 end;
 
 {$region 'TGridViewVclStyleScrollBarsHook'}
-{$if CompilerVersion >= 23 }
+{$if CompilerVersion >= 23}
 procedure TGridViewVclStyleScrollBarsHook.CalcScrollBarsRect;
 var
   P: TPoint;
@@ -11674,8 +11494,8 @@ begin
       R.Top := FVertScrollBarUpButtonRect.Bottom;
       R.Bottom := FVertScrollBarDownButtonRect.Top;
 
-//      Details := StyleServices.GetElementDetails(tsUpperTrackVertNormal);
-//      StyleServices.DrawElement(B.Canvas.Handle, Details, R);
+      Details := StyleServices.GetElementDetails(tsUpperTrackVertNormal);
+      StyleServices.DrawElement(B.Canvas.Handle, Details, R);
 
       if FVertScrollBarWindow.Enabled then
         Details := StyleServices.GetElementDetails(FVertScrollBarSliderState);
@@ -11706,8 +11526,6 @@ function TGridViewVclStyleScrollBarsHook.GetHorzScrollBarSliderRect: TRect;
 var
   P: TPoint;
   BarInfo: TScrollBarInfo;
-var
-  GV : TCustomGridView;
 begin
   if FHorzScrollBarWindow.Visible and FHorzScrollBarWindow.Enabled then
   begin
@@ -11727,7 +11545,6 @@ begin
       else
         OffsetRect(Result, 1, 1);
   end;
-
 end;
 
 function TGridViewVclStyleScrollBarsHook.GetVertScrollBarSliderRect: TRect;
@@ -11793,11 +11610,9 @@ end;
 procedure TGridViewVclStyleScrollBarsHook.UpdateScrollBarWindow;
 var
   R            : TRect;
-  Owner        : TCustomGridView;
   HeaderHeight : Integer;
   BorderWidth  : Integer;
 begin
-  Owner := TCustomGridView(Control);
   // TS: probably the headerheight never needs to be determined. We need to test
   // this for multiple-section headers.
   HeaderHeight := 0;
@@ -12457,4 +12272,38 @@ begin
 end;
 {$ifend}
 {$endregion}
+
+{$if COMPILERVERSION <= 21}
+{$region 'StyleServices'}
+class procedure StyleServices.DrawElement(DC: HDC;
+  Details: TThemedElementDetails; const R: TRect);
+begin
+  ThemeServices.DrawElement(DC, Details, R);
+end;
+
+class function StyleServices.GetElementDetails(
+  Detail: TThemedHeader): TThemedElementDetails;
+begin
+  Result := ThemeServices.GetElementDetails(Detail);
+end;
+
+class function StyleServices.GetElementDetails(Detail: TThemedComboBox):
+  TThemedElementDetails;
+begin
+  Result := ThemeServices.GetElementDetails(Detail);
+end;
+
+class function StyleServices.GetElementDetails(Detail: TThemedButton):
+  TThemedElementDetails;
+begin
+  Result := ThemeServices.GetElementDetails(Detail);
+end;
+
+class function StyleServices.GetEnabled: Boolean;
+begin
+  Result := ThemeServices.ThemesEnabled;
+end;
+{$ifend}
+{$endregion}
+
 end.

@@ -1,9 +1,11 @@
 object frmScopedReferences: TfrmScopedReferences
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsDialog
   Caption = 'Scoped references'
-  ClientHeight = 82
-  ClientWidth = 234
+  ClientHeight = 140
+  ClientWidth = 232
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -34,12 +36,38 @@ object frmScopedReferences: TfrmScopedReferences
     Action = actShowClassNames
     TabOrder = 0
   end
+  object pnlScopedButton: TPanel
+    AlignWithMargins = True
+    Left = 8
+    Top = 108
+    Width = 216
+    Height = 24
+    Margins.Left = 8
+    Margins.Top = 8
+    Margins.Right = 8
+    Margins.Bottom = 8
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 1
+  end
+  object btnCreateScopedButton: TButton
+    Left = 8
+    Top = 79
+    Width = 217
+    Height = 25
+    Action = actCreateScopedButton
+    TabOrder = 2
+  end
   object aclMain: TActionList
     Left = 168
     Top = 8
     object actShowClassNames: TAction
       Caption = 'Show classnames of embedded objects'
       OnExecute = actShowClassNamesExecute
+    end
+    object actCreateScopedButton: TAction
+      Caption = 'Create a scoped button'
+      OnExecute = actCreateScopedButtonExecute
     end
   end
 end

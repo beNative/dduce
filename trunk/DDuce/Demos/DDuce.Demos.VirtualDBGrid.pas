@@ -18,23 +18,31 @@
 
 unit DDuce.Demos.VirtualDBGrid;
 
+{$I ..\Source\DDuce.inc}
+
 //*****************************************************************************
 
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
-  System.Actions, Vcl.ActnList, Vcl.ImgList, Vcl.ExtCtrls, Vcl.ComCtrls,
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ActnList, ImgList, ExtCtrls, ComCtrls, DB, DBCtrls,
 
-  Data.DB,
+{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
+  System.Actions,
+{$ENDIF}
 
+{$IFDEF DSHARP}
   DSharp.Collections,
+{$ENDIF}
+{$IFDEF SPRING}
+  Spring, Spring.Collections,
+{$ENDIF}
 
   DDuce.Components.VirtualDBGrid, DDuce.Components.ListDataSet,
   DDuce.Components.PropertyInspector,
 
-  DDuce.Demos.Contact, Vcl.DBCtrls;
+  DDuce.Demos.Contact;
 
 type
   TfrmVirtualDBGrid = class(TForm)
@@ -49,12 +57,14 @@ type
     aclMain             : TActionList;
     actInspectComponent : TAction;
     dscMain             : TDataSource;
-    navMain: TDBNavigator;
+    navMain             : TDBNavigator;
+
   private
     FVDBG      : TVirtualDBGrid;
     FList      : IList<TContact>;
     FDataSet   : TListDataset<TContact>;
     FInspector : TPropertyInspector;
+
   public
     procedure AfterConstruction; override;
 
@@ -70,10 +80,6 @@ uses
 {$R *.dfm}
 
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 procedure TfrmVirtualDBGrid.AfterConstruction;
 begin
   inherited;
@@ -84,10 +90,6 @@ begin
   FInspector      := CreateInspector(Self, pnlRight, FVDBG);
   FDataSet.Active := True;
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 end.

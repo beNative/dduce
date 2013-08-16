@@ -32,11 +32,17 @@
 
 unit DDuce.Components.Inspector;
 
+{$I ..\DDuce.inc}
+
 interface
 
 uses
   Windows, Messages, CommCtrl, Classes, Controls, Graphics, Forms, StdCtrls,
   Math,
+
+{$IFDEF HAS_UNIT_SYSTEM_UITYPES}
+  System.UITypes,
+{$ENDIF}
 
   DDuce.Components.GridView;
 
@@ -73,7 +79,11 @@ type
     CategoryFont  - type of text in the cells of category.
   }
 
-  TInspectorCategoryRowEvent = procedure(Sender: TObject; Row: Longint; var Category: Boolean) of object;
+  TInspectorCategoryRowEvent = procedure(
+        Sender   : TObject;
+        Row      : Longint;
+    var Category : Boolean
+  ) of object;
 
   TCustomInspector = class(TCustomGridView)
   private
@@ -210,27 +220,22 @@ uses
 
 procedure TInspectorEdit.UpdateBounds(ScrollCaret: Boolean);
 begin
-  {we determine position}
   inherited;
-  {we correct the width of button}
   ButtonWidth := Height;
 end;
 
 procedure TInspectorEdit.UpdateColors;
 begin
-  {we obtain colors on silence}
   inherited;
-  {we correct background and color of type}
   Color := clWindow;
   Font.Color := clBtnText;
 end;
 
 procedure TInspectorEdit.Invalidate;
 begin
-  {it is renovated line}
   inherited;
-  {we consider focus}
-  if Grid <> nil then Grid.InvalidateFocus;
+  if Grid <> nil then
+    Grid.InvalidateFocus;
 end;
 
 { TCustomInspector }
@@ -238,16 +243,12 @@ end;
 constructor TCustomInspector.Create(AOwner: TComponent);
 begin
   inherited;
-  {color}
   Color := clBtnFace;
-  {editing}
   RowSelect := False;
   AllowEdit := True;
   AlwaysEdit := True;
-  {column}
   with Columns do
   begin
-    {the column of properties}
     with Add do
     begin
       Caption := 'Property';
@@ -257,7 +258,6 @@ begin
       ReadOnly := True;
       TabStop := False;
     end;
-    {the column of values}
     with Add do
     begin
       Caption := 'Value';
@@ -266,15 +266,11 @@ begin
       FixedSize := True;
     end;
   end;
-  {we synchronize and hide title}
   Header.Synchronized := True;
   ShowHeader := False;
-  {the height of lines}
   Rows.AutoHeight := False;
   Rows.Height := 16;
-  {the strip of warming up}
   HorzScrollBar.Visible := False;
-  {exterior view}
   ColumnsFullDrag := True;
   DoubleBuffered := True;
   CheckBoxes := True;
@@ -282,9 +278,7 @@ begin
   GridLines := False;
   TextTopIndent := 1;
   TextRightIndent := 1;
-  {the key for the isolation of line}
   CursorKeys := CursorKeys + [gkMouseMove];
-  {the color of text}
   FNameFont := TFont.Create;
   FNameFont.Assign(Font);
   FNameFont.Color := clBtnText;
@@ -349,24 +343,25 @@ end;
 procedure TCustomInspector.ChangeColumns;
 begin
   inherited;
-  {we correct the sizes of columns}
   UpdateColumnsSize;
 end;
 
 function TCustomInspector.ColResizeAllowed(X, Y: Integer): Boolean;
 begin
-  Result := (Columns.Count > 0) and (X >= Columns[0].Width - 4) and (X <= Columns[0].Width);
+  Result := (Columns.Count > 0) and (X >= Columns[0].Width - 4)
+    and (X <= Columns[0].Width);
 end;
 
 procedure TCustomInspector.ColumnResizing(Column: Integer; var Width: Integer);
 begin
-  if Width > ClientWidth - 35 then Width := ClientWidth - 35;
-  if Width < 35 then Width := 35;
+  if Width > ClientWidth - 35 then
+    Width := ClientWidth - 35;
+  if Width < 35 then
+    Width := 35;
 end;
 
 function TCustomInspector.EditCanShow(Cell: TGridCell): Boolean;
 begin
-  {for the cells of category the line of introduction we do not show}
   Result := (not IsCategoryRow(Cell.Row)) and inherited EditCanShow(Cell);
 end;
 
@@ -389,7 +384,6 @@ end;
 function TCustomInspector.GetCellHintRect(Cell: TGridCell): TRect;
 begin
   Result := inherited GetCellHintRect(Cell);
-  {for the lines of categories the rectangle of prompt - entire line }
   if IsCategoryRow(Cell.Row) then
   begin
     Result.Left := GetColumnRect(0).Left;
@@ -399,7 +393,6 @@ end;
 
 function TCustomInspector.GetCellText(Cell: TGridCell): string;
 begin
-  {for the lines of categories the second column will be the same as the first}
   if (Cell.Col <> 0) and IsCategoryRow(Cell.Row) then Cell.Col := 0;
   Result := inherited GetCellText(Cell);
 end;
@@ -417,9 +410,7 @@ end;
 
 procedure TCustomInspector.GetEditListBounds(Cell: TGridCell; var Rect: TRect);
 begin
-  {we consider vertical line}
   Dec(Rect.Left, 2);
-  {working on silence}
   inherited;
 end;
 
@@ -460,32 +451,25 @@ end;
 
 procedure TCustomInspector.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  {we establish focus on itself}
   if not AcquireFocus then
   begin
     MouseCapture := False;
     Exit;
   end;
-  {left key}
   if Button = mbLeft then
   begin
-    {the attempt to begin changes in the size of column}
     if ColResizeAllowed(X, Y) then
     begin
-      {we begin a change in the size}
       StartColResize(Header.Sections[0], X, Y);
-      {we do not release further}
       Exit;
     end;
   end;
-  {processor for silence}
   inherited;
 end;
 
 procedure TCustomInspector.Paint;
 begin
   inherited;
-  {we sketch the framework around the focus}
   PaintFocus;
 end;
 
@@ -493,28 +477,22 @@ procedure TCustomInspector.PaintCell(Cell: TGridCell; Rect: TRect);
 var
   R: TRect;
 begin
-  {the cells of category we sketch to entire line}
   if IsCategoryRow(Cell.Row) then
   begin
     Rect.Left := GetGridRect.Left;
     Rect.Right := GetGridRect.Right;
-    {the column of the values of the cells of category we do not sketch generally}
     if Cell.Col <> 0 then Exit;
   end;
-  {we sketch cell}
   inherited;
-  {for the cells without the focus we sketch the broken separating strip from below}
   if Cell.Row <> CellFocused.Row then
   begin
     R := Rect;
     R.Top := R.Bottom - 1;
     with Canvas do
     begin
-      {the color of the points of line}
       Brush.Color := clGray xor clSilver;
       Font.Color := clBlack;
       Refresh;
-      {line}
       PaintResizeRectDC(Handle, R);
     end;
   end;
@@ -558,9 +536,7 @@ end;
 
 procedure TCustomInspector.Resize;
 begin
-  { we correct columns}
   UpdateColumnsSize;
-  { working on silence}
   inherited;
 end;
 
@@ -589,19 +565,16 @@ begin
   C2 := GridCell(1, VisOrigin.Row + VisSize.Row - 1);
   { we obtain the rectangle of the visible cells}
   R := GetCellsRect(C1, C2);
-  {if point to the left of the cells - we return the first column}
   if X < R.Left then
   begin
     Result := C1.Col;
     Exit;
   end;
-  {if point to the right of cells - we return posledyuyu column}
   if X >= R.Right then
   begin
     Result := C2.Col;
     Exit;
   end;
-  {the search on silence}
   Result := inherited GetColumnAt(X, Y);
 end;
 
@@ -630,19 +603,16 @@ begin
   C2 := GridCell(1, VisOrigin.Row + VisSize.Row - 1);
   { we obtain the rectangle of the visible cells}
   R := GetCellsRect(C1, C2);
-  {if point to vserkhu from the cells - we return the first line}
   if Y < R.Top then
   begin
     Result := MaxIntValue([C1.Row - 1, 0]);
     Exit;
   end;
-  {if point from below from the cells - we return posledyuyu to period}
   if Y >= R.Bottom then
   begin
     Result := MinIntValue([C2.Row + 1, Rows.Count - 1]);
     Exit;
   end;
-  {the search on silence}
   Result := inherited GetRowAt(X, Y);
 end;
 
@@ -654,20 +624,16 @@ end;
 
 procedure TCustomInspector.UpdateColumnsSize;
 begin
-  {but do not occur now changes}
   if (FColUpdate = 0) and (Columns.Count = 2) then
   begin
     Inc(FColUpdate);
     try
-      {we correct the width of the column of values}
       Columns[1].Width := ClientWidth - Columns[0].Width;
-      {column cannot be less than 35 pixels}
       if Columns[1].Width < 35 then
       begin
         Columns[1].Width := 35;
         Columns[0].Width := ClientWidth - 35;
       end;
-      {we correct the width of the column of names}
       if Columns[0].Width < 35 then
       begin
         Columns[0].Width := 35;
@@ -682,8 +648,6 @@ end;
 procedure TCustomInspector.UpdateScrollBars;
 begin
   inherited;
-  {when are dissipated scrollers it increases the visible part table, but
-    Resize is not caused - it is necessary to touch up the sizes of columns}
   UpdateColumnsSize;
 end;
 

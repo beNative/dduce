@@ -18,6 +18,8 @@
 
 unit DDuce.Demos.Contact;
 
+{$I ..\Source\DDuce.inc}
+
 { Sample model object that is typically a database entity object that can be
   persisted. }
 
@@ -26,11 +28,17 @@ unit DDuce.Demos.Contact;
 interface
 
 uses
+{$IFDEF DSHARP}
   DSharp.Core.PropertyChangedBase, // TPropertyChangedBase
 
   DSharp.Bindings.Notifications,   // INotifyPropertyChanged
 
-  DSharp.Collections, DSharp.Collections.ObservableCollection;
+  DSharp.Collections, DSharp.Collections.ObservableCollection
+{$ELSE}
+  {$IFDEF SPRING}
+  Spring, Spring.Collections, Spring.Collections.Lists
+  {$ENDIF}
+{$ENDIF};
 
 //=============================================================================
 
@@ -49,7 +57,7 @@ type
   end;
 
 type
-  TContact = class(TPropertyChangedBase)
+  TContact = class{$IFDEF DSHARP}(TPropertyChangedBase){$ENDIF}
   private
     FLastName    : string;
     FFirstName   : string;
@@ -109,8 +117,13 @@ type
 //      read FPhones;
   end;
 
+{$IFDEF DSHARP}
   TContacts = TObservableCollection<TContact>;
-//  TContacts = TObjectList<TContact>;
+{$ELSE}
+  {$IFDEF SPRING}
+  TContacts = TObjectList<TContact>;
+  {$ENDIF}
+{$ENDIF}
 //*****************************************************************************
 
 implementation
@@ -118,10 +131,7 @@ implementation
 uses
   Dialogs, Classes;
 
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
+{$REGION 'construction and destruction'}
 procedure TContact.AfterConstruction;
 begin
   inherited;
@@ -134,71 +144,62 @@ begin
   //FCountry.Finalize;
   inherited;
 end;
+{$ENDREGION}
 
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
-
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
+{$REGION 'property access methods'}
 procedure TContact.SetActive(const Value: Boolean);
 begin
   FActive := Value;
-  DoPropertyChanged('Active');
+//  DoPropertyChanged('Active');
 end;
 
 procedure TContact.SetAddress(const Value: string);
 begin
   FAddress := Value;
-  DoPropertyChanged('Address');
+//  DoPropertyChanged('Address');
 end;
 
 procedure TContact.SetBirthDate(const Value: TDate);
 begin
   FBirthDate := Value;
-  DoPropertyChanged('BirthDate');
+//  DoPropertyChanged('BirthDate');
 end;
 
 procedure TContact.SetCompanyName(const Value: string);
 begin
   FCompanyName := Value;
-  DoPropertyChanged('CompanyName');
+//  DoPropertyChanged('CompanyName');
 end;
 
 procedure TContact.SetCountry(const Value: string);
 begin
   FCountry := Value;
-  DoPropertyChanged('Country');
+//  DoPropertyChanged('Country');
 end;
 
 procedure TContact.SetEmail(const Value: string);
 begin
   FEmail := Value;
-  DoPropertyChanged('Email');
+//  DoPropertyChanged('Email');
 end;
 
 procedure TContact.SetFirstName(const Value: string);
 begin
   FFirstName := Value;
-  DoPropertyChanged('Firstname');
+//  DoPropertyChanged('Firstname');
 end;
 
 procedure TContact.SetLastName(const Value: string);
 begin
   FLastName := Value;
-  DoPropertyChanged('Lastname');
+//  DoPropertyChanged('Lastname');
 end;
 
 procedure TContact.SetNumber(const Value: Integer);
 begin
   FNumber := Value;
-  DoPropertyChanged('Number');
+//  DoPropertyChanged('Number');
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
+{$ENDREGION}
 
 end.

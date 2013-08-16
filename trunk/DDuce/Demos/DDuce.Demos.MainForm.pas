@@ -18,16 +18,25 @@
 
 unit DDuce.Demos.MainForm;
 
+{$I ..\Source\DDuce.inc}
+
 //*****************************************************************************
 
 interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, DB, DBClient, Contnrs, StdCtrls, Buttons, ActnList, System.Actions,
-  Vcl.ExtCtrls, Vcl.ComCtrls, System.UITypes,
+  Dialogs, DB, StdCtrls, Buttons, ActnList, ExtCtrls, ComCtrls,
 
   VirtualTrees,
+
+{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
+  System.Actions,
+{$ENDIF}
+
+{$IFDEF HAS_UNIT_SYSTEM_UITYPES}
+  System.UITypes,
+{$ENDIF}
 
   DDuce.Logger,
 
@@ -44,13 +53,13 @@ type
     pnlTop         : TPanel;
     pnlVST         : TPanel;
     sbrMain        : TStatusBar;
-    vstConcepts    : TVirtualStringTree;
+    vstDemos: TVirtualStringTree;
 
     procedure actExecuteExecute(Sender: TObject);
     procedure actFocusFilterExecute(Sender: TObject);
 
     procedure tvpConceptsDoubleClick(Sender: TObject);
-    procedure vstConceptsPaintBackground(Sender: TBaseVirtualTree;
+    procedure vstDemosPaintBackground(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; R: TRect; var Handled: Boolean);
     procedure edtFilterChange(Sender: TObject);
     procedure FTVPFilter(Item: TObject; var Accepted: Boolean);
@@ -59,7 +68,7 @@ type
       Shift: TShiftState);
     procedure edtFilterKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure vstConceptsKeyPress(Sender: TObject; var Key: Char);
+    procedure vstDemosKeyPress(Sender: TObject; var Key: Char);
 
     function CustomDrawColumn(
       Sender           : TObject;
@@ -81,8 +90,6 @@ type
     procedure AfterConstruction; override;
 
     procedure ApplyFilter;
-    procedure BeforeDestruction; override;
-
   end;
 
 var
@@ -144,15 +151,12 @@ resourcestring
   SConceptsLoaded = '%d demos loaded.';
 
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 procedure TfrmMainMenu.AfterConstruction;
 begin
   inherited;
+  {$IFDEF DSHARP}
   Logger.Channels.Add(TIPCChannel.Create);
-  FVST := vstConcepts;
+  FVST := vstDemos;
   FTVP := CreateTVP(Self);
   with FTVP.ColumnDefinitions.Add('Name') do
   begin
@@ -177,24 +181,11 @@ begin
   FTVP.OnDoubleClick := FTVPDoubleClick;
   FVST.Header.AutoFitColumns;
   sbrMain.SimpleText := Format(SConceptsLoaded, [DemoManager.ItemList.Count]);
+  {$ENDIF}
 end;
-
-procedure TfrmMainMenu.BeforeDestruction;
-begin
-  FTVP.TreeView := nil; // bug in TVP?
-  inherited;
-end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'action handlers'}
-//*****************************************************************************
-// action handlers                                                       BEGIN
-//*****************************************************************************
-
 procedure TfrmMainMenu.actExecuteExecute(Sender: TObject);
 begin
   DemoManager.Execute(FTVP.SelectedItem);
@@ -205,17 +196,9 @@ begin
   edtFilter.SetFocus;
   edtFilter.SelectAll;
 end;
-
-//*****************************************************************************
-// action handlers                                                         END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'event handlers'}
-//*****************************************************************************
-// event handlers                                                        BEGIN
-//*****************************************************************************
-
 procedure TfrmMainMenu.tvpConceptsDoubleClick(Sender: TObject);
 begin
   DemoManager.Execute(FTVP.SelectedItem);
@@ -241,7 +224,7 @@ begin
     Accepted := True;
 end;
 
-procedure TfrmMainMenu.vstConceptsKeyPress(Sender: TObject; var Key: Char);
+procedure TfrmMainMenu.vstDemosKeyPress(Sender: TObject; var Key: Char);
 begin
   if Ord(Key) = VK_RETURN then
   begin
@@ -262,11 +245,11 @@ begin
   end;
 end;
 
-procedure TfrmMainMenu.vstConceptsPaintBackground(Sender: TBaseVirtualTree;
+procedure TfrmMainMenu.vstDemosPaintBackground(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; R: TRect; var Handled: Boolean);
 begin
-  vstConcepts.BackgroundOffsetX := vstConcepts.ClientWidth - 128;
-  vstConcepts.BackgroundOffsetY := (vstConcepts.ClientHeight) - 128;
+  vstDemos.BackgroundOffsetX := vstDemos.ClientWidth - 128;
+  vstDemos.BackgroundOffsetY := (vstDemos.ClientHeight) - 128;
   Handled := False;
 end;
 
@@ -316,25 +299,13 @@ begin
   TargetCanvas.Font.Style := TargetCanvas.Font.Style + [fsBold];
   Result := True;
 end;
-
-//*****************************************************************************
-// event handlers                                                          END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-//*****************************************************************************
-// protected methods                                                     BEGIN
-//*****************************************************************************
-
 procedure TfrmMainMenu.ApplyFilter;
 begin
   FTVP.ApplyFilter;
 end;
-
-//*****************************************************************************
-// protected methods                                                       END
-//*****************************************************************************
 {$ENDREGION}
 
 end.

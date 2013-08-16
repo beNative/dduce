@@ -1,8 +1,8 @@
 object frmVirtualDBGrid: TfrmVirtualDBGrid
   Left = 0
   Top = 0
-  ClientHeight = 348
-  ClientWidth = 721
+  ClientHeight = 548
+  ClientWidth = 790
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,26 +15,26 @@ object frmVirtualDBGrid: TfrmVirtualDBGrid
   object splHorizontal: TSplitter
     Left = 0
     Top = 22
-    Width = 721
+    Width = 790
     Height = 8
     Cursor = crVSplit
     Align = alTop
     Visible = False
     ExplicitLeft = 8
     ExplicitTop = 79
+    ExplicitWidth = 721
   end
   object sbrMain: TStatusBar
     Left = 0
-    Top = 329
-    Width = 721
+    Top = 529
+    Width = 790
     Height = 19
     Panels = <>
-    ExplicitWidth = 643
   end
   object pnlTop: TPanel
     Left = 0
     Top = 0
-    Width = 721
+    Width = 790
     Height = 22
     Align = alTop
     BevelOuter = bvNone
@@ -42,31 +42,27 @@ object frmVirtualDBGrid: TfrmVirtualDBGrid
     object navMain: TDBNavigator
       Left = 0
       Top = 0
-      Width = 721
+      Width = 790
       Height = 22
       DataSource = dscMain
       Align = alClient
       Flat = True
       TabOrder = 0
-      ExplicitHeight = 33
     end
   end
   object pnlBottom: TPanel
     Left = 0
     Top = 30
-    Width = 721
-    Height = 299
+    Width = 790
+    Height = 499
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 49
-    ExplicitWidth = 643
-    ExplicitHeight = 280
     object splVertical: TSplitter
-      Left = 464
+      Left = 533
       Top = 0
       Width = 8
-      Height = 299
+      Height = 499
       Align = alRight
       ExplicitLeft = 574
       ExplicitHeight = 474
@@ -74,23 +70,20 @@ object frmVirtualDBGrid: TfrmVirtualDBGrid
     object pnlLeft: TPanel
       Left = 0
       Top = 0
-      Width = 464
-      Height = 299
+      Width = 533
+      Height = 499
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 458
-      ExplicitHeight = 280
     end
     object pnlRight: TPanel
-      Left = 472
+      Left = 541
       Top = 0
       Width = 249
-      Height = 299
+      Height = 499
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitHeight = 280
     end
   end
   object imlMain: TImageList

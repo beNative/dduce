@@ -36,6 +36,8 @@
 
 unit DDuce.Components.PropertyInspector;
 
+{$I ..\DDuce.inc}
+
 interface
 
 uses
@@ -812,7 +814,7 @@ procedure ELGetObjectsProps(ADesigner: Pointer; AObjList: TList;
 { TPropertyInspector }
 
 {
- ToDo ( TPropertyInspector ):
+ TODO ( TPropertyInspector ):
 
   - It is necessary to make so that correctly they would be reflected ReadOnly
     property, and so that they would not edit. Problem in the fact that in
@@ -1040,7 +1042,9 @@ type
 implementation
 
 uses
+{$IFDEF HAS_UNIT_SYSTEM_UITYPES}
   System.UITypes,
+{$ENDIF}
 
   DDuce.Components.PropertyInspector.CollectionEditor;
 
@@ -1061,12 +1065,15 @@ const
     'mrYes',
     'mrNo',
     'mrClose',
+{$if COMPILERVERSION > 21}
     'mrHelp',
     'mrTryAgain',
     'mrContinue',
     'mrAll',
+{$ifend}
     'mrNoToAll',
     'mrYesToAll'
+
   );
 
   ShortCuts: array[0..108] of TShortCut = (
@@ -1257,8 +1264,8 @@ begin
         for K := 0 to PropLists[I].Count - 1 do
           if (PropLists[I].Props[K].PropType^ = Intersection[J][0]
             .PropType^) and
-            SameText(PropLists[I].Props[K].Name,
-            Intersection[J][0].Name) then
+            SameText(string(PropLists[I].Props[K].Name),
+            string(Intersection[J][0].Name)) then
           begin
             Index := K;
             Break;
@@ -3014,7 +3021,7 @@ begin
       if ((FEditors[I].ObjectClass = nil) or
         (C.InheritsFrom(FEditors[I].ObjectClass))) and
         ((FEditors[I].PropName = '') or SameText(FEditors[I].PropName,
-        APropInfo.Name)) then
+        string(APropInfo.Name))) then
         if (Best = -1) or ((FEditors[Best].ObjectClass = nil) and
           (FEditors[I].ObjectClass <> nil)) or
           ((FEditors[Best].PropName = '') and (FEditors[I].PropName <> '')) or
@@ -3465,7 +3472,7 @@ end;
 
 function TPropertyEditor.GetPropName: string;
 begin
-  Result := FPropList[0].PropInfo^.Name;
+  Result := string(FPropList[0].PropInfo^.Name);
 end;
 
 function TPropertyEditor.GetPropTypeInfo: PTypeInfo;

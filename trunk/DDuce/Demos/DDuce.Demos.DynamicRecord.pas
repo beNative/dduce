@@ -34,10 +34,16 @@ unit DDuce.Demos.DynamicRecord;
 
 interface
 
+{$I ..\Source\DDuce.inc}
+
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ActnList, Grids, DBGrids, ComCtrls, DB, DBClient,
-  ExtCtrls, System.Actions,
+  ExtCtrls,
+
+{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
+  System.Actions,
+{$ENDIF}
 
   Spring,
 
@@ -163,7 +169,7 @@ type
     tsTRecord          : TTabSheet;
     actTestData        : TAction;
     btnTestData        : TButton;
-    btn1: TButton;
+    btn1               : TButton;
     {$ENDREGION}
 
     procedure actTestAssignExecute(Sender: TObject);
@@ -224,10 +230,7 @@ uses
 
   DDuce.Demos.Utils;
 
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
+{$REGION 'construction and destruction'}
 procedure TfrmDynamicRecords.AfterConstruction;
 begin
   inherited;
@@ -248,27 +251,9 @@ begin
   FreeAndNil(FContact);
   FreeAndNil(FTestClass);
 end;
-
-procedure TfrmDynamicRecords.btn1Click(Sender: TObject);
-begin
-  if Assigned(Reflect.Properties(FContact)) then
-  begin
-    Reflect.Properties(FContact)['FirstName'] := 'Michael';
-     ShowMessage(Reflect.Properties(FContact).ToString);
-  end;
-    //ShowMessage(Reflect.Properties(FContact)['FirstName'].ToString);
-    ShowMessage(Reflect.Properties(FContact).ToString);
-end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
+{$ENDREGION}
 
 {$REGION 'action handlers'}
-//*****************************************************************************
-// action handlers                                                       BEGIN
-//*****************************************************************************
-
 procedure TfrmDynamicRecords.actTestAssignExecute(Sender: TObject);
 begin
   FRecord.Clear;
@@ -309,17 +294,9 @@ begin
   FRecord.ToStrings(FStrings);
   Changed;
 end;
-
-//*****************************************************************************
-// action handlers                                                         END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'event handlers'}
-//*****************************************************************************
-// event handlers                                                        BEGIN
-//*****************************************************************************
-
 procedure TfrmDynamicRecords.InspectorGetCellText(Sender: TObject;
   Cell: TGridCell; var Value: string);
 begin
@@ -336,7 +313,7 @@ end;
 procedure TfrmDynamicRecords.InspectorGetEditStyle(Sender: TObject;
   Cell: TGridCell; var Style: TGridEditStyle);
 begin
-//
+  Style := gePickList;
 end;
 
 procedure TfrmDynamicRecords.InspectorGetEditText(Sender: TObject;
@@ -370,16 +347,19 @@ begin
   end;
 end;
 
-//*****************************************************************************
-// event handlers                                                          END
-//*****************************************************************************
+procedure TfrmDynamicRecords.btn1Click(Sender: TObject);
+begin
+  if Assigned(Reflect.Properties(FContact)) then
+  begin
+    Reflect.Properties(FContact)['FirstName'] := 'Michael';
+     ShowMessage(Reflect.Properties(FContact).ToString);
+  end;
+    //ShowMessage(Reflect.Properties(FContact)['FirstName'].ToString);
+    ShowMessage(Reflect.Properties(FContact).ToString);
+end;
 {$ENDREGION}
 
 {$REGION 'private methods'}
-//*****************************************************************************
-// private methods                                                       BEGIN
-//*****************************************************************************
-
 procedure TfrmDynamicRecords.CreateTestRecord;
 var
   V: TValue;
@@ -388,15 +368,14 @@ begin
   ZeroMemory(@FTestRecord, SizeOf(FTestRecord));
   FTestRecord.TestString := 'string';
   FTestRecord.TestNullableString := 'nullablestring';
-  FTestRecord.TestDouble := 3.14;
+  FTestRecord.TestDouble := PI;
   FTestRecord.TestInteger:= 554;
 end;
 
 procedure TfrmDynamicRecords.CreateTestTRecord;
 begin
   FTestTRecord.Data.SomeString   := 'FTestTRecord.Data.SomeString';
-  FTestTRecord.Data.SomeDateTime := 8.695;
-  //FTestTRecord['SomeDateTime'] := Now;
+  FTestTRecord.Data.SomeDateTime := Now;
   FTestTRecord.Data.Number       := 5;
   FTestTRecord.Data.Bool         := True;
 end;
@@ -432,17 +411,9 @@ begin
   Result.OnSetEditText  := InspectorSetEditText;
   Result.OnGetEditText  := InspectorGetEditText;
 end;
-
-//*****************************************************************************
-// private methods                                                         END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-//*****************************************************************************
-// protected methods                                                     BEGIN
-//*****************************************************************************
-
 procedure TfrmDynamicRecords.ExecuteAssignTContact;
 begin
   FRecord.Assign(FContact);
@@ -463,7 +434,7 @@ end;
 
 procedure TfrmDynamicRecords.ExecuteAssignTTestRecord;
 begin
-  FRecord.Assign(TValue.From<TTestRecord>(FTestRecord), False, True);
+  FRecord.Assign(TValue.From(FTestRecord), False, True);
   Changed;
 end;
 
@@ -490,17 +461,13 @@ begin
 
     lblContact.Caption := AsPropString(FContact);
     lblTestClass.Caption := AsPropString(FTestClass);
-    lblTestRecord.Caption := AsFieldString(TValue.From<TTestRecord>(FTestRecord));
+    lblTestRecord.Caption := AsFieldString(TValue.From(FTestRecord));
     lblTestTRecord.Caption := FTestTRecord.ToString;
 
     lblStrings.Caption := FStrings.Text;
     FUpdate := False;
   end;
 end;
-
-//*****************************************************************************
-// protected methods                                                       END
-//*****************************************************************************
 {$ENDREGION}
 
 end.

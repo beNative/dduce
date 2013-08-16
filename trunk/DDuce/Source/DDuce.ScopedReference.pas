@@ -35,6 +35,10 @@ unit DDuce.ScopedReference;
   of the enclosed object, so the managed object does not need to be created nor
   destroyed as both operations will be handled by the record instance.
 
+  Optionally a factory function for the reference can be specified. If not
+  specified the instance will be created using the default constructor of the
+  object type.
+
   In the example 3 different objects are created to show their classname.
 
   The code below illustrates the traditional object creation and the equivalent
@@ -82,9 +86,14 @@ unit DDuce.ScopedReference;
       end;
 }
 
+{$I DDuce.inc}
+
 //*****************************************************************************
 
 interface
+
+uses
+  SysUtils;
 
 type
   Scoped<T: class, constructor> = record
@@ -118,7 +127,9 @@ type
     function GetRef: T; inline;
 
   public
+    constructor Create(const ARefFactory: TFunc<T>);
     class operator Implicit(const AScoped: Scoped<T>): T; inline; static;
+    procedure Reset;
 
     property Ref: T
       read GetRef;
@@ -149,6 +160,12 @@ end;
 
 { Scoped<T> }
 
+constructor Scoped<T>.Create(const ARefFactory: TFunc<T>);
+begin
+  Reset;
+  FGuard := TGuard.Create(ARefFactory());
+end;
+
 function Scoped<T>.GetRef: T;
 begin
   if FGuard = nil then
@@ -161,7 +178,9 @@ begin
   Result := AScoped.GetRef;
 end;
 
+procedure Scoped<T>.Reset;
+begin
+  FGuard := nil;
+end;
+
 end.
-
-
-

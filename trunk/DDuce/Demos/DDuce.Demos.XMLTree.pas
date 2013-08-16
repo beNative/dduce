@@ -18,6 +18,8 @@
 
 unit DDuce.Demos.XMLTree;
 
+{$I ..\Source\DDuce.inc}
+
 { Form demonstrating the TXMLTree TVirtualStringTree descendant. }
 
 //*****************************************************************************
@@ -26,27 +28,30 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, ActnList, StdCtrls, System.Actions,
+  Dialogs, ExtCtrls, ActnList, StdCtrls,
+
+{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
+  System.Actions,
+{$ENDIF}
 
   VirtualTrees,
 
-  DDuce.Components.XMLTree;
+  DDuce.Components.PropertyInspector, DDuce.Components.XMLTree;
 
 type
   TfrmXMLTree = class(TForm)
-    pnlTop              : TPanel;
-    aclMain             : TActionList;
-    actExpand           : TAction;
-    actCollapse         : TAction;
-    btnExpand           : TButton;
-    btnCollapse         : TButton;
-    actInspectComponent : TAction;
-    btnInspectComponent : TButton;
-    pnlMain             : TPanel;
-    pnlXMLTree          : TPanel;
-    pnlEditor           : TPanel;
-    spl1                : TSplitter;
-    mmoXML              : TMemo;
+    pnlTop       : TPanel;
+    aclMain      : TActionList;
+    actExpand    : TAction;
+    actCollapse  : TAction;
+    btnExpand    : TButton;
+    btnCollapse  : TButton;
+    pnlMain      : TPanel;
+    pnlXMLTree   : TPanel;
+    pnlEditor    : TPanel;
+    spl1         : TSplitter;
+    mmoXML       : TMemo;
+    pnlInspector : TPanel;
 
     procedure actExpandExecute(Sender: TObject);
     procedure actCollapseExecute(Sender: TObject);
@@ -56,6 +61,7 @@ type
   private
     FXMLTree: TXMLTree;
     FXML    : string;
+    FPI     : TPropertyInspector;
 
     procedure InitializeTree;
 
@@ -76,8 +82,6 @@ type
   public
     procedure AfterConstruction; override;
 
-
-
   end;
 
 //*****************************************************************************
@@ -87,7 +91,7 @@ implementation
 {$R *.dfm}
 
 uses
-  ts.Modules.ComponentInspector;
+  DDuce.Demos.Helpers;
 
 {$REGION 'XML string'}
 const
@@ -258,10 +262,6 @@ const
 {$ENDREGION}
 
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 procedure TfrmXMLTree.AfterConstruction;
 begin
   inherited;
@@ -269,18 +269,11 @@ begin
   FXML := XML_STRING;
   mmoXML.Text := FXML;
   InitializeTree;
+  FPI := CreateInspector(Self, pnlInspector, FXMLTree);
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'action handlers'}
-//*****************************************************************************
-// action handlers                                                       BEGIN
-//*****************************************************************************
-
 procedure TfrmXMLTree.actCollapseExecute(Sender: TObject);
 begin
   FXMLTree.FullCollapse;
@@ -293,19 +286,11 @@ end;
 
 procedure TfrmXMLTree.actInspectComponentExecute(Sender: TObject);
 begin
-  InspectComponent(FXMLTree);
+//  InspectComponent(FXMLTree);
 end;
-
-//*****************************************************************************
-// action handlers                                                         END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'event handlers'}
-//*****************************************************************************
-// event handlers                                                        BEGIN
-//*****************************************************************************
-
 procedure TfrmXMLTree.XMLTreeColumnClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
 begin
@@ -339,26 +324,24 @@ begin
     TargetCanvas.Font.Color := clWhite;
   end;
 end;
-
-//*****************************************************************************
-// event handlers                                                          END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'private methods'}
-//*****************************************************************************
-// private methods                                                       BEGIN
-//*****************************************************************************
-
 procedure TfrmXMLTree.InitializeTree;
 begin
-  FXMLTree.Parent := pnlXMLTree;
-  FXMLTree.Align := alClient;
+  FXMLTree.Parent           := pnlXMLTree;
+  FXMLTree.BevelKind        := bkFlat;
+  FXMLTree.BevelInner       := bvNone;
+  FXMLTree.BevelOuter       := bvLowered;
+  FXMLTree.BorderStyle      := bsNone;
+
+  FXMLTree.Align            := alClient;
   FXMLTree.AlignWithMargins := True;
-  FXMLTree.Header.Options := FXMLTree.Header.Options + [hoVisible];
+  FXMLTree.Header.Options   := FXMLTree.Header.Options + [hoVisible];
   with FXMLTree.Header do
   begin
-    AutoSizeIndex := 1;
+    Style := hsPlates;
+    AutoSizeIndex := 0;
     Options := Options + [hoAutoResize, hoVisible];
   end;
   FXMLTree.OnEditing        := XMLTreeEditing;
@@ -391,13 +374,19 @@ begin
     toShowRoot,
     toShowTreeLines,
     toShowVertGridLines,
-    toThemeAware,
-    toUseBlendedImages
+//    toThemeAware,
+    toUseBlendedImages,
+    toUseBlendedSelection
+//    toUseExplorerTheme   // required to show triangle buttons
   ];
   FXMLTree.TreeOptions.AutoOptions := [
     toAutoSpanColumns
   ];
   FXMLTree.XML := FXML;
+  FXMLTree.Colors.GridLineColor := clSilver;
+  FXMLTree.Colors.UnfocusedSelectionColor := clGray;
+  FXMLTree.DrawSelectionMode := smBlendedRectangle;
+  FXMLTree.ButtonStyle := bsTriangle;
   FXMLTree.Header.AutoFitColumns;
 end;
 
@@ -412,10 +401,6 @@ begin
   inherited;
   mmoXML.Text := FXML;
 end;
-
-//*****************************************************************************
-// private methods                                                         END
-//*****************************************************************************
 {$ENDREGION}
 
 end.

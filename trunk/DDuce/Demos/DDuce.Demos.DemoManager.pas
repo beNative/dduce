@@ -74,15 +74,9 @@ type
 implementation
 
 uses
-  SysUtils, StrUtils,
-
-  DSharp.Core.Reflection;
+  SysUtils, StrUtils;
 
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 class constructor TDemoManager.Create;
 begin
   FList := TDemoList.Create(True);
@@ -92,24 +86,15 @@ class destructor TDemoManager.Destroy;
 begin
   FList := nil;
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'public methods'}
-//*****************************************************************************
-// public methods                                                        BEGIN
-//*****************************************************************************
-
 class procedure TDemoManager.Execute(AConcept: TObject);
 var
   F : TComponent;
   C : TDemo;
 begin
   C := AConcept as TDemo;
-  //Application.CreateForm(C.FormClass, F);
   F := C.FormClass.Create(Application);
   if F is TForm then
   begin
@@ -137,27 +122,13 @@ begin
   FList.Add(C);
   Result := True;
 end;
-
-//*****************************************************************************
-// public methods                                                          END
-//*****************************************************************************
 {$ENDREGION}
 
-{ TConcept }
-
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 function TDemo.GetUnitName: string;
 begin
   Result := FFormClass.UnitName;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 end.

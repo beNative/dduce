@@ -18,14 +18,18 @@
 
 unit DDuce.Components.PropertyInspector.CollectionEditor;
 
-//*****************************************************************************
+{$I ..\DDuce.inc}
 
 interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, ComCtrls, ActnList, ImgList, ToolWin, Menus,
-  Grids, TypInfo, System.Actions,
+  Grids, TypInfo,
+
+{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
+  System.Actions,
+{$ENDIF}
 
   DDuce.Components.PropertyInspector;
 
@@ -100,10 +104,6 @@ implementation
 
 {$R *.dfm}
 
-//*****************************************************************************
-// interfaced routines                                                   BEGIN
-//*****************************************************************************
-
 procedure ExecuteCollectionEditor(ACollection : TCollection);
 var
   Form : TfrmCollectionEditor;
@@ -115,14 +115,6 @@ begin
     Form.Free;
   end;
 end;
-
-//*****************************************************************************
-// interfaced routines                                                     END
-//*****************************************************************************
-
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
 
 constructor TfrmCollectionEditor.Create(AOwner: TComponent;
   ACollection: TCollection);
@@ -136,14 +128,6 @@ begin
   UpdateItems;
 end;
 
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
-
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 function TfrmCollectionEditor.GetActiveItem: TCollectionItem;
 var
   I : Integer;
@@ -155,14 +139,6 @@ begin
 
   Result := TCollectionItem(lvCollectionItems.Items[I].Data);
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
-
-//*****************************************************************************
-// action handlers                                                       BEGIN
-//*****************************************************************************
 
 procedure TfrmCollectionEditor.actAddExecute(Sender: TObject);
 begin
@@ -209,14 +185,6 @@ begin
     lvCollectionItems.ItemIndex := I;
   end;
 end;
-
-//*****************************************************************************
-// action handlers                                                         END
-//*****************************************************************************
-
-//*****************************************************************************
-// event handlers                                                        BEGIN
-//*****************************************************************************
 
 procedure TfrmCollectionEditor.lvCollectionItemsDragDrop(Sender,
   Source: TObject; X, Y: Integer);
@@ -285,14 +253,6 @@ begin
   end;
 end;
 
-//*****************************************************************************
-// event handlers                                                          END
-//*****************************************************************************
-
-//*****************************************************************************
-// protected methods                                                     BEGIN
-//*****************************************************************************
-
 procedure TfrmCollectionEditor.UpdateActions;
 var
   B: Boolean;
@@ -349,9 +309,5 @@ begin
     LI.Data := FCollection.Items[I];
   end;
 end;
-
-//*****************************************************************************
-// protected methods                                                       END
-//*****************************************************************************
 
 end.

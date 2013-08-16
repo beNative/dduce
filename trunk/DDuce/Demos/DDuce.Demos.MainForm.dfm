@@ -4,7 +4,7 @@ object frmMainMenu: TfrmMainMenu
   ActiveControl = edtFilter
   Caption = 'DDuce demos'
   ClientHeight = 333
-  ClientWidth = 315
+  ClientWidth = 369
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,11 @@ object frmMainMenu: TfrmMainMenu
     AlignWithMargins = True
     Left = 3
     Top = 286
-    Width = 309
+    Width = 363
     Height = 25
     Action = actExecute
     Align = alBottom
-    Caption = 'Execute'
+    Caption = '&Execute'
     Default = True
     ParentDoubleBuffered = True
     Style = bsNew
@@ -33,16 +33,16 @@ object frmMainMenu: TfrmMainMenu
   object pnlVST: TPanel
     Left = 0
     Top = 29
-    Width = 315
+    Width = 369
     Height = 254
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    object vstConcepts: TVirtualStringTree
+    object vstDemos: TVirtualStringTree
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 309
+      Width = 363
       Height = 248
       Align = alClient
       Background.Data = {
@@ -2122,19 +2122,19 @@ object frmMainMenu: TfrmMainMenu
       TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toReportMode, toToggleOnDblClick, toWheelPanning]
       TreeOptions.PaintOptions = [toPopupMode, toShowBackground, toShowButtons, toShowDropmark, toShowRoot, toShowTreeLines, toThemeAware, toUseBlendedImages, toGhostedIfUnfocused, toUseBlendedSelection, toStaticBackground]
       TreeOptions.SelectionOptions = [toExtendedFocus, toFullRowSelect]
-      OnKeyPress = vstConceptsKeyPress
-      OnPaintBackground = vstConceptsPaintBackground
+      OnKeyPress = vstDemosKeyPress
+      OnPaintBackground = vstDemosPaintBackground
       Columns = <
         item
           Position = 0
-          Width = 305
+          Width = 359
         end>
     end
   end
   object pnlTop: TPanel
     Left = 0
     Top = 0
-    Width = 315
+    Width = 369
     Height = 29
     Align = alTop
     BevelOuter = bvNone
@@ -2143,7 +2143,7 @@ object frmMainMenu: TfrmMainMenu
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 309
+      Width = 363
       Height = 23
       Align = alClient
       Font.Charset = DEFAULT_CHARSET
@@ -2163,7 +2163,7 @@ object frmMainMenu: TfrmMainMenu
   object sbrMain: TStatusBar
     Left = 0
     Top = 314
-    Width = 315
+    Width = 369
     Height = 19
     Panels = <>
     SimplePanel = True
@@ -2172,7 +2172,7 @@ object frmMainMenu: TfrmMainMenu
     Left = 72
     Top = 192
     object actExecute: TAction
-      Caption = 'Execute'
+      Caption = '&Execute'
       OnExecute = actExecuteExecute
     end
     object actClose: TAction

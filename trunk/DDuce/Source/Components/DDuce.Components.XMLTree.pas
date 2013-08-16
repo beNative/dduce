@@ -34,21 +34,19 @@
   - many bugfixes
 }
 
-  unit DDuce.Components.XMLTree;
+unit DDuce.Components.XMLTree;
+
+{$I ..\DDuce.inc}
 
 interface
-
-{$ifdef FPC}
-{$mode delphi}
-{$endif}
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   ImgList,
 
-{$ifdef FPC}
+{$IFDEF FPC}
   Editors, LMessages,
-{$endif}
+{$ENDIF}
   NativeXML,
 
   VirtualTrees,
@@ -57,11 +55,11 @@ uses
 
   DDuce.Components.XMLTree.NodeAttributes;
 
-{$ifdef FPC}
+{$IFDEF FPC}
 type
   TMessage   = TLMessage;
   NativeUint = PtrInt;
-{$endif}
+{$ENDIF}
 
 const
   // Helper message to decouple node change handling from edit handling.
@@ -76,7 +74,7 @@ const
   DEFAULT_BGCOLOR_ELEMENT   = $00ECFFEC; // ELEMENT_NODE without ChildNodes green
   DEFAULT_BGCOLOR_NODE      = $00FFD7D7; // ELEMENT_NODE without ChildNodes green
 
-{$region 'default VST options' /fold}
+{$REGION 'default VST options' /fold}
 const
   DEFAULT_VST_SELECTIONOPTIONS = [
     { Prevent user from selecting with the selection rectangle in multiselect
@@ -265,7 +263,7 @@ const
       to highest index and vice versa when the tree's bidi mode is changed. }
     toAutoBidiColumnOrdering
   ];
-{$endregion}
+{$ENDREGION}
 
 type
   PNodeData = ^TNodeData;
@@ -334,6 +332,7 @@ type
     FXMLDocument         : TNativeXml;
     FValueColumn         : Integer;
     FInternalDataOffset  : Cardinal;
+
     function GetXMLDocument: TNativeXml;
     function GetXML: string;
     procedure SetXML(Value: string);
@@ -363,7 +362,7 @@ type
     function GetDefaultNodeType(AXMLNode: TXmlNode): TNodeType;
 
   protected
-    {$region 'TVirtualStringTree overrides' /fold}
+    {$REGION 'TVirtualStringTree overrides' /fold}
     function GetOptionsClass: TTreeOptionsClass; override;
     procedure DoInitNode(Parent, ANode: PVirtualNode;
       var InitStates: TVirtualNodeInitStates); override;
@@ -379,7 +378,7 @@ type
     procedure DoBeforeItemErase(
       Canvas: TCanvas;
       ANode: PVirtualNode;
-      {$ifdef FPC}const{$endif} ItemRect: TRect;
+      {$IFDEF FPC}const{$ENDIF} ItemRect: TRect;
       var Color: TColor;
       var EraseAction: TItemEraseAction); override;
 
@@ -391,12 +390,12 @@ type
     procedure DoCanEdit(ANode: PVirtualNode; Column: TColumnIndex;
       var Allowed: Boolean); override;
     procedure DoNewText(ANode: PVirtualNode; Column: TColumnIndex;
-      {$ifdef FPC}const{$endif} Text: string); override;
+      {$IFDEF FPC}const{$ENDIF} Text: string); override;
     function DoGetNodeHint(ANode: PVirtualNode; Column: TColumnIndex;
       var LineBreakStyle: TVTTooltipLineBreakStyle): string; override;
     procedure DoMeasureItem(TargetCanvas: TCanvas; Node: PVirtualNode;
       var NodeHeight: Integer); override;
-    {$endregion}
+    {$ENDREGION}
 
     procedure DoCheckNode(Parent: PVirtualNode; var ANewXMLNode: TXmlNode;
       var ANewNodeType: TNodeType; var AAdd: Boolean); virtual;
@@ -458,7 +457,7 @@ type
       read GetNodeXML write SetNodeXML;
 
   published
-    {$region 'published properties' /fold}
+    {$REGION 'published properties' /fold}
     property XML: string
       read GetXML write SetXML;
 
@@ -552,7 +551,7 @@ type
     property Ctl3D;
     property HintAnimation;
     property ParentCtl3D;
-    {$endif}
+    {$ENDIF}
 
     property OnAdvancedHeaderDraw;
     property OnAfterAutoFitColumn;
@@ -678,7 +677,7 @@ type
     property OnStateChange;
     property OnStructureChange;
     property OnUpdating;
-    {$endregion}
+    {$ENDREGION}
   end;
 
 //*****************************************************************************
@@ -739,7 +738,7 @@ const
     xeEndTag
   ];
 
-{$region 'TXmlNodeHelper' /fold}
+{$REGION 'TXmlNodeHelper' /fold}
 
 type
   TXmlNodeHelper = class helper for TXmlNode
@@ -884,13 +883,9 @@ begin
     Result := ProcessXPath(Self, XPath, Nodes, False);
   end;
 end;
-{$endregion}
+{$ENDREGION}
 
-{$region 'construction and destruction' /fold}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
+{$REGION 'construction and destruction' /fold}
 procedure TXMLTree.AfterConstruction;
 begin
   inherited;
@@ -938,17 +933,9 @@ begin
   FExpandedState.Free;
   inherited;
 end;
+{$ENDREGION}
 
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
-{$endregion}
-
-{$region 'property access mehods' /fold}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
+{$REGION 'property access mehods' /fold}
 function TXMLTree.GetNodeXML(ANode: PVirtualNode): string;
 begin
   Result := string(GetData(ANode).XMLNode.WriteToString);
@@ -1030,17 +1017,9 @@ function TXMLTree.GetXMLDocument: TNativeXml;
 begin
   Result := FXMLDocument;
 end;
+{$ENDREGION}
 
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
-{$endregion}
-
-{$region 'message handlers' /fold}
-//*****************************************************************************
-// message handlers                                                      BEGIN
-//*****************************************************************************
-
+{$REGION 'message handlers' /fold}
 { This message was posted by ourselves from the node change handler above to
   decouple that change event and our intention to start editing a node. This
   is necessary to avoid interferences between nodes editors potentially created
@@ -1055,17 +1034,9 @@ begin
     OnEditing event. }
   EditNode(Node, 1);
 end;
+{$ENDREGION}
 
-//*****************************************************************************
-// message handlers                                                        END
-//*****************************************************************************
-{$endregion}
-
-{$region 'event dispatch methods' /fold}
-//*****************************************************************************
-// event dispatch methods                                                BEGIN
-//*****************************************************************************
-
+{$REGION 'event dispatch methods' /fold}
 procedure TXMLTree.DoCheckNode(Parent: PVirtualNode; var ANewXMLNode: TXmlNode;
   var ANewNodeType: TNodeType; var AAdd: Boolean);
 begin
@@ -1124,7 +1095,6 @@ procedure TXMLTree.DoGetText(ANode: PVirtualNode; Column: TColumnIndex;
 var
   S  : UTF8String;
   ND : PNodeData;
-  N  : PVirtualNode;
 begin
   //Logger.EnterMethod(Self, 'DoGetText');
   //Logger.Send('States', SetToString(TypeInfo(ANode.States), ANode.States));
@@ -1253,6 +1223,7 @@ begin
       EraseAction := eaColor;
     end;
   end;
+  Color := clRed;
   inherited DoBeforeItemErase(Canvas, ANode, ItemRect, Color, EraseAction);
 end;
 
@@ -1341,7 +1312,7 @@ begin
 end;
 
 procedure TXMLTree.DoNewText(ANode: PVirtualNode; Column: TColumnIndex;
-  {$ifdef FPC}const{$endif} Text: string);
+  {$IFDEF FPC}const{$ENDIF} Text: string);
 var
   ND : PNodeData;
 begin
@@ -1352,7 +1323,7 @@ begin
     and (ND.NodeType in [ntElement, ntAttribute, ntText, ntNode])
     and (ND.XMLNode.Value <> UTF8String(Text)) then
   begin
-    ND.XMLNode.Value := Text;
+    ND.XMLNode.Value := UTF8String(Text);
   end;
   //if ((Column = Header.MainColumn)
   //  and (ND.NodeType = ntComment) or (Column = FValueColumn)
@@ -1378,17 +1349,9 @@ begin
 //        end;
 //            end;
 end;
+{$ENDREGION}
 
-//*****************************************************************************
-// event dispatch methods                                                  END
-//*****************************************************************************
-{$endregion}
-
-{$region 'private methods' /fold}
-//*****************************************************************************
-// private methods                                                       BEGIN
-//*****************************************************************************
-
+{$REGION 'private methods' /fold}
 procedure TXMLTree.WMChar(var Message: TWMChar);
 begin
   with Message do
@@ -1440,7 +1403,7 @@ begin
     B := ANewXMLNode.ElementType in [xeElement, xeAttribute, xeComment];
     NT := GetDefaultNodeType(ANewXMLNode);
     Logger.Watch('B', B);
-    Logger.Watch('ANewXMLNode', ANewXMLNode.Content);
+    Logger.Watch('ANewXMLNode', string(ANewXMLNode.Content));
 
     DoCheckNode(ANode, ANewXMLNode, NT, B);
     if not(B and Assigned(ANewXMLNode)) then
@@ -1454,7 +1417,8 @@ begin
     NodeType := NT;
     XMLPath := GetXmlPath(XMLNode);
   end;
-  Include(ANode.LastChild.States, vsInitialUserData);
+  // TODO
+  //Include(ANode.LastChild.States, vsOnFreeNodeCallRequired);
   Result := True;
   //Logger.ExitMethod(Self, 'AddChild');
 end;
@@ -1491,17 +1455,9 @@ begin
   end;
   Logger.ExitMethod(Self, 'AddChildren');
 end;
+{$ENDREGION}
 
-//*****************************************************************************
-// private methods                                                         END
-//*****************************************************************************
-{$endregion}
-
-{$region 'protected methods' /fold}
-//*****************************************************************************
-// protected methods                                                     BEGIN
-//*****************************************************************************
-
+{$REGION 'protected methods' /fold}
 procedure TXMLTree.InitializeNodeAttributes;
 var
   NAI: TNodeAttributesItem;
@@ -1573,17 +1529,9 @@ begin
   end;
   FValueColumn := 1;
 end;
+{$ENDREGION}
 
-//*****************************************************************************
-// protected methods                                                       END
-//*****************************************************************************
-{$endregion}
-
-{$region 'public methods' /fold}
-//*****************************************************************************
-// public methods                                                        BEGIN
-//*****************************************************************************
-
+{$REGION 'public methods' /fold}
 procedure TXMLTree.Clear;
 begin
   BeginUpdate;
@@ -1752,7 +1700,6 @@ begin
   if ANewNodeType = ntAttribute then
   begin
     ABefore   := False;
-    AAddBreak := False;
   end
   else if ANewNodeType = ntNode then
   begin
@@ -1767,7 +1714,11 @@ begin
     end;
     ntElement:
     begin
-      N :=  XMLDocument.NodeNewTextType(AName, AValue, xeElement);
+      N :=  XMLDocument.NodeNewTextType(
+        UTF8String(AName),
+        UTF8String(AValue),
+        xeElement
+      );
       //AXmlNode.NodeAdd(N);
       AXmlNode.NodeAdd(N);
       //Parent.NodeNew(AName).Value := AValue;
@@ -1786,13 +1737,13 @@ begin
           //ParentNode.InsertBefore(OwnerDocument.CreateComment(Value), AXMLNode)
         //else
           //AppendChild(Document.NodeNewType(Value, xeComment));
-      N :=  XMLDocument.NodeNewType(AValue, xeComment);
+      N :=  XMLDocument.NodeNewType(UTF8String(AValue), xeComment);
       //AXmlNode.NodeAdd(N);
       AXmlNode.NodeAdd(N);
     end;
     ntText:
     begin
-      N :=  XMLDocument.NodeNewType(AValue, xeQuotedText);
+      N :=  XMLDocument.NodeNewType(UTF8String(AValue), xeQuotedText);
       //AXmlNode.NodeAdd(N);
       AXmlNode.NodeAdd(N);
     end;
@@ -1930,13 +1881,9 @@ begin
       EndUpdate;
   end;
 end;
+{$ENDREGION}
 
-//*****************************************************************************
-// public methods                                                          END
-//*****************************************************************************
-{$endregion}
-
-{$region 'TExpandedState' /fold}
+{$REGION 'TExpandedState' /fold}
 procedure TExpandedState.AfterConstruction;
 begin
   inherited;
@@ -1948,7 +1895,7 @@ begin
   FList.Free;
   inherited;
 end;
-{$endregion}
+{$ENDREGION}
 
 end.
 

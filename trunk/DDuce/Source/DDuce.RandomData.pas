@@ -20,6 +20,8 @@ unit DDuce.RandomData;
 
 { Utility type for generating random test data. }
 
+{$I DDuce.inc}
+
 //*****************************************************************************
 
 interface
@@ -2414,7 +2416,11 @@ implementation
 uses
   SysUtils, Math, DateUtils, StrUtils,
 
-  DSharp.Collections, DSharp.Collections.Extensions, DSharp.Core.Lambda;
+{$IF CompilerVersion > 21}
+  DSharp.Core.Lambda,
+{$IFEND}
+
+  DSharp.Collections, DSharp.Collections.Extensions;
 
 class function RandomData.Str(const AList: array of string): string;
 begin
@@ -2619,15 +2625,18 @@ begin
 end;
 
 class function RandomData.AlliteratedCompanyName: string;
+{$IF CompilerVersion > 21}
 var
   List  : IList<string>;
   A     : string;
   S     : string;
   C     : string;
-  List2 : IList<string>;
   I     : Integer;
   J     : Integer;
+  List2 : IList<string>;
+{$IFEND}
 begin
+{$IF CompilerVersion > 21}
   A := Adjective;
   C := A[1];
   List := TList<string>.Create;
@@ -2647,6 +2656,7 @@ begin
   end
   else
     Result := A + ' ' + Str(CompanyTypes);
+{$IFEND}
     //Lambda.Predicate<string>((Bool(Arg1[1] = Arg(C))))
    //Lambda.Predicate<string>(StartsText(string(Arg1), C))
 //  filter1 := Lambda.Predicate<TCustomer>(

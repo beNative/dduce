@@ -18,12 +18,19 @@
 
 unit DDuce.Reflect;
 
+{$I DDuce.inc}
+
+{
+  Reflect provides some static routines to expose the contents of an object
+  using the RTTI.
+}
+
 //*****************************************************************************
 
 interface
 
 uses
-  System.Rtti,
+  Rtti,
 
   DDuce.DynamicRecord;
 
@@ -37,7 +44,8 @@ type
     class function SetElementNames<T>(const AArg: T): string; static;
 
     class function Fields<T>(const AArg: T): IDynamicRecord; static;
-    class function Properties<T: class, constructor>(const AArg: T): IDynamicRecord; static;
+//    class function Properties<T: class, constructor>(const AArg: T): IDynamicRecord; overload; static;
+    class function Properties<T: class, constructor>(const AArg: T): IDynamicRecord<T>; overload; static;
   end;
 
 //*****************************************************************************
@@ -45,16 +53,27 @@ type
 implementation
 
 uses
-  System.TypInfo, Dialogs;
+  TypInfo, Dialogs;
+
+{ Returns the type name of a given enumerated type instance. }
 
 class function Reflect.EnumName<T>(const AArg: T): string;
 begin
   Result := GetEnumName(TypeInfo(T), OrdValue(AArg));
 end;
 
-class function Reflect.Fields<T>(const AArg: T): IDynamicRecord;
-begin
+// fields are read-only for the moment.
 
+{ Returns the fields of the given instance (record or object). }
+
+class function Reflect.Fields<T>(const AArg: T): IDynamicRecord;
+var
+  R : TRecord;
+  V : TValue;
+begin
+  V := TValue.From<T>(AArg);
+  R.Assign(V, False, True, True, []);
+  Result := R;
 end;
 
 class function Reflect.OrdValue<T>(const AArg: T): Integer;
@@ -66,13 +85,32 @@ begin
   Result := V.AsOrdinal;
 end;
 
-class function Reflect.Properties<T>(const AArg: T): IDynamicRecord;
+{ Returns the properties of the given instance (record or object). }
+
+class function Reflect.Properties<T>(const AArg: T): IDynamicRecord<T>;
 var
   R : IDynamicRecord<T>;
 begin
   R := TDynamicRecord<T>.Create(AArg);
   Result := R;
 end;
+
+//class function Reflect.Properties<T>(const AArg: T): IDynamicRecord;
+//var
+//  R : IDynamicRecord<T>;
+//begin
+//  R := TDynamicRecord<T>.Create(AArg);
+//  Result := R;
+//
+//
+////  var
+////  R : TRecord;
+////  V : TValue;
+////begin
+////  V := TValue.From<T>(AArg);
+////  R.Assign(V, True, False, True, []);
+////  Result := R;
+//end;
 
 class function Reflect.SetElementNames<T>(const AArg: T): string;
 begin

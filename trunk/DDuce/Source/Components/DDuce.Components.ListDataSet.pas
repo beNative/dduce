@@ -24,6 +24,8 @@
 
 unit DDuce.Components.ListDataSet;
 
+{$I ..\DDuce.inc}
+
 //*****************************************************************************
 
 interface
@@ -31,7 +33,13 @@ interface
 uses
   Classes, SysUtils, Db, Rtti,
 
-  DSharp.Collections, DSharp.Core.Events, DSharp.Core.Reflection,
+{$IFDEF SPRING}
+  Spring, Spring.Collections, //Spring.Reflection,
+{$ENDIF}
+
+{$IFDEF DSHARP}
+  DSharp.Collections, DSharp.Core.Events, //DSharp.Core.Reflection,
+{$ENDIF}
 
   DDuce.Components.VirtualDataSet;
 
@@ -134,7 +142,7 @@ type
 
 //=============================================================================
 
-  TListDataset<T> = class(TListDataSet, IList<T>)
+  TListDataset<T> = class(TListDataSet{$if CompilerVersion > 21}, IList<T>{$ifend})
   strict private
     FList : IList<T>;
 
@@ -147,13 +155,17 @@ type
   public
     constructor Create(
       AOwner : TComponent;
-      AList  : IList<T> = nil
+{$IF CompilerVersion > 21}
+      AList  : IList<T> = nil   // default parameters on generic types not supported in D2010
+{$ELSE}
+      AList  : IList<T>
+{$IFEND}
     ); reintroduce; virtual;
     procedure BeforeDestruction; override;
 
   published
     property List: IList<T>
-      read FList write SetList implements IList<T>;
+      read FList write SetList{$IF CompilerVersion > 21}implements IList<T>{$IFEND};
 
     property Current: T
       read GetCurrent;
@@ -166,17 +178,13 @@ implementation
 uses
   TypInfo,
 
-  DDuce.Logger;
+  DDuce.Reflect, DDuce.Logger;
 
 resourcestring
   SDataListNotAssigned = 'List property not set, cannot open Dataset.';
 
 {$REGION 'TListDataset'}
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 constructor TListDataset.Create(AOwner: TComponent; AList: IList);
 begin
   inherited Create(AOwner);
@@ -188,17 +196,9 @@ begin
   FList := nil;
   inherited;
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 procedure TListDataset.SetList(const Value: IList);
 begin
   if Assigned(Value) then
@@ -230,17 +230,9 @@ begin
   else
     Result := -1;
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'event dispatch methods'}
-//*****************************************************************************
-// event dispatch methods                                                BEGIN
-//*****************************************************************************
-
 procedure TListDataset.DoDeleteRecord(Index: Integer);
 begin
   BeginUpdate;
@@ -260,7 +252,17 @@ begin
   begin
     O := FList[Index].AsObject;
     if Field.Index >= 0 then
-      Value := O.GetProperty(Field.FieldName).GetValue(O)
+      {$IFDEF DSHARP}
+      Value :=
+      Reflect.Properties(O).Values[Field.FieldName]
+       //Reflect.Properties(O).ToString(Field.FieldName)
+      //O.GetProperty(Field.FieldName).GetValue(O)
+      {$ENDIF}
+      {$IFDEF SPRING}
+      Value := TType.GetType(O).GetProperty(Field.FieldName).GetValue(O)
+      //Reflect.Properties(O).Values[Field.FieldName]
+      {$ENDIF}
+
     else
       Value := TValue.Empty;
   end;
@@ -268,8 +270,9 @@ end;
 
 procedure TListDataset.DoPostData(Index: Integer);
 var
-  O : TObject;
-  F : TField;
+  O  : TObject;
+  F  : TField;
+  TD : PTypeData;
 begin
   O := nil;
   BeginUpdate;
@@ -282,7 +285,15 @@ begin
       end
       else if State = dsInsert then
       begin
-        O := FList.ItemType.TypeData.ClassType.Create;
+        {$IFDEF DSHARP}
+        TD := GetTypeData(FList.ItemType);
+        {$ENDIF}
+        {$IFDEF SPRING}
+        TD := GetTypeData(FList.ElementType);
+        {$ENDIF}
+        O := TD.ClassType.Create;
+        // in newer Delphis we can use:
+        //    O := FList.ItemType.TypeData.ClassType.Create
         if Index <> -1 then
           FList.Insert(Index, O)
         else
@@ -290,24 +301,21 @@ begin
       end;
       for F in ModifiedFields do
       begin
-        O.GetProperty(F.FieldName).SetValue(O, TValue.FromVariant(F.AsVariant));
+       {$IFDEF DSHARP}
+//        O.GetProperty(F.FieldName).SetValue(O, TValue.FromVariant(F.AsVariant));
+       {$ENDIF}
+       {$IFDEF SPRING}
+        //TType.GetType(O).GetProperty(F.FieldName).SetValue(O, TValue.FromVariant(F.AsVariant));
+       {$ENDIF}
       end;
     end;
   finally
     EndUpdate;
   end;
 end;
-
-//*****************************************************************************
-// event dispatch methods                                                  END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'private methods'}
-//*****************************************************************************
-// private methods                                                       BEGIN
-//*****************************************************************************
-
 procedure TListDataset.LoadFieldDefsFromRtti(AList: IList;
   AFieldDefs: TFieldDefs);
 var
@@ -317,11 +325,19 @@ var
   FS : Integer;
   FD : TFieldDef;
   S  : string;
+  T  : PTypeInfo;
 begin
   if not Assigned(AList) then
     Exit;
 
-  for P in C.GetType(AList.ItemType).GetProperties do
+  {$IFDEF DSHARP}
+  T := AList.ItemType;
+  {$ENDIF}
+  {$IFDEF SPRING}
+  T := AList.ElementType;
+  {$ENDIF}
+
+  for P in C.GetType(T).GetProperties do
   begin
     FT := ftUnknown;
     FS := 0;
@@ -405,17 +421,9 @@ begin
     end;
   end;
 end;
-
-//*****************************************************************************
-// private methods                                                         END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-//*****************************************************************************
-// protected methods                                                     BEGIN
-//*****************************************************************************
-
 procedure TListDataset.InternalInitFieldDefs;
 begin
   FieldDefs.Clear;
@@ -482,17 +490,9 @@ begin
     end;
   end;
 end;
-
-//*****************************************************************************
-// protected methods                                                       END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'public methods'}
-//*****************************************************************************
-// public methods                                                        BEGIN
-//*****************************************************************************
-
 procedure TListDataset.BeginUpdate;
 begin
   Inc(FUpdateCount);
@@ -509,19 +509,11 @@ function TListDataset.Locate(const KeyFields: string; const KeyValues: Variant;
 begin
   Result := False;
 end;
-
-//*****************************************************************************
-// public methods                                                          END
-//*****************************************************************************
 {$ENDREGION}
 {$ENDREGION}
 
 {$REGION 'TListDataset<T>'}
 {$REGION 'construction and destruction'}
-//*****************************************************************************
-// construction and destruction                                          BEGIN
-//*****************************************************************************
-
 constructor TListDataset<T>.Create(AOwner: TComponent; AList: IList<T>);
 begin
   inherited Create(AOwner);
@@ -531,29 +523,36 @@ end;
 procedure TListDataset<T>.BeforeDestruction;
 begin
   if Assigned(FList) then
+    {$IFDEF DSHARP}
     FList.OnCollectionChanged.Remove(CollectionChanged);
+    {$ENDIF}
+    {$IFDEF SPRING}
+    FList.OnChanged.Remove(CollectionChanged);
+    {$ENDIF}
   FList := nil;
   inherited;
 end;
-
-//*****************************************************************************
-// construction and destruction                                            END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-//*****************************************************************************
-// property access methods                                               BEGIN
-//*****************************************************************************
-
 procedure TListDataset<T>.SetList(const Value: IList<T>);
 begin
   if Value <> List then
   begin
     if Assigned(List) then
+      {$IFDEF DSHARP}
       FList.OnCollectionChanged.Remove(CollectionChanged);
+      {$ENDIF}
+      {$IFDEF SPRING}
+      FList.OnChanged.Remove(CollectionChanged);
+      {$ENDIF}
     FList := Value;
+    {$IFDEF DSHARP}
     FList.OnCollectionChanged.Add(CollectionChanged);
+    {$ENDIF}
+    {$IFDEF SPRING}
+    FList.OnChanged.Add(CollectionChanged);
+    {$ENDIF}
     inherited List := Value.AsList;
   end;
 end;
@@ -565,27 +564,15 @@ begin
   else
     Result := Default(T);
 end;
-
-//*****************************************************************************
-// property access methods                                                 END
-//*****************************************************************************
 {$ENDREGION}
 
 {$REGION 'event handlers'}
-//*****************************************************************************
-// event handlers                                                        BEGIN
-//*****************************************************************************
-
 procedure TListDataset<T>.CollectionChanged(Sender: TObject; const Item: T;
   Action: TCollectionChangedAction);
 begin
   if Active and not (State in dsEditModes) then
     Refresh;
 end;
-
-//*****************************************************************************
-// event handlers                                                          END
-//*****************************************************************************
 {$ENDREGION}
 {$ENDREGION}
 
