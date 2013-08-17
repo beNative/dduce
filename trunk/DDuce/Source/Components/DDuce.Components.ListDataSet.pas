@@ -34,11 +34,11 @@ uses
   Classes, SysUtils, Db, Rtti,
 
 {$IFDEF SPRING}
-  Spring, Spring.Collections, //Spring.Reflection,
+  Spring, Spring.Collections,
 {$ENDIF}
 
 {$IFDEF DSHARP}
-  DSharp.Collections, DSharp.Core.Events, //DSharp.Core.Reflection,
+  DSharp.Collections, DSharp.Core.Events,
 {$ENDIF}
 
   DDuce.Components.VirtualDataSet;
@@ -252,17 +252,7 @@ begin
   begin
     O := FList[Index].AsObject;
     if Field.Index >= 0 then
-      {$IFDEF DSHARP}
-      Value :=
-      Reflect.Properties(O).Values[Field.FieldName]
-       //Reflect.Properties(O).ToString(Field.FieldName)
-      //O.GetProperty(Field.FieldName).GetValue(O)
-      {$ENDIF}
-      {$IFDEF SPRING}
-      Value := TType.GetType(O).GetProperty(Field.FieldName).GetValue(O)
-      //Reflect.Properties(O).Values[Field.FieldName]
-      {$ENDIF}
-
+      Value := Reflect.Properties(O).Values[Field.FieldName]
     else
       Value := TValue.Empty;
   end;
@@ -301,12 +291,8 @@ begin
       end;
       for F in ModifiedFields do
       begin
-       {$IFDEF DSHARP}
-//        O.GetProperty(F.FieldName).SetValue(O, TValue.FromVariant(F.AsVariant));
-       {$ENDIF}
-       {$IFDEF SPRING}
-        //TType.GetType(O).GetProperty(F.FieldName).SetValue(O, TValue.FromVariant(F.AsVariant));
-       {$ENDIF}
+        Reflect.Properties(O).Values[F.FieldName] :=
+          TValue.FromVariant(F.AsVariant);
       end;
     end;
   finally

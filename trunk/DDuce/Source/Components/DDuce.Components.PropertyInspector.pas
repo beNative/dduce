@@ -50,8 +50,12 @@ uses
 
 type
   EBaseObjectList = class(Exception);
-  TItemByProc = procedure(AItem: TObject; AData: Pointer;
-    var AResult: Boolean) of object;
+
+  TItemByProc = procedure(
+        AItem   : TObject;
+        AData   : Pointer;
+    var AResult : Boolean
+  ) of object;
 
   TBaseObjectList = class
   private

@@ -2442,29 +2442,32 @@ var
   LType     : TRttiType;
   LProperty : TRttiProperty;
 begin
-  //Result := inherited GetItemValue(AName);
   try
-//    V := TValue.From(FData);
-
-    LType := RttiContext.GetType(TypeInfo(T));
+    LType := RttiContext.GetType(TObject(FData).ClassInfo);
     if Assigned(LType) then
     begin
       LProperty :=  LType.GetProperty(AName);
       if Assigned(LProperty) then
         Result := LProperty.GetValue(TObject(FData));
     end;
-
-//    Result := RttiContext.GetType(TypeInfo(T)).GetProperty(AName).GetValue(TObject(FData));
-    //Result := RttiContext.GetType(TypeInfo(T)).GetProperty(AName).GetValue(V.AsObject);
   except
     Result := TValue.Empty;
   end;
 end;
 
 procedure TDynamicRecord<T>.SetItemValue(AName: string; const AValue: TValue);
+var
+  V         : TValue;
+  LType     : TRttiType;
+  LProperty : TRttiProperty;
 begin
-  //inherited SetItemValue(AName, AValue);
-  RttiContext.GetType(TypeInfo(T)).GetProperty(AName).SetValue(TObject(FData), AValue);
+  LType := RttiContext.GetType(TObject(FData).ClassInfo);
+  if Assigned(LType) then
+  begin
+    LProperty :=  LType.GetProperty(AName);
+    if Assigned(LProperty) then
+      LProperty.SetValue(TObject(FData), AValue);
+  end;
 end;
 
 function TDynamicRecord<T>.ToString(AAlignValues: Boolean): string;
