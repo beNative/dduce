@@ -44,8 +44,9 @@ type
     class function SetElementNames<T>(const AArg: T): string; static;
 
     class function Fields<T>(const AArg: T): IDynamicRecord; static;
-//    class function Properties<T: class, constructor>(const AArg: T): IDynamicRecord; overload; static;
-    class function Properties<T: class, constructor>(const AArg: T): IDynamicRecord<T>; overload; static;
+    class function Properties<T: class, constructor>(
+      const AArg: T
+    ): IDynamicRecord<T>; overload; static;
   end;
 
 //*****************************************************************************

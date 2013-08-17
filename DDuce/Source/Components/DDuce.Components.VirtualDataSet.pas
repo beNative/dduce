@@ -332,6 +332,8 @@ type
 
     function GetFieldData(
       Field: TField;
+    {$IF CompilerVersion >= 25}var
+    {$IFEND}
       Buffer: TValueBuffer
     ): Boolean; override;
 
@@ -883,13 +885,13 @@ begin
       if IsEmpty then
         ARecBuf := nil
       else
-        ARecBuf := ActiveBuffer;
+        ARecBuf := PByte(ActiveBuffer);
 
     dsEdit, dsInsert, dsNewValue:
-      ARecBuf := ActiveBuffer;
+      ARecBuf := PByte(ActiveBuffer);
 
     dsCalcFields, dsInternalCalc:
-      ARecBuf := CalcBuffer;
+      ARecBuf := PByte(CalcBuffer);
 
     dsFilter:
       ARecBuf := FFilterBuffer;
@@ -1404,7 +1406,7 @@ begin
 end;
 
 function TCustomVirtualDataset.GetFieldData(Field: TField;
-  Buffer: TValueBuffer): Boolean;
+   Buffer: TValueBuffer): Boolean;
 var
   RecBuf: TRecordBuffer;
   Data  : TValue;

@@ -53,7 +53,7 @@ type
     pnlTop         : TPanel;
     pnlVST         : TPanel;
     sbrMain        : TStatusBar;
-    vstDemos: TVirtualStringTree;
+    vstDemos       : TVirtualStringTree;
 
     procedure actExecuteExecute(Sender: TObject);
     procedure actFocusFilterExecute(Sender: TObject);
