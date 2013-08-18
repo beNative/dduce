@@ -20,8 +20,6 @@ unit DDuce.Demos.Helpers;
 
 {$I ..\Source\DDuce.inc}
 
-//*****************************************************************************
-
 interface
 
 uses

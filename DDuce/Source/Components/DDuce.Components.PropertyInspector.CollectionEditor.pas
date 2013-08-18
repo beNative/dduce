@@ -33,8 +33,6 @@ uses
 
   DDuce.Components.PropertyInspector;
 
-//=============================================================================
-
 type
   TfrmCollectionEditor = class(TForm)
     aclMain           : TActionList;
@@ -141,6 +139,7 @@ begin
   Result := TCollectionItem(lvCollectionItems.Items[I].Data);
 end;
 
+{$REGION 'action handlers'}
 procedure TfrmCollectionEditor.actAddExecute(Sender: TObject);
 begin
   FCollection.Add;
@@ -186,7 +185,9 @@ begin
     lvCollectionItems.ItemIndex := I;
   end;
 end;
+{$ENDREGION}
 
+{$REGION 'event handlers'}
 procedure TfrmCollectionEditor.lvCollectionItemsDragDrop(Sender,
   Source: TObject; X, Y: Integer);
 begin
@@ -252,7 +253,9 @@ begin
     SL.Free;
   end;
 end;
+{$ENDREGION}
 
+{$REGION 'protected methods'}
 procedure TfrmCollectionEditor.UpdateActions;
 var
   B: Boolean;
@@ -305,5 +308,6 @@ begin
     LI.Data := FCollection.Items[I];
   end;
 end;
+{$ENDREGION}
 
 end.

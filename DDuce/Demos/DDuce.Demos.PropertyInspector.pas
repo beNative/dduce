@@ -2,8 +2,6 @@ unit DDuce.Demos.PropertyInspector;
 
 {$I ..\Source\DDuce.inc}
 
-//*****************************************************************************
-
 interface
 
 uses
@@ -14,6 +12,7 @@ uses
 
 type
   TfrmPropertyInspector = class(TForm)
+    {$REGION 'designer controls'}
     pnlMain       : TPanel;
     pnlLeft       : TPanel;
     pnlRight      : TPanel;
@@ -26,6 +25,7 @@ type
     trbTrackBar   : TTrackBar;
     splSplitter   : TSplitter;
     lblLabel      : TLabel;
+    {$ENDREGION}
 
     procedure cbxControlsChange(Sender: TObject);
 
@@ -36,8 +36,6 @@ type
     procedure AfterConstruction; override;
 
   end;
-
-//*****************************************************************************
 
 implementation
 

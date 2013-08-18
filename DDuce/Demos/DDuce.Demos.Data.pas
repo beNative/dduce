@@ -18,8 +18,6 @@
 
 unit DDuce.Demos.Data;
 
-//*****************************************************************************
-
 interface
 
 uses
@@ -37,8 +35,6 @@ type
   end;
 
 function Data: TdmData;
-
-//*****************************************************************************
 
 implementation
 
@@ -65,4 +61,5 @@ begin
   Result := cdsMain;
 end;
 {$ENDREGION}
+
 end.

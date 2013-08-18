@@ -18,8 +18,6 @@
 
 unit DDuce.Demos.Utils;
 
-//*****************************************************************************
-
 interface
 
 uses
@@ -53,8 +51,6 @@ function SetToString(
         ABrackets    : Boolean = True;
         ATrimChars   : Integer = -1
 ): string;
-
-//*****************************************************************************
 
 implementation
 

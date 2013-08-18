@@ -26,8 +26,6 @@ unit DDuce.Components.ListDataSet;
 
 {$I ..\DDuce.inc}
 
-//*****************************************************************************
-
 interface
 
 uses
@@ -140,8 +138,6 @@ type
     property OnPostError;
   end;
 
-//=============================================================================
-
   TListDataset<T> = class(TListDataSet{$if CompilerVersion > 21}, IList<T>{$ifend})
   strict private
     FList : IList<T>;
@@ -170,8 +166,6 @@ type
     property Current: T
       read GetCurrent;
   end;
-
-//*****************************************************************************
 
 implementation
 

@@ -20,8 +20,6 @@ unit DDuce.Demos.MainForm;
 
 {$I ..\Source\DDuce.inc}
 
-//*****************************************************************************
-
 interface
 
 uses
@@ -30,12 +28,12 @@ uses
 
   VirtualTrees,
 
-{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
-  System.Actions,
-{$ENDIF}
-
 {$IFDEF HAS_UNIT_SYSTEM_UITYPES}
   System.UITypes,
+{$ENDIF}
+
+{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
+  System.Actions,
 {$ENDIF}
 
   DDuce.Logger,
@@ -95,8 +93,6 @@ type
 var
   frmMainMenu: TfrmMainMenu;
 
-//*****************************************************************************
-
 implementation
 
 {$R *.dfm}
@@ -148,7 +144,7 @@ var
   ];
 
 resourcestring
-  SConceptsLoaded = '%d demos loaded.';
+  SDemosLoaded = '%d demos loaded.';
 
 {$REGION 'construction and destruction'}
 procedure TfrmMainMenu.AfterConstruction;
@@ -170,17 +166,12 @@ begin
     ValuePropertyName := 'UnitName';
     AutoSize          := True;
   end;
-//  with FTVP.ColumnDefinitions.Add('Category') do
-//  begin
-//    ValuePropertyName := 'Category';
-//    AutoSize          := True;
-//  end;
   FTVP.TreeView := FVST;
   FTVP.View.ItemsSource := DemoManager.ItemList;
   FTVP.View.Filter.Add(FTVPFilter);
   FTVP.OnDoubleClick := FTVPDoubleClick;
   FVST.Header.AutoFitColumns;
-  sbrMain.SimpleText := Format(SConceptsLoaded, [DemoManager.ItemList.Count]);
+  sbrMain.SimpleText := Format(SDemosLoaded, [DemoManager.ItemList.Count]);
   {$ENDIF}
 end;
 {$ENDREGION}

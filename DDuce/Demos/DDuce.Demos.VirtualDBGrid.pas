@@ -20,8 +20,6 @@ unit DDuce.Demos.VirtualDBGrid;
 
 {$I ..\Source\DDuce.inc}
 
-//*****************************************************************************
-
 interface
 
 uses
@@ -35,6 +33,7 @@ uses
 {$IFDEF DSHARP}
   DSharp.Collections,
 {$ENDIF}
+
 {$IFDEF SPRING}
   Spring, Spring.Collections,
 {$ENDIF}
@@ -70,8 +69,6 @@ type
 
   end;
 
-//*****************************************************************************
-
 implementation
 
 uses
@@ -89,6 +86,7 @@ begin
   FVDBG           := CreateVirtualDBGrid(Self, pnlLeft, dscMain);
   FInspector      := CreateInspector(Self, pnlRight, FVDBG);
   FDataSet.Active := True;
+  FVDBG.Header.AutoFitColumns;
 end;
 {$ENDREGION}
 
