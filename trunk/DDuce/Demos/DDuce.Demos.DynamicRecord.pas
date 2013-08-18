@@ -194,11 +194,26 @@ type
     procedure CreateTestRecord;
     procedure CreateTestTRecord;
 
-    procedure InspectorGetCellText(Sender: TObject; Cell: TGridCell; var Value: string);
-    procedure InspectorSetEditText(Sender: TObject; Cell: TGridCell;
-      var Value: string);
-    procedure InspectorGetEditStyle(Sender: TObject; Cell: TGridCell; var Style: TGridEditStyle);
-    procedure InspectorGetEditText(Sender: TObject; Cell: TGridCell; var Value: string);
+    procedure InspectorGetCellText(
+          Sender : TObject;
+          Cell   : TGridCell;
+      var Value  : string
+    );
+    procedure InspectorSetEditText(
+          Sender : TObject;
+          Cell   : TGridCell;
+      var Value  : string
+    );
+    procedure InspectorGetEditStyle(
+          Sender  : TObject;
+          Cell    : TGridCell;
+      var Style   : TGridEditStyle
+    );
+    procedure InspectorGetEditText(
+          Sender : TObject;
+          Cell   : TGridCell;
+      var Value  : string
+    );
 
     procedure Changed;
 
