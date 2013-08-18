@@ -25,8 +25,6 @@ unit DDuce.Reflect;
   using the RTTI.
 }
 
-//*****************************************************************************
-
 interface
 
 uses
@@ -48,8 +46,6 @@ type
       const AArg: T
     ): IDynamicRecord<T>; overload; static;
   end;
-
-//*****************************************************************************
 
 implementation
 
@@ -96,105 +92,11 @@ begin
   Result := R;
 end;
 
-//class function Reflect.Properties<T>(const AArg: T): IDynamicRecord;
-//var
-//  R : IDynamicRecord<T>;
-//begin
-//  R := TDynamicRecord<T>.Create(AArg);
-//  Result := R;
-//
-//
-////  var
-////  R : TRecord;
-////  V : TValue;
-////begin
-////  V := TValue.From<T>(AArg);
-////  R.Assign(V, True, False, True, []);
-////  Result := R;
-//end;
-
 class function Reflect.SetElementNames<T>(const AArg: T): string;
 begin
-
+  // TODO
 end;
 
 end.
 
-{
-function AsPropString(AValue: TValue): string;
-var
-  P             : TRttiProperty;
-  S             : string;
-  V             : TValue;
-  V2            : TValue;
-  N             : Integer;
-  ExcludedTypes : TTypeKinds;
-begin
-  Result := '';
-  if not AValue.IsEmpty then
-  begin
-    ExcludedTypes := [
-      tkClassRef, tkMethod, tkInterface, tkPointer, tkUnknown, tkArray,
-      tkDynArray, tkClass
-    ];
-    N := 0;
-    for P in FRtti.GetType(AValue.TypeInfo).GetProperties do
-    begin
-      if not (P.PropertyType.TypeKind in ExcludedTypes) and P.IsReadable then
-      begin
-        if Length(P.Name) > N then
-          N := Length(P.Name);
-      end;
-    end;
-    for P in FRtti.GetType(AValue.TypeInfo).GetProperties do
-    begin
-      if not (P.PropertyType.TypeKind in ExcludedTypes) and P.IsReadable then
-      begin
-        try
-        if AValue.IsObject then
-          V := P.GetValue(AValue.AsObject)
-        else
-          V := P.GetValue(AValue.GetReferenceToRawData);
-        except
-          S := '<error reading value>';
-          AppendLine(Result, Format('%-*s = %s', [N, P.Name, S]));
-          Continue;
-        end;
-        try
-        if V.Kind = tkClass then
-        begin
-          S := P.Name + ': ' + V.AsObject.ClassName;
-        end
-        else if V.Kind = tkVariant then
-          S := VarToStrDef(V.AsVariant, '')
-        // don't append #0 characters to the result.
-        else if (V.Kind in [tkChar, tkWChar]) and (V.ToString = #0) then
-          S := ''
-        else if V.Kind = tkRecord then
-        begin
-          if TryGetUnderlyingValue(V, V2) then
-          begin
-            if (V2.Kind in [tkChar, tkWChar]) and (V.ToString = #0) then
-              S := ''
-            else
-              S := V2.ToString;
-          end
-          else
-          begin
-              S := '<error while executing TryGetUnderlyingValue>'
-          end
-        end
-        else
-          S := V.ToString;
-        except
-          S := '<error reading value>';
-          AppendLine(Result, Format('%-*s = %s', [N, P.Name, S]));
-          Continue;
-        end;
-        if S <> '' then
-          AppendLine(Result, Format('%-*s = %s', [N, P.Name, S]));
-      end;
-    end;
-  end;
-end;
-}
+

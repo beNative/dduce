@@ -22,8 +22,6 @@ unit DDuce.Demos.ListDataSet;
 
 { Demonstrates TListDataSet }
 
-//*****************************************************************************
-
 interface
 
 uses
@@ -51,8 +49,6 @@ uses
   DDuce.Components.DBGridView,
 
   DDuce.Demos.Contact;
-
-//=============================================================================
 
 type
   TfrmListDataSet = class(TForm)
@@ -161,8 +157,6 @@ type
       read GetPresenterEnabled write SetPresenterEnabled;
 
   end;
-
-//*****************************************************************************
 
 implementation
 

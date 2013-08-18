@@ -20,8 +20,6 @@ unit DDuce.DynamicRecord;
 
 {$I DDuce.inc}
 
-//*****************************************************************************
-
 interface
 
 uses
@@ -124,8 +122,6 @@ uses
       section of the unit.
 }
 {$ENDREGION}
-
-//=============================================================================
 
 type
   IDynamicField = interface
@@ -256,8 +252,6 @@ type
     property Data: T
       read GetData write SetData;
   end;
-
-//=============================================================================
 
   { TRecord manages a IDynamicRecord instance.  }
 
@@ -624,8 +618,6 @@ type
     class operator Implicit(const ARecord: TRecord<T>): IDynamicRecord; inline; static;
   end;
 
-  //=============================================================================
-
 type
   { TDynamicField holds the Name/Value pair representation of a Field. }
 
@@ -860,14 +852,11 @@ type
     constructor Create(AInstance: T); reintroduce; overload;
     procedure BeforeDestruction; override;
 
-
     //constructor Create(const AData: T);
     { Wrapped instance of type T }
     property Data: T
       read GetData write SetData;
   end;
-
-//*****************************************************************************
 
 implementation
 
@@ -887,8 +876,6 @@ resourcestring
 
 var
   FContext: TRttiContext;
-
-//=============================================================================
 
   { A custom variant type that implements the mapping from the property names
     to the record instance. }
@@ -935,8 +922,6 @@ type
     class property VarDataRecordType : TVarDataRecordType
       read FVarDataRecordType;
   end;
-
-//=============================================================================
 
 {$REGION 'non-interfaced routines'}
 function WordCount(const AString: string; const AWordDelims: TSysCharSet)
@@ -2482,26 +2467,13 @@ begin
   N := 0;
   SL := TStringList.Create;
   try
-//    if AAlignValues then
-//    begin
-//      for I := 0 to Count - 1 do
-//      begin
-//        L := Length(Items[I].Name);
-//        N := IfThen(L > N, L, N);
-//      end;
-//    end;
     N := 30;
     for I := 0 to Count - 1 do
     begin
       if AAlignValues then
       begin
-        //T := Values Items[I].Value.ToString;
-        //T := GetItemValue(
         S := RttiContext.GetType(TypeInfo(T)).GetProperties[I].Name;
         U := GetItemValue(S).ToString;
-
-
-        //T := RttiContext.GetType(TypeInfo(T)).GetProperties[I].GetValue(TObject(Data)).ToString;
         if U = #0 then
           U := '';
         S := Format('%-*s = %s', [N, S, U])

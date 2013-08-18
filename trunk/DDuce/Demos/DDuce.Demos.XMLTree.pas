@@ -20,9 +20,8 @@ unit DDuce.Demos.XMLTree;
 
 {$I ..\Source\DDuce.inc}
 
-{ Form demonstrating the TXMLTree TVirtualStringTree descendant. }
-
-//*****************************************************************************
+{ Form demonstrating the TXMLTree component which is a TVirtualStringTree
+  descendant. }
 
 interface
 
@@ -83,8 +82,6 @@ type
     procedure AfterConstruction; override;
 
   end;
-
-//*****************************************************************************
 
 implementation
 

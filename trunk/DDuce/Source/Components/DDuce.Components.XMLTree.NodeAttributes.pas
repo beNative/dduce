@@ -2,8 +2,6 @@ unit DDuce.Components.XMLTree.NodeAttributes;
 
 {$I ..\DDuce.inc}
 
-//*****************************************************************************
-
 interface
 
 uses
@@ -63,8 +61,6 @@ type
     property ItemByType[Index: TNodeType]: TNodeAttributesItem
       read GetItemByType;
   end;
-
-//*****************************************************************************
 
 implementation
 

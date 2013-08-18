@@ -19,18 +19,10 @@
 unit DDuce.Demos.DynamicRecord;
 
 {
-//  if  R['waarde'].IsEmpty then //  [DCC Fatal Error] Concepts.Forms.DynamicRecords.pas(123): F2084 Internal Error: C13394
-//  // Resolved in Build: : 15.0.3722.28600
-
-}
-
-{
   TODO: check initialization of records
   - using ZeroMem
   - using RTTI on record fields (using Default())
 }
-
-//*****************************************************************************
 
 interface
 
@@ -42,7 +34,7 @@ uses
   ExtCtrls,
 
 {$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
-  System.Actions,
+  //System.Actions,
 {$ENDIF}
 
   Spring,
@@ -51,7 +43,9 @@ uses
 
   DDuce.DynamicRecord,
 
-  DDuce.Demos.Contact;
+  DDuce.Demos.Contact, Data.Bind.EngExt, Vcl.Bind.DBEngExt, System.Rtti,
+  System.Bindings.Outputs, Vcl.Bind.Editors, Data.Bind.Components,
+  Data.Bind.DBScope, System.Actions;
 
 type
   TTestClass = class
@@ -169,14 +163,13 @@ type
     tsTRecord          : TTabSheet;
     actTestData        : TAction;
     btnTestData        : TButton;
-    btn1               : TButton;
     {$ENDREGION}
 
     procedure actTestAssignExecute(Sender: TObject);
     procedure dscTestDataChange(Sender: TObject; Field: TField);
     procedure actToStringsExecute(Sender: TObject);
     procedure actTestDataExecute(Sender: TObject);
-    procedure btn1Click(Sender: TObject);
+
 
   private
     FContact     : TContact;
@@ -232,14 +225,12 @@ type
 
   end;
 
-//*****************************************************************************
-
 implementation
 
 {$R *.dfm}
 
 uses
-  TypInfo, Rtti, StrUtils,
+  TypInfo, StrUtils,
 
   DDuce.Reflect,
 
@@ -249,7 +240,6 @@ uses
 procedure TfrmDynamicRecords.AfterConstruction;
 begin
   inherited;
-  ReportMemoryLeaksOnShutdown := True;
   FInspector := CreateInspector(pnlRecordInspector);
   FStrings := TStringList.Create;
   CreateContact;
@@ -328,7 +318,7 @@ end;
 procedure TfrmDynamicRecords.InspectorGetEditStyle(Sender: TObject;
   Cell: TGridCell; var Style: TGridEditStyle);
 begin
-  Style := gePickList;
+  Style := geSimple;
 end;
 
 procedure TfrmDynamicRecords.InspectorGetEditText(Sender: TObject;
@@ -358,19 +348,8 @@ procedure TfrmDynamicRecords.dscTestDataChange(Sender: TObject; Field: TField);
 begin
   if Field = nil then
   begin
-//    ExecuteFromDataSet;
+    ExecuteFromDataSet;
   end;
-end;
-
-procedure TfrmDynamicRecords.btn1Click(Sender: TObject);
-begin
-  if Assigned(Reflect.Properties(FContact)) then
-  begin
-    Reflect.Properties(FContact)['FirstName'] := 'Michael';
-     ShowMessage(Reflect.Properties(FContact).ToString);
-  end;
-    //ShowMessage(Reflect.Properties(FContact)['FirstName'].ToString);
-    ShowMessage(Reflect.Properties(FContact).ToString);
 end;
 {$ENDREGION}
 
@@ -418,13 +397,13 @@ end;
 
 function TfrmDynamicRecords.CreateInspector(AParent : TWinControl): TInspector;
 begin
-  Result := TInspector.Create(Self);
-  Result.Parent         := AParent;
-  Result.Align          := alClient;
-  Result.OnGetCellText  := InspectorGetCellText;
-  Result.OnGetEditStyle := InspectorGetEditStyle;
-  Result.OnSetEditText  := InspectorSetEditText;
-  Result.OnGetEditText  := InspectorGetEditText;
+//  Result := TInspector.Create(Self);
+//  Result.Parent         := AParent;
+//  Result.Align          := alClient;
+//  Result.OnGetCellText  := InspectorGetCellText;
+//  Result.OnGetEditStyle := InspectorGetEditStyle;
+//  Result.OnSetEditText  := InspectorSetEditText;
+//  Result.OnGetEditText  := InspectorGetEditText;
 end;
 {$ENDREGION}
 
@@ -470,9 +449,9 @@ begin
   if FUpdate then
   begin
     lblRecord.Caption := FRecord.ToString;
-    FInspector.Rows.Count := FRecord.Count;
-    FInspector.Invalidate;
-    FInspector.UpdateEditContents(False);
+//    FInspector.Rows.Count := FRecord.Count;
+//    FInspector.Invalidate;
+//    FInspector.UpdateEditContents(False);
 
     lblContact.Caption := AsPropString(FContact);
     lblTestClass.Caption := AsPropString(FTestClass);

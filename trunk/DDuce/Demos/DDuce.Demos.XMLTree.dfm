@@ -2,7 +2,7 @@ object frmXMLTree: TfrmXMLTree
   Left = 0
   Top = 0
   ClientHeight = 548
-  ClientWidth = 790
+  ClientWidth = 1097
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,11 +15,12 @@ object frmXMLTree: TfrmXMLTree
   object pnlTop: TPanel
     Left = 0
     Top = 0
-    Width = 790
+    Width = 1097
     Height = 32
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 790
     object btnExpand: TButton
       Left = 8
       Top = 4
@@ -40,12 +41,13 @@ object frmXMLTree: TfrmXMLTree
   object pnlMain: TPanel
     Left = 0
     Top = 32
-    Width = 790
+    Width = 1097
     Height = 516
     Align = alClient
     BevelOuter = bvNone
     Caption = 'pnlMain'
     TabOrder = 1
+    ExplicitWidth = 790
     object spl1: TSplitter
       Left = 361
       Top = 0
@@ -67,15 +69,16 @@ object frmXMLTree: TfrmXMLTree
     object pnlEditor: TPanel
       Left = 368
       Top = 0
-      Width = 422
+      Width = 729
       Height = 516
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 422
       object mmoXML: TMemo
         Left = 0
         Top = 0
-        Width = 124
+        Width = 431
         Height = 516
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
@@ -86,15 +89,17 @@ object frmXMLTree: TfrmXMLTree
         ParentFont = False
         TabOrder = 0
         OnChange = mmoXMLChange
+        ExplicitWidth = 124
       end
       object pnlInspector: TPanel
-        Left = 124
+        Left = 431
         Top = 0
         Width = 298
         Height = 516
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitLeft = 124
       end
     end
   end

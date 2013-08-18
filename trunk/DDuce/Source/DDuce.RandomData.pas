@@ -22,8 +22,6 @@ unit DDuce.RandomData;
 
 {$I DDuce.inc}
 
-//*****************************************************************************
-
 interface
 
 type
@@ -2409,8 +2407,6 @@ type
     class function Adjective: string; static;
   end;
 
-//*****************************************************************************
-
 implementation
 
 uses
@@ -2675,6 +2671,3 @@ initialization
   Randomize;
 
 end.
-
-
-
