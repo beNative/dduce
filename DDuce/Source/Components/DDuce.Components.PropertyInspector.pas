@@ -313,11 +313,18 @@ type
     procedure ItemExpanded(AItem: TPropsPageItem); virtual;
     procedure ItemCollapsed(AItem: TPropsPageItem); virtual;
     function GetItemCaptionColor(AItem: TPropsPageItem): TColor; virtual;
-    property Items: TPropsPageItems read FItems;
-    property Splitter: Integer read GetSplitter write SetSplitter;
-    property ValuesColor: TColor read FValuesColor write SetValuesColor
-      default clNavy;
-    property Color default clBtnFace;
+
+    property Items: TPropsPageItems
+      read FItems;
+
+    property Splitter: Integer
+      read GetSplitter write SetSplitter;
+
+    property ValuesColor: TColor
+      read FValuesColor write SetValuesColor default clNavy;
+
+    property Color
+      default clBtnFace;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -938,27 +945,44 @@ type
       var AIncludeProp: Boolean); virtual;
     procedure GetCaptionColor(APropTypeInfo: PTypeInfo; const APropName: string;
       var AColor: TColor); virtual;
-    property Designer: Pointer read FDesigner write SetDesigner;
+
+    property Designer: Pointer
+      read FDesigner write SetDesigner;
+
     property PropKinds: TPropertyInspectorPropKinds read FPropKinds
       write SetPropKinds default [pkProperties];
+
     property ComponentRefColor: TColor read FComponentRefColor
       write SetComponentRefColor default clMaroon;
-    property ComponentRefChildColor: TColor read FComponentRefChildColor
-      write SetComponentRefChildColor default clGreen;
-    property ExpandComponentRefs: Boolean read FExpandComponentRefs
-      write SetExpandComponentRefs default True;
-    property ReadOnly: Boolean read FReadOnly write SetReadOnly default False;
-    property OnGetComponent: TOnGetComponent read FOnGetComponent
-      write FOnGetComponent;
+
+    property ComponentRefChildColor: TColor
+      read FComponentRefChildColor write SetComponentRefChildColor
+      default clGreen;
+
+    property ExpandComponentRefs: Boolean
+      read FExpandComponentRefs write SetExpandComponentRefs default True;
+
+    property ReadOnly: Boolean
+      read FReadOnly write SetReadOnly default False;
+
+    property OnGetComponent: TOnGetComponent
+      read FOnGetComponent write FOnGetComponent;
+
     property OnGetComponentNames: TOnGetComponentNames
       read FOnGetComponentNames write FOnGetComponentNames;
-    property OnGetComponentName: TOnGetComponentName read FOnGetComponentName
-      write FOnGetComponentName;
-    property OnFilterProp: TPropertyInspectorOnFilterProp read FOnFilterProp
-      write FOnFilterProp;
-    property OnModified: TNotifyEvent read FOnModified write FOnModified;
+
+    property OnGetComponentName: TOnGetComponentName
+      read FOnGetComponentName write FOnGetComponentName;
+
+    property OnFilterProp: TPropertyInspectorOnFilterProp
+      read FOnFilterProp write FOnFilterProp;
+
+    property OnModified: TNotifyEvent
+      read FOnModified write FOnModified;
+
     property OnGetCaptionColor: TPropertyInspectorOnGetCaptionColor
       read FOnGetCaptionColor write FOnGetCaptionColor;
+
     property OnGetEditorClass: TPropertyInspectorOnGetEditorClass
       read FOnGetEditorClass write FOnGetEditorClass;
 
@@ -977,10 +1001,14 @@ type
       const APropName: string; AEditorClass: TPropertyEditorClass);
     procedure UnregisterPropEditor(ATypeInfo: PTypeInfo; AObjectClass: TClass;
       const APropName: string; AEditorClass: TPropertyEditorClass);
+
     property Items;
-    property Objects[AIndex: Integer]: TPersistent read GetObjects
-      write SetObjects;
-    property ObjectCount: Integer read GetObjectCount;
+
+    property Objects[AIndex: Integer]: TPersistent
+      read GetObjects write SetObjects;
+
+    property ObjectCount: Integer
+      read GetObjectCount;
   end;
 
   TPropertyInspector = class(TCustomPropertyInspector)
@@ -1477,7 +1505,7 @@ begin
   // Do nothing
 end;
 
-{ TElMethodPropEditor }
+{ TMethodPropertyEditor }
 
 function TMethodPropertyEditor.GetValue: string;
 var
@@ -1577,7 +1605,6 @@ begin
     FCellBitmap.Width := ARect.Right - ARect.Left;
     FCellBitmap.Height := ARect.Bottom - ARect.Top;
 
-            { Fill }
     with FCellBitmap.Canvas do
     begin
       PI := ItemByRow(ARow);
@@ -1617,7 +1644,7 @@ begin
 
       if ACol = 0 then
       begin
-                            { Splitter }
+        { Splitter }
         Pen.Color := clBtnShadow;
         Polyline([Point(FCellBitmap.Width - 2, 0), Point(FCellBitmap.Width - 2,
           FCellBitmap.Height)]);
@@ -1627,7 +1654,6 @@ begin
       end;
       if ARow = Row - 1 then
       begin
-                            { Selected row ages }
         Pen.Color := cl3DDkShadow;
         Polyline([Point(0, FCellBitmap.Height - 2), Point(FCellBitmap.Width,
           FCellBitmap.Height - 2)]);
@@ -1638,7 +1664,6 @@ begin
       else
         if ARow = Row then
       begin
-                                { Selected row ages }
         if ACol = 0 then
         begin
           Pen.Color := cl3DDkShadow;
@@ -1655,7 +1680,7 @@ begin
       end
       else
       begin
-                                { Row line }
+        { Row line }
         if FBitmapBkColor <> Color then
           UpdatePattern;
         Windows.FillRect(Handle, Rect(0, FCellBitmap.Height - 1,
@@ -1766,12 +1791,11 @@ begin
 end;
 
 procedure TCustomPropsPage.MouseDown(Button: TMouseButton; Shift: TShiftState;
-  X,
-  Y: Integer);
+  X, Y: Integer);
 var
-  LGridCoord: TGridCoord;
-  LCellRect : TRect;
-  LItem     : TPropsPageItem;
+  LGridCoord : TGridCoord;
+  LCellRect  : TRect;
+  LItem      : TPropsPageItem;
 begin
   if ssLeft in Shift then
   begin
@@ -1783,7 +1807,6 @@ begin
     else
     begin
       inherited;
-      // TSI
       InvalidateEditor;
       LGridCoord := MouseCoord(X, Y);
       if (LGridCoord.X = 0) and (LGridCoord.Y <> -1) then
@@ -1901,7 +1924,7 @@ begin
   inherited;
   AdjustTopRow;
   UpdateScrollBar;
-  Splitter := Splitter; // Include UpdateColWidths;
+  Splitter := Splitter;
   ShowEditor;
 end;
 
@@ -1950,8 +1973,8 @@ procedure TCustomPropsPage.ItemsChange;
   end;
 
 var
-  I         : Integer;
-  LActiveItem: TPropsPageItem;
+  I           : Integer;
+  LActiveItem : TPropsPageItem;
 
 begin
   if (FUpdateCount <= 0) and not(ppsDestroying in FState) then
@@ -2291,7 +2314,7 @@ begin
     ActiveList.Width := Width;
     if ActiveList = PickList then
     begin
-                    { Get values }
+      { Get values }
       DoGetPickListItems;
       TCustomListBoxAccess(PickList).Color := Color;
       TCustomListBoxAccess(PickList).Font := Font;
@@ -2300,7 +2323,7 @@ begin
         LVisItemCount := DropDownRows
       else
         LVisItemCount := PickList.Items.Count;
-                    { Calc PickList height }
+      { Calc PickList height }
       if LItem.OwnerDrawPickList then
       begin
         LHW := 4;
@@ -2318,12 +2341,12 @@ begin
         PickList.Height := LHW
       else
         PickList.Height := 20;
-                    { Set PickList selected item }
+      { Set PickList selected item }
       if Text = '' then
         PickList.ItemIndex := -1
       else
         PickList.ItemIndex := PickList.Items.IndexOf(Text);
-                    { Calc PickList width }
+      { Calc PickList width }
       LHW := PickList.ClientWidth;
       for I := 0 to PickList.Items.Count - 1 do
       begin
@@ -2842,18 +2865,19 @@ begin
     try
       Caption := FEditor.PropName;
       LPropAttrs := FEditor.GetAttrs;
-      if (praValueList in LPropAttrs) and not TCustomPropertyInspector(Owner)
-        .ReadOnly then
+      if (praValueList in LPropAttrs)
+        and not TCustomPropertyInspector(Owner).ReadOnly then
         EditStyle := esPickList
       else
-        if (praDialog in LPropAttrs) and not TCustomPropertyInspector(Owner)
-        .ReadOnly then
+        if (praDialog in LPropAttrs)
+          and not TCustomPropertyInspector(Owner).ReadOnly then
         EditStyle := esEllipsis
       else
         EditStyle := esSimple;
-      Expandable := LExpandables[(praSubProperties in LPropAttrs) and
-        not((praComponentRef in LPropAttrs) and not TCustomPropertyInspector
-        (Owner).ExpandComponentRefs)];
+      Expandable := LExpandables[
+        (praSubProperties in LPropAttrs)
+        and not((praComponentRef in LPropAttrs)
+        and not TCustomPropertyInspector(Owner).ExpandComponentRefs)];
       ReadOnly := (praReadOnly in LPropAttrs) or
         TCustomPropertyInspector(Owner).ReadOnly;
       AutoUpdate := praAutoUpdate in LPropAttrs;

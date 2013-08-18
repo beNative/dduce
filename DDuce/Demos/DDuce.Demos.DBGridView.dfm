@@ -50,10 +50,6 @@ object frmDBGridView: TfrmDBGridView
     object tsDBGridViewEvents: TTabSheet
       Caption = 'DBGridView Events'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 876
-      ExplicitHeight = 0
       object pnlDBGridViewEvents: TPanel
         Left = 0
         Top = 0
@@ -62,7 +58,6 @@ object frmDBGridView: TfrmDBGridView
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 876
         object lbxDBGridViewEvents: TCheckListBox
           AlignWithMargins = True
           Left = 3
@@ -159,10 +154,6 @@ object frmDBGridView: TfrmDBGridView
     object tsDataSourceEvents: TTabSheet
       Caption = 'DataSource Events'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 876
-      ExplicitHeight = 0
       object pnlDataSourceEvents: TPanel
         Left = 0
         Top = 0
@@ -171,7 +162,6 @@ object frmDBGridView: TfrmDBGridView
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 876
         object lbxDataSourceEvents: TCheckListBox
           AlignWithMargins = True
           Left = 3

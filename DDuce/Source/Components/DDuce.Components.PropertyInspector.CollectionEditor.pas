@@ -94,13 +94,14 @@ type
       read GetActiveItem;
   end;
 
-//=============================================================================
-
 procedure ExecuteCollectionEditor(ACollection : TCollection);
 
-//*****************************************************************************
-
 implementation
+
+uses
+  Rtti,
+
+  DDuce.Reflect;
 
 {$R *.dfm}
 
@@ -216,38 +217,37 @@ end;
 
 procedure TfrmCollectionEditor.FInspectorModified(Sender: TObject);
 var
-  I, J  : Integer;
+  I  : Integer;
+  J  : Integer;
   S  : string;
-  V  : Variant;
+  V  : TValue;
   AI : TPropsPageItem;
   PI : TPropsPageItem;
-  Instance : TObject;
   SL : TStringList;
+  O  : TObject;
 begin
   SL := TStringList.Create;
   try
     AI := FInspector.ActiveItem;
-    S := AI.Caption;
-    V := AI.DisplayValue;
+    O  := FInspector.Objects[0];
+    S  := AI.Caption;
+    V  := Reflect.Properties(O).Values[S];
     PI := AI;
     while Assigned(PI) do
     begin
       SL.Add(PI.Caption);
       PI := PI.Parent;
     end;
-
-     for I := 0 to lvCollectionItems.Items.Count - 1 do
-     begin
-       if lvCollectionItems.Items[I].Selected then
-       begin
-         Instance := FCollection.Items[I];
-         for J := SL.Count -1 downto 1 do
-         begin
-           Instance := GetObjectProp(Instance, SL[J]);
-         end;
-         SetPropValue(Instance, S, V);
-       end;
-     end;
+    for I := 0 to lvCollectionItems.Items.Count - 1 do
+    begin
+      if lvCollectionItems.Items[I].Selected then
+      begin
+        O := FCollection.Items[I];
+        for J := SL.Count -1 downto 1 do
+          O := GetObjectProp(O, SL[J]);
+        Reflect.Properties(O).Values[S] := V;
+      end;
+    end;
   finally
     SL.Free;
   end;
@@ -263,8 +263,6 @@ begin
   actUp.Enabled := B and (lvCollectionItems.ItemIndex > 0);
   actDown.Enabled := B and (lvCollectionItems.ItemIndex < FCollection.Count - 1);
 end;
-
-//-----------------------------------------------------------------------------
 
 procedure TfrmCollectionEditor.UpdateInspector;
 var
@@ -290,8 +288,6 @@ begin
     UpdateActions;
   end;
 end;
-
-//-----------------------------------------------------------------------------
 
 procedure TfrmCollectionEditor.UpdateItems;
 var
