@@ -88,8 +88,6 @@ unit DDuce.ScopedReference;
 
 {$I DDuce.inc}
 
-//*****************************************************************************
-
 interface
 
 uses
@@ -134,8 +132,6 @@ type
     property Ref: T
       read GetRef;
   end;
-
-//*****************************************************************************
 
 implementation
 
