@@ -27,8 +27,6 @@ unit DDuce.Components.VirtualDataSet;
 
 {$I ..\DDuce.inc}
 
-//*****************************************************************************
-
 interface
 
 uses
@@ -371,8 +369,6 @@ type
       read FOnPostData write FOnPostData;
   end;
 
-//=============================================================================
-
   TVirtualDataset = class(TCustomVirtualDataset)
   published
     property Active;
@@ -425,8 +421,6 @@ procedure VirtualDatasetErrorFmt(
   const AArgs    : array of const;
         ADataset : TCustomVirtualDataset = nil
 );
-
-//*****************************************************************************
 
 implementation
 
@@ -1794,4 +1788,3 @@ Last  : Goto the last record. Returns True or False
 
 AppendBuffer : Append a buffer to the records.
 }
-

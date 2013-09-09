@@ -20,8 +20,6 @@ unit DDuce.Components.XMLTree.Editors;
 
 {$I ..\DDuce.inc}
 
-//*****************************************************************************
-
 interface
 
 uses
@@ -76,8 +74,6 @@ type
     Value: array[0..3] of Variant;
     Changed: Boolean;
   end;
-
-//*****************************************************************************
 
 implementation
 
