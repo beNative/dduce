@@ -1,4 +1,4 @@
-program DDuceDemos;
+program Demo.DDuce;
 
 uses
   Forms,
