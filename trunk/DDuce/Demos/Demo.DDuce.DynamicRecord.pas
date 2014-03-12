@@ -29,13 +29,12 @@ interface
 {$I ..\Source\DDuce.inc}
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ActnList, Grids, DBGrids, ComCtrls, DB, DBClient,
-  ExtCtrls,
-
-{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
-  //System.Actions,
-{$ENDIF}
+  System.SysUtils, System.Variants, System.Classes, System.Actions,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
+  Vcl.ActnList, Vcl.Grids, Vcl.DBGrids, Vcl.ComCtrls, Vcl.ExtCtrls,
+  Data.DB,
+  Datasnap.DBClient,
+  Winapi.Windows, Winapi.Messages,
 
   Spring,
 
@@ -45,7 +44,7 @@ uses
 
   Demo.Contact, Data.Bind.EngExt, Vcl.Bind.DBEngExt, System.Rtti,
   System.Bindings.Outputs, Vcl.Bind.Editors, Data.Bind.Components,
-  Data.Bind.DBScope, System.Actions;
+  Data.Bind.DBScope;
 
 type
   TTestClass = class
@@ -131,8 +130,6 @@ type
     property TestNullableChar: Nullable<Char>
       read FTestNullableChar write FTestNullableChar;
   end;
-
-//=============================================================================
 
 type
   TfrmDynamicRecords = class(TForm)
@@ -230,7 +227,7 @@ implementation
 {$R *.dfm}
 
 uses
-  TypInfo, StrUtils,
+  System.TypInfo, System.StrUtils,
 
   DDuce.Reflect,
 

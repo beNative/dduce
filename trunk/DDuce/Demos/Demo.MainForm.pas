@@ -207,7 +207,7 @@ begin
     C := TDemo(Item);
     Accepted :=
       ContainsText(C.Name, edtFilter.Text)
-      or ContainsText(C.UnitName, edtFilter.Text);
+      or ContainsText(C.SourceFilename, edtFilter.Text);
   end
   else
     Accepted := True;

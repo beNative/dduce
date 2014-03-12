@@ -25,7 +25,7 @@ procedure RegisterDemos;
 implementation
 
 uses
-  SysUtils,
+  System.SysUtils,
 
   Demo.DDuce.ListDataSet,
   Demo.DDuce.ScopedReferences,
