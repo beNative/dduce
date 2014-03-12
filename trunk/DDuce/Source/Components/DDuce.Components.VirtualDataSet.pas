@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2014 Tim Sinaeve tim.sinaeve@gmail.com
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -771,7 +771,8 @@ begin
     ftLargeInt:
       begin
         TVarData(AVariant).VType := VT_DECIMAL;
-        Decimal(AVariant).Lo64   := Int64(ABuffer^);
+
+//        Decimal(AVariant). Lo64   := Int64(ABuffer^);
       end;
   else
     DatabaseErrorFmt(SUnsupportedFieldType, [FieldTypeNames[AField.DataType],
@@ -1010,13 +1011,14 @@ begin
       IUnknown(ABuffer^) := AVariant;
     ftIDispatch:
       IDispatch(ABuffer^) := AVariant;
-    ftLargeInt:
-      if Decimal(AVariant).sign > 0 then
-        LargeInt(ABuffer^) := -1 * Decimal(AVariant).Lo64
-      else
-        LargeInt(ABuffer^) := Decimal(AVariant).Lo64;
-    ftBlob .. ftTypedBinary, ftVariant, ftWideMemo:
-      OleVariant(ABuffer^) := AVariant;
+    ftLargeInt: ;
+//  TS: not portable!
+//      if Decimal(AVariant).sign > 0 then
+//        LargeInt(ABuffer^) := -1 * Decimal(AVariant).Lo64
+//      else
+//        LargeInt(ABuffer^) := Decimal(AVariant).Lo64;
+//    ftBlob .. ftTypedBinary, ftVariant, ftWideMemo:
+//      OleVariant(ABuffer^) := AVariant;
   else
     DatabaseErrorFmt(SUnsupportedFieldType, [FieldTypeNames[AField.DataType],
         AField.DisplayName]);
@@ -1400,7 +1402,7 @@ begin
 end;
 
 function TCustomVirtualDataset.GetFieldData(Field: TField;
-   Buffer: TValueBuffer): Boolean;
+var  Buffer: TValueBuffer): Boolean;
 var
   RecBuf: TRecordBuffer;
   Data  : TValue;

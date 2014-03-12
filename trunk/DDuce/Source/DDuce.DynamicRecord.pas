@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2014 Tim Sinaeve tim.sinaeve@gmail.com
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -886,7 +886,7 @@ type
     { Our customized layout of the variant's record data. We only need a reference
       to the TDynamicRecord instance. }
 
-    TVarDataRecordData = packed record
+    TVarDataRecordData = {packed} record
       VType         : TVarType;
       Reserved1     : Word;
       Reserved2     : Word;
@@ -1158,7 +1158,7 @@ function TVarDataRecordType.GetProperty(var Dest: TVarData; const V: TVarData;
 begin
   Result := True;
   try
-    Variant(Dest) := TVarDataRecordData(V).DynamicRecord[Name].AsVariant;
+//    Variant(Dest) := TVarDataRecordData(V).DynamicRecord[Name].AsVariant;
   except
     raise Exception.CreateFmt(SValueCannotBeRead, [Name]);
   end;
@@ -1203,7 +1203,7 @@ begin
       Result := False;
     end;
   end;
-  TVarDataRecordData(V).DynamicRecord[Name] := U;
+//  TVarDataRecordData(V).DynamicRecord[Name] := U;
   if not Result then
     raise Exception.CreateFmt(SValueConversionError, [Name, VarTypeAsText(AValue.VType)]);
 end;

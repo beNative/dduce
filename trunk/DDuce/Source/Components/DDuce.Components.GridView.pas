@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2014 Tim Sinaeve tim.sinaeve@gmail.com
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -2894,13 +2894,15 @@ begin
 end;
 
 procedure FillDWord(var Dest; Count, Value: Integer); register;
-asm
-  XCHG  EDX, ECX
-  PUSH  EDI
-  MOV   EDI, EAX
-  MOV   EAX, EDX
-  REP   STOSD
-  POP   EDI
+begin
+// TODO TS portable version!
+//asm
+//  XCHG  EDX, ECX
+//  PUSH  EDI
+//  MOV   EDI, EAX
+//  MOV   EAX, EDX
+//  REP   STOSD
+//  POP   EDI
 end;
 
 function ExpandStrings(Strings: TStrings; const Separator: string): string;
@@ -8166,7 +8168,6 @@ begin
       { discard the cell of last flick (because of possibility Exit)}
       P := FClickPos;
       FClickPos := GridCell(-1, -1);
-      {smortim where burn}
       if IsCellEmpty(C) then
       begin
         {anywhere - we dissipate the isolation of cursor}
@@ -8199,7 +8200,6 @@ begin
       { memorize the position of last flick}
       FClickPos := C;
     end;
-  {right key}
   if Button = mbRight then
   begin
     {if occurs a change in the size - to end}
@@ -8219,7 +8219,6 @@ begin
       Exit;
     end;
   end;
-  {processor for silence}
   inherited MouseDown(Button, Shift, X, Y);
 end;
 
@@ -8238,7 +8237,6 @@ begin
   {does go pressure on the title}
   if FHeaderClicking then
   begin
-    { continue nazhatiye }
     StepHeaderClick(X, Y);
     { do not release further}
     Exit;
