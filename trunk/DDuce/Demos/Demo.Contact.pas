@@ -120,7 +120,6 @@ type
   TContacts = TObjectList<TContact>;
   {$ENDIF}
 {$ENDIF}
-//*****************************************************************************
 
 implementation
 

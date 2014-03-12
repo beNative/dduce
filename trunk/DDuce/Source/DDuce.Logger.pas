@@ -484,7 +484,6 @@ begin
   end
   else
     Stream := nil;
-  // SendStream free Stream
   InternalSendStream(AMsgType, AText, Stream);
 end;
 
@@ -598,7 +597,8 @@ end;
 procedure TLogger.Send(const AName: string; AValue: TValue);
 begin
   case AValue.Kind of
-    tkInteger: Send(AName, AValue.AsInteger);
+    tkInteger:
+      Send(AName, AValue.AsInteger);
     tkEnumeration:
     begin
       if AValue.TypeInfo = TypeInfo(Boolean) then
@@ -606,30 +606,33 @@ begin
         Send(AName, AValue.AsBoolean);
       end;
     end;
-//    tkFloat:
-//    begin
-//      if AValue.TypeInfo.Name = 'TDate' then
-//      begin
-//        Send(AName, AValue.AsType<TDate>);
-//      end
-//      else
-//      if AValue.TypeInfo.Name = 'TDateTime' then
-//      begin
-//        Send(AName, AValue.AsType<TDateTime>);
-//      end
-//      else
-//      if AValue.TypeInfo = TypeInfo(TTime) then
-//      begin
-//        Send(AName, AValue.AsType<TTime>);
-//      end
-//      else
-//      begin
-//        Send(AName, AValue.AsExtended);
-//      end;
-//    end;
-    tkClass: Send(AName, AValue.AsObject);
-    //tkVariant: Send(AName, AValue.AsVariant);
-    tkInt64: Send(AName, AValue.AsInt64);
+    tkFloat:
+    begin
+      if AValue.TypeInfo.Name = 'TDate' then
+      begin
+        Send(AName, AValue.AsType<TDate>);
+      end
+      else
+      if AValue.TypeInfo.Name = 'TDateTime' then
+      begin
+        Send(AName, AValue.AsType<TDateTime>);
+      end
+      else
+      if AValue.TypeInfo = TypeInfo(TTime) then
+      begin
+        Send(AName, AValue.AsType<TTime>);
+      end
+      else
+      begin
+        Send(AName, AValue.AsExtended);
+      end;
+    end;
+    tkClass:
+      Send(AName, AValue.AsObject);
+//    tkVariant:
+//      Send(AName, AValue.AsVariant);
+    tkInt64:
+      Send(AName, AValue.AsInt64);
   else
     Send(AName, AValue.ToString);
   end;
@@ -645,7 +648,7 @@ var
   S: string;
 begin
   if AException <> nil then
-    S := AException.ClassName + ' - ' + AException.Message + #13#10;
+    S := AException.ClassName + ' - ' + AException.Message + sLineBreak;
   InternalSendBuffer(lmtException, AName, S[1], Length(S));
 end;
 

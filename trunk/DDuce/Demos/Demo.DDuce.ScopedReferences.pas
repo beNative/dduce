@@ -21,8 +21,6 @@ unit Demo.DDuce.ScopedReferences;
 { Form demonstrating the use of scoped references in Delphi (or smart pointers
   as they are called in C++). }
 
-//*****************************************************************************
-
 interface
 
 {$I ..\Source\DDuce.inc}
@@ -54,8 +52,6 @@ type
     procedure ShowClassNames;
     procedure CreateScopedButton;
   end;
-
-//*****************************************************************************
 
 implementation
 
