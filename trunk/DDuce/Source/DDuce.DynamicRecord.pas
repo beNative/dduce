@@ -253,6 +253,12 @@ type
       read GetData write SetData;
   end;
 
+  IRecord = IDynamicRecord;
+
+  { The language does not support generic type aliases, so
+             IRecord<T> = IDynamicRecord<T>;
+     will not compile. }
+
   { TRecord manages a IDynamicRecord instance.  }
 
   TRecord = record
@@ -616,6 +622,7 @@ type
     class operator Implicit(const ARecord: TRecord<T>): T; inline; static;
     class operator Implicit(const ARecord: TRecord<T>): TRecord; inline; static;
     class operator Implicit(const ARecord: TRecord<T>): IDynamicRecord; inline; static;
+    class operator Implicit(const ARecord: TRecord<T>): IDynamicRecord<T>; inline; static;
   end;
 
 type
@@ -886,7 +893,7 @@ type
     { Our customized layout of the variant's record data. We only need a reference
       to the TDynamicRecord instance. }
 
-    TVarDataRecordData = {packed} record
+    TVarDataRecordData = record
       VType         : TVarType;
       Reserved1     : Word;
       Reserved2     : Word;
@@ -1158,7 +1165,7 @@ function TVarDataRecordType.GetProperty(var Dest: TVarData; const V: TVarData;
 begin
   Result := True;
   try
-//    Variant(Dest) := TVarDataRecordData(V).DynamicRecord[Name].AsVariant;
+    Variant(Dest) := TVarDataRecordData(V).DynamicRecord[Name].AsVariant;
   except
     raise Exception.CreateFmt(SValueCannotBeRead, [Name]);
   end;
@@ -1203,7 +1210,7 @@ begin
       Result := False;
     end;
   end;
-//  TVarDataRecordData(V).DynamicRecord[Name] := U;
+  TVarDataRecordData(V).DynamicRecord[Name] := U;
   if not Result then
     raise Exception.CreateFmt(SValueConversionError, [Name, VarTypeAsText(AValue.VType)]);
 end;
@@ -1899,7 +1906,12 @@ begin
   begin
     SetLength(VA, Count);
     for I := 0 to Count - 1 do
-      VA[I] := Items[I].Value.AsVariant;
+    begin
+      if Items[I].Value.IsType<Boolean> then
+        VA[I] := Items[I].Value.AsBoolean
+      else
+        VA[I] := Items[I].Value.AsVariant;
+    end;
   end
   else
   begin
@@ -2743,6 +2755,11 @@ begin
 end;
 
 class operator TRecord<T>.Implicit(const ARecord: TRecord<T>): IDynamicRecord;
+begin
+  Result := ARecord.DynamicRecord;
+end;
+
+class operator TRecord<T>.Implicit(const ARecord: TRecord<T>): IDynamicRecord<T>;
 begin
   Result := ARecord.DynamicRecord;
 end;
