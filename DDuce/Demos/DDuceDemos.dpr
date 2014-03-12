@@ -2,19 +2,18 @@ program DDuceDemos;
 
 uses
   Forms,
-  Themes,
-  DDuce.Demos.XMLTree in 'DDuce.Demos.XMLTree.pas' {frmXMLTree},
-  DDuce.Demos.DynamicRecord in 'DDuce.Demos.DynamicRecord.pas' {frmDynamicRecords},
-  DDuce.Demos.ScopedReferences in 'DDuce.Demos.ScopedReferences.pas' {frmScopedReferences},
-  DDuce.Demos.ListDataSet in 'DDuce.Demos.ListDataSet.pas' {frmListDataSet},
-  DDuce.Demos.MainForm in 'DDuce.Demos.MainForm.pas' {frmMainMenu},
-  DDuce.Demos.Contact in 'DDuce.Demos.Contact.pas',
-  DDuce.Demos.Data in 'DDuce.Demos.Data.pas' {dmData: TDataModule},
-  DDuce.Demos.Utils in 'DDuce.Demos.Utils.pas',
-  DDuce.Demos.Helpers in 'DDuce.Demos.Helpers.pas',
-  DDuce.Demos.Registration in 'DDuce.Demos.Registration.pas',
-  DDuce.Demos.DemoManager in 'DDuce.Demos.DemoManager.pas',
-  DDuce.Demos.DBGridView in 'DDuce.Demos.DBGridView.pas' {frmDBGridView},
+  Demo.DDuce.XMLTree in 'Demo.DDuce.XMLTree.pas' {frmXMLTree},
+  Demo.DDuce.DynamicRecord in 'Demo.DDuce.DynamicRecord.pas' {frmDynamicRecords},
+  Demo.DDuce.ScopedReferences in 'Demo.DDuce.ScopedReferences.pas' {frmScopedReferences},
+  Demo.DDuce.ListDataSet in 'Demo.DDuce.ListDataSet.pas' {frmListDataSet},
+  Demo.MainForm in 'Demo.MainForm.pas' {frmMainMenu},
+  Demo.Contact in 'Demo.Contact.pas',
+  Demo.Data in 'Demo.Data.pas' {dmData: TDataModule},
+  Demo.Utils in 'Demo.Utils.pas',
+  Demo.Helpers in 'Demo.Helpers.pas',
+  Demo.Registration in 'Demo.Registration.pas',
+  Demo.Manager in 'Demo.Manager.pas',
+  Demo.DDuce.DBGridView in 'Demo.DDuce.DBGridView.pas' {frmDBGridView},
   DDuce.DynamicRecord in '..\Source\DDuce.DynamicRecord.pas',
   DDuce.Logger in '..\Source\DDuce.Logger.pas',
   DDuce.RandomData in '..\Source\DDuce.RandomData.pas',
@@ -33,9 +32,11 @@ uses
   DDuce.Components.XMLTree.Editors in '..\Source\Components\DDuce.Components.XMLTree.Editors.pas',
   DDuce.Components.XMLTree.NodeAttributes in '..\Source\Components\DDuce.Components.XMLTree.NodeAttributes.pas',
   DDuce.Components.XMLTree in '..\Source\Components\DDuce.Components.XMLTree.pas',
-  DDuce.Demos.PropertyInspector in 'DDuce.Demos.PropertyInspector.pas' {frmPropertyInspector},
-  DDuce.Demos.VirtualDBGrid in 'DDuce.Demos.VirtualDBGrid.pas' {frmVirtualDBGrid},
-  DDuce.Demos.Reflect in 'DDuce.Demos.Reflect.pas' {frmReflect};
+  Demo.DDuce.PropertyInspector in 'Demo.DDuce.PropertyInspector.pas' {frmPropertyInspector},
+  Demo.DDuce.VirtualDBGrid in 'Demo.DDuce.VirtualDBGrid.pas' {frmVirtualDBGrid},
+  Demo.DDuce.Reflect in 'Demo.DDuce.Reflect.pas' {frmReflect},
+  Vcl.Themes,
+  Vcl.Styles;
 
 {$R *.res}
 

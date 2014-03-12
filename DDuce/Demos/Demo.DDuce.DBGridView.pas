@@ -240,16 +240,12 @@ type
 
   end;
 
-//*****************************************************************************
-
 implementation
 
 {$R *.dfm}
 
 uses
   TypInfo,
-
-//  DDuce.ComponentInspector,
 
   Demo.Data;
 
