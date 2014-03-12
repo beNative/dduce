@@ -21,7 +21,8 @@ unit Demo.Manager;
 interface
 
 uses
-  Classes, Forms,
+  System.Classes,
+  Vcl.Forms,
 
   DSharp.Collections;
 
@@ -31,7 +32,7 @@ type
     FName      : string;
     FFormClass : TComponentClass;
 
-    function GetUnitName: string;
+    function GetSourceFilename: string;
 
   published
     property Name: string
@@ -40,8 +41,8 @@ type
     property FormClass: TComponentClass
       read FFormClass write FFormClass;
 
-    property UnitName: string
-      read GetUnitName;
+    property SourceFilename: string
+      read GetSourceFilename;
   end;
 
   TDemoList = TObjectList<TDemo>;
@@ -70,7 +71,7 @@ type
 implementation
 
 uses
-  SysUtils, StrUtils;
+  System.SysUtils, System.StrUtils;
 
 {$REGION 'construction and destruction'}
 class constructor TDemoManager.Create;
@@ -121,7 +122,7 @@ end;
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-function TDemo.GetUnitName: string;
+function TDemo.GetSourceFilename: string;
 begin
   Result := FFormClass.UnitName;
 end;

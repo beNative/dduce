@@ -296,7 +296,7 @@ begin
       if H > NodeHeight then
         NodeHeight := H;
     end;
-    if NodeHeight > DefaultNodeHeight then
+    if Cardinal(NodeHeight) > DefaultNodeHeight then
       NodeHeight := NodeHeight + 4; // needed to avoid multiline text drawing issues
   end;
 end;

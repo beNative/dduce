@@ -25,15 +25,12 @@ unit Demo.DDuce.DBGridView;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ComCtrls, StdCtrls, ActnList, ExtCtrls, CheckLst, Menus, ImgList,
-  System.Actions,
-
-{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
-//  System.Actions,
-{$ENDIF}
-
-  DB, DBClient, DBCtrls,
+  Winapi.Windows, Winapi.Messages,
+  System.SysUtils, System.Variants, System.Classes, System.Actions,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.DBCtrls,
+  Vcl.StdCtrls, Vcl.ActnList, Vcl.ExtCtrls, Vcl.CheckLst, Vcl.Menus, Vcl.ImgList,
+  Data.DB,
+  Datasnap.DBClient,
 
   DDuce.Components.GridView, DDuce.Components.DBGridView,
   DDuce.Components.LogTree;
@@ -245,7 +242,7 @@ implementation
 {$R *.dfm}
 
 uses
-  TypInfo,
+  System.TypInfo,
 
   Demo.Data;
 
@@ -256,7 +253,7 @@ var
 procedure TfrmDBGridView.AfterConstruction;
 begin
   inherited;
-  dscMain.DataSet := Data.DataSet;
+  dscMain.DataSet := DataSet;
   CreateDBGridView;
 
   FVLT := TLogTree.Create(Self);

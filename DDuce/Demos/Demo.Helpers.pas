@@ -23,7 +23,9 @@ unit Demo.Helpers;
 interface
 
 uses
-  Classes, Controls, Contnrs, DB, DBGrids, StdCtrls,
+  System.Classes, System.Contnrs,
+  Vcl.Controls, Vcl.DBGrids, Vcl.StdCtrls,
+  Data.DB,
 
   VirtualTrees,
 

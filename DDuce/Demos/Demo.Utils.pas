@@ -21,7 +21,8 @@ unit Demo.Utils;
 interface
 
 uses
-  Classes, Rtti, Dialogs, Controls, TypInfo;
+  System.Classes, System.Rtti, System.TypInfo,
+  Vcl.Dialogs, Vcl.Controls;
 
 procedure AppendLine(
   var   AToString : string;
@@ -55,7 +56,8 @@ function SetToString(
 implementation
 
 uses
-  SysUtils, StrUtils, Variants, Windows, Messages, Character;
+  System.SysUtils, System.StrUtils, System.Variants, System.Character,
+  Winapi.Windows, Winapi.Messages;
 
 var
   FRtti: TRttiContext;
@@ -380,7 +382,7 @@ var
     if Length(AString) > 0 then
     begin
       C := AString[1];
-      while (N < Length(AString)) and TCharacter.IsLower(C) do
+      while (N < Length(AString)) and C.IsLower do
       begin
         Inc(N);
         C := AString[N + 1];
