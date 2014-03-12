@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2014 Tim Sinaeve tim.sinaeve@gmail.com
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -84,7 +84,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, CommCtrl, Classes, Controls, Graphics, Forms,
-  StdCtrls, Math, ImgList, Dialogs, Db, DBTables, DBCtrls, Generics.Collections,
+  StdCtrls, Math, ImgList, Dialogs, Db, DBCtrls, Generics.Collections,
   Grids,
 
   DDuce.Components.GridView;
