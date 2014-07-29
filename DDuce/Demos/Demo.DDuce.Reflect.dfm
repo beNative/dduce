@@ -33,9 +33,9 @@ object frmReflect: TfrmReflect
   object mmoMain: TMemo
     AlignWithMargins = True
     Left = 3
-    Top = 22
+    Top = 19
     Width = 627
-    Height = 483
+    Height = 486
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone

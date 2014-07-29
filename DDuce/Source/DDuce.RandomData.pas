@@ -2410,11 +2410,7 @@ type
 implementation
 
 uses
-  SysUtils, Math, DateUtils, StrUtils,
-
-{$IF CompilerVersion > 21}
-  DSharp.Core.Lambda,
-{$IFEND}
+  System.SysUtils, System.Math, System.DateUtils, System.StrUtils,
 
   DSharp.Collections, DSharp.Collections.Extensions;
 
@@ -2487,12 +2483,9 @@ class function RandomData.Name: string;
 
 begin
   case Random(3) of
-    0:
-    Result := SmartName;
-    1:
-    Result := CombiName;
-    2:
-    Result := TripletName;
+    0: Result := SmartName;
+    1: Result := CombiName;
+    2: Result := TripletName;
   end;
   Result[1] := UpCase(Result[1]);
 end;
@@ -2621,7 +2614,6 @@ begin
 end;
 
 class function RandomData.AlliteratedCompanyName: string;
-{$IF CompilerVersion > 21}
 var
   List  : IList<string>;
   A     : string;
@@ -2630,9 +2622,7 @@ var
   I     : Integer;
   J     : Integer;
   List2 : IList<string>;
-{$IFEND}
 begin
-{$IF CompilerVersion > 21}
   A := Adjective;
   C := A[1];
   List := TList<string>.Create;
@@ -2652,7 +2642,6 @@ begin
   end
   else
     Result := A + ' ' + Str(CompanyTypes);
-{$IFEND}
     //Lambda.Predicate<string>((Bool(Arg1[1] = Arg(C))))
    //Lambda.Predicate<string>(StartsText(string(Arg1), C))
 //  filter1 := Lambda.Predicate<TCustomer>(

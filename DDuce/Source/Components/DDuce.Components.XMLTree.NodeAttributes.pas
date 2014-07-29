@@ -5,7 +5,8 @@ unit DDuce.Components.XMLTree.NodeAttributes;
 interface
 
 uses
-  Classes, SysUtils, Graphics,
+  System.Classes, System.SysUtils,
+  Vcl.Graphics,
 
   DSharp.Core.Collections;
 
@@ -35,7 +36,7 @@ type
     function GetDisplayName: string; override;
 
   public
-    constructor Create(ACollection: Classes.TCollection); override;
+    constructor Create(ACollection: System.Classes.TCollection); override;
     procedure BeforeDestruction; override;
 
   published
@@ -66,7 +67,7 @@ implementation
 
 {$region 'TNodeAttributesItem' /fold}
 {$region 'construction and destruction' /fold}
-constructor TNodeAttributesItem.Create(ACollection: Classes.TCollection);
+constructor TNodeAttributesItem.Create(ACollection: System.Classes.TCollection);
 begin
   inherited Create(ACollection);
   FFont := TFont.Create;

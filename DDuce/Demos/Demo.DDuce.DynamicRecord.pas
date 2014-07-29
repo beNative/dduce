@@ -227,9 +227,9 @@ implementation
 {$R *.dfm}
 
 uses
-  System.TypInfo, System.StrUtils,
+  System.TypInfo,
 
-  DDuce.Reflect,
+
 
   Demo.Utils;
 

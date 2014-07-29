@@ -91,7 +91,7 @@ unit DDuce.ScopedReference;
 interface
 
 uses
-  SysUtils;
+  System.SysUtils;
 
 type
   Scoped<T: class, constructor> = record

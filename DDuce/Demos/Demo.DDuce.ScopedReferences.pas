@@ -26,12 +26,10 @@ interface
 {$I ..\Source\DDuce.inc}
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ActnList, StdCtrls, ExtCtrls,
-
-//{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
-  System.Actions,
-//{$ENDIF}
+  System.Actions, System.SysUtils, System.Variants, System.Classes,
+  Winapi.Windows, Winapi.Messages,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList, Vcl.StdCtrls,
+  Vcl.ExtCtrls,
 
   DDuce.ScopedReference;
 
@@ -55,11 +53,9 @@ type
 
 implementation
 
-uses
-  Spring;
-
 {$R *.dfm}
 
+{$REGION 'action handlers'}
 procedure TfrmScopedReferences.actCreateScopedButtonExecute(Sender: TObject);
 begin
   CreateScopedButton;
@@ -69,7 +65,9 @@ procedure TfrmScopedReferences.actShowClassNamesExecute(Sender: TObject);
 begin
   ShowClassNames;
 end;
+{$ENDREGION}
 
+{$REGION 'private methods'}
 procedure TfrmScopedReferences.ShowClassNames;
 var
   O: Scoped<TObject>;
@@ -97,6 +95,7 @@ begin
   );
   ShowMessage('Scoped button will be destroyed.');
 end;
+{$ENDREGION}
 
 end.
 

@@ -41,8 +41,11 @@ unit DDuce.Components.PropertyInspector;
 interface
 
 uses
-  Classes, Controls, Grids, Graphics, Windows, Types, Variants, Messages, Forms,
-  StdCtrls, SysUtils, Dialogs, TypInfo, ComCtrls, Menus,
+  System.Classes, System.Types, System.Variants, System.SysUtils,
+  System.TypInfo,
+  Vcl.Controls, Vcl.Grids, Vcl.Graphics, Vcl.Forms, Vcl.StdCtrls, Vcl.ComCtrls,
+  Vcl.Menus, Vcl.Dialogs,
+  Winapi.Windows, Winapi.Messages,
 
   DDuce.Components.PropertyInspector.StringsEditor;
 
@@ -82,8 +85,11 @@ type
     procedure Delete(AIndex: Integer);
     procedure Clear;
     function IndexOf(AItem: TObject): Integer;
-    property Items[AIndex: Integer]: TObject read GetItems; default;
-    property Count: Integer read GetCount write SetCount;
+
+    property Items[AIndex: Integer]: TObject
+      read GetItems; default;
+    property Count: Integer
+      read GetCount write SetCount;
   end;
 
 {
@@ -129,7 +135,9 @@ type
 
   public
     constructor Create(AOwner: TComponent); override;
-    property ReadOnlyStyle: Boolean read FReadOnlyStyle;
+
+    property ReadOnlyStyle: Boolean
+      read FReadOnlyStyle;
   end;
 
   TPropsPageItemExpandable = (
@@ -260,10 +268,10 @@ type
     FRows           : array of TPropsPageItem;
     FUpdateCount    : Integer;
     FValuesColor    : TColor;
-    FBitmap         : Graphics.TBitmap;
+    FBitmap         : Vcl.Graphics.TBitmap;
     FBitmapBkColor  : TColor;
     FBrush          : HBRUSH;
-    FCellBitmap     : Graphics.TBitmap;
+    FCellBitmap     : Vcl.Graphics.TBitmap;
 
     procedure ItemsChange;
     function IsOnSplitter(AX: Integer): Boolean;
@@ -1074,9 +1082,7 @@ type
 implementation
 
 uses
-{$IFDEF HAS_UNIT_SYSTEM_UITYPES}
   System.UITypes,
-{$ENDIF}
 
   DDuce.Components.PropertyInspector.CollectionEditor;
 
@@ -1097,15 +1103,12 @@ const
     'mrYes',
     'mrNo',
     'mrClose',
-{$if COMPILERVERSION > 21}
     'mrHelp',
     'mrTryAgain',
     'mrContinue',
     'mrAll',
-{$ifend}
     'mrNoToAll',
     'mrYesToAll'
-
   );
 
   ShortCuts: array[0..108] of TShortCut = (
@@ -1566,9 +1569,9 @@ begin
   DefaultDrawing := False;
   FItems := TPropsPageItems.Create(Self);
   FValuesColor := clNavy;
-  FBitmap := Graphics.TBitmap.Create;
+  FBitmap := Vcl.Graphics.TBitmap.Create;
   UpdatePattern;
-  FCellBitmap := Graphics.TBitmap.Create;
+  FCellBitmap := Vcl.Graphics.TBitmap.Create;
 end;
 
 function TCustomPropsPage.CreateEditor: TInplaceEdit;
@@ -1683,7 +1686,7 @@ begin
         { Row line }
         if FBitmapBkColor <> Color then
           UpdatePattern;
-        Windows.FillRect(Handle, Rect(0, FCellBitmap.Height - 1,
+        Winapi.Windows.FillRect(Handle, Rect(0, FCellBitmap.Height - 1,
           FCellBitmap.Width, FCellBitmap.Height), FBrush);
       end;
     end;
@@ -2151,7 +2154,7 @@ begin
   GetCursorPos(LP);
   LP := ScreenToClient(LP);
   if IsOnSplitter(LP.X) then
-    Windows.SetCursor(Screen.Cursors[crHSplit])
+    Winapi.Windows.SetCursor(Screen.Cursors[crHSplit])
   else
     inherited;
 end;
@@ -2367,7 +2370,7 @@ begin
       SWP_NOSIZE or SWP_NOACTIVATE or SWP_SHOWWINDOW);
     ListVisible := True;
     Invalidate;
-    Windows.SetFocus(Handle);
+    Winapi.Windows.SetFocus(Handle);
   end;
 end;
 

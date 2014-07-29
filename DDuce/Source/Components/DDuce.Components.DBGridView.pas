@@ -83,9 +83,11 @@ unit DDuce.Components.DBGridView;
 interface
 
 uses
-  Windows, Messages, SysUtils, CommCtrl, Classes, Controls, Graphics, Forms,
-  StdCtrls, Math, ImgList, Dialogs, Db, DBCtrls, Generics.Collections,
-  Grids,
+  System.SysUtils, System.Classes, System.Generics.Collections, System.Math,
+  Winapi.Windows, Winapi.Messages, Winapi.CommCtrl,
+  Vcl.Controls, Vcl.Graphics, Vcl.Forms, Vcl.DBCtrls, Vcl.Grids, Vcl.StdCtrls,
+  Vcl.ImgList, Vcl.Dialogs,
+  Data.DB,
 
   DDuce.Components.GridView;
 
@@ -889,11 +891,9 @@ type
 implementation
 
 uses
-{$IF CompilerVersion > 21}
   System.Types,
-{$IFEND}
-
-  DBConsts, Themes;
+  Vcl.Themes,
+  Data.DBConsts;
 
 {$R *.RES}
 
@@ -2223,7 +2223,7 @@ begin
       if Action = gdaFail then
         raise;
       if Action = gdaAbort then
-        SysUtils.Abort;
+        System.SysUtils.Abort;
     end;
   end;
 end;
@@ -3007,7 +3007,7 @@ begin
         if Action = gdaFail then
           raise;
         if Action = gdaAbort then
-          SysUtils.Abort;
+          System.SysUtils.Abort;
       end;
     end;
     DataFieldUpdated(EditField);

@@ -23,16 +23,11 @@ unit Demo.MainForm;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, DB, StdCtrls, Buttons, ActnList, ExtCtrls, ComCtrls,
+  System.Actions, System.UITypes, System.Classes, Vcl.ActnList,
+  Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Controls, Vcl.ExtCtrls, Vcl.Buttons,
+  Vcl.Forms,
 
   VirtualTrees,
-
-{$IFDEF HAS_UNIT_SYSTEM_UITYPES}
-  System.UITypes,
-{$ENDIF}
-
-  System.Actions,
 
   DDuce.Logger,
 
@@ -96,7 +91,9 @@ implementation
 {$R *.dfm}
 
 uses
-  StrUtils,
+  System.StrUtils, System.SysUtils,
+  Vcl.Graphics,
+  Winapi.Windows, WinApi.Messages,
 
   Demo.Helpers, Demo.Manager;
 

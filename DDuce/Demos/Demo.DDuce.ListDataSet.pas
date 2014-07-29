@@ -20,21 +20,17 @@ unit Demo.DDuce.ListDataSet;
 
 {$I ..\Source\DDuce.inc}
 
-{ Demonstrates TListDataSet }
+{ Demonstrates TListDataSet<T> }
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, DB, Grids, DBGrids, Contnrs, ActnList, Mask, StdCtrls, ExtCtrls,
-
-  DBCtrls, ComCtrls,
+  System.Actions, System.Classes,
+  Vcl.ActnList, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.Mask, Vcl.DBCtrls, Vcl.StdCtrls,
+  Vcl.Controls,
+  Data.DB,
 
   VirtualTrees,
-
-{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
-//  System.Actions,
-{$ENDIF}
 
 {$IFDEF SPRING}
   Spring, Spring.Collections,
@@ -48,7 +44,7 @@ uses
   DDuce.Components.ListDataSet, DDuce.Components.GridView,
   DDuce.Components.DBGridView,
 
-  Demo.Contact, System.Actions;
+  Demo.Contact;
 
 type
   TfrmListDataSet = class(TForm)
@@ -163,11 +159,8 @@ implementation
 {$R *.dfm}
 
 uses
-  Rtti, Math,
-
-{$IFDEF DSHARP}
-  DSharp.Core.Reflection,
-{$ENDIF}
+  System.Rtti, System.Math, System.SysUtils,
+  Vcl.Forms,
 
   Demo.Helpers;
 

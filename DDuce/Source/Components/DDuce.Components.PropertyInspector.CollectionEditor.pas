@@ -23,13 +23,12 @@ unit DDuce.Components.PropertyInspector.CollectionEditor;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, ComCtrls, ActnList, ImgList, ToolWin, Menus,
-  Grids, TypInfo,
-
-{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
+  System.SysUtils, System.Variants, System.Classes, System.TypInfo,
   System.Actions,
-{$ENDIF}
+  Winapi.Windows, Winapi.Messages,
+  Vcl.Dialogs, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ActnList,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ImgList, Vcl.ToolWin, Vcl.Menus,
+
 
   DDuce.Components.PropertyInspector;
 
@@ -85,8 +84,10 @@ type
     procedure UpdateActions; override;
 
   public
-    constructor Create(AOwner      : TComponent;
-                       ACollection : TCollection); reintroduce;
+    constructor Create(
+      AOwner      : TComponent;
+      ACollection : TCollection
+    ); reintroduce;
 
     property ActiveItem : TCollectionItem
       read GetActiveItem;
@@ -97,7 +98,7 @@ procedure ExecuteCollectionEditor(ACollection : TCollection);
 implementation
 
 uses
-  Rtti,
+  System.Rtti,
 
   DDuce.Reflect;
 

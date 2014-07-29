@@ -40,7 +40,9 @@ unit DDuce.Logger;
 interface
 
 uses
-  Types, Classes, SysUtils, Windows, Rtti, Generics.Collections;
+  System.Types, System.Classes, System.SysUtils, System.Rtti,
+  System.Generics.Collections,
+  WinApi.Windows;
 
 type
   TLogMessageType = (
@@ -357,7 +359,9 @@ var
 implementation
 
 uses
-  Forms, Messages, TypInfo, StrUtils;
+  System.TypInfo, System.StrUtils,
+  WinApi.Messages,
+  Vcl.Forms;
 
 resourcestring
   SErrServerNotActive = 'Server with ID %s is not active.';
@@ -966,7 +970,7 @@ begin
     end;
     CDS.lpData := Data.Memory;
     CDS.cbData := Data.Size;
-    Windows.SendMessage(FHWnd, WM_COPYDATA, 0, Integer(@CDS));
+    WinApi.Windows.SendMessage(FHWnd, WM_COPYDATA, 0, Integer(@CDS));
   finally
     FreeAndNil(FMemStr);
   end;

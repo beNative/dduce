@@ -29,7 +29,9 @@ unit DDuce.Components.LogTree;
 interface
 
 uses
-  Classes, SysUtils, Graphics, Types, Windows, ImgList, Menus,
+  System.Classes, System.SysUtils, System.Types,
+  WinApi.Windows,
+  Vcl.Graphics, Vcl.ImgList, Vcl.Menus,
 
   VirtualTrees;
 
@@ -59,8 +61,8 @@ type
 
   TLogPopupmenu = class(TPopupMenu)
   private
-    FOwner               : TComponent;
-    FOnPopupMenuItemClick: TOnPopupMenuItemClick;
+    FOwner                : TComponent;
+    FOnPopupMenuItemClick : TOnPopupMenuItemClick;
 
     procedure OnMenuItemClick(Sender: TObject);
 
@@ -168,10 +170,8 @@ type
 implementation
 
 uses
-{$IF CompilerVersion > 21}
   System.UITypes,
-{$IFEND}
-  Dialogs, Clipbrd;
+  Vcl.Dialogs, Vcl.Clipbrd;
 
 resourcestring
   SSaveLog         = '&Save';
@@ -192,6 +192,7 @@ begin
   FShowImages              := True;
   FLogLevels               := [llError, llInfo, llWarning, llDebug];
   NodeDataSize             := SizeOf(TLogNodeData);
+  Loaded;
 end;
 
 procedure TLogTree.DoAfterCellPaint(Canvas: TCanvas; Node: PVirtualNode;
@@ -387,7 +388,7 @@ begin
   Header.Columns[1].MinWidth := 300;
   Header.Options := Header.Options + [hoAutoResize];
 
-  if (PopupMenu = nil) and (not(csDesigning in ComponentState)) then
+  if not Assigned(PopupMenu) and not (csDesigning in ComponentState) then
   begin
     PopupMenu := TLogPopupmenu.Create(Self);
     TLogPopupmenu(PopupMenu).OnPopupMenuItemClick :=

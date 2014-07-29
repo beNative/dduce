@@ -23,7 +23,9 @@ unit DDuce.Components.XMLTree.Editors;
 interface
 
 uses
-  Messages, SysUtils, Classes, Controls, Forms, StdCtrls, Types,
+  System.SysUtils, System.Classes, System.Types,
+  WinApi.Messages,
+  Vcl.Controls, Vcl.Forms, Vcl.StdCtrls,
 
 {$IFDEF FPC}
   EditBtn, LCLIntf, LCLType,
@@ -78,7 +80,7 @@ type
 implementation
 
 uses
-  Windows,
+  WinApi.Windows,
 
   DDuce.Components.XMLTree;
 

@@ -4,8 +4,8 @@
 
 {$I jedi.inc}                // Import JEDI Development environment directives
 
-{$IFNDEF DELPHI2010_UP}
-  {$MESSAGE ERROR 'This library requires Delphi 2010 or higher.'}
+{$IFNDEF DELPHIXE2_UP}
+  {$MESSAGE ERROR 'This library requires Delphi XE2 or higher.'}
 {$ENDIF}
 
 {$IFNDEF MSWINDOWS}

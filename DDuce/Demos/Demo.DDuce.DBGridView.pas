@@ -28,9 +28,8 @@ uses
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, System.Actions,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.DBCtrls,
-  Vcl.StdCtrls, Vcl.ActnList, Vcl.ExtCtrls, Vcl.CheckLst, Vcl.Menus, Vcl.ImgList,
+  Vcl.StdCtrls, Vcl.ActnList, Vcl.ExtCtrls, Vcl.CheckLst, Vcl.ImgList,
   Data.DB,
-  Datasnap.DBClient,
 
   DDuce.Components.GridView, DDuce.Components.DBGridView,
   DDuce.Components.LogTree;
@@ -242,9 +241,7 @@ implementation
 {$R *.dfm}
 
 uses
-  System.TypInfo,
-
-  Demo.Data;
+  System.TypInfo;
 
 var
   ProcByLevel: string;

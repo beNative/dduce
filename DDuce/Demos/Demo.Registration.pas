@@ -29,12 +29,15 @@ uses
 
   Demo.DDuce.ListDataSet,
   Demo.DDuce.ScopedReferences,
-  Demo.DDuce.DynamicRecord,
+
   Demo.DDuce.XMLTree,
   Demo.DDuce.VirtualDBGrid,
   Demo.DDuce.DBGridView,
+
   Demo.DDuce.PropertyInspector,
   Demo.DDuce.Reflect,
+  Demo.DDuce.DynamicRecord,
+
   Demo.Manager;
 
 {$REGION 'interfaced routines'}
@@ -45,8 +48,8 @@ begin
   DemoManager.Register(TfrmReflect, 'Reflect');
   DemoManager.Register(TfrmVirtualDBGrid, 'VirtualDBGrid');
   DemoManager.Register(TfrmScopedReferences, 'Scoped references');
-//  DemoManager.Register(TfrmDBGridView, 'DBGridView');
-//  DemoManager.Register(TfrmDynamicRecords, 'Dynamic records');
+  //DemoManager.Register(TfrmDBGridView, 'DBGridView');
+  DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
   DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
 end;
 {$ENDREGION}
