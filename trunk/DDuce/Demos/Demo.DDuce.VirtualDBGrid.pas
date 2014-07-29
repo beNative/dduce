@@ -20,15 +20,15 @@ unit Demo.DDuce.VirtualDBGrid;
 
 {$I ..\Source\DDuce.inc}
 
+{ Form demonstrating the TVirtualDBGrid component. }
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ActnList, ImgList, ExtCtrls, ComCtrls, DB, DBCtrls,
-
-//{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
-  System.Actions,
-//{$ENDIF}
+  System.Actions, System.Classes,
+  Vcl.ActnList, Vcl.ImgList, Vcl.Controls, Vcl.DBCtrls, Vcl.ExtCtrls, Vcl.Forms,
+  Vcl.ComCtrls,
+  Data.DB,
 
 {$IFDEF DSHARP}
   DSharp.Collections,

@@ -28,7 +28,7 @@ unit DDuce.Reflect;
 interface
 
 uses
-  Rtti,
+  System.Rtti,
 
   DDuce.DynamicRecord;
 
@@ -50,7 +50,7 @@ type
 implementation
 
 uses
-  TypInfo, Dialogs;
+  System.TypInfo;
 
 { Returns the type name of a given enumerated type instance. }
 

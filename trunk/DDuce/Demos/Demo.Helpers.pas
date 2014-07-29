@@ -24,7 +24,7 @@ interface
 
 uses
   System.Classes, System.Contnrs,
-  Vcl.Controls, Vcl.DBGrids, Vcl.StdCtrls,
+  Vcl.Controls, Vcl.DBGrids,
   Data.DB,
 
   VirtualTrees,
@@ -134,7 +134,7 @@ implementation
 uses
   ImgList, Forms, Graphics, SysUtils, Rtti, Windows,
 
-  DSharp.Core.Reflection, DSharp.Windows.ColumnDefinitions.ControlTemplate,
+  DSharp.Windows.ColumnDefinitions.ControlTemplate,
 
   DDuce.RandomData;
 

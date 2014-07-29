@@ -23,12 +23,11 @@ unit DDuce.Components.PropertyInspector.StringsEditor;
 interface
 
 uses
-{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
-  System.Actions,
-{$ENDIF}
-
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ComCtrls, ExtCtrls, StdActns, ActnList, Menus, ImgList;
+  System.SysUtils, System.Variants, System.Classes, System.Actions,
+  Winapi.Windows, Winapi.Messages,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
+  Vcl.ComCtrls, Vcl.StdActns, Vcl.ActnList, Vcl.Menus,
+  Vcl.ImgList;
 
 resourcestring
   SCaption            = 'String List Editor';
@@ -68,7 +67,8 @@ type
 
   public
     function Execute: Boolean;
-    property Lines: TStrings read GetLines write SetLines;
+    property Lines: TStrings
+      read GetLines write SetLines;
   end;
 
 implementation

@@ -30,8 +30,10 @@ unit DDuce.Components.VirtualDataSet;
 interface
 
 uses
-  Classes, SysUtils, DB, Forms, DbConsts, DBcommon, Variants, FMTBcd, Rtti,
-  Generics.Collections,
+  System.Classes, System.SysUtils, System.Variants, System.Rtti,
+  System.Generics.Collections,
+  Vcl.Forms,
+  Data.DB, Data.DbConsts,
 
   DDuce.Logger;
 
@@ -330,9 +332,7 @@ type
 
     function GetFieldData(
       Field: TField;
-    {$IF CompilerVersion >= 25}var
-    {$IFEND}
-      Buffer: TValueBuffer
+      var Buffer: TValueBuffer
     ): Boolean; override;
 
     property MasterDataLink: TVirtualMasterDataLink
@@ -409,8 +409,6 @@ type
     property OnPostError;
   end;
 
-//=============================================================================
-
 procedure VirtualDatasetError(
   const AMessage : string;
         ADataset : TCustomVirtualDataset = nil
@@ -425,7 +423,9 @@ procedure VirtualDatasetErrorFmt(
 implementation
 
 uses
-  ActiveX, Windows, Math, WideStrUtils;
+  System.Math, System.WideStrUtils,
+  WinApi.ActiveX, WinApi.Windows,
+  Data.FmtBcd;
 
 resourcestring
   SUnsupportedFieldType = 'Unsupported field type (%s) in field %s.';
@@ -771,8 +771,7 @@ begin
     ftLargeInt:
       begin
         TVarData(AVariant).VType := VT_DECIMAL;
-
-//        Decimal(AVariant). Lo64   := Int64(ABuffer^);
+        Decimal(AVariant).Lo64   := Int64(ABuffer^);
       end;
   else
     DatabaseErrorFmt(SUnsupportedFieldType, [FieldTypeNames[AField.DataType],
@@ -1402,7 +1401,7 @@ begin
 end;
 
 function TCustomVirtualDataset.GetFieldData(Field: TField;
-var  Buffer: TValueBuffer): Boolean;
+   var Buffer: TValueBuffer): Boolean;
 var
   RecBuf: TRecordBuffer;
   Data  : TValue;

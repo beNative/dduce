@@ -26,12 +26,10 @@ unit Demo.DDuce.XMLTree;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, ActnList, StdCtrls, System.Actions,
+  System.SysUtils, System.Variants, System.Classes, System.Actions,
 
-{$IFDEF HAS_UNIT_SYSTEM_ACTIONS}
-//  System.Actions,
-{$ENDIF}
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
+  Vcl.ActnList, Vcl.StdCtrls,
 
   VirtualTrees,
 

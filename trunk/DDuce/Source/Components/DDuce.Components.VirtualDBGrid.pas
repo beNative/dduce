@@ -35,12 +35,11 @@ unit DDuce.Components.VirtualDBGrid;
 interface
 
 uses
-  Windows, types, SysUtils, Classes, Controls, DB, Dialogs, Variants, ImgList,
-  Forms, Graphics, ExtCtrls, Buttons, Messages, Generics.Collections,
-
-{$IFDEF HAS_UNIT_SYSTEM_UITYPES}
-  System.UITypes,
-{$ENDIF}
+  System.UITypes, System.SysUtils, System.Classes, System.Generics.Collections,
+  System.Variants, System.Types,
+  WinApi.Windows, WinApi.Messages,
+  Vcl.Controls, Data.DB, Vcl.Dialogs, Vcl.ImgList, Vcl.Forms, Vcl.Graphics,
+  Vcl.Buttons,
 
   VirtualTrees;
 
@@ -880,7 +879,7 @@ function CompareRecordData(Record1, Record2: TRecordData; Column: TColumnIndex;
 implementation
 
 uses
-  Math;
+  System.Math;
 
 type
   TIntegerList = TList<Integer>;
@@ -1084,39 +1083,39 @@ procedure TRecordData.Add(const AFieldName: string; AFieldValue: Variant;
   AFieldType: TFieldType;
   AFieldFlag: Byte);
 var
-  rec: PDBFieldValueRec;
+  R: PDBFieldValueRec;
 begin
-  New(rec);
-  rec^.FieldName := AFieldName;
-  rec^.FieldValue := AFieldValue;
-  rec^.FieldType := AFieldType;
-  rec^.FieldFlag := AFieldFlag;
-  FList.Add(rec);
+  New(R);
+  R^.FieldName := AFieldName;
+  R^.FieldValue := AFieldValue;
+  R^.FieldType := AFieldType;
+  R^.FieldFlag := AFieldFlag;
+  FList.Add(R);
 end;
 
 procedure TRecordData.Insert(Index: Integer; const AFieldName: string;
   AFieldValue: Variant;
   AFieldType: TFieldType; AFieldFlag: Byte);
 var
-  rec: PDBFieldValueRec;
+  R: PDBFieldValueRec;
 begin
-  New(rec);
-  rec^.FieldName := AFieldName;
-  rec^.FieldValue := AFieldValue;
-  rec^.FieldType := AFieldType;
-  rec^.FieldFlag := AFieldFlag;
-  FList.Insert(Index, rec);
+  New(R);
+  R^.FieldName := AFieldName;
+  R^.FieldValue := AFieldValue;
+  R^.FieldType := AFieldType;
+  R^.FieldFlag := AFieldFlag;
+  FList.Insert(Index, R);
 end;
 
 procedure TRecordData.Delete(Index: Integer);
 var
-  rec: PDBFieldValueRec;
+  R: PDBFieldValueRec;
 begin
   if (Index > -1) and (Index < FieldsCount) then
   begin
-    rec := PDBFieldValueRec(FList[Index]);
-    if rec <> nil then
-      Dispose(rec);
+    R := PDBFieldValueRec(FList[Index]);
+    if R <> nil then
+      Dispose(R);
     FList.Delete(Index);
   end;
 end;

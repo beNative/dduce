@@ -29,7 +29,8 @@ unit DDuce.Components.ListDataSet;
 interface
 
 uses
-  Classes, SysUtils, Db, Rtti,
+  System.Classes, System.SysUtils, System.Rtti,
+  Data.Db,
 
 {$IFDEF SPRING}
   Spring, Spring.Collections,
@@ -138,7 +139,7 @@ type
     property OnPostError;
   end;
 
-  TListDataset<T> = class(TListDataSet{$if CompilerVersion > 21}, IList<T>{$ifend})
+  TListDataset<T> = class(TListDataSet, IList<T>)
   strict private
     FList : IList<T>;
 
@@ -151,17 +152,13 @@ type
   public
     constructor Create(
       AOwner : TComponent;
-{$IF CompilerVersion > 21}
-      AList  : IList<T> = nil   // default parameters on generic types not supported in D2010
-{$ELSE}
-      AList  : IList<T>
-{$IFEND}
+      AList  : IList<T> = nil
     ); reintroduce; virtual;
     procedure BeforeDestruction; override;
 
   published
     property List: IList<T>
-      read FList write SetList{$IF CompilerVersion > 21}implements IList<T>{$IFEND};
+      read FList write SetList implements IList<T>;
 
     property Current: T
       read GetCurrent;
@@ -170,7 +167,7 @@ type
 implementation
 
 uses
-  TypInfo,
+  System.TypInfo,
 
   DDuce.Reflect, DDuce.Logger;
 

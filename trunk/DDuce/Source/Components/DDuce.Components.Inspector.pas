@@ -37,8 +37,9 @@ unit DDuce.Components.Inspector;
 interface
 
 uses
-  Windows, Messages, CommCtrl, Classes, Controls, Graphics, Forms, StdCtrls,
-  Math,
+  System.Classes, System.Math,
+  Winapi.Windows, Winapi.Messages,
+  Vcl.Controls, Vcl.Graphics, Vcl.Forms, Vcl.StdCtrls,
 
 {$IFDEF HAS_UNIT_SYSTEM_UITYPES}
   System.UITypes,
@@ -130,10 +131,15 @@ type
     function IsCategoryRow(Row: Integer): Boolean; virtual;
     procedure UpdateColumnsSize; virtual;
     procedure UpdateScrollBars; override;
-    property CategoryFont: TFont read FCategoryFont write SetCategoryFont;
-    property NameFont: TFont read FNameFont write SetNameFont;
-    property ValueFont: TFont read FValueFont write SetValueFont;
-    property OnGetCategoryRow: TInspectorCategoryRowEvent read FOnGetCategoryRow write FOnGetCategoryRow;
+
+    property CategoryFont: TFont
+      read FCategoryFont write SetCategoryFont;
+    property NameFont: TFont
+      read FNameFont write SetNameFont;
+    property ValueFont: TFont
+      read FValueFont write SetValueFont;
+    property OnGetCategoryRow: TInspectorCategoryRowEvent
+      read FOnGetCategoryRow write FOnGetCategoryRow;
   end;
 
 { TInspector }
@@ -334,7 +340,7 @@ begin
     if (HitTest = HTCLIENT) and not (csDesigning in ComponentState) then
       if ColResizeAllowed(X, Y) then
       begin
-        Windows.SetCursor(Screen.Cursors[crHSplit]);
+        Winapi.Windows.SetCursor(Screen.Cursors[crHSplit]);
         Exit;
       end;
   inherited;

@@ -86,8 +86,13 @@ unit DDuce.Components.GridView;
 interface
 
 uses
-  Themes, Windows, Messages, SysUtils, CommCtrl, Classes, Forms, Controls,
-  Graphics, Dialogs, StdCtrls, Math, Mask, ImgList;
+  System.SysUtils, System.Classes, System.Math,
+  Vcl.Themes, Vcl.Forms, Vcl.Controls, Vcl.Graphics, Vcl.Dialogs, Vcl.StdCtrls,
+  Vcl.ImgList, Vcl.Mask,
+  Winapi.Windows, Winapi.Messages, Winapi.CommCtrl;
+
+type
+  TBitmap = Vcl.Graphics.TBitmap;
 
 const
   MaxColumnWidth = MaxInt div 2;
@@ -2278,133 +2283,256 @@ type
       OnlyVisibleRows : Boolean = True); virtual;
     procedure SizeColumnsToClient;
 
-    property AllowEdit: Boolean read FAllowEdit write SetAllowEdit default False;
-    property AllowSelect: Boolean read FAllowSelect write SetAllowSelect default True;
-    property AlwaysEdit: Boolean read FAlwaysEdit write SetAlwaysEdit default False;
-    property AlwaysSelected: Boolean read FAlwaysSelected write SetAlwaysSelected default False;
-
-    property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle default bsSingle;
-    property CancelOnExit: Boolean read FCancelOnExit write FCancelOnExit default True;
+    property AllowEdit: Boolean
+      read FAllowEdit write SetAllowEdit default False;
+    property AllowSelect: Boolean
+      read FAllowSelect write SetAllowSelect default True;
+    property AlwaysEdit: Boolean
+      read FAlwaysEdit write SetAlwaysEdit default False;
+    property AlwaysSelected: Boolean
+      read FAlwaysSelected write SetAlwaysSelected default False;
+    property BorderStyle: TBorderStyle
+      read FBorderStyle write SetBorderStyle default bsSingle;
+    property CancelOnExit: Boolean
+      read FCancelOnExit write FCancelOnExit default True;
     property Canvas;
-    property CellFocused: TGridCell read FCellFocused write SetCellFocused;
-    property Cells[Col, Row: Integer]: string read GetCell write SetCell;
-    property CellSelected: Boolean read FCellSelected write SetCellSelected;
-    property CheckBoxes: Boolean read FCheckBoxes write SetCheckBoxes default False;
-    property Checked[Col, Row: Integer]: Boolean read GetChecked;
-    property CheckState[Col, Row: Longint]: TCheckBoxState read GetCheckBoxState;
-    property CheckHeight: Integer read FCheckHeight;
-    property CheckLeftIndent: Integer read FCheckLeftIndent write SetCheckLeftIndent default 0;
-    property CheckStyle: TGridCheckStyle read FCheckStyle write SetCheckStyle default csWin95;
-    property CheckTopIndent: Integer read FCheckTopIndent write SetCheckTopIndent default 0;
-    property CheckWidth: Integer read FCheckWidth;
-    property Col: Integer read GetCol write SetCol;
-    property ColResizing: Boolean read FColResizing;
-    property ColumnClick: Boolean read FColumnClick write FColumnClick default True;
-    property Columns: TGridColumns read FColumns write SetColumns;
-    property ColumnsFullDrag: Boolean read FColumnsFullDrag write FColumnsFullDrag default False;
-    property ColumnsSizing: Boolean read FColumnsSizing write FColumnsSizing default True;
-    property CursorKeys: TGridCursorKeys read FCursorKeys write SetCursorKeys default [gkArrows, gkMouse, gkMouseWheel];
-    property DefaultEditMenu: Boolean read FDefaultEditMenu write FDefaultEditMenu default False;
-    property DoubleBuffered: Boolean read FDoubleBuffered write FDoubleBuffered default False;
-    property Edit: TGridEdit read GetEdit;
-    property EditCell: TGridCell read FEditCell;
-    property EditColumn: TGridColumn read GetEditColumn;
-    property EditDropDown: Boolean read GetEditDropDown write SetEditDropDown;
-    property Editing: Boolean read GetEditing write SetEditing;
-    property EndEllipsis: Boolean read FEndEllipsis write SetEndEllipsis default True;
-    property Fixed: TGridFixed read GetFixed write SetFixed;
-    property FitColsToClient: Boolean read FFitColsToClient write SetFitColsToClient;
-    property FlatBorder: Boolean read FFlatBorder write SetFlatBorder default False;
-    property FocusOnScroll: Boolean read FFocusOnScroll write FFocusOnScroll default False;
-    property GridColor: TColor read FGridColor write SetGridColor default clSilver;
-    property GridLines: Boolean read FGridLines write SetGridLines default True;
-    property GridLineWidth: Integer read FGridLineWidth;
-    property GridStyle: TGridStyles read FGridStyle write SetGridStyle default [gsHorzLine, gsVertLine];
-    property Header: TGridHeader read GetHeader write SetHeader;
-    property HideSelection: Boolean read FHideSelection write SetHideSelection default False;
-    property HorzScrollBar: TGridScrollBar read FHorzScrollBar write SetHorzScrollBar;
-    property ImageHighlight: Boolean read FImageHighlight write SetImageHighlight default True;
-    property ImageIndexDef: Integer read FImageIndexDef write SetImageIndexDef default 0;
-    property ImageLeftIndent: Integer read FImageLeftIndent write SetImageLeftIndent default 2;
-    property Images: TImageList read FImages write SetImages;
-    property ImageTopIndent: Integer read FImageTopIndent write SetImageTopIndent default 1;
-    property LeftCol: Integer read GetLeftCol write SetLeftCol;
-    property ReadOnly: Boolean read FReadOnly write SetReadOnly default False;
-    property RightClickSelect: Boolean read FRightClickSelect write FRightClickSelect default True;
-    property Row: Integer read GetRow write SetRow;
-    property Rows: TGridRows read GetRows write SetRows;
-    property RowSelect: Boolean read FRowSelect write SetRowSelect default False;
-    property ShowCellTips: Boolean read FShowCellTips write SetShowCellTips;
-    property ShowFocusRect: Boolean read FShowFocusRect write SetShowFocusRect default True;
-    property ShowHeader: Boolean read FShowHeader write SetShowHeader default True;
-    property SortLeftIndent: Integer read FSortLeftIndent write SetSortLeftIndent default 0;  // was 5
-    property SortTopIndent: Integer read FSortTopIndent write SetSortTopIndent default 0;
-    property TextLeftIndent: Integer read FTextLeftIndent write SetTextLeftIndent default 6;
-    property TextRightIndent: Integer read FTextRightIndent write SetTextRightIndent default 6;
-    property TextTopIndent: Integer read FTextTopIndent write SetTextTopIndent default 2;
-    property ThemeXPEnabled: Boolean read FThemeXPEnabled write SetThemeXPEnabled default True;
-    property TipsCell: TGridCell read FTipsCell;
-    property TipsText: string read FTipsText;
-    property TopRow: Integer read GetTopRow write SetTopRow;
-    property UpdateLock: Integer read FUpdateLock;
-    property VertScrollBar: TGridScrollBar read FVertScrollBar write SetVertScrollBar;
-    property VisibleColCount: Integer read GetVisibleColCount;
-    property VisibleRowCount: Integer read GetVisibleRowCount;
-    property VisOrigin: TGridCell read FVisOrigin write SetVisOrigin;
-    property VisSize: TGridCell read FVisSize;
+    property CellFocused: TGridCell
+      read FCellFocused write SetCellFocused;
+    property Cells[Col, Row: Integer]: string
+      read GetCell write SetCell;
+    property CellSelected: Boolean
+      read FCellSelected write SetCellSelected;
+    property CheckBoxes: Boolean
+      read FCheckBoxes write SetCheckBoxes default False;
+    property Checked[Col, Row: Integer]: Boolean
+      read GetChecked;
+    property CheckState[Col, Row: Longint]: TCheckBoxState
+      read GetCheckBoxState;
+    property CheckHeight: Integer
+      read FCheckHeight;
+    property CheckLeftIndent: Integer
+      read FCheckLeftIndent write SetCheckLeftIndent default 0;
+    property CheckStyle: TGridCheckStyle
+      read FCheckStyle write SetCheckStyle default csWin95;
+    property CheckTopIndent: Integer
+      read FCheckTopIndent write SetCheckTopIndent default 0;
+    property CheckWidth: Integer
+      read FCheckWidth;
+    property Col: Integer
+      read GetCol write SetCol;
+    property ColResizing: Boolean
+      read FColResizing;
+    property ColumnClick: Boolean
+      read FColumnClick write FColumnClick default True;
+    property Columns: TGridColumns
+      read FColumns write SetColumns;
+    property ColumnsFullDrag: Boolean
+      read FColumnsFullDrag write FColumnsFullDrag default False;
+    property ColumnsSizing: Boolean
+      read FColumnsSizing write FColumnsSizing default True;
+    property CursorKeys: TGridCursorKeys
+      read FCursorKeys write SetCursorKeys default [gkArrows, gkMouse, gkMouseWheel];
+    property DefaultEditMenu: Boolean
+      read FDefaultEditMenu write FDefaultEditMenu default False;
+    property DoubleBuffered: Boolean
+      read FDoubleBuffered write FDoubleBuffered default False;
+    property Edit: TGridEdit
+      read GetEdit;
+    property EditCell: TGridCell
+      read FEditCell;
+    property EditColumn: TGridColumn
+      read GetEditColumn;
+    property EditDropDown: Boolean
+      read GetEditDropDown write SetEditDropDown;
+    property Editing: Boolean
+      read GetEditing write SetEditing;
+    property EndEllipsis: Boolean
+      read FEndEllipsis write SetEndEllipsis default True;
+    property Fixed: TGridFixed
+      read GetFixed write SetFixed;
+    property FitColsToClient: Boolean
+      read FFitColsToClient write SetFitColsToClient;
+    property FlatBorder: Boolean
+      read FFlatBorder write SetFlatBorder default False;
+    property FocusOnScroll: Boolean
+      read FFocusOnScroll write FFocusOnScroll default False;
+    property GridColor: TColor
+      read FGridColor write SetGridColor default clSilver;
+    property GridLines: Boolean
+      read FGridLines write SetGridLines default True;
+    property GridLineWidth: Integer
+      read FGridLineWidth;
+    property GridStyle: TGridStyles
+      read FGridStyle write SetGridStyle default [gsHorzLine, gsVertLine];
+    property Header: TGridHeader
+      read GetHeader write SetHeader;
+    property HideSelection: Boolean
+      read FHideSelection write SetHideSelection default False;
+    property HorzScrollBar: TGridScrollBar
+      read FHorzScrollBar write SetHorzScrollBar;
+    property ImageHighlight: Boolean
+      read FImageHighlight write SetImageHighlight default True;
+    property ImageIndexDef: Integer
+      read FImageIndexDef write SetImageIndexDef default 0;
+    property ImageLeftIndent: Integer
+      read FImageLeftIndent write SetImageLeftIndent default 2;
+    property Images: TImageList
+      read FImages write SetImages;
+    property ImageTopIndent: Integer
+      read FImageTopIndent write SetImageTopIndent default 1;
+    property LeftCol: Integer
+      read GetLeftCol write SetLeftCol;
+    property ReadOnly: Boolean
+      read FReadOnly write SetReadOnly default False;
+    property RightClickSelect: Boolean
+      read FRightClickSelect write FRightClickSelect default True;
+    property Row: Integer
+      read GetRow write SetRow;
+    property Rows: TGridRows
+      read GetRows write SetRows;
+    property RowSelect: Boolean
+      read FRowSelect write SetRowSelect default False;
+    property ShowCellTips: Boolean
+      read FShowCellTips write SetShowCellTips;
+    property ShowFocusRect: Boolean
+      read FShowFocusRect write SetShowFocusRect default True;
+    property ShowHeader: Boolean
+      read FShowHeader write SetShowHeader default True;
+    property SortLeftIndent: Integer
+      read FSortLeftIndent write SetSortLeftIndent default 0;  // was 5
+    property SortTopIndent: Integer
+      read FSortTopIndent write SetSortTopIndent default 0;
+    property TextLeftIndent: Integer
+      read FTextLeftIndent write SetTextLeftIndent default 6;
+    property TextRightIndent: Integer
+      read FTextRightIndent write SetTextRightIndent default 6;
+    property TextTopIndent: Integer
+      read FTextTopIndent write SetTextTopIndent default 2;
+    property ThemeXPEnabled: Boolean
+      read FThemeXPEnabled write SetThemeXPEnabled default True;
+    property TipsCell: TGridCell
+      read FTipsCell;
+    property TipsText: string
+      read FTipsText;
+    property TopRow: Integer
+      read GetTopRow write SetTopRow;
+    property UpdateLock: Integer
+      read FUpdateLock;
+    property VertScrollBar: TGridScrollBar
+      read FVertScrollBar write SetVertScrollBar;
+    property VisibleColCount: Integer
+      read GetVisibleColCount;
+    property VisibleRowCount: Integer
+      read GetVisibleRowCount;
+    property VisOrigin: TGridCell
+      read FVisOrigin write SetVisOrigin;
+    property VisSize: TGridCell
+      read FVisSize;
 
-    property OnAppendRow: TGridAppendRowEvent read FOnAppendRow write FOnAppendRow;
-    property OnCellAcceptCursor: TGridCellAcceptCursorEvent read FOnCellAcceptCursor write FOnCellAcceptCursor;
-    property OnCellClick: TGridCellClickEvent read FOnCellClick write FOnCellClick;
-    property OnCellTips: TGridCellTipsEvent read FOnCellTips write FOnCellTips;
-    property OnChange: TGridChangedEvent read FOnChange write FOnChange;
-    property OnChangeColumns: TNotifyEvent read FOnChangeColumns write FOnChangeColumns;
-    property OnChangeEditing: TNotifyEvent read FOnChangeEditing write FOnChangeEditing;
-    property OnChangeEditMode: TNotifyEvent read FOnChangeEditMode write FOnChangeEditMode;
-    property OnChangeFixed: TNotifyEvent read FOnChangeFixed write FOnChangeFixed;
-    property OnChangeRows: TNotifyEvent read FOnChangeRows write FOnChangeRows;
-    property OnChanging: TGridChangingEvent read FOnChanging write FOnChanging;
-    property OnCheckClick: TGridCellNotifyEvent read FOnCheckClick write FOnCheckClick;
-    property OnColumnAutoSize: TGridColumnResizeEvent read FOnColumnAutoSize write FOnColumnAutoSize;
-    property OnColumnResize: TGridColumnResizeEvent read FOnColumnResize write FOnColumnResize;
-    property OnColumnResizing: TGridColumnResizeEvent read FOnColumnResizing write FOnColumnResizing;
-    property OnDraw: TGridDrawEvent read FOnDraw write FOnDraw;
-    property OnDrawCell: TGridDrawCellEvent read FOnDrawCell write FOnDrawCell;
-    property OnDrawHeader: TGridDrawHeaderEvent read FOnDrawHeader write FOnDrawHeader;
-    property OnEditAcceptKey: TGridAcceptKeyEvent read FOnEditAcceptKey write FOnEditAcceptKey;
-    property OnEditButtonPress: TGridCellNotifyEvent read FOnEditButtonPress write FOnEditButtonPress;
-    property OnEditCanceled: TGridCellNotifyEvent read FOnEditCanceled write FOnEditCanceled;
-    property OnEditCanModify: TGridEditCanModifyEvent read FOnEditCanModify write FOnEditCanModify;
-    property OnEditCanShow: TGridEditCanShowEvent read FOnEditCanShow write FOnEditCanShow;
-    property OnEditChange: TGridCellNotifyEvent read FOnEditChange write FOnEditChange;
-    property OnEditCloseUp: TGridEditCloseUpEvent read FOnEditCloseUp write FOnEditCloseUp;
-    property OnEditSelectNext: TGridTextEvent read FOnEditSelectNext write FOnEditSelectNext;
-    property OnGetCellColors: TGridCellColorsEvent read FOnGetCellColors write FOnGetCellColors;
-    property OnGetCellHintRect: TGridRectEvent read FOnGetCellHintRect write FOnGetCellHintRect;
-    property OnGetCellImage: TGridCellImageEvent read FOnGetCellImage write FOnGetCellImage;
-    property OnGetCellImageIndent: TGridCellIndentEvent read FOnGetCellImageIndent write FOnGetCellImageIndent;
-    property OnGetCellReadOnly: TGridCellreadOnlyEvent read FOnGetCellReadOnly write FOnGetCellReadOnly;
-    property OnGetCellText: TGridTextEvent read FOnGetCellText write FOnGetCellText;
-    property OnGetCellTextIndent: TGridCellIndentEvent read FOnGetCellTextIndent write FOnGetCellTextIndent;
-    property OnGetCheckAlignment: TGridCheckAlignmentEvent read FOnGetCheckAlignment write FOnGetCheckAlignment;
-    property OnGetCheckImage: TGridCheckImageEvent read FOnGetCheckImage write FOnGetCheckImage;
-    property OnGetCheckIndent: TGridCellIndentEvent read FOnGetCheckIndent write FOnGetCheckIndent;
-    property OnGetCheckKind: TGridCheckKindEvent read FOnGetCheckKind write FOnGetCheckKind;
-    property OnGetCheckState: TGridCheckStateEvent read FOnGetCheckState write FOnGetCheckState;
-    property OnGetEditList: TGridEditListEvent read FOnGetEditList write FOnGetEditList;
-    property OnGetEditListBounds: TGridRectEvent read FOnGetEditListBounds write FOnGetEditListBounds;
-    property OnGetEditMask: TGridTextEvent read FOnGetEditMask write FOnGetEditMask;
-    property OnGetEditStyle: TGridEditStyleEvent read FOnGetEditStyle write FOnGetEditStyle;
-    property OnGetEditText: TGridTextEvent read FOnGetEditText write FOnGetEditText;
-    property OnGetHeaderColors: TGridHeaderColorsEvent read FOnGetHeaderColors write FOnGetHeaderColors;
-    property OnGetHeaderImage: TGridHeaderImageEvent read FOnGetHeaderImage write FOnGetHeaderImage;
-    property OnGetSortDirection: TGridSortDirectionEvent read FOnGetSortDirection write FOnGetSortDirection;
-    property OnGetSortImage: TGridSortImageEvent read FOnGetSortImage write FOnGetSortImage;
-    property OnGetTipsRect: TGridRectEvent read FOnGetTipsRect write FOnGetTipsRect;
-    property OnGetTipsText: TGridTextEvent read FOnGetTipsText write FOnGetTipsText;
-    property OnHeaderClick: TGridHeaderClickEvent read FOnHeaderClick write FOnHeaderClick;
-    property OnHeaderClicking: TGridHeaderClickingEvent read FOnHeaderClicking write FOnHeaderClicking;
-    property OnSetEditText: TGridTextEvent read FOnSetEditText write FOnSetEditText;
+    property OnAppendRow: TGridAppendRowEvent
+      read FOnAppendRow write FOnAppendRow;
+    property OnCellAcceptCursor: TGridCellAcceptCursorEvent
+      read FOnCellAcceptCursor write FOnCellAcceptCursor;
+    property OnCellClick: TGridCellClickEvent
+      read FOnCellClick write FOnCellClick;
+    property OnCellTips: TGridCellTipsEvent
+      read FOnCellTips write FOnCellTips;
+    property OnChange: TGridChangedEvent
+      read FOnChange write FOnChange;
+    property OnChangeColumns: TNotifyEvent
+      read FOnChangeColumns write FOnChangeColumns;
+    property OnChangeEditing: TNotifyEvent
+      read FOnChangeEditing write FOnChangeEditing;
+    property OnChangeEditMode: TNotifyEvent
+      read FOnChangeEditMode write FOnChangeEditMode;
+    property OnChangeFixed: TNotifyEvent
+      read FOnChangeFixed write FOnChangeFixed;
+    property OnChangeRows: TNotifyEvent
+      read FOnChangeRows write FOnChangeRows;
+    property OnChanging: TGridChangingEvent
+      read FOnChanging write FOnChanging;
+    property OnCheckClick: TGridCellNotifyEvent
+      read FOnCheckClick write FOnCheckClick;
+    property OnColumnAutoSize: TGridColumnResizeEvent
+      read FOnColumnAutoSize write FOnColumnAutoSize;
+    property OnColumnResize: TGridColumnResizeEvent
+      read FOnColumnResize write FOnColumnResize;
+    property OnColumnResizing: TGridColumnResizeEvent
+      read FOnColumnResizing write FOnColumnResizing;
+    property OnDraw: TGridDrawEvent
+      read FOnDraw write FOnDraw;
+    property OnDrawCell: TGridDrawCellEvent
+      read FOnDrawCell write FOnDrawCell;
+    property OnDrawHeader: TGridDrawHeaderEvent
+      read FOnDrawHeader write FOnDrawHeader;
+    property OnEditAcceptKey: TGridAcceptKeyEvent
+      read FOnEditAcceptKey write FOnEditAcceptKey;
+    property OnEditButtonPress: TGridCellNotifyEvent
+      read FOnEditButtonPress write FOnEditButtonPress;
+    property OnEditCanceled: TGridCellNotifyEvent
+      read FOnEditCanceled write FOnEditCanceled;
+    property OnEditCanModify: TGridEditCanModifyEvent
+      read FOnEditCanModify write FOnEditCanModify;
+    property OnEditCanShow: TGridEditCanShowEvent
+      read FOnEditCanShow write FOnEditCanShow;
+    property OnEditChange: TGridCellNotifyEvent
+      read FOnEditChange write FOnEditChange;
+    property OnEditCloseUp: TGridEditCloseUpEvent
+      read FOnEditCloseUp write FOnEditCloseUp;
+    property OnEditSelectNext: TGridTextEvent
+      read FOnEditSelectNext write FOnEditSelectNext;
+    property OnGetCellColors: TGridCellColorsEvent
+      read FOnGetCellColors write FOnGetCellColors;
+    property OnGetCellHintRect: TGridRectEvent
+      read FOnGetCellHintRect write FOnGetCellHintRect;
+    property OnGetCellImage: TGridCellImageEvent
+      read FOnGetCellImage write FOnGetCellImage;
+    property OnGetCellImageIndent: TGridCellIndentEvent
+      read FOnGetCellImageIndent write FOnGetCellImageIndent;
+    property OnGetCellReadOnly: TGridCellreadOnlyEvent
+      read FOnGetCellReadOnly write FOnGetCellReadOnly;
+    property OnGetCellText: TGridTextEvent
+      read FOnGetCellText write FOnGetCellText;
+    property OnGetCellTextIndent: TGridCellIndentEvent
+      read FOnGetCellTextIndent write FOnGetCellTextIndent;
+    property OnGetCheckAlignment: TGridCheckAlignmentEvent
+      read FOnGetCheckAlignment write FOnGetCheckAlignment;
+    property OnGetCheckImage: TGridCheckImageEvent
+      read FOnGetCheckImage write FOnGetCheckImage;
+    property OnGetCheckIndent: TGridCellIndentEvent
+      read FOnGetCheckIndent write FOnGetCheckIndent;
+    property OnGetCheckKind: TGridCheckKindEvent
+      read FOnGetCheckKind write FOnGetCheckKind;
+    property OnGetCheckState: TGridCheckStateEvent
+      read FOnGetCheckState write FOnGetCheckState;
+    property OnGetEditList: TGridEditListEvent
+      read FOnGetEditList write FOnGetEditList;
+    property OnGetEditListBounds: TGridRectEvent
+      read FOnGetEditListBounds write FOnGetEditListBounds;
+    property OnGetEditMask: TGridTextEvent
+      read FOnGetEditMask write FOnGetEditMask;
+    property OnGetEditStyle: TGridEditStyleEvent
+      read FOnGetEditStyle write FOnGetEditStyle;
+    property OnGetEditText: TGridTextEvent
+      read FOnGetEditText write FOnGetEditText;
+    property OnGetHeaderColors: TGridHeaderColorsEvent
+      read FOnGetHeaderColors write FOnGetHeaderColors;
+    property OnGetHeaderImage: TGridHeaderImageEvent
+      read FOnGetHeaderImage write FOnGetHeaderImage;
+    property OnGetSortDirection: TGridSortDirectionEvent
+      read FOnGetSortDirection write FOnGetSortDirection;
+    property OnGetSortImage: TGridSortImageEvent
+      read FOnGetSortImage write FOnGetSortImage;
+    property OnGetTipsRect: TGridRectEvent
+      read FOnGetTipsRect write FOnGetTipsRect;
+    property OnGetTipsText: TGridTextEvent
+      read FOnGetTipsText write FOnGetTipsText;
+    property OnHeaderClick: TGridHeaderClickEvent
+      read FOnHeaderClick write FOnHeaderClick;
+    property OnHeaderClicking: TGridHeaderClickingEvent
+      read FOnHeaderClicking write FOnHeaderClicking;
+    property OnSetEditText: TGridTextEvent
+      read FOnSetEditText write FOnSetEditText;
   end;
 
 { TGridView }
@@ -2683,11 +2811,7 @@ procedure FillDWord(var Dest; Count, Value: Integer); register;
 implementation
 
 uses
-{$IFDEF HAS_UNIT_SYSTEM_UITYPES}
-  System.UITypes,
-{$ENDIF}
-
-  Types;
+  System.UITypes, System.Types;
 
 {$R *.RES}
 
@@ -2696,9 +2820,9 @@ type
   PIntArray = ^TIntArray;
   TIntArray = array[0..MaxInt div 16 - 1] of Integer;
 var
-  FPatternBitmap: Graphics.TBitmap;
+  FPatternBitmap: Vcl.Graphics.TBitmap;
 
-function PatternBitmap:  Graphics.TBitmap;
+function PatternBitmap:  Vcl.Graphics.TBitmap;
 const
   C: array[Boolean] of TColor = (clBlack, clWhite);
 var
@@ -2706,7 +2830,7 @@ var
 begin
   if not Assigned(FPatternBitmap) then
   begin
-    FPatternBitmap :=  Graphics.TBitmap.Create;
+    FPatternBitmap :=  Vcl.Graphics.TBitmap.Create;
     with FPatternBitmap do
     begin
       Monochrome := TRUE;
@@ -2810,9 +2934,9 @@ end;
 
 function GetTextWidth(const AText: string; AFont: TFont): Integer;
 var
-  Bitmap: Graphics.TBitmap;
+  Bitmap: Vcl.Graphics.TBitmap;
 begin
-  Bitmap := Graphics.TBitmap.Create;
+  Bitmap := Vcl.Graphics.TBitmap.Create;
   try
     Bitmap.Canvas.Font.Assign(AFont);
     Result := Bitmap.Canvas.TextExtent(AText).cx;
@@ -4709,7 +4833,7 @@ end;
 procedure TGridListBox.CreateWnd;
 begin
   inherited CreateWnd;
-  Windows.SetParent(Handle, 0);
+  Winapi.Windows.SetParent(Handle, 0);
   CallWindowProc(DefWndProc, Handle, WM_SETFOCUS, 0, 0);
 end;
 
@@ -4900,7 +5024,7 @@ begin
   GetCursorPos(P);
   if (FEditStyle <> geSimple) and PtInRect(GetButtonRect, ScreenToClient(P)) then
   begin
-    Windows.SetCursor(LoadCursor(0, IDC_ARROW));
+    Winapi.Windows.SetCursor(LoadCursor(0, IDC_ARROW));
     Exit;
   end;
   inherited;
@@ -5538,7 +5662,7 @@ begin
       SetWindowPos(FActiveList.Handle, HWND_TOP, FActiveList.Left, FActiveList.Top, 0, 0, Flags);
       FDropListVisible := True;
       Invalidate;
-      Windows.SetFocus(Handle);
+      Winapi.Windows.SetFocus(Handle);
     end;
   end;
 end;
@@ -5554,7 +5678,7 @@ begin
   end;
   ValidateRect(Handle, nil);
   InvalidateRect(Handle, nil, True);
-  Windows.GetClientRect(Handle, Cur);
+  Winapi.Windows.GetClientRect(Handle, Cur);
   MapWindowPoints(Handle, Grid.Handle, Cur, 2);
   ValidateRect(Grid.Handle, @Cur);
   InvalidateRect(Grid.Handle, @Cur, False);
@@ -5573,7 +5697,7 @@ begin
     begin
       FDefocusing := True;
       try
-        Windows.SetFocus(Grid.Handle);
+        Winapi.Windows.SetFocus(Grid.Handle);
       finally
         FDefocusing := False;
       end;
@@ -5607,7 +5731,7 @@ end;
 procedure TCustomGridEdit.SetFocus;
 begin
   if IsWindowVisible(Handle) then
-    Windows.SetFocus(Handle);
+    Winapi.Windows.SetFocus(Handle);
 end;
 
 procedure TCustomGridEdit.Show;
@@ -5624,7 +5748,7 @@ begin
     UpdateColors;
     UpdateBounds(ScrollCaret);
     if Grid.Focused then
-      Windows.SetFocus(Handle);
+      Winapi.Windows.SetFocus(Handle);
   end;
 end;
 
@@ -6532,14 +6656,14 @@ begin
     begin
       if FColResizing then
       begin
-        Windows.SetCursor(Screen.Cursors[crHSplit]);
+        Winapi.Windows.SetCursor(Screen.Cursors[crHSplit]);
         Exit;
       end;
       if (HitTest = HTCLIENT) and ShowHeader then
         if PtInRect(GetHeaderRect, FHitTest)
           and (GetResizeSectionAt(X, Y) <> nil) then
         begin
-          Windows.SetCursor(Screen.Cursors[crHSplit]);
+          Winapi.Windows.SetCursor(Screen.Cursors[crHSplit]);
           Exit;
         end;
     end;
@@ -6715,7 +6839,7 @@ var
 begin
   if ShowCellTips then
   begin
-    Windows.GetCursorPos(P);
+    Winapi.Windows.GetCursorPos(P);
     HintControl := GetHintControl(FindDragTarget(P, False));
     if HintControl = Self then
       Application.CancelHint;
@@ -7094,7 +7218,7 @@ var
 begin
   if not IsCellHasImage(Cell) then
   begin
-    Result := Classes.Rect(0, 0, 0, 0);
+    Result := System.Classes.Rect(0, 0, 0, 0);
     Exit;
   end;
   R := GetCellRect(Cell);
@@ -7133,7 +7257,7 @@ var
 begin
   if (Cell.Col < 0) or (Cell.Col > Columns.Count - 1) then
   begin
-    Result := Classes.Rect(0, 0, 0, 0);
+    Result := System.Classes.Rect(0, 0, 0, 0);
     Exit;
   end;
   if (Cell.Row >= 0) and (Cell.Row < Rows.Count) then
@@ -7142,7 +7266,7 @@ begin
     TI := GetCellTextIndent(Cell);
     T := GetCellText(Cell);
   end;
-  R := Classes.Rect(0, 0, 0, 0);
+  R := System.Classes.Rect(0, 0, 0, 0);
   if Columns[Cell.Col].WordWrap then
   begin
     R := GetEditRect(Cell);
@@ -7216,7 +7340,7 @@ var
 begin
   if not IsCellHasCheck(Cell) then
   begin
-    Result := Classes.Rect(0, 0, 0, 0);
+    Result := System.Classes.Rect(0, 0, 0, 0);
     Exit;
   end;
   R := GetCellRect(Cell);
@@ -10729,7 +10853,7 @@ end;
 procedure TCustomGridView.InvalidateRect(Rect: TRect);
 begin
   if (FUpdateLock = 0) and HandleAllocated and Visible then
-    Windows.InvalidateRect(Handle, @Rect, False);
+    Winapi.Windows.InvalidateRect(Handle, @Rect, False);
 end;
 
 procedure TCustomGridView.InvalidateRow(Row: Integer);
@@ -11133,7 +11257,7 @@ begin
     Exit;
   if IsActiveControl then
   begin
-    Windows.SetFocus(Handle);
+    Winapi.Windows.SetFocus(Handle);
     if GetFocus = Handle then
       Perform(CM_UIACTIVATE, 0, 0);
   end

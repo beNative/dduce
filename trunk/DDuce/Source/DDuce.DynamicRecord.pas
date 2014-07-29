@@ -23,9 +23,8 @@ unit DDuce.DynamicRecord;
 interface
 
 uses
-  SysUtils, Classes, Rtti, DB,
-
-  DDuce.ScopedReference;
+  System.SysUtils, System.Classes, System.Rtti,
+  Data.DB;
 
 {$REGION 'Documentation'}
 {
@@ -868,7 +867,9 @@ type
 implementation
 
 uses
-  TypInfo, Variants, Windows, StrUtils, Generics.Collections, Dialogs, Math;
+  System.TypInfo, System.Variants, System.Math, System.StrUtils,
+  System.Generics.Collections,
+  WinApi.Windows;
 
 resourcestring
   SFieldNotFound        = 'Record does not contain a field with name %s';
@@ -893,7 +894,7 @@ type
     { Our customized layout of the variant's record data. We only need a reference
       to the TDynamicRecord instance. }
 
-    TVarDataRecordData = record
+    TVarDataRecordData = packed record
       VType         : TVarType;
       Reserved1     : Word;
       Reserved2     : Word;
