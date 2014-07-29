@@ -21,7 +21,8 @@ unit Demo.Data;
 interface
 
 uses
-  SysUtils, Classes, DB, DBClient;
+  System.SysUtils, System.Classes,
+  Data.DB, Datasnap.DBClient;
 
 type
   TdmData = class(TDataModule)
@@ -41,7 +42,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Forms;
+  Vcl.Forms;
 
 var
   FData: TdmData;
