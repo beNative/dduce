@@ -16,41 +16,23 @@
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
-unit Demo.Registration;
+unit Test.Registration;
 
 interface
 
-procedure RegisterDemos;
+procedure RegisterTests;
 
 implementation
 
 uses
-  Demo.DDuce.ListDataSet,
-  Demo.DDuce.ScopedReferences,
+  TestFramework,
 
-  Demo.DDuce.XMLTree,
-  Demo.DDuce.VirtualDBGrid,
+  Test.DDuce.DynamicRecord, Test.DDuce.DynamicRecord.Generic;
 
-
-  Demo.DDuce.PropertyInspector,
-  Demo.DDuce.Reflect,
-  Demo.DDuce.DynamicRecord,
-
-  Demo.Manager;
-
-{$REGION 'interfaced routines'}
-procedure RegisterDemos;
+procedure RegisterTests;
 begin
-  DemoManager.Register(TfrmListDataSet, 'ListDataSet');
-  DemoManager.Register(TfrmXMLTree, 'XMLTree');
-  DemoManager.Register(TfrmReflect, 'Reflect');
-  DemoManager.Register(TfrmVirtualDBGrid, 'VirtualDBGrid');
-  DemoManager.Register(TfrmScopedReferences, 'Scoped references');
-  //DemoManager.Register(TfrmDBGridView, 'DBGridView');
-  DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
-  DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
+  RegisterTest('TRecord', TestTRecord.Suite);
+  RegisterTest('TRecord<T>', TestGenericTRecord.Suite);
 end;
-{$ENDREGION}
 
 end.
-

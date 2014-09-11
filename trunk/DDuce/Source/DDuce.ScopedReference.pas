@@ -84,6 +84,26 @@ unit DDuce.ScopedReference;
         ShowMessage(P.Ref.ClassName);
         ShowMessage(L.Ref.ClassName);
       end;
+
+  Optionally you can provide a delegate with the construction code for the
+  wrapped type.
+  When not provided the default parameterless constructor of the type is used.
+
+  Example using an anonymous method as a delegate to construct the scoped type:
+
+      procedure CreateScopedComponent;
+      var
+        C: Scoped<TComponent>;
+      begin
+        C.Create(
+          function
+          begin
+            Result := TComponent.Create(Self);
+            Result.Name := 'MyComponent';
+          end
+        );
+        ShowMessage(C.Ref.Name);
+      end;
 }
 
 {$I DDuce.inc}

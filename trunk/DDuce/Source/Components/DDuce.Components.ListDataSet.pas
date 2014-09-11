@@ -37,7 +37,7 @@ uses
 {$ENDIF}
 
 {$IFDEF DSHARP}
-  DSharp.Collections, DSharp.Core.Events,
+  DSharp.Collections,
 {$ENDIF}
 
   DDuce.Components.VirtualDataSet;

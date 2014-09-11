@@ -45,8 +45,6 @@ type
       read GetSourceFilename;
   end;
 
-  TDemoList = TObjectList<TDemo>;
-
   TDemoManager = record
     class var
       FList: IList;
@@ -72,6 +70,9 @@ implementation
 
 uses
   System.SysUtils, System.StrUtils;
+
+type
+  TDemoList = TObjectList<TDemo>;
 
 {$REGION 'construction and destruction'}
 class constructor TDemoManager.Create;

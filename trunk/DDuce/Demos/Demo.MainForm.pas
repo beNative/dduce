@@ -23,9 +23,9 @@ unit Demo.MainForm;
 interface
 
 uses
-  System.Actions, System.UITypes, System.Classes, Vcl.ActnList,
-  Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Controls, Vcl.ExtCtrls, Vcl.Buttons,
-  Vcl.Forms,
+  System.Actions, System.UITypes, System.Classes,
+  Vcl.ActnList, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Controls, Vcl.ExtCtrls,
+  Vcl.Buttons, Vcl.Forms,
 
   VirtualTrees,
 
@@ -49,19 +49,12 @@ type
     procedure actExecuteExecute(Sender: TObject);
     procedure actFocusFilterExecute(Sender: TObject);
 
-    procedure tvpConceptsDoubleClick(Sender: TObject);
     procedure vstDemosPaintBackground(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; R: TRect; var Handled: Boolean);
     procedure edtFilterChange(Sender: TObject);
     procedure FTVPFilter(Item: TObject; var Accepted: Boolean);
     procedure FTVPDoubleClick(Sender: TObject);
-    procedure edtFilterKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure edtFilterKeyUp(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure vstDemosKeyPress(Sender: TObject; var Key: Char);
-
-    function CustomDrawColumn(
+    function FTVPColumnDefinitionsCustomDrawColumn(
       Sender           : TObject;
       ColumnDefinition : TColumnDefinition;
       Item             : TObject;
@@ -71,6 +64,12 @@ type
       DrawMode         : TDrawMode;
       Selected         : Boolean
     ): Boolean;
+
+    procedure edtFilterKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edtFilterKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure vstDemosKeyPress(Sender: TObject; var Key: Char);
 
   private
     FVKPressed : Boolean;
@@ -92,10 +91,10 @@ implementation
 
 uses
   System.StrUtils, System.SysUtils,
-  Vcl.Graphics,
   Winapi.Windows, WinApi.Messages,
+  Vcl.Graphics,
 
-  Demo.Helpers, Demo.Manager;
+  Demo.Factories, Demo.Manager;
 
 type
   TVKSet = set of Byte;
@@ -148,13 +147,13 @@ begin
   {$IFDEF DSHARP}
   Logger.Channels.Add(TIPCChannel.Create);
   FVST := vstDemos;
-  FTVP := CreateTVP(Self);
+  FTVP := TDemoFactories.CreateTVP(Self);
   with FTVP.ColumnDefinitions.Add('Name') do
   begin
     ValuePropertyName := 'Name';
     AutoSize          := True;
     Alignment         := taCenter;
-    OnCustomDraw      := CustomDrawColumn;
+    OnCustomDraw      := FTVPColumnDefinitionsCustomDrawColumn;
   end;
   with FTVP.ColumnDefinitions.Add('UnitName') do
   begin
@@ -165,6 +164,7 @@ begin
   FTVP.View.ItemsSource := DemoManager.ItemList;
   FTVP.View.Filter.Add(FTVPFilter);
   FTVP.OnDoubleClick := FTVPDoubleClick;
+  //FTVP.OnKeyAction   := FTVPKeyAction;
   FVST.Header.AutoFitColumns;
   sbrMain.SimpleText := Format(SDemosLoaded, [DemoManager.ItemList.Count]);
   {$ENDIF}
@@ -185,11 +185,6 @@ end;
 {$ENDREGION}
 
 {$REGION 'event handlers'}
-procedure TfrmMainMenu.tvpConceptsDoubleClick(Sender: TObject);
-begin
-  DemoManager.Execute(FTVP.SelectedItem);
-end;
-
 procedure TfrmMainMenu.FTVPDoubleClick(Sender: TObject);
 begin
   actExecute.Execute;
@@ -277,7 +272,7 @@ begin
     FVKPressed := False;
 end;
 
-function TfrmMainMenu.CustomDrawColumn(Sender: TObject;
+function TfrmMainMenu.FTVPColumnDefinitionsCustomDrawColumn(Sender: TObject;
   ColumnDefinition: TColumnDefinition; Item: TObject; TargetCanvas: TCanvas;
   CellRect: TRect; ImageList: TCustomImageList; DrawMode: TDrawMode;
   Selected: Boolean): Boolean;

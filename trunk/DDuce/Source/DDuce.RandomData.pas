@@ -26,7 +26,7 @@ interface
 
 type
   RandomData = record
-  private
+  strict private
   type
     TGender = (
       gnMale,
@@ -2379,6 +2379,7 @@ type
     {$endregion}
 
   public
+    class constructor Create;
     class function Name: string; static;
     class function CompanyName: string; static;
     class function AlliteratedCompanyName: string; static;
@@ -2413,6 +2414,11 @@ uses
   System.SysUtils, System.Math, System.DateUtils, System.StrUtils,
 
   DSharp.Collections, DSharp.Collections.Extensions;
+
+class constructor RandomData.Create;
+begin
+  Randomize;
+end;
 
 class function RandomData.Str(const AList: array of string): string;
 begin
@@ -2655,8 +2661,5 @@ class function RandomData.State: string;
 begin
   Result := Str(USStates);
 end;
-
-initialization
-  Randomize;
 
 end.

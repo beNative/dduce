@@ -23,11 +23,10 @@ unit DDuce.Components.PropertyInspector.StringsEditor;
 interface
 
 uses
-  System.SysUtils, System.Variants, System.Classes, System.Actions,
-  Winapi.Windows, Winapi.Messages,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
-  Vcl.ComCtrls, Vcl.StdActns, Vcl.ActnList, Vcl.Menus,
-  Vcl.ImgList;
+  System.SysUtils, System.Classes, System.Actions,
+
+  Vcl.Controls, Vcl.Forms, Vcl.StdCtrls,
+  Vcl.ComCtrls, Vcl.StdActns, Vcl.ActnList, Vcl.Menus, Vcl.ImgList;
 
 resourcestring
   SCaption            = 'String List Editor';

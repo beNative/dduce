@@ -85,8 +85,8 @@ interface
 uses
   System.SysUtils, System.Classes, System.Generics.Collections, System.Math,
   Winapi.Windows, Winapi.Messages, Winapi.CommCtrl,
-  Vcl.Controls, Vcl.Graphics, Vcl.Forms, Vcl.DBCtrls, Vcl.Grids, Vcl.StdCtrls,
-  Vcl.ImgList, Vcl.Dialogs,
+  Vcl.Controls, Vcl.Graphics, Vcl.Forms, Vcl.DBCtrls, Vcl.StdCtrls,
+  Vcl.ImgList,
   Data.DB,
 
   DDuce.Components.GridView;

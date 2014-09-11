@@ -20,7 +20,8 @@ unit Demo.DDuce.VirtualDBGrid;
 
 {$I ..\Source\DDuce.inc}
 
-{ Form demonstrating the TVirtualDBGrid component. }
+{ Form demonstrating the TVirtualDBGrid component connected to a generic
+  TListDataSet. }
 
 interface
 
@@ -72,7 +73,7 @@ type
 implementation
 
 uses
-  Demo.Helpers;
+  Demo.Factories;
 
 {$R *.dfm}
 
@@ -80,11 +81,11 @@ uses
 procedure TfrmVirtualDBGrid.AfterConstruction;
 begin
   inherited;
-  FList           := CreateContactList(1000);
+  FList           := TDemoFactories.CreateContactList(1000);
   FDataSet        := TListDataset<TContact>.Create(Self, FList);
   dscMain.DataSet := FDataSet;
-  FVDBG           := CreateVirtualDBGrid(Self, pnlLeft, dscMain);
-  FInspector      := CreateInspector(Self, pnlRight, FVDBG);
+  FVDBG           := TDemoFactories.CreateVirtualDBGrid(Self, pnlLeft, dscMain);
+  FInspector      := TDemoFactories.CreateInspector(Self, pnlRight, FVDBG);
   FDataSet.Active := True;
   FVDBG.Header.AutoFitColumns;
 end;

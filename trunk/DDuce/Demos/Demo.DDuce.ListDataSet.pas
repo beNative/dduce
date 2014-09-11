@@ -159,18 +159,18 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Rtti, System.Math, System.SysUtils,
+  System.SysUtils,
   Vcl.Forms,
 
-  Demo.Helpers;
+  Demo.Factories, Demo.Helpers;
 
 {$REGION 'construction and destruction'}
 procedure TfrmListDataSet.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FList        := CreateContactList;
-  FVST         := CreateVST(Self, pnlRight);
-  FDBGV        := CreateDBGridView(Self, pnlLeft, dscMain);
+  FList        := TDemoFactories.CreateContactList;
+  FVST         := TDemoFactories.CreateVST(Self, pnlRight);
+  FDBGV        := TDemoFactories.CreateDBGridView(Self, pnlLeft, dscMain);
   FListDataSet := TListDataset<TContact>.Create(Self, FList);
   {$IFDEF DSHARP}
   FBG          := TBindingGroup.Create(Self);
@@ -337,7 +337,7 @@ end;
 
 procedure TfrmListDataSet.FillList;
 begin
-  FillListWithContacts(FList.AsList, StrToInt(edtRecordCount.Text));
+  TDemoFactories.FillListWithContacts(FList.AsList, StrToInt(edtRecordCount.Text));
 end;
 
 procedure TfrmListDataSet.ConnectDataSet;
@@ -352,7 +352,7 @@ begin
   {$IFDEF DSHARP}
   if not Assigned(FTVP) then
   begin
-    FTVP := CreateTVP(Self, FVST, FList.AsList);
+    FTVP := TDemoFactories.CreateTVP(Self, FVST, FList.AsList);
     FVST.Header.AutoFitColumns;
     AddControlBinding(FBG, FTVP, 'View.CurrentItem.Firstname', edtFirstname);
     AddControlBinding(FBG, FTVP, 'View.CurrentItem.Lastname', edtLastname);

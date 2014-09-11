@@ -30,11 +30,11 @@ interface
 
 uses
   System.SysUtils, System.Variants, System.Classes, System.Actions,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
-  Vcl.ActnList, Vcl.Grids, Vcl.DBGrids, Vcl.ComCtrls, Vcl.ExtCtrls,
+  Vcl.Controls, Vcl.Forms, Vcl.StdCtrls, Vcl.ActnList, Vcl.Grids, Vcl.DBGrids,
+  Vcl.ComCtrls, Vcl.ExtCtrls,
   Data.DB,
   Datasnap.DBClient,
-  Winapi.Windows, Winapi.Messages,
+  Winapi.Windows,
 
   Spring,
 
@@ -42,9 +42,7 @@ uses
 
   DDuce.DynamicRecord,
 
-  Demo.Contact, Data.Bind.EngExt, Vcl.Bind.DBEngExt, System.Rtti,
-  System.Bindings.Outputs, Vcl.Bind.Editors, Data.Bind.Components,
-  Data.Bind.DBScope;
+  Demo.Contact, System.Rtti;
 
 type
   TTestClass = class
@@ -228,8 +226,6 @@ implementation
 
 uses
   System.TypInfo,
-
-
 
   Demo.Utils;
 

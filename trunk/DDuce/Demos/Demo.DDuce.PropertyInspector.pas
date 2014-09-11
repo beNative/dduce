@@ -59,7 +59,7 @@ type
 implementation
 
 uses
-  Demo.Helpers;
+  Demo.Factories;
 
 {$R *.dfm}
 
@@ -70,7 +70,11 @@ var
   C: TWinControl;
 begin
   inherited;
-  FPropertyInspector := CreateInspector(Self, pnlLeft, bgButtonGroup);
+  FPropertyInspector := TDemoFactories.CreateInspector(
+    Self,
+    pnlLeft,
+    bgButtonGroup
+  );
   FPropertyInspector.Name := 'PropertyInspector';
   for I := 0 to ComponentCount - 1 do
   begin

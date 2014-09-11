@@ -1,5 +1,5 @@
 
-{.$DEFINE SPRING}
+//{$DEFINE SPRING}
 {$DEFINE DSHARP}
 
 {$I jedi.inc}                // Import JEDI Development environment directives
