@@ -124,7 +124,8 @@ type
 implementation
 
 uses
-  Dialogs, Classes;
+  System.Classes,
+  Vcl.Dialogs;
 
 {$REGION 'construction and destruction'}
 procedure TContact.AfterConstruction;

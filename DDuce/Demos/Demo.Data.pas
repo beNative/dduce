@@ -21,7 +21,7 @@ unit Demo.Data;
 interface
 
 uses
-  System.SysUtils, System.Classes,
+  System.Classes,
   Data.DB, Datasnap.DBClient;
 
 type

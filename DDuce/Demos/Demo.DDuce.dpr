@@ -4,7 +4,7 @@ uses
   Forms,
   Demo.DDuce.XMLTree in 'Demo.DDuce.XMLTree.pas' {frmXMLTree},
   Demo.DDuce.DynamicRecord in 'Demo.DDuce.DynamicRecord.pas' {frmDynamicRecords},
-  Demo.DDuce.ScopedReferences in 'Demo.DDuce.ScopedReferences.pas' {frmScopedReferences},
+  Demo.DDuce.ScopedReference in 'Demo.DDuce.ScopedReference.pas' {frmScopedReferences},
   Demo.DDuce.ListDataSet in 'Demo.DDuce.ListDataSet.pas' {frmListDataSet},
   Demo.MainForm in 'Demo.MainForm.pas' {frmMainMenu},
   Demo.Contact in 'Demo.Contact.pas',
@@ -36,7 +36,8 @@ uses
   Demo.DDuce.VirtualDBGrid in 'Demo.DDuce.VirtualDBGrid.pas' {frmVirtualDBGrid},
   Demo.DDuce.Reflect in 'Demo.DDuce.Reflect.pas' {frmReflect},
   Vcl.Themes,
-  Vcl.Styles;
+  Vcl.Styles,
+  Demo.Factories in 'Demo.Factories.pas';
 
 {$R *.res}
 

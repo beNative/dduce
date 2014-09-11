@@ -26,10 +26,10 @@ unit Demo.DDuce.XMLTree;
 interface
 
 uses
-  System.SysUtils, System.Variants, System.Classes, System.Actions,
+  System.SysUtils, System.Classes, System.Actions,
 
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
-  Vcl.ActnList, Vcl.StdCtrls,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.ActnList,
+  Vcl.StdCtrls,
 
   VirtualTrees,
 
@@ -86,7 +86,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Demo.Helpers;
+  Demo.Factories;
 
 {$REGION 'XML string'}
 const
@@ -264,7 +264,7 @@ begin
   FXML := XML_STRING;
   mmoXML.Text := FXML;
   InitializeTree;
-  FPI := CreateInspector(Self, pnlInspector, FXMLTree);
+  FPI := TDemoFactories.CreateInspector(Self, pnlInspector, FXMLTree);
 end;
 {$ENDREGION}
 

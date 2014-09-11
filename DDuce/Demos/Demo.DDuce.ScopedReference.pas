@@ -16,7 +16,7 @@
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
-unit Demo.DDuce.ScopedReferences;
+unit Demo.DDuce.ScopedReference;
 
 { Form demonstrating the use of scoped references in Delphi (or smart pointers
   as they are called in C++). }
@@ -26,9 +26,8 @@ interface
 {$I ..\Source\DDuce.inc}
 
 uses
-  System.Actions, System.SysUtils, System.Variants, System.Classes,
-  Winapi.Windows, Winapi.Messages,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList, Vcl.StdCtrls,
+  System.Actions, System.SysUtils, System.Classes,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList, Vcl.StdCtrls,
   Vcl.ExtCtrls,
 
   DDuce.ScopedReference;
@@ -93,7 +92,7 @@ begin
       ShowMessage('Scoped button created.');
     end
   );
-  ShowMessage('Scoped button will be destroyed.');
+  ShowMessage('Scoped button will be automatically destroyed.');
 end;
 {$ENDREGION}
 

@@ -19,15 +19,17 @@ uses
   TestFramework,
   GUITestRunner,
   TextTestRunner,
-  Test.DynamicRecord in 'Test.DynamicRecord.pas',
-  Test.DynamicRecord.Data in 'Test.DynamicRecord.Data.pas',
-  Test.DynamicRecord.Generic in 'Test.DynamicRecord.Generic.pas';
+  Test.DDuce.DynamicRecord in 'Test.DDuce.DynamicRecord.pas',
+  Test.DDuce.DynamicRecord.Data in 'Test.DDuce.DynamicRecord.Data.pas',
+  Test.DDuce.DynamicRecord.Generic in 'Test.DDuce.DynamicRecord.Generic.pas',
+  Test.Registration in 'Test.Registration.pas';
 
 {$R *.RES}
 
 begin
   ReportMemoryLeaksOnShutdown := True;
   Application.Initialize;
+  RegisterTests;
   if IsConsole then
     with TextTestRunner.RunRegisteredTests do
       Free

@@ -39,7 +39,6 @@ uses
   System.Variants, System.Types,
   WinApi.Windows, WinApi.Messages,
   Vcl.Controls, Data.DB, Vcl.Dialogs, Vcl.ImgList, Vcl.Forms, Vcl.Graphics,
-  Vcl.Buttons,
 
   VirtualTrees;
 
@@ -50,10 +49,13 @@ const
   DefaultIndicatorColor = clBtnFace;
 
   // FieldFlag constants
-  ffUndeclared = high(Byte);
+  ffUndeclared = High(Byte);
   ffDBField    = 0;
   ffCalculated = 1;
   ffIndicator  = 2;
+
+type
+  TImageIndex = System.UITypes.TImageIndex;
 
 type
   TVTDBAdvOption = (
@@ -111,7 +113,7 @@ type
   TRecordCountType = (
     rcFromDataset,
     rcCustom
-    );
+  );
 
 const
   DefaultAdvOptions = [
@@ -126,7 +128,7 @@ const
     aoSortDBFieldColumns,
     aoEditDBFieldColumns,
     aoSortCalculatedColumns
-    ];
+  ];
 
 type
   TRecordData          = class;
@@ -136,7 +138,8 @@ type
   {                          If isn't assigned this event, than standard 'dataset.recordcount' will be used }
   TOnGetRecordCountEvent = procedure(
     Sender: TCustomVirtualDBGrid;
-    var RecordCount: Integer) of object;
+    var RecordCount: Integer
+  ) of object;
 
   { TOnCalculateValueEvent - Triggered when at least one column has column type = ctCalculated and }
   {                          we want to fillup value for this calculated column                    }
@@ -145,22 +148,26 @@ type
     const IDText: string;
     Column: TColumnIndex; RecordData: TRecordData;
     RowIndex: Cardinal; var CalculatedValue: string;
-    var CalculatedValueType: TFieldType) of object;
+    var CalculatedValueType: TFieldType
+  ) of object;
 
   { TOnFormatFieldValueEvent - Triggered when loading data from dataset}
   TOnFormatFieldValueEvent = procedure(
     Sender: TCustomVirtualDBGrid;
     Column: TColumnIndex;
     RecordData: TRecordData;
-    RowIndex: Cardinal; Field: TField;
-    var FieldValue: Variant) of object;
+    RowIndex: Cardinal;
+    Field: TField;
+    var FieldValue: Variant
+  ) of object;
 
   { TOnLoadRecordEvent - Triggered when record from database was loaded into VirtualDBGrid }
   {                      Assigning this event can reduce speed of VirtualDBGrid            }
   TOnLoadRecordEvent = procedure(
-    Sender: TCustomVirtualDBGrid;
-    RecordData: TRecordData;
-    RowIndex: Cardinal) of object;
+    Sender     : TCustomVirtualDBGrid;
+    RecordData : TRecordData;
+    RowIndex   : Cardinal
+  ) of object;
 
   { TOnCustomSortEvent - Triggered when SortType in DBOptions is stCustom to sort database }
   {                      by user                                                           }
@@ -175,9 +182,11 @@ type
   TOnCustomSortEvent = procedure(
     Sender: TCustomVirtualDBGrid;
     Column: TColumnIndex;
-    ColumnType: TColumnType; const SortBy: string;
+    ColumnType: TColumnType;
+    const SortBy: string;
     SortDirection: TSortDirection;
-    var RefreshGrid: Boolean) of object;
+    var RefreshGrid: Boolean
+  ) of object;
 
   { TOnPostChanges - Triggered when grid is at the end of editing cell, you can or not post }
   {                  changes to the grid/database                                           }
@@ -193,10 +202,13 @@ type
   TOnPostChanges = procedure(
     Sender: TCustomVirtualDBGrid;
     const FieldNameOrIDText: string;
-    Column: TColumnIndex; ColumnType: TColumnType;
-    RecordData: TRecordData; RowIndex: Cardinal;
-    var NewValue: string; var PostChanges: Boolean)
-    of object;
+    Column: TColumnIndex;
+    ColumnType: TColumnType;
+    RecordData: TRecordData;
+    RowIndex: Cardinal;
+    var NewValue: string;
+    var PostChanges: Boolean
+  ) of object;
 
   { TOnChangeSort  - Triggered when sorting in the grid was changed                          }
   {    :SortColumn - column index of sorted column                                           }
@@ -204,18 +216,21 @@ type
   TOnChangeSort = procedure(
     Sender: TCustomVirtualDBGrid;
     SortColumn: TColumnIndex;
-    SortDirection: TSortDirection) of object;
+    SortDirection: TSortDirection
+  ) of object;
 
   TOnCompareRecord = procedure(
     Sender: TCustomVirtualDBGrid;
     Record1, Record2: TRecordData;
     Column: TColumnIndex;
-    var Result: Integer) of object;
+    var Result: Integer
+  ) of object;
 
   TOnRecordDblClick = procedure(
     Sender: TCustomVirtualDBGrid;
     Column: TColumnIndex;
-    RecordData: TRecordData) of object;
+    RecordData: TRecordData
+  ) of object;
 
   PDBFieldValueRec = ^TDBFieldValueRec;
 
@@ -384,17 +399,17 @@ type
 
   TVTDBOptions = class(TPersistent)
   private
-    FOwner            : TCustomVirtualDBGrid;
-    FDataLink         : TVirtualDBTreeDataLink;
-    FIndicatorImIndex : TImageIndex;
-    FIndicatorAlign   : TIndicatorAlign;
-    FIndicatorVAlign  : TIndicatorVAlign;
-    FOddRowColor      : TColor;
-    FEvenRowColor     : TColor;
-    FSortingType      : TSortingType;
-    FRecordCountType  : TRecordCountType;
-    FSortColumnBgColor: TColor;
-    FAdvOptions       : TVTDBAdvOptions;
+    FOwner             : TCustomVirtualDBGrid;
+    FDataLink          : TVirtualDBTreeDataLink;
+    FIndicatorImIndex  : TImageIndex;
+    FIndicatorAlign    : TIndicatorAlign;
+    FIndicatorVAlign   : TIndicatorVAlign;
+    FOddRowColor       : TColor;
+    FEvenRowColor      : TColor;
+    FSortingType       : TSortingType;
+    FRecordCountType   : TRecordCountType;
+    FSortColumnBgColor : TColor;
+    FAdvOptions        : TVTDBAdvOptions;
     function GetDataSource: TDataSource;
     procedure SetDataSource(Value: TDataSource);
     procedure SetIndicatorImIndex(Value: TImageIndex);
@@ -1217,8 +1232,7 @@ var
 begin
   Result := False;
 
-  if (IDText <> '')
-  then
+  if IDText <> '' then
   begin
     for I := 0 to FieldsCount - 1 do
     begin
@@ -2519,7 +2533,7 @@ end;
 function TCustomVirtualDBGrid.DoFocusChanging(OldNode, NewNode: PVirtualNode;
   OldColumn, NewColumn: TColumnIndex): Boolean;
 begin
-  if (NewColumn <= NoColumn) then
+  if NewColumn <= NoColumn then
   begin
     Result := False;
     Exit;
@@ -2551,7 +2565,7 @@ begin
     ColType := TVirtualDBTreeColumn(Header.Columns[Column]).ColumnType;
 
     // If column is ctIndicator then do nothing ...
-    if (ColType = ctIndicator) then
+    if ColType = ctIndicator then
       Exit;
 
     // If column is DBField and we dont want to sort this type of column then do nothing ...
@@ -3341,8 +3355,7 @@ begin
       begin
             // Do only if autodetect sortdirection was enabled(setting value -1 to ASortDirection)
         if (ASortDirection = -1) then
-          if (Header.SortDirection = sdAscending)
-          then
+          if Header.SortDirection = sdAscending then
             sDirection := sdDescending
           else
             sDirection := sdAscending;
@@ -3351,8 +3364,7 @@ begin
         Header.SortColumn := AColumn;
 
       // If current sort options are the same as the following one then Exit
-      if (OldSortDirection = sDirection) and
-        (OldSortColumn = AColumn) then
+      if (OldSortDirection = sDirection) and (OldSortColumn = AColumn) then
         Exit;
 
       try

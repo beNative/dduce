@@ -43,7 +43,7 @@ interface
 uses
   System.Classes, System.Types, System.Variants, System.SysUtils,
   System.TypInfo,
-  Vcl.Controls, Vcl.Grids, Vcl.Graphics, Vcl.Forms, Vcl.StdCtrls, Vcl.ComCtrls,
+  Vcl.Controls, Vcl.Grids, Vcl.Graphics, Vcl.Forms, Vcl.StdCtrls,
   Vcl.Menus, Vcl.Dialogs,
   Winapi.Windows, Winapi.Messages,
 

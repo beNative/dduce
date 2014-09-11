@@ -34,9 +34,7 @@ uses
 
 type
   Reflect = record
-  class var
-    FRttiContext: TRttiContext;
-
+  public
     class function EnumName<T>(const AArg: T): string; static;
     class function OrdValue<T>(const AArg: T): Integer; static;
     class function SetElementNames<T>(const AArg: T): string; static;
@@ -91,6 +89,8 @@ begin
   R := TDynamicRecord<T>.Create(AArg);
   Result := R;
 end;
+
+// ElementNamesOfSet
 
 class function Reflect.SetElementNames<T>(const AArg: T): string;
 begin

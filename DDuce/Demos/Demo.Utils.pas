@@ -22,7 +22,7 @@ interface
 
 uses
   System.Classes, System.Rtti, System.TypInfo,
-  Vcl.Dialogs, Vcl.Controls;
+  Vcl.Controls;
 
 procedure AppendLine(
   var   AToString : string;

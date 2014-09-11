@@ -225,7 +225,10 @@ type
     procedure FromStrings(AStrings: TStrings);
     procedure ToStrings(AStrings: TStrings);
 
+    { Returns the content as a readable string }
     function ToString(AAlignValues: Boolean = True): string; overload;
+
+    { Conversion methods. When conversion fails the default value is returned. }
     function ToString(
       const AName         : string;
       const ADefaultValue : string = ''
@@ -900,7 +903,7 @@ type
       Reserved2     : Word;
       Reserved3     : Word;
       DynamicRecord : TDynamicRecord;
-      Reserved4     : LongInt;
+      Reserved4     : NativeInt;
     end;
 
   class var
@@ -1299,14 +1302,8 @@ var
   V: TValue;
 begin
   V := Values[AName];
-  if V.IsEmpty then
-    Result := ADefaultValue
-  else
-    try
-      Result := V.AsBoolean;
-    except
-      Result := ADefaultValue
-    end;
+  if not V.TryAsType<Boolean>(Result) then
+    Result := ADefaultValue;
 end;
 
 function TDynamicRecord.ToFloat(const AName: string;
@@ -1315,34 +1312,23 @@ var
   V: TValue;
 begin
   V := Values[AName];
-  if V.IsEmpty then
-    Result := ADefaultValue
-  else
-  begin
-    try
-      Result := V.AsVariant
-    except
-      Result := ADefaultValue
-    end;
-  end;
+  if not V.TryAsType<Double>(Result) then
+    Result := ADefaultValue;
 end;
+
+// convert string to Integer does not work yet!
 
 function TDynamicRecord.ToInteger(const AName: string; const
   ADefaultValue: Integer): Integer;
 var
   V: TValue;
+  R: Int64;
 begin
   V := Values[AName];
-  if V.IsEmpty then
+  if not V.TryAsOrdinal(R) then
     Result := ADefaultValue
   else
-  begin
-    try
-      Result := V.AsVariant
-    except
-      Result := ADefaultValue
-    end;
-  end;
+    Result := R;
 end;
 
 function TDynamicRecord.ToString: string;
@@ -1356,14 +1342,7 @@ var
   V: TValue;
 begin
   V := Values[AName];
-  if V.IsEmpty then
-    Result := ADefaultValue
-  else
-    try
-      Result := V.ToString;
-    except
-      Result := ADefaultValue
-    end;
+  Result := V.ToString;
 end;
 {$ENDREGION}
 
@@ -2133,8 +2112,33 @@ begin
 end;
 
 function TRecord.IsBlank(const AName: string): Boolean;
+var
+  TV : TValue;
+  V  : Variant;
 begin
-  Result := IsEmpty or (ToString(AName) = '');
+  if ContainsField(AName) then
+  begin
+    TV := Values[AName];
+    if TV.IsEmpty then
+      Result := True
+    else if TV.IsType<string> then
+    begin
+      Result := TV.ToString = '';
+    end
+    else if TV.IsType<Variant> then
+    begin
+      V := TV.AsVariant;
+      Result := VarIsClear(V) or VarIsNull(V) or VarIsEmpty(V)
+        {or VarIsEmptyParam(V)}; // Does not work! Returns not True when
+                                 // EmptyParam is passed as a value to a TValue
+    end
+    else
+      Result := False;
+  end
+  else
+  begin
+    Result := True;
+  end;
 end;
 
 function TRecord.IsEmpty: Boolean;
@@ -2431,7 +2435,10 @@ begin
   Result := TDynamicField<T>.Create(Self);
   P := RttiContext.GetType(TypeInfo(T)).GetProperties[Index];
   Result.Name := P.Name;
-  Result.Value := P.GetValue(TObject(Data));
+  if Assigned(Data) then
+    Result.Value := P.GetValue(TObject(Data))
+  else
+    Result.Value := TValue.Empty;
 end;
 
 function TDynamicRecord<T>.GetItemValue(AName: string): TValue;

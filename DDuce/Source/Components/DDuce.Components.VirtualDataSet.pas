@@ -768,10 +768,16 @@ begin
         DataConvert(AField, ABuffer, @AVariant, False)
       else
         AVariant := Variant(ABuffer^);
+    {$IFNDEF CPUX64}
     ftLargeInt:
       begin
         TVarData(AVariant).VType := VT_DECIMAL;
         Decimal(AVariant).Lo64   := Int64(ABuffer^);
+      end;
+    {$ENDIF}
+    ftLongWord:
+      begin
+        AVariant := LongWord(ABuffer^);
       end;
   else
     DatabaseErrorFmt(SUnsupportedFieldType, [FieldTypeNames[AField.DataType],
