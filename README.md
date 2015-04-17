@@ -12,7 +12,7 @@ The sources depend on the following libraries and components:
 
 In addition some lesser known but excellent open source Delphi components were ported and extended to support the latest versions of Delphi.
 
-## TListDataSet`<...>` ##
+## TListDataSet\<T\> ##
 
 A generic dataset component that can be used to expose a generic list as a `TDataSet`.
 
