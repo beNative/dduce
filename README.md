@@ -15,19 +15,19 @@ In addition some lesser known but excellent open source Delphi components were p
 
 ## TListDataSet\<T\>
 
-A generic dataset component that can be used to expose a generic list as a {{{TDataSet}}}.
+A generic dataset component that can be used to expose a generic list as a TDataSet.
 
-!http://dduce.googlecode.com/svn/trunk/Wiki/dduce_listdataset_demo.png
+!(http://dduce.googlecode.com/svn/trunk/Wiki/dduce_listdataset_demo.png)
 
 ## TXMLTree
 
 A TVirtualStringTree descendant to visualize and edit XML data.
 
-!http://dduce.googlecode.com/svn/trunk/Wiki/dduce_xmltree_demo.png
+!(http://dduce.googlecode.com/svn/trunk/Wiki/dduce_xmltree_demo.png)
 
 ## TVirtualDBGrid
 
-A {{{TVirtualStringTree}}} descendant which can be linked to a {{{TDataSource}}} and can be used like a {{{TDBGrid}}}. This component is based on the sourcecode found at [http://sourceforge.net/projects/virtualdbgrid/]. The Initial Developer of the original code is *Peter Sulek*.
+A TVirtualStringTree descendant which can be linked to a TDataSource and can be used like a TDBGrid. This component is based on the sourcecode found at [http://sourceforge.net/projects/virtualdbgrid/]. The Initial Developer of the original code is *Peter Sulek*.
 
 ## TPropertyInspector
 
