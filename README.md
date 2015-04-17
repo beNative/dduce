@@ -17,7 +17,7 @@ In addition some lesser known but excellent open source Delphi components were p
 
 A generic dataset component that can be used to expose a generic list as a TDataSet.
 
-![TListDataSet](http://dduce.googlecode.com/svn/trunk/Wiki/dduce_listdataset_demo.png)
+![TListDataSet](http://github.com/beNative/dduce/blob/master/Wiki/dduce_listdataset_demo.png)
 
 ## TXMLTree
 
