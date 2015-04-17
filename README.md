@@ -1,9 +1,3 @@
-# Downloads #
-
-## Binaries and releases can be downloaded from the [project page at SourceForge](https://sourceforge.net/projects/dduce/). ##
-
-The main repository of the sources is still based on this location.
-
 # Introduction #
 
 **DDuce** is a new Delphi code library. Since Delphi got new language features like operator overloading, attributes, generics, anonymous methods and extended RTTI it provides some new powerful tools to extend the developer's creativity.
