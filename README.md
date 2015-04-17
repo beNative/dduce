@@ -17,13 +17,13 @@ In addition some lesser known but excellent open source Delphi components were p
 
 A generic dataset component that can be used to expose a generic list as a TDataSet.
 
-!(http://dduce.googlecode.com/svn/trunk/Wiki/dduce_listdataset_demo.png)
+![](http://dduce.googlecode.com/svn/trunk/Wiki/dduce_listdataset_demo.png)
 
 ## TXMLTree
 
 A TVirtualStringTree descendant to visualize and edit XML data.
 
-!(http://dduce.googlecode.com/svn/trunk/Wiki/dduce_xmltree_demo.png)
+![](http://dduce.googlecode.com/svn/trunk/Wiki/dduce_xmltree_demo.png)
 
 ## TVirtualDBGrid
 
