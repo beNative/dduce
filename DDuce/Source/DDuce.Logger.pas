@@ -1,19 +1,17 @@
 {
-  Copyright (C) 2013-2014 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2015 Tim Sinaeve tim.sinaeve@gmail.com
 
-  This library is free software; you can redistribute it and/or modify it
-  under the terms of the GNU Library General Public License as published by
-  the Free Software Foundation; either version 3 of the License, or (at your
-  option) any later version.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-  This program is distributed in the hope that it will be useful, but WITHOUT
-  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License
-  for more details.
+      http://www.apache.org/licenses/LICENSE-2.0
 
-  You should have received a copy of the GNU Library General Public License
-  along with this library; if not, write to the Free Software Foundation,
-  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 }
 
 {
@@ -43,6 +41,9 @@ uses
   System.Types, System.Classes, System.SysUtils, System.Rtti,
   System.Generics.Collections,
   WinApi.Windows;
+
+const
+  DEFAULT_MAXSTACKCOUNT = 20;
 
 type
   TLogMessageType = (
@@ -125,22 +126,25 @@ type
   { TCustomLogChannel }
 
   TCustomLogChannel = class abstract
-  private
+  strict private
     FActive: Boolean;
+
+  strict protected
+    function GetActive: Boolean; virtual;
+    procedure SetActive(const Value: Boolean); virtual;
 
   public
     procedure Clear; virtual; abstract;
     procedure Write(const AMsg: TLogMessage); virtual; abstract;
-    procedure Open; virtual; abstract;
 
     property Active: Boolean
-      read FActive write FActive;
+      read GetActive write SetActive;
   end;
 
   { TIPCChannel }
 
   TIPCChannel = class(TCustomLogChannel)
-  private
+  strict private
     FClient       : TWinIPCClient;
     FBuffer       : TMemoryStream;
     FClearMessage : TLogMessage;
@@ -155,39 +159,50 @@ type
 
   { TFileChannel }
 
+  {  TODO:
+      - Custom file format (use date in name), use filename counters, etc...
+      - default filename in constructor
+
+  }
+
   TFileChannel = class(TCustomLogChannel)
   strict private
-    FRelativeIdent : Integer;
-    FBaseIdent     : Integer;
-    FShowHeader    : Boolean;
-    FShowTime      : Boolean;
-    FShowPrefix    : Boolean;
-    FShowStrings   : Boolean;
-    FStreamWriter  : TStreamWriter;
+    FRelativeIndent : Integer;
+    FBaseIndent     : Integer;
+    FShowHeader     : Boolean;
+    FShowDate       : Boolean;
+    FShowTime       : Boolean;
+    FShowPrefix     : Boolean;
+    FShowStrings    : Boolean;
+    FStreamWriter   : TStreamWriter;
 
     procedure SetShowTime(const AValue: Boolean);
+    procedure SetShowDate(const Value: Boolean);
 
     function Space(ACount: Integer): string;
-    procedure UpdateIdentation;
+    procedure UpdateIndentation;
     procedure WriteStrings(AStream: TStream);
     procedure WriteComponent(AStream: TStream);
 
   public
-    constructor Create(const AFileName: string);
+    constructor Create(const AFileName: string = ''); reintroduce; virtual;
+
     procedure BeforeDestruction; override;
 
     procedure Clear; override;
     procedure Write(const AMsg: TLogMessage); override;
-    procedure Open; override;
 
     property ShowHeader: Boolean
-      read FShowHeader write FShowHeader;
+      read FShowHeader write FShowHeader default False;
 
     property ShowPrefix: Boolean
-      read FShowPrefix write FShowPrefix;
+      read FShowPrefix write FShowPrefix default True;
 
     property ShowTime: Boolean
-      read FShowTime write SetShowTime;
+      read FShowTime write SetShowTime default True;
+
+    property ShowDate: Boolean
+      read FShowDate write SetShowDate default False;
   end;
 
   TChannelList = TObjectList<TCustomLogChannel>;
@@ -227,6 +242,23 @@ type
     procedure Watch(const AName: string; AValue: Cardinal); overload;
     procedure Watch(const AName: string; AValue: Double); overload;
     procedure Watch(const AName: string; AValue: Boolean); overload;
+
+    procedure SendWarning(const AText: string);
+    procedure SendWarningFmt(const AText: string; AArgs: array of const);
+    procedure SendError(const AText: string);
+    procedure SendErrorFmt(const AText: string; AArgs: array of const);
+    procedure SendInfo(const AText: string);
+    procedure SendInfoFmt(const AText: string; AArgs: array of const);
+
+    procedure SendPointer(const AName: string; APointer: Pointer);
+    procedure SendException(const AName: string; AException: Exception);
+    procedure SendMemory(const AName: string; AAddress: Pointer; ASize: LongWord);
+
+    procedure SendIf(
+      const AText       : string;
+            AExpression : Boolean;
+            AIsTrue     : Boolean = True
+    );
 
     property Channels: TChannelList
       read GetChannels;
@@ -299,7 +331,11 @@ type
     );
 
     procedure SendWarning(const AText: string);
+    procedure SendWarningFmt(const AText: string; AArgs: array of const);
     procedure SendError(const AText: string);
+    procedure SendErrorFmt(const AText: string; AArgs: array of const);
+    procedure SendInfo(const AText: string);
+    procedure SendInfoFmt(const AText: string; AArgs: array of const);
 
     { Uses the OnCustomData event as callback. }
     procedure SendCustomData(
@@ -343,7 +379,7 @@ type
       read FLogStack;
 
     property MaxStackCount: Integer
-      read FMaxStackCount write SetMaxStackCount;
+      read FMaxStackCount write SetMaxStackCount default DEFAULT_MAXSTACKCOUNT;
 
     property OnCustomData: TCustomDataCallbackMethod
       read FOnCustomData write FOnCustomData;
@@ -367,11 +403,12 @@ resourcestring
   SErrServerNotActive = 'Server with ID %s is not active.';
 
 const
-  DefaultCheckName = 'CheckPoint';
+  STACKCOUNTLIMIT        = 256;
+  DEFAULT_CHECKPOINTNAME = 'CheckPoint';
   {TODO -oTS -cGeneral : Rename this}
-  MsgWndClassName : PChar = 'MsgWindowCls';
+  MSG_WND_CLASSNAME : PChar = 'MsgWindowCls';
 
-  LogPrefixes: array [lmtInfo..lmtCounter] of string = (
+  LOG_PREFIXES: array [lmtInfo..lmtCounter] of string = (
     'INFO',
     'ERROR',
     'WARNING',
@@ -400,22 +437,16 @@ const
 {$REGION 'construction and destruction'}
 procedure TLogger.AfterConstruction;
 begin
-  inherited;
-  FChannels := TChannelList.Create;
-  FMaxStackCount := 20;
-  FLogStack := TStringList.Create;
-  FCheckList := TStringList.Create;
-  with FCheckList do
-  begin
-    CaseSensitive := False;
-    Sorted := True;
-  end;
-  FCounterList := TStringList.Create;
-  with FCounterList do
-  begin
-    CaseSensitive := False;
-    Sorted := True;
-  end;
+  inherited AfterConstruction;
+  FChannels                  := TChannelList.Create;
+  FMaxStackCount             := DEFAULT_MAXSTACKCOUNT;
+  FLogStack                  := TStringList.Create;
+  FCheckList                 := TStringList.Create;
+  FCheckList.CaseSensitive   := False;
+  FCheckList.Sorted          := True;
+  FCounterList               := TStringList.Create;
+  FCounterList.CaseSensitive := False;
+  FCounterList.Sorted        := True;
 end;
 
 procedure TLogger.BeforeDestruction;
@@ -424,17 +455,17 @@ begin
   FLogStack.Free;
   FCheckList.Free;
   FCounterList.Free;
-  inherited;
+  inherited BeforeDestruction;
 end;
 {$ENDREGION}
 
 {$REGION 'property access methods'}
 procedure TLogger.SetMaxStackCount(const AValue: Integer);
 begin
-  if AValue < 256 then
+  if AValue < STACKCOUNTLIMIT then
     FMaxStackCount := AValue
   else
-    FMaxStackCount := 256;
+    FMaxStackCount := STACKCOUNTLIMIT;
 end;
 {$ENDREGION}
 
@@ -458,13 +489,10 @@ var
   LM : TLogMessage;
   C  : TCustomLogChannel;
 begin
-  with LM do
-  begin
-    MsgType := AMsgType;
-    MsgTime := Now;
-    MsgText := AText;
-    Data    := AStream;
-  end;
+  LM.MsgType := AMsgType;
+  LM.MsgTime := Now;
+  LM.MsgText := AText;
+  LM.Data    := AStream;
   for C in Channels do
     if C.Active then
       C.Write(LM);
@@ -505,9 +533,14 @@ begin
        C.Clear;
 end;
 
-procedure TLogger.Send(const AName: string; AArgs: array of const);
+procedure TLogger.SendInfo(const AText: string);
 begin
-  InternalSend(lmtInfo, Format(AName, AArgs));
+  InternalSend(lmtInfo, AText);
+end;
+
+procedure TLogger.SendInfoFmt(const AText: string; AArgs: array of const);
+begin
+  InternalSend(lmtInfo, Format(AText, AArgs));
 end;
 
 procedure TLogger.Send(const AName: string; const AValue: string);
@@ -664,9 +697,8 @@ end;
 
 procedure TLogger.SendIf(const AText: string; AExpression, AIsTrue: Boolean);
 begin
-  if AExpression <> AIsTrue then
-    Exit;
-  InternalSend(lmtConditional, AText);
+  if AExpression = AIsTrue then
+    InternalSend(lmtConditional, AText);
 end;
 
 procedure TLogger.SendWarning(const AText: string);
@@ -674,9 +706,19 @@ begin
   InternalSend(lmtWarning, AText);
 end;
 
+procedure TLogger.SendWarningFmt(const AText: string; AArgs: array of const);
+begin
+  InternalSend(lmtWarning, Format(AText, AArgs));
+end;
+
 procedure TLogger.SendError(const AText: string);
 begin
   InternalSend(lmtError, AText);
+end;
+
+procedure TLogger.SendErrorFmt(const AText: string; AArgs: array of const);
+begin
+  InternalSend(lmtError, Format(AText, AArgs));
 end;
 
 procedure TLogger.SendCustomData(const AName: string; const AData: TValue);
@@ -804,7 +846,7 @@ var
   S: string;
 begin
   if AName = '' then
-    S := DefaultCheckName
+    S := DEFAULT_CHECKPOINTNAME
   else
     S := AName;
   I := FCheckList.IndexOf(AName);
@@ -931,7 +973,7 @@ end;
 {$REGION 'public methods'}
 procedure TWinIPCClient.Connect;
 begin
-  FHWND := FindWindow(MsgWndClassName, PChar(FWindowName));
+  FHWND := FindWindow(MSG_WND_CLASSNAME, PChar(FWindowName));
   if FHWND = 0 then
     raise Exception.Create(Format(SErrServerNotActive, [FServerID]));
 end;
@@ -943,7 +985,7 @@ end;
 
 function TWinIPCClient.ServerRunning: Boolean;
 begin
-  Result := FindWindow(MsgWndClassName, PChar(FWindowName)) <> 0;
+  Result := FindWindow(MSG_WND_CLASSNAME, PChar(FWindowName)) <> 0;
 end;
 
 procedure TWinIPCClient.SendStream(AStream: TStream);
@@ -976,6 +1018,21 @@ begin
   end;
 end;
 {$ENDREGION}
+{$ENDREGION}
+
+{$REGION 'TCustomLogChannel'}
+function TCustomLogChannel.GetActive: Boolean;
+begin
+  Result := FActive;
+end;
+
+procedure TCustomLogChannel.SetActive(const Value: Boolean);
+begin
+  if Value <> Active then
+  begin
+    FActive := Value;
+  end;
+end;
 {$ENDREGION}
 
 {$REGION 'TIPCChannel'}
@@ -1053,14 +1110,30 @@ end;
 
 {$REGION 'TFileChannel'}
 {$REGION 'construction and destruction'}
-constructor TFileChannel.Create(const AFileName: String);
+constructor TFileChannel.Create(const AFileName: string);
+var
+  S : string;
 begin
+  inherited Create;
+  if AFileName = '' then
+  begin
+    S := ExtractFilePath(Application.ExeName)
+      + FormatDateTime('yyyymmdd hhnnss ', Now)
+      + ExtractFileName(ChangeFileExt(Application.ExeName, '.log'));
+  end
+  else
+    S := AFileName;
   FShowPrefix   := True;
+  FShowDate     := False;
   FShowTime     := True;
   FShowStrings  := True;
+  FShowHeader   := True;
   Active        := True;
-  FStreamWriter := TStreamWriter.Create(AFileName, True);
-  inherited Create;
+  FStreamWriter := TStreamWriter.Create(S, True); // Append
+  if FShowHeader then
+    FStreamWriter.WriteLine('============|Log Session Started at ' + DateTimeToStr(Now)
+      + ' by ' + Application.Title + '|============');
+  UpdateIndentation;
 end;
 
 procedure TFileChannel.BeforeDestruction;
@@ -1071,22 +1144,30 @@ end;
 {$ENDREGION}
 
 {$REGION 'property access methods'}
+procedure TFileChannel.SetShowDate(const Value: Boolean);
+begin
+  FShowDate := Value;
+  UpdateIndentation;
+end;
+
 procedure TFileChannel.SetShowTime(const AValue: Boolean);
 begin
   FShowTime := AValue;
-  UpdateIdentation;
+  UpdateIndentation;
 end;
 {$ENDREGION}
 
 {$REGION 'private methods'}
-procedure TFileChannel.UpdateIdentation;
+procedure TFileChannel.UpdateIndentation;
 var
   S : string;
 begin
   S := '';
-  if FShowTime then
-    S := FormatDateTime('hh:nn:ss:zzz', Time);
-  FBaseIdent := Length(S) + 3;
+  if ShowDate then
+    S := FormatDateTime('yyyy-mm-dd ', Date);
+  if ShowTime then
+    S := S + FormatDateTime('hh:nn:ss:zzz', Time);
+  FBaseIndent := Length(S) + 3;
 end;
 
 function TFileChannel.Space(ACount: Integer): string;
@@ -1096,19 +1177,23 @@ end;
 
 procedure TFileChannel.WriteStrings(AStream: TStream);
 var
-  I: Integer;
+  I  : Integer;
+  SL : TStringList;
 begin
-  if AStream.Size = 0 then
-    Exit;
-  with TStringList.Create do
+  if AStream.Size > 0 then
+  begin
+    SL := TStringList.Create;
     try
       AStream.Position := 0;
-      LoadFromStream(AStream);
-      for I := 0 to Count - 1 do
-        FStreamWriter.WriteLine(Space(FRelativeIdent + FBaseIdent) + Strings[I]);
+      SL.LoadFromStream(AStream);
+      for I := 0 to SL.Count - 1 do
+        FStreamWriter.WriteLine(
+          Space(FRelativeIndent + FBaseIndent) + SL.Strings[I]
+        );
     finally
-      Free;
+      SL.Free;
     end;
+  end;
 end;
 
 procedure TFileChannel.WriteComponent(AStream: TStream);
@@ -1127,13 +1212,15 @@ end;
 procedure TFileChannel.Write(const AMsg: TLogMessage);
 begin
   // Exit method identation must be set before
-  if (AMsg.MsgType = lmtExitMethod) and (FRelativeIdent >= 2) then
-    Dec(FRelativeIdent, 2);
-  if FShowTime then
+  if (AMsg.MsgType = lmtExitMethod) and (FRelativeIndent >= 2) then
+    Dec(FRelativeIndent, 2);
+  if ShowDate then
+    FStreamWriter.Write(FormatDateTime('yyyy-mm-dd', AMsg.MsgTime) + ' ');
+  if ShowTime then
     FStreamWriter.Write(FormatDateTime('hh:nn:ss:zzz', AMsg.MsgTime) + ' ');
-  FStreamWriter.Write(Space(FRelativeIdent));
-  if FShowPrefix then
-    FStreamWriter.Write(LogPrefixes[AMsg.MsgType] + ': ');
+  FStreamWriter.Write(Space(FRelativeIndent));
+  if ShowPrefix then
+    FStreamWriter.Write(LOG_PREFIXES[AMsg.MsgType] + ': ');
   FStreamWriter.WriteLine(AMsg.MsgText);
   if FShowStrings and (AMsg.Data <> nil) then
   begin
@@ -1146,7 +1233,7 @@ begin
   end;
   // Update enter method identation
   if AMsg.MsgType = lmtEnterMethod then
-    Inc(FRelativeIdent, 2);
+    Inc(FRelativeIndent, 2);
 end;
 
 procedure TFileChannel.Open;
