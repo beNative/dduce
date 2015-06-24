@@ -29,7 +29,8 @@ uses
 
   DSharp.Bindings.Notifications,   // INotifyPropertyChanged
 
-  DSharp.Collections, DSharp.Collections.ObservableCollection
+  //DSharp.Collections,
+  DSharp.Collections.ObservableCollection
 {$ELSE}
   {$IFDEF SPRING}
   Spring, Spring.Collections, Spring.Collections.Lists

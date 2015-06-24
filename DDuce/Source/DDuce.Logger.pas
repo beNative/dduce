@@ -675,6 +675,11 @@ begin
   end;
 end;
 
+procedure TLogger.Send(const AName: string; AArgs: array of const);
+begin
+
+end;
+
 procedure TLogger.SendPointer(const AName: string; APointer: Pointer);
 begin
   InternalSend(lmtValue, AName + ' = ' + IntToHex(Integer(APointer), 8));
@@ -1236,13 +1241,13 @@ begin
     Inc(FRelativeIndent, 2);
 end;
 
-procedure TFileChannel.Open;
-begin
-  if FShowHeader then
-    FStreamWriter.WriteLine('=== Log Session Started at ' + DateTimeToStr(Now)
-        + ' by ' + Application.name + ' ===');
-  UpdateIdentation;
-end;
+//procedure TFileChannel.Open;
+//begin
+//  if FShowHeader then
+//    FStreamWriter.WriteLine('=== Log Session Started at ' + DateTimeToStr(Now)
+//        + ' by ' + Application.name + ' ===');
+//  UpdateIdentation;
+//end;
 {$ENDREGION}
 {$ENDREGION}
 

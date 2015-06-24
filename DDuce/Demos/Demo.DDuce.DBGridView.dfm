@@ -46,6 +46,10 @@ object frmDBGridView: TfrmDBGridView
     object tsDBGridView: TTabSheet
       Caption = 'DBGridView'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tsDBGridViewEvents: TTabSheet
       Caption = 'DBGridView Events'

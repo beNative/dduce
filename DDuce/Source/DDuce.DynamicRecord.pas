@@ -26,9 +26,13 @@ uses
 
 {$REGION 'Documentation'}
 {
-  TRecord holds a set of key-value pairs which can be assigned from/to any
-  object or record instance. Extended RTTI is used to map the object or
-  record properties to the field values of the record.
+  TRecord is a custom record type holding dynamically typed fields.
+  It consosts of a set of key-value pairs which can be assigned from/to any
+  object or record instance. In that respect it behaves more or less than a
+  dynamic associative array commonly found in dynamically typed languages (e.g.
+  tables in Lua and lists in Python).
+  Extended RTTI is used to map the object or record properties to the field
+  values of the record.
 
   FEATURES:
     - No instrumentation code. Direct field access is possible.
@@ -97,8 +101,14 @@ uses
   as a managed object wrapper while remaining compatible with the basic
   instance type.
   The Data property is of type T.
+  The generic version allows for lazy instantiation of objects of type T when
+  the object is not passed to the TRecord<T> instance.
+  A TRecord<T> instance is assignment compatible with IDynamicRecord<T> and
+  IDynamicRecord variables.
 
   Future enhancements:
+    - TRecord<T>: add overloaded constructor with factory method (TFunc<T>).
+      This allows more customized autoconstruction.
     - Add more events
     - Control/data binding support
     - lazy instantiation of IDynamicRecord
@@ -473,12 +483,11 @@ type
     function GetData: T;
     procedure SetData(AValue: T);
     function GetDynamicRecord: IDynamicRecord<T>;
+    function GetCount: Integer;
+    function GetField(AName: string): IDynamicField<T>;
 
     property DynamicRecord: IDynamicRecord<T>
       read GetDynamicRecord;
-
-    function GetCount: Integer;
-    function GetField(AName: string): IDynamicField<T>;
 
   public
     constructor Create(
@@ -659,8 +668,9 @@ type
 
   { Reference counted. }
 
-  TDynamicField<T: class, constructor> = class(TCollectionItem, IDynamicField,
-                                                                IDynamicField<T>)
+  TDynamicField<T: class, constructor> = class(
+    TCollectionItem, IDynamicField, IDynamicField<T>
+  )
   strict private
     FRefCount : Integer;
     FName     : string;
@@ -686,8 +696,6 @@ type
 
     procedure BeforeDestruction; override;
   end;
-
-//=============================================================================
 
   { TDynamicRecord is a reference counted collection used as the internal fields
     representation of the TRecord type. }
@@ -837,9 +845,9 @@ type
     function ToString: string; overload; override;
   end;
 
-  TDynamicRecord<T: class, constructor> = class(TDynamicRecord,
-                                                IDynamicRecord,
-                                                IDynamicRecord<T>)
+  TDynamicRecord<T: class, constructor> = class(
+    TDynamicRecord, IDynamicRecord, IDynamicRecord<T>
+  )
   strict private
     FData: T;
 
@@ -875,26 +883,25 @@ uses
 resourcestring
   SFieldNotFound        = 'Record does not contain a field with name %s';
   SValueCannotBeRead    = 'Value of %s could not be read';
-  SValueConversionError = 'Error while trying to convert value of (%s) with ' +
-                          'type (%s)';
-  SParamIsNotRecordOrInstanceType = 'AInstance is not a record or instance t' +
-  'ype!';
+  SValueConversionError =
+    'Error while trying to convert value of (%s) with type (%s)';
+  SParamIsNotRecordOrInstanceType =
+    'AInstance is not a record or instance type!';
   SPropertyNotFound = 'Property %s not found! (%s)';
-  SArgumentTypeNotSupported = 'The argument type of AssignTo is not supporte' +
-  'd.';
+  SArgumentTypeNotSupported =
+    'The argument type of AssignTo is not supported';
 
 var
   FContext: TRttiContext;
 
-  { A custom variant type that implements the mapping from the property names
-    to the record instance. }
+{ A custom variant type that implements the mapping from the property names to
+  the record instance. }
 type
   TVarDataRecordType = class(TInvokeableVariantType)
   private
   type
-    { Our customized layout of the variant's record data. We only need a reference
-      to the TDynamicRecord instance. }
-
+    { Our customized layout of the variant's record data. We only need a
+      reference to the TDynamicRecord instance. }
     TVarDataRecordData = packed record
       VType         : TVarType;
       Reserved1     : Word;
@@ -1340,7 +1347,14 @@ var
   V: TValue;
 begin
   V := Values[AName];
-  Result := V.ToString;
+  if V.IsEmpty then
+    Result := ADefaultValue
+  else
+    try
+      Result := V.ToString;
+    except
+      Result := ADefaultValue
+    end;
 end;
 {$ENDREGION}
 
@@ -1359,13 +1373,13 @@ begin
     FOnChanged(Self);
 end;
 
-{ Constructs a unique itemname for a new collection-item. }
+{ Constructs a unique itemn ame for a new collection-item.
+  The Insert method calls SetItemName to initialize the Name property of items
+  when it inserts them into the collection. This overridden version provides
+  collection items with default names. }
 
 procedure TDynamicRecord.SetItemName(Item: TCollectionItem);
 begin
-// The Insert method calls SetItemName to initialize the Name property of items
-// when it inserts them into the collection. This overridden version provides
-// collection items with default names.
   TDynamicField(Item).Name :=
     Copy(Item.ClassName, 2, Length(Item.ClassName)) + IntToStr(Item.ID + 1);
 end;
@@ -1727,7 +1741,7 @@ begin
   end;
 end;
 
-{ Assigns from Name/value pairs in a stringlist. }
+{ Assigns from a TStrings instance holding name/value pairs. }
 
 procedure TDynamicRecord.FromStrings(AStrings: TStrings);
 var
@@ -1738,6 +1752,8 @@ begin
     Values[AStrings.Names[I]] := AStrings.ValueFromIndex[I];
   end;
 end;
+
+{ Assigns to a TStrings instance holding name/value pairs. }
 
 procedure TDynamicRecord.ToStrings(AStrings: TStrings);
 var
@@ -1753,6 +1769,8 @@ begin
     AStrings.Values[Items[I].Name] := S;
   end;
 end;
+
+{ Finds a field with a given name. Returns nil if no field is found. }
 
 function TDynamicRecord.Find(const AName: string): IDynamicField;
 var
@@ -1818,7 +1836,7 @@ var
 begin
   for I := 0 to Count - 1 do
   begin
-    S := VarToStrDef(Items[I].ToString, '');
+    S := VarToStrDef(Items[I].Value.ToString, '');
     if I > 0 then
       Result := Result + ',' + S
     else
@@ -2222,8 +2240,8 @@ end;
 
 procedure TRecord.Assign(const ARecord: TRecord; const ANames: array of string);
 var
-  F: IDynamicField;
-  S: string;
+  F : IDynamicField;
+  S : string;
 begin
   if Length(ANames) = 0 then
   begin
@@ -2506,7 +2524,6 @@ begin
   end;
 end;
 {$ENDREGION}
-
 {$ENDREGION}
 
 {$REGION 'TDynamicField<T>'}
@@ -2626,7 +2643,7 @@ end;
 
 procedure TRecord<T>.Assign(const ARecord: TRecord);
 begin
-  //DynamicRecord.Assign(ARecord);
+  DynamicRecord.Assign(ARecord);
 end;
 
 procedure TRecord<T>.AssignProperty(const AInstance: TValue;
@@ -2676,30 +2693,48 @@ end;
 
 constructor TRecord<T>.Create(const ARecord: TRecord<T>);
 begin
-//
+  DynamicRecord.Data := ARecord.Data;
 end;
 
 class function TRecord<T>.Create: TRecord<T>;
 begin
-//
+  // fake constructor
 end;
 
 constructor TRecord<T>.Create(const AInstance: TValue; const AAssignProperties,
   AAssignFields, AAssignNulls: Boolean; const ANames: array of string);
 begin
-//
+  DynamicRecord.Assign(
+    AInstance,
+    AAssignProperties,
+    AAssignFields,
+    AAssignNulls,
+    ANames
+  );
 end;
 
 constructor TRecord<T>.Create(const AInstance: TValue; const AAssignProperties,
   AAssignFields: Boolean);
 begin
-//
+  DynamicRecord.Assign(
+    AInstance,
+    AAssignProperties,
+    AAssignFields,
+    True,
+    []
+  );
 end;
 
 procedure TRecord<T>.Create(const AInstance: TValue;
   const ANames: array of string);
 begin
-//
+  DynamicRecord.Assign(
+    AInstance,
+    True,
+    False,
+    False,
+    ANames
+  );
 end;
 
 function TRecord<T>.DeleteField(const AName: string): Boolean;

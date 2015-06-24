@@ -36,7 +36,8 @@ uses
   System.UITypes, System.SysUtils, System.Classes, System.Generics.Collections,
   System.Variants, System.Types,
   WinApi.Windows, WinApi.Messages,
-  Vcl.Controls, Data.DB, Vcl.Dialogs, Vcl.ImgList, Vcl.Forms, Vcl.Graphics,
+  Vcl.Controls, Vcl.Dialogs, Vcl.ImgList, Vcl.Forms, Vcl.Graphics,
+  Data.DB,
 
   VirtualTrees;
 
@@ -521,9 +522,9 @@ type
     procedure DoInitNode(Parent, Node: PVirtualNode;
       var InitStates: TVirtualNodeInitStates); override;
     procedure DoNewText(Node: PVirtualNode; Column: TColumnIndex;
-      Text: string); override;
+      const Text: string); override;
 
-    procedure DoHeaderClick(HitInfo: TVTHeaderHitInfo); override;
+    procedure DoHeaderClick(const HitInfo: TVTHeaderHitInfo); override;
 
     procedure DoHeaderDragged(Column: TColumnIndex;
       OldPosition: TColumnPosition); override;
@@ -2436,7 +2437,7 @@ begin
 end;
 
 procedure TCustomVirtualDBGrid.DoNewText(Node: PVirtualNode;
-  Column: TColumnIndex; Text: string);
+  Column: TColumnIndex; const Text: string);
 var
   WField     : TField;
   DBColumn   : TVirtualDBTreeColumn;
@@ -2492,7 +2493,7 @@ begin
   inherited DoNewText(Node, Column, Text);
 end;
 
-procedure TCustomVirtualDBGrid.DoHeaderClick(HitInfo: TVTHeaderHitInfo);
+procedure TCustomVirtualDBGrid.DoHeaderClick(const HitInfo: TVTHeaderHitInfo);
 begin
   if (DBOptions.SortingType <> stNone) and
     (aoAllowSorting in DBOptions.AdvOptions) then

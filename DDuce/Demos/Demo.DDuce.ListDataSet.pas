@@ -32,10 +32,11 @@ uses
 
 {$IFDEF SPRING}
   Spring, Spring.Collections,
+  Spring.Persistence.ObjectDataSet,
 {$ENDIF}
 
 {$IFDEF DSHARP}
-  DSharp.Collections, DSharp.Bindings, DSharp.Bindings.VCLControls,
+  DSharp.Bindings, DSharp.Bindings.VCLControls,
   DSharp.Windows.TreeViewPresenter,
 {$ENDIF}
 
@@ -111,7 +112,8 @@ type
     procedure dscMainUpdateData(Sender: TObject);
 
   private
-    FList        : IList<TContact>;
+    FList        : IList;
+
     FVST         : TVirtualStringTree;
     FDBGV        : TDBGridView;
 {$IFDEF DSHARP}
@@ -119,6 +121,7 @@ type
     FBG          : TBindingGroup;
 {$ENDIF}
     FListDataSet : TListDataSet<TContact>;
+    FObjectDataSet: TObjectDataset;
 
     function GetDataSet: TDataSet;
     function GetDataSetEnabled: Boolean;
@@ -164,12 +167,16 @@ uses
 
 {$REGION 'construction and destruction'}
 procedure TfrmListDataSet.AfterConstruction;
+var
+  L : IList<TContact>;
 begin
   inherited AfterConstruction;
-  FList        := TDemoFactories.CreateContactList;
+  L := TDemoFactories.CreateContactList;
+  FList        := L.AsList;
   FVST         := TDemoFactories.CreateVST(Self, pnlRight);
   FDBGV        := TDemoFactories.CreateDBGridView(Self, pnlLeft, dscMain);
-  FListDataSet := TListDataset<TContact>.Create(Self, FList);
+  FListDataSet := TListDataset<TContact>.Create(Self, L);
+  FObjectDataSet := TObjectDataset.Create(Self);
   {$IFDEF DSHARP}
   FBG          := TBindingGroup.Create(Self);
   {$ENDIF}
@@ -234,7 +241,8 @@ end;
 {$REGION 'property access methods'}
 function TfrmListDataSet.GetDataSet: TDataSet;
 begin
-  Result := FListDataSet;
+//  Result := FListDataSet;
+  Result := FObjectDataSet;
 end;
 
 function TfrmListDataSet.GetDataSetEnabled: Boolean;
@@ -335,12 +343,14 @@ end;
 
 procedure TfrmListDataSet.FillList;
 begin
-  TDemoFactories.FillListWithContacts(FList.AsList, StrToInt(edtRecordCount.Text));
+  TDemoFactories.FillListWithContacts(FList, StrToInt(edtRecordCount.Text));
 end;
 
 procedure TfrmListDataSet.ConnectDataSet;
 begin
+  FObjectDataSet.SetDataList<TContact>(FList as IList<TContact>);
   DataSet.Active := True;
+
   dscMain.DataSet := DataSet;
   FDBGV.AutoSizeCols;
 end;
@@ -350,7 +360,7 @@ begin
   {$IFDEF DSHARP}
   if not Assigned(FTVP) then
   begin
-    FTVP := TDemoFactories.CreateTVP(Self, FVST, FList.AsList);
+    FTVP := TDemoFactories.CreateTVP(Self, FVST, FList);
     FVST.Header.AutoFitColumns;
     AddControlBinding(FBG, FTVP, 'View.CurrentItem.Firstname', edtFirstname);
     AddControlBinding(FBG, FTVP, 'View.CurrentItem.Lastname', edtLastname);

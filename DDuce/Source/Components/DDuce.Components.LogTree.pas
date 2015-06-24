@@ -33,6 +33,9 @@ uses
 
   VirtualTrees;
 
+const
+  DEFAULT_DATETIMEFORMAT = 'dd-mm-yyyy hh:nn:ss.zzz';
+
 type
   TLogLevel = (
     llNone,
@@ -83,6 +86,7 @@ type
     FShowDateColumn          : Boolean;
     FShowImages              : Boolean;
     FMaximumLines            : Cardinal;
+    FDateTimeFormat          : string;
 
     function DrawHTML(const ARect: TRect; const ACanvas: TCanvas;
       const Text: string; Selected: Boolean): Integer;
@@ -99,6 +103,8 @@ type
       FalseResult: Variant): Variant;
     function StripHTMLTags(const Value: string): string;
     function RemoveCtrlChars(const Value: string): string;
+    function GetDateTimeFormat: string;
+    procedure SetDateTimeFormat(const Value: string);
 
   protected
     procedure DoOnLog(var LogText: string; var CancelEntry: Boolean;
@@ -163,6 +169,9 @@ type
 
     property MaximumLines: Cardinal
       read FMaximumLines write FMaximumLines;
+
+    property DateTimeFormat: string
+      read GetDateTimeFormat write SetDateTimeFormat;
   end;
 
 implementation
@@ -182,7 +191,7 @@ resourcestring
 constructor TLogTree.Create(AOwner: TComponent);
 begin
   inherited;
-
+  FDateTimeFormat          := DEFAULT_DATETIMEFORMAT;
   FAutoScroll              := True;
   FHTMLSupport             := True;
   FRemoveControlCharacters := False;
@@ -330,11 +339,15 @@ begin
   if Assigned(NodeData) then
     case Column of
       - 1, 0:
-        Result := Concat(DateTimeToStr(NodeData.Timestamp), '.',
-          FormatDateTime('zzz', NodeData.Timestamp));
+        Result := FormatDateTime(DateTimeFormat, NodeData.Timestamp);
       1:
         Result := NodeData.LogText;
     end;
+end;
+
+function TLogTree.GetDateTimeFormat: string;
+begin
+  Result := FDateTimeFormat;
 end;
 
 procedure TLogTree.AddDefaultColumns(
@@ -353,9 +366,7 @@ begin
     for I := Low(ColumnNames) to High(ColumnNames) do
     begin
       Column := Header.Columns.Add;
-
       Column.Text := ColumnNames[I];
-
       if ColumnWidths[I] > 0 then
         Column.Width := ColumnWidths[I]
       else
@@ -377,13 +388,9 @@ begin
   TreeOptions.SelectionOptions := TreeOptions.SelectionOptions +
     [toFullRowSelect, toRightClickSelect];
 
-  AddDefaultColumns([SDate,
-    SLog],
-    [170,
-    120]);
-
+  AddDefaultColumns([SDate, SLog], [100, 100]);
   Header.AutoSizeIndex := 1;
-  Header.Columns[1].MinWidth := 300;
+  Header.Columns[1].MinWidth := 80;
   Header.Options := Header.Options + [hoAutoResize];
 
   if not Assigned(PopupMenu) and not (csDesigning in ComponentState) then
@@ -494,7 +501,6 @@ begin
     Strings.Add(Concat(IfThen(FShowDateColumn,
       Concat(GetCellText(Node, 0), #09), ''), IfThen(FHTMLSupport,
       StripHTMLTags(GetCellText(Node, 1)), GetCellText(Node, 1))));
-
     Node := Node.NextSibling;
   end;
 end;
@@ -578,7 +584,15 @@ end;
 procedure TLogTree.LogFmt(Value: string; const Args: Array of
   Const; LogLevel: TLogLevel; Timestamp: TDateTime);
 begin
-  Log(format(Value, Args), LogLevel, Timestamp);
+  Log(Format(Value, Args), LogLevel, Timestamp);
+end;
+
+procedure TLogTree.SetDateTimeFormat(const Value: string);
+begin
+  if Value <> DateTimeFormat then
+  begin
+    FDateTimeFormat := Value;
+  end;
 end;
 
 procedure TLogTree.SetLogLevels(const Value: TLogLevels);

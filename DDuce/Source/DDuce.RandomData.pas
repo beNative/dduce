@@ -37,13 +37,14 @@ type
     Consonants = Letters - Vowels;
 
     {$region 'SmartPrefixes'}
-    SmartPrefixes: array [0 .. 20] of string = (
+    SmartPrefixes: array [0 .. 22] of string = (
       'base',
       'cor',
       'pri',
       'pre',
       'neo',
       'new',
+      'evo',
       'or',
       'hi',
       'inter',
@@ -56,6 +57,7 @@ type
       'xer',
       'qua',
       'gen',
+      'psi',
       'in',
       're',
       'tri'
@@ -83,7 +85,7 @@ type
     {$endregion}
 
     {$region 'FirstNames'}
-    FirstNames: array [RandomData.TGender, 0 .. 562] of string = (
+    FirstNames: array [RandomData.TGender, 0 .. 564] of string = (
       (
         'Aaron',
         'Abraham',
@@ -568,6 +570,7 @@ type
         'Salvador',
         'Salvatore',
         'Sam',
+        'Sammy',
         'Samuel',
         'Santos',
         'Scott',
@@ -644,6 +647,7 @@ type
         'William',
         'Willie',
         'Willis',
+        'Willy',
         'Wilson',
         'Winston',
         'Zachary',
@@ -966,6 +970,7 @@ type
         'Julie',
         'Juliette',
         'June',
+        'Justine',
         'Karan',
         'Karen',
         'Kari',
@@ -1207,6 +1212,7 @@ type
         'Wendy',
         'Whitney',
         'Wilma',
+        'Whoopy',
         'Windy',
         'Yolanda',
         'Yuette',
@@ -1989,70 +1995,126 @@ type
     {$endregion}
 
     {$region 'Adjectives'}
-    Adjectives: array [0 .. 93] of string = (
+    Adjectives: array [0 .. 162] of string = (
       'Abused',
       'Ambiguous',
       'Ancient',
       'Arrogant',
+      'Automatic',
       'Automotive',
+      'Amazing',
+      'Alcoholic',
       'Basic',
       'Blue',
       'Bloated',
       'Bright',
+      'Bricked',
+      'Busty',
       'Clever',
+      'Clear',
       'Cold',
       'Cool',
+      'Celtic',
+      'Crazy',
+      'Classic',
+      'Casted',
+      'Committed',
       'Corny',
+      'Cloudy',
       'Creepy',
+      'Crusty',
+      'Convoluted',
+      'Compact',
+      'Credits',
+      'Catastrophic',
+      'Complicated',
       'Crystal',
       'Deluxe',
       'Dirty',
       'Dizzy',
       'Domestic',
       'Essential',
+      'Easy',
       'Exact',
       'Exciting',
+      'Electric',
+      'Electronic',
       'Expensive',
+      'Extreme',
+      'Endless',
       'Explosive',
       'Express',
       'Faint',
       'Fake',
+      'Fragmented',
       'Fancy',
       'Fast',
+      'Fixed',
       'Fat',
+      'Fuzzy',
+      'Floating',
+      'Flaky',
       'Frantic',
+      'Fantastic',
       'Free',
+      'Frosty',
+      'Flexible',
+      'Frozen',
+      'Forbidden',
+      'Furious',
       'Funny',
       'Future',
       'Good',
       'Great',
       'Giant',
+      'Global',
       'Hairy',
       'Happy',
+      'Harmonic',
       'Homeless',
+      'Holy',
+      'Holographic',
       'Hot',
       'Hungry',
       'Incomprehensive',
       'Intimate',
       'Intelligent',
+      'Infected',
       'Inflamed',
+      'Inspiring',
+      'Insane',
+      'Inflated',
       'Jittery',
       'Kinky',
+      'Lazy',
       'Lonely',
+      'Lone',
+      'Magistic',
+      'Mobile',
+      'Marooned',
+      'Milky',
+      'Mint',
+      'Mighty',
       'Millenium',
       'Monkey',
+      'Naked',
+      'Nasty',
+      'Nude',
       'Obsessive',
       'Open',
+      'Past',
       'Perfect',
       'Perverse',
       'Pink',
       'Power',
       'Precise',
+      'Pointless',
       'Pulp',
       'Quaint',
       'Random',
       'Rare',
       'Red',
+      'Responsive',
       'Risky',
       'Rusty',
       'Secret',
@@ -2060,7 +2122,10 @@ type
       'Serious',
       'Sick',
       'Simple',
+      'Soules',
+      'Soil',
       'Sleepy',
+      'Sticky',
       'Smart',
       'Smelly',
       'Soapy',
@@ -2068,13 +2133,21 @@ type
       'Solid',
       'Spooky',
       'Star',
+      'Sudden',
+      'Social',
       'Stormy',
+      'Stunning',
       'Sure',
       'Tense',
+      'Tested',
       'Total',
+      'Torn',
       'Transparant',
       'Ultimate',
+      'United',
+      'Universal',
       'Unintentional',
+      'Unconstitutional',
       'Vast',
       'Virtual',
       'Vintage',
@@ -2083,58 +2156,99 @@ type
       'Wild',
       'Wise',
       'Wireless',
+      'Whispering',
+      'Worn',
       'Zero'
     );
     {$endregion}
 
     {$region 'CompanySuffixes'}
-    CompanySuffixes: array [0 .. 98] of string = (
+    CompanySuffixes: array [0 .. 190] of string = (
       'Accessories',
       'Adventures',
       'Addicts',
+      'Archives',
+      'Artifacts',
+      'Adhesives',
+      'Almanacs',
+      'Antiques',
       'Air',
       'Anomalities',
       'Architecture',
       'Assassinations',
       'Assemblies',
+      'Alcohol',
       'Balls',
+      'Bombs',
       'Bills',
       'Business',
+      'Coke',
       'Cars',
       'Caves',
+      'Carpets',
       'Cartridges',
       'Cleaning',
       'Clothing',
+      'Culprits',
       'Computers',
       'Computing',
       'Concepts',
+      'Conceptions',
+      'Convictions',
       'Consultancy',
       'Consulting',
+      'Constructions',
+      'Cows',
+      'Crashes',
       'Creations',
       'Crimes',
       'Diapers',
+      'Discs',
+      'Deals',
       'Disclosures',
       'Diseases',
+      'Desasters',
+      'Designs',
+      'Drugs',
+      'Dreams',
+      'Harmonies',
       'Encounters',
       'Entertainment',
       'Equipment',
+      'Estates',
       'Experiments',
+      'Expeditions',
       'Exploitations',
+      'Enclosures',
       'Explorations',
+      'Endeavours',
       'Explosives',
+      'Electronics',
       'Emissions',
+      'Estates',
+      'Facts',
+      'Fans',
+      'Forks',
       'Fiction',
       'Flakes',
+      'Flames',
       'Flowers',
       'Food',
+      'Fools',
       'Funerals',
+      'Faces',
       'Furniture',
       'Fusion',
+      'Gaskets',
+      'Games',
       'Gestures',
+      'Galaxies',
       'Gloves',
       'Greed',
       'Hippies',
+      'Horrors',
       'Hooligans',
+      'Hackers',
       'Heavens',
       'Insects',
       'Instruments',
@@ -2144,47 +2258,100 @@ type
       'Jeans',
       'Knowledge',
       'Laboratories',
+      'Lazers',
       'Lightning',
+      'Makers',
+      'Maps',
+      'Masters',
+      'Minds',
       'Machines',
+      'Modules',
+      'Medics',
+      'Maniacs',
       'Marriages',
+      'Mechanics',
+      'Mixers',
       'Missions',
+      'Movies',
+      'Mushrooms',
       'Nuts',
       'Organisms',
       'Ornaments',
       'Oil',
+      'Papers',
       'Packaging',
+      'Partners',
       'Plastics',
       'Powertools',
       'Pants',
+      'Pistons',
       'Pets',
       'Pictures',
       'Pipes',
       'Platforms',
+      'Phones',
+      'Pools',
+      'Plastics',
       'Power',
+      'Productions',
       'Projects',
+      'Perverts',
+      'Puppies',
+      'Radiation',
       'Reality',
+      'Rollercoasters',
+      'Revelations',
+      'Revolutions',
       'Roots',
+      'Rooms',
+      'Robots',
       'Rubbers',
       'Questions',
       'Sands',
+      'Sales',
+      'Stars',
       'Services',
+      'Spam',
+      'Skulls',
       'Software',
+      'Scoops',
+      'Socks',
       'Solutions',
       'Structures',
+      'States',
+      'Stickers',
       'Surgeries',
+      'Shapes',
+      'Seeds',
+      'Sounds',
+      'Studios',
       'Systems',
       'Technologies',
+      'Tablets',
       'Textiles',
+      'Tissues',
+      'Triangles',
       'Tools',
       'Toys',
+      'Tomatoes',
+      'Turntables',
       'Towers',
       'Underwear',
+      'Umbrellas',
+      'University',
+      'Vehicles',
+      'Videos',
+      'Visions',
+      'Violins',
       'Vomit',
+      'Voices',
+      'Warming',
       'Waste',
       'Wear',
       'Wellness',
       'Winds',
       'Wipers',
+      'Wipes',
       'Wool',
       'Weed',
       'Zombies'
@@ -2209,7 +2376,7 @@ type
     {$endregion}
 
     {$region 'StreetBeginnings'}
-    StreetBeginnings: array [0 .. 20] of string = (
+    StreetBeginnings: array [0 .. 21] of string = (
       'Apple',
       'Banana',
       'Bright',
@@ -2220,6 +2387,7 @@ type
       'Diamond',
       'Green',
       'Gold',
+      'Holy',
       'Moon',
       'New',
       'Oak',
@@ -2235,14 +2403,17 @@ type
     {$endregion}
 
     {$region 'StreetEndings'}
-    StreetEndings: array [0 .. 6] of string = (
+    StreetEndings: array [0 .. 9] of string = (
       'wood',
       'dale',
       'land',
       'bridge',
       'lake',
       'hill',
-      'field'
+      'field',
+      'space',
+      'water',
+      'creek'
     );
     {$endregion}
 
@@ -2411,7 +2582,7 @@ implementation
 uses
   System.SysUtils, System.Math, System.DateUtils, System.StrUtils,
 
-  DSharp.Collections, DSharp.Collections.Extensions;
+  Spring.Collections, Spring.Collections.Extensions, Spring;
 
 class constructor RandomData.Create;
 begin
@@ -2619,30 +2790,31 @@ end;
 
 class function RandomData.AlliteratedCompanyName: string;
 var
-  List  : IList<string>;
+  //List  : IList<string>;
+  List : IList<string>;
   A     : string;
   S     : string;
   C     : string;
   I     : Integer;
   J     : Integer;
-  List2 : IList<string>;
+  List2 : IEnumerable<string>;
 begin
   A := Adjective;
   C := A[1];
-  List := TList<string>.Create;
+  List :=  TCollections.CreateList<string>;
   for S in CompanySuffixes do
     List.Add(S);
-  List2 := Enumerable<string>(List).Where(
-    function(Arg: string): Boolean
+  List2 := List.Where(
+    function(const Arg: string): Boolean
     begin
       Result := StartsText(C, Arg);
     end
-  ).ToList;
+  );
   I := List2.Count;
   if I > 0 then
   begin
     J := Random(I);
-    Result := A + ' ' + List2[J] + ' ' + Str(CompanyTypes);
+    Result := A + ' ' + List2.ToArray[J] + ' ' + Str(CompanyTypes);
   end
   else
     Result := A + ' ' + Str(CompanyTypes);

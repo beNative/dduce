@@ -29,10 +29,6 @@ uses
   Vcl.ComCtrls,
   Data.DB,
 
-{$IFDEF DSHARP}
-  DSharp.Collections,
-{$ENDIF}
-
 {$IFDEF SPRING}
   Spring, Spring.Collections,
 {$ENDIF}

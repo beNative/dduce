@@ -26,8 +26,7 @@
   - Unicode support in Delphi 2009 and later
   - Compatibility with FPC 2.6.x and above
   - Support for VirtualTree version 5.0.x and above
-  - Uses NativeXML to parse the XML. This is many times faster than using
-  MSXML.
+  - Uses NativeXML to parse the XML. This is many times faster than using MSXML.
   - Customizable node paint options
   - many bugfixes
 }
@@ -388,7 +387,7 @@ type
     procedure DoCanEdit(ANode: PVirtualNode; Column: TColumnIndex;
       var Allowed: Boolean); override;
     procedure DoNewText(ANode: PVirtualNode; Column: TColumnIndex;
-      {$IFDEF FPC}const{$ENDIF} Text: string); override;
+      const Text: string); override;
     function DoGetNodeHint(ANode: PVirtualNode; Column: TColumnIndex;
       var LineBreakStyle: TVTTooltipLineBreakStyle): string; override;
     procedure DoMeasureItem(TargetCanvas: TCanvas; Node: PVirtualNode;
@@ -902,7 +901,6 @@ begin
   HintMode                     := hmHintAndDefault;
   WantTabs                     := True;
   DefaultPasteMode             := amInsertAfter;
-  Font.Name                    := 'Consolas';
   EditDelay                    := 0;
   IncrementalSearch            := isNone;
   Colors.GridLineColor         := clGray;
@@ -1308,7 +1306,7 @@ begin
 end;
 
 procedure TXMLTree.DoNewText(ANode: PVirtualNode; Column: TColumnIndex;
-  {$IFDEF FPC}const{$ENDIF} Text: string);
+  const Text: string);
 var
   ND : PNodeData;
 begin

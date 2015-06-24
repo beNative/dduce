@@ -30,13 +30,7 @@ uses
   System.Classes, System.SysUtils, System.Rtti,
   Data.Db,
 
-{$IFDEF SPRING}
   Spring, Spring.Collections,
-{$ENDIF}
-
-{$IFDEF DSHARP}
-  DSharp.Collections,
-{$ENDIF}
 
   DDuce.Components.VirtualDataSet;
 
@@ -264,12 +258,7 @@ begin
       end
       else if State = dsInsert then
       begin
-        {$IFDEF DSHARP}
-        TD := GetTypeData(FList.ItemType);
-        {$ENDIF}
-        {$IFDEF SPRING}
         TD := GetTypeData(FList.ElementType);
-        {$ENDIF}
         O := TD.ClassType.Create;
         // in newer Delphis we can use:
         //    O := FList.ItemType.TypeData.ClassType.Create
@@ -304,13 +293,7 @@ var
 begin
   if not Assigned(AList) then
     Exit;
-
-  {$IFDEF DSHARP}
-  T := AList.ItemType;
-  {$ENDIF}
-  {$IFDEF SPRING}
   T := AList.ElementType;
-  {$ENDIF}
 
   for P in C.GetType(T).GetProperties do
   begin
@@ -498,12 +481,7 @@ end;
 procedure TListDataset<T>.BeforeDestruction;
 begin
   if Assigned(FList) then
-    {$IFDEF DSHARP}
-    FList.OnCollectionChanged.Remove(CollectionChanged);
-    {$ENDIF}
-    {$IFDEF SPRING}
     FList.OnChanged.Remove(CollectionChanged);
-    {$ENDIF}
   FList := nil;
   inherited;
 end;
@@ -515,19 +493,9 @@ begin
   if Value <> List then
   begin
     if Assigned(List) then
-      {$IFDEF DSHARP}
-      FList.OnCollectionChanged.Remove(CollectionChanged);
-      {$ENDIF}
-      {$IFDEF SPRING}
       FList.OnChanged.Remove(CollectionChanged);
-      {$ENDIF}
     FList := Value;
-    {$IFDEF DSHARP}
-    FList.OnCollectionChanged.Add(CollectionChanged);
-    {$ENDIF}
-    {$IFDEF SPRING}
     FList.OnChanged.Add(CollectionChanged);
-    {$ENDIF}
     inherited List := Value.AsList;
   end;
 end;

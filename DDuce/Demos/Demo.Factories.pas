@@ -27,9 +27,10 @@ uses
 
   VirtualTrees,
 
+  Spring, Spring.Collections, Spring.Collections.Extensions, Spring.Collections.Lists,
 {$IFDEF DSHARP}
-  DSharp.Windows.TreeViewPresenter, DSharp.Collections,
-  DSharp.Bindings.Collections, DSharp.Core.DataTemplates, DSharp.Core.Events,
+  DSharp.Windows.TreeViewPresenter, //DSharp.Collections,
+  DSharp.Bindings.Collections, DSharp.Core.DataTemplates,
 {$ENDIF}
 
 {$IFDEF SPRING}
@@ -535,7 +536,7 @@ var
 begin
   if Assigned(ASource) then // auto create column definitions
   begin
-    for P in C.GetType(ASource.ItemType).GetProperties do
+    for P in C.GetType(ASource.ElementType).GetProperties do
     begin
       with ATVP.ColumnDefinitions.Add(P.Name) do
         ValuePropertyName := P.Name;

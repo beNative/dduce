@@ -895,6 +895,10 @@ uses
 
 {$R *.RES}
 
+type
+  PIntArray = ^TIntArray;
+  TIntArray = array[0..MaxInt div 16 - 1] of Integer;
+
 function IsLookupField(Field: TField): Boolean;
 var
   MasterField: TField;
@@ -2694,10 +2698,6 @@ begin
       end;
   end;
 end;
-
-type
-  PIntArray = ^TIntArray;
-  TIntArray = array[0..MaxInt div 16 - 1] of Integer;
 
 procedure TCustomDBGridView.PaintIndicatorGrid;
 var

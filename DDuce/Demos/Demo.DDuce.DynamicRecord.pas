@@ -27,7 +27,7 @@ interface
 {$I ..\Source\DDuce.inc}
 
 uses
-  System.SysUtils, System.Variants, System.Classes, System.Actions,
+  System.SysUtils, System.Variants, System.Classes, System.Actions, System.Rtti,
   Vcl.Controls, Vcl.Forms, Vcl.StdCtrls, Vcl.ActnList, Vcl.Grids, Vcl.DBGrids,
   Vcl.ComCtrls, Vcl.ExtCtrls,
   Data.DB,
@@ -40,7 +40,7 @@ uses
 
   DDuce.DynamicRecord,
 
-  Demo.Contact, System.Rtti;
+  Demo.Contact;
 
 type
   TTestClass = class
@@ -130,39 +130,56 @@ type
 type
   TfrmDynamicRecords = class(TForm)
     {$REGION 'designer controls'}
-    aclMain            : TActionList;
-    actTestAssign      : TAction;
-    actTestAssignTo    : TAction;
-    actToStrings       : TAction;
-    btnTestAssign      : TButton;
-    btnTestAssignTo    : TButton;
-    btnTestAssignTo1   : TButton;
-    dscTest            : TDataSource;
-    dsTest             : TClientDataSet;
-    grdpnl1            : TGridPanel;
-    grdTest            : TDBGrid;
-    lblContact         : TLabel;
-    lblRecord          : TLabel;
-    lblStrings         : TLabel;
-    lblTestClass       : TLabel;
-    lblTestRecord      : TLabel;
-    lblTestTRecord     : TLabel;
-    pgcMain            : TPageControl;
-    pnlRecordInspector : TPanel;
-    tsContactObject    : TTabSheet;
-    tsDataSet          : TTabSheet;
-    tsTestClass        : TTabSheet;
-    tsTestRecord       : TTabSheet;
-    tsTRecord          : TTabSheet;
-    actTestData        : TAction;
-    btnTestData        : TButton;
+    aclMain                   : TActionList;
+    actTestAssign             : TAction;
+    actTestAssignTo           : TAction;
+    actToStrings              : TAction;
+    btnTestAssign             : TButton;
+    btnTestAssignTo           : TButton;
+    btnTestAssignTo1          : TButton;
+    dscTest                   : TDataSource;
+    dsTest                    : TClientDataSet;
+    pnlBottom                 : TGridPanel;
+    grdTest                   : TDBGrid;
+    lblContact                : TLabel;
+    lblTestClass              : TLabel;
+    lblTestRecord             : TLabel;
+    lblTestTRecord            : TLabel;
+    pgcMain                   : TPageControl;
+    pnlRecordInspector        : TPanel;
+    tsContactObject           : TTabSheet;
+    tsDataSet                 : TTabSheet;
+    tsTestClass               : TTabSheet;
+    tsTestRecord              : TTabSheet;
+    tsTRecord                 : TTabSheet;
+    actTestData               : TAction;
+    btnTestData               : TButton;
+    pnlRecordInspectorHeader  : TPanel;
+    pnlBottomRight            : TPanel;
+    pnlRightBottomHeader      : TPanel;
+    pnlTRecordRepresentations : TGridPanel;
+    grpAsCommaText            : TGroupBox;
+    grpAsDelimitedText        : TGroupBox;
+    grpToStrings              : TGroupBox;
+    grpToString               : TGroupBox;
+    lblAsCommaText            : TLabel;
+    lblAsDelimitedText        : TLabel;
+    lblToStrings              : TLabel;
+    lblToString               : TLabel;
+    chkQuoteValues: TCheckBox;
+    edtDelimiter: TLabeledEdit;
+    edtQuoteChar: TLabeledEdit;
+    chkAlignValues: TCheckBox;
     {$ENDREGION}
 
     procedure actTestAssignExecute(Sender: TObject);
     procedure dscTestDataChange(Sender: TObject; Field: TField);
     procedure actToStringsExecute(Sender: TObject);
     procedure actTestDataExecute(Sender: TObject);
-
+    procedure chkQuoteValuesClick(Sender: TObject);
+    procedure edtQuoteCharChange(Sender: TObject);
+    procedure edtDelimiterChange(Sender: TObject);
+    procedure chkAlignValuesClick(Sender: TObject);
 
   private
     FContact     : TContact;
@@ -321,7 +338,7 @@ begin
   end
   else
   begin
-    Value := FRecord.ToString(FRecord.Items[Cell.Row].Name);
+    Value := FRecord.Items[Cell.Row].Value.ToString;
   end;
 end;
 
@@ -331,7 +348,7 @@ begin
   if Cell.Col = 1 then
   begin
     FRecord.Items[Cell.Row].Value := Value;
-    FUpdate := True;
+    Changed;
   end;
 end;
 
@@ -341,6 +358,26 @@ begin
   begin
     ExecuteFromDataSet;
   end;
+end;
+
+procedure TfrmDynamicRecords.edtDelimiterChange(Sender: TObject);
+begin
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.edtQuoteCharChange(Sender: TObject);
+begin
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.chkAlignValuesClick(Sender: TObject);
+begin
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.chkQuoteValuesClick(Sender: TObject);
+begin
+  Changed;
 end;
 {$ENDREGION}
 
@@ -352,7 +389,7 @@ begin
   V := TValue.From<TTestRecord>(FTestRecord);
   ZeroMemory(@FTestRecord, SizeOf(FTestRecord));
   FTestRecord.TestString := 'string';
-  FTestRecord.TestNullableString := 'nullablestring';
+  FTestRecord.TestNullableString := 'NullableString';
   FTestRecord.TestDouble := PI;
   FTestRecord.TestInteger:= 554;
 end;
@@ -371,7 +408,7 @@ begin
     FreeAndNil(FTestClass);
   FTestClass := TTestClass.Create;
   FTestClass.TestString := 'string';
-  FTestClass.TestNullableString := 'nullablestring';
+  FTestClass.TestNullableString := 'NullableString';
   FTestClass.TestNullableString := Null;
 end;
 
@@ -388,13 +425,13 @@ end;
 
 function TfrmDynamicRecords.CreateInspector(AParent : TWinControl): TInspector;
 begin
-//  Result := TInspector.Create(Self);
-//  Result.Parent         := AParent;
-//  Result.Align          := alClient;
-//  Result.OnGetCellText  := InspectorGetCellText;
-//  Result.OnGetEditStyle := InspectorGetEditStyle;
-//  Result.OnSetEditText  := InspectorSetEditText;
-//  Result.OnGetEditText  := InspectorGetEditText;
+  Result := TInspector.Create(Self);
+  Result.Parent         := AParent;
+  Result.Align          := alClient;
+  Result.OnGetCellText  := InspectorGetCellText;
+  Result.OnGetEditStyle := InspectorGetEditStyle;
+  Result.OnSetEditText  := InspectorSetEditText;
+  Result.OnGetEditText  := InspectorGetEditText;
 end;
 {$ENDREGION}
 
@@ -439,17 +476,23 @@ begin
   inherited;
   if FUpdate then
   begin
-    lblRecord.Caption := FRecord.ToString;
-//    FInspector.Rows.Count := FRecord.Count;
-//    FInspector.Invalidate;
-//    FInspector.UpdateEditContents(False);
-
-    lblContact.Caption := AsPropString(FContact);
-    lblTestClass.Caption := AsPropString(FTestClass);
-    lblTestRecord.Caption := AsFieldString(TValue.From(FTestRecord));
+    //lblRecord.Caption := FRecord.ToString;
+    FInspector.Rows.Count := FRecord.Count;
+    FInspector.UpdateEditText;
+    lblContact.Caption     := AsPropString(FContact);
+    lblTestClass.Caption   := AsPropString(FTestClass);
+    lblTestRecord.Caption  := AsFieldString(TValue.From(FTestRecord));
     lblTestTRecord.Caption := FTestTRecord.ToString;
 
-    lblStrings.Caption := FStrings.Text;
+    FRecord.ToStrings(FStrings);
+    lblAsCommaText.Caption     := FRecord.AsCommaText;
+    lblAsDelimitedText.Caption := FRecord.AsDelimitedText(
+      edtDelimiter.Text,
+      chkQuoteValues.Checked,
+      edtQuoteChar.Text[1]
+    );
+    lblToString.Caption := FRecord.ToString(chkAlignValues.Checked);
+    lblToStrings.Caption := FStrings.Text;
     FUpdate := False;
   end;
 end;

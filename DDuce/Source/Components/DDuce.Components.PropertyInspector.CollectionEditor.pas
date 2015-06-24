@@ -28,7 +28,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Menus,
 
 
-  DDuce.Components.PropertyInspector, Vcl.ImgList, Vcl.ToolWin, System.ImageList;
+  DDuce.Components.PropertyInspector, Vcl.ImgList, Vcl.ToolWin;
 
 type
   TfrmCollectionEditor = class(TForm)

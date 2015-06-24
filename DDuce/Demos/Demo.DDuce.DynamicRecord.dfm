@@ -10,31 +10,8 @@ object frmDynamicRecords: TfrmDynamicRecords
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  DesignSize = (
-    716
-    591)
   PixelsPerInch = 96
   TextHeight = 13
-  object lblStrings: TLabel
-    AlignWithMargins = True
-    Left = 512
-    Top = 8
-    Width = 196
-    Height = 269
-    Anchors = [akLeft, akTop, akRight, akBottom]
-    AutoSize = False
-    Color = clInfoBk
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Consolas'
-    Font.Style = []
-    ParentColor = False
-    ParentFont = False
-    ParentShowHint = False
-    ShowHint = True
-    Transparent = False
-  end
   object btnTestAssign: TButton
     Left = 8
     Top = 8
@@ -54,22 +31,18 @@ object frmDynamicRecords: TfrmDynamicRecords
   object pgcMain: TPageControl
     Left = 97
     Top = 8
-    Width = 409
-    Height = 273
-    ActivePage = tsTRecord
+    Width = 611
+    Height = 201
+    ActivePage = tsContactObject
     TabOrder = 2
     object tsContactObject: TTabSheet
       Caption = 'TContact object'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblContact: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 395
-        Height = 242
+        Width = 597
+        Height = 170
         Align = alClient
         AutoSize = False
         Color = clInfoBk
@@ -94,14 +67,14 @@ object frmDynamicRecords: TfrmDynamicRecords
       ImageIndex = 1
       ExplicitLeft = 0
       ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 401
+      ExplicitHeight = 245
       object grdTest: TDBGrid
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 395
-        Height = 239
+        Width = 597
+        Height = 167
         Align = alClient
         DataSource = dscTest
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -147,14 +120,14 @@ object frmDynamicRecords: TfrmDynamicRecords
       ImageIndex = 2
       ExplicitLeft = 0
       ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 401
+      ExplicitHeight = 245
       object lblTestClass: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 395
-        Height = 242
+        Width = 597
+        Height = 170
         Align = alClient
         AutoSize = False
         Color = clInfoBk
@@ -179,14 +152,14 @@ object frmDynamicRecords: TfrmDynamicRecords
       ImageIndex = 3
       ExplicitLeft = 0
       ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 401
+      ExplicitHeight = 245
       object lblTestRecord: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 395
-        Height = 242
+        Width = 597
+        Height = 170
         Align = alClient
         AutoSize = False
         Color = clInfoBk
@@ -209,12 +182,16 @@ object frmDynamicRecords: TfrmDynamicRecords
     object tsTRecord: TTabSheet
       Caption = 'TRecord'
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 401
+      ExplicitHeight = 245
       object lblTestTRecord: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 395
-        Height = 239
+        Width = 597
+        Height = 170
         Align = alClient
         AutoSize = False
         Color = clInfoBk
@@ -235,70 +212,321 @@ object frmDynamicRecords: TfrmDynamicRecords
       end
     end
   end
-  object grdpnl1: TGridPanel
+  object pnlBottom: TGridPanel
     Left = 0
-    Top = 287
+    Top = 215
     Width = 716
-    Height = 304
+    Height = 376
     Align = alBottom
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     ColumnCollection = <
       item
-        Value = 50.000000000000000000
+        Value = 37.500000000000000000
       end
       item
-        Value = 50.000000000000000000
+        Value = 62.500000000000000000
       end>
     ControlCollection = <
-      item
-        Column = 1
-        Control = lblRecord
-        Row = 0
-      end
       item
         Column = 0
         Control = pnlRecordInspector
         Row = 0
+      end
+      item
+        Column = 1
+        Control = pnlBottomRight
+        Row = 0
       end>
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     RowCollection = <
       item
         Value = 100.000000000000000000
+      end
+      item
+        SizeStyle = ssAuto
       end>
     TabOrder = 3
-    object lblRecord: TLabel
-      AlignWithMargins = True
-      Left = 361
-      Top = 3
-      Width = 352
-      Height = 298
-      Align = alClient
-      AutoSize = False
-      Color = clInfoBk
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Consolas'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
-      ParentShowHint = False
-      ShowHint = True
-      Transparent = False
-      ExplicitLeft = 225
-      ExplicitTop = 1
-      ExplicitWidth = 253
-      ExplicitHeight = 261
-    end
     object pnlRecordInspector: TPanel
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 352
-      Height = 298
+      Width = 262
+      Height = 370
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
+      object pnlRecordInspectorHeader: TPanel
+        Left = 0
+        Top = 0
+        Width = 262
+        Height = 17
+        Align = alTop
+        BevelOuter = bvNone
+        Caption = 'TRecord content'
+        TabOrder = 0
+      end
+    end
+    object pnlBottomRight: TPanel
+      Left = 268
+      Top = 0
+      Width = 448
+      Height = 376
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 1
+      object pnlRightBottomHeader: TPanel
+        Left = 0
+        Top = 0
+        Width = 448
+        Height = 19
+        Align = alTop
+        BevelOuter = bvNone
+        Caption = 'Conversion methods'
+        TabOrder = 0
+      end
+      object pnlTRecordRepresentations: TGridPanel
+        Left = 0
+        Top = 19
+        Width = 448
+        Height = 357
+        Align = alClient
+        BevelOuter = bvNone
+        ColumnCollection = <
+          item
+            Value = 100.000000000000000000
+          end>
+        ControlCollection = <
+          item
+            Column = 0
+            Control = grpAsCommaText
+            Row = 0
+          end
+          item
+            Column = 0
+            Control = grpAsDelimitedText
+            Row = 1
+          end
+          item
+            Column = 0
+            Control = grpToStrings
+            Row = 2
+          end
+          item
+            Column = 0
+            Control = grpToString
+            Row = 3
+          end>
+        RowCollection = <
+          item
+            Value = 25.113906109260310000
+          end
+          item
+            Value = 24.947071570572670000
+          end
+          item
+            Value = 24.948130782096440000
+          end
+          item
+            Value = 24.990891538070580000
+          end>
+        TabOrder = 1
+        object grpAsCommaText: TGroupBox
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 442
+          Height = 83
+          Align = alClient
+          Caption = 'AsCommaText'
+          TabOrder = 0
+          object lblAsCommaText: TLabel
+            AlignWithMargins = True
+            Left = 5
+            Top = 18
+            Width = 432
+            Height = 63
+            Align = alClient
+            Color = clWhite
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Consolas'
+            Font.Style = []
+            ParentColor = False
+            ParentFont = False
+            Transparent = False
+            WordWrap = True
+            ExplicitWidth = 6
+            ExplicitHeight = 13
+          end
+        end
+        object grpAsDelimitedText: TGroupBox
+          AlignWithMargins = True
+          Left = 3
+          Top = 92
+          Width = 442
+          Height = 83
+          Align = alClient
+          Caption = 'AsDelimitedText'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 1
+          object lblAsDelimitedText: TLabel
+            AlignWithMargins = True
+            Left = 180
+            Top = 18
+            Width = 257
+            Height = 63
+            Align = alRight
+            Anchors = [akLeft, akTop, akRight, akBottom]
+            AutoSize = False
+            Color = clWhite
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Consolas'
+            Font.Style = []
+            ParentColor = False
+            ParentFont = False
+            Transparent = False
+            WordWrap = True
+            ExplicitWidth = 255
+            ExplicitHeight = 62
+          end
+          object chkQuoteValues: TCheckBox
+            Left = 11
+            Top = 22
+            Width = 83
+            Height = 17
+            Caption = 'Quote values'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 0
+            OnClick = chkQuoteValuesClick
+          end
+          object edtDelimiter: TLabeledEdit
+            Left = 61
+            Top = 47
+            Width = 64
+            Height = 21
+            EditLabel.Width = 45
+            EditLabel.Height = 13
+            EditLabel.Caption = 'Delimiter:'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            LabelPosition = lpLeft
+            ParentFont = False
+            TabOrder = 1
+            Text = ';'
+            OnChange = edtDelimiterChange
+          end
+          object edtQuoteChar: TLabeledEdit
+            Left = 157
+            Top = 20
+            Width = 17
+            Height = 21
+            EditLabel.Width = 58
+            EditLabel.Height = 13
+            EditLabel.Caption = 'Quote char:'
+            LabelPosition = lpLeft
+            MaxLength = 1
+            TabOrder = 2
+            Text = #39
+            OnChange = edtQuoteCharChange
+          end
+        end
+        object grpToStrings: TGroupBox
+          AlignWithMargins = True
+          Left = 3
+          Top = 181
+          Width = 442
+          Height = 83
+          Align = alClient
+          Caption = 'ToStrings'
+          TabOrder = 2
+          object lblToStrings: TLabel
+            AlignWithMargins = True
+            Left = 5
+            Top = 18
+            Width = 432
+            Height = 63
+            Align = alClient
+            Color = clWhite
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Consolas'
+            Font.Style = []
+            ParentColor = False
+            ParentFont = False
+            Transparent = False
+            WordWrap = True
+            ExplicitWidth = 6
+            ExplicitHeight = 13
+          end
+        end
+        object grpToString: TGroupBox
+          AlignWithMargins = True
+          Left = 3
+          Top = 270
+          Width = 442
+          Height = 84
+          Align = alClient
+          Caption = 'ToString'
+          TabOrder = 3
+          DesignSize = (
+            442
+            84)
+          object lblToString: TLabel
+            AlignWithMargins = True
+            Left = 96
+            Top = 18
+            Width = 341
+            Height = 64
+            Anchors = [akLeft, akTop, akRight, akBottom]
+            AutoSize = False
+            Color = clWhite
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Consolas'
+            Font.Style = []
+            ParentColor = False
+            ParentFont = False
+            Transparent = False
+            WordWrap = True
+            ExplicitWidth = 339
+          end
+          object chkAlignValues: TCheckBox
+            Left = 11
+            Top = 24
+            Width = 79
+            Height = 17
+            Caption = 'Align values'
+            Checked = True
+            State = cbChecked
+            TabOrder = 0
+            OnClick = chkAlignValuesClick
+          end
+        end
+      end
     end
   end
   object btnTestAssignTo1: TButton
@@ -307,6 +535,12 @@ object frmDynamicRecords: TfrmDynamicRecords
     Width = 83
     Height = 25
     Action = actToStrings
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 4
   end
   object btnTestData: TButton
@@ -341,7 +575,12 @@ object frmDynamicRecords: TfrmDynamicRecords
     end
   end
   object dsTest: TClientDataSet
-    PersistDataPacket.Data = {
+    Active = True
+    Aggregates = <>
+    Params = <>
+    Left = 32
+    Top = 128
+    Data = {
       5F0400009619E0BD010000001800000005001200000003000000CA00044E616D
       650100490010000100055749445448020002001800074361706974616C010049
       001000010005574944544802000200180009436F6E74696E656E740100490010
@@ -378,16 +617,11 @@ object frmDynamicRecords: TfrmDynamicRecords
       00000000608005410000000048E746410000000956656E657A75656C61074361
       72616361730D536F75746820416D6572696361000000005ED52B410000000092
       C97241}
-    Active = True
-    Aggregates = <>
-    Params = <>
-    Left = 24
-    Top = 208
   end
   object dscTest: TDataSource
     DataSet = dsTest
     OnDataChange = dscTestDataChange
-    Left = 56
-    Top = 200
+    Left = 64
+    Top = 168
   end
 end

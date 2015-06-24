@@ -19,6 +19,7 @@
     - Datasets without databases by Marco Cantú (http://edn.embarcadero.com/article/20587)
     - Gerald Nunn's TGXBaseDataset
     - http://stackoverflow.com/questions/9533760/how-can-i-get-a-dataset-of-in-memory-objects
+    - ported code to enable 64bit support
 }
 
 unit DDuce.Components.VirtualDataSet;
@@ -102,11 +103,10 @@ type
   TCustomVirtualDataset = class;
   TVirtualDataset       = class;
 
-{$IF CompilerVersion <= 21}
-  TValueBuffer = Pointer;
-  NativeInt    = LongInt;
+{$IF CompilerVersion <= 21} // remove?
+  TValueBuffer  = Pointer;
+  NativeInt     = LongInt;
 {$IFEND}
-
   EVirtualDatasetError = class(Exception);
   PVariantList         = ^TVariantList;
   TVariantList         = array [0 .. 0] of OleVariant;
@@ -188,13 +188,15 @@ type
     FInternalOpen     : Boolean;
     FCurrentRecord    : Integer;      // current record (0 to FRecordCount - 1)
     FFilterBuffer     : TRecordBuffer;
+    FOldValueBuffer   : TRecordBuffer;
     FReadOnly         : Boolean;
     FRecordBufferSize : Integer;      // data + housekeeping (TRecordInfo)
 
     FMasterDataLink : TVirtualMasterDataLink;
     FModifiedFields : TList<TField>;
-    FOldValueBuffer : TRecordBuffer;
-    FReserved       : Pointer;
+    {$IFDEF DELPHIXE3_UP}
+    FReserved: Pointer;
+    {$ENDIF}
 
     FOnDeleteRecord   : TDeleteRecordEvent;
     FOnGetFieldValue  : TGetFieldValueEvent;
@@ -269,7 +271,12 @@ type
     // Abstract overrides
     function AllocRecordBuffer: TRecordBuffer; override;
     procedure FreeRecordBuffer(var Buffer: TRecordBuffer); override;
-    procedure GetBookmarkData(Buffer: TRecordBuffer; Data: Pointer); override;
+    {$IFDEF DELPHIXE5_UP}
+    procedure GetBookmarkData(Buffer: TRecBuf; Data: TBookmark); overload; override;
+    {$ENDIF}
+    {$IFNDEF NEXTGEN}
+    procedure GetBookmarkData(Buffer: TRecordBuffer; Data: Pointer); overload; override;
+    {$ENDIF}
     function GetBookmarkFlag(Buffer: TRecordBuffer): TBookmarkFlag; override;
 
     // abstract methods required for all datasets
@@ -902,6 +909,11 @@ function TCustomVirtualDataset.GetBlobFieldData(FieldNo: Integer;
   var Buffer: TBlobByteData): Integer;
 begin
   Result := inherited GetBlobFieldData(FieldNo, Buffer);
+end;
+
+procedure TCustomVirtualDataset.GetBookmarkData(Buffer: TRecBuf; Data: TBookmark);
+begin
+  //PObject(Data)^ := IndexList.GetModel(PArrayRecInfo(Buffer)^.Index).AsObject;
 end;
 
 procedure TCustomVirtualDataset.GetBookmarkData(Buffer: TRecordBuffer;

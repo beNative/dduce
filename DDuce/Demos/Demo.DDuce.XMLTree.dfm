@@ -46,7 +46,7 @@ object frmXMLTree: TfrmXMLTree
     BevelOuter = bvNone
     Caption = 'pnlMain'
     TabOrder = 1
-    object spl1: TSplitter
+    object splVertical: TSplitter
       Left = 361
       Top = 0
       Width = 7

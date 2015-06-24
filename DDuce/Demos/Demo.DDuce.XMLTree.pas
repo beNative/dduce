@@ -44,13 +44,12 @@ type
     pnlMain      : TPanel;
     pnlXMLTree   : TPanel;
     pnlEditor    : TPanel;
-    spl1         : TSplitter;
+    splVertical  : TSplitter;
     mmoXML       : TMemo;
     pnlInspector : TPanel;
 
     procedure actExpandExecute(Sender: TObject);
     procedure actCollapseExecute(Sender: TObject);
-    procedure actInspectComponentExecute(Sender: TObject);
     procedure mmoXMLChange(Sender: TObject);
 
   private
@@ -71,6 +70,7 @@ type
       Column: TColumnIndex; Shift: TShiftState);
     procedure XMLTreeEdited(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex);
+
   protected
     procedure UpdateActions; override;
 
@@ -259,6 +259,7 @@ procedure TfrmXMLTree.AfterConstruction;
 begin
   inherited;
   FXMLTree := TXMLTree.Create(Self);
+  FXMLTree.Parent := pnlXMLTree;
   FXML := XML_STRING;
   mmoXML.Text := FXML;
   InitializeTree;
@@ -275,11 +276,6 @@ end;
 procedure TfrmXMLTree.actExpandExecute(Sender: TObject);
 begin
   FXMLTree.FullExpand;
-end;
-
-procedure TfrmXMLTree.actInspectComponentExecute(Sender: TObject);
-begin
-//  InspectComponent(FXMLTree);
 end;
 {$ENDREGION}
 
@@ -316,6 +312,12 @@ begin
   begin
     TargetCanvas.Font.Color := clWhite;
   end;
+end;
+
+procedure TfrmXMLTree.mmoXMLChange(Sender: TObject);
+begin
+  FXML := mmoXML.Text;
+  FXMLTree.XML := FXML;
 end;
 {$ENDREGION}
 
@@ -382,13 +384,9 @@ begin
   FXMLTree.ButtonStyle := bsTriangle;
   FXMLTree.Header.AutoFitColumns;
 end;
+{$ENDREGION}
 
-procedure TfrmXMLTree.mmoXMLChange(Sender: TObject);
-begin
-  FXML := mmoXML.Text;
-  FXMLTree.XML := FXML;
-end;
-
+{$REGION 'protected methods'}
 procedure TfrmXMLTree.UpdateActions;
 begin
   inherited;

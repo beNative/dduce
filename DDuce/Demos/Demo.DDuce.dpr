@@ -1,7 +1,6 @@
 program Demo.DDuce;
 
 uses
-  Forms,
   Demo.DDuce.XMLTree in 'Demo.DDuce.XMLTree.pas' {frmXMLTree},
   Demo.DDuce.DynamicRecord in 'Demo.DDuce.DynamicRecord.pas' {frmDynamicRecords},
   Demo.DDuce.ScopedReference in 'Demo.DDuce.ScopedReference.pas' {frmScopedReferences},
@@ -35,8 +34,6 @@ uses
   Demo.DDuce.PropertyInspector in 'Demo.DDuce.PropertyInspector.pas' {frmPropertyInspector},
   Demo.DDuce.VirtualDBGrid in 'Demo.DDuce.VirtualDBGrid.pas' {frmVirtualDBGrid},
   Demo.DDuce.Reflect in 'Demo.DDuce.Reflect.pas' {frmReflect},
-  Vcl.Themes,
-  Vcl.Styles,
   Demo.Factories in 'Demo.Factories.pas';
 
 {$R *.res}
@@ -48,7 +45,7 @@ begin
   RegisterDemos;
   if DemoManager.ItemList.Count = 1 then
   begin
-    DemoManager.Execute(DemoManager.ItemList.First.AsObject);
+    DemoManager.Execute(DemoManager.ItemList[0].AsObject);
   end
   else
   begin

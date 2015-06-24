@@ -25,11 +25,8 @@ implementation
 uses
   Demo.DDuce.ListDataSet,
   Demo.DDuce.ScopedReference,
-
   Demo.DDuce.XMLTree,
   Demo.DDuce.VirtualDBGrid,
-
-
   Demo.DDuce.PropertyInspector,
   Demo.DDuce.Reflect,
   Demo.DDuce.DynamicRecord,
