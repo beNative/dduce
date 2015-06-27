@@ -33,10 +33,6 @@ uses
   DSharp.Bindings.Collections, DSharp.Core.DataTemplates,
 {$ENDIF}
 
-{$IFDEF SPRING}
-  Spring, Spring.Collections, Spring.Collections.Lists,
-{$ENDIF}
-
   DDuce.Components.PropertyInspector, DDuce.Components.LogTree,
   DDuce.Components.GridView, DDuce.Components.DBGridView,
   DDuce.Components.VirtualDBGrid,
@@ -49,14 +45,14 @@ type
     class procedure InitializeTVP(
       ATVP      : TTreeViewPresenter;
       AVST      : TVirtualStringTree = nil;
-      ASource   : IList = nil;
+      ASource   : IObjectList = nil;
       ATemplate : IDataTemplate = nil;
       AFilter   : TFilterEvent = nil
     ); static;
 
   public
     class procedure FillListWithContacts(
-      AList  : IList;
+      AList  : IList<TContact>;
       ACount : Integer
     ); static;
 
@@ -77,16 +73,14 @@ type
       const AName   : string = ''
     ): TVirtualStringTree; static;
 
-    {$IFDEF DSHARP}
     class function CreateTVP(
             AOwner    : TComponent;
             AVST      : TVirtualStringTree = nil;
-            ASource   : IList = nil;
+            ASource   : IObjectList = nil;
             ATemplate : IDataTemplate = nil;
             AFilter   : TFilterEvent = nil;
       const AName     : string = ''
     ): TTreeViewPresenter; static;
-    {$ENDIF}
 
     class function CreateDBGridView(
             AOwner      : TComponent;
@@ -350,7 +344,7 @@ class function TDemoFactories.CreateContactList(
   const ACount: Integer): IList<TContact>;
 begin
   Result := TContacts.Create;
-  FillListWithContacts(Result.AsList, ACount);
+  FillListWithContacts(Result, ACount);
 end;
 
 class function TDemoFactories.CreateDBGrid(AOwner: TComponent;
@@ -462,9 +456,8 @@ begin
   Result := C;
 end;
 
-{$IFDEF DSHARP}
 class function TDemoFactories.CreateTVP(AOwner: TComponent;
-  AVST: TVirtualStringTree; ASource: IList; ATemplate: IDataTemplate;
+  AVST: TVirtualStringTree; ASource: IObjectList; ATemplate: IDataTemplate;
   AFilter: TFilterEvent; const AName: string): TTreeViewPresenter;
 var
   TVP: TTreeViewPresenter;
@@ -473,7 +466,6 @@ begin
   InitializeTVP(TVP, AVST, ASource, ATemplate, AFilter);
   Result := TVP;
 end;
-{$ENDIF}
 
 class function TDemoFactories.CreateVirtualDBGrid(AOwner: TComponent;
   AParent: TWinControl; ADataSource: TDataSource;
@@ -512,7 +504,7 @@ begin
   Result := VST;
 end;
 
-class procedure TDemoFactories.FillListWithContacts(AList: IList;
+class procedure TDemoFactories.FillListWithContacts(AList: IList<TContact>;
   ACount: Integer);
 var
   I : Integer;
@@ -528,7 +520,7 @@ begin
 end;
 
 class procedure TDemoFactories.InitializeTVP(ATVP: TTreeViewPresenter;
-  AVST: TVirtualStringTree; ASource: IList; ATemplate: IDataTemplate;
+  AVST: TVirtualStringTree; ASource: IObjectList; ATemplate: IDataTemplate;
   AFilter: TFilterEvent);
 var
   P : TRttiProperty;

@@ -29,7 +29,9 @@ uses
 
   DDuce.Logger,
 
-  DSharp.Windows.ColumnDefinitions, DSharp.Windows.TreeViewPresenter;
+  DSharp.Windows.ColumnDefinitions, DSharp.Windows.TreeViewPresenter,
+
+  Spring.Collections;
 
 type
   TfrmMainMenu = class(TForm)
@@ -42,7 +44,8 @@ type
     pnlTop         : TPanel;
     pnlVST         : TPanel;
     sbrMain        : TStatusBar;
-    vstDemos       : TVirtualStringTree;
+    vstDemos: TVirtualStringTree;
+    //vstDemos       : TVirtualStringTree;
 
     procedure actExecuteExecute(Sender: TObject);
     procedure actFocusFilterExecute(Sender: TObject);
@@ -159,7 +162,7 @@ begin
     AutoSize          := True;
   end;
   FTVP.TreeView := FVST;
-  FTVP.View.ItemsSource := DemoManager.ItemList;
+  FTVP.View.ItemsSource := DemoManager.ItemList as IObjectList;
   FTVP.View.Filter.Add(FTVPFilter);
   FTVP.OnDoubleClick := FTVPDoubleClick;
   //FTVP.OnKeyAction   := FTVPKeyAction;

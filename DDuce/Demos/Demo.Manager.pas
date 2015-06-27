@@ -22,9 +22,7 @@ uses
   System.Classes,
   Vcl.Forms,
 
-  Spring.Collections;
-
-  //DSharp.Collections;
+  Spring.Collections, Spring.Collections.Lists, Spring.Collections.Extensions;
 
 type
   TDemo = class(TPersistent)
@@ -46,7 +44,7 @@ type
   end;
 
   TDemoManager = record
-    class function GetItemList: IList; static;
+    class function GetItemList: IList<TDemo>; static;
     class var
       FList: IList<TDemo>;
 
@@ -60,7 +58,7 @@ type
     class constructor Create;
     class destructor Destroy;
 
-    class property ItemList: IList
+    class property ItemList: IList<TDemo>
       read GetItemList;
   end;
 
@@ -70,9 +68,6 @@ implementation
 
 uses
   System.SysUtils, System.StrUtils;
-
-type
-  TDemoList = IList<TDemo>;
 
 {$REGION 'construction and destruction'}
 class constructor TDemoManager.Create;
@@ -107,9 +102,9 @@ begin
     raise Exception.CreateFmt('Cannot create %s', [C.FormClass.ClassName]);
 end;
 
-class function TDemoManager.GetItemList: IList;
+class function TDemoManager.GetItemList: IList<TDemo>;
 begin
-  Result := FList.AsList;
+  Result := FList;
 end;
 
 class function TDemoManager.Register(AFormClass: TComponentClass;

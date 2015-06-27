@@ -30,15 +30,10 @@ uses
 
   VirtualTrees,
 
-{$IFDEF SPRING}
-  Spring, Spring.Collections,
-  Spring.Persistence.ObjectDataSet,
-{$ENDIF}
+  Spring, Spring.Collections, Spring.Persistence.ObjectDataSet,
 
-{$IFDEF DSHARP}
   DSharp.Bindings, DSharp.Bindings.VCLControls,
   DSharp.Windows.TreeViewPresenter,
-{$ENDIF}
 
   DDuce.Components.ListDataSet, DDuce.Components.GridView,
   DDuce.Components.DBGridView,
@@ -112,16 +107,13 @@ type
     procedure dscMainUpdateData(Sender: TObject);
 
   private
-    FList        : IList;
-
-    FVST         : TVirtualStringTree;
-    FDBGV        : TDBGridView;
-{$IFDEF DSHARP}
-    FTVP         : TTreeViewPresenter;
-    FBG          : TBindingGroup;
-{$ENDIF}
-    FListDataSet : TListDataSet<TContact>;
-    FObjectDataSet: TObjectDataset;
+    FList          : IList<TContact>;
+    FVST           : TVirtualStringTree;
+    FDBGV          : TDBGridView;
+    FTVP           : TTreeViewPresenter;
+    FBG            : TBindingGroup;
+    FListDataSet   : TListDataSet<TContact>;
+    FObjectDataSet : TObjectDataset;
 
     function GetDataSet: TDataSet;
     function GetDataSetEnabled: Boolean;
@@ -167,19 +159,14 @@ uses
 
 {$REGION 'construction and destruction'}
 procedure TfrmListDataSet.AfterConstruction;
-var
-  L : IList<TContact>;
 begin
   inherited AfterConstruction;
-  L := TDemoFactories.CreateContactList;
-  FList        := L.AsList;
-  FVST         := TDemoFactories.CreateVST(Self, pnlRight);
-  FDBGV        := TDemoFactories.CreateDBGridView(Self, pnlLeft, dscMain);
-  FListDataSet := TListDataset<TContact>.Create(Self, L);
-  FObjectDataSet := TObjectDataset.Create(Self);
-  {$IFDEF DSHARP}
-  FBG          := TBindingGroup.Create(Self);
-  {$ENDIF}
+  FList               := TDemoFactories.CreateContactList;
+  FVST                := TDemoFactories.CreateVST(Self, pnlRight);
+  FDBGV               := TDemoFactories.CreateDBGridView(Self, pnlLeft, dscMain);
+  FListDataSet        := TListDataset<TContact>.Create(Self, FList);
+  FObjectDataSet      := TObjectDataset.Create(Self);
+  FBG                 := TBindingGroup.Create(Self);
   FDBGV.OnHeaderClick := FDBGVHeaderClick;
   //FDBGV.OnGetSortDirection := FDBGVGe
 end;
@@ -241,8 +228,8 @@ end;
 {$REGION 'property access methods'}
 function TfrmListDataSet.GetDataSet: TDataSet;
 begin
-//  Result := FListDataSet;
-  Result := FObjectDataSet;
+  Result := FListDataSet;
+//  Result := FObjectDataSet;
 end;
 
 function TfrmListDataSet.GetDataSetEnabled: Boolean;
@@ -261,9 +248,7 @@ end;
 function TfrmListDataSet.GetPresenterEnabled: Boolean;
 begin
   Result := False;
-  {$IFDEF DSHARP}
   Result := Assigned(FTVP);
-  {$ENDIF}
 end;
 
 procedure TfrmListDataSet.SetPresenterEnabled(const Value: Boolean);
@@ -348,7 +333,7 @@ end;
 
 procedure TfrmListDataSet.ConnectDataSet;
 begin
-  FObjectDataSet.SetDataList<TContact>(FList as IList<TContact>);
+  //FObjectDataSet.SetDataList<TContact>(FList as IList<TContact>);
   DataSet.Active := True;
 
   dscMain.DataSet := DataSet;
@@ -357,10 +342,9 @@ end;
 
 procedure TfrmListDataSet.ConnectPresenter;
 begin
-  {$IFDEF DSHARP}
   if not Assigned(FTVP) then
   begin
-    FTVP := TDemoFactories.CreateTVP(Self, FVST, FList);
+    FTVP := TDemoFactories.CreateTVP(Self, FVST, FList as IObjectList);
     FVST.Header.AutoFitColumns;
     AddControlBinding(FBG, FTVP, 'View.CurrentItem.Firstname', edtFirstname);
     AddControlBinding(FBG, FTVP, 'View.CurrentItem.Lastname', edtLastname);
@@ -370,7 +354,6 @@ begin
     AddControlBinding(FBG, FTVP, 'View.CurrentItem.Country', edtCountry);
     AddControlBinding(FBG, FTVP, 'View.CurrentItem.Number', edtNumber);
   end;
-  {$ENDIF}
 end;
 
 procedure TfrmListDataSet.DisconnectDataSet;
@@ -382,10 +365,8 @@ end;
 procedure TfrmListDataSet.DisconnectPresenter;
 begin
   FVST.Clear;
-  {$IFDEF DSHARP}
   FBG.Bindings.Clear;
   FreeAndNil(FTVP);
-  {$ENDIF}
 end;
 {$ENDREGION}
 
