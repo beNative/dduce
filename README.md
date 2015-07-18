@@ -5,10 +5,10 @@
 This library introduces some new components like a generic `TDataSet` decendant which can be used on generic lists of objects and some new types and concepts leveraging the new language features that were introduced in the contemporary Delphis.
 
 The sources depend on the following libraries and components:
-  * [Spring4D](https://bitbucket.org/sglienke/spring4d)
-  * [DSharp](https://bitbucket.org/sglienke/dsharp)
-  * [Virtual treeview](https://code.google.com/p/virtual-treeview/)
-  * [NativeXML](https://code.google.com/p/simdesign/)
+  * [Spring4D](http://bitbucket.org/sglienke/spring4d)
+  * [DSharp](http://bitbucket.org/sglienke/dsharp)
+  * [Virtual treeview](http://github.com/Virtual-TreeView/Virtual-TreeView)
+  * [NativeXML](http://code.google.com/p/simdesign/)
 
 In addition some lesser known but excellent open source Delphi components were ported and extended to support the latest versions of Delphi.
 
