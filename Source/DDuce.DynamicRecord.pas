@@ -2587,12 +2587,11 @@ end;
 {$ENDREGION}
 
 {$REGION 'TDynamicField<T>'}
-{$REGION 'property access methods'}
+{$REGION 'construction and destruction'}
 procedure TDynamicField<T>.BeforeDestruction;
 begin
   Collection := nil;
   inherited;
-
 end;
 {$ENDREGION}
 
@@ -2760,7 +2759,12 @@ end;
 
 class function TRecord<T>.Create: TRecord<T>;
 begin
-  // fake constructor
+  // fake constructor that can be used to assign a new instance to a variable.
+end;
+
+constructor TRecord<T>.Create(const ARefFactory: TFunc<T>);
+begin
+  DynamicRecord.Data := ARefFactory();
 end;
 
 constructor TRecord<T>.Create(const AInstance: TValue; const AAssignProperties,
@@ -2964,10 +2968,4 @@ begin
 end;
 {$ENDREGION}
 {$ENDREGION}
-
-constructor TRecord<T>.Create(const ARefFactory: TFunc<T>);
-begin
-
-end;
-
 end.
