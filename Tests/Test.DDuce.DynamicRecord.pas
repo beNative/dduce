@@ -18,6 +18,8 @@
 
 unit Test.DDuce.DynamicRecord;
 
+{ Tests all members of the non-generic version of TRecord. }
+
 interface
 
 uses
@@ -44,20 +46,20 @@ type
     function CreateDataSet: TDataSet;
     function RetrieveRecordFunction: TRecord;
 
-    procedure PassingRecordThroughParam(ARecord: TRecord);
-    procedure PassingRecordThroughConstParam(const ARecord: TRecord);
-    procedure PassingRecordThroughVarParam(var ARecord: TRecord);
-    procedure PassingRecordThroughInterfaceParam(const ARecord: IDynamicRecord);
+    procedure PassingRecordArgumentThroughValueParam(ARecord: TRecord);
+    procedure PassingRecordArgumentThroughConstParam(const ARecord: TRecord);
+    procedure PassingRecordArgumentThroughVarParam(var ARecord: TRecord);
+    procedure PassingRecordArgumentThroughInterfaceParam(const ARecord: IDynamicRecord);
 
   public
     procedure SetUp; override;
     procedure TearDown; override;
 
   published
-    procedure TestPassingRecordAsConstTRecordParameter;
-    procedure TestPassingRecordAsVarTRecordParameter;
-    procedure TestPassingRecordAsTRecordParameter;
-    procedure TestPassingRecordAsIDynamicRecordParameter;
+    procedure TestPassingRecordArgumentThroughConstParam;
+    procedure TestPassingRecordArgumentThroughVarParam;
+    procedure TestPassingRecordArgumentThroughValueParam;
+    procedure TestPassingRecordArgumentThroughInterfaceParam;
 
     procedure TestContainsField;
     procedure TestDeleteField;
@@ -70,6 +72,7 @@ type
     procedure TestToInteger;
     procedure TestToString;
     procedure TestToBoolean;
+
     procedure TestIsBlank;
 
     procedure TestFromDataSet;
@@ -148,7 +151,7 @@ begin
   Result := DS;
 end;
 
-procedure TestTRecord.PassingRecordThroughConstParam(const ARecord: TRecord);
+procedure TestTRecord.PassingRecordArgumentThroughConstParam(const ARecord: TRecord);
 var
   S : string;
   F : IDynamicField;
@@ -162,7 +165,7 @@ begin
   //Status(S);
 end;
 
-procedure TestTRecord.PassingRecordThroughInterfaceParam(
+procedure TestTRecord.PassingRecordArgumentThroughInterfaceParam(
   const ARecord: IDynamicRecord);
 var
   S : string;
@@ -176,7 +179,7 @@ begin
   //Status(S);
 end;
 
-procedure TestTRecord.PassingRecordThroughParam(ARecord: TRecord);
+procedure TestTRecord.PassingRecordArgumentThroughValueParam(ARecord: TRecord);
 var
   S : string;
   F : IDynamicField;
@@ -193,7 +196,7 @@ begin
 //  Status(S);
 end;
 
-procedure TestTRecord.PassingRecordThroughVarParam(var ARecord: TRecord);
+procedure TestTRecord.PassingRecordArgumentThroughVarParam(var ARecord: TRecord);
 var
   S : string;
 begin
@@ -226,7 +229,7 @@ end;
 procedure TestTRecord.TestAsCommaText;
 begin
   CheckEqualsString(
-    'TestInteger = 5,TestString = Test,TestBoolean = True,TestDouble = 3,14',
+    '5,Test,True,3,14',
     FRecord.AsCommaText
   );
 end;
@@ -292,7 +295,7 @@ end;
 
 procedure TestTRecord.TestContainsField;
 begin
-  // Test contains
+  // Test ContainsField method
   CheckTrue(FRecord.ContainsField(TEST_INTEGER), TEST_INTEGER);
   CheckTrue(FRecord.ContainsField(UpperCase(TEST_INTEGER)), TEST_INTEGER);
   CheckTrue(FRecord.ContainsField(TEST_STRING), TEST_STRING);
@@ -417,7 +420,7 @@ begin
   CheckTrue(R.IsEmpty);
 end;
 
-procedure TestTRecord.TestPassingRecordAsConstTRecordParameter;
+procedure TestTRecord.TestPassingRecordArgumentThroughConstParam;
 var
   R : TRecord;
 begin
@@ -425,11 +428,11 @@ begin
   R.Data.I := 10;
   R.Data.S := 'string';
   R.Data.F := 3.14;
-  PassingRecordThroughConstParam(R);
+  PassingRecordArgumentThroughConstParam(R);
   CheckTrue(R.Data.NewValue = 'Test', 'NewValue not found');
 end;
 
-procedure TestTRecord.TestPassingRecordAsIDynamicRecordParameter;
+procedure TestTRecord.TestPassingRecordArgumentThroughInterfaceParam;
 var
   R : TRecord;
 begin
@@ -437,10 +440,10 @@ begin
   R.Data.I := 10;
   R.Data.S := 'string';
   R.Data.F := 3.14;
-  PassingRecordThroughInterfaceParam(R);
+  PassingRecordArgumentThroughInterfaceParam(R);
 end;
 
-procedure TestTRecord.TestPassingRecordAsTRecordParameter;
+procedure TestTRecord.TestPassingRecordArgumentThroughValueParam;
 var
   R : TRecord;
   I : Integer;
@@ -449,7 +452,7 @@ begin
   R.Data.I := 10;
   R.Data.S := 'string';
   R.Data.F := 3.14;
-  PassingRecordThroughParam(R);
+  PassingRecordArgumentThroughValueParam(R);
 
   for I := 0 to 100 do
   begin
@@ -458,16 +461,16 @@ begin
     R.Data.S := RandomData.CompanyName;
     R.Data.F := RandomData.Number(457);
 
-    PassingRecordThroughParam(R);
-    PassingRecordThroughConstParam(R);
-    PassingRecordThroughVarParam(R);
-    PassingRecordThroughInterfaceParam(R);
+    PassingRecordArgumentThroughValueParam(R);
+    PassingRecordArgumentThroughConstParam(R);
+    PassingRecordArgumentThroughVarParam(R);
+    PassingRecordArgumentThroughInterfaceParam(R);
   end;
 end;
 
-procedure TestTRecord.TestPassingRecordAsVarTRecordParameter;
+procedure TestTRecord.TestPassingRecordArgumentThroughVarParam;
 begin
-  PassingRecordThroughVarParam(FRecord);
+  PassingRecordArgumentThroughVarParam(FRecord);
 end;
 
 procedure TestTRecord.TestRetrieveRecord;
@@ -517,7 +520,7 @@ end;
 procedure TestTRecord.TestToInteger;
 begin
   CheckEquals(1, FRecord.ToInteger(TEST_BOOLEAN), TEST_BOOLEAN);
-  CheckEquals(5, FRecord.ToInteger(TEST_INTEGER), 5, TEST_INTEGER);
+  CheckEquals(5, FRecord.ToInteger(TEST_INTEGER), TEST_INTEGER);
   CheckEquals(0, FRecord.ToInteger(TEST_STRING), TEST_STRING);
   CheckEquals(5, FRecord.ToInteger(TEST_STRING_INTEGER), TEST_STRING_INTEGER);
   CheckEquals(0, FRecord.ToInteger(TEST_STRING_DOUBLE), TEST_STRING_DOUBLE);

@@ -1240,14 +1240,6 @@ begin
   if AMsg.MsgType = lmtEnterMethod then
     Inc(FRelativeIndent, 2);
 end;
-
-//procedure TFileChannel.Open;
-//begin
-//  if FShowHeader then
-//    FStreamWriter.WriteLine('=== Log Session Started at ' + DateTimeToStr(Now)
-//        + ' by ' + Application.name + ' ===');
-//  UpdateIdentation;
-//end;
 {$ENDREGION}
 {$ENDREGION}
 
@@ -1255,3 +1247,4 @@ initialization
   Logger := TLogger.Create;
 
 end.
+

@@ -10,6 +10,9 @@ object frmDynamicRecords: TfrmDynamicRecords
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  DesignSize = (
+    716
+    591)
   PixelsPerInch = 96
   TextHeight = 13
   object btnTestAssign: TButton
@@ -34,6 +37,7 @@ object frmDynamicRecords: TfrmDynamicRecords
     Width = 611
     Height = 201
     ActivePage = tsContactObject
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 2
     object tsContactObject: TTabSheet
       Caption = 'TContact object'
@@ -67,8 +71,8 @@ object frmDynamicRecords: TfrmDynamicRecords
       ImageIndex = 1
       ExplicitLeft = 0
       ExplicitTop = 0
-      ExplicitWidth = 401
-      ExplicitHeight = 245
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object grdTest: TDBGrid
         AlignWithMargins = True
         Left = 3
@@ -120,8 +124,8 @@ object frmDynamicRecords: TfrmDynamicRecords
       ImageIndex = 2
       ExplicitLeft = 0
       ExplicitTop = 0
-      ExplicitWidth = 401
-      ExplicitHeight = 245
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblTestClass: TLabel
         AlignWithMargins = True
         Left = 3
@@ -152,8 +156,8 @@ object frmDynamicRecords: TfrmDynamicRecords
       ImageIndex = 3
       ExplicitLeft = 0
       ExplicitTop = 0
-      ExplicitWidth = 401
-      ExplicitHeight = 245
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblTestRecord: TLabel
         AlignWithMargins = True
         Left = 3
@@ -184,8 +188,8 @@ object frmDynamicRecords: TfrmDynamicRecords
       ImageIndex = 4
       ExplicitLeft = 0
       ExplicitTop = 0
-      ExplicitWidth = 401
-      ExplicitHeight = 245
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblTestTRecord: TLabel
         AlignWithMargins = True
         Left = 3
@@ -552,6 +556,15 @@ object frmDynamicRecords: TfrmDynamicRecords
     Caption = 'TestData'
     TabOrder = 5
   end
+  object btn1: TButton
+    Left = 8
+    Top = 132
+    Width = 75
+    Height = 25
+    Caption = 'btn1'
+    TabOrder = 6
+    OnClick = btn1Click
+  end
   object aclMain: TActionList
     Left = 24
     Top = 160
@@ -578,8 +591,8 @@ object frmDynamicRecords: TfrmDynamicRecords
     Active = True
     Aggregates = <>
     Params = <>
-    Left = 32
-    Top = 128
+    Left = 56
+    Top = 176
     Data = {
       5F0400009619E0BD010000001800000005001200000003000000CA00044E616D
       650100490010000100055749445448020002001800074361706974616C010049

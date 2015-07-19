@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2014 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2015 Tim Sinaeve tim.sinaeve@gmail.com
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -39,6 +39,7 @@ type
   TestGenericTRecord = class(TTestCase)
   private
     FObject: TTestClass;
+    FRecord : TRecord<TTestClass>;
 
     function RetrieveRecord(
       const AString : string;
@@ -129,9 +130,13 @@ begin
   inherited;
   FObject := TTestClass.Create;
   FObject.TestBoolean := True;
-  FObject.TestString  := 'test';
+  FObject.TestString  := 'Test';
   FObject.TestInteger := 5;
   FObject.TestDouble  := 3.14;
+  FRecord.Data.TestBoolean := True;
+  FRecord.Data.TestString  := 'Test';
+  FRecord.Data.TestInteger := 5;
+  FRecord.Data.TestDouble  := 3.14;
 end;
 
 procedure TestGenericTRecord.TearDown;
@@ -147,10 +152,10 @@ var
   R : TRecord<TTestClass>;
   T : TRecord;
 begin
-  R.Create(FObject);
-  //Status(R.ToString);
-  T := R;
-  ProcessRecord(R);
+//  R.Create(FObject);
+//  Status(R.ToString);
+//  T := R;
+  ProcessRecord(FRecord);
 end;
 
 procedure TestGenericTRecord.TestAsDelimitedText;
@@ -214,7 +219,7 @@ end;
 
 procedure TestGenericTRecord.TestDeleteField;
 begin
-
+        // should not be possible
 end;
 
 procedure TestGenericTRecord.TestFromDataSet;
@@ -228,48 +233,88 @@ begin
 end;
 
 procedure TestGenericTRecord.TestIsBlank;
+var
+  R: TRecord<TTestClass>;
 begin
-
+  R[TEST_STRING] := '';
+  CheckTrue(R.IsBlank(TEST_STRING), TEST_STRING);
 end;
 
 procedure TestGenericTRecord.TestIsEmpty;
 begin
-
+//
 end;
 
 procedure TestGenericTRecord.TestRetrieveRecord;
 begin
-
+//
 end;
 
 procedure TestGenericTRecord.TestRetrieveRecordFunction;
 begin
-
+//
 end;
 
 procedure TestGenericTRecord.TestToBoolean;
 begin
-
+  CheckTrue(FRecord.ToBoolean(TEST_STRING, True), TEST_STRING);
+  //CheckTrue(FRecord.ToBoolean(TEST_STRING_INTEGER, True), TEST_STRING_INTEGER);
+  //CheckTrue(FRecord.ToBoolean(TEST_STRING_DOUBLE, True), TEST_STRING_DOUBLE);
+  CheckTrue(FRecord.ToBoolean(TEST_DOUBLE, True), TEST_DOUBLE);
+  CheckTrue(FRecord.ToBoolean(TEST_BOOLEAN, True), TEST_BOOLEAN);
+  CheckTrue(FRecord.ToBoolean(TEST_INTEGER, True), TEST_INTEGER);
 end;
 
 procedure TestGenericTRecord.TestToFloat;
 begin
-
+  CheckEquals(5, FRecord.ToFloat(TEST_INTEGER), TEST_INTEGER);
+  try
+    CheckTrue(IsZero(FRecord.ToFloat(TEST_STRING)), TEST_STRING);
+  except
+  end;
+  try
+    CheckTrue(IsZero(FRecord.ToFloat(TEST_BOOLEAN)), TEST_BOOLEAN);
+  except
+  end;
+  CheckEquals(3.14, FRecord.ToFloat(TEST_DOUBLE), 0.001);
 end;
 
 procedure TestGenericTRecord.TestToInteger;
 begin
+  CheckEquals(1, FRecord.ToInteger(TEST_BOOLEAN), TEST_BOOLEAN);
+  CheckEquals(5, FRecord.ToInteger(TEST_INTEGER), TEST_INTEGER);
+  CheckEquals(0, FRecord.ToInteger(TEST_STRING), TEST_STRING);
+  //CheckEquals(5, FRecord.ToInteger(TEST_STRING_INTEGER), TEST_STRING_INTEGER);
+//  CheckEquals(0, FRecord.ToInteger(TEST_STRING_DOUBLE), TEST_STRING_DOUBLE);
 
+  // float values are not rounded or trunked when converting. Conversion fails.
+  CheckEquals(0, FRecord.ToInteger(TEST_DOUBLE), TEST_DOUBLE);
 end;
 
 procedure TestGenericTRecord.TestToString;
 begin
-
+  CheckEquals('True', FRecord.ToString(TEST_BOOLEAN), TEST_BOOLEAN);
+  CheckEquals('5', FRecord.ToString(TEST_INTEGER), TEST_INTEGER);
+  CheckEquals('Test', FRecord.ToString(TEST_STRING), TEST_STRING);
+//CheckEquals('5', FRecord.ToString(TEST_STRING_INTEGER), TEST_STRING_INTEGER);
+  //CheckEquals('3,14', FRecord.ToString(TEST_STRING_DOUBLE), TEST_STRING_DOUBLE);
+  CheckEquals('3,14', FRecord.ToString(TEST_DOUBLE), TEST_DOUBLE);
 end;
 
 procedure TestGenericTRecord.TestToStrings;
+var
+  SL : TStrings;
 begin
-
+  SL := TStringList.Create;
+  try
+    FRecord.ToStrings(SL);
+    CheckEquals('True', SL.Values[TEST_BOOLEAN], TEST_BOOLEAN);
+    CheckEquals('5', SL.Values[TEST_INTEGER], TEST_INTEGER);
+    CheckEquals('Test', SL.Values[TEST_STRING], TEST_STRING);
+    CheckEquals('3,14', SL.Values[TEST_DOUBLE], TEST_DOUBLE);
+  finally
+    SL.Free;
+  end;
 end;
 
 procedure TestGenericTRecord.TestTRecordAssignments;
@@ -282,7 +327,7 @@ begin
   DR[TEST_INTEGER] := 5;
   Status(DR.ToString);
 
-  DCR := TRecord<TTestClass>.Create(FObject);
+  //DCR := TRecord<TTestClass>.Create(FObject);
   Status(DCR.ToString);
 
   // test TRecord<T> => IDynamicRecord<T>

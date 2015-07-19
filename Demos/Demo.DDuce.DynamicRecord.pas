@@ -44,7 +44,7 @@ uses
 
 type
   TTestClass = class
-  private
+  strict private
     FTestBoolean          : Boolean;
     FTestChar             : Char;
     FTestDateTime         : TDateTime;
@@ -87,7 +87,7 @@ type
 
 type
   TTestRecord = record
-  private
+  strict private
     FTestBoolean          : Boolean;
     FTestChar             : Char;
     FTestDateTime         : TDateTime;
@@ -101,6 +101,7 @@ type
     FTestNullableString   : Nullable<string>;
     FTestNullableChar     : Nullable<Char>;
 
+  public
     property TestBoolean: Boolean
       read FTestBoolean write FTestBoolean;
     property TestChar: Char
@@ -126,6 +127,8 @@ type
     property TestNullableChar: Nullable<Char>
       read FTestNullableChar write FTestNullableChar;
   end;
+
+  TManagedClass = TRecord<TTestClass>;
 
 type
   TfrmDynamicRecords = class(TForm)
@@ -166,10 +169,11 @@ type
     lblAsDelimitedText        : TLabel;
     lblToStrings              : TLabel;
     lblToString               : TLabel;
-    chkQuoteValues: TCheckBox;
-    edtDelimiter: TLabeledEdit;
-    edtQuoteChar: TLabeledEdit;
-    chkAlignValues: TCheckBox;
+    chkQuoteValues            : TCheckBox;
+    edtDelimiter              : TLabeledEdit;
+    edtQuoteChar              : TLabeledEdit;
+    chkAlignValues            : TCheckBox;
+    btn1                      : TButton;
     {$ENDREGION}
 
     procedure actTestAssignExecute(Sender: TObject);
@@ -180,22 +184,25 @@ type
     procedure edtQuoteCharChange(Sender: TObject);
     procedure edtDelimiterChange(Sender: TObject);
     procedure chkAlignValuesClick(Sender: TObject);
+    procedure btn1Click(Sender: TObject);
 
   private
-    FContact     : TContact;
-    FTestRecord  : TTestRecord;
-    FTestClass   : TTestClass;
-    FTestTRecord : TRecord;
-    FInspector   : TInspector;
-    FRecord      : TRecord;
-    FUpdate      : Boolean;
-    FStrings     : TStrings;
+    FContact          : TContact;
+    FTestRecord       : TTestRecord;
+    FTestClass        : TTestClass;
+    FTestTRecord      : TRecord;
+    FTestManagedClass : TManagedClass;
+    FInspector        : TInspector;
+    FRecord           : TRecord;
+    FUpdate           : Boolean;
+    FStrings          : TStrings;
 
     function CreateInspector(AParent : TWinControl): TInspector;
     procedure CreateContact;
     procedure CreateTestClass;
     procedure CreateTestRecord;
     procedure CreateTestTRecord;
+    procedure CreateTestManagedClass;
 
     procedure InspectorGetCellText(
           Sender : TObject;
@@ -240,7 +247,7 @@ implementation
 {$R *.dfm}
 
 uses
-  System.TypInfo,
+  System.TypInfo, Vcl.Dialogs,
 
   Demo.Utils;
 
@@ -254,6 +261,7 @@ begin
   CreateTestClass;
   CreateTestRecord;
   CreateTestTRecord;
+  CreateTestManagedClass;
   Changed;
 end;
 
@@ -264,6 +272,23 @@ begin
   FreeAndNil(FContact);
   FreeAndNil(FTestClass);
 end;
+
+procedure TfrmDynamicRecords.btn1Click(Sender: TObject);
+var
+  R : TRecord;
+  //GR : TRecord<TTestClass>;
+  GR : TManagedClass;
+begin
+  //R := FTestManagedClass; // copies data to R
+
+  GR := FTestManagedClass;
+  GR.Data.TestBoolean := False;
+
+//  R.Data.TestBoolean := False;
+  ShowMessage(FTestManagedClass.ToString);
+  ShowMessage(GR.ToString);
+end;
+
 {$ENDREGION}
 
 {$REGION 'action handlers'}
@@ -412,6 +437,11 @@ begin
   FTestClass.TestNullableString := Null;
 end;
 
+procedure TfrmDynamicRecords.CreateTestManagedClass;
+begin
+  FTestManagedClass.Data.TestBoolean := True;
+end;
+
 procedure TfrmDynamicRecords.CreateContact;
 begin
   if Assigned(FContact) then
@@ -477,8 +507,8 @@ begin
   if FUpdate then
   begin
     //lblRecord.Caption := FRecord.ToString;
-    FInspector.Rows.Count := FRecord.Count;
-    FInspector.UpdateEditText;
+    //FInspector.Rows.Count := FRecord.Count;
+    //FInspector.UpdateEditText;
     lblContact.Caption     := AsPropString(FContact);
     lblTestClass.Caption   := AsPropString(FTestClass);
     lblTestRecord.Caption  := AsFieldString(TValue.From(FTestRecord));

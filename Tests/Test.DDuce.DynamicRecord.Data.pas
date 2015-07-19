@@ -18,6 +18,8 @@
 
 unit Test.DDuce.DynamicRecord.Data;
 
+{ Data structures used for testing the DDuce.DynamicRecord unit. }
+
 interface
 
 uses
@@ -88,12 +90,12 @@ type
     FTestDouble           : Double;
     FTestInteger          : Integer;
     FTestString           : string;
-//    FTestNullableBoolean  : Nullable<Boolean>;
-//    FTestNullableDateTime : Nullable<TDateTime>;
-//    FTestNullableDouble   : Nullable<Double>;
-//    FTestNullableInteger  : Nullable<Integer>;
-//    FTestNullableString   : Nullable<string>;
-//    FTestNullableChar     : Nullable<Char>;
+    FTestNullableBoolean  : Nullable<Boolean>;
+    FTestNullableDateTime : Nullable<TDateTime>;
+    FTestNullableDouble   : Nullable<Double>;
+    FTestNullableInteger  : Nullable<Integer>;
+    FTestNullableString   : Nullable<string>;
+    FTestNullableChar     : Nullable<Char>;
 
   public
     property TestBoolean: Boolean
@@ -113,19 +115,24 @@ type
 
     property TestString: string
       read FTestString write FTestString;
-//    property TestNullableBoolean: Nullable<Boolean>
-//      read FTestNullableBoolean write FTestNullableBoolean;
-//    property TestNullableDateTime: Nullable<TDateTime>
-//      read FTestNullableDateTime write FTestNullableDateTime;
-//    property TestNullableDouble: Nullable<Double>
-//      read FTestNullableDouble write FTestNullableDouble;
-//    property TestNullableInteger: Nullable<Integer>
-//      read FTestNullableInteger write FTestNullableInteger;
-//    property TestNullableString: Nullable<string>
-//      read FTestNullableString write FTestNullableString;
 
-//    property TestNullableChar: Nullable<Char>
-//      read FTestNullableChar write FTestNullableChar;
+    property TestNullableBoolean: Nullable<Boolean>
+      read FTestNullableBoolean write FTestNullableBoolean;
+
+    property TestNullableDateTime: Nullable<TDateTime>
+      read FTestNullableDateTime write FTestNullableDateTime;
+
+    property TestNullableDouble: Nullable<Double>
+      read FTestNullableDouble write FTestNullableDouble;
+
+    property TestNullableInteger: Nullable<Integer>
+      read FTestNullableInteger write FTestNullableInteger;
+
+    property TestNullableString: Nullable<string>
+      read FTestNullableString write FTestNullableString;
+
+    property TestNullableChar: Nullable<Char>
+      read FTestNullableChar write FTestNullableChar;
   end;
 
 implementation
