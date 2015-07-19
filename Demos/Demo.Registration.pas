@@ -30,6 +30,7 @@ uses
   Demo.DDuce.PropertyInspector,
   Demo.DDuce.Reflect,
   Demo.DDuce.DynamicRecord,
+  Demo.DDuce.DBGridView,
 
   Demo.Manager;
 
@@ -41,7 +42,7 @@ begin
   DemoManager.Register(TfrmReflect, 'Reflect');
   DemoManager.Register(TfrmVirtualDBGrid, 'VirtualDBGrid');
   DemoManager.Register(TfrmScopedReferences, 'Scoped references');
-  //DemoManager.Register(TfrmDBGridView, 'DBGridView');
+  DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
   DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
 end;
