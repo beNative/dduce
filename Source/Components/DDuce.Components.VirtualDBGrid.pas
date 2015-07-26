@@ -24,6 +24,8 @@
   Changes by Tim Sinaeve:
     - Support for VTV 5.0 and later added
     - Made indicator column fixed.
+
+    - Support VTV  6.0
 }
 
 unit DDuce.Components.VirtualDBGrid;
@@ -516,9 +518,7 @@ type
     procedure DoAfterCellPaint(Canvas: TCanvas; Node: PVirtualNode;
       Column: TColumnIndex; CellRect: TRect); override;
     procedure DoFreeNode(Node: PVirtualNode); override;
-    procedure DoGetText(Node: PVirtualNode; Column: TColumnIndex;
-      TextType: TVSTTextType;
-      var Text: string); override;
+    procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
     procedure DoInitNode(Parent, Node: PVirtualNode;
       var InitStates: TVirtualNodeInitStates); override;
     procedure DoNewText(Node: PVirtualNode; Column: TColumnIndex;
@@ -1310,13 +1310,11 @@ var
   I: Integer;
 begin
   Result := Null;
-
-  if (FieldName <> '') then
+  if FieldName <> '' then
   begin
-    for I := 0 to FieldsCount - 1 do
+    for I := 1 to FieldsCount - 1 do
     begin
-      if UpperCase(Fields[I].FieldName) = UpperCase(FieldName)
-      then
+      if UpperCase(Fields[I].FieldName) = UpperCase(FieldName) then
       begin
         Result := PDBFieldValueRec(FList[I])^.FieldValue;
         Break;
@@ -2402,29 +2400,53 @@ begin
   inherited DoFreeNode(Node);
 end;
 
-procedure TCustomVirtualDBGrid.DoGetText(Node: PVirtualNode;
-  Column: TColumnIndex; TextType: TVSTTextType; var Text: string);
+procedure TCustomVirtualDBGrid.DoGetText(
+  var pEventArgs: TVSTGetCellTextEventArgs);
 var
   Data      : PNodeData;
   DBColumn  : TVirtualDBTreeColumn;
   FieldValue: Variant;
 begin
-  if Column <= NoColumn then
+  if pEventArgs.Column <= NoColumn then
     Exit;
-  DBColumn := TVirtualDBTreeColumn(Header.Columns[Column]);
+  DBColumn := TVirtualDBTreeColumn(Header.Columns[pEventArgs.Column]);
   if (DBColumn.ColumnType = ctIndicator) or (DBColumn.Style = vsOwnerDraw) then
     Exit;
-  Data := InternalGetNodeData(Node);
+  Data := InternalGetNodeData(pEventArgs.Node);
   if IsDataOk(Data) then
   begin
     //todo: add a Column > FieldIndex map to avoid using fieldname for the data lookup
     if DBColumn.ColumnType = ctDBField then
-      FieldValue := Data.RecordData.FieldValue[DBColumn.FieldName]
+      //FieldValue := Data.RecordData.FieldValue[DBColumn.FieldName]
     else
       FieldValue := Data.RecordData.FieldValueByIdx[DBColumn.Index];
-    Text := VarToStr(FieldValue);
+    pEventArgs.CellText := VarToStr(FieldValue);
   end;
 end;
+
+//procedure TCustomVirtualDBGrid.DoGetText(Node: PVirtualNode;
+//  Column: TColumnIndex; TextType: TVSTTextType; var Text: string);
+//var
+//  Data      : PNodeData;
+//  DBColumn  : TVirtualDBTreeColumn;
+//  FieldValue: Variant;
+//begin
+//  if Column <= NoColumn then
+//    Exit;
+//  DBColumn := TVirtualDBTreeColumn(Header.Columns[Column]);
+//  if (DBColumn.ColumnType = ctIndicator) or (DBColumn.Style = vsOwnerDraw) then
+//    Exit;
+//  Data := InternalGetNodeData(Node);
+//  if IsDataOk(Data) then
+//  begin
+//    //todo: add a Column > FieldIndex map to avoid using fieldname for the data lookup
+//    if DBColumn.ColumnType = ctDBField then
+//      FieldValue := Data.RecordData.FieldValue[DBColumn.FieldName]
+//    else
+//      FieldValue := Data.RecordData.FieldValueByIdx[DBColumn.Index];
+//    Text := VarToStr(FieldValue);
+//  end;
+//end;
 
 procedure TCustomVirtualDBGrid.DoInitNode(Parent, Node: PVirtualNode;
   var InitStates: TVirtualNodeInitStates);

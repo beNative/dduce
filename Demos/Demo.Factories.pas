@@ -29,7 +29,7 @@ uses
 
   Spring, Spring.Collections, Spring.Collections.Extensions, Spring.Collections.Lists,
 {$IFDEF DSHARP}
-  DSharp.Windows.TreeViewPresenter, //DSharp.Collections,
+  DSharp.Windows.TreeViewPresenter,
   DSharp.Bindings.Collections, DSharp.Core.DataTemplates,
 {$ENDIF}
 

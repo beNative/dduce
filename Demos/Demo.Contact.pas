@@ -26,10 +26,7 @@ interface
 uses
 {$IFDEF DSHARP}
   DSharp.Core.PropertyChangedBase, // TPropertyChangedBase
-
   DSharp.Bindings.Notifications,   // INotifyPropertyChanged
-
-  //DSharp.Collections,
   DSharp.Collections.ObservableCollection
 {$ELSE}
   {$IFDEF SPRING}

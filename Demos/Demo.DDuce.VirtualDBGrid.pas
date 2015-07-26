@@ -36,7 +36,7 @@ uses
   DDuce.Components.VirtualDBGrid, DDuce.Components.ListDataSet,
   DDuce.Components.PropertyInspector,
 
-  Demo.Contact;
+  Demo.Contact, System.ImageList;
 
 type
   TfrmVirtualDBGrid = class(TForm)
@@ -67,7 +67,7 @@ type
 implementation
 
 uses
-  Demo.Factories;
+  Demo.Data, Demo.Factories;
 
 {$R *.dfm}
 
@@ -77,6 +77,7 @@ begin
   inherited;
   FList           := TDemoFactories.CreateContactList(1000);
   FDataSet        := TListDataset<TContact>.Create(Self, FList);
+  //FDataSet := Demo.Data.Data.DataSet;
   dscMain.DataSet := FDataSet;
   FVDBG           := TDemoFactories.CreateVirtualDBGrid(Self, pnlLeft, dscMain);
   FInspector      := TDemoFactories.CreateInspector(Self, pnlRight, FVDBG);

@@ -112,8 +112,7 @@ type
     procedure DoOnAfterLog; virtual;
     procedure DoAfterCellPaint(Canvas: TCanvas; Node: PVirtualNode;
       Column: TColumnIndex; CellRect: TRect); override;
-    procedure DoGetText(Node: PVirtualNode; Column: TColumnIndex;
-      TextType: TVSTTextType; var Text: string); override;
+    procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
     procedure DoFreeNode(Node: PVirtualNode); override;
     function DoGetImageIndex(Node: PVirtualNode; Kind: TVTImageKind;
       Column: TColumnIndex; var Ghosted: Boolean; var Index: Integer):
@@ -269,15 +268,12 @@ begin
   Result := inherited DoGetImageIndex(Node, Kind, Column, Ghosted, Index);
 end;
 
-procedure TLogTree.DoGetText(Node: PVirtualNode; Column: TColumnIndex;
-  TextType: TVSTTextType; var Text: string);
+procedure TLogTree.DoGetText(var pEventArgs: TVSTGetCellTextEventArgs);
 begin
-  inherited;
-
-  if (TextType = ttNormal) and ((Column <= 0) or (not FHTMLSupport)) then
-    Text := GetCellText(Node, Column)
+  if (pEventArgs.Column <= 0) or (not FHTMLSupport) then
+    pEventArgs.CellText := GetCellText(pEventArgs.Node, pEventArgs.Column)
   else
-    Text := '';
+    pEventArgs.CellText := '';
 end;
 
 procedure TLogTree.DoInitNode(Parent, Node: PVirtualNode;

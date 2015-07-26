@@ -215,9 +215,9 @@ type
       var Value  : string
     );
     procedure InspectorGetEditStyle(
-          Sender  : TObject;
-          Cell    : TGridCell;
-      var Style   : TGridEditStyle
+          Sender : TObject;
+          Cell   : TGridCell;
+      var Style  : TGridEditStyle
     );
     procedure InspectorGetEditText(
           Sender : TObject;
@@ -247,7 +247,8 @@ implementation
 {$R *.dfm}
 
 uses
-  System.TypInfo, Vcl.Dialogs,
+  System.TypInfo,
+  Vcl.Dialogs,
 
   Demo.Utils;
 

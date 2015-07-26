@@ -24,13 +24,13 @@ interface
 
 uses
   Winapi.Windows,
-  System.SysUtils, System.Classes, System.Actions,
+  System.SysUtils, System.Classes, System.Actions, System.ImageList,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ComCtrls, Vcl.ImgList,
   Vcl.StdCtrls, Vcl.ActnList, Vcl.ExtCtrls, Vcl.CheckLst,
   Data.DB,
 
   DDuce.Components.GridView, DDuce.Components.DBGridView,
-  DDuce.Components.LogTree, System.ImageList;
+  DDuce.Components.LogTree;
 
 type
   TfrmDBGridView = class(TForm)
@@ -239,7 +239,9 @@ implementation
 {$R *.dfm}
 
 uses
-  System.TypInfo;
+  System.TypInfo,
+
+  Demo.Data;
 
 var
   ProcByLevel: string;
@@ -248,7 +250,7 @@ var
 procedure TfrmDBGridView.AfterConstruction;
 begin
   inherited;
-  dscMain.DataSet := DataSet;
+  dscMain.DataSet := Demo.Data.Data.DataSet;
   CreateDBGridView;
 
   FVLT := TLogTree.Create(Self);

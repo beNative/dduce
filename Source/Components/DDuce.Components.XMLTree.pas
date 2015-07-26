@@ -364,8 +364,9 @@ type
     procedure DoInitNode(Parent, ANode: PVirtualNode;
       var InitStates: TVirtualNodeInitStates); override;
     procedure DoFreeNode(ANode: PVirtualNode); override;
-    procedure DoGetText(ANode: PVirtualNode; Column: TColumnIndex;
-      TextType: TVSTTextType; var Text: string); override;
+
+//    procedure DoGetText(ANode: PVirtualNode; Column: TColumnIndex;
+//      TextType: TVSTTextType; var Text: string); override;
     function DoCreateEditor(Node: PVirtualNode; Column: TColumnIndex): IVTEditLink; override;
     function DoGetImageIndex(ANode: PVirtualNode; Kind: TVTImageKind;
       Column: TColumnIndex; var Ghosted: Boolean;
@@ -402,6 +403,7 @@ type
     procedure InitializeHeader;
     // message handlers
     procedure WMStartEditing(var AMessage: TMessage); message WM_STARTEDITING;
+    procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
 
   public
     procedure AfterConstruction; override;
@@ -445,7 +447,9 @@ type
       AAddBreak    : Boolean = False;
       AXMLNode     : TXmlNode = nil
     );
+
     procedure DeleteNode(Node: PVirtualNode; Reindex: Boolean = True);
+
 
     property XMLDocument: TNativeXml
       read GetXMLDocument;
@@ -1081,9 +1085,16 @@ begin
     ND.XMLPath  := '';
     ND.NodeType := ntUnknown;
   end;
-  inherited;
+  inherited DoFreeNode(ANode);
 end;
 
+procedure TXMLTree.DoGetText(var pEventArgs: TVSTGetCellTextEventArgs);
+begin
+  inherited DoGetText(pEventArgs);
+
+end;
+
+(*
 procedure TXMLTree.DoGetText(ANode: PVirtualNode; Column: TColumnIndex;
   TextType: TVSTTextType; var Text: string);
 var
@@ -1150,6 +1161,7 @@ begin
   inherited;
   //Logger.ExitMethod(Self, 'DoGetText');
 end;
+*)
 
 function TXMLTree.DoCreateEditor(Node: PVirtualNode; Column: TColumnIndex)
   : IVTEditLink;
@@ -1708,11 +1720,11 @@ begin
     end;
     ntElement:
     begin
-      N :=  XMLDocument.NodeNewTextType(
-        UTF8String(AName),
-        UTF8String(AValue),
-        xeElement
-      );
+//      N :=  XMLDocument.NodeNewTextType(
+//        UTF8String(AName),
+//        UTF8String(AValue),
+//        xeElement
+//      );
       //AXmlNode.NodeAdd(N);
       AXmlNode.NodeAdd(N);
       //Parent.NodeNew(AName).Value := AValue;
@@ -1731,13 +1743,13 @@ begin
           //ParentNode.InsertBefore(OwnerDocument.CreateComment(Value), AXMLNode)
         //else
           //AppendChild(Document.NodeNewType(Value, xeComment));
-      N :=  XMLDocument.NodeNewType(UTF8String(AValue), xeComment);
+      //N :=  XMLDocument.NodeNewType(UTF8String(AValue), xeComment);
       //AXmlNode.NodeAdd(N);
       AXmlNode.NodeAdd(N);
     end;
     ntText:
     begin
-      N :=  XMLDocument.NodeNewType(UTF8String(AValue), xeQuotedText);
+      //N :=  XMLDocument.NodeNewType(UTF8String(AValue), xeQuotedText);
       //AXmlNode.NodeAdd(N);
       AXmlNode.NodeAdd(N);
     end;
@@ -1757,7 +1769,7 @@ end;
 procedure TXMLTree.DeleteNode(Node: PVirtualNode; Reindex: Boolean);
 begin
   GetXMLNode(Node).Delete;
-  inherited;
+
 end;
 
 { Calculates the path to the given xml node. }

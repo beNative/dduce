@@ -588,12 +588,7 @@ object frmDynamicRecords: TfrmDynamicRecords
     end
   end
   object dsTest: TClientDataSet
-    Active = True
-    Aggregates = <>
-    Params = <>
-    Left = 56
-    Top = 176
-    Data = {
+    PersistDataPacket.Data = {
       5F0400009619E0BD010000001800000005001200000003000000CA00044E616D
       650100490010000100055749445448020002001800074361706974616C010049
       001000010005574944544802000200180009436F6E74696E656E740100490010
@@ -630,6 +625,11 @@ object frmDynamicRecords: TfrmDynamicRecords
       00000000608005410000000048E746410000000956656E657A75656C61074361
       72616361730D536F75746820416D6572696361000000005ED52B410000000092
       C97241}
+    Active = True
+    Aggregates = <>
+    Params = <>
+    Left = 56
+    Top = 176
   end
   object dscTest: TDataSource
     DataSet = dsTest
