@@ -266,7 +266,7 @@ type
     function GetFieldType(const FieldName: string) : TFieldType;
     function GetFieldsCount: Integer; inline;
     function GetIndidicatorByIdx(Index: Integer): Boolean;
-    function GetFielFlag(Index: Integer): Byte;
+    function GetFieldFlag(Index: Integer): Byte;
 
   public
     constructor Create; virtual;
@@ -309,7 +309,7 @@ type
     property FieldType[const FieldName: string]: TFieldType
       read GetFieldType;
     property FieldFlag[Index: Integer]: Byte
-      read GetFielFlag;
+      read GetFieldFlag;
     property Fields[Index: Integer]: TDBFieldValueRec
       read GetField write SetField;
     property FieldsCount: Integer
@@ -1210,7 +1210,7 @@ begin
     Result := (PDBFieldValueRec(FList[Index])^.FieldFlag = ffIndicator);
 end;
 
-function TRecordData.GetFielFlag(Index: Integer): Byte;
+function TRecordData.GetFieldFlag(Index: Integer): Byte;
 begin
   Result := ffUndeclared;
 

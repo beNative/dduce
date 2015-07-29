@@ -77,7 +77,6 @@ begin
   inherited;
   FList           := TDemoFactories.CreateContactList(1000);
   FDataSet        := TListDataset<TContact>.Create(Self, FList);
-  //FDataSet := Demo.Data.Data.DataSet;
   dscMain.DataSet := FDataSet;
   FVDBG           := TDemoFactories.CreateVirtualDBGrid(Self, pnlLeft, dscMain);
   FInspector      := TDemoFactories.CreateInspector(Self, pnlRight, FVDBG);

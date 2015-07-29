@@ -100,7 +100,6 @@ object frmVirtualDBGrid: TfrmVirtualDBGrid
     end
   end
   object dscMain: TDataSource
-    DataSet = dmData.cdsMain
     Left = 312
     Top = 176
   end

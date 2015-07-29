@@ -38,13 +38,13 @@ uses
 procedure RegisterDemos;
 begin
   DemoManager.Register(TfrmListDataSet, 'ListDataSet');
-  DemoManager.Register(TfrmXMLTree, 'XMLTree');
-  DemoManager.Register(TfrmReflect, 'Reflect');
-  DemoManager.Register(TfrmVirtualDBGrid, 'VirtualDBGrid');
   DemoManager.Register(TfrmScopedReferences, 'Scoped references');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
   DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
+  DemoManager.Register(TfrmReflect, 'Reflect');
+//  DemoManager.Register(TfrmXMLTree, 'XMLTree');
+//  DemoManager.Register(TfrmVirtualDBGrid, 'VirtualDBGrid');
 end;
 {$ENDREGION}
 

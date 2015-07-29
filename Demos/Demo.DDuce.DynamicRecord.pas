@@ -16,8 +16,14 @@
 
 unit Demo.DDuce.DynamicRecord;
 
+{ This form demonstrates the basics of the TRecord data structure.
+  It also features the following components:
+    - TInspector (DDuce.Components.Inspector)
+ }
+
 {
   TODO: check initialization of records
+  - TRecord<T>
   - using ZeroMem
   - using RTTI on record fields (using Default())
 }
@@ -27,12 +33,12 @@ interface
 {$I ..\Source\DDuce.inc}
 
 uses
+  Winapi.Windows,
   System.SysUtils, System.Variants, System.Classes, System.Actions, System.Rtti,
   Vcl.Controls, Vcl.Forms, Vcl.StdCtrls, Vcl.ActnList, Vcl.Grids, Vcl.DBGrids,
   Vcl.ComCtrls, Vcl.ExtCtrls,
   Data.DB,
   Datasnap.DBClient,
-  Winapi.Windows,
 
   Spring,
 
@@ -61,26 +67,37 @@ type
   public
     property TestBoolean: Boolean
       read FTestBoolean write FTestBoolean;
+
     property TestChar: Char
       read FTestChar write FTestChar;
+
     property TestDateTime: TDateTime
       read FTestDateTime write FTestDateTime;
+
     property TestDouble: Double
       read FTestDouble write FTestDouble;
+
     property TestInteger: Integer
       read FTestInteger write FTestInteger;
+
     property TestNullableBoolean: Nullable<Boolean>
       read FTestNullableBoolean write FTestNullableBoolean;
+
     property TestNullableDateTime: Nullable<TDateTime>
       read FTestNullableDateTime write FTestNullableDateTime;
+
     property TestNullableDouble: Nullable<Double>
       read FTestNullableDouble write FTestNullableDouble;
+
     property TestNullableInteger: Nullable<Integer>
       read FTestNullableInteger write FTestNullableInteger;
+
     property TestNullableString: Nullable<string>
       read FTestNullableString write FTestNullableString;
+
     property TestString: string
       read FTestString write FTestString;
+
     property TestNullableChar: Nullable<Char>
       read FTestNullableChar write FTestNullableChar;
   end;
@@ -104,31 +121,40 @@ type
   public
     property TestBoolean: Boolean
       read FTestBoolean write FTestBoolean;
+
     property TestChar: Char
       read FTestChar write FTestChar;
+
     property TestDateTime: TDateTime
       read FTestDateTime write FTestDateTime;
+
     property TestDouble: Double
       read FTestDouble write FTestDouble;
+
     property TestInteger: Integer
       read FTestInteger write FTestInteger;
+
     property TestNullableBoolean: Nullable<Boolean>
       read FTestNullableBoolean write FTestNullableBoolean;
+
     property TestNullableDateTime: Nullable<TDateTime>
       read FTestNullableDateTime write FTestNullableDateTime;
+
     property TestNullableDouble: Nullable<Double>
       read FTestNullableDouble write FTestNullableDouble;
+
     property TestNullableInteger: Nullable<Integer>
       read FTestNullableInteger write FTestNullableInteger;
+
     property TestNullableString: Nullable<string>
       read FTestNullableString write FTestNullableString;
+
     property TestString: string
       read FTestString write FTestString;
+
     property TestNullableChar: Nullable<Char>
       read FTestNullableChar write FTestNullableChar;
   end;
-
-  TManagedClass = TRecord<TTestClass>;
 
 type
   TfrmDynamicRecords = class(TForm)
@@ -173,25 +199,22 @@ type
     edtDelimiter              : TLabeledEdit;
     edtQuoteChar              : TLabeledEdit;
     chkAlignValues            : TCheckBox;
-    btn1                      : TButton;
     {$ENDREGION}
 
     procedure actTestAssignExecute(Sender: TObject);
-    procedure dscTestDataChange(Sender: TObject; Field: TField);
-    procedure actToStringsExecute(Sender: TObject);
     procedure actTestDataExecute(Sender: TObject);
-    procedure chkQuoteValuesClick(Sender: TObject);
-    procedure edtQuoteCharChange(Sender: TObject);
-    procedure edtDelimiterChange(Sender: TObject);
+    procedure actToStringsExecute(Sender: TObject);
     procedure chkAlignValuesClick(Sender: TObject);
-    procedure btn1Click(Sender: TObject);
+    procedure chkQuoteValuesClick(Sender: TObject);
+    procedure dscTestDataChange(Sender: TObject; Field: TField);
+    procedure edtDelimiterChange(Sender: TObject);
+    procedure edtQuoteCharChange(Sender: TObject);
 
   private
     FContact          : TContact;
     FTestRecord       : TTestRecord;
     FTestClass        : TTestClass;
     FTestTRecord      : TRecord;
-    FTestManagedClass : TManagedClass;
     FInspector        : TInspector;
     FRecord           : TRecord;
     FUpdate           : Boolean;
@@ -202,7 +225,6 @@ type
     procedure CreateTestClass;
     procedure CreateTestRecord;
     procedure CreateTestTRecord;
-    procedure CreateTestManagedClass;
 
     procedure InspectorGetCellText(
           Sender : TObject;
@@ -255,41 +277,23 @@ uses
 {$REGION 'construction and destruction'}
 procedure TfrmDynamicRecords.AfterConstruction;
 begin
-  inherited;
+  inherited AfterConstruction;
   FInspector := CreateInspector(pnlRecordInspector);
   FStrings := TStringList.Create;
   CreateContact;
   CreateTestClass;
   CreateTestRecord;
   CreateTestTRecord;
-  CreateTestManagedClass;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.BeforeDestruction;
 begin
-  inherited;
+  inherited BeforeDestruction;
   FreeAndNil(FStrings);
   FreeAndNil(FContact);
   FreeAndNil(FTestClass);
 end;
-
-procedure TfrmDynamicRecords.btn1Click(Sender: TObject);
-var
-  R : TRecord;
-  //GR : TRecord<TTestClass>;
-  GR : TManagedClass;
-begin
-  //R := FTestManagedClass; // copies data to R
-
-  GR := FTestManagedClass;
-  GR.Data.TestBoolean := False;
-
-//  R.Data.TestBoolean := False;
-  ShowMessage(FTestManagedClass.ToString);
-  ShowMessage(GR.ToString);
-end;
-
 {$ENDREGION}
 
 {$REGION 'action handlers'}
@@ -438,11 +442,6 @@ begin
   FTestClass.TestNullableString := Null;
 end;
 
-procedure TfrmDynamicRecords.CreateTestManagedClass;
-begin
-  FTestManagedClass.Data.TestBoolean := True;
-end;
-
 procedure TfrmDynamicRecords.CreateContact;
 begin
   if Assigned(FContact) then
@@ -504,12 +503,11 @@ end;
 
 procedure TfrmDynamicRecords.UpdateActions;
 begin
-  inherited;
   if FUpdate then
   begin
-    //lblRecord.Caption := FRecord.ToString;
-    //FInspector.Rows.Count := FRecord.Count;
-    //FInspector.UpdateEditText;
+    FInspector.Rows.Count := FRecord.Count;
+    FInspector.UpdateEditText;
+    FInspector.Invalidate;
     lblContact.Caption     := AsPropString(FContact);
     lblTestClass.Caption   := AsPropString(FTestClass);
     lblTestRecord.Caption  := AsFieldString(TValue.From(FTestRecord));
@@ -526,6 +524,7 @@ begin
     lblToStrings.Caption := FStrings.Text;
     FUpdate := False;
   end;
+  inherited UpdateActions;
 end;
 {$ENDREGION}
 

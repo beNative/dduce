@@ -367,6 +367,7 @@ type
 
 //    procedure DoGetText(ANode: PVirtualNode; Column: TColumnIndex;
 //      TextType: TVSTTextType; var Text: string); override;
+    procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
     function DoCreateEditor(Node: PVirtualNode; Column: TColumnIndex): IVTEditLink; override;
     function DoGetImageIndex(ANode: PVirtualNode; Kind: TVTImageKind;
       Column: TColumnIndex; var Ghosted: Boolean;
@@ -403,7 +404,6 @@ type
     procedure InitializeHeader;
     // message handlers
     procedure WMStartEditing(var AMessage: TMessage); message WM_STARTEDITING;
-    procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
 
   public
     procedure AfterConstruction; override;
@@ -1089,14 +1089,6 @@ begin
 end;
 
 procedure TXMLTree.DoGetText(var pEventArgs: TVSTGetCellTextEventArgs);
-begin
-  inherited DoGetText(pEventArgs);
-
-end;
-
-(*
-procedure TXMLTree.DoGetText(ANode: PVirtualNode; Column: TColumnIndex;
-  TextType: TVSTTextType; var Text: string);
 var
   S  : UTF8String;
   ND : PNodeData;
@@ -1107,15 +1099,15 @@ begin
   { TODO -oTS : Not sure why we get here when the component is destroyed. }
   if csDestroying in ComponentState then
     Exit;
-  ND := GetData(ANode);
+  ND := GetData(pEventArgs.Node);
   if Assigned(ND) and Assigned(ND.XMLNode) then
   begin
-    if Column = Header.MainColumn then
+    if pEventArgs.Column = Header.MainColumn then
     begin
       if ND.NodeType = ntComment then
       begin
         S := ND.XMLNode.Value;
-        ANode.States := ANode.States + [vsHeightMeasured];
+        pEventArgs.Node.States := pEventArgs.Node.States + [vsHeightMeasured];
       end
       else
       begin
@@ -1137,7 +1129,7 @@ begin
         //end
       end;
     end
-    else if Column = FValueColumn then
+    else if pEventArgs.Column = FValueColumn then
     begin
       if (ND.NodeType <> ntComment)
         and (ND.XMLNode.NodeCount > 0)
@@ -1149,7 +1141,7 @@ begin
       if ND.NodeType = ntComment then
       begin
         S := '';
-        ANode.States := ANode.States + [vsHeightMeasured];
+        pEventArgs.Node.States := pEventArgs.Node.States + [vsHeightMeasured];
       end
       else
       begin
@@ -1157,11 +1149,8 @@ begin
       end;
     end;
   end;
-  Text := string(S);
-  inherited;
-  //Logger.ExitMethod(Self, 'DoGetText');
+  pEventArgs.CellText := string(S);
 end;
-*)
 
 function TXMLTree.DoCreateEditor(Node: PVirtualNode; Column: TColumnIndex)
   : IVTEditLink;
@@ -1902,6 +1891,9 @@ begin
   inherited;
 end;
 {$ENDREGION}
+
+initialization
+  Logger.Channels.Add(TIPCChannel.Create);
 
 end.
 

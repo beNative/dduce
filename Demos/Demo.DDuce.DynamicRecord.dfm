@@ -69,10 +69,6 @@ object frmDynamicRecords: TfrmDynamicRecords
     object tsDataSet: TTabSheet
       Caption = 'DataSet'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grdTest: TDBGrid
         AlignWithMargins = True
         Left = 3
@@ -122,10 +118,6 @@ object frmDynamicRecords: TfrmDynamicRecords
     object tsTestClass: TTabSheet
       Caption = 'TTestClass'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblTestClass: TLabel
         AlignWithMargins = True
         Left = 3
@@ -154,10 +146,6 @@ object frmDynamicRecords: TfrmDynamicRecords
     object tsTestRecord: TTabSheet
       Caption = 'TTestRecord'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblTestRecord: TLabel
         AlignWithMargins = True
         Left = 3
@@ -186,10 +174,6 @@ object frmDynamicRecords: TfrmDynamicRecords
     object tsTRecord: TTabSheet
       Caption = 'TRecord'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblTestTRecord: TLabel
         AlignWithMargins = True
         Left = 3
@@ -328,7 +312,7 @@ object frmDynamicRecords: TfrmDynamicRecords
           end>
         RowCollection = <
           item
-            Value = 25.113906109260310000
+            Value = 25.113906109260300000
           end
           item
             Value = 24.947071570572670000
@@ -555,15 +539,6 @@ object frmDynamicRecords: TfrmDynamicRecords
     Action = actTestData
     Caption = 'TestData'
     TabOrder = 5
-  end
-  object btn1: TButton
-    Left = 8
-    Top = 132
-    Width = 75
-    Height = 25
-    Caption = 'btn1'
-    TabOrder = 6
-    OnClick = btn1Click
   end
   object aclMain: TActionList
     Left = 24

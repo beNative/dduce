@@ -278,7 +278,7 @@ end;
 
 procedure TfrmDBGridView.actInspectComponentExecute(Sender: TObject);
 begin
-//  InspectComponent(FDBGV);
+  //InspectComponent(FDBGV);
 end;
 {$ENDREGION}
 
