@@ -50,10 +50,6 @@ object frmDBGridView: TfrmDBGridView
     object tsDBGridViewEvents: TTabSheet
       Caption = 'DBGridView Events'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlDBGridViewEvents: TPanel
         Left = 0
         Top = 0
@@ -158,10 +154,6 @@ object frmDBGridView: TfrmDBGridView
     object tsDataSourceEvents: TTabSheet
       Caption = 'DataSource Events'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlDataSourceEvents: TPanel
         Left = 0
         Top = 0
@@ -271,6 +263,7 @@ object frmDBGridView: TfrmDBGridView
     object actInspectComponent: TAction
       Caption = 'Inspect component (CTRL-F1)'
       ShortCut = 16496
+      Visible = False
       OnExecute = actInspectComponentExecute
     end
     object actAutoSizeColumns: TAction

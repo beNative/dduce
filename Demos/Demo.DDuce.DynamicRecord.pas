@@ -211,14 +211,14 @@ type
     procedure edtQuoteCharChange(Sender: TObject);
 
   private
-    FContact          : TContact;
-    FTestRecord       : TTestRecord;
-    FTestClass        : TTestClass;
-    FTestTRecord      : TRecord;
-    FInspector        : TInspector;
-    FRecord           : TRecord;
-    FUpdate           : Boolean;
-    FStrings          : TStrings;
+    FContact     : TContact;
+    FTestRecord  : TTestRecord;
+    FTestClass   : TTestClass;
+    FTestTRecord : TRecord;
+    FInspector   : TInspector;
+    FRecord      : TRecord;
+    FUpdate      : Boolean;
+    FStrings     : TStrings;
 
     function CreateInspector(AParent : TWinControl): TInspector;
     procedure CreateContact;

@@ -18,7 +18,11 @@ unit Demo.DDuce.ListDataSet;
 
 {$I ..\Source\DDuce.inc}
 
-{ Demonstrates TListDataSet<T> }
+{ Demonstrates TListDataSet<T> and the following components:
+    - TDBGridView - DDuce.Components.DBGridView
+    - DSharp bindings
+    - Spring ObjectDataSet
+}
 
 interface
 

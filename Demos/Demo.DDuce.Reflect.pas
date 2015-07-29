@@ -43,10 +43,12 @@ implementation
 uses
   DDuce.Reflect;
 
+{$REGION 'construction and destruction'}
 procedure TfrmReflect.AfterConstruction;
 begin
-  inherited;
+  inherited AfterConstruction;
   mmoMain.Text := Reflect.Properties(Self).ToString;
 end;
+{$ENDREGION}
 
 end.

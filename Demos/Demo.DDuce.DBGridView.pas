@@ -212,7 +212,6 @@ type
     procedure grdDBGVClearMultiSelect(Sender: TObject);
     procedure grdDBGVRowMultiSelect(Sender: TObject; Row: Integer;
       var Select: Boolean);
-
     {$ENDREGION}
 
   protected
@@ -241,7 +240,7 @@ implementation
 uses
   System.TypInfo,
 
-  Demo.Data;
+  Demo.Data, Demo.Factories;
 
 var
   ProcByLevel: string;
@@ -1059,15 +1058,16 @@ end;
 
 procedure TfrmDBGridView.CreateDBGridView;
 begin
-  FDBGV := TDBGridView.Create(Self);
+  FDBGV := TDemoFactories.CreateDBGridView(
+    Self,
+    tsDBGridView,
+    dscMain,
+    'grdDBGV'
+  );
   with FDBGV do
   begin
-    Name             := 'grdDBGV';
-    Parent           := tsDBGridView;
     AlignWithMargins := True;
-    Align            := alClient;
     CursorKeys       := [gkArrows, gkTabs, gkReturn, gkMouse, gkMouseWheel];
-    DataSource       := dscMain;
     DoubleBuffered   := True;
     ParentFont       := False;
     ParentShowHint   := False;
@@ -1076,7 +1076,6 @@ begin
     TabOrder         := 0;
     FitColsToClient  := False;
     MultiSelect      := False;
-
     ConnectEvents;
   end;
 end;
@@ -1088,37 +1087,37 @@ end;
 
 procedure TfrmDBGridView.AddToLog(const AString, AInfo: string; AColor: TColor;
   AObject: TObject);
-//var
-//  S : string;
-//  T : string;
-//  B : Boolean;
+var
+  S : string;
+  T : string;
+  B : Boolean;
 begin
 //  T := ExtractMethodName(AString);
 //  T := StrAfter('.', T);
-//
-//  if not Assigned(AObject) then
-//  begin
+
+  if not Assigned(AObject) then
+  begin
 //    T := StrAfter('grdDBGV', T);
 //    T := StrBefore('$', T);
-//    T := 'On' + T;
-//    B := IsChecked(T, lbxDBGridViewEvents)
-//  end
-//  else
-//  begin
+    T := 'On' + T;
+    B := IsChecked(T, lbxDBGridViewEvents)
+  end
+  else
+  begin
 //    T := StrAfter('dscMain', T);
-//    T := 'On' + T;
-//    B := IsChecked(T, lbxDataSourceEvents);
-//  end;
-//
-//  T := T + AInfo;
-//
-//  if B then
-//  begin
-//    S := Format('<font-color=%s><b> %s',
-//      [ColorToString(AColor), T]);
-//
-//    FVLT.Log(S);
-//  end;
+    T := 'On' + T;
+    B := IsChecked(T, lbxDataSourceEvents);
+  end;
+
+  T := T + AInfo;
+
+  if B then
+  begin
+    S := Format('<font-color=%s><b> %s',
+      [ColorToString(AColor), T]);
+
+    FVLT.Log(S);
+  end;
 end;
 
 function TfrmDBGridView.IsChecked(const AName: string; AListBox : TCheckListBox): Boolean;

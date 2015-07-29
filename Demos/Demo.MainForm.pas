@@ -44,8 +44,7 @@ type
     pnlTop         : TPanel;
     pnlVST         : TPanel;
     sbrMain        : TStatusBar;
-    vstDemos: TVirtualStringTree;
-    //vstDemos       : TVirtualStringTree;
+    vstDemos       : TVirtualStringTree;
 
     procedure actExecuteExecute(Sender: TObject);
     procedure actFocusFilterExecute(Sender: TObject);
@@ -165,7 +164,6 @@ begin
   FTVP.View.ItemsSource := DemoManager.ItemList as IObjectList;
   FTVP.View.Filter.Add(FTVPFilter);
   FTVP.OnDoubleClick := FTVPDoubleClick;
-  //FTVP.OnKeyAction   := FTVPKeyAction;
   FVST.Header.AutoFitColumns;
   sbrMain.SimpleText := Format(SDemosLoaded, [DemoManager.ItemList.Count]);
   {$ENDIF}

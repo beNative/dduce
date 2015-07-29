@@ -35,18 +35,21 @@ object frmDynamicRecords: TfrmDynamicRecords
     Left = 97
     Top = 8
     Width = 611
-    Height = 201
+    Height = 193
     ActivePage = tsContactObject
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 2
     object tsContactObject: TTabSheet
       Caption = 'TContact object'
+      ExplicitLeft = 0
+      ExplicitTop = 28
+      ExplicitHeight = 173
       object lblContact: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 597
-        Height = 170
+        Height = 162
         Align = alClient
         AutoSize = False
         Color = clInfoBk
@@ -69,12 +72,13 @@ object frmDynamicRecords: TfrmDynamicRecords
     object tsDataSet: TTabSheet
       Caption = 'DataSet'
       ImageIndex = 1
+      ExplicitHeight = 173
       object grdTest: TDBGrid
         AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 597
-        Height = 167
+        Height = 159
         Align = alClient
         DataSource = dscTest
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -118,12 +122,13 @@ object frmDynamicRecords: TfrmDynamicRecords
     object tsTestClass: TTabSheet
       Caption = 'TTestClass'
       ImageIndex = 2
+      ExplicitHeight = 173
       object lblTestClass: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 597
-        Height = 170
+        Height = 162
         Align = alClient
         AutoSize = False
         Color = clInfoBk
@@ -146,12 +151,13 @@ object frmDynamicRecords: TfrmDynamicRecords
     object tsTestRecord: TTabSheet
       Caption = 'TTestRecord'
       ImageIndex = 3
+      ExplicitHeight = 173
       object lblTestRecord: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 597
-        Height = 170
+        Height = 162
         Align = alClient
         AutoSize = False
         Color = clInfoBk
@@ -174,12 +180,13 @@ object frmDynamicRecords: TfrmDynamicRecords
     object tsTRecord: TTabSheet
       Caption = 'TRecord'
       ImageIndex = 4
+      ExplicitHeight = 173
       object lblTestTRecord: TLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 597
-        Height = 170
+        Height = 162
         Align = alClient
         AutoSize = False
         Color = clInfoBk
@@ -532,17 +539,17 @@ object frmDynamicRecords: TfrmDynamicRecords
     TabOrder = 4
   end
   object btnTestData: TButton
-    Left = 16
+    Left = 8
     Top = 101
-    Width = 75
+    Width = 83
     Height = 25
     Action = actTestData
     Caption = 'TestData'
     TabOrder = 5
   end
   object aclMain: TActionList
-    Left = 24
-    Top = 160
+    Left = 16
+    Top = 136
     object actTestAssignTo: TAction
       Category = 'Test'
       Caption = 'AssignTo'
@@ -603,13 +610,13 @@ object frmDynamicRecords: TfrmDynamicRecords
     Active = True
     Aggregates = <>
     Params = <>
-    Left = 56
-    Top = 176
+    Left = 120
+    Top = 136
   end
   object dscTest: TDataSource
     DataSet = dsTest
     OnDataChange = dscTestDataChange
-    Left = 64
-    Top = 168
+    Left = 72
+    Top = 136
   end
 end
