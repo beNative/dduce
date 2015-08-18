@@ -65,6 +65,9 @@ end;
 {$ENDREGION}
 
 {$REGION 'private methods'}
+{ Automatically instantiates and displays the class name of the managed objects,
+  which are all destroyed when leaving scope. }
+
 procedure TfrmScopedReferences.ShowClassNames;
 var
   O: Scoped<TObject>;
@@ -75,6 +78,9 @@ begin
   ShowMessage(P.Ref.ClassName);
   ShowMessage(L.Ref.ClassName);
 end;
+
+{ Creates a scoped TButton control by giving a anonymous factory function as
+  the argument. It is automatically destroyed when leaving scope. }
 
 procedure TfrmScopedReferences.CreateScopedButton;
 var
