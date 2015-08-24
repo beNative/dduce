@@ -14,26 +14,45 @@
   limitations under the License.
 }
 
-unit Test.Registration;
+unit Test.DDuce.Reflect;
 
 interface
 
-procedure RegisterTests;
+uses
+  System.SysUtils, System.Classes, System.Generics.Collections, System.Variants,
+
+  DDuce.Reflect,
+
+  TestFramework; // DUnit
+
+type
+  TestReflect = class(TTestCase)
+  private
+
+  public
+    procedure SetUp; override;
+    procedure TearDown; override;
+
+  published
+
+
+  end;
+
 
 implementation
 
-uses
-  TestFramework,
+{ TestReflect }
 
-  Test.DDuce.DynamicRecord, Test.DDuce.DynamicRecord.Generic,
-  Test.DDuce.Reflect;
-
-procedure RegisterTests;
+procedure TestReflect.SetUp;
 begin
-  RegisterTest('TRecord', TestTRecord.Suite);
-  //RegisterTest('TRecord<T>', TestGenericTRecord.Suite);
-  RegisterTest('Reflect', TestReflect.Suite);
+  inherited SetUp;
+//
+end;
 
+procedure TestReflect.TearDown;
+begin
+  inherited TearDown;
+//
 end;
 
 end.

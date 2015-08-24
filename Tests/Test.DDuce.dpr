@@ -17,13 +17,11 @@ program Test.DDuce;
 uses
   Forms,
   TestInsight.DUnit,
-//  TestFramework,
-//  GUITestRunner,
-//  TextTestRunner,
   Test.DDuce.DynamicRecord in 'Test.DDuce.DynamicRecord.pas',
   Test.DDuce.DynamicRecord.Data in 'Test.DDuce.DynamicRecord.Data.pas',
   Test.DDuce.DynamicRecord.Generic in 'Test.DDuce.DynamicRecord.Generic.pas',
-  Test.Registration in 'Test.Registration.pas';
+  Test.Registration in 'Test.Registration.pas',
+  Test.DDuce.Reflect in 'Test.DDuce.Reflect.pas';
 
 {$R *.RES}
 
