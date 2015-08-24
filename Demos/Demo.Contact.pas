@@ -74,10 +74,11 @@ type
     procedure SetActive(const Value: Boolean);
     procedure SetCountry(const Value: string);
 
-  published
+  public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
+  published
     property FirstName: string
       read FFirstName write SetFirstName;
 

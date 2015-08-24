@@ -16,9 +16,10 @@ program Test.DDuce;
 
 uses
   Forms,
-  TestFramework,
-  GUITestRunner,
-  TextTestRunner,
+  TestInsight.DUnit,
+//  TestFramework,
+//  GUITestRunner,
+//  TextTestRunner,
   Test.DDuce.DynamicRecord in 'Test.DDuce.DynamicRecord.pas',
   Test.DDuce.DynamicRecord.Data in 'Test.DDuce.DynamicRecord.Data.pas',
   Test.DDuce.DynamicRecord.Generic in 'Test.DDuce.DynamicRecord.Generic.pas',
@@ -30,12 +31,13 @@ begin
   ReportMemoryLeaksOnShutdown := True;
   Application.Initialize;
   RegisterTests;
-  if IsConsole then
-    with TextTestRunner.RunRegisteredTests do
-      Free
-  else
-  begin
-    GUITestRunner.RunRegisteredTests;
-  end;
+  RunRegisteredTests;
+//  if IsConsole then
+//    with TextTestRunner.RunRegisteredTests do
+//      Free
+//  else
+//  begin
+//    GUITestRunner.RunRegisteredTests;
+//  end;
 end.
 

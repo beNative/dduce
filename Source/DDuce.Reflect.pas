@@ -19,7 +19,7 @@ unit DDuce.Reflect;
 {$I DDuce.inc}
 
 {
-  Reflect provides some static routines to expose the contents of an object
+  Reflect provides some static routines to expose the contents of a type
   using the RTTI.
 }
 

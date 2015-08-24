@@ -34,6 +34,14 @@ uses
   Extended RTTI is used to map the object or record properties to the field
   values of the record.
 
+  TERMINOLOGY
+    The name TRecord was chosen because it behaves as native pascal records when
+    assigned to eachother. Rather than copying the reference (like classes and
+    class interfaces) the data is copied.
+    When assigning two TRecord variables the data is always copied. So each
+    TRecord manages its own data (creation and destruction).
+
+
   FEATURES:
     - No instrumentation code. Direct field access is possible.
     - No field initialisation required.
@@ -57,11 +65,14 @@ uses
             ...
           end;
         end;
-    - TValue is used as a more type safe alternative for Variant types, with
-      no implicit conversions.
+    - the TValue type is used as a typed value (with no unwanted implicit
+      conversions like with Variant values). Once a value is assigned, the type
+      of the value is fixed.
     - ToString/ToFloat/ToInteger/ToBoolean members can be used to force
       conversion into a specific target type, with the possiblity to pass a
-      default value to return when conversion fails.
+      default value to return when conversion fails. Do note that the .As<type>
+      members of TValue do not convert the type of the value.
+
     - The data can be accessed as a Variant (like field values of a dataset)
       through the Data member which is a custom variant type designed to
       access the field names through dynamic invocation. This means that fields
@@ -85,35 +96,46 @@ uses
           R2['Value'] := 10;
           R2 := R1;
           Assert(R2.ToInteger('Value') = 5)
-          R1.Data.Value := 9;
+          R1.Data.Value := 9; // is equivalent to R1['Value'] := 9;
           Assert(R2.ToInteger('Value') = 9);
         end;
-    - A TRecord instance can be exposed as an interface reference:
+      => not the wanted behaviour as we want a copy on assignment like with a
+         normal Pascal record !!!!!!
+         it should behave as a VALUE type and not a REFERENCE type!
+         Essentially the decision always comes down to a decision on what you want the assignment operator to mean.
+     => as a TRecord is a Delphi record type, it supports operator overloading,
+        which needs to be used to have the copy on write semantics we would
+        expect.
+
+    - If you don't want this behaviour a TRecord instance can also be referenced
+      as a IDynamicRecord interface using a factory method.
         var
           DR: IDynamicRecord;
         begin
           DR := TRecord.Create;
         end;
+
     - A debug visualizer is available that shows the content of the record while
       debugging in the IDE.
 
   TRecord<T> allows typed access to contained data. In that respect it behaves
   as a managed object wrapper while remaining compatible with the basic
   instance type.
-  The Data property is of type T.
-  The generic version allows for lazy instantiation of objects of type T when
-  the object is not passed to the TRecord<T> instance.
-  A TRecord<T> instance is assignment compatible with IDynamicRecord<T> and
-  IDynamicRecord variables.
+    - TRecord<T> can be assigned to T, but only if T was created. It will copy
+      the values rather than exposing and assigning the reference.
+    - The Data property is of type T.
+    - The generic version does automatic instantiation of objects of type T.
+    - A TRecord<T> instance is assignment compatible with TRecord,
+      IDynamicRecord<T> and IDynamicRecord variables.
+    - Does the same as Scoped instances
 
   Future enhancements:
     - TRecord<T>: add overloaded constructor with factory method (TFunc<T>).
       This allows more customized autoconstruction.
     - Add more events
     - Control/data binding support
-    - lazy instantiation of IDynamicRecord
-      - track changes
-      - specialized assignments using TAssignOptions
+    - track changes
+    - specialized assignments using TAssignOptions
           TAssignOption = (
             aoProperties,  // assigns properties from the source instance
             aoFields,      // assigns fields from the source instance
@@ -127,11 +149,38 @@ uses
     - To be able to compile the generic version it was necessary to move some of
       the internal types from the implementation section to the interface
       section of the unit.
+
+    - Interface types are now compiled with extra RTTI (IInvokable/$M+ compiler
+      directive)
+
+
+  References:
+    To make TRecord really behave as a proper value type, there had to be a
+    way to implement this copy on write behaviour (COW) on the managed
+    interface variable (IDynamicRecord). Barry Kelly came to the rescue in his
+    article where he explains how to implement user-defined copy-on-write
+    data structures in Delphi. The magic happens in the MutableClone method,
+    which makes a new copy if the reference count of the managed interface
+    variable exceeds 1.
+    A full explanation of this mechanism can be found on Barry's blog:
+
+    http://blog.barrkel.com/2009/01/implementing-user-defined-copy-on-write.html
+
+    TODO does not work yet when mixing generic and non generic instances.
+      A notable side effect is that assignments from/to TRecord and
+      IDynamicRecord variables cause copies to be made where in this case we
+      want to have a reference.
+      We tried to compensate for this by keeping a seperate reference count
+      variable in the TRecord instance to keep track of any external user
+      defined interface variables (IDynamicRecord) that reference the TRecord
+      instance. This does not work yet.
+
+
 }
 {$ENDREGION}
 
 type
-  IDynamicField = interface
+  IDynamicField = interface(IInvokable)
   ['{74D23797-BE4C-464A-BEF5-011BE159C8A9}']
     function GetName: string;
     function GetValue: TValue;
@@ -150,9 +199,11 @@ type
   ['{C5B53103-22D6-487B-B202-738E36040015}']
   end;
 
+  {$M+}
   IDynamicRecord<T: class, constructor> = interface;
+  {$M-}
 
-  IDynamicRecord = interface
+  IDynamicRecord = interface(IInvokable)
   ['{E3B57B88-1DB5-4663-8621-EE235233A114}']
     function GetItem(Index: Integer): IDynamicField;
     function GetField(AName: string): IDynamicField;
@@ -259,8 +310,13 @@ type
   ['{98AD898F-552C-4B08-B5E9-B9C481153407}']
     function GetData: T;
     procedure SetData(AValue: T);
+    function GetRefFactory: TFunc<T>;
+    procedure SetRefFactory(const ARefFactory : TFunc<T>);
     property Data: T
       read GetData write SetData;
+
+    property RefFactory: TFunc<T>
+      read GetRefFactory write SetRefFactory;
   end;
 
   IRecord = IDynamicRecord;
@@ -286,11 +342,12 @@ type
         read GetCurrent;
     end;
 
-  strict private
+  private
   var
     FDynamicRecord : IDynamicRecord;
     FSaveProc      : TProc;
     FLoadProc      : TProc;
+    FRecRefCount   : Integer;
 
     function GetItemValue(AName: string): TValue;
     procedure SetItemValue(AName: string; const AValue: TValue);
@@ -299,6 +356,9 @@ type
     function GetDynamicRecord: IDynamicRecord;
     function GetCount: Integer;
     function GetField(AName: string): IDynamicField;
+
+    procedure DoIncRefCount;
+    function MutableClone: IDynamicRecord;
 
     property DynamicRecord: IDynamicRecord
       read GetDynamicRecord;
@@ -322,6 +382,7 @@ type
     ); overload;
     constructor Create(const ARecord: TRecord); overload;
     class function Create: TRecord; overload; static;
+    class function CreateDynamicRecord: IDynamicRecord; overload; static;
 
     function AsVarArray(const AFieldNames : string = '') : Variant;
     function AsCommaText(const AFieldNames : string) : string; overload;
@@ -358,6 +419,8 @@ type
     ); overload;
 
     procedure Assign(const ARecord : TRecord); overload;
+    procedure Assign(ADynamicRecord: IDynamicRecord); overload;
+
     procedure Assign(
       const ARecord : TRecord;
       const ANames  : array of string
@@ -446,11 +509,12 @@ type
 
     { Implicit cast to our specialized invokable variant. }
     // variant := trecord
-    class operator Implicit(const ARecord: TRecord): Variant; inline; static;
+    class operator Implicit(const ASource: TRecord): Variant; inline; static;
     // idynamicrecord := MyRecord
-    class operator Implicit(const ARecord: TRecord): IDynamicRecord; inline; static;
+    class operator Implicit(const ASource: TRecord): IDynamicRecord; inline; static;
     class operator Implicit(const ASource: IDynamicRecord): TRecord; inline; static;
     class operator Implicit(const ASource: TValue): TRecord; inline; static;
+
     //class operator Implicit(const ARecord: TRecord): IDynamicRecord<T>; inline; static;
   end;
 
@@ -481,10 +545,11 @@ type
     procedure SetItemValue(AName: string; const AValue: TValue);
     function GetItem(Index: Integer): IDynamicField<T>;
     function GetData: T;
-    procedure SetData(AValue: T);
     function GetDynamicRecord: IDynamicRecord<T>;
     function GetCount: Integer;
     function GetField(AName: string): IDynamicField<T>;
+
+    function MutableClone: IDynamicRecord<T>;
 
     property DynamicRecord: IDynamicRecord<T>
       read GetDynamicRecord;
@@ -508,6 +573,7 @@ type
     ); overload;
     constructor Create(const ARecord: TRecord<T>); overload;
     constructor Create(AInstance: T); overload;
+    constructor Create(const ARefFactory: TFunc<T>); overload;
 
     class function Create: TRecord<T>; overload; static;
 
@@ -614,7 +680,7 @@ type
     function IsBlank(const AName: string): Boolean;
 
     property Data: T
-      read GetData write SetData;
+      read GetData;
 
     { Fieldcount. }
     property Count: Integer
@@ -628,10 +694,10 @@ type
     property SaveProc: TProc
       read FSaveProc write FSaveProc;
 
-    class operator Implicit(const ARecord: TRecord<T>): T; inline; static;
-    class operator Implicit(const ARecord: TRecord<T>): TRecord; inline; static;
-    class operator Implicit(const ARecord: TRecord<T>): IDynamicRecord; inline; static;
-    class operator Implicit(const ARecord: TRecord<T>): IDynamicRecord<T>; inline; static;
+    class operator Implicit(const ASource: TRecord<T>): T; inline; static;
+    class operator Implicit(const ASource: TRecord<T>): TRecord; inline; static;
+    class operator Implicit(const ASource: TRecord<T>): IDynamicRecord; inline; static;
+    class operator Implicit(const ASource: TRecord<T>): IDynamicRecord<T>; inline; static;
   end;
 
 type
@@ -685,6 +751,9 @@ type
     function _AddRef: Integer; stdcall;
     function _Release: Integer; stdcall;
 
+  public
+    procedure BeforeDestruction; override;
+    
   published
     { Fieldname used as key in the TDynamicRecord collection }
     property Name: string
@@ -693,8 +762,6 @@ type
     { Dynamic typed field value. }
     property Value : TValue
       read GetValue write SetValue;
-
-    procedure BeforeDestruction; override;
   end;
 
   { TDynamicRecord is a reference counted collection used as the internal fields
@@ -835,6 +902,10 @@ type
     property Count: Integer
       read GetCount;
 
+  protected
+    property RefCount: Integer
+      read FRefCount;
+
   public
     // constructors and destructors
     constructor Create; overload; virtual;
@@ -846,31 +917,40 @@ type
   end;
 
   TDynamicRecord<T: class, constructor> = class(
-    TDynamicRecord, IDynamicRecord, IDynamicRecord<T>
-  )
+    TDynamicRecord, IDynamicRecord, IDynamicRecord<T>)
   strict private
-    FData: T;
+    FData       : T;
+    FRefFactory : TFunc<T>;
 
   strict protected
     function GetData: T;
     procedure SetData(AValue: T);
+
+  strict private
+    function GetRefFactory: TFunc<T>;
+    procedure SetRefFactory(const Value: TFunc<T>); protected
     function GetField(AName: string): IDynamicField; override;
     function GetItem(Index: Integer): IDynamicField; override;
     function GetItemValue(AName: string): TValue; override;
     procedure SetItemValue(AName: string; const AValue: TValue); override;
 
   public
+    //function Invoke: T;
     function GetCount: Integer; override;
     function ToString(AAlignValues: Boolean): string; overload; override;
 
     constructor Create; overload; override;
     constructor Create(AInstance: T); reintroduce; overload;
+    procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
     //constructor Create(const AData: T);
     { Wrapped instance of type T }
     property Data: T
       read GetData write SetData;
+
+    property RefFactory: TFunc<T>
+      read GetRefFactory write SetRefFactory;
   end;
 
 implementation
@@ -1008,6 +1088,8 @@ begin
   end;
   SetLength(Result, N);
 end;
+
+{ TODO: use Spring routine }
 
 function ExtractGenericArguments(ATypeInfo: PTypeInfo): string;
 var
@@ -1326,14 +1408,20 @@ end;
 function TDynamicRecord.ToInteger(const AName: string; const
   ADefaultValue: Integer): Integer;
 var
-  V: TValue;
-  R: Int64;
+  V : TValue;
+  R : Int64;
+  S : string;
 begin
   V := Values[AName];
-  if not V.TryAsOrdinal(R) then
-    Result := ADefaultValue
+  if V.TryAsOrdinal(R) then // Boolean
+    Result := R
+  else if V.TryAsType<Int64>(R) then
+    Result := R
   else
-    Result := R;
+  begin
+    S := V.ToString;
+    Result := StrToIntDef(S, ADefaultValue);
+  end
 end;
 
 function TDynamicRecord.ToString: string;
@@ -1753,7 +1841,9 @@ begin
   end;
 end;
 
-{ Assigns to a TStrings instance holding name/value pairs. }
+{ Assigns to a TStrings instance holding name/value pairs.
+  Remark: fields with empty values will not be added to the stringlist (this
+  is inherent to Delphi's implementation of TStrings. }
 
 procedure TDynamicRecord.ToStrings(AStrings: TStrings);
 var
@@ -2087,13 +2177,17 @@ end;
 
 function TRecord.GetData: Variant;
 begin
+  FDynamicRecord := MutableClone;
   Result := DynamicRecord.Data;
 end;
 
 function TRecord.GetDynamicRecord: IDynamicRecord;
 begin
   if not Assigned(FDynamicRecord) then
+  begin
     FDynamicRecord := TDynamicRecord.Create;
+    FRecRefCount := 0;
+  end;
   Result := FDynamicRecord;
 end;
 
@@ -2117,9 +2211,17 @@ begin
   Result := DynamicRecord.Values[AName];
 end;
 
+procedure TRecord.SetItemValue(AName: string; const AValue: TValue);
+begin
+  FDynamicRecord := MutableClone;
+  DynamicRecord.Values[AName] := AValue;
+end;
+{$ENDREGION}
+
+{$REGION 'operator overloads'}
 class operator TRecord.Implicit(const ASource: IDynamicRecord): TRecord;
 begin
-  Result.Assign(ASource);
+ Result.Assign(ASource);
 end;
 
 class operator TRecord.Implicit(const ASource: TValue): TRecord;
@@ -2127,56 +2229,21 @@ begin
   Result.Assign(ASource);
 end;
 
-function TRecord.IsBlank(const AName: string): Boolean;
+class operator TRecord.Implicit(const ASource: TRecord): Variant;
+begin
+  Result := ASource.Data;
+end;
+
+class operator TRecord.Implicit(const ASource: TRecord): IDynamicRecord;
 var
-  TV : TValue;
-  V  : Variant;
+  N: Integer;
 begin
-  if ContainsField(AName) then
-  begin
-    TV := Values[AName];
-    if TV.IsEmpty then
-      Result := True
-    else if TV.IsType<string> then
-    begin
-      Result := TV.ToString = '';
-    end
-    else if TV.IsType<Variant> then
-    begin
-      V := TV.AsVariant;
-      Result := VarIsClear(V) or VarIsNull(V) or VarIsEmpty(V)
-        {or VarIsEmptyParam(V)}; // Does not work! Returns not True when
-                                 // EmptyParam is passed as a value to a TValue
-    end
-    else
-      Result := False;
-  end
-  else
-  begin
-    Result := True;
-  end;
-end;
-
-function TRecord.IsEmpty: Boolean;
-begin
-  Result := DynamicRecord.IsEmpty;
-end;
-
-procedure TRecord.SetItemValue(AName: string; const AValue: TValue);
-begin
-  DynamicRecord.Values[AName] := AValue;
-end;
-{$ENDREGION}
-
-{$REGION 'operator overloads'}
-class operator TRecord.Implicit(const ARecord: TRecord): Variant;
-begin
-  Result := ARecord.Data;
-end;
-
-class operator TRecord.Implicit(const ARecord: TRecord): IDynamicRecord;
-begin
-  Result := ARecord.DynamicRecord;
+  N := TDynamicRecord(ASource.FDynamicRecord).RefCount;
+  //Inc(ASource.FRecRefCount);
+  Result := ASource.FDynamicRecord;
+  if TDynamicRecord(ASource.FDynamicRecord).RefCount > N then
+    ASource.DoIncRefCount;
+//    ASource.FRecRefCount := ASource.FRecRefCount + 1;
 end;
 {$ENDREGION}
 
@@ -2243,6 +2310,7 @@ var
   F : IDynamicField;
   S : string;
 begin
+  Clear;
   if Length(ANames) = 0 then
   begin
     for F in ARecord do
@@ -2257,6 +2325,11 @@ begin
       Values[S] := ARecord[S];
     end;
   end;
+end;
+
+procedure TRecord.Assign(ADynamicRecord: IDynamicRecord);
+begin
+  DynamicRecord.Assign(ADynamicRecord);
 end;
 
 procedure TRecord.Assign(const ARecord: TRecord);
@@ -2302,6 +2375,11 @@ begin
   Result := DynamicRecord.DeleteField(AName);
 end;
 
+procedure TRecord.DoIncRefCount;
+begin
+  FRecRefCount := FRecRefCount + 1;
+end;
+
 { Makes a copy of the current record of a given dataset by assigning each field
   value of the dataset to a dynamic record field. }
 
@@ -2313,6 +2391,41 @@ end;
 procedure TRecord.FromStrings(AStrings: TStrings);
 begin
   DynamicRecord.FromStrings(AStrings);
+end;
+
+function TRecord.IsBlank(const AName: string): Boolean;
+var
+  TV : TValue;
+  V  : Variant;
+begin
+  if ContainsField(AName) then
+  begin
+    TV := Values[AName];
+    if TV.IsEmpty then
+      Result := True
+    else if TV.IsType<string> then
+    begin
+      Result := TV.ToString = '';
+    end
+    else if TV.IsType<Variant> then
+    begin
+      V := TV.AsVariant;
+      Result := VarIsClear(V) or VarIsNull(V) or VarIsEmpty(V)
+        {or VarIsEmptyParam(V)}; // Does not work! Returns not True when
+                                 // EmptyParam is passed as a value to a TValue
+    end
+    else
+      Result := False;
+  end
+  else
+  begin
+    Result := True;
+  end;
+end;
+
+function TRecord.IsEmpty: Boolean;
+begin
+  Result := DynamicRecord.IsEmpty;
 end;
 
 { String representation of the record in the form:
@@ -2327,6 +2440,39 @@ procedure TRecord.Load;
 begin
   if Assigned(FLoadProc) then
     FLoadProc();
+end;
+
+function TRecord.MutableClone: IDynamicRecord;
+var
+  N : Integer;
+begin
+ if not Assigned(FDynamicRecord) then
+ begin
+   FDynamicRecord := TDynamicRecord.Create;
+   Exit(FDynamicRecord);
+ end
+ else
+ begin
+   N := TDynamicRecord(FDynamicRecord).RefCount;
+   if N {(N - FRecRefCount - 1)} = 1 then
+   begin
+     Exit(FDynamicRecord)
+   end
+   else
+   begin
+     Result := TDynamicRecord.Create;
+     FRecRefCount := 0;
+   end;
+
+ end;
+
+// if TDynamicRecord(FDynamicRecord).RefCount = 1 {- FRecRefCount = 1} then
+//   Exit(FDynamicRecord)
+// else
+// begin
+//   Result := TDynamicRecord.Create;
+//   FRecRefCount := 0;
+// end;
 end;
 
 procedure TRecord.Save;
@@ -2407,9 +2553,19 @@ begin
   inherited Create(TDynamicField<T>);
 end;
 
+procedure TDynamicRecord<T>.AfterConstruction;
+begin
+  inherited;
+  FRefFactory :=  function: T
+  begin
+    Result := T.Create; // default constructor
+  end;
+end;
+
 procedure TDynamicRecord<T>.BeforeDestruction;
 begin
-  FData := nil;
+  if Assigned(FData) then
+    FreeAndNil(FData);
   inherited;
 end;
 
@@ -2428,6 +2584,8 @@ end;
 
 function TDynamicRecord<T>.GetData: T;
 begin
+  if not Assigned(FData) then
+    FData := FRefFactory();
   Result := FData;
 end;
 
@@ -2435,7 +2593,7 @@ procedure TDynamicRecord<T>.SetData(AValue: T);
 begin
   if AValue <> Data then
   begin
-    FData := AValue;
+    Assign(AValue, True, True, True, []);
   end;
 end;
 
@@ -2474,6 +2632,16 @@ begin
   except
     Result := TValue.Empty;
   end;
+end;
+
+function TDynamicRecord<T>.GetRefFactory: TFunc<T>;
+begin
+  Result := FRefFactory;
+end;
+
+procedure TDynamicRecord<T>.SetRefFactory(const Value: TFunc<T>);
+begin
+  FRefFactory := Value;
 end;
 
 procedure TDynamicRecord<T>.SetItemValue(AName: string; const AValue: TValue);
@@ -2527,14 +2695,15 @@ end;
 {$ENDREGION}
 
 {$REGION 'TDynamicField<T>'}
-{$REGION 'property access methods'}
+{$REGION 'construction and destruction'}
 procedure TDynamicField<T>.BeforeDestruction;
 begin
   Collection := nil;
   inherited;
-
 end;
+{$ENDREGION}
 
+{$REGION 'property access methods'}
 function TDynamicField<T>.GetName: string;
 begin
   Result := FName;
@@ -2587,10 +2756,143 @@ begin
     Destroy;
 end;
 {$ENDREGION}
-
 {$ENDREGION}
 
 {$REGION 'TRecord<T>'}
+{$REGION 'construction and destruction'}
+class function TRecord<T>.Create: TRecord<T>;
+begin
+  // fake constructor that can be used to assign a new instance to a variable.
+end;
+
+constructor TRecord<T>.Create(const ARefFactory: TFunc<T>);
+begin
+  DynamicRecord.Data := ARefFactory();
+end;
+
+constructor TRecord<T>.Create(const AInstance: TValue; const AAssignProperties,
+  AAssignFields, AAssignNulls: Boolean; const ANames: array of string);
+begin
+  DynamicRecord.Assign(
+    AInstance,
+    AAssignProperties,
+    AAssignFields,
+    AAssignNulls,
+    ANames
+  );
+end;
+
+constructor TRecord<T>.Create(const AInstance: TValue; const AAssignProperties,
+  AAssignFields: Boolean);
+begin
+  DynamicRecord.Assign(
+    AInstance,
+    AAssignProperties,
+    AAssignFields,
+    True,
+    []
+  );
+end;
+
+procedure TRecord<T>.Create(const AInstance: TValue;
+  const ANames: array of string);
+begin
+  DynamicRecord.Assign(
+    AInstance,
+    True,
+    False,
+    False,
+    ANames
+  );
+end;
+
+constructor TRecord<T>.Create(AInstance: T);
+begin
+  DynamicRecord.Assign(AInstance, True, False, True, []);
+end;
+
+constructor TRecord<T>.Create(const ARecord: TRecord<T>);
+begin
+  DynamicRecord.Assign(ARecord);
+end;
+{$ENDREGION}
+
+{$REGION 'property access methods'}
+function TRecord<T>.GetCount: Integer;
+begin
+  Result := DynamicRecord.Count;
+end;
+
+function TRecord<T>.GetData: T;
+begin
+  FDynamicRecord := MutableClone;
+  Result := DynamicRecord.Data;
+end;
+
+{ TODO: probably this should not be allowed (only a getter) }
+
+//procedure TRecord<T>.SetData(AValue: T);
+//begin
+//  DynamicRecord.Data := AValue;
+//end;
+
+function TRecord<T>.GetDynamicRecord: IDynamicRecord<T>;
+begin
+  if not Assigned(FDynamicRecord) then
+    FDynamicRecord := TDynamicRecord<T>.Create;
+  Result := FDynamicRecord;
+end;
+
+function TRecord<T>.GetEnumerator: TRecordEnumerator;
+begin
+  Result := TRecordEnumerator.Create(DynamicRecord);
+end;
+
+function TRecord<T>.GetField(AName: string): IDynamicField<T>;
+begin
+  Result := DynamicRecord.Fields[AName] as IDynamicField<T>;
+end;
+
+function TRecord<T>.GetItem(Index: Integer): IDynamicField<T>;
+begin
+  Result := DynamicRecord.Items[Index] as IDynamicField<T>;
+end;
+
+function TRecord<T>.GetItemValue(AName: string): TValue;
+begin
+  Result := DynamicRecord.Values[AName];
+end;
+
+procedure TRecord<T>.SetItemValue(AName: string; const AValue: TValue);
+begin
+  FDynamicRecord := MutableClone;
+  DynamicRecord.Values[AName] := AValue;
+end;
+{$ENDREGION}
+
+{$REGION 'operator overloads'}
+class operator TRecord<T>.Implicit(const ASource: TRecord<T>): T;
+begin
+  Result := ASource.Data;
+end;
+
+class operator TRecord<T>.Implicit(const ASource: TRecord<T>): IDynamicRecord;
+begin
+  Result.Assign(ASource.DynamicRecord);
+end;
+
+class operator TRecord<T>.Implicit(const ASource: TRecord<T>): IDynamicRecord<T>;
+begin
+  Result.Assign(ASource.DynamicRecord);
+end;
+
+class operator TRecord<T>.Implicit(const ASource: TRecord<T>): TRecord;
+begin
+  Result.Assign(TValue.From<T>(ASource.Data));
+end;
+{$ENDREGION}
+
+{$REGION 'public methods'}
 function TRecord<T>.AsCommaText: string;
 begin
   Result := DynamicRecord.AsCommaText;
@@ -2618,13 +2920,13 @@ end;
 procedure TRecord<T>.Assign(const AInstance: TValue;
   const ANames: array of string);
 begin
-  //DynamicRecord.Assign(AInstance, ANames);
+  DynamicRecord.Assign(AInstance, True, True, True, ANames);
 end;
 
 procedure TRecord<T>.Assign(const AInstance: TValue; const AAssignProperties,
   AAssignFields: Boolean);
 begin
-  //DynamicRecord.Assign(AInstance, AAssignProperties, AAssignFields);
+  DynamicRecord.Assign(AInstance, AAssignProperties, AAssignFields, True, []);
 end;
 
 procedure TRecord<T>.Assign(const AInstance: TValue; const AAssignProperties,
@@ -2638,7 +2940,7 @@ end;
 procedure TRecord<T>.Assign(const ARecord: TRecord;
   const ANames: array of string);
 begin
-  //DynamicRecord.Assign(ARecord, ANames);
+  DynamicRecord.Assign(ARecord);
 end;
 
 procedure TRecord<T>.Assign(const ARecord: TRecord);
@@ -2686,57 +2988,6 @@ begin
   Result := DynamicRecord.ContainsField(AName);
 end;
 
-constructor TRecord<T>.Create(AInstance: T);
-begin
-  DynamicRecord.Data := AInstance;
-end;
-
-constructor TRecord<T>.Create(const ARecord: TRecord<T>);
-begin
-  DynamicRecord.Data := ARecord.Data;
-end;
-
-class function TRecord<T>.Create: TRecord<T>;
-begin
-  // fake constructor
-end;
-
-constructor TRecord<T>.Create(const AInstance: TValue; const AAssignProperties,
-  AAssignFields, AAssignNulls: Boolean; const ANames: array of string);
-begin
-  DynamicRecord.Assign(
-    AInstance,
-    AAssignProperties,
-    AAssignFields,
-    AAssignNulls,
-    ANames
-  );
-end;
-
-constructor TRecord<T>.Create(const AInstance: TValue; const AAssignProperties,
-  AAssignFields: Boolean);
-begin
-  DynamicRecord.Assign(
-    AInstance,
-    AAssignProperties,
-    AAssignFields,
-    True,
-    []
-  );
-end;
-
-procedure TRecord<T>.Create(const AInstance: TValue;
-  const ANames: array of string);
-begin
-  DynamicRecord.Assign(
-    AInstance,
-    True,
-    False,
-    False,
-    ANames
-  );
-end;
-
 function TRecord<T>.DeleteField(const AName: string): Boolean;
 begin
   Result := FDynamicRecord.DeleteField(AName);
@@ -2751,63 +3002,6 @@ end;
 procedure TRecord<T>.FromStrings(AStrings: TStrings);
 begin
   FDynamicRecord.FromStrings(AStrings);
-end;
-
-function TRecord<T>.GetCount: Integer;
-begin
-  Result := DynamicRecord.Count;
-end;
-
-function TRecord<T>.GetData: T;
-begin
-  Result := DynamicRecord.Data;
-end;
-
-function TRecord<T>.GetDynamicRecord: IDynamicRecord<T>;
-begin
-  if not Assigned(FDynamicRecord) then
-    FDynamicRecord := TDynamicRecord<T>.Create;
-  Result := FDynamicRecord;
-end;
-
-function TRecord<T>.GetEnumerator: TRecordEnumerator;
-begin
-  Result := TRecordEnumerator.Create(DynamicRecord);
-end;
-
-function TRecord<T>.GetField(AName: string): IDynamicField<T>;
-begin
-  Result := DynamicRecord.Fields[AName] as IDynamicField<T>;
-end;
-
-function TRecord<T>.GetItem(Index: Integer): IDynamicField<T>;
-begin
-  Result := DynamicRecord.Items[Index] as IDynamicField<T>;
-end;
-
-function TRecord<T>.GetItemValue(AName: string): TValue;
-begin
-  Result := DynamicRecord.Values[AName];
-end;
-
-class operator TRecord<T>.Implicit(const ARecord: TRecord<T>): T;
-begin
-  Result := ARecord;
-end;
-
-class operator TRecord<T>.Implicit(const ARecord: TRecord<T>): IDynamicRecord;
-begin
-  Result := ARecord.DynamicRecord;
-end;
-
-class operator TRecord<T>.Implicit(const ARecord: TRecord<T>): IDynamicRecord<T>;
-begin
-  Result := ARecord.DynamicRecord;
-end;
-
-class operator TRecord<T>.Implicit(const ARecord: TRecord<T>): TRecord;
-begin
-  Result.Assign(TValue.From<T>(ARecord.Data));
 end;
 
 function TRecord<T>.IsBlank(const AName: string): Boolean;
@@ -2826,20 +3020,25 @@ begin
     FLoadProc();
 end;
 
+function TRecord<T>.MutableClone: IDynamicRecord<T>;
+begin
+ if not Assigned(FDynamicRecord) then
+ begin
+   FDynamicRecord := TDynamicRecord<T>.Create;
+   Exit(FDynamicRecord);
+ end
+ else if TDynamicRecord<T>(FDynamicRecord).RefCount = 1 then
+   Exit(FDynamicRecord)
+ else
+ begin
+   Result := TDynamicRecord<T>.Create(Self);
+ end;
+end;
+
 procedure TRecord<T>.Save;
 begin
   if Assigned(FSaveProc) then
     FSaveProc();
-end;
-
-procedure TRecord<T>.SetData(AValue: T);
-begin
-  DynamicRecord.Data := AValue;
-end;
-
-procedure TRecord<T>.SetItemValue(AName: string; const AValue: TValue);
-begin
-  DynamicRecord.Values[AName] := AValue;
 end;
 
 function TRecord<T>.ToBoolean(const AName: string;
@@ -2879,6 +3078,7 @@ procedure TRecord<T>.ToStrings(AStrings: TStrings);
 begin
   DynamicRecord.ToStrings(AStrings);
 end;
+{$ENDREGION}
 
 {$REGION 'TRecord<T>.TRecordEnumerator'}
 constructor TRecord<T>.TRecordEnumerator.Create(ARecord: IDynamicRecord<T>);
@@ -2900,5 +3100,10 @@ begin
 end;
 {$ENDREGION}
 {$ENDREGION}
+
+class function TRecord.CreateDynamicRecord: IDynamicRecord;
+begin
+  Result := TDynamicRecord.Create;
+end;
 
 end.

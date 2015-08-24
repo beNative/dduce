@@ -27,7 +27,8 @@ uses
 
   VirtualTrees,
 
-  Spring, Spring.Collections, Spring.Collections.Extensions, Spring.Collections.Lists,
+  Spring, Spring.Collections, Spring.Collections.Extensions,
+  Spring.Collections.Lists,
 {$IFDEF DSHARP}
   DSharp.Windows.TreeViewPresenter,
   DSharp.Bindings.Collections, DSharp.Core.DataTemplates,

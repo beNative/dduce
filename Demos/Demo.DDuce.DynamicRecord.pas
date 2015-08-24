@@ -156,6 +156,8 @@ type
       read FTestNullableChar write FTestNullableChar;
   end;
 
+  TManagedClass = TRecord<TTestClass>;
+
 type
   TfrmDynamicRecords = class(TForm)
     {$REGION 'designer controls'}
@@ -199,32 +201,37 @@ type
     edtDelimiter              : TLabeledEdit;
     edtQuoteChar              : TLabeledEdit;
     chkAlignValues            : TCheckBox;
+    btn1                      : TButton;
     {$ENDREGION}
 
     procedure actTestAssignExecute(Sender: TObject);
-    procedure actTestDataExecute(Sender: TObject);
-    procedure actToStringsExecute(Sender: TObject);
-    procedure chkAlignValuesClick(Sender: TObject);
-    procedure chkQuoteValuesClick(Sender: TObject);
     procedure dscTestDataChange(Sender: TObject; Field: TField);
-    procedure edtDelimiterChange(Sender: TObject);
+    procedure actToStringsExecute(Sender: TObject);
+    procedure actTestDataExecute(Sender: TObject);
+
+    procedure chkQuoteValuesClick(Sender: TObject);
     procedure edtQuoteCharChange(Sender: TObject);
+    procedure edtDelimiterChange(Sender: TObject);
+    procedure chkAlignValuesClick(Sender: TObject);
+    procedure btn1Click(Sender: TObject);
 
   private
-    FContact     : TContact;
-    FTestRecord  : TTestRecord;
-    FTestClass   : TTestClass;
-    FTestTRecord : TRecord;
-    FInspector   : TInspector;
-    FRecord      : TRecord;
-    FUpdate      : Boolean;
-    FStrings     : TStrings;
+    FContact          : TContact;
+    FTestRecord       : TTestRecord;
+    FTestClass        : TTestClass;
+    FTestTRecord      : TRecord;
+    FTestManagedClass : TManagedClass;
+    FInspector        : TInspector;
+    FRecord           : TRecord;
+    FUpdate           : Boolean;
+    FStrings          : TStrings;
 
     function CreateInspector(AParent : TWinControl): TInspector;
     procedure CreateContact;
     procedure CreateTestClass;
     procedure CreateTestRecord;
     procedure CreateTestTRecord;
+    procedure CreateTestManagedClass;
 
     procedure InspectorGetCellText(
           Sender : TObject;
@@ -237,9 +244,9 @@ type
       var Value  : string
     );
     procedure InspectorGetEditStyle(
-          Sender : TObject;
-          Cell   : TGridCell;
-      var Style  : TGridEditStyle
+          Sender  : TObject;
+          Cell    : TGridCell;
+      var Style   : TGridEditStyle
     );
     procedure InspectorGetEditText(
           Sender : TObject;
@@ -284,16 +291,51 @@ begin
   CreateTestClass;
   CreateTestRecord;
   CreateTestTRecord;
+  CreateTestManagedClass;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.BeforeDestruction;
 begin
   inherited BeforeDestruction;
+  FreeAndNil(FInspector);
   FreeAndNil(FStrings);
   FreeAndNil(FContact);
   FreeAndNil(FTestClass);
 end;
+
+procedure TfrmDynamicRecords.btn1Click(Sender: TObject);
+var
+  R  : TRecord;
+  R2 : IDynamicRecord;   // should behave as a proper reference variable
+  R3 : TRecord;
+  R5 : TRecord;
+
+begin
+  //R2 := TRecord.Create;
+  R['TestInteger'] := 5;
+    R3 := R;
+ // R3 := R;
+  R2 := R; // does also increase refcount => unwanted sideeffect  -> can be monitorred in TRecord!
+    R5 := R;
+  R['TestInteger'] := 6;       // makes a new copy while we do not want this
+
+
+
+//
+//  R['Test'] := 5;
+//  R2 := R;
+//  R2['Test'] := 6;
+  ShowMessage(R.ToString);
+  ShowMessage(R2.ToString);
+  ShowMessage(R5.ToString);
+
+
+  // WORKS
+//  IDR := GR; // does not work.
+  //ShowMessage(IDR.ToString);
+end;
+
 {$ENDREGION}
 
 {$REGION 'action handlers'}
@@ -425,11 +467,16 @@ begin
 end;
 
 procedure TfrmDynamicRecords.CreateTestTRecord;
+var
+  R: TRecord;
 begin
   FTestTRecord.Data.SomeString   := 'FTestTRecord.Data.SomeString';
   FTestTRecord.Data.SomeDateTime := Now;
   FTestTRecord.Data.Number       := 5;
   FTestTRecord.Data.Bool         := True;
+  R := TRecord.Create;
+  R.Assign(FTestTRecord);
+  R.Data.Number := 6;
 end;
 
 procedure TfrmDynamicRecords.CreateTestClass;
@@ -440,6 +487,11 @@ begin
   FTestClass.TestString := 'string';
   FTestClass.TestNullableString := 'NullableString';
   FTestClass.TestNullableString := Null;
+end;
+
+procedure TfrmDynamicRecords.CreateTestManagedClass;
+begin
+  FTestManagedClass.Data.TestBoolean := True;
 end;
 
 procedure TfrmDynamicRecords.CreateContact;
@@ -503,11 +555,13 @@ end;
 
 procedure TfrmDynamicRecords.UpdateActions;
 begin
+  inherited UpdateActions;
   if FUpdate then
   begin
-    FInspector.Rows.Count := FRecord.Count;
-    FInspector.UpdateEditText;
-    FInspector.Invalidate;
+    //lblRecord.Caption := FRecord.ToString;
+    //FInspector.Rows.Count := FRecord.Count;
+    //FInspector.UpdateEditText;
+//    FInspector.InvalidateGrid;
     lblContact.Caption     := AsPropString(FContact);
     lblTestClass.Caption   := AsPropString(FTestClass);
     lblTestRecord.Caption  := AsFieldString(TValue.From(FTestRecord));
@@ -524,7 +578,7 @@ begin
     lblToStrings.Caption := FStrings.Text;
     FUpdate := False;
   end;
-  inherited UpdateActions;
+
 end;
 {$ENDREGION}
 
