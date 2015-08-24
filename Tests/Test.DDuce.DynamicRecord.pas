@@ -1,19 +1,17 @@
 {
-  Copyright (C) 2013-2014 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2015 Tim Sinaeve tim.sinaeve@gmail.com
 
-  This library is free software; you can redistribute it and/or modify it
-  under the terms of the GNU Library General Public License as published by
-  the Free Software Foundation; either version 3 of the License, or (at your
-  option) any later version.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-  This program is distributed in the hope that it will be useful, but WITHOUT
-  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License
-  for more details.
+      http://www.apache.org/licenses/LICENSE-2.0
 
-  You should have received a copy of the GNU Library General Public License
-  along with this library; if not, write to the Free Software Foundation,
-  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 }
 
 unit Test.DDuce.DynamicRecord;
@@ -38,7 +36,9 @@ uses
 type
   TestTRecord = class(TTestCase)
   private
-    FRecord: TRecord;
+    FRecord        : TRecord;
+    FDynamicRecord : IDynamicRecord;
+
     function RetrieveRecord(
       const AString : string;
        var  ARecord : TRecord
@@ -46,20 +46,22 @@ type
     function CreateDataSet: TDataSet;
     function RetrieveRecordFunction: TRecord;
 
-    procedure PassingRecordArgumentThroughValueParam(ARecord: TRecord);
-    procedure PassingRecordArgumentThroughConstParam(const ARecord: TRecord);
-    procedure PassingRecordArgumentThroughVarParam(var ARecord: TRecord);
-    procedure PassingRecordArgumentThroughInterfaceParam(const ARecord: IDynamicRecord);
+    procedure PassingRecordArgumentByValueParam(ARecord: TRecord);
+    procedure PassingRecordArgumentByConstParam(const ARecord: TRecord);
+    procedure PassingRecordArgumentByVarParam(var ARecord: TRecord);
+    procedure PassingRecordArgumentByInterfaceParam(const ARecord: IDynamicRecord);
 
   public
     procedure SetUp; override;
     procedure TearDown; override;
 
   published
-    procedure TestPassingRecordArgumentThroughConstParam;
-    procedure TestPassingRecordArgumentThroughVarParam;
-    procedure TestPassingRecordArgumentThroughValueParam;
-    procedure TestPassingRecordArgumentThroughInterfaceParam;
+    procedure TestPassingRecordArgumentByConstParam;
+    procedure TestPassingRecordArgumentByVarParam;
+    procedure TestPassingRecordArgumentByValueParam;
+    procedure TestPassingRecordArgumentByInterfaceParam;
+
+    procedure TestAssignIDynamicRecordToTRecord;
 
     procedure TestContainsField;
     procedure TestDeleteField;
@@ -87,7 +89,6 @@ type
     procedure TestAssignProperty;
 
     procedure TestRetrieveRecord;
-
     procedure TestRetrieveRecordFunction;
 
   end;
@@ -116,11 +117,20 @@ begin
   FRecord[TEST_STRING_DOUBLE]  := '3,14';
   FRecord[TEST_BOOLEAN]        := True;
   FRecord[TEST_DOUBLE]         := 3.14;
+
+  FDynamicRecord := TRecord.CreateDynamicRecord;
+  FDynamicRecord[TEST_INTEGER]        := 5;
+  FDynamicRecord[TEST_STRING]         := 'Test';
+  FDynamicRecord[TEST_STRING_INTEGER] := '5';
+  FDynamicRecord[TEST_STRING_DOUBLE]  := '3,14';
+  FDynamicRecord[TEST_BOOLEAN]        := True;
+  FDynamicRecord[TEST_DOUBLE]         := 3.14;
 end;
 
 procedure TestTRecord.TearDown;
 begin
   FRecord.Clear;
+  FDynamicRecord := nil;
 end;
 
 function TestTRecord.CreateDataSet: TDataSet;
@@ -151,7 +161,7 @@ begin
   Result := DS;
 end;
 
-procedure TestTRecord.PassingRecordArgumentThroughConstParam(const ARecord: TRecord);
+procedure TestTRecord.PassingRecordArgumentByConstParam(const ARecord: TRecord);
 var
   S : string;
   F : IDynamicField;
@@ -162,41 +172,27 @@ begin
     Status(F.ToString);
   end;
   S := Format('PassingRecordThroughConstParam: '#13#10'%s', [ARecord.ToString]);
-  //Status(S);
 end;
 
-procedure TestTRecord.PassingRecordArgumentThroughInterfaceParam(
+procedure TestTRecord.PassingRecordArgumentByInterfaceParam(
   const ARecord: IDynamicRecord);
 var
   S : string;
-  //F : IDynamicField;
 begin
   S := Format('PassingRecordThroughInterfaceParam: '#13#10'%s', [ARecord.ToString]);
-//    for F in ARecord do
-//  begin
-//    Status(F.ToString);
-//  end;
-  //Status(S);
 end;
 
-procedure TestTRecord.PassingRecordArgumentThroughValueParam(ARecord: TRecord);
+procedure TestTRecord.PassingRecordArgumentByValueParam(ARecord: TRecord);
 var
-  S : string;
   F : IDynamicField;
-
 begin
-  //FStatusStrings.Add('PassingRecordThroughParam');
   for F in ARecord do
   begin
     Status(F.ToString);
   end;
-
-
-//  S := Format('PassingRecordThroughParam: '#13#10'%s', [ARecord.ToString]);
-//  Status(S);
 end;
 
-procedure TestTRecord.PassingRecordArgumentThroughVarParam(var ARecord: TRecord);
+procedure TestTRecord.PassingRecordArgumentByVarParam(var ARecord: TRecord);
 var
   S : string;
 begin
@@ -229,15 +225,27 @@ end;
 procedure TestTRecord.TestAsCommaText;
 begin
   CheckEqualsString(
-    '5,Test,True,3,14',
+    '5,Test,5,3,14,True,3,14',
     FRecord.AsCommaText
   );
 end;
 
 procedure TestTRecord.TestAsDelimitedText;
 begin
-  CheckEqualsString('5,Test,True,3,14', FRecord.AsDelimitedText(','));
+  CheckEqualsString('5,Test,5,3,14,True,3,14', FRecord.AsDelimitedText(','));
   CheckEqualsString('5', FRecord.AsDelimitedText(TEST_INTEGER, ','));
+end;
+
+procedure TestTRecord.TestAssignIDynamicRecordToTRecord;
+var
+  R : TRecord;
+begin
+  R.Assign(FDynamicRecord);
+  Status(R.ToString);
+  CheckEquals(FDynamicRecord.Data.TestBoolean, R[TEST_BOOLEAN].AsBoolean, TEST_BOOLEAN);
+  CheckEquals(FDynamicRecord.Data.TestInteger, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
+  CheckEquals(FDynamicRecord.Data.TestString, R[TEST_STRING].AsString, TEST_STRING);
+  CheckEquals(FDynamicRecord.Data.TestDouble, R[TEST_DOUBLE].AsExtended, TEST_DOUBLE);
 end;
 
 procedure TestTRecord.TestAssignProperty;
@@ -420,7 +428,7 @@ begin
   CheckTrue(R.IsEmpty);
 end;
 
-procedure TestTRecord.TestPassingRecordArgumentThroughConstParam;
+procedure TestTRecord.TestPassingRecordArgumentByConstParam;
 var
   R : TRecord;
 begin
@@ -428,11 +436,11 @@ begin
   R.Data.I := 10;
   R.Data.S := 'string';
   R.Data.F := 3.14;
-  PassingRecordArgumentThroughConstParam(R);
+  PassingRecordArgumentByConstParam(R);
   CheckTrue(R.Data.NewValue = 'Test', 'NewValue not found');
 end;
 
-procedure TestTRecord.TestPassingRecordArgumentThroughInterfaceParam;
+procedure TestTRecord.TestPassingRecordArgumentByInterfaceParam;
 var
   R : TRecord;
 begin
@@ -440,10 +448,10 @@ begin
   R.Data.I := 10;
   R.Data.S := 'string';
   R.Data.F := 3.14;
-  PassingRecordArgumentThroughInterfaceParam(R);
+  PassingRecordArgumentByInterfaceParam(R);
 end;
 
-procedure TestTRecord.TestPassingRecordArgumentThroughValueParam;
+procedure TestTRecord.TestPassingRecordArgumentByValueParam;
 var
   R : TRecord;
   I : Integer;
@@ -452,7 +460,7 @@ begin
   R.Data.I := 10;
   R.Data.S := 'string';
   R.Data.F := 3.14;
-  PassingRecordArgumentThroughValueParam(R);
+  PassingRecordArgumentByValueParam(R);
 
   for I := 0 to 100 do
   begin
@@ -461,16 +469,17 @@ begin
     R.Data.S := RandomData.CompanyName;
     R.Data.F := RandomData.Number(457);
 
-    PassingRecordArgumentThroughValueParam(R);
-    PassingRecordArgumentThroughConstParam(R);
-    PassingRecordArgumentThroughVarParam(R);
-    PassingRecordArgumentThroughInterfaceParam(R);
+    PassingRecordArgumentByValueParam(R);
+    PassingRecordArgumentByConstParam(R);
+    PassingRecordArgumentByVarParam(R);
+    PassingRecordArgumentByInterfaceParam(R);
   end;
 end;
 
-procedure TestTRecord.TestPassingRecordArgumentThroughVarParam;
+procedure TestTRecord.TestPassingRecordArgumentByVarParam;
 begin
-  PassingRecordArgumentThroughVarParam(FRecord);
+  PassingRecordArgumentByVarParam(FRecord);
+  CheckTrue(True, 'OK');
 end;
 
 procedure TestTRecord.TestRetrieveRecord;
