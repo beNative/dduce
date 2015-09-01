@@ -1,0 +1,8 @@
+/Tests/*.dcu
+__history
+*.local
+*.dcu
+*.identcache
+*.rsm
+*.drc
+*.map
