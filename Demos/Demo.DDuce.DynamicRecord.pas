@@ -314,7 +314,7 @@ var
 begin
   //R2 := TRecord.Create;
   R['TestInteger'] := 5;
-    R3 := R;
+  R3 := R;
  // R3 := R;
   R2 := R; // does also increase refcount => unwanted sideeffect  -> can be monitorred in TRecord!
     R5 := R;

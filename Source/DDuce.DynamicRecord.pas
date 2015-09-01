@@ -310,13 +310,13 @@ type
   ['{98AD898F-552C-4B08-B5E9-B9C481153407}']
     function GetData: T;
     procedure SetData(AValue: T);
-    function GetRefFactory: TFunc<T>;
-    procedure SetRefFactory(const ARefFactory : TFunc<T>);
+    function GetDataFactory: TFunc<T>;
+    procedure SetDataFactory(const ADataFactory : TFunc<T>);
     property Data: T
       read GetData write SetData;
 
-    property RefFactory: TFunc<T>
-      read GetRefFactory write SetRefFactory;
+    property DataFactory: TFunc<T>
+      read GetDataFactory write SetDataFactory;
   end;
 
   IRecord = IDynamicRecord;
@@ -573,7 +573,7 @@ type
     ); overload;
     constructor Create(const ARecord: TRecord<T>); overload;
     constructor Create(AInstance: T); overload;
-    constructor Create(const ARefFactory: TFunc<T>); overload;
+    constructor Create(const ADataFactory: TFunc<T>); overload;
 
     class function Create: TRecord<T>; overload; static;
 
@@ -753,7 +753,7 @@ type
 
   public
     procedure BeforeDestruction; override;
-    
+
   published
     { Fieldname used as key in the TDynamicRecord collection }
     property Name: string
@@ -927,8 +927,8 @@ type
     procedure SetData(AValue: T);
 
   strict private
-    function GetRefFactory: TFunc<T>;
-    procedure SetRefFactory(const Value: TFunc<T>); protected
+    function GetDataFactory: TFunc<T>;
+    procedure SetDataFactory(const Value: TFunc<T>); protected
     function GetField(AName: string): IDynamicField; override;
     function GetItem(Index: Integer): IDynamicField; override;
     function GetItemValue(AName: string): TValue; override;
@@ -949,8 +949,8 @@ type
     property Data: T
       read GetData write SetData;
 
-    property RefFactory: TFunc<T>
-      read GetRefFactory write SetRefFactory;
+    property DataFactory: TFunc<T>
+      read GetDataFactory write SetDataFactory;
   end;
 
 implementation
@@ -2584,7 +2584,7 @@ end;
 
 function TDynamicRecord<T>.GetData: T;
 begin
-  if not Assigned(FData) then
+  if not Assigned(FData) and Assigned(FRefFactory) then
     FData := FRefFactory();
   Result := FData;
 end;
@@ -2634,12 +2634,12 @@ begin
   end;
 end;
 
-function TDynamicRecord<T>.GetRefFactory: TFunc<T>;
+function TDynamicRecord<T>.GetDataFactory: TFunc<T>;
 begin
   Result := FRefFactory;
 end;
 
-procedure TDynamicRecord<T>.SetRefFactory(const Value: TFunc<T>);
+procedure TDynamicRecord<T>.SetDataFactory(const Value: TFunc<T>);
 begin
   FRefFactory := Value;
 end;
@@ -2765,9 +2765,9 @@ begin
   // fake constructor that can be used to assign a new instance to a variable.
 end;
 
-constructor TRecord<T>.Create(const ARefFactory: TFunc<T>);
+constructor TRecord<T>.Create(const ADataFactory: TFunc<T>);
 begin
-  DynamicRecord.Data := ARefFactory();
+  DynamicRecord.Data := ADataFactory();
 end;
 
 constructor TRecord<T>.Create(const AInstance: TValue; const AAssignProperties,

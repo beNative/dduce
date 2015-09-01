@@ -82,10 +82,9 @@ end;
 
 class function Reflect.Properties<T>(const AArg: T): IDynamicRecord<T>;
 var
-  R : IDynamicRecord<T>;
+  R : TRecord<T>;
 begin
-  R := TDynamicRecord<T>.Create(AArg);
-  Result := R;
+  Result := TRecord<T>.Create(AArg);
 end;
 
 // ElementNamesOfSet
