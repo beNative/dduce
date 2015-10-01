@@ -40,7 +40,7 @@
         <VerInfo_Locale>2067</VerInfo_Locale>
         <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;$(DCC_Namespace)</DCC_Namespace>
         <BRCC_IncludePath>C:\CIMDevelopment\TestAndLearn\TSI\trunk\Tests\FastMM;$(BRCC_IncludePath)</BRCC_IncludePath>
-        <DCC_Define>_CONSOLE_TESTRUNNER;$(DCC_Define)</DCC_Define>
+        <DCC_Define>_CONSOLE_TESTRUNNER;TESTINSIGHT;$(DCC_Define)</DCC_Define>
         <DCC_DcuOutput>.</DCC_DcuOutput>
         <DCC_DependencyCheckOutputName>Tests.exe</DCC_DependencyCheckOutputName>
         <DCC_UnitSearchPath>$(BDS)\Source\DUnit\src;C:\CIMDevelopment\TestAndLearn\TSI\trunk\Tests\FastMM;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
@@ -532,13 +532,13 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>

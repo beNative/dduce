@@ -45,7 +45,6 @@ type
     ): Boolean;
 
     function RetrieveRecordFunction: TRecord;
-    function CreateDataSet: TDataSet;
     procedure ProcessRecord(ARecord: IDynamicRecord);
 
   public
@@ -54,27 +53,29 @@ type
 
   published
     procedure TestTRecordAssignments;
-    procedure TestContainsField;
-    procedure TestDeleteField;
-    procedure TestIsEmpty;
+    procedure Test_ContainsField_method;
+    procedure Test_DeleteField_method;
+    procedure Test_IsEmpty_method;
 
     procedure TestConversions;
 
     // test methods with automatic conversion to destination type
-    procedure TestToFloat;
-    procedure TestToInteger;
-    procedure TestToString;
-    procedure TestToBoolean;
-    procedure TestIsBlank;
+    procedure Test_ToFloat_Method;
+    procedure Test_ToInteger_method;
+    procedure Test_ToString_method;
+    procedure Test_ToBoolean_method;
+    procedure Test_IsBlank_method;
 
-    procedure TestFromDataSet;
+    procedure Test_FromDataSet_method;
 
-    procedure TestFromStrings;
-    procedure TestToStrings;
+    procedure Test_FromStrings_method;
+    procedure Test_ToStrings_method;
 
-    procedure TestAsDelimitedText;
-    procedure TestAsVarArray;
-    procedure TestAsCommaText;
+    procedure Test_AsDelimitedText_method;
+    procedure Test_AsVarArray_method;
+    procedure Test_AsCommaText_method;
+
+    procedure Test_Count_Property;
 
     procedure TestAssignProperty;
 
@@ -99,11 +100,6 @@ const
   TEST_NON_EXISTENT_VALUE = 'TestNonExistentValue';
 
 {$REGION 'private methods'}
-function TestGenericTRecord.CreateDataSet: TDataSet;
-begin
-
-end;
-
 procedure TestGenericTRecord.ProcessRecord(ARecord: IDynamicRecord);
 begin
   Status('ProcessRecord:');
@@ -113,12 +109,12 @@ end;
 function TestGenericTRecord.RetrieveRecord(const AString: string;
   var ARecord: TRecord): Boolean;
 begin
-
+  Result := True;
 end;
 
 function TestGenericTRecord.RetrieveRecordFunction: TRecord;
 begin
-
+  Result := TRecord.Create;
 end;
 {$ENDREGION}
 
@@ -145,7 +141,7 @@ end;
 {$ENDREGION}
 
 {$REGION 'Test methods'}
-procedure TestGenericTRecord.TestAsCommaText;
+procedure TestGenericTRecord.Test_AsCommaText_method;
 var
   R : TRecord<TTestClass>;
   T : TRecord;
@@ -156,7 +152,7 @@ begin
   ProcessRecord(FRecord);
 end;
 
-procedure TestGenericTRecord.TestAsDelimitedText;
+procedure TestGenericTRecord.Test_AsDelimitedText_method;
 begin
 
 end;
@@ -166,17 +162,24 @@ begin
 
 end;
 
-procedure TestGenericTRecord.TestAsVarArray;
+procedure TestGenericTRecord.Test_AsVarArray_method;
 begin
 
 end;
 
-procedure TestGenericTRecord.TestContainsField;
+procedure TestGenericTRecord.Test_ContainsField_method;
 var
   R : TRecord<TTestClass>;
 begin
   R.Create;
   CheckTrue(R.ContainsField('TestChar'));
+end;
+
+procedure TestGenericTRecord.Test_Count_Property;
+var
+  R : TRecord<TTestClass>;
+begin
+  CheckEquals(12, R.Count);
 end;
 
 procedure TestGenericTRecord.TestConversions;
@@ -191,7 +194,8 @@ begin
     O.TestString  := 'test';
     O.TestInteger := 5;
     O.TestDouble  := 3.14;
-    R.Create(O);
+    //R.From<TTestClass>(O);
+    //R.Create(O);
 //    R.AssignProperty(O, TEST_BOOLEAN);
 //    R.AssignProperty(O, TEST_STRING);
 //    R.AssignProperty(O, TEST_INTEGER);
@@ -215,22 +219,22 @@ begin
   end;
 end;
 
-procedure TestGenericTRecord.TestDeleteField;
+procedure TestGenericTRecord.Test_DeleteField_method;
 begin
-        // should not be possible
+        // should not be possible!
 end;
 
-procedure TestGenericTRecord.TestFromDataSet;
-begin
-
-end;
-
-procedure TestGenericTRecord.TestFromStrings;
+procedure TestGenericTRecord.Test_FromDataSet_method;
 begin
 
 end;
 
-procedure TestGenericTRecord.TestIsBlank;
+procedure TestGenericTRecord.Test_FromStrings_method;
+begin
+
+end;
+
+procedure TestGenericTRecord.Test_IsBlank_method;
 var
   R: TRecord<TTestClass>;
 begin
@@ -238,9 +242,13 @@ begin
   CheckTrue(R.IsBlank(TEST_STRING), TEST_STRING);
 end;
 
-procedure TestGenericTRecord.TestIsEmpty;
+{ TODO: IsEmpty has little meaning in the generic version. }
+
+procedure TestGenericTRecord.Test_IsEmpty_method;
+var
+  R: TRecord<TTestClass>;
 begin
-//
+  CheckFalse(R.IsEmpty);  //
 end;
 
 procedure TestGenericTRecord.TestRetrieveRecord;
@@ -253,7 +261,7 @@ begin
 //
 end;
 
-procedure TestGenericTRecord.TestToBoolean;
+procedure TestGenericTRecord.Test_ToBoolean_method;
 begin
   CheckTrue(FRecord.ToBoolean(TEST_STRING, True), TEST_STRING);
   //CheckTrue(FRecord.ToBoolean(TEST_STRING_INTEGER, True), TEST_STRING_INTEGER);
@@ -263,7 +271,7 @@ begin
   CheckTrue(FRecord.ToBoolean(TEST_INTEGER, True), TEST_INTEGER);
 end;
 
-procedure TestGenericTRecord.TestToFloat;
+procedure TestGenericTRecord.Test_ToFloat_Method;
 begin
   CheckEquals(5, FRecord.ToFloat(TEST_INTEGER), TEST_INTEGER);
   try
@@ -277,29 +285,24 @@ begin
   CheckEquals(3.14, FRecord.ToFloat(TEST_DOUBLE), 0.001);
 end;
 
-procedure TestGenericTRecord.TestToInteger;
+procedure TestGenericTRecord.Test_ToInteger_method;
 begin
   CheckEquals(1, FRecord.ToInteger(TEST_BOOLEAN), TEST_BOOLEAN);
   CheckEquals(5, FRecord.ToInteger(TEST_INTEGER), TEST_INTEGER);
   CheckEquals(0, FRecord.ToInteger(TEST_STRING), TEST_STRING);
-  //CheckEquals(5, FRecord.ToInteger(TEST_STRING_INTEGER), TEST_STRING_INTEGER);
-//  CheckEquals(0, FRecord.ToInteger(TEST_STRING_DOUBLE), TEST_STRING_DOUBLE);
-
   // float values are not rounded or trunked when converting. Conversion fails.
   CheckEquals(0, FRecord.ToInteger(TEST_DOUBLE), TEST_DOUBLE);
 end;
 
-procedure TestGenericTRecord.TestToString;
+procedure TestGenericTRecord.Test_ToString_method;
 begin
   CheckEquals('True', FRecord.ToString(TEST_BOOLEAN), TEST_BOOLEAN);
   CheckEquals('5', FRecord.ToString(TEST_INTEGER), TEST_INTEGER);
   CheckEquals('Test', FRecord.ToString(TEST_STRING), TEST_STRING);
-//CheckEquals('5', FRecord.ToString(TEST_STRING_INTEGER), TEST_STRING_INTEGER);
-  //CheckEquals('3,14', FRecord.ToString(TEST_STRING_DOUBLE), TEST_STRING_DOUBLE);
   CheckEquals('3,14', FRecord.ToString(TEST_DOUBLE), TEST_DOUBLE);
 end;
 
-procedure TestGenericTRecord.TestToStrings;
+procedure TestGenericTRecord.Test_ToStrings_method;
 var
   SL : TStrings;
 begin
@@ -321,21 +324,21 @@ var
   DCR : IDynamicRecord;
   DCGR : IDynamicRecord<TTestClass>;
 begin
-  DR := TRecord.Create;
+  DR := TRecord.CreateDynamicRecord;
   DR[TEST_INTEGER] := 5;
   Status(DR.ToString);
 
-  //DCR := TRecord<TTestClass>.Create(FObject);
-  Status(DCR.ToString);
-
-  // test TRecord<T> => IDynamicRecord<T>
-  DCGR := TRecord<TTestClass>.Create(FObject);
-  DCGR.Data.TestInteger := 50;
-  Status(DCGR.ToString);
-
-  DCR := DCGR;
-  DCR.Data.TestString := 'String';
-  Status(DCR.ToString);
+//  //DCR := TRecord<TTestClass>.Create(FObject);
+//  Status(DCR.ToString);
+//
+//  // test TRecord<T> => IDynamicRecord<T>
+//  DCGR := TRecord<TTestClass>.Create(FObject);
+//  DCGR.Data.TestInteger := 50;
+//  Status(DCGR.ToString);
+//
+//  DCR := DCGR;
+//  DCR.Data.TestString := 'String';
+//  Status(DCR.ToString);
 end;
 {$ENDREGION}
 
