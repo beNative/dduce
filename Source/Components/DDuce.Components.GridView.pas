@@ -6583,11 +6583,14 @@ end;
 procedure TCustomGridView.WMKillFocus(var Message: TWMKillFocus);
 begin
   inherited;
-  if Rows.Count > 0 then
+  if not (csDestroying in ComponentState) then
   begin
-    InvalidateFocus;
-    if (FEdit <> nil) and (Message.FocusedWnd <> FEdit.Handle) then
-      HideCursor;
+    if Rows.Count > 0 then
+    begin
+      InvalidateFocus;
+      if (FEdit <> nil) and (Message.FocusedWnd <> FEdit.Handle) then
+        HideCursor;
+    end;
   end;
 end;
 
