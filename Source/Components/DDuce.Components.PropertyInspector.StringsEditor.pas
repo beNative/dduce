@@ -24,7 +24,8 @@ uses
   System.SysUtils, System.Classes, System.Actions,
 
   Vcl.Controls, Vcl.Forms, Vcl.StdCtrls,
-  Vcl.ComCtrls, Vcl.StdActns, Vcl.ActnList, Vcl.Menus, Vcl.ImgList;
+  Vcl.ComCtrls, Vcl.StdActns, Vcl.ActnList, Vcl.Menus, Vcl.ImgList,
+  System.ImageList;
 
 resourcestring
   SCaption            = 'String List Editor';
