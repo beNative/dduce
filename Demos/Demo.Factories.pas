@@ -539,7 +539,7 @@ begin
   ATVP.SyncMode := False;
   ATVP.UseColumnDefinitions := True;
   ATVP.ListMode             := True;
-  ATVP.View.ItemsSource     := ASource;
+  ATVP.View.ItemsSource     := ASource as IObjectList;
   if Assigned(ATemplate) then
     ATVP.View.ItemTemplate :=
       TColumnDefinitionsControlTemplate.Create(ATVP.ColumnDefinitions);

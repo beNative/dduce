@@ -40,7 +40,7 @@ uses
   Data.DB,
   Datasnap.DBClient,
 
-  Spring,
+  Spring, // for using Nullable types.
 
   DDuce.Components.GridView, DDuce.Components.Inspector,
 
@@ -160,60 +160,139 @@ type
 
 type
   TfrmDynamicRecords = class(TForm)
-    {$REGION 'designer controls'}
-    aclMain                   : TActionList;
-    actTestAssign             : TAction;
-    actTestAssignTo           : TAction;
-    actToStrings              : TAction;
-    btnTestAssign             : TButton;
-    btnTestAssignTo           : TButton;
-    btnTestAssignTo1          : TButton;
-    dscTest                   : TDataSource;
-    dsTest                    : TClientDataSet;
-    pnlBottom                 : TGridPanel;
-    grdTest                   : TDBGrid;
-    lblContact                : TLabel;
-    lblTestClass              : TLabel;
-    lblTestRecord             : TLabel;
-    lblTestTRecord            : TLabel;
-    pgcMain                   : TPageControl;
-    pnlRecordInspector        : TPanel;
-    tsContactObject           : TTabSheet;
-    tsDataSet                 : TTabSheet;
-    tsTestClass               : TTabSheet;
-    tsTestRecord              : TTabSheet;
-    tsTRecord                 : TTabSheet;
-    actTestData               : TAction;
-    btnTestData               : TButton;
-    pnlRecordInspectorHeader  : TPanel;
-    pnlBottomRight            : TPanel;
-    pnlRightBottomHeader      : TPanel;
-    pnlTRecordRepresentations : TGridPanel;
-    grpAsCommaText            : TGroupBox;
-    grpAsDelimitedText        : TGroupBox;
-    grpToStrings              : TGroupBox;
-    grpToString               : TGroupBox;
-    lblAsCommaText            : TLabel;
-    lblAsDelimitedText        : TLabel;
-    lblToStrings              : TLabel;
-    lblToString               : TLabel;
-    chkQuoteValues            : TCheckBox;
-    edtDelimiter              : TLabeledEdit;
-    edtQuoteChar              : TLabeledEdit;
-    chkAlignValues            : TCheckBox;
-    btn1                      : TButton;
-    {$ENDREGION}
+    aclMain                                   : TActionList;
+    actAssignFDynamicRecord1ToFDynamicRecord2 : TAction;
+    actAssignFDynamicRecord1ToFRecord1        : TAction;
+    actAssignFDynamicRecord1ToFRecord2        : TAction;
+    actAssignFDynamicRecord2ToFDynamicRecord1 : TAction;
+    actAssignFDynamicRecord2ToFRecord1        : TAction;
+    actAssignFDynamicRecord2ToFRecord2        : TAction;
+    actAssignFieldValueToDynamicRecord1       : TAction;
+    actAssignFieldValueToDynamicRecord2       : TAction;
+    actAssignFieldValueToFRecord1             : TAction;
+    actAssignFieldValueToFRecord2             : TAction;
+    actAssignFRecord1ToFDynamicRecord1        : TAction;
+    actAssignFRecord1ToFDynamicRecord2        : TAction;
+    actAssignFRecord1ToFRecord2               : TAction;
+    actAssignFRecord2ToFDynamicRecord1        : TAction;
+    actAssignFRecord2ToFDynamicRecord2        : TAction;
+    actAssignFRecord2ToFRecord1               : TAction;
+    actCustomTest                             : TAction;
+    actFDynamicRecord1Clear                   : TAction;
+    actFDynamicRecord2Clear                   : TAction;
+    actFRecord1Clear                          : TAction;
+    actFRecord2Clear                          : TAction;
+    actTestAssign                             : TAction;
+    actTestAssignTo                           : TAction;
+    actTestData                               : TAction;
+    actToStrings                              : TAction;
+    btnAssignFDynamicRecord2ToFDynamicRecord1: TButton;
+    btnAssignFDynamicRecord1ToFDynamicRecord2: TButton;
+    btnAssignFDynamicRecord1ToFRecord2        : TButton;
+    btnAssignFDynamicRecord2ToFRecord1        : TButton;
+    btnAssignFDynamicRecord2ToFRecord2        : TButton;
+    btnAssignFieldValueToDynamicRecord1       : TButton;
+    btnAssignFieldValueToDynamicRecord2       : TButton;
+    btnAssignFieldValueToFRecord1             : TButton;
+    btnAssignFieldValueToFRecord2             : TButton;
+    btnAssignFDynamicRecord1ToFRecord1: TButton;
+    btnAssignFRecord1ToFDynamicRecord1: TButton;
+    btnAssignFRecord1ToFDynamicRecord2: TButton;
+    btnAssignFRecord2ToFRecord1: TButton;
+    btnAssignFRecord1ToFRecord4               : TButton;
+    btnAssignFRecord2ToFDynamicRecord1        : TButton;
+    btnAssignFRecord2ToFDynamicRecord2        : TButton;
+    btnClearFRecord1                          : TButton;
+    btnCustomTest                             : TButton;
+    btnFDynamicRecord1Clear1                  : TButton;
+    btnFDynamicRecord2Clear                   : TButton;
+    btnFRecord2Clear1                         : TButton;
+    btnTestAssign                             : TButton;
+    btnTestAssignTo                           : TButton;
+    btnTestAssignTo1                          : TButton;
+    btnTestData                               : TButton;
+    chkAlignValues                            : TCheckBox;
+    chkQuoteValues                            : TCheckBox;
+    dscTest                                   : TDataSource;
+    dsTest                                    : TClientDataSet;
+    edtDelimiter                              : TLabeledEdit;
+    edtQuoteChar                              : TLabeledEdit;
+    grdTest                                   : TDBGrid;
+    grpAsCommaText                            : TGroupBox;
+    grpAsDelimitedText                        : TGroupBox;
+    grpToString                               : TGroupBox;
+    grpToStrings                              : TGroupBox;
+    lbl00                                     : TLabel;
+    lbl01                                     : TLabel;
+    lbl02                                     : TLabel;
+    lbl03                                     : TLabel;
+    lbl04                                     : TLabel;
+    lbl15                                     : TLabel;
+    lbl20                                     : TLabel;
+    lbl30                                     : TLabel;
+    lbl40                                     : TLabel;
+    lblContact                                : TLabel;
+    lblFDynamicRecord1                        : TLabel;
+    lblFDynamicRecord2                        : TLabel;
+    lblFRecord1                               : TLabel;
+    lblFRecord2                               : TLabel;
+    lblTestClass                              : TLabel;
+    lblTestRecord                             : TLabel;
+    lblTestTRecord                            : TLabel;
+    mmoAsCommaText                            : TMemo;
+    mmoAsDelimitedText                        : TMemo;
+    mmoToString                               : TMemo;
+    mmoToStrings                              : TMemo;
+    pgcMain                                   : TPageControl;
+    pnlAssignments: TGridPanel;
+    pnlBottom                                 : TGridPanel;
+    pnlBottomRight                            : TPanel;
+    pnlRecordInspector                        : TPanel;
+    pnlRecordInspectorHeader                  : TPanel;
+    pnlRightBottomHeader                      : TPanel;
+    pnlTop                                    : TPanel;
+    pnlTRecordRepresentations                 : TGridPanel;
+    spl1                                      : TSplitter;
+    tsAssignments                             : TTabSheet;
+    tsContactObject                           : TTabSheet;
+    tsDataSet                                 : TTabSheet;
+    tsTestClass                               : TTabSheet;
+    tsTestRecord                              : TTabSheet;
+    tsTRecord                                 : TTabSheet;
+    pnlField: TPanel;
+    edtFieldName: TLabeledEdit;
+    edtValue: TLabeledEdit;
 
-    procedure actTestAssignExecute(Sender: TObject);
     procedure dscTestDataChange(Sender: TObject; Field: TField);
-    procedure actToStringsExecute(Sender: TObject);
-    procedure actTestDataExecute(Sender: TObject);
-
     procedure chkQuoteValuesClick(Sender: TObject);
     procedure edtQuoteCharChange(Sender: TObject);
     procedure edtDelimiterChange(Sender: TObject);
     procedure chkAlignValuesClick(Sender: TObject);
-    procedure btn1Click(Sender: TObject);
+
+    procedure actTestAssignExecute(Sender: TObject);
+    procedure actToStringsExecute(Sender: TObject);
+    procedure actTestDataExecute(Sender: TObject);
+    procedure actFDynamicRecord1ClearExecute(Sender: TObject);
+    procedure actFDynamicRecord2ClearExecute(Sender: TObject);
+    procedure actAssignFieldValueToFRecord1Execute(Sender: TObject);
+    procedure actAssignFRecord1ToFDynamicRecord1Execute(Sender: TObject);
+    procedure actAssignFRecord1ToFRecord2Execute(Sender: TObject);
+    procedure actFRecord1ClearExecute(Sender: TObject);
+    procedure actFRecord2ClearExecute(Sender: TObject);
+    procedure actAssignFieldValueToFRecord2Execute(Sender: TObject);
+    procedure actAssignFDynamicRecord1ToFDynamicRecord2Execute(Sender: TObject);
+    procedure actAssignFieldValueToDynamicRecord2Execute(Sender: TObject);
+    procedure actCustomTestExecute(Sender: TObject);
+    procedure actAssignFieldValueToDynamicRecord1Execute(Sender: TObject);
+    procedure actAssignFRecord2ToFDynamicRecord2Execute(Sender: TObject);
+    procedure actAssignFRecord2ToFDynamicRecord1Execute(Sender: TObject);
+    procedure actAssignFRecord1ToFDynamicRecord2Execute(Sender: TObject);
+    procedure actAssignFDynamicRecord1ToFRecord2Execute(Sender: TObject);
+    procedure actAssignFDynamicRecord1ToFRecord1Execute(Sender: TObject);
+    procedure actAssignFDynamicRecord2ToFRecord2Execute(Sender: TObject);
+    procedure actAssignFDynamicRecord2ToFDynamicRecord1Execute(Sender: TObject);
+    procedure actAssignFDynamicRecord2ToFRecord1Execute(Sender: TObject);
+    procedure actAssignFRecord2ToFRecord1Execute(Sender: TObject);
 
   private
     FContact          : TContact;
@@ -226,35 +305,43 @@ type
     FUpdate           : Boolean;
     FStrings          : TStrings;
 
+    // the test dummies to play with.
+    FRecord1          : TRecord;
+    FRecord2          : TRecord;
+    FDynamicRecord1   : IDynamicRecord;
+    FDynamicRecord2   : IDynamicRecord;
+
+    procedure FInspectorGetCellText(
+          Sender : TObject;
+          Cell   : TGridCell;
+      var Value  : string
+    );
+    procedure FInspectorSetEditText(
+          Sender : TObject;
+          Cell   : TGridCell;
+      var Value  : string
+    );
+    procedure FInspectorGetEditStyle(
+          Sender  : TObject;
+          Cell    : TGridCell;
+      var Style   : TGridEditStyle
+    );
+    procedure FInspectorGetEditText(
+          Sender : TObject;
+          Cell   : TGridCell;
+      var Value  : string
+    );
+
     function CreateInspector(AParent : TWinControl): TInspector;
+
     procedure CreateContact;
     procedure CreateTestClass;
     procedure CreateTestRecord;
     procedure CreateTestTRecord;
     procedure CreateTestManagedClass;
 
-    procedure InspectorGetCellText(
-          Sender : TObject;
-          Cell   : TGridCell;
-      var Value  : string
-    );
-    procedure InspectorSetEditText(
-          Sender : TObject;
-          Cell   : TGridCell;
-      var Value  : string
-    );
-    procedure InspectorGetEditStyle(
-          Sender  : TObject;
-          Cell    : TGridCell;
-      var Style   : TGridEditStyle
-    );
-    procedure InspectorGetEditText(
-          Sender : TObject;
-          Cell   : TGridCell;
-      var Value  : string
-    );
-
     procedure Changed;
+    procedure UpdateControls;
 
     procedure ExecuteFromDataSet;
     procedure ExecuteAssignTContact;
@@ -262,8 +349,31 @@ type
     procedure ExecuteAssignTTestRecord;
     procedure ExecuteAssignTRecord;
 
+    procedure ExecuteAssignFieldValueToFRecord1;
+    procedure ExecuteAssignFieldValueToFRecord2;
+    procedure ExecuteAssignFieldValueToFDynamicRecord1;
+    procedure ExecuteAssignFieldValueToFDynamicRecord2;
+
+    procedure ExecuteAssignFRecord1ToFRecord2;
+    procedure ExecuteAssignFRecord1ToFDynamicRecord1;
+    procedure ExecuteAssignFRecord1ToFDynamicRecord2;
+
+    procedure ExecuteAssignFRecord2ToFRecord1;
+    procedure ExecuteAssignFRecord2ToFDynamicRecord1;
+    procedure ExecuteAssignFRecord2ToFDynamicRecord2;
+
+    procedure ExecuteAssignFDynamicRecord1ToFRecord1;
+    procedure ExecuteAssignFDynamicRecord1ToFRecord2;
+    procedure ExecuteAssignFDynamicRecord1ToFDynamicRecord2;
+
+    procedure ExecuteAssignFDynamicRecord2ToFRecord1;
+    procedure ExecuteAssignFDynamicRecord2ToFRecord2;
+    procedure ExecuteAssignFDynamicRecord2ToFDynamicRecord1;
+
   protected
     procedure UpdateActions; override;
+
+    procedure UpdateRefCountDisplay;
 
   public
     procedure AfterConstruction; override;
@@ -286,56 +396,28 @@ procedure TfrmDynamicRecords.AfterConstruction;
 begin
   inherited AfterConstruction;
   FInspector := CreateInspector(pnlRecordInspector);
-  FStrings := TStringList.Create;
+  FStrings   := TStringList.Create;
   CreateContact;
   CreateTestClass;
   CreateTestRecord;
   CreateTestTRecord;
   CreateTestManagedClass;
+  FRecord1.Clear;
+  FDynamicRecord1 := TRecord.CreateDynamicRecord;
+  FDynamicRecord2 := TRecord.CreateDynamicRecord;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.BeforeDestruction;
 begin
-  inherited BeforeDestruction;
   FreeAndNil(FInspector);
   FreeAndNil(FStrings);
   FreeAndNil(FContact);
   FreeAndNil(FTestClass);
+  FDynamicRecord1 := nil;
+  FDynamicRecord2 := nil;
+  inherited BeforeDestruction;
 end;
-
-procedure TfrmDynamicRecords.btn1Click(Sender: TObject);
-var
-  R  : TRecord;
-  R2 : IDynamicRecord;   // should behave as a proper reference variable
-  R3 : TRecord;
-  R5 : TRecord;
-
-begin
-  //R2 := TRecord.Create;
-  R['TestInteger'] := 5;
-  R3 := R;
- // R3 := R;
-  R2 := R; // does also increase refcount => unwanted sideeffect  -> can be monitorred in TRecord!
-    R5 := R;
-  R['TestInteger'] := 6;       // makes a new copy while we do not want this
-
-
-
-//
-//  R['Test'] := 5;
-//  R2 := R;
-//  R2['Test'] := 6;
-  ShowMessage(R.ToString);
-  ShowMessage(R2.ToString);
-  ShowMessage(R5.ToString);
-
-
-  // WORKS
-//  IDR := GR; // does not work.
-  //ShowMessage(IDR.ToString);
-end;
-
 {$ENDREGION}
 
 {$REGION 'action handlers'}
@@ -364,11 +446,161 @@ begin
   end
 end;
 
+procedure TfrmDynamicRecords.actAssignFDynamicRecord1ToFDynamicRecord2Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFDynamicRecord1ToFDynamicRecord2;
+end;
+
+procedure TfrmDynamicRecords.actAssignFRecord1ToFDynamicRecord1Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFRecord1ToFDynamicRecord1;
+end;
+
+procedure TfrmDynamicRecords.actAssignFRecord1ToFRecord2Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFRecord1ToFRecord2;
+end;
+
+procedure TfrmDynamicRecords.actAssignFieldValueToDynamicRecord1Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFieldValueToFDynamicRecord1;
+end;
+
+procedure TfrmDynamicRecords.actAssignFieldValueToDynamicRecord2Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFieldValueToFDynamicRecord2;
+end;
+
+procedure TfrmDynamicRecords.actAssignFieldValueToFRecord1Execute(Sender: TObject);
+begin
+  ExecuteAssignFieldValueToFRecord1;
+end;
+
+procedure TfrmDynamicRecords.actAssignFieldValueToFRecord2Execute(Sender: TObject);
+begin
+  ExecuteAssignFieldValueToFRecord2;
+end;
+
+procedure TfrmDynamicRecords.actAssignFRecord2ToFDynamicRecord2Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFRecord2ToFDynamicRecord2;
+end;
+
+procedure TfrmDynamicRecords.actAssignFRecord2ToFDynamicRecord1Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFRecord2ToFDynamicRecord1;
+end;
+
+procedure TfrmDynamicRecords.actAssignFRecord1ToFDynamicRecord2Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFRecord1ToFDynamicRecord2;
+end;
+
+procedure TfrmDynamicRecords.actAssignFDynamicRecord1ToFRecord2Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFDynamicRecord1ToFRecord2;
+end;
+
+procedure TfrmDynamicRecords.actAssignFDynamicRecord1ToFRecord1Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFDynamicRecord1ToFRecord1;
+end;
+
+procedure TfrmDynamicRecords.actAssignFDynamicRecord2ToFRecord2Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFDynamicRecord2ToFRecord2;
+end;
+
+procedure TfrmDynamicRecords.actAssignFDynamicRecord2ToFDynamicRecord1Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFDynamicRecord2ToFDynamicRecord1;
+end;
+
+procedure TfrmDynamicRecords.actAssignFDynamicRecord2ToFRecord1Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFDynamicRecord2ToFRecord1;
+end;
+
+procedure TfrmDynamicRecords.actAssignFRecord2ToFRecord1Execute(
+  Sender: TObject);
+begin
+  ExecuteAssignFRecord2ToFRecord1;
+end;
+
+procedure TfrmDynamicRecords.actCustomTestExecute(Sender: TObject);
+var
+  R1 : TRecord;
+  R2 : TRecord;
+  R3 : TRecord;
+  I1 : IDynamicRecord;   // should behave as a proper reference variable
+begin
+  R1['TestInteger']  := 5;
+  R1.Data.TestString := 'Test';
+  R2 := R1; // copy content (COW semantics)
+  ShowMessage(Format('%d %d', [R1.RefCount, R1.InternalRefCount]));
+  I1 := TRecord.CreateDynamicRecord;
+  I1.Assign(R1);
+  ShowMessage(Format('%d %d', [R1.RefCount, R1.InternalRefCount]));
+  R3.Assign(R1);
+  R3.Data.TestInteger := 7;
+  ShowMessage(Format('%d %d', [R1.RefCount, R1.InternalRefCount]));
+  R1['TestInteger'] := 6;       // makes a new copy while we do not want this
+  ShowMessage(Format('%d %d', [R1.RefCount, R1.InternalRefCount]));
+  ShowMessage(R1.ToString); //6
+  ShowMessage(R2.ToString); //5
+  ShowMessage(R3.ToString); //5
+  ShowMessage(I1.ToString); // 6
+end;
+
+procedure TfrmDynamicRecords.actFDynamicRecord1ClearExecute(Sender: TObject);
+begin
+  if Assigned(FDynamicRecord1) then
+  begin
+    FDynamicRecord1.Clear;
+    Changed;
+  end;
+end;
+
+procedure TfrmDynamicRecords.actFDynamicRecord2ClearExecute(Sender: TObject);
+begin
+  if Assigned(FDynamicRecord2) then
+  begin
+    FDynamicRecord2.Clear;
+    Changed;
+  end;
+end;
+
+procedure TfrmDynamicRecords.actFRecord1ClearExecute(Sender: TObject);
+begin
+  FRecord1.Clear;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.actFRecord2ClearExecute(Sender: TObject);
+begin
+  FRecord2.Clear;
+  Changed;
+end;
+
 procedure TfrmDynamicRecords.actTestDataExecute(Sender: TObject);
 var
   V: Variant;
 begin
   V := 50;
+  // assign arbitrary data
   FRecord.Data.MyInt := 10;
   FRecord.Data.MyVar := V;
   Changed;
@@ -382,7 +614,7 @@ end;
 {$ENDREGION}
 
 {$REGION 'event handlers'}
-procedure TfrmDynamicRecords.InspectorGetCellText(Sender: TObject;
+procedure TfrmDynamicRecords.FInspectorGetCellText(Sender: TObject;
   Cell: TGridCell; var Value: string);
 begin
   if Cell.Col = 0 then
@@ -395,13 +627,13 @@ begin
   end;
 end;
 
-procedure TfrmDynamicRecords.InspectorGetEditStyle(Sender: TObject;
+procedure TfrmDynamicRecords.FInspectorGetEditStyle(Sender: TObject;
   Cell: TGridCell; var Style: TGridEditStyle);
 begin
   Style := geSimple;
 end;
 
-procedure TfrmDynamicRecords.InspectorGetEditText(Sender: TObject;
+procedure TfrmDynamicRecords.FInspectorGetEditText(Sender: TObject;
   Cell: TGridCell; var Value: string);
 begin
   if Cell.Col = 0 then
@@ -414,7 +646,7 @@ begin
   end;
 end;
 
-procedure TfrmDynamicRecords.InspectorSetEditText(Sender: TObject;
+procedure TfrmDynamicRecords.FInspectorSetEditText(Sender: TObject;
   Cell: TGridCell; var Value: String);
 begin
   if Cell.Col = 1 then
@@ -486,12 +718,16 @@ begin
   FTestClass := TTestClass.Create;
   FTestClass.TestString := 'string';
   FTestClass.TestNullableString := 'NullableString';
-  FTestClass.TestNullableString := Null;
+  FTestClass.TestNullableDateTime := Null;
 end;
 
 procedure TfrmDynamicRecords.CreateTestManagedClass;
 begin
-  FTestManagedClass.Data.TestBoolean := True;
+  FTestManagedClass.Data.TestBoolean  := True;
+  FTestManagedClass.Data.TestChar     := 'Y';
+  FTestManagedClass.Data.TestDateTime := Now;
+  FTestManagedClass.Data.TestInteger  := 5;
+  FTestManagedClass.Data.TestString   := 'foo';
 end;
 
 procedure TfrmDynamicRecords.CreateContact;
@@ -499,10 +735,10 @@ begin
   if Assigned(FContact) then
     FreeAndNil(FContact);
   FContact := TContact.Create;
-  FContact.FirstName := 'Tim';
-  FContact.LastName := 'Sinaeve';
-  FContact.Number := 5;
-  FContact.BirthDate := Now;
+  FContact.FirstName := 'John';
+  FContact.LastName  := 'Doe';
+  FContact.Number    := 5;
+  FContact.BirthDate := Now - 20000;
 end;
 
 function TfrmDynamicRecords.CreateInspector(AParent : TWinControl): TInspector;
@@ -510,17 +746,18 @@ begin
   Result := TInspector.Create(Self);
   Result.Parent         := AParent;
   Result.Align          := alClient;
-  Result.OnGetCellText  := InspectorGetCellText;
-  Result.OnGetEditStyle := InspectorGetEditStyle;
-  Result.OnSetEditText  := InspectorSetEditText;
-  Result.OnGetEditText  := InspectorGetEditText;
+  Result.AlwaysEdit     := False;
+  Result.OnGetCellText  := FInspectorGetCellText;
+  Result.OnGetEditStyle := FInspectorGetEditStyle;
+  Result.OnSetEditText  := FInspectorSetEditText;
+  Result.OnGetEditText  := FInspectorGetEditText;
 end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
 procedure TfrmDynamicRecords.ExecuteAssignTContact;
 begin
-  FRecord.Assign(FContact);
+  FRecord.From(FContact);
   Changed;
 end;
 
@@ -532,20 +769,116 @@ end;
 
 procedure TfrmDynamicRecords.ExecuteAssignTTestClass;
 begin
-  FRecord.Assign(FTestClass);
+  FRecord.From(FTestClass);
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignTTestRecord;
 begin
-  FRecord.Assign(TValue.From(FTestRecord), False, True);
+  FRecord.From(FTestRecord);
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFieldValueToFDynamicRecord1;
+begin
+  FDynamicRecord1[edtFieldName.Text] := edtValue.Text;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFieldValueToFDynamicRecord2;
+begin
+  FDynamicRecord2[edtFieldName.Text] := edtValue.Text;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFieldValueToFRecord1;
+begin
+  FRecord1[edtFieldName.Text] := edtValue.Text;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFieldValueToFRecord2;
+begin
+  FRecord2[edtFieldName.Text] := edtValue.Text;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFRecord2ToFRecord1;
+begin
+  FRecord1 := FRecord2;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFDynamicRecord1ToFRecord1;
+begin
+  FRecord1 := FDynamicRecord1;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFDynamicRecord2ToFRecord1;
+begin
+  FRecord1 := FDynamicRecord2;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFRecord1ToFRecord2;
+begin
+  FRecord2 := FRecord1;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFDynamicRecord1ToFRecord2;
+begin
+  FRecord2 := FDynamicRecord1;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFDynamicRecord2ToFRecord2;
+begin
+  FRecord2 := FDynamicRecord2;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFRecord1ToFDynamicRecord1;
+begin
+  FDynamicRecord1 := FRecord1;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFRecord2ToFDynamicRecord1;
+begin
+  FDynamicRecord1 := FRecord2;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFDynamicRecord2ToFDynamicRecord1;
+begin
+  FDynamicRecord1 := FDynamicRecord2;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFRecord1ToFDynamicRecord2;
+begin
+  FDynamicRecord2 := FRecord1;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFRecord2ToFDynamicRecord2;
+begin
+  FDynamicRecord2 := FRecord2;
+  Changed;
+end;
+
+procedure TfrmDynamicRecords.ExecuteAssignFDynamicRecord1ToFDynamicRecord2;
+begin
+  FDynamicRecord2 := FDynamicRecord1;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteFromDataSet;
 begin
   FRecord.FromDataSet(dsTest);
-  FUpdate := True;
+  Changed;
 end;
 
 procedure TfrmDynamicRecords.Changed;
@@ -556,29 +889,48 @@ end;
 procedure TfrmDynamicRecords.UpdateActions;
 begin
   inherited UpdateActions;
+  UpdateControls;
+  UpdateRefCountDisplay;
+end;
+
+procedure TfrmDynamicRecords.UpdateControls;
+begin
   if FUpdate then
   begin
-    //lblRecord.Caption := FRecord.ToString;
-    //FInspector.Rows.Count := FRecord.Count;
-    //FInspector.UpdateEditText;
-//    FInspector.InvalidateGrid;
+    FInspector.Rows.Count := FRecord.Count;
+    FInspector.InvalidateGrid;
     lblContact.Caption     := AsPropString(FContact);
     lblTestClass.Caption   := AsPropString(FTestClass);
     lblTestRecord.Caption  := AsFieldString(TValue.From(FTestRecord));
     lblTestTRecord.Caption := FTestTRecord.ToString;
 
     FRecord.ToStrings(FStrings);
-    lblAsCommaText.Caption     := FRecord.AsCommaText;
-    lblAsDelimitedText.Caption := FRecord.AsDelimitedText(
+    mmoAsCommaText.Text     := FRecord.AsCommaText;
+    mmoAsDelimitedText.Text := FRecord.AsDelimitedText(
       edtDelimiter.Text,
       chkQuoteValues.Checked,
       edtQuoteChar.Text[1]
     );
-    lblToString.Caption := FRecord.ToString(chkAlignValues.Checked);
-    lblToStrings.Caption := FStrings.Text;
+    mmoToString.Text := FRecord.ToString(chkAlignValues.Checked);
+    mmoToStrings.Text := FStrings.Text;
+
+    UpdateRefCountDisplay;
     FUpdate := False;
   end;
+end;
 
+procedure TfrmDynamicRecords.UpdateRefCountDisplay;
+begin
+  if Assigned(FDynamicRecord1) then
+  begin
+    lblFDynamicRecord1.Caption := FDynamicRecord1.ToString;
+  end;
+  if Assigned(FDynamicRecord2) then
+  begin
+    lblFDynamicRecord2.Caption := FDynamicRecord2.ToString;
+  end;
+  lblFRecord1.Caption      := FRecord1.ToString;
+  lblFRecord2.Caption      := FRecord2.ToString;
 end;
 {$ENDREGION}
 

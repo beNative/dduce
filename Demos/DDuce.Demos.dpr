@@ -25,6 +25,13 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   RegisterDemos;
-  Application.CreateForm(TfrmMainMenu, frmMainMenu);
+  if DemoManager.ItemList.Count = 1 then
+  begin
+    DemoManager.Execute(DemoManager.ItemList.Single);
+  end
+  else
+  begin
+    Application.CreateForm(TfrmMainMenu, frmMainMenu);
+  end;
   Application.Run;
 end.
