@@ -182,7 +182,6 @@ type
     function GetCount: Integer;
     function GetField(AName: string): IDynamicField;
 
-    procedure DoIncRefCount;
     function MutableClone: IDynamicRecord;
     function GetInternalRefCount: Integer;
 
@@ -746,7 +745,7 @@ type
 
     procedure Assign(
       const ARecord : TRecord
-    ); overload;
+    ); reintroduce; overload;
 
     procedure AssignTo(Dest: TPersistent); overload; override;
     procedure AssignTo(AInstance: TValue); reintroduce; overload;
@@ -2306,11 +2305,6 @@ begin
   Result := DynamicRecord.DeleteField(AName);
 end;
 
-procedure TRecord.DoIncRefCount;
-begin
-  FRecRefCount := FRecRefCount + 1;
-end;
-
 procedure TRecord.From(const AInstance: TValue; const AAssignProperties,
   AAssignFields, AAssignNulls: Boolean; const ANames: array of string);
 begin
@@ -2381,7 +2375,6 @@ end;
 function TRecord.MutableClone: IDynamicRecord;
 var
   N : Integer;
-  R : TRecord;
 begin
   if not Assigned(FDynamicRecord) then
   begin
@@ -2880,7 +2873,6 @@ end;
 procedure TRecord<T>.From<T>(const Value: T);
 begin
   FDynamicRecord.From(TValue.From(Value), True, False, False, []);
-//
 end;
 
 procedure TRecord<T>.FromDataSet(ADataSet: TDataSet;
