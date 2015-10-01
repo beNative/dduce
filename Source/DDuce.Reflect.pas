@@ -65,8 +65,9 @@ var
   V : TValue;
 begin
   V := TValue.From<T>(AArg);
-  R.Assign(V, False, True, True, []);
-  Result := R;
+  R.From(V, False, True, True, []);
+  Result := R.CreateDynamicRecord;
+  Result.Assign(R);
 end;
 
 class function Reflect.OrdValue<T>(const AArg: T): Integer;
