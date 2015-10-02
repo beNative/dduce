@@ -2133,6 +2133,7 @@ end;
 
 function TRecord.GetData: Variant;
 begin
+  FDynamicRecord := MutableClone;
   Result := DynamicRecord.Data;
 end;
 
