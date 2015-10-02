@@ -325,7 +325,7 @@ type
     // idynamicrecord := MyRecord
     class operator Implicit(const ASource: TRecord): IDynamicRecord;
     class operator Implicit(const ASource: IDynamicRecord): TRecord;
-    class operator Implicit(const ASource: TValue): TRecord;
+    //class operator Implicit(const ASource: TValue): TRecord;
 
   end;
 
@@ -2116,7 +2116,7 @@ end;
 procedure TRecord.Create(const AInstance: TValue;
   const ANames: array of string);
 begin
-  Assign(AInstance, ANames);
+  //Assign(AInstance, ANames);
 end;
 
 class function TRecord.CreateDynamicRecord: IDynamicRecord;
@@ -2184,10 +2184,10 @@ begin
   Result.Assign(ASource);
 end;
 
-class operator TRecord.Implicit(const ASource: TValue): TRecord;
-begin
-  Result.Assign(ASource);
-end;
+//class operator TRecord.Implicit(const ASource: TValue): TRecord;
+//begin
+//  Result.From(ASource);
+//end;
 
 class operator TRecord.Implicit(const ASource: TRecord): Variant;
 begin
@@ -2241,7 +2241,7 @@ var
   S : string;
 begin
   Clear;
-  if Length(ANames) = 0 then
+  if Length(ANames) = 0 then // assign all fields
   begin
     for F in ARecord do
       Values[F.Name] := F.Value;
@@ -2265,7 +2265,7 @@ end;
 procedure TRecord.Assign(const ARecord: TRecord);
 begin
   if ARecord.DynamicRecord <> DynamicRecord then
-    Assign(ARecord);
+    DynamicRecord.Assign(ARecord);
 end;
 
 procedure TRecord.AssignProperty(const AInstance: TValue;
@@ -2313,7 +2313,8 @@ end;
 
 procedure TRecord.From<T>(const Value: T);
 begin
-  DynamicRecord.From(TValue.From(Value), True, False, False, []);
+  //DynamicRecord.From(TValue.From(Value), True, False, False, []);
+  DynamicRecord.From(TValue.From<T>(Value), True, False, False, []);
 end;
 
 { Makes a copy of the current record of a given dataset by assigning each field
@@ -2464,7 +2465,7 @@ end;
 
 procedure TDynamicRecord<T>.AfterConstruction;
 begin
-  inherited;
+  inherited AfterConstruction;
   FRefFactory :=  function: T
   begin
     Result := T.Create; // default constructor
@@ -2475,7 +2476,7 @@ procedure TDynamicRecord<T>.BeforeDestruction;
 begin
   if Assigned(FData) then
     FreeAndNil(FData);
-  inherited;
+  inherited BeforeDestruction;
 end;
 
 constructor TDynamicRecord<T>.Create(AInstance: T);
@@ -2610,7 +2611,7 @@ end;
 procedure TDynamicField<T>.BeforeDestruction;
 begin
   Collection := nil;
-  inherited;
+  inherited BeforeDestruction;
 end;
 {$ENDREGION}
 
@@ -2791,7 +2792,7 @@ end;
 
 class operator TRecord<T>.Implicit(const ASource: TRecord<T>): TRecord;
 begin
-  Result.Assign(TValue.From<T>(ASource.Data));
+  Result.Assign(ASource.DynamicRecord);
 end;
 {$ENDREGION}
 
