@@ -16,6 +16,8 @@
 
 unit Test.Registration;
 
+{$I Test.DDuce.inc}
+
 interface
 
 procedure RegisterTests;
@@ -31,9 +33,8 @@ uses
 procedure RegisterTests;
 begin
   RegisterTest('TRecord', TestTRecord.Suite);
-  //RegisterTest('TRecord<T>', TestGenericTRecord.Suite);
+  RegisterTest('TRecord<T>', TestGenericTRecord.Suite);
   RegisterTest('Reflect', TestReflect.Suite);
-
 end;
 
 end.

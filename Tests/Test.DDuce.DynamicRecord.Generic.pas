@@ -16,6 +16,8 @@
 
 unit Test.DDuce.DynamicRecord.Generic;
 
+{$I Test.DDuce.inc}
+
 interface
 
 uses
@@ -33,10 +35,9 @@ uses
   Test.DDuce.DynamicRecord.Data;
 
 type
-  // Test methods for class TfrmMain
   TestGenericTRecord = class(TTestCase)
   private
-    FObject: TTestClass;
+    FObject : TTestClass;
     FRecord : TRecord<TTestClass>;
 
     function RetrieveRecord(
@@ -119,14 +120,17 @@ end;
 {$ENDREGION}
 
 {$REGION 'public methods'}
+{$REGION 'SetUp and TearDown methods'}
 procedure TestGenericTRecord.SetUp;
 begin
-  inherited;
+  inherited SetUp;
   FObject := TTestClass.Create;
   FObject.TestBoolean := True;
   FObject.TestString  := 'Test';
   FObject.TestInteger := 5;
   FObject.TestDouble  := 3.14;
+
+  // FRecord: TRecord<TTestClass>;
   FRecord.Data.TestBoolean := True;
   FRecord.Data.TestString  := 'Test';
   FRecord.Data.TestInteger := 5;
@@ -136,8 +140,9 @@ end;
 procedure TestGenericTRecord.TearDown;
 begin
   FreeAndNil(FObject);
-  inherited;
+  inherited TearDown;
 end;
+{$ENDREGION}
 {$ENDREGION}
 
 {$REGION 'Test methods'}
@@ -164,22 +169,17 @@ end;
 
 procedure TestGenericTRecord.Test_AsVarArray_method;
 begin
-
+  //
 end;
 
 procedure TestGenericTRecord.Test_ContainsField_method;
-var
-  R : TRecord<TTestClass>;
 begin
-  R.Create;
-  CheckTrue(R.ContainsField('TestChar'));
+  CheckTrue(FRecord.ContainsField('TestChar'));
 end;
 
 procedure TestGenericTRecord.Test_Count_Property;
-var
-  R : TRecord<TTestClass>;
 begin
-  CheckEquals(12, R.Count);
+  CheckEquals(12, FRecord.Count);
 end;
 
 procedure TestGenericTRecord.TestConversions;
@@ -188,12 +188,10 @@ var
   //TR : TTestRecord;
   R  : TRecord<TTestClass>;
 begin
-  O := TTestClass.Create;
-  try
-    O.TestBoolean := True;
-    O.TestString  := 'test';
-    O.TestInteger := 5;
-    O.TestDouble  := 3.14;
+  FObject.TestBoolean := True;
+  FObject.TestString  := 'test';
+  FObject.TestInteger := 5;
+  FObject.TestDouble  := 3.14;
     //R.From<TTestClass>(O);
     //R.Create(O);
 //    R.AssignProperty(O, TEST_BOOLEAN);
@@ -214,9 +212,9 @@ begin
 //    R.AssignProperty(TValue.From(TR), TEST_INTEGER);
 //    R.AssignProperty(TValue.From(TR), TEST_DOUBLE);
 
-  finally
+//finally
     O.Free;
-  end;
+  //end;
 end;
 
 procedure TestGenericTRecord.Test_DeleteField_method;

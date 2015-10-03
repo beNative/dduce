@@ -16,6 +16,8 @@
 
 unit Test.DDuce.Reflect;
 
+{$I Test.DDuce.inc}
+
 interface
 
 uses

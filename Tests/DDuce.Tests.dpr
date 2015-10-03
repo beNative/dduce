@@ -10,13 +10,19 @@ program DDuce.Tests;
 
 }
 
+{$I Test.DDuce.inc}
+
 {$IFDEF CONSOLE_TESTRUNNER}
 {$APPTYPE CONSOLE}
 {$ENDIF}
 
 uses
   Forms,
+  {$IFDEF TESTINSIGHT}
   TestInsight.DUnit,
+  {$ELSE}
+  GUITestRunner,
+  {$ENDIF}
   Test.DDuce.DynamicRecord in 'Test.DDuce.DynamicRecord.pas',
   Test.DDuce.DynamicRecord.Data in 'Test.DDuce.DynamicRecord.Data.pas',
   Test.DDuce.DynamicRecord.Generic in 'Test.DDuce.DynamicRecord.Generic.pas',
@@ -30,12 +36,5 @@ begin
   Application.Initialize;
   RegisterTests;
   RunRegisteredTests;
-//  if IsConsole then
-//    with TextTestRunner.RunRegisteredTests do
-//      Free
-//  else
-//  begin
-//    GUITestRunner.RunRegisteredTests;
-//  end;
 end.
 
