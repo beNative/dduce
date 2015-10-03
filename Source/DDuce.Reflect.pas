@@ -82,8 +82,6 @@ end;
 { Returns the properties of the given instance (record or object). }
 
 class function Reflect.Properties<T>(const AArg: T): IDynamicRecord<T>;
-var
-  R : TRecord<T>;
 begin
   Result := TRecord<T>.Create(AArg);
 end;

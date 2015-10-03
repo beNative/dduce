@@ -152,35 +152,32 @@ type
   {$M+}
   IDynamicRecord<T: class, constructor> = interface;
   {$M-}
-  IDynamicField<T> = interface;
+
+  TRecordEnumerator = record
+  strict private
+    FIndex  : Integer;
+    FRecord : IDynamicRecord;
+  public
+    constructor Create(ARecord: IDynamicRecord);
+
+    function GetCurrent: IDynamicField;
+    function MoveNext: Boolean;
+    property Current: IDynamicField
+      read GetCurrent;
+  end;
 
   TRecord = record
-  strict private
-  type
-    TRecordEnumerator = record
-    strict private
-      FIndex  : Integer;
-      FRecord : IDynamicRecord;
-    public
-      constructor Create(ARecord: IDynamicRecord);
-      function GetCurrent: IDynamicField; inline;
-      function MoveNext: Boolean;
-      property Current: IDynamicField
-        read GetCurrent;
-    end;
-
   private
-  var
     FDynamicRecord : IDynamicRecord;
     FRecRefCount   : Integer;
 
-    function GetItemValue(AName: string): TValue;
-    procedure SetItemValue(AName: string; const AValue: TValue);
+    function GetItemValue(const AName: string): TValue;
+    procedure SetItemValue(const AName: string; const AValue: TValue);
     function GetItem(Index: Integer): IDynamicField;
     function GetData: Variant;
     function GetDynamicRecord: IDynamicRecord;
     function GetCount: Integer;
-    function GetField(AName: string): IDynamicField;
+    function GetField(const AName: string): IDynamicField;
 
     function MutableClone: IDynamicRecord;
     function GetInternalRefCount: Integer;
@@ -276,13 +273,13 @@ type
 
     procedure Clear;
 
-    property Values[AName : string]: TValue
+    property Values[const AName : string]: TValue
       read GetItemValue write SetItemValue; default;
 
     property Items[AIndex: Integer]: IDynamicField
       read GetItem;
 
-    property Fields[AName: string]: IDynamicField
+    property Fields[const AName: string]: IDynamicField
       read GetField;
 
     // conversion methods
@@ -332,33 +329,16 @@ type
 // generic version
   { TRecord<T> manages a IDynamicRecord<T> instance.  }
   TRecord<T: class, constructor> = record
-  strict private
-  type
-    TRecordEnumerator = record
-    strict private
-      FIndex  : Integer;
-      FRecord : IDynamicRecord<T>;
-    public
-      constructor Create(ARecord: IDynamicRecord<T>);
-      function GetCurrent: IDynamicField<T>; inline;
-      function MoveNext: Boolean;
-      property Current: IDynamicField<T>
-        read GetCurrent;
-    end;
-
   private
-  var
     FDynamicRecord : IDynamicRecord<T>;
     FSaveProc      : TProc;
     FLoadProc      : TProc;
 
-    function GetItemValue(AName: string): TValue;
-    procedure SetItemValue(AName: string; const AValue: TValue);
-    function GetItem(Index: Integer): IDynamicField<T>;
+    function GetItemValue(const AName: string): TValue;
+    procedure SetItemValue(const AName: string; const AValue: TValue);
     function GetData: T;
-    function GetDynamicRecord: IDynamicRecord<T>;
     function GetCount: Integer;
-    function GetField(AName: string): IDynamicField<T>;
+    function GetDynamicRecord: IDynamicRecord<T>;
 
     function MutableClone: IDynamicRecord<T>;
 
@@ -422,7 +402,7 @@ type
       const AAssignNulls  : Boolean
     ); overload;
 
-    procedure From<T>(const Value: T);
+    procedure From(const Value: T);
     procedure FromDataSet(
             ADataSet     : TDataSet;
       const AAssignNulls : Boolean = False
@@ -432,7 +412,6 @@ type
     procedure ToStrings(AStrings: TStrings);
 
     function ContainsField(const AName: string): Boolean;
-    function DeleteField(const AName: string): Boolean;
     function IsEmpty: Boolean;
 
     { IEnumerable }
@@ -442,14 +421,8 @@ type
     procedure Save; // leverages SaveProc property to save.
     procedure Clear; // TODO:
 
-    property Values[AName : string]: TValue
+    property Values[const AName : string]: TValue
       read GetItemValue write SetItemValue; default;
-
-    property Items[AIndex: Integer]: IDynamicField<T>
-      read GetItem;
-
-    property Fields[AName: string]: IDynamicField<T>
-      read GetField;
 
     // conversion methods
     function ToString(AAlignValues: Boolean = True): string; overload;
@@ -515,13 +488,15 @@ type
   IDynamicRecord = interface(IInvokable)
   ['{E3B57B88-1DB5-4663-8621-EE235233A114}']
     function GetItem(Index: Integer): IDynamicField;
-    function GetField(AName: string): IDynamicField;
-    function GetItemValue(AName: string): TValue;
-    procedure SetItemValue(AName: string; const AValue: TValue);
+    function GetField(const AName: string): IDynamicField;
+    function GetItemValue(const AName: string): TValue;
+    procedure SetItemValue(const AName: string; const AValue: TValue);
     procedure SetItemName(Item: TCollectionItem);
     function GetData: Variant;
     function GetCount: Integer;
     function GetRefCount: Integer;
+
+    function GetEnumerator: TRecordEnumerator;
 
     function ContainsField(const AName: string): Boolean;
     function DeleteField(const AName: string): Boolean;
@@ -534,13 +509,8 @@ type
       const ANames    : array of string
     ); overload;
 
-    procedure Assign(
-      AInstance : IDynamicRecord
-    );overload;
-
-    procedure Assign(
-      const ARecord : TRecord
-    ); overload;
+    procedure Assign(AInstance: IDynamicRecord);overload;
+    procedure Assign(const ARecord: TRecord); overload;
 
     procedure From(
       const AInstance         : TValue;
@@ -605,13 +575,13 @@ type
       const ADefaultValue : Boolean = False
     ): Boolean;
 
-    property Values[AName : string]: TValue
+    property Values[const AName : string]: TValue
       read GetItemValue write SetItemValue; default;
 
     property Items[AIndex: Integer]: IDynamicField
       read GetItem;
 
-    property Fields[AName: string]: IDynamicField
+    property Fields[const AName: string]: IDynamicField
       read GetField;
 
     property Data: Variant
@@ -645,6 +615,7 @@ type
      will not compile. }
 
   { TDynamicField holds the Name/Value pair representation of a Field. }
+  { non reference counted }
 
   TDynamicField = class(TCollectionItem, IDynamicField)
   strict private
@@ -678,7 +649,7 @@ type
   { Reference counted. }
 
   TDynamicField<T: class, constructor> = class(
-    TCollectionItem, IDynamicField, IDynamicField<T>
+    TCollectionItem, IDynamicField
   )
   strict private
     FRefCount : Integer;
@@ -707,8 +678,7 @@ type
       read GetValue write SetValue;
   end;
 
-  { TDynamicRecord is a reference counted collection used as the internal fields
-    representation of the TRecord type. }
+  { TDynamicRecord is a collection used as the storage of the contained data. }
 
   TDynamicRecord = class(TCollection, IDynamicRecord)
   strict private
@@ -722,16 +692,14 @@ type
     function _Release: Integer; stdcall;
 
     function GetData: Variant;
-
-  strict
-  private
     function GetRefCount: Integer;
+
   protected
     function GetCount: Integer; reintroduce; virtual;
-    function GetField(AName: string): IDynamicField; virtual;
+    function GetField(const AName: string): IDynamicField; virtual;
     function GetItem(Index: Integer): IDynamicField; virtual;
-    function GetItemValue(AName: string): TValue; virtual;
-    procedure SetItemValue(AName: string; const AValue: TValue); virtual;
+    function GetItemValue(const AName: string): TValue; virtual;
+    procedure SetItemValue(const AName: string; const AValue: TValue); virtual;
 
     procedure Update(AItem: TCollectionItem); override;
     procedure SetItemName(Item: TCollectionItem); override;
@@ -826,7 +794,7 @@ type
     property RttiContext: TRttiContext
       read FRttiContext;
 
-    property Fields[AName: string]: IDynamicField
+    property Fields[const AName: string]: IDynamicField
       read GetField;
 
     { Provides indexed access to the list of collection items. }
@@ -834,7 +802,7 @@ type
       read GetItem;
 
     { Returns the item values for a given key (Name). }
-    property Values[AName : string]: TValue
+    property Values[const AName : string]: TValue
       read GetItemValue write SetItemValue; default;
 
     property OnChanged: TNotifyEvent
@@ -858,6 +826,8 @@ type
     constructor Create; overload; virtual;
     constructor Create(const AFieldNames : string); overload;
 
+    function GetEnumerator: TRecordEnumerator;
+
     //procedure Assign(Source: TPersistent); overload; override;
     function ToString(AAlignValues: Boolean): string; reintroduce; overload; virtual;
     function ToString: string; overload; override;
@@ -867,31 +837,29 @@ type
     TDynamicRecord, IDynamicRecord, IDynamicRecord<T>)
   strict private
     FData       : T;
-    FRefFactory : TFunc<T>;
+    FDataFactory : TFunc<T>;
 
-  strict protected
+  protected
+    function GetCount: Integer; override;
     function GetData: T;
     procedure SetData(AValue: T);
-
-  strict private
     function GetDataFactory: TFunc<T>;
-    procedure SetDataFactory(const Value: TFunc<T>); protected
-    function GetField(AName: string): IDynamicField; override;
+    procedure SetDataFactory(const Value: TFunc<T>);
     function GetItem(Index: Integer): IDynamicField; override;
-    function GetItemValue(AName: string): TValue; override;
-    procedure SetItemValue(AName: string; const AValue: TValue); override;
+    function GetItemValue(const AName: string): TValue; override;
+    procedure SetItemValue(const AName: string; const AValue: TValue); override;
 
   public
     //function Invoke: T;
-    function GetCount: Integer; override;
+
     function ToString(AAlignValues: Boolean): string; overload; override;
 
     constructor Create; overload; override;
     constructor Create(AInstance: T); reintroduce; overload;
+
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
-    //constructor Create(const AData: T);
     { Wrapped instance of type T }
     property Data: T
       read GetData write SetData;
@@ -1295,7 +1263,7 @@ begin
   TVarDataRecordType.TVarDataRecordData(Result).DynamicRecord := Self;
 end;
 
-function TDynamicRecord.GetField(AName: string): IDynamicField;
+function TDynamicRecord.GetField(const AName: string): IDynamicField;
 begin
   Result := Find(AName);
 end;
@@ -1305,7 +1273,7 @@ begin
   Result := inherited Items[Index] as TDynamicField;
 end;
 
-function TDynamicRecord.GetItemValue(AName: string): TValue;
+function TDynamicRecord.GetItemValue(const AName: string): TValue;
 var
   P : IDynamicField;
 begin
@@ -1320,7 +1288,7 @@ begin
   Result := FRefCount;
 end;
 
-procedure TDynamicRecord.SetItemValue(AName: string; const AValue: TValue);
+procedure TDynamicRecord.SetItemValue(const AName: string; const AValue: TValue);
 var
   P : IDynamicField;
 begin
@@ -1399,6 +1367,11 @@ end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
+function TDynamicRecord.GetEnumerator: TRecordEnumerator;
+begin
+  Result := TRecordEnumerator.Create(Self);
+end;
+
 { Overridden method from TCollection to make any necessary changes when the
   items in the collection change. This method is called automatically when an
   update is issued.
@@ -2152,7 +2125,7 @@ begin
   Result := TRecordEnumerator.Create(DynamicRecord);
 end;
 
-function TRecord.GetField(AName: string): IDynamicField;
+function TRecord.GetField(const AName: string): IDynamicField;
 begin
   Result := DynamicRecord.Fields[AName];
 end;
@@ -2167,12 +2140,12 @@ begin
   Result := DynamicRecord.Items[Index];
 end;
 
-function TRecord.GetItemValue(AName: string): TValue;
+function TRecord.GetItemValue(const AName: string): TValue;
 begin
   Result := DynamicRecord.Values[AName];
 end;
 
-procedure TRecord.SetItemValue(AName: string; const AValue: TValue);
+procedure TRecord.SetItemValue(const AName: string; const AValue: TValue);
 begin
   FDynamicRecord := MutableClone;
   FDynamicRecord.Values[AName] := AValue;
@@ -2432,9 +2405,9 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION 'TRecord.TRecordEnumerator'}
+{$REGION 'TRecordEnumerator'}
 {$REGION 'construction and destruction'}
-constructor TRecord.TRecordEnumerator.Create(ARecord: IDynamicRecord);
+constructor TRecordEnumerator.Create(ARecord: IDynamicRecord);
 begin
   FIndex  := -1;
   FRecord := ARecord;
@@ -2442,12 +2415,12 @@ end;
 {$ENDREGION}
 
 {$REGION 'public methods'}
-function TRecord.TRecordEnumerator.GetCurrent: IDynamicField;
+function TRecordEnumerator.GetCurrent: IDynamicField;
 begin
   Result := FRecord.Items[FIndex];
 end;
 
-function TRecord.TRecordEnumerator.MoveNext: Boolean;
+function TRecordEnumerator.MoveNext: Boolean;
 begin
   Result := FIndex < FRecord.Count - 1;
   if Result then
@@ -2467,7 +2440,7 @@ end;
 procedure TDynamicRecord<T>.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FRefFactory :=  function: T
+  FDataFactory := function: T
   begin
     Result := T.Create; // default constructor
   end;
@@ -2495,8 +2468,8 @@ end;
 
 function TDynamicRecord<T>.GetData: T;
 begin
-  if not Assigned(FData) and Assigned(FRefFactory) then
-    FData := FRefFactory();
+  if not Assigned(FData) and Assigned(FDataFactory) then
+    FData := FDataFactory();
   Result := FData;
 end;
 
@@ -2508,11 +2481,7 @@ begin
   end;
 end;
 
-function TDynamicRecord<T>.GetField(AName: string): IDynamicField;
-begin
-  Result := inherited GetField(AName);
-end;
-
+{ Creates an IDynamicField instance on the fly which wraps the actual value. }
 function TDynamicRecord<T>.GetItem(Index: Integer): IDynamicField;
 var
   P: TRttiProperty;
@@ -2526,48 +2495,49 @@ begin
     Result.Value := TValue.Empty;
 end;
 
-function TDynamicRecord<T>.GetItemValue(AName: string): TValue;
+{ Creates an TValue instance on the fly which wraps the actual value. }
+function TDynamicRecord<T>.GetItemValue(const AName: string): TValue;
 var
   V         : TValue;
   LType     : TRttiType;
   LProperty : TRttiProperty;
 begin
   try
-    LType := RttiContext.GetType(TObject(FData).ClassInfo);
+    LType := RttiContext.GetType(TObject(Data).ClassInfo);
     if Assigned(LType) then
     begin
       LProperty :=  LType.GetProperty(AName);
       if Assigned(LProperty) then
-        Result := LProperty.GetValue(TObject(FData));
+        Result := LProperty.GetValue(TObject(Data));
     end;
   except
     Result := TValue.Empty;
   end;
 end;
 
-procedure TDynamicRecord<T>.SetItemValue(AName: string; const AValue: TValue);
+procedure TDynamicRecord<T>.SetItemValue(const AName: string; const AValue: TValue);
 var
   V         : TValue;
   LType     : TRttiType;
   LProperty : TRttiProperty;
 begin
-  LType := RttiContext.GetType(TObject(FData).ClassInfo);
+  LType := RttiContext.GetType(TObject(Data).ClassInfo);
   if Assigned(LType) then
   begin
     LProperty :=  LType.GetProperty(AName);
     if Assigned(LProperty) then
-      LProperty.SetValue(TObject(FData), AValue);
+      LProperty.SetValue(TObject(Data), AValue);
   end;
 end;
 
 function TDynamicRecord<T>.GetDataFactory: TFunc<T>;
 begin
-  Result := FRefFactory;
+  Result := FDataFactory;
 end;
 
 procedure TDynamicRecord<T>.SetDataFactory(const Value: TFunc<T>);
 begin
-  FRefFactory := Value;
+  FDataFactory := Value;
 end;
 {$ENDREGION}
 
@@ -2750,25 +2720,15 @@ end;
 
 function TRecord<T>.GetEnumerator: TRecordEnumerator;
 begin
-  Result := TRecordEnumerator.Create(DynamicRecord);
+  Result := TRecordEnumerator.Create(Self);
 end;
 
-function TRecord<T>.GetField(AName: string): IDynamicField<T>;
-begin
-  Result := DynamicRecord.Fields[AName] as IDynamicField<T>;
-end;
-
-function TRecord<T>.GetItem(Index: Integer): IDynamicField<T>;
-begin
-  Result := DynamicRecord.Items[Index] as IDynamicField<T>;
-end;
-
-function TRecord<T>.GetItemValue(AName: string): TValue;
+function TRecord<T>.GetItemValue(const AName: string): TValue;
 begin
   Result := DynamicRecord.Values[AName];
 end;
 
-procedure TRecord<T>.SetItemValue(AName: string; const AValue: TValue);
+procedure TRecord<T>.SetItemValue(const AName: string; const AValue: TValue);
 begin
   FDynamicRecord := MutableClone;
   DynamicRecord.Values[AName] := AValue;
@@ -2783,11 +2743,15 @@ end;
 
 class operator TRecord<T>.Implicit(const ASource: TRecord<T>): IDynamicRecord;
 begin
+  if not Assigned(Result) then
+    Result := TDynamicRecord.Create;
   Result.Assign(ASource.DynamicRecord);
 end;
 
 class operator TRecord<T>.Implicit(const ASource: TRecord<T>): IDynamicRecord<T>;
 begin
+  if not Assigned(Result) then
+    Result := TDynamicRecord<T>.Create;
   Result.Assign(ASource.DynamicRecord);
 end;
 
@@ -2867,14 +2831,9 @@ begin
   Result := DynamicRecord.ContainsField(AName);
 end;
 
-function TRecord<T>.DeleteField(const AName: string): Boolean;
+procedure TRecord<T>.From(const Value: T);
 begin
-  Result := FDynamicRecord.DeleteField(AName);
-end;
-
-procedure TRecord<T>.From<T>(const Value: T);
-begin
-  FDynamicRecord.From(TValue.From(Value), True, False, False, []);
+  FDynamicRecord.From(TValue.From<T>(Value), True, False, False, []);
 end;
 
 procedure TRecord<T>.FromDataSet(ADataSet: TDataSet;
@@ -2956,26 +2915,6 @@ end;
 procedure TRecord<T>.ToStrings(AStrings: TStrings);
 begin
   DynamicRecord.ToStrings(AStrings);
-end;
-{$ENDREGION}
-
-{$REGION 'TRecord<T>.TRecordEnumerator'}
-constructor TRecord<T>.TRecordEnumerator.Create(ARecord: IDynamicRecord<T>);
-begin
-  FIndex  := -1;
-  FRecord := ARecord;
-end;
-
-function TRecord<T>.TRecordEnumerator.GetCurrent: IDynamicField<T>;
-begin
-  Result := FRecord.Items[FIndex] as IDynamicField<T>;
-end;
-
-function TRecord<T>.TRecordEnumerator.MoveNext: Boolean;
-begin
-  Result := FIndex < FRecord.Count - 1;
-  if Result then
-    Inc(FIndex);
 end;
 {$ENDREGION}
 {$ENDREGION}
