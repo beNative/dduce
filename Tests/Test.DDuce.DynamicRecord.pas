@@ -16,6 +16,8 @@
 
 unit Test.DDuce.DynamicRecord;
 
+{$I Test.DDuce.inc}
+
 { Tests all members of the non-generic version of TRecord. }
 
 interface
@@ -28,6 +30,10 @@ uses
   Datasnap.DBClient,
 
   DDuce.DynamicRecord, DDuce.RandomData,
+
+  {$IFDEF SPRING}
+  Spring,
+  {$ENDIF}
 
   TestFramework, // DUnit
 
@@ -46,10 +52,10 @@ type
     function CreateDataSet: TDataSet;
     function RetrieveRecordFunction: TRecord;
 
-    procedure PassingRecordArgumentByValueParam(ARecord: TRecord);
-    procedure PassingRecordArgumentByConstParam(const ARecord: TRecord);
-    procedure PassingRecordArgumentByVarParam(var ARecord: TRecord);
-    procedure PassingRecordArgumentByInterfaceParam(const ARecord: IDynamicRecord);
+    procedure PassingArgumentByValueParam(ARecord: TRecord);
+    procedure PassingArgumentByConstParam(const ARecord: TRecord);
+    procedure PassingArgumentByVarParam(var ARecord: TRecord);
+    procedure PassingArgumentByInterfaceParam(ARecord: IDynamicRecord);
 
   public
     procedure SetUp; override;
@@ -60,11 +66,15 @@ type
     procedure Test_passing_TRecord_argument_as_var_parameter;
     procedure Test_passing_TRecord_argument_as_value_parameter;
     procedure Test_passing_TRecord_argument_as_IDynamicRecord_parameter;
+    procedure Test_passing_IDynamicRecord_argument_as_value_parameter;
+    procedure Test_passing_IDynamicRecord_argument_as_const_parameter;
+    procedure Test_passing_IDynamicRecord_argument_as_IDynamicRecord_parameter;
 
     procedure Test_Assign_method_for_IDynamicRecord_argument;
 
     procedure Test_assignment_operator_for_TRecord_to_TRecord;
     procedure Test_assignment_operator_for_TRecord_to_IDynamicRecord;
+    procedure Test_assignment_operator_for_IDynamicRecord_to_TRecord;
 
     procedure Test_faulty_condition;
 
@@ -170,12 +180,13 @@ begin
   Result := DS;
 end;
 
-procedure TestTRecord.PassingRecordArgumentByConstParam(const ARecord: TRecord);
+procedure TestTRecord.PassingArgumentByConstParam(const ARecord: TRecord);
 var
   S : string;
   F : IDynamicField;
 begin
   ARecord.Data.NewValue := 'Test';
+  ARecord['NewValue2'] := 'Test';
   for F in ARecord do
   begin
     Status(F.ToString);
@@ -183,15 +194,17 @@ begin
   S := Format('PassingRecordThroughConstParam: '#13#10'%s', [ARecord.ToString]);
 end;
 
-procedure TestTRecord.PassingRecordArgumentByInterfaceParam(
-  const ARecord: IDynamicRecord);
+procedure TestTRecord.PassingArgumentByInterfaceParam(
+  ARecord: IDynamicRecord);
 var
   S : string;
 begin
+  ARecord.Data.NewValue := 'Test';
+  ARecord['NewValue2'] := 'Test';
   S := Format('PassingRecordThroughInterfaceParam: '#13#10'%s', [ARecord.ToString]);
 end;
 
-procedure TestTRecord.PassingRecordArgumentByValueParam(ARecord: TRecord);
+procedure TestTRecord.PassingArgumentByValueParam(ARecord: TRecord);
 var
   F : IDynamicField;
 begin
@@ -199,12 +212,21 @@ begin
   begin
     Status(F.ToString);
   end;
+  ARecord.Data.NewValue := 'Test';
+  ARecord['NewValue2'] := 'Test';
 end;
 
-procedure TestTRecord.PassingRecordArgumentByVarParam(var ARecord: TRecord);
+{ For var parameters the type of the passed value does have to match with the
+  type of the parameter. So
+              PassingArgumentByVarParam(FDynamicRecord);
+  will not compile.
+}
+procedure TestTRecord.PassingArgumentByVarParam(var ARecord: TRecord);
 var
   S : string;
 begin
+  ARecord.Data.NewValue := 'Test';
+  ARecord['NewValue2'] := 'Test';
   S := Format('PassingRecordThroughVarParam: '#13#10'%s', [ARecord.ToString]);
   Status(S);
 end;
@@ -252,29 +274,31 @@ var
   I  : Integer;
   N  : Integer;
   V  : Variant;
+  S  : string;
 begin
   VA := FRecord.AsVarArray;
   N := VarArrayDimCount(VA);
   for I := VarArrayLowBound(VA, N) to VarArrayHighBound(VA, N) do
   begin
     V := VarArrayGet(VA, [I]);
-    Status(IntToStr(I));
-    Status(VarToStrDef(V, ''));
+    S := Format('[%d] = %s', [I, VarToStrDef(V, '')]);
+    Status(S);
+    CheckEqualsString(VarToStrDef(V, ''), FRecord.Items[I].Value.ToString);
   end;
-  CheckTrue(True, 'OK');
 end;
 
 procedure TestTRecord.Test_ToStrings_method;
 var
   SL : TStrings;
+  F  : IDynamicField;
 begin
   SL := TStringList.Create;
   try
     FRecord.ToStrings(SL);
-    CheckEquals('True', SL.Values[TEST_BOOLEAN], TEST_BOOLEAN);
-    CheckEquals('5', SL.Values[TEST_INTEGER], TEST_INTEGER);
-    CheckEquals('Test', SL.Values[TEST_STRING], TEST_STRING);
-    CheckEquals('3,14', SL.Values[TEST_DOUBLE], TEST_DOUBLE);
+    for F in FRecord do
+    begin
+      CheckEqualsString(F.Value.ToString, SL.Values[F.Name]);
+    end;
   finally
     SL.Free;
   end;
@@ -286,19 +310,26 @@ procedure TestTRecord.Test_FromDataSet_method;
 var
   DS : TDataSet;
   R  : TRecord;
-  I  : Integer;
+  F  : IDynamicField;
 begin
-  for I := 0 to 10 do
-  begin
-    DS := CreateDataSet;
-    try
+  DS := CreateDataSet;
+  try
+    DS.First;
+    while not DS.Eof do
+    begin
       R.FromDataSet(DS);
+      {$IFDEF SPRING}
+      for F in R do
+      begin
+        CheckTrue(F.Value.Equals(TValue.FromVariant(DS[F.Name])));
+      end;
+      {$ENDIF}
       Status(R.ToString);
-    finally
-      FreeAndNil(DS);
+      DS.Next;
     end;
+  finally
+    FreeAndNil(DS);
   end;
-  CheckTrue(True, 'OK');
 end;
 
 procedure TestTRecord.Test_FromStrings_method;
@@ -324,13 +355,19 @@ end;
 procedure TestTRecord.Test_Assign_method_for_IDynamicRecord_argument;
 var
   R : TRecord;
+  F : IDynamicField;
 begin
   R.Assign(FDynamicRecord);
   Status(R.ToString);
+  {$IFDEF SPRING}
+  for F in R do
+  begin
+    CheckTrue(FDynamicRecord[F.Name].Equals(F.Value));
+  end;
+  {$ENDIF}
   CheckEquals(FDynamicRecord.Data.TestBoolean, R[TEST_BOOLEAN].AsBoolean, TEST_BOOLEAN);
   CheckEquals(FDynamicRecord.Data.TestInteger, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
   CheckEquals(FDynamicRecord.Data.TestString, R[TEST_STRING].AsString, TEST_STRING);
-  //CheckEquals(FDynamicRecord.Data.TestDouble, R[TEST_DOUBLE].AsExtended, TEST_DOUBLE);
 end;
 {$ENDREGION}
 
@@ -350,9 +387,8 @@ procedure TestTRecord.Test_DeleteField_method;
 begin
   // Test DeleteField
   CheckTrue(FRecord.DeleteField(TEST_INTEGER), TEST_INTEGER);
+  // Check if it is really gone
   CheckFalse(FRecord.ContainsField(TEST_INTEGER), TEST_INTEGER);
-  CheckFalse(FRecord.ContainsField(TEST_INTEGER), TEST_INTEGER);
-  CheckTrue(FRecord.ContainsField(TEST_STRING), TEST_STRING);
 end;
 {$ENDREGION}
 
@@ -386,6 +422,12 @@ begin
   CheckFalse(R.IsBlank(S), S);
   R[S] := NaN;
   CheckFalse(R.IsBlank(S), S);
+  R[S] := Infinity;
+  CheckFalse(R.IsBlank(S), S);
+  R[S] := NegInfinity;
+  CheckFalse(R.IsBlank(S), S);
+  R[S] := 0.0;
+  CheckFalse(R.IsBlank(S), S);
 
   S := TEST_BOOLEAN;
   R[S] := False;
@@ -396,9 +438,10 @@ begin
   CheckTrue(R.IsBlank(S), 'Null');
   R[S] := TValue.FromVariant(Unassigned);
   CheckTrue(R.IsBlank(S), 'Unassigned');
-// This test fails! EmptyParam is not translated correctly by TValue
-//  R[S] := TValue.FromVariant(EmptyParam);
-//  CheckTrue(R.IsBlank(S), 'EmptyParam');
+  // EmptyParam does not translate to TValue.Empty.
+  R[S] := TValue.FromVariant(EmptyParam);
+  CheckFalse(R.IsBlank(S), 'EmptyParam');
+
   R[S] := TValue.FromVariant('');
   CheckTrue(R.IsBlank(S), 'Empty string');
 end;
@@ -423,6 +466,13 @@ end;
 {$ENDREGION}
 
 {$REGION 'Passing TRecord instances as an argument'}
+{ When passing as a const parameter no copy is made of the argument. However,
+  inspite of being a const parameter it is possible to change its value in
+  the method call. This behaviour is normal as explained here:
+  http://stackoverflow.com/questions/7413899/record-methods-and-const-parameters-in-delphi
+  Using const in this case is equivalent as passing by reference (or var
+  parameter).
+}
 procedure TestTRecord.Test_passing_TRecord_argument_as_const_parameter;
 var
   R : TRecord;
@@ -431,10 +481,13 @@ begin
   R.Data.I := 10;
   R.Data.S := 'string';
   R.Data.F := 3.14;
-  PassingRecordArgumentByConstParam(R);
-  CheckTrue(R.Data.NewValue = 'Test', 'NewValue not found');
+  PassingArgumentByConstParam(R);
+  CheckTrue(R.Data.NewValue = 'Test');
+  CheckTrue(R.Data.NewValue2 = 'Test');
 end;
 
+{ When passing a TRecord value through a IDynamicRecord parameter, an implicit
+  copy is created by the overloaded assignment operator of TRecord. }
 procedure TestTRecord.Test_passing_TRecord_argument_as_IDynamicRecord_parameter;
 var
   R : TRecord;
@@ -443,10 +496,12 @@ begin
   R.Data.I := 10;
   R.Data.S := 'string';
   R.Data.F := 3.14;
-  PassingRecordArgumentByInterfaceParam(R);
-  CheckTrue(True, 'OK');
+  PassingArgumentByInterfaceParam(R);
+  CheckFalse(R.Data.NewValue = 'Test');
+  CheckFalse(R.Data.NewValue2 = 'Test');
 end;
 
+{ When passing a TRecord by value, an implicit copy is created. }
 procedure TestTRecord.Test_passing_TRecord_argument_as_value_parameter;
 var
   R : TRecord;
@@ -456,27 +511,45 @@ begin
   R.Data.I := 10;
   R.Data.S := 'string';
   R.Data.F := 3.14;
-  PassingRecordArgumentByValueParam(R);
-
-  for I := 0 to 100 do
-  begin
-    R.Data.B := True;
-    R.Data.I := RandomData.Number(20);
-    R.Data.S := RandomData.CompanyName;
-    R.Data.F := RandomData.Number(457);
-
-    PassingRecordArgumentByValueParam(R);
-    PassingRecordArgumentByConstParam(R);
-    PassingRecordArgumentByVarParam(R);
-    PassingRecordArgumentByInterfaceParam(R);
-  end;
-  CheckTrue(True, 'OK');
+  PassingArgumentByValueParam(R);
+  CheckFalse(R.Data.NewValue = 'Test');
+  CheckFalse(R.Data.NewValue2 = 'Test');
 end;
 
+{ When passing a TRecord by reference (var parameter), no copy is created. }
 procedure TestTRecord.Test_passing_TRecord_argument_as_var_parameter;
 begin
-  PassingRecordArgumentByVarParam(FRecord);
-  CheckTrue(True, 'OK');
+  PassingArgumentByVarParam(FRecord);
+  CheckTrue(FRecord.Data.NewValue = 'Test');
+  CheckTrue(FRecord.Data.NewValue2 = 'Test');
+end;
+
+{ As the IDynamicRecord argument is implicitly casted to TRecord, a copy of
+  its content is made. }
+procedure TestTRecord.Test_passing_IDynamicRecord_argument_as_value_parameter;
+begin
+  PassingArgumentByValueParam(FDynamicRecord);
+  CheckFalse(FDynamicRecord.Data.NewValue = 'Test');
+  CheckFalse(FDynamicRecord.Data.NewValue2 = 'Test');
+end;
+
+{ As the IDynamicRecord argument is implicitly casted to TRecord, a copy of
+  its content is made. }
+procedure TestTRecord.Test_passing_IDynamicRecord_argument_as_const_parameter;
+begin
+  PassingArgumentByConstParam(FDynamicRecord);
+  CheckFalse(FDynamicRecord.Data.NewValue = 'Test');
+  CheckFalse(FDynamicRecord.Data.NewValue2 = 'Test');
+  Status(FDynamicRecord.ToString);
+end;
+
+{ As we pass the reference, no copy is made. }
+procedure TestTRecord.Test_passing_IDynamicRecord_argument_as_IDynamicRecord_parameter;
+begin
+  PassingArgumentByInterfaceParam(FDynamicRecord);
+  CheckTrue(FDynamicRecord.Data.NewValue = 'Test');
+  CheckTrue(FDynamicRecord.Data.NewValue2 = 'Test');
+  Status(FDynamicRecord.ToString);
 end;
 {$ENDREGION}
 
@@ -526,7 +599,9 @@ begin
   CheckEquals('3,14', FRecord.ToString(TEST_STRING_DOUBLE), TEST_STRING_DOUBLE);
   CheckEquals('3,14', FRecord.ToString(TEST_DOUBLE), TEST_DOUBLE);
 end;
+
 {$REGION 'Operator overload tests'}
+{ Assigning a TRecord to a TRecord results in creating a copy. }
 procedure TestTRecord.Test_assignment_operator_for_TRecord_to_TRecord;
 var
   R: TRecord;
@@ -534,6 +609,29 @@ begin
   R := FRecord;
   FRecord[TEST_INTEGER] := 6;
   CheckEquals(5, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
+end;
+
+{ Assigning a TRecord to a IDynamicRecord results in creating a copy of the
+  content. }
+procedure TestTRecord.Test_assignment_operator_for_TRecord_to_IDynamicRecord;
+var
+  DR : IDynamicRecord;
+begin
+  // if DR is nil like here, a new instance with a copy of the data is
+  // automatically created by the overloaded assignment operator of TRecord.
+  DR := FRecord;
+  FRecord[TEST_STRING] := 'another value';
+  CheckEquals('Test', DR[TEST_STRING].AsString); // a copy has been made
+end;
+
+{ Assigning an IDynamicRecord to a TRecord results in creating a copy. }
+procedure TestTRecord.Test_assignment_operator_for_IDynamicRecord_to_TRecord;
+var
+  R: TRecord;
+begin
+  R := FDynamicRecord;
+  R[TEST_INTEGER] := 6;
+  CheckEquals(5, FDynamicRecord[TEST_INTEGER].AsInteger, TEST_INTEGER);
 end;
 {$ENDREGION}
 
@@ -548,11 +646,11 @@ begin
     O.TestString  := 'test';
     O.TestInteger := 5;
     O.TestDouble  := 3.14;
+    // fill the TRecord instance with property name-value pairs.
     R.AssignProperty(O, TEST_BOOLEAN);
     R.AssignProperty(O, TEST_STRING);
     R.AssignProperty(O, TEST_INTEGER);
     R.AssignProperty(O, TEST_DOUBLE);
-
     CheckEquals(O.TestBoolean, R[TEST_BOOLEAN].AsBoolean, TEST_BOOLEAN);
     CheckEquals(O.TestInteger, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
     CheckEquals(O.TestString, R[TEST_STRING].AsString, TEST_STRING);
@@ -583,22 +681,13 @@ begin
   CheckEquals('test', R['Test'].AsString);
 end;
 
-procedure TestTRecord.Test_assignment_operator_for_TRecord_to_IDynamicRecord;
-var
-  DR : IDynamicRecord;
-begin
-  DR := FRecord;
-  FRecord[TEST_STRING] := 'Yes';
-  CheckEquals('Test', DR[TEST_STRING].AsString); // a copy has been made
-end;
-
 procedure TestTRecord.Test_faulty_condition;
 begin
   FDynamicRecord[TEST_STRING] := '';
   FRecord := FDynamicRecord;
   CheckEqualsString('', FRecord[TEST_STRING].AsString);
 
-  FRecord['TEST_STRING'] := 'New Value';
+  FRecord[TEST_STRING] := 'New Value';
   CheckNotEqualsString('New Value', FDynamicRecord[TEST_STRING].AsString);
 
   FDynamicRecord[TEST_STRING] := 'Bad';
@@ -614,8 +703,6 @@ begin
 
   FDynamicRecord[TEST_STRING] := 'Bad';
   CheckEqualsString('Good', FRecord[TEST_STRING].AsString);
-
-
 end;
 
 end.
