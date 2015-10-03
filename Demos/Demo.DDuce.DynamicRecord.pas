@@ -186,22 +186,22 @@ type
     actTestAssignTo                           : TAction;
     actTestData                               : TAction;
     actToStrings                              : TAction;
-    btnAssignFDynamicRecord2ToFDynamicRecord1: TButton;
-    btnAssignFDynamicRecord1ToFDynamicRecord2: TButton;
+    btnAssignFDynamicRecord1ToFDynamicRecord2 : TButton;
+    btnAssignFDynamicRecord1ToFRecord1        : TButton;
     btnAssignFDynamicRecord1ToFRecord2        : TButton;
+    btnAssignFDynamicRecord2ToFDynamicRecord1 : TButton;
     btnAssignFDynamicRecord2ToFRecord1        : TButton;
     btnAssignFDynamicRecord2ToFRecord2        : TButton;
     btnAssignFieldValueToDynamicRecord1       : TButton;
     btnAssignFieldValueToDynamicRecord2       : TButton;
     btnAssignFieldValueToFRecord1             : TButton;
     btnAssignFieldValueToFRecord2             : TButton;
-    btnAssignFDynamicRecord1ToFRecord1: TButton;
-    btnAssignFRecord1ToFDynamicRecord1: TButton;
-    btnAssignFRecord1ToFDynamicRecord2: TButton;
-    btnAssignFRecord2ToFRecord1: TButton;
+    btnAssignFRecord1ToFDynamicRecord1        : TButton;
+    btnAssignFRecord1ToFDynamicRecord2        : TButton;
     btnAssignFRecord1ToFRecord4               : TButton;
     btnAssignFRecord2ToFDynamicRecord1        : TButton;
     btnAssignFRecord2ToFDynamicRecord2        : TButton;
+    btnAssignFRecord2ToFRecord1               : TButton;
     btnClearFRecord1                          : TButton;
     btnCustomTest                             : TButton;
     btnFDynamicRecord1Clear1                  : TButton;
@@ -216,7 +216,9 @@ type
     dscTest                                   : TDataSource;
     dsTest                                    : TClientDataSet;
     edtDelimiter                              : TLabeledEdit;
+    edtFieldName                              : TLabeledEdit;
     edtQuoteChar                              : TLabeledEdit;
+    edtValue                                  : TLabeledEdit;
     grdTest                                   : TDBGrid;
     grpAsCommaText                            : TGroupBox;
     grpAsDelimitedText                        : TGroupBox;
@@ -244,9 +246,10 @@ type
     mmoToString                               : TMemo;
     mmoToStrings                              : TMemo;
     pgcMain                                   : TPageControl;
-    pnlAssignments: TGridPanel;
+    pnlAssignments                            : TGridPanel;
     pnlBottom                                 : TGridPanel;
     pnlBottomRight                            : TPanel;
+    pnlField                                  : TPanel;
     pnlRecordInspector                        : TPanel;
     pnlRecordInspectorHeader                  : TPanel;
     pnlRightBottomHeader                      : TPanel;
@@ -259,9 +262,6 @@ type
     tsTestClass                               : TTabSheet;
     tsTestRecord                              : TTabSheet;
     tsTRecord                                 : TTabSheet;
-    pnlField: TPanel;
-    edtFieldName: TLabeledEdit;
-    edtValue: TLabeledEdit;
 
     procedure dscTestDataChange(Sender: TObject; Field: TField);
     procedure chkQuoteValuesClick(Sender: TObject);
@@ -542,27 +542,33 @@ end;
 
 procedure TfrmDynamicRecords.actCustomTestExecute(Sender: TObject);
 var
-  R1 : TRecord;
-  R2 : TRecord;
-  R3 : TRecord;
-  I1 : IDynamicRecord;   // should behave as a proper reference variable
+  R : TRecord<TContact>;
+  Rn : TRecord;
+  C : TContact;
+  F : IDynamicField;
+  DR : IDynamicRecord;
 begin
-  R1['TestInteger']  := 5;
-  R1.Data.TestString := 'Test';
-  R2 := R1; // copy content (COW semantics)
-  ShowMessage(Format('%d %d', [R1.RefCount, R1.InternalRefCount]));
-  I1 := TRecord.CreateDynamicRecord;
-  I1.Assign(R1);
-  ShowMessage(Format('%d %d', [R1.RefCount, R1.InternalRefCount]));
-  R3.Assign(R1);
-  R3.Data.TestInteger := 7;
-  ShowMessage(Format('%d %d', [R1.RefCount, R1.InternalRefCount]));
-  R1['TestInteger'] := 6;       // makes a new copy while we do not want this
-  ShowMessage(Format('%d %d', [R1.RefCount, R1.InternalRefCount]));
-  ShowMessage(R1.ToString); //6
-  ShowMessage(R2.ToString); //5
-  ShowMessage(R3.ToString); //5
-  ShowMessage(I1.ToString); // 6
+  R.Data.FirstName := 'John';
+  R.Data.LastName  := 'Doe';
+//
+//  Rn := R;
+//  ShowMessage(Rn.ToString);
+//  Rn.Data.Extra := 'extra';
+//  Rn.Data.FirstName := 'Tim';
+//  //ShowMessage(Rn.ToString);
+//  R.Assign(Rn);
+//  ShowMessage(R.ToString);
+
+//  DR := TRecord.CreateDynamicRecord;
+//  DR['Name'] := 'Tim';
+  Rn := R;
+  Rn.Data.Extra := 'extra';
+  Rn.Data.FirstName := 'Tim';
+
+  R.Assign(Rn);
+  for F in R do
+    ShowMessage(F.ToString);
+
 end;
 
 procedure TfrmDynamicRecords.actFDynamicRecord1ClearExecute(Sender: TObject);

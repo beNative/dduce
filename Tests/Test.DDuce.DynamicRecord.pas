@@ -49,7 +49,7 @@ type
       const AString : string;
        var  ARecord : TRecord
     ): Boolean;
-    function CreateDataSet: TDataSet;
+    function CreateDataSet(ARecordCount: Integer): TDataSet;
     function RetrieveRecordFunction: TRecord;
 
     procedure PassingArgumentByValueParam(ARecord: TRecord);
@@ -152,7 +152,7 @@ end;
 {$REGION 'private methods'}
 // helper methods used in tests
 
-function TestTRecord.CreateDataSet: TDataSet;
+function TestTRecord.CreateDataSet(ARecordCount: Integer): TDataSet;
 var
   DS : TClientDataSet;
   I  : Integer;
@@ -169,7 +169,7 @@ begin
     Name     := 'Age';
   end;
   DS.CreateDataSet;
-  for I := 0 to 100 do
+  for I := 0 to Pred(ARecordCount) do
   begin
     DS.Append;
     DS.FieldByName('Name').AsString := RandomData.FirstName(gnMale);
@@ -241,7 +241,7 @@ function TestTRecord.RetrieveRecord(const AString: string;
 var
   DS: TDataSet;
 begin
-  DS := CreateDataSet;
+  DS := CreateDataSet(10);
   try
     Result := True;
     ARecord.FromDataSet(DS);
@@ -312,7 +312,7 @@ var
   R  : TRecord;
   F  : IDynamicField;
 begin
-  DS := CreateDataSet;
+  DS := CreateDataSet(1000);
   try
     DS.First;
     while not DS.Eof do
