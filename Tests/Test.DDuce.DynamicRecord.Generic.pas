@@ -20,11 +20,21 @@ unit Test.DDuce.DynamicRecord.Generic;
 
 interface
 
+{
+  Current limitations of TRecord<T>:
+
+    - T is limited to primary datatypes. Variant is not supported.
+
+    - FromStrings should cast to the field type
+
+
+}
+
 uses
+  Winapi.Windows, Winapi.Messages,
   System.Variants, System.SysUtils, System.Contnrs, System.Classes,
   Data.DB,
   Datasnap.DBClient,
-  Winapi.Windows, Winapi.Messages,
   Vcl.Controls, Vcl.Dialogs, Vcl.Forms, Vcl.Buttons, Vcl.ActnList, Vcl.StdCtrls,
   Vcl.Graphics,
 
@@ -55,7 +65,6 @@ type
   published
     procedure TestTRecordAssignments;
     procedure Test_ContainsField_method;
-    procedure Test_DeleteField_method;
     procedure Test_IsEmpty_method;
 
     procedure TestConversions;
@@ -76,6 +85,13 @@ type
     procedure Test_AsVarArray_method;
     procedure Test_AsCommaText_method;
 
+    procedure Test_assignment_operator_for_generic_TRecord_to_TRecord;
+    procedure Test_assignment_operator_for_TRecord_to_generic_TRecord;
+    procedure Test_assignment_operator_for_generic_TRecord_to_generic_TRecord;
+
+//    procedure Test_assignment_operator_for_TRecord_to_IDynamicRecord;
+//    procedure Test_assignment_operator_for_IDynamicRecord_to_TRecord;
+
     procedure Test_Count_Property;
 
     procedure TestAssignProperty;
@@ -89,7 +105,9 @@ type
 implementation
 
 uses
-  System.Math, System.Types, System.Rtti;
+  System.Math, System.Types, System.Rtti,
+
+  Spring;
 
 const
   TEST_INTEGER            = 'TestInteger';
@@ -135,6 +153,8 @@ begin
   FRecord.Data.TestString  := 'Test';
   FRecord.Data.TestInteger := 5;
   FRecord.Data.TestDouble  := 3.14;
+  FRecord.Data.TestDateTime := Now;
+  FRecord.Data.TestChar     := 'C';
 end;
 
 procedure TestGenericTRecord.TearDown;
@@ -217,19 +237,26 @@ begin
   //end;
 end;
 
-procedure TestGenericTRecord.Test_DeleteField_method;
-begin
-        // should not be possible!
-end;
-
 procedure TestGenericTRecord.Test_FromDataSet_method;
 begin
 
 end;
 
 procedure TestGenericTRecord.Test_FromStrings_method;
+var
+  SL : TStrings;
+  R  : TRecord;
 begin
-
+  SL := TStringList.Create;
+  try
+    SL.Values[TEST_INTEGER] := '5';
+    SL.Values[TEST_STRING] := 'Test';
+    FRecord.FromStrings(SL);
+    CheckEquals(FRecord.Data.TestInteger, 5);
+    CheckEquals(FRecord.Data.TestString, 'Test');
+  finally
+    SL.Free;
+  end;
 end;
 
 procedure TestGenericTRecord.Test_IsBlank_method;
@@ -262,8 +289,6 @@ end;
 procedure TestGenericTRecord.Test_ToBoolean_method;
 begin
   CheckTrue(FRecord.ToBoolean(TEST_STRING, True), TEST_STRING);
-  //CheckTrue(FRecord.ToBoolean(TEST_STRING_INTEGER, True), TEST_STRING_INTEGER);
-  //CheckTrue(FRecord.ToBoolean(TEST_STRING_DOUBLE, True), TEST_STRING_DOUBLE);
   CheckTrue(FRecord.ToBoolean(TEST_DOUBLE, True), TEST_DOUBLE);
   CheckTrue(FRecord.ToBoolean(TEST_BOOLEAN, True), TEST_BOOLEAN);
   CheckTrue(FRecord.ToBoolean(TEST_INTEGER, True), TEST_INTEGER);
@@ -272,14 +297,8 @@ end;
 procedure TestGenericTRecord.Test_ToFloat_Method;
 begin
   CheckEquals(5, FRecord.ToFloat(TEST_INTEGER), TEST_INTEGER);
-  try
-    CheckTrue(IsZero(FRecord.ToFloat(TEST_STRING)), TEST_STRING);
-  except
-  end;
-  try
-    CheckTrue(IsZero(FRecord.ToFloat(TEST_BOOLEAN)), TEST_BOOLEAN);
-  except
-  end;
+  CheckTrue(IsZero(FRecord.ToFloat(TEST_STRING)), TEST_STRING);
+  CheckTrue(IsZero(FRecord.ToFloat(TEST_BOOLEAN)), TEST_BOOLEAN);
   CheckEquals(3.14, FRecord.ToFloat(TEST_DOUBLE), 0.001);
 end;
 
@@ -339,6 +358,52 @@ begin
 //  Status(DCR.ToString);
 end;
 {$ENDREGION}
+
+procedure TestGenericTRecord.Test_assignment_operator_for_generic_TRecord_to_TRecord;
+var
+  R : TRecord;
+  F : IDynamicField;
+begin
+  R := FRecord;
+  for F in R do
+  begin
+    CheckTrue(F.Value.Equals(R[F.Name]));
+  end;
+end;
+
+procedure TestGenericTRecord.Test_assignment_operator_for_TRecord_to_generic_TRecord;
+var
+  R : TRecord;
+  F : IDynamicField;
+begin
+  R[TEST_INTEGER] := 125;
+  R.Data.TestBoolean  := True;
+  R.Data.TestChar     := 'C';
+  R.Data.TestDateTime := Now;
+  R.Data.TestDouble   := Pi;
+  R.Data.TestInteger  := 5;
+  R.Data.TestString   := 'Test';
+  FRecord := R;
+  for F in FRecord do
+  begin
+    CheckTrue(F.Value.Equals(R[F.Name]), F.Name);
+  end;
+end;
+
+procedure TestGenericTRecord.Test_assignment_operator_for_generic_TRecord_to_generic_TRecord;
+var
+  R : TRecord<TTestClass>;
+  F : IDynamicField;
+begin
+  R := FRecord;
+  for F in R do
+  begin
+    CheckTrue(F.Value.Equals(R[F.Name]), F.Name);
+  end;
+  R.Data.TestInteger := 0;
+  CheckNotEquals(R.Data.TestInteger, FRecord.Data.TestInteger);
+
+end;
 
 end.
 

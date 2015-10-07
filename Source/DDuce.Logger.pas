@@ -71,9 +71,9 @@ type
   ILogger = interface;
 
   TLogMessage = record
-    MsgType : TLogMessageType;
+    MsgType : Integer;
     MsgTime : TDateTime;
-    MsgText : string;
+    MsgText : AnsiString; // for FPC compatibility
     Data    : TStream;
   end;
 
@@ -236,6 +236,9 @@ type
     procedure EnterMethod(ASender: TObject; const AName: string); overload;
     procedure ExitMethod(const AName: string); overload;
     procedure ExitMethod(ASender: TObject; const AName: string); overload;
+
+    procedure AddCheckPoint(const AName: string = '');
+    procedure ResetCheckPoint(const AName: string = '');
 
     procedure Watch(const AName: string; const AValue: string); overload;
     procedure Watch(const AName: string; AValue: Integer); overload;
@@ -405,8 +408,7 @@ resourcestring
 const
   STACKCOUNTLIMIT        = 256;
   DEFAULT_CHECKPOINTNAME = 'CheckPoint';
-  {TODO -oTS -cGeneral : Rename this}
-  MSG_WND_CLASSNAME : PChar = 'MsgWindowCls';
+  MSG_WND_CLASSNAME : PChar = 'FPCMsgWindowCls';
 
   LOG_PREFIXES: array [lmtInfo..lmtCounter] of string = (
     'INFO',
@@ -489,12 +491,12 @@ var
   LM : TLogMessage;
   C  : TCustomLogChannel;
 begin
-  LM.MsgType := AMsgType;
+  LM.MsgType := Integer(AMsgType);
   LM.MsgTime := Now;
-  LM.MsgText := AText;
+  LM.MsgText := AnsiString(AText);
   LM.Data    := AStream;
   for C in Channels do
-    if C.Active then
+//    if C.Active then
       C.Write(LM);
   AStream.Free;
 end;
@@ -677,7 +679,7 @@ end;
 
 procedure TLogger.Send(const AName: string; AArgs: array of const);
 begin
-
+  Send(Format(AName, AArgs));
 end;
 
 procedure TLogger.SendPointer(const AName: string; APointer: Pointer);
@@ -1033,10 +1035,10 @@ end;
 
 procedure TCustomLogChannel.SetActive(const Value: Boolean);
 begin
-  if Value <> Active then
-  begin
+  //if Value <> Active then
+  //begin
     FActive := Value;
-  end;
+  //end;
 end;
 {$ENDREGION}
 
@@ -1044,13 +1046,13 @@ end;
 {$REGION 'construction and destruction'}
 procedure TIPCChannel.AfterConstruction;
 begin
-  inherited;
+  inherited AfterConstruction;
   with FClearMessage do
   begin
-    MsgType := lmtClear;
-    MsgText:='';
-    MsgTime:=Now;
-    Data:=nil;
+    MsgType := Integer(lmtClear);
+    MsgText := '';
+    MsgTime := Now;
+    Data    := nil;
   end;
   FBuffer := TMemoryStream.Create;
   FClient := TWinIPCClient.Create(nil);
@@ -1217,7 +1219,7 @@ end;
 procedure TFileChannel.Write(const AMsg: TLogMessage);
 begin
   // Exit method identation must be set before
-  if (AMsg.MsgType = lmtExitMethod) and (FRelativeIndent >= 2) then
+  if (AMsg.MsgType = Integer(lmtExitMethod)) and (FRelativeIndent >= 2) then
     Dec(FRelativeIndent, 2);
   if ShowDate then
     FStreamWriter.Write(FormatDateTime('yyyy-mm-dd', AMsg.MsgTime) + ' ');
@@ -1225,11 +1227,11 @@ begin
     FStreamWriter.Write(FormatDateTime('hh:nn:ss:zzz', AMsg.MsgTime) + ' ');
   FStreamWriter.Write(Space(FRelativeIndent));
   if ShowPrefix then
-    FStreamWriter.Write(LOG_PREFIXES[AMsg.MsgType] + ': ');
+    FStreamWriter.Write(LOG_PREFIXES[TLogMessageType(AMsg.MsgType)] + ': ');
   FStreamWriter.WriteLine(AMsg.MsgText);
   if FShowStrings and (AMsg.Data <> nil) then
   begin
-    case AMsg.MsgType of
+    case TLogMessageType(AMsg.MsgType) of
       lmtStrings, lmtCallStack, lmtHeapInfo, lmtException:
          WriteStrings(AMsg.Data);
       lmtObject:
@@ -1237,7 +1239,7 @@ begin
     end;
   end;
   // Update enter method identation
-  if AMsg.MsgType = lmtEnterMethod then
+  if TLogMessageType(AMsg.MsgType) = lmtEnterMethod then
     Inc(FRelativeIndent, 2);
 end;
 {$ENDREGION}
@@ -1245,6 +1247,7 @@ end;
 
 initialization
   Logger := TLogger.Create;
+  Logger.Channels.Add(TIPCChannel.Create);
 
 end.
 

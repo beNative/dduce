@@ -22,11 +22,11 @@ unit Test.DDuce.DynamicRecord.Data;
 
 interface
 
+{$IFDEF SPRING}
 uses
-  {$IFDEF SPRING}
-  Spring,
-  {$ENDIF}
-  DDuce.DynamicRecord;
+  Spring;
+{$ENDIF}
+
 
 type
   TTestClass = class
@@ -37,15 +37,15 @@ type
     FTestDouble           : Double;
     FTestInteger          : Integer;
     FTestString           : string;
-    FTestVariant          : Variant;
-    {$IFDEF SPRING}
+    //FTestVariant          : Variant;
+{$IFDEF NULLABLE}
     FTestNullableBoolean  : Nullable<Boolean>;
     FTestNullableDateTime : Nullable<TDateTime>;
     FTestNullableDouble   : Nullable<Double>;
     FTestNullableInteger  : Nullable<Integer>;
     FTestNullableString   : Nullable<string>;
     FTestNullableChar     : Nullable<Char>;
-    {$ENDIF}
+{$ENDIF}
 
   public
     property TestBoolean: Boolean
@@ -66,10 +66,11 @@ type
     property TestString: string
       read FTestString write FTestString;
 
-    property TestVariant: Variant
-      read FTestVariant write FTestVariant;
+      // Variant data in TRecord is not supported
+//    property TestVariant: Variant
+//      read FTestVariant write FTestVariant;
 
-    {$IFDEF SPRING}
+{$IFDEF NULLABLE}
     property TestNullableBoolean: Nullable<Boolean>
       read FTestNullableBoolean write FTestNullableBoolean;
 
@@ -87,7 +88,7 @@ type
 
     property TestNullableChar: Nullable<Char>
       read FTestNullableChar write FTestNullableChar;
-    {$ENDIF}
+{$ENDIF}
   end;
 
 type
@@ -99,15 +100,15 @@ type
     FTestDouble           : Double;
     FTestInteger          : Integer;
     FTestString           : string;
-    FTestVariant          : Variant;
-    {$IFDEF SPRING}
+    //FTestVariant          : Variant;
+{$IFDEF NULLABLE}
     FTestNullableBoolean  : Nullable<Boolean>;
     FTestNullableDateTime : Nullable<TDateTime>;
     FTestNullableDouble   : Nullable<Double>;
     FTestNullableInteger  : Nullable<Integer>;
     FTestNullableString   : Nullable<string>;
     FTestNullableChar     : Nullable<Char>;
-    {$ENDIF}
+{$ENDIF}
 
   public
     property TestBoolean: Boolean
@@ -128,10 +129,10 @@ type
     property TestString: string
       read FTestString write FTestString;
 
-    property TestVariant: Variant
-      read FTestVariant write FTestVariant;
+//    property TestVariant: Variant
+//      read FTestVariant write FTestVariant;
 
-    {$IFDEF SPRING}
+{$IFDEF NULLABLE}
     property TestNullableBoolean: Nullable<Boolean>
       read FTestNullableBoolean write FTestNullableBoolean;
 
@@ -149,7 +150,7 @@ type
 
     property TestNullableChar: Nullable<Char>
       read FTestNullableChar write FTestNullableChar;
-    {$ENDIF}
+{$ENDIF}
   end;
 
 implementation

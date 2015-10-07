@@ -1892,8 +1892,5 @@ begin
 end;
 {$ENDREGION}
 
-initialization
-  Logger.Channels.Add(TIPCChannel.Create);
-
 end.
 

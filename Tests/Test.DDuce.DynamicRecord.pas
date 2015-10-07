@@ -49,7 +49,6 @@ type
       const AString : string;
        var  ARecord : TRecord
     ): Boolean;
-    function CreateDataSet(ARecordCount: Integer): TDataSet;
     function RetrieveRecordFunction: TRecord;
 
     procedure PassingArgumentByValueParam(ARecord: TRecord);
@@ -109,8 +108,9 @@ implementation
 
 uses
   System.Math, System.Types, System.Rtti,
+  Vcl.Dialogs,
 
-  Vcl.Dialogs;
+  Test.Utils;
 
 const
   TEST_INTEGER            = 'TestInteger';
@@ -120,6 +120,7 @@ const
   TEST_STRING_INTEGER     = 'TestStringInteger';
   TEST_STRING_DOUBLE      = 'TestStringDouble';
   TEST_TVALUE             = 'TestTValue';
+  TEST_CHAR               = 'TestChar';
   TEST_VARIANT            = 'TestVariant';
   TEST_NON_EXISTENT_VALUE = 'TestNonExistentValue';
 
@@ -132,6 +133,7 @@ begin
   FRecord[TEST_STRING_DOUBLE]  := '3,14';
   FRecord[TEST_BOOLEAN]        := True;
   FRecord[TEST_DOUBLE]         := 3.14;
+  FRecord[TEST_CHAR]           := 'C';
 
   FDynamicRecord := TRecord.CreateDynamicRecord;
   FDynamicRecord[TEST_INTEGER]        := 5;
@@ -140,6 +142,7 @@ begin
   FDynamicRecord[TEST_STRING_DOUBLE]  := '3,14';
   FDynamicRecord[TEST_BOOLEAN]        := True;
   FDynamicRecord[TEST_DOUBLE]         := 3.14;
+  FDynamicRecord[TEST_CHAR]           := 'C';
 end;
 
 procedure TestTRecord.TearDown;
@@ -151,34 +154,6 @@ end;
 
 {$REGION 'private methods'}
 // helper methods used in tests
-
-function TestTRecord.CreateDataSet(ARecordCount: Integer): TDataSet;
-var
-  DS : TClientDataSet;
-  I  : Integer;
-begin
-  DS := TClientDataSet.Create(nil);
-  with DS.FieldDefs.AddFieldDef do
-  begin
-    DataType := ftString;
-    Name     := 'Name';
-  end;
-  with DS.FieldDefs.AddFieldDef do
-  begin
-    DataType := ftInteger;
-    Name     := 'Age';
-  end;
-  DS.CreateDataSet;
-  for I := 0 to Pred(ARecordCount) do
-  begin
-    DS.Append;
-    DS.FieldByName('Name').AsString := RandomData.FirstName(gnMale);
-    DS.FieldByName('Age').AsInteger := RandomData.Number(50);
-    DS.Post;
-  end;
-  DS.First;
-  Result := DS;
-end;
 
 procedure TestTRecord.PassingArgumentByConstParam(const ARecord: TRecord);
 var
@@ -241,7 +216,7 @@ function TestTRecord.RetrieveRecord(const AString: string;
 var
   DS: TDataSet;
 begin
-  DS := CreateDataSet(10);
+  DS := TTestUtils.CreateDataSet(10);
   try
     Result := True;
     ARecord.FromDataSet(DS);
@@ -312,7 +287,7 @@ var
   R  : TRecord;
   F  : IDynamicField;
 begin
-  DS := CreateDataSet(1000);
+  DS := TTestUtils.CreateDataSet(1000);
   try
     DS.First;
     while not DS.Eof do
@@ -567,14 +542,8 @@ end;
 procedure TestTRecord.Test_ToFloat_method;
 begin
   CheckEquals(5, FRecord.ToFloat(TEST_INTEGER), TEST_INTEGER);
-  try
-    CheckTrue(IsZero(FRecord.ToFloat(TEST_STRING)), TEST_STRING);
-  except
-  end;
-  try
-    CheckTrue(IsZero(FRecord.ToFloat(TEST_BOOLEAN)), TEST_BOOLEAN);
-  except
-  end;
+  CheckTrue(IsZero(FRecord.ToFloat(TEST_STRING)), TEST_STRING);
+  CheckTrue(IsZero(FRecord.ToFloat(TEST_BOOLEAN)), TEST_BOOLEAN);
   CheckEquals(3.14, FRecord.ToFloat(TEST_DOUBLE), 0.001);
 end;
 

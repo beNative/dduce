@@ -417,8 +417,6 @@ type
     { IEnumerable }
     function GetEnumerator: TRecordEnumerator;
 
-    procedure Load; // leverages LoadProc property to load.
-    procedure Save; // leverages SaveProc property to save.
     procedure Clear; // TODO:
 
     property Values[const AName : string]: TValue
@@ -460,6 +458,7 @@ type
       read FSaveProc write FSaveProc;
 
     class operator Implicit(const ASource: TRecord<T>): T;
+    class operator Implicit(const ASource: TRecord): TRecord<T>;
     class operator Implicit(const ASource: TRecord<T>): TRecord;
     class operator Implicit(const ASource: TRecord<T>): IDynamicRecord;
     class operator Implicit(const ASource: TRecord<T>): IDynamicRecord<T>;
@@ -2708,6 +2707,7 @@ end;
 
 function TRecord<T>.GetData: T;
 begin
+  FDynamicRecord := MutableClone;
   Result := DynamicRecord.Data;
 end;
 
@@ -2756,6 +2756,11 @@ begin
 end;
 
 class operator TRecord<T>.Implicit(const ASource: TRecord<T>): TRecord;
+begin
+  Result.Assign(ASource.DynamicRecord);
+end;
+
+class operator TRecord<T>.Implicit(const ASource: TRecord): TRecord<T>;
 begin
   Result.Assign(ASource.DynamicRecord);
 end;
@@ -2857,31 +2862,19 @@ begin
   Result := DynamicRecord.IsEmpty;
 end;
 
-procedure TRecord<T>.Load;
-begin
-  if Assigned(FLoadProc) then
-    FLoadProc();
-end;
-
 function TRecord<T>.MutableClone: IDynamicRecord<T>;
 begin
- if not Assigned(FDynamicRecord) then
- begin
-   FDynamicRecord := TDynamicRecord<T>.Create;
-   Exit(FDynamicRecord);
- end
- else if TDynamicRecord<T>(FDynamicRecord).RefCount = 1 then
-   Exit(FDynamicRecord)
- else
- begin
-   Result := TDynamicRecord<T>.Create(Self);
- end;
-end;
-
-procedure TRecord<T>.Save;
-begin
-  if Assigned(FSaveProc) then
-    FSaveProc();
+   if not Assigned(FDynamicRecord) then
+   begin
+     FDynamicRecord := TDynamicRecord<T>.Create;
+     Exit(FDynamicRecord);
+   end
+   else if TDynamicRecord<T>(FDynamicRecord).RefCount = 1 then
+     Exit(FDynamicRecord)
+   else
+   begin
+     Result := TDynamicRecord<T>.Create(Self);
+   end;
 end;
 
 function TRecord<T>.ToBoolean(const AName: string;
