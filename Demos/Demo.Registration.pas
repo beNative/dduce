@@ -23,7 +23,7 @@ procedure RegisterDemos;
 implementation
 
 uses
-  Demo.DDuce.ListDataSet,
+  //Demo.DDuce.ListDataSet,
   Demo.DDuce.ScopedReference,
   Demo.DDuce.XMLTree,
   Demo.DDuce.VirtualDBGrid,
@@ -31,13 +31,14 @@ uses
   Demo.DDuce.Reflect,
   Demo.DDuce.DynamicRecord,
   Demo.DDuce.DBGridView,
+  Demo.DDuce.Logger,
 
   Demo.Manager;
 
 {$REGION 'interfaced routines'}
 procedure RegisterDemos;
 begin
-  DemoManager.Register(TfrmListDataSet, 'ListDataSet');
+  //DemoManager.Register(TfrmListDataSet, 'ListDataSet');
   DemoManager.Register(TfrmScopedReferences, 'Scoped references');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
@@ -45,6 +46,7 @@ begin
   DemoManager.Register(TfrmXMLTree, 'XMLTree');
   DemoManager.Register(TfrmVirtualDBGrid, 'VirtualDBGrid');
   DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
+  DemoManager.Register(TfrmLogger, 'Logger');
 end;
 {$ENDREGION}
 

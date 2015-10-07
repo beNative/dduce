@@ -41,13 +41,16 @@ implementation
 {$R *.dfm}
 
 uses
-  DDuce.Reflect;
+  DDuce.Reflect, DDuce.Logger;
 
 {$REGION 'construction and destruction'}
 procedure TfrmReflect.AfterConstruction;
 begin
   inherited AfterConstruction;
-  mmoMain.Text := Reflect.Properties(Self).ToString;
+
+  Logger.Send('Me', 'Testing');
+  Logger.SendInfo('Info posted');
+  //mmoMain.Text := Reflect.Properties(Self).ToString;
 end;
 {$ENDREGION}
 

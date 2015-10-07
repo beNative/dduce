@@ -144,8 +144,7 @@ resourcestring
 procedure TfrmMainMenu.AfterConstruction;
 begin
   inherited;
-  {$IFDEF DSHARP}
-  Logger.Channels.Add(TIPCChannel.Create);
+{$IFDEF DSHARP}
   FVST := vstDemos;
   FTVP := TDemoFactories.CreateTVP(Self);
   with FTVP.ColumnDefinitions.Add('Name') do
@@ -166,7 +165,7 @@ begin
   FTVP.OnDoubleClick := FTVPDoubleClick;
   FVST.Header.AutoFitColumns;
   sbrMain.SimpleText := Format(SDemosLoaded, [DemoManager.ItemList.Count]);
-  {$ENDIF}
+{$ENDIF}
 end;
 {$ENDREGION}
 

@@ -36,7 +36,7 @@ uses
   DDuce.Components.VirtualDBGrid, DDuce.Components.ListDataSet,
   DDuce.Components.PropertyInspector,
 
-  Demo.Contact;
+  Demo.Contact, System.ImageList;
 
 type
   TfrmVirtualDBGrid = class(TForm)
