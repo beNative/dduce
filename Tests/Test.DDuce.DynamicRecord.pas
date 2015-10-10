@@ -37,7 +37,7 @@ uses
 
   TestFramework, // DUnit
 
-  Test.DDuce.DynamicRecord.Data;
+  Test.Data;
 
 type
   TestTRecord = class(TTestCase)
@@ -91,6 +91,7 @@ type
 
     procedure Test_FromDataSet_method;
     procedure Test_FromStrings_method;
+    procedure Test_From_method;
 
     procedure Test_AsDelimitedText_method;
     procedure Test_AsVarArray_method;
@@ -98,6 +99,10 @@ type
     procedure Test_ToStrings_method;
 
     procedure Test_AssignProperty_method;
+
+    procedure Test_AssignTo_method_for_Object;
+    // not yet supported
+//    procedure Test_AssignTo_method_for_Record;
 
     procedure TestRetrieveRecord;
     procedure TestRetrieveRecordFunction;
@@ -109,6 +114,8 @@ implementation
 uses
   System.Math, System.Types, System.Rtti,
   Vcl.Dialogs,
+
+  DDuce.Logger,
 
   Test.Utils;
 
@@ -232,14 +239,14 @@ end;
 procedure TestTRecord.Test_AsCommaText_method;
 begin
   CheckEqualsString(
-    '5,Test,5,3,14,True,3,14',
+    '5,Test,5,3,14,True,3,14,C',
     FRecord.AsCommaText
   );
 end;
 
 procedure TestTRecord.Test_AsDelimitedText_method;
 begin
-  CheckEqualsString('5,Test,5,3,14,True,3,14', FRecord.AsDelimitedText(','));
+  CheckEqualsString('5,Test,5,3,14,True,3,14,C', FRecord.AsDelimitedText(','));
   CheckEqualsString('5', FRecord.AsDelimitedText(TEST_INTEGER, ','));
 end;
 
@@ -287,7 +294,7 @@ var
   R  : TRecord;
   F  : IDynamicField;
 begin
-  DS := TTestUtils.CreateDataSet(1000);
+  DS := TTestUtils.CreateDataSet(100);
   try
     DS.First;
     while not DS.Eof do
@@ -322,7 +329,6 @@ begin
   finally
     SL.Free;
   end;
-  CheckTrue(True, 'OK');
 end;
 {$ENDREGION}
 
@@ -634,7 +640,7 @@ var
   R : TRecord;
   I : Integer;
 begin
-  for I := 0 to 1000 do
+  for I := 0 to 100 do
   begin
     RetrieveRecord(RandomData.Name, R);
     Status(R['Test'].AsString);
@@ -673,6 +679,66 @@ begin
   FDynamicRecord[TEST_STRING] := 'Bad';
   CheckEqualsString('Good', FRecord[TEST_STRING].AsString);
 end;
+
+procedure TestTRecord.Test_From_method;
+var
+  R  : TRecord;
+  O1 : TTestClass;
+  O2 : TTestClass;
+begin
+  O1 := TTestUtils.CreateTestObject;
+  try
+    R.From(O1);
+    O2 := TTestClass.Create;
+    try
+      R.AssignTo(O2);
+      CheckEquals(O1.TestInteger, O2.TestInteger);
+    finally
+      O2.Free;
+    end;
+  finally
+    O1.Free;
+  end;
+end;
+
+procedure TestTRecord.Test_AssignTo_method_for_Object;
+var
+  R  : TRecord;
+  O1 : TTestClass;
+  O2 : TTestClass;
+begin
+  O1 := TTestUtils.CreateTestObject;
+  try
+    R.From(O1);
+    O2 := TTestClass.Create;
+    try
+      R.AssignTo(O2);
+      CheckTrue(O1.Equals(O2));
+    finally
+      O2.Free;
+    end;
+  finally
+    O1.Free;
+  end;
+end;
+
+{
+procedure TestTRecord.Test_AssignTo_method_for_Record;
+var
+  R  : TRecord;
+  R1 : TTestRecord;
+  R2 : TTestRecord;
+begin
+  // not yet supported because of Rtti-bug (TRttiType.GetProperties only works
+  // for class types.
+  R1 := TTestUtils.CreateTestRecord;
+  R.From(R1);
+  R.AssignTo(TValue.From(R2));
+  Logger.Send(AsFieldString(TValue.From(R1)));
+  Logger.Send(AsFieldString(TValue.From(R2)));
+  CheckTrue(R1.Equals(R2));
+end;
+}
 
 end.
 

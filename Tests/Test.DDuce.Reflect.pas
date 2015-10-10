@@ -25,11 +25,15 @@ uses
 
   DDuce.Reflect,
 
-  TestFramework; // DUnit
+  TestFramework, // DUnit
+
+  Test.Data;
 
 type
   TestReflect = class(TTestCase)
   private
+    FTestObject : TTestClass;
+    FTestRecord : TTestRecord;
 
   public
     procedure SetUp; override;
@@ -37,24 +41,43 @@ type
 
   published
 
+    procedure TestSetPropertyOfObject;
+
 
   end;
 
 
 implementation
 
-{ TestReflect }
+uses
+  System.Rtti,
 
+  Test.Utils,
+
+  DDuce.Logger;
+
+{$REGION 'SetUp and TearDown methods'}
 procedure TestReflect.SetUp;
 begin
   inherited SetUp;
+  FTestObject := TTestUtils.CreateTestObject;
+  FTestRecord := TTestUtils.CreateTestRecord;
 //
 end;
 
 procedure TestReflect.TearDown;
 begin
   inherited TearDown;
+  FTestObject.Free;
 //
+end;
+{$ENDREGION}
+
+procedure TestReflect.TestSetPropertyOfObject;
+
+begin
+  Reflect.Fields(FTestObject).Data.TestInteger := 0;
+  CheckEquals(0, FTestObject.TestInteger);
 end;
 
 end.

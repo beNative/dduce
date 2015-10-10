@@ -28,6 +28,10 @@ interface
     - FromStrings should cast to the field type
 
 
+   In a standard TRecord the data is stored in a collection of named TValue
+   variables.
+
+   In the generic version the data is stored in the provided type.
 }
 
 uses
@@ -42,13 +46,14 @@ uses
 
   TestFramework,
 
-  Test.DDuce.DynamicRecord.Data;
+  Test.Data;
 
 type
   TestGenericTRecord = class(TTestCase)
   private
-    FObject : TTestClass;
-    FRecord : TRecord<TTestClass>;
+    FObject        : TTestClass;
+    FRecord        : TRecord<TTestClass>;
+    FDynamicRecord : IDynamicRecord<TTestClass>;
 
     function RetrieveRecord(
       const AString : string;
@@ -376,7 +381,6 @@ var
   R : TRecord;
   F : IDynamicField;
 begin
-  R[TEST_INTEGER] := 125;
   R.Data.TestBoolean  := True;
   R.Data.TestChar     := 'C';
   R.Data.TestDateTime := Now;
@@ -388,6 +392,8 @@ begin
   begin
     CheckTrue(F.Value.Equals(R[F.Name]), F.Name);
   end;
+  R[TEST_INTEGER] := 125;
+  //CheckFalse(R.Data.TestInteger = FRecord.Data.TestInteger);
 end;
 
 procedure TestGenericTRecord.Test_assignment_operator_for_generic_TRecord_to_generic_TRecord;
