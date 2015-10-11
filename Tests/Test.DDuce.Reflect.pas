@@ -41,11 +41,7 @@ type
 
   published
 
-    procedure TestSetPropertyOfObject;
-
-
   end;
-
 
 implementation
 
@@ -72,12 +68,5 @@ begin
 //
 end;
 {$ENDREGION}
-
-procedure TestReflect.TestSetPropertyOfObject;
-
-begin
-  Reflect.Fields(FTestObject).Data.TestInteger := 0;
-  CheckEquals(0, FTestObject.TestInteger);
-end;
 
 end.

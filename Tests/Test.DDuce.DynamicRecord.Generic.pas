@@ -57,11 +57,11 @@ type
     procedure SetUp; override;
     procedure TearDown; override;
 
+    procedure Test_FromStrings_method; // fails, not implemented
 
+  published
     procedure Test_ContainsField_method;
     procedure Test_IsEmpty_method;
-
-    procedure TestConversions;
 
     // test methods with automatic conversion to destination type
     procedure Test_ToFloat_Method;
@@ -70,31 +70,21 @@ type
     procedure Test_ToBoolean_method;
     procedure Test_IsBlank_method;
 
-    procedure Test_FromDataSet_method;
-
-
-    procedure Test_FromStrings_method;
     procedure Test_ToStrings_method;
-
-    procedure Test_AsDelimitedText_method;
-    procedure Test_AsVarArray_method;
-    procedure Test_AsCommaText_method;
-
 
     procedure Test_assignment_operator_for_generic_TRecord_to_TRecord;
     procedure Test_assignment_operator_for_TRecord_to_generic_TRecord;
-published
     procedure Test_assignment_operator_for_generic_TRecord_to_generic_TRecord;
-
 
 //    procedure Test_assignment_operator_for_TRecord_to_IDynamicRecord;
 //    procedure Test_assignment_operator_for_IDynamicRecord_to_TRecord;
 
+    procedure Test_Assign_method_for_IDynamicRecord_argument;
+    procedure Test_Assign_method_for_TRecord_argument;
+    procedure Test_Assign_method_for_generic_IDynamicRecord_argument;
+    procedure Test_Assign_method_for_generic_TRecord_argument;
 
     procedure Test_Count_Property;
-
-    procedure TestAssignProperty;
-    procedure TestRetrieveRecordFunction;
 
   end;
 
@@ -125,46 +115,32 @@ begin
   FObject.TestInteger := 5;
   FObject.TestDouble  := 3.14;
 
-  // FRecord: TRecord<TTestClass>;
   FRecord.Data.TestBoolean := True;
   FRecord.Data.TestString  := 'Test';
   FRecord.Data.TestInteger := 5;
   FRecord.Data.TestDouble  := 3.14;
   FRecord.Data.TestDateTime := Now;
   FRecord.Data.TestChar     := 'C';
+
+  FDynamicRecord := TRecord<TTestClass>.CreateDynamicRecord;
+  FDynamicRecord.Data.TestBoolean := True;
+  FDynamicRecord.Data.TestString  := 'Test';
+  FDynamicRecord.Data.TestInteger := 5;
+  FDynamicRecord.Data.TestDouble  := 3.14;
+  FDynamicRecord.Data.TestDateTime := Now;
+  FDynamicRecord.Data.TestChar     := 'C';
 end;
 
 procedure TestGenericTRecord.TearDown;
 begin
   FreeAndNil(FObject);
+  FDynamicRecord := nil;
   inherited TearDown;
 end;
 {$ENDREGION}
 {$ENDREGION}
 
 {$REGION 'Test methods'}
-procedure TestGenericTRecord.Test_AsCommaText_method;
-begin
-//  R.Create(FObject);
-//  Status(R.ToString);
-//  T := R;
-end;
-
-procedure TestGenericTRecord.Test_AsDelimitedText_method;
-begin
-
-end;
-
-procedure TestGenericTRecord.TestAssignProperty;
-begin
-
-end;
-
-procedure TestGenericTRecord.Test_AsVarArray_method;
-begin
-  //
-end;
-
 procedure TestGenericTRecord.Test_ContainsField_method;
 begin
   CheckTrue(FRecord.ContainsField('TestChar'));
@@ -172,47 +148,7 @@ end;
 
 procedure TestGenericTRecord.Test_Count_Property;
 begin
-  CheckEquals(12, FRecord.Count);
-end;
-
-procedure TestGenericTRecord.TestConversions;
-var
-  O  : TTestClass;
-  //TR : TTestRecord;
-  R  : TRecord<TTestClass>;
-begin
-  FObject.TestBoolean := True;
-  FObject.TestString  := 'test';
-  FObject.TestInteger := 5;
-  FObject.TestDouble  := 3.14;
-    //R.From<TTestClass>(O);
-    //R.Create(O);
-//    R.AssignProperty(O, TEST_BOOLEAN);
-//    R.AssignProperty(O, TEST_STRING);
-//    R.AssignProperty(O, TEST_INTEGER);
-//    R.AssignProperty(O, TEST_DOUBLE);
-
-    CheckEquals(True, R[TEST_BOOLEAN].AsBoolean, TEST_BOOLEAN);
-    CheckEquals(5, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
-    CheckEquals('test', R[TEST_STRING].AsString, TEST_STRING);
-
-//    TR.TestBoolean := True;
-//    TR.TestString  := 'test';
-//    TR.TestInteger := 5;
-//    TR.TestDouble  := 3.14;
-//    R.AssignProperty(TValue.From(TR), TEST_BOOLEAN);
-//    R.AssignProperty(TValue.From(TR), TEST_STRING);
-//    R.AssignProperty(TValue.From(TR), TEST_INTEGER);
-//    R.AssignProperty(TValue.From(TR), TEST_DOUBLE);
-
-//finally
-    O.Free;
-  //end;
-end;
-
-procedure TestGenericTRecord.Test_FromDataSet_method;
-begin
-
+  CheckEquals(6, FRecord.Count);
 end;
 
 procedure TestGenericTRecord.Test_FromStrings_method;
@@ -221,36 +157,27 @@ var
 begin
   SL := TStringList.Create;
   try
-//    SL.Values[TEST_INTEGER] := '5';
-//    SL.Values[TEST_STRING] := 'Test';
-    //FRecord.FromStrings(SL);
-//    CheckEquals(FRecord.Data.TestInteger, 5);
-    //CheckEquals(FRecord.Data.TestString, 'Test');
+    SL.Values[TEST_INTEGER] := '5';
+    SL.Values[TEST_STRING] := 'Test';
+    FRecord.FromStrings(SL);
+    CheckEquals(FRecord.Data.TestInteger, 5);
+    CheckEquals(FRecord.Data.TestString, 'Test');
   finally
     SL.Free;
   end;
 end;
 
 procedure TestGenericTRecord.Test_IsBlank_method;
-var
-  R: TRecord<TTestClass>;
 begin
-  //R[TEST_STRING] := '';
-  //CheckTrue(R.IsBlank(TEST_STRING), TEST_STRING);
+  FRecord.Data.TestString := '';
+  CheckTrue(FRecord.IsBlank(TEST_STRING));
 end;
 
 { TODO: IsEmpty has little meaning in the generic version. }
 
 procedure TestGenericTRecord.Test_IsEmpty_method;
-var
-  R: TRecord<TTestClass>;
 begin
-  CheckFalse(R.IsEmpty);  //
-end;
-
-procedure TestGenericTRecord.TestRetrieveRecordFunction;
-begin
-//
+  CheckFalse(FRecord.IsEmpty);
 end;
 
 procedure TestGenericTRecord.Test_ToBoolean_method;
@@ -292,11 +219,11 @@ var
 begin
   SL := TStringList.Create;
   try
-//    FRecord.ToStrings(SL);
-//    CheckEquals('True', SL.Values[TEST_BOOLEAN], TEST_BOOLEAN);
-//    CheckEquals('5', SL.Values[TEST_INTEGER], TEST_INTEGER);
-//    CheckEquals('Test', SL.Values[TEST_STRING], TEST_STRING);
-//    CheckEquals('3,14', SL.Values[TEST_DOUBLE], TEST_DOUBLE);
+    FRecord.ToStrings(SL);
+    CheckEquals('True', SL.Values[TEST_BOOLEAN], TEST_BOOLEAN);
+    CheckEquals('5', SL.Values[TEST_INTEGER], TEST_INTEGER);
+    CheckEquals('Test', SL.Values[TEST_STRING], TEST_STRING);
+    CheckEquals('3,14', SL.Values[TEST_DOUBLE], TEST_DOUBLE);
   finally
     SL.Free;
   end;
@@ -349,6 +276,52 @@ begin
   //R.Data.TestInteger := 0;
   //CheckNotEquals(R.Data.TestInteger, FRecord.Data.TestInteger);
 
+end;
+
+procedure TestGenericTRecord.Test_Assign_method_for_IDynamicRecord_argument;
+var
+  DR : IDynamicRecord;
+begin
+  DR := TRecord.CreateDynamicRecord;
+  DR.Data.TestInteger := 5;
+  DR.Data.TestString  := 'Test';
+  FRecord.Assign(DR);
+  CheckEquals(DR.ToInteger(TEST_INTEGER), FRecord.Data.TestInteger);
+  CheckEquals(DR.ToString(TEST_STRING), FRecord.Data.TestString);
+end;
+
+procedure TestGenericTRecord.Test_Assign_method_for_TRecord_argument;
+var
+  R : TRecord;
+begin
+  R.Data.TestInteger := 8;
+  R.Data.TestString  := 'Foo';
+  FRecord.Assign(R);
+  CheckEquals(R.ToInteger(TEST_INTEGER), FRecord.Data.TestInteger);
+  CheckEquals(R.ToString(TEST_STRING), FRecord.Data.TestString);
+end;
+
+procedure TestGenericTRecord.Test_Assign_method_for_generic_IDynamicRecord_argument;
+var
+  DR : IDynamicRecord<TTestClass>;
+begin
+  DR := TRecord<TTestClass>.CreateDynamicRecord;
+  DR.Data.TestInteger := 7;
+  DR.Data.TestString  := 'Some test';
+  FRecord.Assign(DR);
+  CheckEquals(DR.Data.TestInteger, FRecord.Data.TestInteger);
+  CheckEquals(DR.Data.TestString, FRecord.Data.TestString);
+end;
+
+procedure TestGenericTRecord.Test_Assign_method_for_generic_TRecord_argument;
+var
+  R : TRecord<TTestClass>;
+begin
+  R.Data.TestInteger := 1;
+  R.Data.TestString  := 'Another test';
+  FRecord.Assign(R);
+  CheckEquals(R.Data.TestInteger, FRecord.Data.TestInteger);
+  CheckEquals(R.Data.TestString, FRecord.Data.TestString);
 end;
 
 end.

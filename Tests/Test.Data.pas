@@ -28,7 +28,6 @@ uses
   Spring;
 {$ENDIF}
 
-
 type
   TTestClass = class(TObject)
   private
@@ -38,7 +37,6 @@ type
     FTestDouble           : Double;
     FTestInteger          : Integer;
     FTestString           : string;
-    //FTestVariant          : Variant;
 {$IFDEF NULLABLE}
     FTestNullableBoolean  : Nullable<Boolean>;
     FTestNullableDateTime : Nullable<TDateTime>;
@@ -68,10 +66,6 @@ type
 
     property TestString: string
       read FTestString write FTestString;
-
-      // Variant data in TRecord is not supported
-//    property TestVariant: Variant
-//      read FTestVariant write FTestVariant;
 
 {$IFDEF NULLABLE}
     property TestNullableBoolean: Nullable<Boolean>
@@ -103,7 +97,6 @@ type
     FTestDouble           : Double;
     FTestInteger          : Integer;
     FTestString           : string;
-    //FTestVariant          : Variant;
 {$IFDEF NULLABLE}
     FTestNullableBoolean  : Nullable<Boolean>;
     FTestNullableDateTime : Nullable<TDateTime>;
@@ -134,9 +127,6 @@ type
     property TestString: string
       read FTestString write FTestString;
 
-//    property TestVariant: Variant
-//      read FTestVariant write FTestVariant;
-
 {$IFDEF NULLABLE}
     property TestNullableBoolean: Nullable<Boolean>
       read FTestNullableBoolean write FTestNullableBoolean;
@@ -163,8 +153,7 @@ implementation
 uses
   System.Math;
 
-{ TTestClass }
-
+{$REGION 'TTestClass'}
 function TTestClass.Equals(Obj: TObject): Boolean;
 var
   O : TTestClass;
@@ -184,17 +173,18 @@ begin
     Result := False;
   end;
 end;
+{$ENDREGION}
 
-{ TTestRecord }
-
+{$REGION 'TTestRecord'}
 function TTestRecord.Equals(var ARecord: TTestRecord): Boolean;
 begin
   Result := ARecord.TestString.Equals(TestString)
-      and (ARecord.TestBoolean = TestBoolean)
-      and (SameValue(ARecord.TestDouble, TestDouble))
-      and (ARecord.TestInteger = TestInteger)
-      and (ARecord.TestChar = TestChar)
-      and (SameValue(ARecord.TestDateTime, TestDateTime))
+    and (ARecord.TestBoolean = TestBoolean)
+    and (SameValue(ARecord.TestDouble, TestDouble))
+    and (ARecord.TestInteger = TestInteger)
+    and (ARecord.TestChar = TestChar)
+    and (SameValue(ARecord.TestDateTime, TestDateTime));
 end;
+{$ENDREGION}
 
 end.

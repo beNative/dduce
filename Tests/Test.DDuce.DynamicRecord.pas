@@ -70,6 +70,9 @@ type
     procedure Test_passing_IDynamicRecord_argument_as_IDynamicRecord_parameter;
 
     procedure Test_Assign_method_for_IDynamicRecord_argument;
+    procedure Test_Assign_method_for_TRecord_argument;
+    procedure Test_Assign_method_for_generic_IDynamicRecord_argument;
+    procedure Test_Assign_method_for_generic_TRecord_argument;
 
     procedure Test_assignment_operator_for_TRecord_to_TRecord;
     procedure Test_assignment_operator_for_TRecord_to_IDynamicRecord;
@@ -339,7 +342,6 @@ var
   F : IDynamicField;
 begin
   R.Assign(FDynamicRecord);
-  Status(R.ToString);
   {$IFDEF SPRING}
   for F in R do
   begin
@@ -350,6 +352,24 @@ begin
   CheckEquals(FDynamicRecord.Data.TestInteger, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
   CheckEquals(FDynamicRecord.Data.TestString, R[TEST_STRING].AsString, TEST_STRING);
 end;
+
+procedure TestTRecord.Test_Assign_method_for_TRecord_argument;
+var
+  R : TRecord;
+  F : IDynamicField;
+begin
+  R.Assign(FRecord);
+  {$IFDEF SPRING}
+  for F in R do
+  begin
+    CheckTrue(FRecord[F.Name].Equals(F.Value));
+  end;
+  {$ENDIF}
+  CheckEquals(FRecord.Data.TestBoolean, R[TEST_BOOLEAN].AsBoolean, TEST_BOOLEAN);
+  CheckEquals(FRecord.Data.TestInteger, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
+  CheckEquals(FRecord.Data.TestString, R[TEST_STRING].AsString, TEST_STRING);
+end;
+
 {$ENDREGION}
 
 {$REGION 'Tests of field manipulation methods'}
@@ -486,7 +506,6 @@ end;
 procedure TestTRecord.Test_passing_TRecord_argument_as_value_parameter;
 var
   R : TRecord;
-  I : Integer;
 begin
   R.Data.B := False;
   R.Data.I := 10;
@@ -739,6 +758,30 @@ begin
   CheckTrue(R1.Equals(R2));
 end;
 }
+
+
+procedure TestTRecord.Test_Assign_method_for_generic_IDynamicRecord_argument;
+var
+  DR : IDynamicRecord<TTestClass>;
+begin
+  DR := TRecord<TTestClass>.CreateDynamicRecord;
+  DR.Data.TestString := 'Some teststring';
+  DR.Data.TestChar   := 'A';
+  FRecord.Assign(DR);
+  CheckEquals(FRecord[TEST_STRING].AsString, DR.Data.TestString);
+  CheckEquals(FRecord[TEST_CHAR].AsString, DR.Data.TestChar);
+end;
+
+procedure TestTRecord.Test_Assign_method_for_generic_TRecord_argument;
+var
+  R : TRecord<TTestClass>;
+begin
+  R.Data.TestString := 'Some teststring';
+  R.Data.TestChar   := 'A';
+  FRecord.Assign(R);
+  CheckEquals(FRecord[TEST_STRING].AsString, R.Data.TestString);
+  CheckEquals(FRecord[TEST_CHAR].AsString, R.Data.TestChar);
+end;
 
 end.
 
