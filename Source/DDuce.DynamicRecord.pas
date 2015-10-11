@@ -182,10 +182,6 @@ type
       const AAssignProperties : Boolean = True;
       const AAssignFields     : Boolean = False
     ); overload;
-    procedure Create(
-      const AInstance : TValue;
-      const ANames    : array of string
-    ); overload;
     constructor Create(
       const AInstance         : TValue;
       const AAssignProperties : Boolean;
@@ -213,7 +209,6 @@ type
             AQuoteChar   : Char = '"'
     ): string; overload;
 
-    procedure Assign(const ARecord : TRecord); overload;
     procedure Assign(ADynamicRecord: IDynamicRecord); overload;
     procedure Assign(
       const ARecord : TRecord;
@@ -419,7 +414,7 @@ type
     { IEnumerable }
     function GetEnumerator: TRecordEnumerator;
 
-    procedure Clear; // TODO:
+    procedure Clear;
 
     property Values[const AName : string]: TValue
       read GetItemValue write SetItemValue; default;
@@ -599,7 +594,7 @@ type
     procedure SetDataFactory(const ADataFactory : TFunc<T>);
 
     procedure Assign(AInstance: T); overload;
-    procedure Assign(const ASource: TRecord<T>); overload;
+    procedure Assign(ASource: IDynamicRecord<T>); overload;
 
     property Data: T
       read GetData write SetData;
@@ -812,13 +807,11 @@ type
       read GetRefCount;
 
   public
-    // constructors and destructors
     constructor Create; overload; virtual;
     constructor Create(const AFieldNames : string); overload;
 
     function GetEnumerator: TRecordEnumerator;
 
-    //procedure Assign(Source: TPersistent); overload; override;
     function ToString(AAlignValues: Boolean): string; reintroduce; overload; virtual;
     function ToString: string; overload; override;
   end;
@@ -840,8 +833,6 @@ type
     procedure SetItemValue(const AName: string; const AValue: TValue); override;
 
   public
-    //function Invoke: T;
-
     function ToString(AAlignValues: Boolean): string; overload; override;
 
     constructor Create; overload; override;
@@ -852,7 +843,7 @@ type
     procedure BeforeDestruction; override;
 
     procedure Assign(AInstance: T); overload;
-    procedure Assign(const ASource: TRecord<T>); overload;
+    procedure Assign(ASource: IDynamicRecord<T>); overload;
 
     { Wrapped instance of type T }
     property Data: T
@@ -911,15 +902,21 @@ type
 
   public
     procedure Clear(var V: TVarData); override;
-    procedure Copy(var   Dest     : TVarData;
-                   const Source   : TVarData;
-                   const Indirect : Boolean); override;
-    function GetProperty(var   Dest : TVarData;
-                         const V    : TVarData;
-                         const Name : string): Boolean; override;
-    function SetProperty(const V      : TVarData;
-                         const Name   : string;
-                         const AValue : TVarData): Boolean; override;
+    procedure Copy(
+      var   Dest     : TVarData;
+      const Source   : TVarData;
+      const Indirect : Boolean
+    ); override;
+    function GetProperty(
+      var   Dest : TVarData;
+      const V    : TVarData;
+      const Name : string
+    ): Boolean; override;
+    function SetProperty(
+      const V      : TVarData;
+      const Name   : string;
+      const AValue : TVarData
+    ): Boolean; override;
 
     class constructor Create;
     class destructor Destroy;
@@ -2081,12 +2078,6 @@ begin
   Assign(ARecord);
 end;
 
-procedure TRecord.Create(const AInstance: TValue;
-  const ANames: array of string);
-begin
-  //Assign(AInstance, ANames);
-end;
-
 class function TRecord.CreateDynamicRecord: IDynamicRecord;
 begin
   Result := TDynamicRecord.Create;
@@ -2152,11 +2143,6 @@ class operator TRecord.Implicit(const ASource: IDynamicRecord): TRecord;
 begin
   Result.Assign(ASource);
 end;
-
-//class operator TRecord.Implicit(const ASource: TValue): TRecord;
-//begin
-//  Result.From(ASource);
-//end;
 
 class operator TRecord.Implicit(const ASource: TRecord): Variant;
 begin
@@ -2231,12 +2217,6 @@ begin
   DynamicRecord.Assign(ADynamicRecord);
 end;
 
-procedure TRecord.Assign(const ARecord: TRecord);
-begin
-  if ARecord.DynamicRecord <> DynamicRecord then
-    DynamicRecord.Assign(ARecord);
-end;
-
 procedure TRecord.AssignProperty(const AInstance: TValue;
   const APropertyName: string; const AAssignNulls: Boolean);
 begin
@@ -2282,7 +2262,6 @@ end;
 
 procedure TRecord.From<T>(const Value: T);
 begin
-  //DynamicRecord.From(TValue.From(Value), True, False, False, []);
   DynamicRecord.From(TValue.From<T>(Value), True, False, False, []);
 end;
 
@@ -2548,9 +2527,9 @@ begin
   From(AInstance, True, False, False, []);
 end;
 
-procedure TDynamicRecord<T>.Assign(const ASource: TRecord<T>);
+procedure TDynamicRecord<T>.Assign(ASource: IDynamicRecord<T>);
 begin
-//
+  Assign(ASource.Data);
 end;
 
 function TDynamicRecord<T>.ToString(AAlignValues: Boolean): string;
@@ -2707,8 +2686,6 @@ end;
 
 constructor TRecord<T>.Create(const ARecord: TRecord<T>);
 begin
-  //DynamicRecord.Assign(ARecord.DynamicRecord);
-  //DynamicRecord.Assign(ARecord);
   Assign(ARecord);
 end;
 
@@ -2768,11 +2745,6 @@ end;
 {$ENDREGION}
 
 {$REGION 'operator overloads'}
-//class operator TRecord<T>.Implicit(const ASource: TRecord<T>): T;
-//begin
-//  Result := ASource.Data;
-//end;
-
 class operator TRecord<T>.Implicit(const ASource: TRecord<T>): IDynamicRecord;
 begin
   if not Assigned(Result) then
@@ -2784,7 +2756,7 @@ class operator TRecord<T>.Implicit(const ASource: TRecord<T>): IDynamicRecord<T>
 begin
   if not Assigned(Result) then
     Result := TDynamicRecord<T>.Create;
-  Result.Assign(ASource);
+  Result.Assign(ASource.Data);
 end;
 
 class operator TRecord<T>.Implicit(const ASource: TRecord<T>): TRecord;
@@ -2826,6 +2798,11 @@ end;
 procedure TRecord<T>.Assign(const ARecord: TRecord);
 begin
   DynamicRecord.Assign(ARecord);
+end;
+
+procedure TRecord<T>.Assign(ASource: T);
+begin
+  DynamicRecord.Assign(ASource);
 end;
 
 procedure TRecord<T>.AssignProperty(const AInstance: TValue;
@@ -2943,10 +2920,5 @@ begin
 end;
 {$ENDREGION}
 {$ENDREGION}
-
-procedure TRecord<T>.Assign(ASource: T);
-begin
-  DynamicRecord.Assign(ASource);
-end;
 
 end.
