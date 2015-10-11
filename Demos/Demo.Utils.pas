@@ -139,6 +139,8 @@ begin
       tkDynArray, tkClass
     ];
     N := 0;
+    // REMARK: GetProperties only works for class types, not record types!
+    // This is a known bug by Embarcadero and will be fixed in future releases.
     for P in FRtti.GetType(AValue.TypeInfo).GetProperties do
     begin
       if not (P.PropertyType.TypeKind in ExcludedTypes) and P.IsReadable then

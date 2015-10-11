@@ -61,7 +61,7 @@ type
     grpWatches              : TGroupBox;
     imlMain                 : TImageList;
     trbMain                 : TTrackBar;
-    lblPosition: TLabel;
+    lblPosition             : TLabel;
 
     procedure trbMainChange(Sender: TObject);
 
@@ -170,7 +170,7 @@ end;
 {$REGION 'protected methods'}
 procedure TfrmLogger.UpdateActions;
 begin
-  inherited;
+  inherited UpdateActions;
   actEnterMethod1.Enabled := not FM1Entered;
   actExitMethod1.Enabled  := FM1Entered;
   actEnterMethod2.Enabled := not FM2Entered;

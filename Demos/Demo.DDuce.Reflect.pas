@@ -48,9 +48,10 @@ procedure TfrmReflect.AfterConstruction;
 begin
   inherited AfterConstruction;
 
-  Logger.Send('Me', 'Testing');
-  Logger.SendInfo('Info posted');
-  //mmoMain.Text := Reflect.Properties(Self).ToString;
+//  Logger.Send('Me', 'Testing');
+//  Logger.SendInfo('Info posted');
+  mmoMain.Text := Reflect.Properties(Self).ToString;
+  Logger.Send(Reflect.Fields(Self).ToString)
 end;
 {$ENDREGION}
 
