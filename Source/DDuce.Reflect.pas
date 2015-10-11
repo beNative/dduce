@@ -40,7 +40,7 @@ type
     class function Fields<T>(const AArg: T): IDynamicRecord; static;
     class function Properties<T: class, constructor>(
       const AArg: T
-    ): IDynamicRecord<T>; overload; static;
+    ): IDynamicRecord; overload; static;
   end;
 
 implementation
@@ -60,14 +60,9 @@ end;
 { Returns the fields of the given instance (record or object). }
 
 class function Reflect.Fields<T>(const AArg: T): IDynamicRecord;
-var
-  R : TRecord;
-  V : TValue;
 begin
-  V := TValue.From<T>(AArg);
-  R.From(V, False, True, True, []);
-  Result := R.CreateDynamicRecord;
-  Result.Assign(R);
+  Result := TRecord.CreateDynamicRecord;
+  Result.From(TValue.From(AArg), False, True, True, []);
 end;
 
 class function Reflect.OrdValue<T>(const AArg: T): Integer;
@@ -81,9 +76,11 @@ end;
 
 { Returns the properties of the given instance (record or object). }
 
-class function Reflect.Properties<T>(const AArg: T): IDynamicRecord<T>;
+class function Reflect.Properties<T>(const AArg: T): IDynamicRecord;
 begin
-  Result := TRecord<T>.Create(AArg);
+  Result := TRecord.CreateDynamicRecord;
+  //Result.From(TValue.From(AArg), True, False, True, []);
+  Result.From(AArg, True, False, True, []);
 end;
 
 // ElementNamesOfSet
