@@ -84,10 +84,10 @@ unit DDuce.Components.GridView;
 interface
 
 uses
+  Winapi.Windows, Winapi.Messages, Winapi.CommCtrl,
   System.SysUtils, System.Classes, System.Math,
   Vcl.Themes, Vcl.Forms, Vcl.Controls, Vcl.Graphics, Vcl.Dialogs, Vcl.StdCtrls,
-  Vcl.ImgList, Vcl.Mask,
-  Winapi.Windows, Winapi.Messages, Winapi.CommCtrl;
+  Vcl.ImgList, Vcl.Mask;
 
 type
   TBitmap = Vcl.Graphics.TBitmap;
