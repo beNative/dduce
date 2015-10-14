@@ -104,8 +104,6 @@ type
     procedure Test_AssignProperty_method;
 
     procedure Test_AssignTo_method_for_Object;
-    // not yet supported
-//    procedure Test_AssignTo_method_for_Record;
 
     procedure TestRetrieveRecord;
     procedure TestRetrieveRecordFunction;
@@ -692,7 +690,6 @@ begin
   CheckEqualsString('Bad', FDynamicRecord[TEST_STRING].AsString);
 
   FDynamicRecord := FRecord;
-//FDynamicRecord.Assign(FRecord);
   CheckEqualsString('Good', FDynamicRecord[TEST_STRING].AsString);
 
   FDynamicRecord[TEST_STRING] := 'Bad';
@@ -740,25 +737,6 @@ begin
     O1.Free;
   end;
 end;
-
-{
-procedure TestTRecord.Test_AssignTo_method_for_Record;
-var
-  R  : TRecord;
-  R1 : TTestRecord;
-  R2 : TTestRecord;
-begin
-  // not yet supported because of Rtti-bug (TRttiType.GetProperties only works
-  // for class types.
-  R1 := TTestUtils.CreateTestRecord;
-  R.From(R1);
-  R.AssignTo(TValue.From(R2));
-  Logger.Send(AsFieldString(TValue.From(R1)));
-  Logger.Send(AsFieldString(TValue.From(R2)));
-  CheckTrue(R1.Equals(R2));
-end;
-}
-
 
 procedure TestTRecord.Test_Assign_method_for_generic_IDynamicRecord_argument;
 var
