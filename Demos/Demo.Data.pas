@@ -25,13 +25,18 @@ uses
 
 type
   TdmData = class(TDataModule)
-    cdsMain: TClientDataSet;
-    imlMain: TImageList;
+    cdsMain : TClientDataSet;
+    imlMain : TImageList;
+
   private
     function GetDataSet: TDataSet;
     function GetImageList: TImageList;
 
   public
+    procedure AfterConstruction; override;
+
+    procedure FillDataSet(ARecordCount: Integer);
+
     property DataSet: TDataSet
       read GetDataSet;
 
@@ -46,7 +51,10 @@ implementation
 {$R *.dfm}
 
 uses
-  Vcl.Forms;
+  System.Variants,
+  Vcl.Forms,
+
+  DDuce.RandomData;
 
 var
   FData: TdmData;
@@ -57,6 +65,14 @@ begin
   if not Assigned(FData) then
     FData := TdmData.Create(Application);
   Result := FData;
+end;
+{$ENDREGION}
+
+{$REGION 'construction and destruction'}
+procedure TdmData.AfterConstruction;
+begin
+  inherited AfterConstruction;
+  FillDataSet(10000);
 end;
 {$ENDREGION}
 
@@ -72,4 +88,63 @@ begin
 end;
 {$ENDREGION}
 
+{$REGION 'protected methods'}
+procedure TdmData.FillDataSet(ARecordCount: Integer);
+var
+  DS : TClientDataSet;
+  I  : Integer;
+  S  : string;
+begin
+  DS := cdsMain;
+  DS.Data := Null;
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Name     := 'Name';
+  end;
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftDate;
+    Name     := 'BirthDate';
+  end;
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Name     := 'Email';
+  end;
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Name     := 'Address';
+  end;
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Name     := 'Company';
+  end;
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftBoolean;
+    Name     := 'Active';
+  end;
+  DS.CreateDataSet;
+  for I := 0 to Pred(ARecordCount) do
+  begin
+    DS.Append;
+    S := RandomData.PersonName;
+    DS.FieldByName('Name').AsString := S;
+    DS.FieldByName('Email').AsString := RandomData.Email(S, RandomData.Name);
+    DS.FieldByName('BirthDate').AsDateTime := RandomData.BirthDate(1920, 1998);
+    DS.FieldByName('Company').AsString := RandomData.AlliteratedCompanyName;
+    DS.FieldByName('Address').AsString := RandomData.Address;
+    DS.FieldByName('Active').AsBoolean := RandomData.Bool;
+    DS.Post;
+  end;
+  DS.First;
+end;
+{$ENDREGION}
+
 end.
+
+
+

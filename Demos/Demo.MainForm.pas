@@ -23,7 +23,7 @@ interface
 uses
   System.Actions, System.UITypes, System.Classes,
   Vcl.ActnList, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Controls, Vcl.ExtCtrls,
-  Vcl.Buttons, Vcl.Forms,
+  Vcl.Buttons, Vcl.Forms, Vcl.ImgList,
 
   VirtualTrees,
 
@@ -31,7 +31,7 @@ uses
 
   DSharp.Windows.ColumnDefinitions, DSharp.Windows.TreeViewPresenter,
 
-  Spring.Collections, System.ImageList, Vcl.ImgList;
+  Spring.Collections, System.ImageList;
 
 type
   TfrmMainMenu = class(TForm)
@@ -45,7 +45,7 @@ type
     pnlVST         : TPanel;
     sbrMain        : TStatusBar;
     vstDemos       : TVirtualStringTree;
-    imlMain: TImageList;
+    imlMain        : TImageList;
 
     procedure actExecuteExecute(Sender: TObject);
     procedure actFocusFilterExecute(Sender: TObject);

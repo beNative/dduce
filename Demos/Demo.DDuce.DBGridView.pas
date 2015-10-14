@@ -69,7 +69,6 @@ type
     procedure chkMultiselectClick(Sender: TObject);
     procedure chkConnectEventsClick(Sender: TObject);
 
-    procedure actInspectComponentExecute(Sender: TObject);
     procedure actAutoSizeColumnsExecute(Sender: TObject);
     procedure actClearLogExecute(Sender: TObject);
 
@@ -77,8 +76,6 @@ type
     FDBGV : TDBGridView;
     FVLT  : TLogTree;
 
-    procedure ConnectEvents;
-    procedure DisconnectEvents;
     function GetDataSet: TDataSet;
 
     {$REGION 'event handlers'}
@@ -214,6 +211,9 @@ type
       var Select: Boolean);
     {$ENDREGION}
 
+    procedure ConnectEvents;
+    procedure DisconnectEvents;
+
   protected
     procedure AddToLog(
       const AString : string;
@@ -255,7 +255,7 @@ var
 {$REGION 'construction and destruction'}
 procedure TfrmDBGridView.AfterConstruction;
 begin
-  inherited;
+  inherited AfterConstruction;
   dscMain.DataSet := Demo.Data.Data.DataSet;
   CreateDBGridView;
 
@@ -280,11 +280,6 @@ end;
 procedure TfrmDBGridView.actClearLogExecute(Sender: TObject);
 begin
   FVLT.Clear;
-end;
-
-procedure TfrmDBGridView.actInspectComponentExecute(Sender: TObject);
-begin
-  //InspectComponent(FDBGV);
 end;
 {$ENDREGION}
 
@@ -1083,7 +1078,6 @@ begin
     TabOrder         := 0;
     FitColsToClient  := False;
     MultiSelect      := False;
-    ConnectEvents;
   end;
 end;
 

@@ -5,6 +5,7 @@ object frmInspector: TfrmInspector
   ClientHeight = 605
   ClientWidth = 660
   Color = clBtnFace
+  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -29,7 +30,6 @@ object frmInspector: TfrmInspector
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 450
   end
   object pnlRight: TPanel
     Left = 327
@@ -39,16 +39,61 @@ object frmInspector: TfrmInspector
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 185
-    ExplicitWidth = 450
-    ExplicitHeight = 450
+    object splHorizontal: TSplitter
+      Left = 0
+      Top = 209
+      Width = 333
+      Height = 7
+      Cursor = crVSplit
+      Align = alBottom
+      ExplicitTop = 208
+    end
+    object pnlInspector: TPanel
+      Left = 0
+      Top = 216
+      Width = 333
+      Height = 389
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 0
+    end
+    object grdMain: TDBGrid
+      Left = 0
+      Top = 0
+      Width = 333
+      Height = 209
+      Align = alClient
+      DataSource = dscMain
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      ReadOnly = True
+      TabOrder = 1
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+    end
+  end
+  object dscMain: TDataSource
+    OnDataChange = dscMainDataChange
+    Left = 16
+    Top = 8
+  end
+  object pmMain: TPopupMenu
+    Left = 64
+    Top = 8
+    object mniHideEmptyFields: TMenuItem
+      Action = actHideEmptyFields
+      AutoCheck = True
+    end
   end
   object aclMain: TActionList
-    Left = 312
-    Top = 232
-  end
-  object imlMain: TImageList
-    Left = 368
-    Top = 224
+    Left = 120
+    Top = 8
+    object actHideEmptyFields: TAction
+      AutoCheck = True
+      Caption = 'Hide empty fields'
+      Checked = True
+    end
   end
 end

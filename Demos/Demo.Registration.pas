@@ -26,7 +26,6 @@ uses
   //Demo.DDuce.ListDataSet,
   Demo.DDuce.ScopedReference,
   Demo.DDuce.XMLTree,
-  Demo.DDuce.VirtualDBGrid,
   Demo.DDuce.PropertyInspector,
   Demo.DDuce.Reflect,
   Demo.DDuce.DynamicRecord,
@@ -46,7 +45,6 @@ begin
   DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
   DemoManager.Register(TfrmReflect, 'Reflect');
   DemoManager.Register(TfrmXMLTree, 'XMLTree');
-  DemoManager.Register(TfrmVirtualDBGrid, 'VirtualDBGrid');
   DemoManager.Register(TfrmLogger, 'Logger');
   DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
   DemoManager.Register(TfrmInspector, 'Inspector');

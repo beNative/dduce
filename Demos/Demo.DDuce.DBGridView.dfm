@@ -50,10 +50,6 @@ object frmDBGridView: TfrmDBGridView
     object tsDBGridViewEvents: TTabSheet
       Caption = 'DBGridView Events'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlDBGridViewEvents: TPanel
         Left = 0
         Top = 0
@@ -158,10 +154,6 @@ object frmDBGridView: TfrmDBGridView
     object tsDataSourceEvents: TTabSheet
       Caption = 'DataSource Events'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlDataSourceEvents: TPanel
         Left = 0
         Top = 0
@@ -252,8 +244,6 @@ object frmDBGridView: TfrmDBGridView
       Height = 17
       Anchors = [akTop, akRight]
       Caption = 'Connect events'
-      Checked = True
-      State = cbChecked
       TabOrder = 5
       OnClick = chkConnectEventsClick
     end
@@ -272,7 +262,6 @@ object frmDBGridView: TfrmDBGridView
       Caption = 'Inspect component (CTRL-F1)'
       ShortCut = 16496
       Visible = False
-      OnExecute = actInspectComponentExecute
     end
     object actAutoSizeColumns: TAction
       Caption = 'Autosize columns'
@@ -287,7 +276,7 @@ object frmDBGridView: TfrmDBGridView
     Left = 112
     Top = 576
     Bitmap = {
-      494C010104000900180010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101040009001C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

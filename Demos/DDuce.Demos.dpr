@@ -9,7 +9,6 @@ uses
   Demo.DDuce.PropertyInspector in 'Demo.DDuce.PropertyInspector.pas' {frmPropertyInspector},
   Demo.DDuce.Reflect in 'Demo.DDuce.Reflect.pas' {frmReflect},
   Demo.DDuce.ScopedReference in 'Demo.DDuce.ScopedReference.pas' {frmScopedReferences},
-  Demo.DDuce.VirtualDBGrid in 'Demo.DDuce.VirtualDBGrid.pas' {frmVirtualDBGrid},
   Demo.DDuce.XMLTree in 'Demo.DDuce.XMLTree.pas' {frmXMLTree},
   Demo.Factories in 'Demo.Factories.pas',
   Demo.Helpers in 'Demo.Helpers.pas',
