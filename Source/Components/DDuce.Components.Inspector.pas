@@ -167,6 +167,7 @@ type
     property ParentFont;
     property ParentShowHint;
     property PopupMenu;
+    property Rows;
     property ShowCellTips;
     property ShowHint;
     property TabOrder;
