@@ -32,6 +32,8 @@ uses
   Demo.DDuce.DynamicRecord,
   Demo.DDuce.DBGridView,
   Demo.DDuce.Logger,
+  Demo.DDuce.Inspector,
+  Demo.DDuce.GridView,
 
   Demo.Manager;
 
@@ -45,8 +47,10 @@ begin
   DemoManager.Register(TfrmReflect, 'Reflect');
   DemoManager.Register(TfrmXMLTree, 'XMLTree');
   DemoManager.Register(TfrmVirtualDBGrid, 'VirtualDBGrid');
-  DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
   DemoManager.Register(TfrmLogger, 'Logger');
+  DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
+  DemoManager.Register(TfrmInspector, 'Inspector');
+  DemoManager.Register(TfrmGridView, 'GridView');
 end;
 {$ENDREGION}
 

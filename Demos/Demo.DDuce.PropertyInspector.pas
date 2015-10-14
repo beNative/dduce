@@ -25,7 +25,7 @@ uses
   Vcl.ComCtrls, Vcl.ButtonGroup, Vcl.StdCtrls, Vcl.Controls, Vcl.ExtCtrls,
   Vcl.Forms,
 
-  DDuce.Components.PropertyInspector;
+  DDuce.Components.PropertyInspector, System.ImageList, Vcl.ImgList;
 
 type
   TfrmPropertyInspector = class(TForm)
@@ -36,12 +36,13 @@ type
     btnButton     : TButton;
     chkCheckBox   : TCheckBox;
     edtEdit       : TEdit;
-    bgButtonGroup : TButtonGroup;
+    bgMain: TButtonGroup;
     cbxControls   : TComboBox;
     sbrStatusBar  : TStatusBar;
     trbTrackBar   : TTrackBar;
     splSplitter   : TSplitter;
     lblLabel      : TLabel;
+    edtButtonedEdit: TButtonedEdit;
     {$ENDREGION}
 
     procedure cbxControlsChange(Sender: TObject);
@@ -57,7 +58,7 @@ type
 implementation
 
 uses
-  Demo.Factories;
+  Demo.Factories, Demo.Data;
 
 {$R *.dfm}
 
@@ -67,11 +68,18 @@ var
   I: Integer;
   C: TWinControl;
 begin
-  inherited;
-  FPropertyInspector := TDemoFactories.CreateInspector(
+  inherited AfterConstruction;
+  bgMain.Images          := Data.ImageList;
+  btnButton.Images       := Data.ImageList;
+  edtButtonedEdit.Images := Data.ImageList;
+  for I := 0 to bgMain.Images.Count - 1 do
+    with bgMain.Items.Add do
+      ImageIndex := I;
+
+  FPropertyInspector := TDemoFactories.CreatePropertyInspector(
     Self,
     pnlLeft,
-    bgButtonGroup
+    bgMain
   );
   FPropertyInspector.Name := 'PropertyInspector';
   for I := 0 to ComponentCount - 1 do

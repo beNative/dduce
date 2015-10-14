@@ -31,7 +31,7 @@ uses
 
   DSharp.Windows.ColumnDefinitions, DSharp.Windows.TreeViewPresenter,
 
-  Spring.Collections;
+  Spring.Collections, System.ImageList, Vcl.ImgList;
 
 type
   TfrmMainMenu = class(TForm)
@@ -45,6 +45,7 @@ type
     pnlVST         : TPanel;
     sbrMain        : TStatusBar;
     vstDemos       : TVirtualStringTree;
+    imlMain: TImageList;
 
     procedure actExecuteExecute(Sender: TObject);
     procedure actFocusFilterExecute(Sender: TObject);

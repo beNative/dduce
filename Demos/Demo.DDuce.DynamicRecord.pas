@@ -19,13 +19,6 @@ unit Demo.DDuce.DynamicRecord;
 { This form demonstrates the basics of the TRecord data structure.
   It also features the following components:
     - TInspector (DDuce.Components.Inspector)
- }
-
-{
-  TODO: check initialization of records
-  - TRecord<T>
-  - using ZeroMem
-  - using RTTI on record fields (using Default())
 }
 
 interface
@@ -160,6 +153,7 @@ type
 
 type
   TfrmDynamicRecords = class(TForm)
+    {$REGION 'designer fields'}
     aclMain                                   : TActionList;
     actAssignFDynamicRecord1ToFDynamicRecord2 : TAction;
     actAssignFDynamicRecord1ToFRecord1        : TAction;
@@ -262,6 +256,7 @@ type
     tsTestClass                               : TTabSheet;
     tsTestRecord                              : TTabSheet;
     tsTRecord                                 : TTabSheet;
+    {$ENDREGION}
 
     procedure dscTestDataChange(Sender: TObject; Field: TField);
     procedure chkQuoteValuesClick(Sender: TObject);

@@ -17,7 +17,9 @@ uses
   Demo.Manager in 'Demo.Manager.pas',
   Demo.Registration in 'Demo.Registration.pas',
   Demo.Utils in 'Demo.Utils.pas',
-  Demo.DDuce.Logger in 'Demo.DDuce.Logger.pas' {frmLogger};
+  Demo.DDuce.Logger in 'Demo.DDuce.Logger.pas' {frmLogger},
+  Demo.DDuce.Inspector in 'Demo.DDuce.Inspector.pas' {frmInspector},
+  Demo.DDuce.GridView in 'Demo.DDuce.GridView.pas' {frmGridView};
 
 {$R *.res}
 

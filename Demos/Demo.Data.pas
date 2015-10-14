@@ -19,18 +19,24 @@ unit Demo.Data;
 interface
 
 uses
-  System.Classes,
+  System.Classes, System.ImageList,
+  Vcl.ImgList, Vcl.Controls,
   Data.DB, Datasnap.DBClient;
 
 type
   TdmData = class(TDataModule)
     cdsMain: TClientDataSet;
+    imlMain: TImageList;
   private
     function GetDataSet: TDataSet;
+    function GetImageList: TImageList;
 
   public
     property DataSet: TDataSet
       read GetDataSet;
+
+    property ImageList: TImageList
+      read GetImageList;
   end;
 
 function Data: TdmData;
@@ -58,6 +64,11 @@ end;
 function TdmData.GetDataSet: TDataSet;
 begin
   Result := cdsMain;
+end;
+
+function TdmData.GetImageList: TImageList;
+begin
+  Result := imlMain;
 end;
 {$ENDREGION}
 

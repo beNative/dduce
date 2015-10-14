@@ -263,7 +263,7 @@ begin
   FXML := XML_STRING;
   mmoXML.Text := FXML;
   InitializeTree;
-  FPI := TDemoFactories.CreateInspector(Self, pnlInspector, FXMLTree);
+  FPI := TDemoFactories.CreatePropertyInspector(Self, pnlInspector, FXMLTree);
 end;
 {$ENDREGION}
 

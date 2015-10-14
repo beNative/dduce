@@ -24,7 +24,7 @@ unit Demo.DDuce.VirtualDBGrid;
 interface
 
 uses
-  System.Actions, System.Classes,
+  System.Actions, System.Classes, System.ImageList,
   Vcl.ActnList, Vcl.ImgList, Vcl.Controls, Vcl.DBCtrls, Vcl.ExtCtrls, Vcl.Forms,
   Vcl.ComCtrls,
   Data.DB,
@@ -36,7 +36,7 @@ uses
   DDuce.Components.VirtualDBGrid, DDuce.Components.ListDataSet,
   DDuce.Components.PropertyInspector,
 
-  Demo.Contact, System.ImageList;
+  Demo.Contact;
 
 type
   TfrmVirtualDBGrid = class(TForm)
@@ -74,12 +74,12 @@ uses
 {$REGION 'construction and destruction'}
 procedure TfrmVirtualDBGrid.AfterConstruction;
 begin
-  inherited;
+  inherited AfterConstruction;
   FList           := TDemoFactories.CreateContactList(1000);
   FDataSet        := TListDataset<TContact>.Create(Self, FList);
   dscMain.DataSet := FDataSet;
   FVDBG           := TDemoFactories.CreateVirtualDBGrid(Self, pnlLeft, dscMain);
-  FInspector      := TDemoFactories.CreateInspector(Self, pnlRight, FVDBG);
+  FInspector      := TDemoFactories.CreatePropertyInspector(Self, pnlRight, FVDBG);
   FDataSet.Active := True;
   FVDBG.Header.AutoFitColumns;
 end;

@@ -59,7 +59,6 @@ type
     grpMethodTracing        : TGroupBox;
     grpNotificationMessages : TGroupBox;
     grpWatches              : TGroupBox;
-    imlMain                 : TImageList;
     trbMain                 : TTrackBar;
     lblPosition             : TLabel;
 
@@ -83,14 +82,18 @@ type
     FM2Entered : Boolean;
 
   protected
+
     procedure UpdateActions; override;
 
+  public
+    procedure AfterConstruction; override;
   end;
 
 implementation
 
 uses
-  DDuce.Logger;
+  DDuce.Logger,
+  Demo.Data;
 
 {$R *.dfm}
 
@@ -177,5 +180,23 @@ begin
   actExitMethod2.Enabled  := FM2Entered;
 end;
 {$ENDREGION}
+
+procedure TfrmLogger.AfterConstruction;
+begin
+  inherited AfterConstruction;
+  aclMain.Images          := Data.ImageList;
+  btnAddCheckpoint.Images := Data.ImageList;
+  btnIncCounter.Images    := Data.ImageList;
+  btnDecCounter.Images    := Data.ImageList;
+  btnEnterMethod1.Images  := Data.ImageList;
+  btnEnterMethod2.Images  := Data.ImageList;
+  btnExitMethod1.Images   := Data.ImageList;
+  btnExitMethod2.Images   := Data.ImageList;
+  btnResetCounter.Images  := Data.ImageList;
+  btnSendError.Images     := Data.ImageList;
+  btnSendObject.Images    := Data.ImageList;
+  btnSendWarning.Images   := Data.ImageList;
+  btnSendInfo.Images      := Data.ImageList;
+end;
 
 end.

@@ -1,9 +1,11 @@
 object frmPropertyInspector: TfrmPropertyInspector
   Left = 0
   Top = 0
+  Caption = 'PropertyInspector Demo'
   ClientHeight = 586
-  ClientWidth = 680
+  ClientWidth = 682
   Color = clBtnFace
+  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -16,11 +18,12 @@ object frmPropertyInspector: TfrmPropertyInspector
   object pnlMain: TPanel
     Left = 0
     Top = 0
-    Width = 680
+    Width = 682
     Height = 586
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 680
     object splSplitter: TSplitter
       Left = 313
       Top = 0
@@ -56,18 +59,19 @@ object frmPropertyInspector: TfrmPropertyInspector
     object pnlRight: TPanel
       Left = 321
       Top = 0
-      Width = 359
+      Width = 361
       Height = 567
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 359
       DesignSize = (
-        359
+        361
         567)
       object lblLabel: TLabel
         Left = 6
         Top = 3
-        Width = 348
+        Width = 350
         Height = 62
         Alignment = taCenter
         Anchors = [akLeft, akTop, akRight]
@@ -87,62 +91,85 @@ object frmPropertyInspector: TfrmPropertyInspector
         ExplicitWidth = 245
       end
       object btnButton: TButton
-        Left = 6
-        Top = 100
-        Width = 348
+        Left = 225
+        Top = 68
+        Width = 109
         Height = 25
-        Anchors = [akLeft, akTop, akRight]
-        Caption = 'Button'
+        Caption = 'TButton'
+        ImageIndex = 0
+        ImageMargins.Left = 3
+        ImageMargins.Top = 3
+        ImageMargins.Right = 3
+        ImageMargins.Bottom = 3
+        Images = dmData.imlMain
         TabOrder = 1
       end
       object chkCheckBox: TCheckBox
         Left = 6
-        Top = 163
-        Width = 348
+        Top = 132
+        Width = 101
         Height = 17
         Anchors = [akLeft, akTop, akRight]
-        Caption = 'CheckBox'
+        Caption = 'TCheckBox'
+        State = cbGrayed
         TabOrder = 2
       end
       object edtEdit: TEdit
         Left = 6
         Top = 73
-        Width = 348
+        Width = 107
         Height = 21
-        Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
+        Text = 'TEdit'
       end
-      object bgButtonGroup: TButtonGroup
+      object bgMain: TButtonGroup
         Left = 6
-        Top = 186
-        Width = 348
-        Height = 375
+        Top = 155
+        Width = 350
+        Height = 406
         Anchors = [akLeft, akTop, akRight, akBottom]
         BevelInner = bvNone
         BevelKind = bkFlat
         BorderStyle = bsNone
         ButtonOptions = [gboAllowReorder, gboShowCaptions]
+        Images = dmData.imlMain
         Items = <>
         TabOrder = 3
       end
       object trbTrackBar: TTrackBar
         Left = 6
-        Top = 131
-        Width = 348
+        Top = 100
+        Width = 350
         Height = 26
         Anchors = [akLeft, akTop, akRight]
         PositionToolTip = ptTop
+        ShowSelRange = False
         TabOrder = 4
+      end
+      object edtButtonedEdit: TButtonedEdit
+        Left = 121
+        Top = 73
+        Width = 98
+        Height = 21
+        Images = dmData.imlMain
+        RightButton.Hint = 'Hint'
+        RightButton.HotImageIndex = 114
+        RightButton.ImageIndex = 115
+        RightButton.PressedImageIndex = 116
+        RightButton.Visible = True
+        TabOrder = 5
+        Text = 'TButtonedEdit'
       end
     end
     object sbrStatusBar: TStatusBar
       Left = 0
       Top = 567
-      Width = 680
+      Width = 682
       Height = 19
       Panels = <>
       ParentShowHint = False
       ShowHint = True
+      ExplicitWidth = 680
     end
   end
 end

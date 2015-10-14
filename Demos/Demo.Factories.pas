@@ -36,7 +36,7 @@ uses
 
   DDuce.Components.PropertyInspector, DDuce.Components.LogTree,
   DDuce.Components.GridView, DDuce.Components.DBGridView,
-  DDuce.Components.VirtualDBGrid,
+  DDuce.Components.Inspector, DDuce.Components.VirtualDBGrid,
 
   Demo.Contact;
 
@@ -58,15 +58,36 @@ type
     ); static;
 
     class function CreateLogTree(
-      AOwner  : TComponent;
-      AParent : TWinControl
+            AOwner  : TComponent;
+            AParent : TWinControl;
+      const AName   : string = ''
     ): TLogTree; static;
 
-    class function CreateInspector(
+    class function CreatePropertyInspector(
       AOwner  : TComponent;
       AParent : TWinControl;
       AObject : TPersistent = nil
     ): TPropertyInspector; static;
+
+    class function CreateInspector(
+            AOwner  : TComponent;
+            AParent : TWinControl;
+      const AName   : string = ''
+    ): TInspector; static;
+
+    class function CreateGridView(
+            AOwner  : TComponent;
+            AParent : TWinControl;
+      const AName   : string = ''
+    ): TGridView; static;
+
+    class function CreateDBGridView(
+            AOwner      : TComponent;
+            AParent     : TWinControl;
+            ADataSource : TDataSource = nil;
+      const AName       : string = ''
+    ): TDBGridView; static;
+
 
     class function CreateVST(
             AOwner  : TComponent;
@@ -82,13 +103,6 @@ type
             AFilter   : TFilterEvent = nil;
       const AName     : string = ''
     ): TTreeViewPresenter; static;
-
-    class function CreateDBGridView(
-            AOwner      : TComponent;
-            AParent     : TWinControl;
-            ADataSource : TDataSource = nil;
-      const AName       : string = ''
-    ): TDBGridView; static;
 
     { Create standard VCL DB Grid. }
 
@@ -387,7 +401,7 @@ begin
   Result := GV;
 end;
 
-class function TDemoFactories.CreateInspector(AOwner: TComponent;
+class function TDemoFactories.CreatePropertyInspector(AOwner: TComponent;
   AParent: TWinControl; AObject: TPersistent): TPropertyInspector;
 var
   PI : TPropertyInspector;
@@ -408,7 +422,7 @@ begin
 end;
 
 class function TDemoFactories.CreateLogTree(AOwner: TComponent;
-  AParent: TWinControl): TLogTree;
+  AParent: TWinControl; const AName: string): TLogTree;
 var
   VLT : TLogTree;
 begin
@@ -475,6 +489,8 @@ var
   VDBG: TVirtualDBGrid;
 begin
   VDBG                      := TVirtualDBGrid.Create(AOwner);
+  if AName <> '' then
+    VDBG.Name := AName;
   VDBG.AlignWithMargins     := True;
   VDBG.Parent               := AParent;
   VDBG.Align                := alClient;
@@ -545,6 +561,44 @@ begin
       TColumnDefinitionsControlTemplate.Create(ATVP.ColumnDefinitions);
   if Assigned(AFilter) then
     ATVP.View.Filter.Add(AFilter);
+end;
+
+class function TDemoFactories.CreateInspector(AOwner: TComponent;
+  AParent: TWinControl; const AName: string): TInspector;
+var
+  I: TInspector;
+begin
+  I := TInspector.Create(AOwner);
+  if AName <> '' then
+    I.Name := AName;
+  I.Parent := AParent;
+  I.Align := alClient;
+  Result := I;
+end;
+
+class function TDemoFactories.CreateGridView(AOwner: TComponent;
+  AParent: TWinControl; const AName: string): TGridView;
+var
+  GV: TGridView;
+begin
+  GV := TGridView.Create(AOwner);
+  if AName <> '' then
+    GV.Name := AName;
+  GV.Parent := AParent;
+  GV.Align := alClient;
+  GV.Header.Flat      := False;
+  GV.AlignWithMargins := True;
+  GV.Parent           := AParent;
+  GV.Align            := alClient;
+  GV.CursorKeys       := GV.CursorKeys + [gkReturn];
+  GV.GridStyle        := GV.GridStyle + [gsDotLines];
+  GV.ColumnsFullDrag  := True;
+  GV.DoubleBuffered   := True;
+  GV.CheckBoxes       := True;
+  GV.ShowFocusRect    := False;
+  GV.CheckStyle       := csFlat;
+  GV.ColumnClick      := True;
+  Result := GV;
 end;
 
 end.
