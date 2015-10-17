@@ -6,3 +6,6 @@ __history
 *.rsm
 *.drc
 *.map
+/DynamicRecord assignments.ods
+*.stat
+*.log
