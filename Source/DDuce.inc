@@ -14,6 +14,9 @@
   limitations under the License.
 }
 
+{$IFNDEF DDUCE_INC}
+{$DEFINE DDUCE_INC}
+
 {$DEFINE SPRING}
 {$DEFINE DSHARP}
 
@@ -29,3 +32,5 @@
 
 {$WARN UNIT_PLATFORM OFF}    // Turn off UNIT_PLATFORM warning
 {$WARN SYMBOL_PLATFORM OFF}  // Turn off SYMBOL_PLATFORM warning
+
+{$ENDIF ~DDUCE_INC}
