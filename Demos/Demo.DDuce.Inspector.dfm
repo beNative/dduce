@@ -3,7 +3,7 @@ object frmInspector: TfrmInspector
   Top = 0
   Caption = 'Inspector demo'
   ClientHeight = 605
-  ClientWidth = 660
+  ClientWidth = 984
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -34,34 +34,37 @@ object frmInspector: TfrmInspector
   object pnlRight: TPanel
     Left = 327
     Top = 0
-    Width = 333
+    Width = 657
     Height = 605
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 333
     object splHorizontal: TSplitter
       Left = 0
-      Top = 209
-      Width = 333
+      Top = 481
+      Width = 657
       Height = 7
       Cursor = crVSplit
       Align = alBottom
       ExplicitTop = 208
+      ExplicitWidth = 333
     end
     object pnlInspector: TPanel
       Left = 0
-      Top = 216
-      Width = 333
-      Height = 389
+      Top = 488
+      Width = 657
+      Height = 117
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitWidth = 547
     end
     object grdMain: TDBGrid
       Left = 0
       Top = 0
-      Width = 333
-      Height = 209
+      Width = 657
+      Height = 481
       Align = alClient
       DataSource = dscMain
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]

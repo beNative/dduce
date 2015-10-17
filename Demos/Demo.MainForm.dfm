@@ -16,19 +16,6 @@ object frmMainMenu: TfrmMainMenu
   ShowHint = True
   PixelsPerInch = 96
   TextHeight = 13
-  object btnExecute: TBitBtn
-    AlignWithMargins = True
-    Left = 3
-    Top = 286
-    Width = 363
-    Height = 25
-    Action = actExecute
-    Align = alBottom
-    Caption = '&Execute'
-    ParentDoubleBuffered = True
-    Style = bsNew
-    TabOrder = 0
-  end
   object pnlVST: TPanel
     Left = 0
     Top = 29
@@ -37,22 +24,6 @@ object frmMainMenu: TfrmMainMenu
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    object vstDemos: TVirtualStringTree
-      Left = 0
-      Top = 0
-      Width = 369
-      Height = 254
-      Align = alClient
-      Header.AutoSizeIndex = 0
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
-      Header.MainColumn = -1
-      TabOrder = 0
-      Columns = <>
-    end
   end
   object pnlTop: TPanel
     Left = 0
@@ -91,12 +62,28 @@ object frmMainMenu: TfrmMainMenu
     Panels = <>
     SimplePanel = True
   end
+  object btnExecute: TButton
+    AlignWithMargins = True
+    Left = 3
+    Top = 286
+    Width = 363
+    Height = 25
+    Action = actExecute
+    Align = alBottom
+    Default = True
+    ImageMargins.Left = 3
+    ImageMargins.Top = 3
+    ImageMargins.Right = 3
+    ImageMargins.Bottom = 3
+    Images = imlMain
+    TabOrder = 0
+  end
   object aclMain: TActionList
     Images = imlMain
     Left = 72
     Top = 192
     object actExecute: TAction
-      Caption = '&Execute'
+      Caption = '&Execute demo'
       ImageIndex = 0
       OnExecute = actExecuteExecute
     end
@@ -114,7 +101,7 @@ object frmMainMenu: TfrmMainMenu
     Left = 176
     Top = 168
     Bitmap = {
-      494C010101000800180010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C0101010008001C0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000328492FFC7CDCEFF00000000000000000000000000000000000000000000

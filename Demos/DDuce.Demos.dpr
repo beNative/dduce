@@ -18,7 +18,9 @@ uses
   Demo.Utils in 'Demo.Utils.pas',
   Demo.DDuce.Logger in 'Demo.DDuce.Logger.pas' {frmLogger},
   Demo.DDuce.Inspector in 'Demo.DDuce.Inspector.pas' {frmInspector},
-  Demo.DDuce.GridView in 'Demo.DDuce.GridView.pas' {frmGridView};
+  Demo.DDuce.GridView in 'Demo.DDuce.GridView.pas' {frmGridView},
+  Vcl.Themes,
+  Vcl.Styles;
 
 {$R *.res}
 

@@ -4,7 +4,6 @@ object frmDynamicRecords: TfrmDynamicRecords
   ClientHeight = 673
   ClientWidth = 966
   Color = clBtnFace
-  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

@@ -66,7 +66,6 @@ begin
   FPropertyInspector :=
     TDemoFactories.CreatePropertyInspector(Self, pnlLeft, FGridView);
   FList := TDemoFactories.CreateContactList(1000);
-
 end;
 
 end.

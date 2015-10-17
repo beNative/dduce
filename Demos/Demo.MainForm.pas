@@ -21,17 +21,15 @@ unit Demo.MainForm;
 interface
 
 uses
-  System.Actions, System.UITypes, System.Classes,
+  System.Actions, System.UITypes, System.Classes, System.ImageList,
   Vcl.ActnList, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Controls, Vcl.ExtCtrls,
   Vcl.Buttons, Vcl.Forms, Vcl.ImgList,
 
   VirtualTrees,
 
-  DDuce.Logger,
-
   DSharp.Windows.ColumnDefinitions, DSharp.Windows.TreeViewPresenter,
 
-  Spring.Collections, System.ImageList;
+  Spring.Collections;
 
 type
   TfrmMainMenu = class(TForm)
@@ -39,20 +37,24 @@ type
     actClose       : TAction;
     actExecute     : TAction;
     actFocusFilter : TAction;
-    btnExecute     : TBitBtn;
     edtFilter      : TEdit;
     pnlTop         : TPanel;
     pnlVST         : TPanel;
     sbrMain        : TStatusBar;
-    vstDemos       : TVirtualStringTree;
     imlMain        : TImageList;
+    btnExecute     : TButton;
 
     procedure actExecuteExecute(Sender: TObject);
     procedure actFocusFilterExecute(Sender: TObject);
 
-    procedure vstDemosPaintBackground(Sender: TBaseVirtualTree;
-      TargetCanvas: TCanvas; R: TRect; var Handled: Boolean);
-    procedure edtFilterChange(Sender: TObject);
+    procedure FVSTKeyPress(Sender: TObject; var Key: Char);
+    procedure FVSTPaintBackground(
+          Sender       : TBaseVirtualTree;
+          TargetCanvas : TCanvas;
+          R            : TRect;
+      var Handled      : Boolean
+    );
+
     procedure FTVPFilter(Item: TObject; var Accepted: Boolean);
     procedure FTVPDoubleClick(Sender: TObject);
     function FTVPColumnDefinitionsCustomDrawColumn(
@@ -66,11 +68,17 @@ type
       Selected         : Boolean
     ): Boolean;
 
-    procedure edtFilterKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure edtFilterKeyUp(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure vstDemosKeyPress(Sender: TObject; var Key: Char);
+    procedure edtFilterChange(Sender: TObject);
+    procedure edtFilterKeyDown(
+          Sender : TObject;
+      var Key    : Word;
+          Shift  : TShiftState
+    );
+    procedure edtFilterKeyUp(
+          Sender : TObject;
+      var Key    : Word;
+          Shift  : TShiftState
+    );
 
   private
     FVKPressed : Boolean;
@@ -91,8 +99,8 @@ implementation
 {$R *.dfm}
 
 uses
-  System.StrUtils, System.SysUtils,
   Winapi.Windows, WinApi.Messages,
+  System.StrUtils, System.SysUtils,
   Vcl.Graphics,
 
   Demo.Factories, Demo.Manager;
@@ -144,9 +152,14 @@ resourcestring
 {$REGION 'construction and destruction'}
 procedure TfrmMainMenu.AfterConstruction;
 begin
-  inherited;
-{$IFDEF DSHARP}
-  FVST := vstDemos;
+  inherited AfterConstruction;
+  FVST := TDemoFactories.CreateVST(
+    Self,
+    pnlVST
+  );
+  FVST.AlignWithMargins  := True;
+  FVST.OnKeyPress        := FVSTKeyPress;
+  FVST.OnPaintBackground := FVSTPaintBackground;
   FTVP := TDemoFactories.CreateTVP(Self);
   with FTVP.ColumnDefinitions.Add('Name') do
   begin
@@ -166,7 +179,6 @@ begin
   FTVP.OnDoubleClick := FTVPDoubleClick;
   FVST.Header.AutoFitColumns;
   sbrMain.SimpleText := Format(SDemosLoaded, [DemoManager.ItemList.Count]);
-{$ENDIF}
 end;
 {$ENDREGION}
 
@@ -191,24 +203,24 @@ end;
 
 procedure TfrmMainMenu.FTVPFilter(Item: TObject; var Accepted: Boolean);
 var
-  C: TDemo;
+  D : TDemo;
 begin
   if edtFilter.Text <> '' then
   begin
-    C := TDemo(Item);
+    D := TDemo(Item);
     Accepted :=
-      ContainsText(C.Name, edtFilter.Text)
-      or ContainsText(C.SourceFilename, edtFilter.Text);
+      ContainsText(D.Name, edtFilter.Text)
+      or ContainsText(D.SourceFilename, edtFilter.Text);
   end
   else
     Accepted := True;
 end;
 
-procedure TfrmMainMenu.vstDemosKeyPress(Sender: TObject; var Key: Char);
+procedure TfrmMainMenu.FVSTKeyPress(Sender: TObject; var Key: Char);
 begin
   if Ord(Key) = VK_RETURN then
   begin
-    Close;
+    actExecute.Execute;
   end
   else if Ord(Key) = VK_ESCAPE then
   begin
@@ -225,11 +237,11 @@ begin
   end;
 end;
 
-procedure TfrmMainMenu.vstDemosPaintBackground(Sender: TBaseVirtualTree;
+procedure TfrmMainMenu.FVSTPaintBackground(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; R: TRect; var Handled: Boolean);
 begin
-  vstDemos.BackgroundOffsetX := vstDemos.ClientWidth - 128;
-  vstDemos.BackgroundOffsetY := (vstDemos.ClientHeight) - 128;
+  FVST.BackgroundOffsetX := FVST.ClientWidth - 128;
+  FVST.BackgroundOffsetY := (FVST.ClientHeight) - 128;
   Handled := False;
 end;
 

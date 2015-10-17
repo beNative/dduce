@@ -25,17 +25,18 @@ uses
 
 type
   TdmData = class(TDataModule)
-    cdsMain : TClientDataSet;
     imlMain : TImageList;
 
   private
+    FDataSet: TClientDataSet;
+
     function GetDataSet: TDataSet;
     function GetImageList: TImageList;
 
   public
     procedure AfterConstruction; override;
 
-    procedure FillDataSet(ARecordCount: Integer);
+    procedure FillDataSet(const ARecordCount: Integer);
 
     property DataSet: TDataSet
       read GetDataSet;
@@ -59,6 +60,9 @@ uses
 var
   FData: TdmData;
 
+const
+  DEFAULT_RECORDCOUNT = 10000;
+
 {$REGION 'interfaced routines'}
 function Data: TdmData;
 begin
@@ -72,14 +76,15 @@ end;
 procedure TdmData.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FillDataSet(10000);
+  FDataSet := TClientDataSet.Create(Self);
+  FillDataSet(DEFAULT_RECORDCOUNT);
 end;
 {$ENDREGION}
 
 {$REGION 'property access methods'}
 function TdmData.GetDataSet: TDataSet;
 begin
-  Result := cdsMain;
+  Result := FDataSet;
 end;
 
 function TdmData.GetImageList: TImageList;
@@ -89,58 +94,56 @@ end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-procedure TdmData.FillDataSet(ARecordCount: Integer);
+procedure TdmData.FillDataSet(const ARecordCount: Integer);
 var
-  DS : TClientDataSet;
   I  : Integer;
   S  : string;
 begin
-  DS := cdsMain;
-  DS.Data := Null;
-  with DS.FieldDefs.AddFieldDef do
+  FDataSet.Data := Null;
+  with FDataSet.FieldDefs.AddFieldDef do
   begin
     DataType := ftString;
     Name     := 'Name';
   end;
-  with DS.FieldDefs.AddFieldDef do
+  with FDataSet.FieldDefs.AddFieldDef do
   begin
     DataType := ftDate;
     Name     := 'BirthDate';
   end;
-  with DS.FieldDefs.AddFieldDef do
+  with FDataSet.FieldDefs.AddFieldDef do
   begin
     DataType := ftString;
     Name     := 'Email';
   end;
-  with DS.FieldDefs.AddFieldDef do
+  with FDataSet.FieldDefs.AddFieldDef do
   begin
     DataType := ftString;
     Name     := 'Address';
   end;
-  with DS.FieldDefs.AddFieldDef do
+  with FDataSet.FieldDefs.AddFieldDef do
   begin
     DataType := ftString;
     Name     := 'Company';
   end;
-  with DS.FieldDefs.AddFieldDef do
+  with FDataSet.FieldDefs.AddFieldDef do
   begin
     DataType := ftBoolean;
     Name     := 'Active';
   end;
-  DS.CreateDataSet;
+  FDataSet.CreateDataSet;
   for I := 0 to Pred(ARecordCount) do
   begin
-    DS.Append;
+    FDataSet.Append;
     S := RandomData.PersonName;
-    DS.FieldByName('Name').AsString := S;
-    DS.FieldByName('Email').AsString := RandomData.Email(S, RandomData.Name);
-    DS.FieldByName('BirthDate').AsDateTime := RandomData.BirthDate(1920, 1998);
-    DS.FieldByName('Company').AsString := RandomData.AlliteratedCompanyName;
-    DS.FieldByName('Address').AsString := RandomData.Address;
-    DS.FieldByName('Active').AsBoolean := RandomData.Bool;
-    DS.Post;
+    FDataSet.FieldByName('Name').AsString := S;
+    FDataSet.FieldByName('Email').AsString := RandomData.Email(S, RandomData.Name);
+    FDataSet.FieldByName('BirthDate').AsDateTime := RandomData.BirthDate(1920, 1998);
+    FDataSet.FieldByName('Company').AsString := RandomData.AlliteratedCompanyName;
+    FDataSet.FieldByName('Address').AsString := RandomData.Address;
+    FDataSet.FieldByName('Active').AsBoolean := RandomData.Bool;
+    FDataSet.Post;
   end;
-  DS.First;
+  FDataSet.First;
 end;
 {$ENDREGION}
 

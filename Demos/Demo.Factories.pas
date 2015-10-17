@@ -36,7 +36,7 @@ uses
 
   DDuce.Components.PropertyInspector, DDuce.Components.LogTree,
   DDuce.Components.GridView, DDuce.Components.DBGridView,
-  DDuce.Components.Inspector, DDuce.Components.VirtualDBGrid,
+  DDuce.Components.Inspector,
 
   Demo.Contact;
 
@@ -105,20 +105,12 @@ type
     ): TTreeViewPresenter; static;
 
     { Create standard VCL DB Grid. }
-
     class function CreateDBGrid(
             AOwner      : TComponent;
             AParent     : TWinControl;
             ADataSource : TDataSource = nil;
       const AName       : string = ''
     ): TDBGrid; static;
-
-    class function CreateVirtualDBGrid(
-            AOwner      : TComponent;
-            AParent     : TWinControl;
-            ADataSource : TDataSource = nil;
-      const AName       : string = ''
-    ): TVirtualDBGrid; static;
 
     class function CreateRandomContact: TContact; static;
 
@@ -138,16 +130,17 @@ uses
 
   DDuce.RandomData;
 
+{$REGION 'Default TVirtualStringTree settings'}
 const
   DEFAULT_VST_SELECTIONOPTIONS = [
     { Prevent user from selecting with the selection rectangle in multiselect
       mode. }
 //    toDisableDrawSelection,
     {  Entries other than in the main column can be selected, edited etc. }
-    toExtendedFocus
+    toExtendedFocus,
     { Hit test as well as selection highlight are not constrained to the text
       of a node. }
-//    toFullRowSelect,
+    toFullRowSelect,
     { Constrain selection to the same level as the selection anchor. }
 //    toLevelSelectConstraint,
     { Allow selection, dragging etc. with the middle mouse button. This and
@@ -163,7 +156,7 @@ const
 //    toCenterScrollIntoView
     { Simplifies draw selection, so a node's caption does not need to intersect
       with the selection rectangle. }
-//    toSimpleDrawSelection
+    toSimpleDrawSelection
   ];
   DEFAULT_VST_MISCOPTIONS = [
     { Register tree as OLE accepting drop target }
@@ -176,7 +169,7 @@ const
       (CS_HREDRAW/CS_VREDRAW). }
 //    toFullRepaintOnResize,
     { Use some special enhancements to simulate and support grid behavior. }
-    toGridExtensions,
+//    toGridExtensions,
     { Initialize nodes when saving a tree to a stream. }
     toInitOnSave,
     { Tree behaves like TListView in report mode. }
@@ -352,13 +345,13 @@ const
       to highest index and vice versa when the tree's bidi mode is changed. }
     toAutoBidiColumnOrdering
   ];
+{$ENDREGION}
 
-{ TDemoFactories }
-
+{$REGION 'TDemoFactories'}
 class function TDemoFactories.CreateContactList(
   const ACount: Integer): IList<TContact>;
 begin
-  Result := TContacts.Create;
+  Result := TObjectList<TContact>.Create;
   FillListWithContacts(Result, ACount);
 end;
 
@@ -394,8 +387,7 @@ begin
   GV.ShowFocusRect    := False;
   GV.CheckStyle       := csFlat;
   GV.ColumnClick      := True;
-  GV.ShowIndicator    := False;
-  //GV.ShowIndicator    := True;
+  GV.ShowIndicator    := True;
   GV.DataSource       := ADataSource;
   GV.AutoSizeCols;
   Result := GV;
@@ -480,23 +472,6 @@ begin
   TVP := TTreeViewPresenter.Create(AOwner);
   InitializeTVP(TVP, AVST, ASource, ATemplate, AFilter);
   Result := TVP;
-end;
-
-class function TDemoFactories.CreateVirtualDBGrid(AOwner: TComponent;
-  AParent: TWinControl; ADataSource: TDataSource;
-  const AName: string): TVirtualDBGrid;
-var
-  VDBG: TVirtualDBGrid;
-begin
-  VDBG                      := TVirtualDBGrid.Create(AOwner);
-  if AName <> '' then
-    VDBG.Name := AName;
-  VDBG.AlignWithMargins     := True;
-  VDBG.Parent               := AParent;
-  VDBG.Align                := alClient;
-  VDBG.DBOptions.DataSource := ADataSource;
-  VDBG.DBOptions.AdvOptions := VDBG.DBOptions.AdvOptions - [aoStrippedRows];
-  Result := VDBG;
 end;
 
 class function TDemoFactories.CreateVST(AOwner: TComponent;
@@ -600,5 +575,6 @@ begin
   GV.ColumnClick      := True;
   Result := GV;
 end;
+{$ENDREGION}
 
 end.
