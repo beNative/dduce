@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{23E854B1-371C-44E6-8503-F0FF13DFB16B}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="DDuce.Core.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="DDuce.Components.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="DDuce_Core">
+        <MSBuild Projects="DDuce.Core.dproj"/>
+    </Target>
+    <Target Name="DDuce_Core:Clean">
+        <MSBuild Projects="DDuce.Core.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DDuce_Core:Make">
+        <MSBuild Projects="DDuce.Core.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="DDuce_Components">
+        <MSBuild Projects="DDuce.Components.dproj"/>
+    </Target>
+    <Target Name="DDuce_Components:Clean">
+        <MSBuild Projects="DDuce.Components.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DDuce_Components:Make">
+        <MSBuild Projects="DDuce.Components.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="DDuce_Core;DDuce_Components"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="DDuce_Core:Clean;DDuce_Components:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="DDuce_Core:Make;DDuce_Components:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

@@ -1,0 +1,52 @@
+package DDuce.Components;
+
+{$R *.res}
+{$I LibSuffix.inc}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  dbrtl,
+  vcldb,
+  VirtualTreesDR;
+
+contains
+  DDuce.Components.DBGridView in '..\Source\Components\DDuce.Components.DBGridView.pas',
+  DDuce.Components.GridView in '..\Source\Components\DDuce.Components.GridView.pas',
+  DDuce.Components.Inspector in '..\Source\Components\DDuce.Components.Inspector.pas',
+  DDuce.Components.ListDataSet in '..\Source\Components\DDuce.Components.ListDataSet.pas',
+  DDuce.Components.LogTree in '..\Source\Components\DDuce.Components.LogTree.pas',
+  DDuce.Components.PropertyInspector.CollectionEditor in '..\Source\Components\DDuce.Components.PropertyInspector.CollectionEditor.pas' {frmCollectionEditor},
+  DDuce.Components.PropertyInspector in '..\Source\Components\DDuce.Components.PropertyInspector.pas',
+  DDuce.Components.PropertyInspector.StringsEditor in '..\Source\Components\DDuce.Components.PropertyInspector.StringsEditor.pas' {StringsEditorDialog},
+  DDuce.Components.VirtualDataSet in '..\Source\Components\DDuce.Components.VirtualDataSet.pas',
+  DDuce.Components.XMLTree.Editors in '..\Source\Components\DDuce.Components.XMLTree.Editors.pas',
+  DDuce.Components.XMLTree.NodeAttributes in '..\Source\Components\DDuce.Components.XMLTree.NodeAttributes.pas',
+  DDuce.Components.XMLTree in '..\Source\Components\DDuce.Components.XMLTree.pas';
+
+end.
