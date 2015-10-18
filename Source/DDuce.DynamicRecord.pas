@@ -289,6 +289,7 @@ type
       const ADefaultValue : Boolean = False
     ): Boolean;
 
+    { True if the string representation of the value is an empty string. }
     function IsBlank(const AName: string): Boolean;
 
     { Makes access to all field values possible through dynamic invocation. }
@@ -454,7 +455,6 @@ type
     property SaveProc: TProc
       read FSaveProc write FSaveProc;
 
-    //class operator Implicit(const ASource: TRecord<T>): T;
     class operator Implicit(const ASource: TRecord): TRecord<T>;
     class operator Implicit(const ASource: TRecord<T>): TRecord;
     class operator Implicit(const ASource: TRecord<T>): IDynamicRecord;
@@ -2873,17 +2873,16 @@ end;
 
 function TRecord<T>.MutableClone: IDynamicRecord<T>;
 begin
-   if not Assigned(FDynamicRecord) then
-   begin
-     FDynamicRecord := TDynamicRecord<T>.Create;
-     Exit(FDynamicRecord);
-   end
-   else if TDynamicRecord<T>(FDynamicRecord).RefCount = 1 then
-     Exit(FDynamicRecord)
-   else
-   begin
-     Result := TDynamicRecord<T>.Create(Self);
-   end;
+  if not Assigned(FDynamicRecord) then
+  begin
+    FDynamicRecord := TDynamicRecord<T>.Create;
+    Result := FDynamicRecord;
+  end
+  else if TDynamicRecord<T>(FDynamicRecord).RefCount > 0 then
+  begin
+    Result := TDynamicRecord<T>.Create;
+    Result.Assign(FDynamicRecord);
+  end;
 end;
 
 function TRecord<T>.ToBoolean(const AName: string;
@@ -2920,5 +2919,4 @@ begin
 end;
 {$ENDREGION}
 {$ENDREGION}
-
 end.
