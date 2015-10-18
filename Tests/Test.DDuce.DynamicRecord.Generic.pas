@@ -75,14 +75,14 @@ type
     procedure Test_assignment_operator_for_generic_TRecord_to_TRecord;
     procedure Test_assignment_operator_for_TRecord_to_generic_TRecord;
     procedure Test_assignment_operator_for_generic_TRecord_to_generic_TRecord;
-
-//    procedure Test_assignment_operator_for_TRecord_to_IDynamicRecord;
-//    procedure Test_assignment_operator_for_IDynamicRecord_to_TRecord;
+    procedure Test_assignment_operator_for_generic_IDynamicRecord_to_generic_IDynamicRecord;
+    procedure Test_assignment_operator_for_IDynamicRecord_to_generic_IDynamicRecord;
 
     procedure Test_Assign_method_for_IDynamicRecord_argument;
     procedure Test_Assign_method_for_TRecord_argument;
     procedure Test_Assign_method_for_generic_IDynamicRecord_argument;
     procedure Test_Assign_method_for_generic_TRecord_argument;
+    procedure Test_Assign_method_for_generic_argument;
 
     procedure Test_Count_Property;
 
@@ -230,13 +230,14 @@ begin
 end;
 {$ENDREGION}
 
+{$REGION 'Test assignment operator'}
 procedure TestGenericTRecord.Test_assignment_operator_for_generic_TRecord_to_TRecord;
 var
   R : TRecord;
   F : IDynamicField;
 begin
   R := FRecord;
-  for F in R do
+  for F in FRecord do
   begin
     CheckTrue(F.Value.Equals(R[F.Name]));
   end;
@@ -259,25 +260,56 @@ begin
     CheckTrue(F.Value.Equals(R[F.Name]), F.Name);
   end;
   R[TEST_INTEGER] := 125;
-  //CheckFalse(R.Data.TestInteger = FRecord.Data.TestInteger);
+  CheckFalse(R.Data.TestInteger = FRecord.Data.TestInteger);
 end;
 
 procedure TestGenericTRecord.Test_assignment_operator_for_generic_TRecord_to_generic_TRecord;
 var
-  R : TRecord;
-  //<TTestClass>;
+  R : TRecord<TTestClass>;
   F : IDynamicField;
 begin
   R := FRecord;
-  for F in R do
+  for F in FRecord do
   begin
     CheckTrue(F.Value.Equals(R[F.Name]), F.Name);
   end;
-  //R.Data.TestInteger := 0;
-  //CheckNotEquals(R.Data.TestInteger, FRecord.Data.TestInteger);
-
+  R.Data.TestInteger := 0;
+  CheckNotEquals(R.Data.TestInteger, FRecord.Data.TestInteger);
 end;
 
+procedure TestGenericTRecord.Test_assignment_operator_for_generic_IDynamicRecord_to_generic_IDynamicRecord;
+var
+  DR : IDynamicRecord<TTestClass>;
+  F : IDynamicField;
+begin
+  DR := TRecord<TTestClass>.CreateDynamicRecord;
+  DR := FDynamicRecord; // reference is copied
+  for F in FDynamicRecord do
+  begin
+    CheckTrue(F.Value.Equals(DR[F.Name]), F.Name);
+  end;
+  DR.Data.TestInteger := 78;
+  CheckEquals(DR.Data.TestInteger, FDynamicRecord.Data.TestInteger);
+end;
+
+procedure TestGenericTRecord.Test_assignment_operator_for_IDynamicRecord_to_generic_IDynamicRecord;
+var
+  DR : IDynamicRecord;
+  F  : IDynamicField;
+begin
+  DR := TRecord.CreateDynamicRecord; // is not needed, but added for clarity
+
+  DR := FDynamicRecord; // reference is copied
+  for F in FDynamicRecord do
+  begin
+    CheckTrue(F.Value.Equals(DR[F.Name]), F.Name);
+  end;
+  //DR.Data.TestInteger := 78;
+  CheckEquals(DR.Data.TestInteger, FDynamicRecord.Data.TestInteger);
+end;
+{$ENDREGION}
+
+{$REGION 'Test Assign method'}
 procedure TestGenericTRecord.Test_Assign_method_for_IDynamicRecord_argument;
 var
   DR : IDynamicRecord;
@@ -288,6 +320,8 @@ begin
   FRecord.Assign(DR);
   CheckEquals(DR.ToInteger(TEST_INTEGER), FRecord.Data.TestInteger);
   CheckEquals(DR.ToString(TEST_STRING), FRecord.Data.TestString);
+  DR.Data.TestInteger := 48;
+  CheckNotEquals(DR.ToInteger(TEST_INTEGER), FRecord.Data.TestInteger);
 end;
 
 procedure TestGenericTRecord.Test_Assign_method_for_TRecord_argument;
@@ -299,6 +333,8 @@ begin
   FRecord.Assign(R);
   CheckEquals(R.ToInteger(TEST_INTEGER), FRecord.Data.TestInteger);
   CheckEquals(R.ToString(TEST_STRING), FRecord.Data.TestString);
+  R.Data.TestString  := 'Value';
+  CheckNotEquals(R.ToString(TEST_STRING), FRecord.Data.TestString);
 end;
 
 procedure TestGenericTRecord.Test_Assign_method_for_generic_IDynamicRecord_argument;
@@ -322,7 +358,20 @@ begin
   FRecord.Assign(R);
   CheckEquals(R.Data.TestInteger, FRecord.Data.TestInteger);
   CheckEquals(R.Data.TestString, FRecord.Data.TestString);
+  R.Data.TestInteger := 2;
+  CheckNotEquals(R.Data.TestInteger, FRecord.Data.TestInteger);
 end;
+
+procedure TestGenericTRecord.Test_Assign_method_for_generic_argument;
+var
+  F : IDynamicField;
+begin
+  FRecord.Assign(FObject);
+  CheckEquals(FObject.TestInteger, FRecord.Data.TestInteger);
+  FObject.TestInteger := 0;
+  CheckNotEquals(FObject.TestInteger, FRecord.Data.TestInteger);
+end;
+{$ENDREGION}
 
 end.
 
