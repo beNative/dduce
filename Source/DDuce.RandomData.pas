@@ -2574,6 +2574,22 @@ type
     );
     {$ENDREGION}
 
+    {$REGION 'Colors'}
+    Colors: array[0..10] of string = (
+      'black',
+      'blue',
+      'brown',
+      'gray',
+      'green',
+      'orange',
+      'pink',
+      'purple',
+      'red',
+      'white',
+      'yellow'
+    );
+    {$ENDREGION}
+
     {$REGION 'Fruit'}
     Fruits: array[0..29] of string = (
       'apple',
@@ -2672,6 +2688,7 @@ type
     class function Number(AMin: Integer; AMax: Integer): Integer; overload; static;
     class function Street: string; static;
     class function Shape: string; static;
+    class function Color: string; static;
     class function City: string; static;
     class function Country: string; static;
     class function Continent: string; static;
@@ -2695,11 +2712,14 @@ uses
 
   Spring.Collections, Spring.Collections.Extensions, Spring;
 
+{$REGION 'construction and destruction'}
 class constructor RandomData.Create;
 begin
   Randomize;
 end;
+{$ENDREGION}
 
+{$REGION 'public methods'}
 class function RandomData.Str(const AList: array of string): string;
 begin
   Result := AList[Random(Length(AList))];
@@ -2959,5 +2979,11 @@ class function RandomData.Shape: string;
 begin
   Result := Str(Shapes);
 end;
+
+class function RandomData.Color: string;
+begin
+  Result := Str(Colors);
+end;
+{$ENDREGION}
 
 end.
