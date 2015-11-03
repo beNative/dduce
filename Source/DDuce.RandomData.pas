@@ -36,7 +36,7 @@ type
     Vowels     = ['a', 'e', 'i', 'o', 'u', 'y'];
     Consonants = Letters - Vowels;
 
-    {$region 'SmartPrefixes'}
+    {$REGION 'SmartPrefixes'}
     SmartPrefixes: array [0 .. 22] of string = (
       'base',
       'cor',
@@ -62,9 +62,9 @@ type
       're',
       'tri'
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'SmartSuffixes'}
+    {$REGION 'SmartSuffixes'}
     SmartSuffixes: array [0 .. 14] of string = (
       'teq',
       'tex',
@@ -82,9 +82,9 @@ type
       'nec',
       'rex'
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'FirstNames'}
+    {$REGION 'FirstNames'}
     FirstNames: array [RandomData.TGender, 0 .. 564] of string = (
       (
         'Aaron',
@@ -1221,10 +1221,10 @@ type
         'Zelma'
       )
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'LastNames'}
-    LastNames: array [0 .. 765] of string = (
+    {$REGION 'LastNames'}
+    LastNames: array [0 .. 768] of string = (
       'Adams',
       'Adamski',
       'Adkins',
@@ -1242,6 +1242,7 @@ type
       'Appleton',
       'Arant',
       'Arce',
+      'Armstrong',
       'Arnold',
       'Arreguin',
       'Arterburn',
@@ -1360,6 +1361,7 @@ type
       'Cleveland',
       'Cline',
       'Clingman',
+      'Clinton',
       'Cloud',
       'Clyburn',
       'Cobbins',
@@ -1830,6 +1832,7 @@ type
       'Romeo',
       'Rondeau',
       'Ross',
+      'Rossi',
       'Roughton',
       'Rouse',
       'Royster',
@@ -1992,9 +1995,9 @@ type
       'Zamora',
       'Zavala'
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'Adjectives'}
+    {$REGION 'Adjectives'}
     Adjectives: array [0 .. 162] of string = (
       'Abused',
       'Ambiguous',
@@ -2160,9 +2163,9 @@ type
       'Worn',
       'Zero'
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'CompanySuffixes'}
+    {$REGION 'CompanySuffixes'}
     CompanySuffixes: array [0 .. 190] of string = (
       'Accessories',
       'Adventures',
@@ -2356,26 +2359,26 @@ type
       'Weed',
       'Zombies'
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'CompanyTypes'}
+    {$REGION 'CompanyTypes'}
     CompanyTypes: array [0 .. 2] of string = (
       'Corp.',
       'Inc.',
       'Ltd.'
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'StreetPrefixes'}
+    {$REGION 'StreetPrefixes'}
     StreetPrefixes: array [0 .. 3] of string = (
       'North',
       'East',
       'South',
       'West'
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'StreetBeginnings'}
+    {$REGION 'StreetBeginnings'}
     StreetBeginnings: array [0 .. 21] of string = (
       'Apple',
       'Banana',
@@ -2400,9 +2403,9 @@ type
       'Water',
       'White'
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'StreetEndings'}
+    {$REGION 'StreetEndings'}
     StreetEndings: array [0 .. 9] of string = (
       'wood',
       'dale',
@@ -2415,10 +2418,10 @@ type
       'water',
       'creek'
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'StreetTypes'}
-    StreetTypes: array [0 .. 9] of string = (
+    {$REGION 'StreetTypes'}
+    StreetTypes: array [0 .. 10] of string = (
       'Street',
       'Road',
       'Avenue',
@@ -2426,13 +2429,14 @@ type
       'Court',
       'Boulevard',
       'Drive',
+      'Park',
       'Parkway',
       'Lane',
       'Square'
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'USCities'}
+    {$REGION 'USCities'}
     USCities: array [0 .. 29] of string = (
       'Alabama',
       'Atlanta',
@@ -2465,9 +2469,9 @@ type
       'Utah',
       'Washington'
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'USStates'}
+    {$REGION 'USStates'}
     USStates: array [0 .. 29] of string = (
       'PR',
       'SC',
@@ -2500,9 +2504,9 @@ type
       'YI',
       'TX'
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'DomainSuffixes'}
+    {$REGION 'DomainSuffixes'}
     DomainSuffixes: array [0 .. 4] of string = (
       'com',
       'org',
@@ -2510,9 +2514,9 @@ type
       'edu',
       'gov'
     );
-    {$endregion}
+    {$ENDREGION}
 
-    {$region 'CountryNames'}
+    {$REGION 'CountryNames'}
     CountryNames: array[0..29] of string = (
       'Argentina',
       'Austria',
@@ -2545,7 +2549,129 @@ type
       'United States',
       'South Africa'
     );
-    {$endregion}
+    {$ENDREGION}
+
+    {$REGION 'Continents'}
+    Continents: array[0..6] of string = (
+      'Africa',
+      'Antarctica',
+      'Asia',
+      'Australia',
+      'Europe',
+      'North America',
+      'South America'
+    );
+    {$ENDREGION}
+
+    {$REGION 'Planets'}
+    Planets: array[0..8] of string = (
+      'Mercury',
+      'Venus',
+      'Earth',
+      'Mars',
+      'Jupiter',
+      'Saturn',
+      'Uranus',
+      'Neptune',
+      'Pluto'
+    );
+    {$ENDREGION}
+
+    {$REGION 'Colors'}
+    Colors: array[0..10] of string = (
+      'black',
+      'blue',
+      'brown',
+      'gray',
+      'green',
+      'orange',
+      'pink',
+      'purple',
+      'red',
+      'white',
+      'yellow'
+    );
+    {$ENDREGION}
+
+    {$REGION 'Fruit'}
+    Fruits: array[0..29] of string = (
+      'apple',
+      'apricot',
+      'banana',
+      'blackberry',
+      'blueberry',
+      'cherry',
+      'cranberry',
+      'currant',
+      'fig',
+      'grape',
+      'grapefruit',
+      'grapes',
+      'kiwi',
+      'kumquat',
+      'lemon',
+      'lime',
+      'melon',
+      'nectarine',
+      'orange',
+      'peach',
+      'pear',
+      'persimmon',
+      'pineapple',
+      'plum',
+      'pomegranate',
+      'prune',
+      'raspberry',
+      'strawberry',
+      'tangerine',
+      'watermelon'
+    );
+    {$ENDREGION}
+
+    {$REGION 'Vegetables'}
+    Vegetables: array[0..22] of string = (
+      'asparagus',
+      'bean',
+      'beet',
+      'broccoli',
+      'cabbage',
+      'carrot',
+      'cauliflower',
+      'celery',
+      'corn',
+      'cucumber',
+      'eggplant',
+      'pepper',
+      'kale',
+      'lettuce',
+      'okra',
+      'onion',
+      'peas',
+      'potato',
+      'pumpkin',
+      'radish',
+      'spinach',
+      'potato',
+      'tomato'
+    );
+    {$ENDREGION}
+
+    {$REGION 'Shapes'}
+    Shapes: array[0..11] of string = (
+      'circle',
+      'ellipse',
+      'hexagon',
+      'octagon',
+      'oval',
+      'parallelogram',
+      'pentagon',
+      'rectangle',
+      'square',
+      'star',
+      'trapezoid',
+      'triangle'
+    );
+    {$ENDREGION}
 
   public
     class constructor Create;
@@ -2558,12 +2684,17 @@ type
     class function FullName(Gender: TGender): string; static;
     class function LastName: string; static;
     class function PersonName: string; static;
+    class function Fruit: string; static;
+    class function Vegetable: string; static;
     class function NumberString(Len: Integer): string; static;
     class function Number(ARange: Integer): Integer; overload; static;
     class function Number(AMin: Integer; AMax: Integer): Integer; overload; static;
     class function Street: string; static;
+    class function Shape: string; static;
+    class function Color: string; static;
     class function City: string; static;
     class function Country: string; static;
+    class function Continent: string; static;
     class function Address: string; static;
     class function State: string; static;
     class function Letter: Char; static;
@@ -2573,7 +2704,7 @@ type
     class function DateTime(AMin: TDateTime; AMax: TDateTime): TDateTime; static;
     class function BirthDate(AMinYear: Word; AMaxYear: Word): TDate; static;
     class function Bool: Boolean; static;
-
+    class function Planet: string; static;
     class function Adjective: string; static;
   end;
 
@@ -2584,11 +2715,14 @@ uses
 
   Spring.Collections, Spring.Collections.Extensions, Spring;
 
+{$REGION 'construction and destruction'}
 class constructor RandomData.Create;
 begin
   Randomize;
 end;
+{$ENDREGION}
 
+{$REGION 'public methods'}
 class function RandomData.Str(const AList: array of string): string;
 begin
   Result := AList[Random(Length(AList))];
@@ -2760,7 +2894,7 @@ begin
     Result := EmptyStr;
 
   Result := Result + Str(StreetBeginnings) + Str(StreetEndings) + ' ' + Str
-    (StreetTypes) + ' ' + IntToStr((Random(499) + 1) div (Random(9) + 1) + 1);
+    (StreetTypes);
 end;
 
 class function RandomData.BirthDate(AMinYear, AMaxYear: Word): TDate;
@@ -2780,7 +2914,12 @@ end;
 
 class function RandomData.Address: string;
 begin
-  Result := Format('%s %d %d %s', [Street, Number(2), Number(4), City]);
+  Result := Format('%d, %s %s, %d', [
+    ((Random(499) + 1) div (Random(9) + 1) + 1),
+    Street,
+    City,
+    Number(50000)
+  ]);
 end;
 
 class function RandomData.Adjective: string;
@@ -2790,8 +2929,7 @@ end;
 
 class function RandomData.AlliteratedCompanyName: string;
 var
-  //List  : IList<string>;
-  List : IList<string>;
+  List  : IList<string>;
   A     : string;
   S     : string;
   C     : string;
@@ -2818,18 +2956,42 @@ begin
   end
   else
     Result := A + ' ' + Str(CompanyTypes);
-    //Lambda.Predicate<string>((Bool(Arg1[1] = Arg(C))))
-   //Lambda.Predicate<string>(StartsText(string(Arg1), C))
-//  filter1 := Lambda.Predicate<TCustomer>(
-//    Bool(Arg1.CompanyName = 'Alfreds Futterkiste')
-//      or Bool(Arg1.CompanyName = 'Around the Horn'));
-//  filter2 := Lambda.Predicate<TCustomer>(StartsText(Arg(Edit1).Text, Arg1.CompanyName));
-
 end;
 
 class function RandomData.State: string;
 begin
   Result := Str(USStates);
 end;
+
+class function RandomData.Planet: string;
+begin
+  Result := Str(Planets);
+end;
+
+class function RandomData.Fruit: string;
+begin
+  Result := Str(Fruits);
+end;
+
+class function RandomData.Vegetable: string;
+begin
+  Result := Str(Vegetables);
+end;
+
+class function RandomData.Continent: string;
+begin
+  Result := Str(Continents);
+end;
+
+class function RandomData.Shape: string;
+begin
+  Result := Str(Shapes);
+end;
+
+class function RandomData.Color: string;
+begin
+  Result := Str(Colors);
+end;
+{$ENDREGION}
 
 end.
