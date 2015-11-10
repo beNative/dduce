@@ -545,25 +545,13 @@ var
 begin
   R.Data.FirstName := 'John';
   R.Data.LastName  := 'Doe';
-//
-//  Rn := R;
-//  ShowMessage(Rn.ToString);
-//  Rn.Data.Extra := 'extra';
-//  Rn.Data.FirstName := 'Tim';
-//  //ShowMessage(Rn.ToString);
-//  R.Assign(Rn);
-//  ShowMessage(R.ToString);
-
-//  DR := TRecord.CreateDynamicRecord;
-//  DR['Name'] := 'Tim';
   Rn := R;
   Rn.Data.Extra := 'extra';
-  Rn.Data.FirstName := 'Tim';
+  Rn.Data.FirstName := 'Test';
 
   R.Assign(Rn);
   for F in R do
     ShowMessage(F.ToString);
-
 end;
 
 procedure TfrmDynamicRecords.actFDynamicRecord1ClearExecute(Sender: TObject);

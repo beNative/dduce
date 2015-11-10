@@ -23,7 +23,6 @@ interface
 uses
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, System.Actions,
-  System.ImageList,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ImgList;
 
@@ -93,9 +92,30 @@ implementation
 
 uses
   DDuce.Logger,
+
   Demo.Data;
 
 {$R *.dfm}
+
+{$REGION 'construction and destruction'}
+procedure TfrmLogger.AfterConstruction;
+begin
+  inherited AfterConstruction;
+  aclMain.Images          := Data.ImageList;
+  btnAddCheckpoint.Images := Data.ImageList;
+  btnIncCounter.Images    := Data.ImageList;
+  btnDecCounter.Images    := Data.ImageList;
+  btnEnterMethod1.Images  := Data.ImageList;
+  btnEnterMethod2.Images  := Data.ImageList;
+  btnExitMethod1.Images   := Data.ImageList;
+  btnExitMethod2.Images   := Data.ImageList;
+  btnResetCounter.Images  := Data.ImageList;
+  btnSendError.Images     := Data.ImageList;
+  btnSendObject.Images    := Data.ImageList;
+  btnSendWarning.Images   := Data.ImageList;
+  btnSendInfo.Images      := Data.ImageList;
+end;
+{$ENDREGION}
 
 {$REGION 'action handlers'}
 procedure TfrmLogger.actSendInfoExecute(Sender: TObject);
@@ -180,23 +200,5 @@ begin
   actExitMethod2.Enabled  := FM2Entered;
 end;
 {$ENDREGION}
-
-procedure TfrmLogger.AfterConstruction;
-begin
-  inherited AfterConstruction;
-  aclMain.Images          := Data.ImageList;
-  btnAddCheckpoint.Images := Data.ImageList;
-  btnIncCounter.Images    := Data.ImageList;
-  btnDecCounter.Images    := Data.ImageList;
-  btnEnterMethod1.Images  := Data.ImageList;
-  btnEnterMethod2.Images  := Data.ImageList;
-  btnExitMethod1.Images   := Data.ImageList;
-  btnExitMethod2.Images   := Data.ImageList;
-  btnResetCounter.Images  := Data.ImageList;
-  btnSendError.Images     := Data.ImageList;
-  btnSendObject.Images    := Data.ImageList;
-  btnSendWarning.Images   := Data.ImageList;
-  btnSendInfo.Images      := Data.ImageList;
-end;
 
 end.

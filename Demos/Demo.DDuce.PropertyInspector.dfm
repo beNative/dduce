@@ -23,7 +23,6 @@ object frmPropertyInspector: TfrmPropertyInspector
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 680
     object splSplitter: TSplitter
       Left = 313
       Top = 0
@@ -64,7 +63,6 @@ object frmPropertyInspector: TfrmPropertyInspector
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 359
       DesignSize = (
         361
         567)
@@ -101,7 +99,6 @@ object frmPropertyInspector: TfrmPropertyInspector
         ImageMargins.Top = 3
         ImageMargins.Right = 3
         ImageMargins.Bottom = 3
-        Images = dmData.imlMain
         TabOrder = 1
       end
       object chkCheckBox: TCheckBox
@@ -132,7 +129,6 @@ object frmPropertyInspector: TfrmPropertyInspector
         BevelKind = bkFlat
         BorderStyle = bsNone
         ButtonOptions = [gboAllowReorder, gboShowCaptions]
-        Images = dmData.imlMain
         Items = <>
         TabOrder = 3
       end
@@ -151,7 +147,6 @@ object frmPropertyInspector: TfrmPropertyInspector
         Top = 73
         Width = 98
         Height = 21
-        Images = dmData.imlMain
         RightButton.Hint = 'Hint'
         RightButton.HotImageIndex = 114
         RightButton.ImageIndex = 115
@@ -169,7 +164,6 @@ object frmPropertyInspector: TfrmPropertyInspector
       Panels = <>
       ParentShowHint = False
       ShowHint = True
-      ExplicitWidth = 680
     end
   end
 end

@@ -24,12 +24,12 @@ interface
 
 uses
   System.Classes,
-  Vcl.Controls, Vcl.StdCtrls, Vcl.Forms;
+  Vcl.Controls, Vcl.StdCtrls, Vcl.Forms, Vcl.ExtCtrls;
 
 type
   TfrmReflect = class(TForm)
     mmoMain      : TMemo;
-    lblReflected : TLabel;
+    pnlReflected: TPanel;
 
   public
     procedure AfterConstruction; override;

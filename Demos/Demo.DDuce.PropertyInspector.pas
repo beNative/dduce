@@ -23,9 +23,9 @@ interface
 uses
   System.Classes,
   Vcl.ComCtrls, Vcl.ButtonGroup, Vcl.StdCtrls, Vcl.Controls, Vcl.ExtCtrls,
-  Vcl.Forms,
+  Vcl.Forms, Vcl.ImgList,
 
-  DDuce.Components.PropertyInspector, System.ImageList, Vcl.ImgList;
+  DDuce.Components.PropertyInspector;
 
 type
   TfrmPropertyInspector = class(TForm)

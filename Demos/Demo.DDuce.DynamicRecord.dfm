@@ -4,6 +4,7 @@ object frmDynamicRecords: TfrmDynamicRecords
   ClientHeight = 673
   ClientWidth = 966
   Color = clBtnFace
+  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -75,10 +76,18 @@ object frmDynamicRecords: TfrmDynamicRecords
         Left = 0
         Top = 0
         Width = 356
-        Height = 17
+        Height = 19
         Align = alTop
         BevelOuter = bvNone
         Caption = 'TRecord content'
+        Color = clAppWorkSpace
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentBackground = False
+        ParentFont = False
         TabOrder = 0
       end
     end
@@ -91,20 +100,32 @@ object frmDynamicRecords: TfrmDynamicRecords
       BevelOuter = bvNone
       TabOrder = 1
       object pnlRightBottomHeader: TPanel
-        Left = 0
-        Top = 0
-        Width = 604
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 598
         Height = 19
         Align = alTop
         BevelOuter = bvNone
         Caption = 'Conversion methods'
+        Color = clAppWorkSpace
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentBackground = False
+        ParentFont = False
         TabOrder = 0
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 604
       end
       object pnlTRecordRepresentations: TGridPanel
         Left = 0
-        Top = 19
+        Top = 25
         Width = 604
-        Height = 374
+        Height = 368
         Align = alClient
         BevelOuter = bvNone
         ColumnCollection = <
@@ -146,21 +167,24 @@ object frmDynamicRecords: TfrmDynamicRecords
             Value = 24.990891538070580000
           end>
         TabOrder = 1
+        ExplicitTop = 19
+        ExplicitHeight = 374
         object grpAsCommaText: TGroupBox
           AlignWithMargins = True
           Left = 3
           Top = 3
           Width = 598
-          Height = 87
+          Height = 86
           Align = alClient
           Caption = 'AsCommaText'
           TabOrder = 0
+          ExplicitHeight = 87
           object mmoAsCommaText: TMemo
             AlignWithMargins = True
             Left = 5
             Top = 18
             Width = 588
-            Height = 67
+            Height = 66
             Margins.Bottom = 0
             Align = alClient
             BevelInner = bvNone
@@ -178,14 +202,15 @@ object frmDynamicRecords: TfrmDynamicRecords
             ParentFont = False
             ScrollBars = ssVertical
             TabOrder = 0
+            ExplicitHeight = 67
           end
         end
         object grpAsDelimitedText: TGroupBox
           AlignWithMargins = True
           Left = 3
-          Top = 96
+          Top = 95
           Width = 598
-          Height = 87
+          Height = 85
           Align = alClient
           Caption = 'AsDelimitedText'
           Font.Charset = DEFAULT_CHARSET
@@ -195,6 +220,8 @@ object frmDynamicRecords: TfrmDynamicRecords
           Font.Style = []
           ParentFont = False
           TabOrder = 1
+          ExplicitTop = 96
+          ExplicitHeight = 87
           object chkQuoteValues: TCheckBox
             Left = 11
             Top = 22
@@ -248,7 +275,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 180
             Top = 18
             Width = 413
-            Height = 67
+            Height = 65
             Margins.Bottom = 0
             Align = alRight
             Anchors = [akLeft, akTop, akRight, akBottom]
@@ -267,23 +294,26 @@ object frmDynamicRecords: TfrmDynamicRecords
             ParentFont = False
             ScrollBars = ssVertical
             TabOrder = 3
+            ExplicitHeight = 67
           end
         end
         object grpToStrings: TGroupBox
           AlignWithMargins = True
           Left = 3
-          Top = 189
+          Top = 186
           Width = 598
-          Height = 87
+          Height = 85
           Align = alClient
           Caption = 'ToStrings'
           TabOrder = 2
+          ExplicitTop = 189
+          ExplicitHeight = 87
           object mmoToStrings: TMemo
             AlignWithMargins = True
             Left = 5
             Top = 18
             Width = 588
-            Height = 67
+            Height = 65
             Margins.Bottom = 0
             Align = alClient
             BevelInner = bvNone
@@ -301,20 +331,23 @@ object frmDynamicRecords: TfrmDynamicRecords
             ParentFont = False
             ScrollBars = ssVertical
             TabOrder = 0
+            ExplicitHeight = 67
           end
         end
         object grpToString: TGroupBox
           AlignWithMargins = True
           Left = 3
-          Top = 282
+          Top = 277
           Width = 598
-          Height = 89
+          Height = 88
           Align = alClient
           Caption = 'ToString'
           TabOrder = 3
+          ExplicitTop = 282
+          ExplicitHeight = 89
           DesignSize = (
             598
-            89)
+            88)
           object chkAlignValues: TCheckBox
             Left = 11
             Top = 24
@@ -331,7 +364,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 96
             Top = 18
             Width = 497
-            Height = 69
+            Height = 68
             Margins.Bottom = 0
             Anchors = [akLeft, akTop, akRight, akBottom]
             BevelInner = bvNone
@@ -349,6 +382,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             ParentFont = False
             ScrollBars = ssVertical
             TabOrder = 1
+            ExplicitHeight = 69
           end
         end
       end
@@ -370,7 +404,7 @@ object frmDynamicRecords: TfrmDynamicRecords
       Top = 8
       Width = 869
       Height = 266
-      ActivePage = tsContactObject
+      ActivePage = tsAssignments
       Anchors = [akLeft, akTop, akRight, akBottom]
       TabOrder = 0
       object tsContactObject: TTabSheet
@@ -403,10 +437,6 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsDataSet: TTabSheet
         Caption = 'DataSet'
         ImageIndex = 1
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object grdTest: TDBGrid
           AlignWithMargins = True
           Left = 3
@@ -427,10 +457,6 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsTestClass: TTabSheet
         Caption = 'TTestClass'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object lblTestClass: TLabel
           AlignWithMargins = True
           Left = 3
@@ -459,10 +485,6 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsTestRecord: TTabSheet
         Caption = 'TTestRecord'
         ImageIndex = 3
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object lblTestRecord: TLabel
           AlignWithMargins = True
           Left = 3
@@ -491,10 +513,6 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsTRecord: TTabSheet
         Caption = 'TRecord'
         ImageIndex = 4
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object lblTestTRecord: TLabel
           AlignWithMargins = True
           Left = 3
@@ -523,10 +541,6 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsAssignments: TTabSheet
         Caption = 'Assignments'
         ImageIndex = 6
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object pnlAssignments: TGridPanel
           Left = 0
           Top = 0
@@ -929,13 +943,12 @@ object frmDynamicRecords: TfrmDynamicRecords
             Action = actFRecord1Clear
             Align = alClient
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlue
+            Font.Color = clBlack
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
             ParentFont = False
             TabOrder = 0
-            StyleElements = [seClient, seBorder]
           end
           object btnFRecord2Clear1: TButton
             AlignWithMargins = True

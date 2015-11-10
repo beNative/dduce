@@ -367,7 +367,6 @@ begin
   CheckEquals(FRecord.Data.TestInteger, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
   CheckEquals(FRecord.Data.TestString, R[TEST_STRING].AsString, TEST_STRING);
 end;
-
 {$ENDREGION}
 
 {$REGION 'Tests of field manipulation methods'}
@@ -760,6 +759,7 @@ begin
   CheckEquals(FRecord[TEST_STRING].AsString, R.Data.TestString);
   CheckEquals(FRecord[TEST_CHAR].AsString, R.Data.TestChar);
 end;
+{$ENDREGION}
 
 end.
 

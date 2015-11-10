@@ -1,7 +1,6 @@
 package DDuce.Core;
 
 {$R *.res}
-{$I LibSuffix.inc}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
@@ -26,12 +25,14 @@ package DDuce.Core;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
+{$RUNONLY}
 {$IMPLICITBUILD ON}
 
 requires
   rtl,
   vcl,
-  dbrtl;
+  dbrtl,
+  Spring.Core;
 
 contains
   DDuce.DynamicRecord in '..\Source\DDuce.DynamicRecord.pas',

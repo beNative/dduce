@@ -18,7 +18,7 @@
 {$DEFINE DDUCE_INC}
 
 {$DEFINE SPRING}
-{$DEFINE DSHARP}
+{.$DEFINE DSHARP}
 
 {$I jedi.inc}                // Import JEDI Development environment directives
 

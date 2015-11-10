@@ -39,7 +39,6 @@ object frmInspector: TfrmInspector
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 333
     object splHorizontal: TSplitter
       Left = 0
       Top = 481
@@ -58,7 +57,6 @@ object frmInspector: TfrmInspector
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 547
     end
     object grdMain: TDBGrid
       Left = 0

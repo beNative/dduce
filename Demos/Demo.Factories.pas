@@ -29,10 +29,8 @@ uses
 
   Spring, Spring.Collections, Spring.Collections.Extensions,
   Spring.Collections.Lists,
-{$IFDEF DSHARP}
   DSharp.Windows.TreeViewPresenter,
   DSharp.Bindings.Collections, DSharp.Core.DataTemplates,
-{$ENDIF}
 
   DDuce.Components.PropertyInspector, DDuce.Components.LogTree,
   DDuce.Components.GridView, DDuce.Components.DBGridView,
@@ -87,7 +85,6 @@ type
             ADataSource : TDataSource = nil;
       const AName       : string = ''
     ): TDBGridView; static;
-
 
     class function CreateVST(
             AOwner  : TComponent;
@@ -444,21 +441,6 @@ begin
     BirthDate   := RandomData.BirthDate(1928, 1987);
     Country     := 'USA';
     Active      := RandomData.Bool;
-//        if RandomData.Letter = 'a' then
-//        begin
-//          P := TPhone.Create;
-//          P.Phone := RandomData.NumberString(8);
-//          P.Kind  := RandomData.City;
-//          C.Phones.Add(P);
-//          P := TPhone.Create;
-//          P.Phone := RandomData.NumberString(8);
-//          P.Kind  := RandomData.City;
-//          C.Phones.Add(P);
-//          P := TPhone.Create;
-//          P.Phone := RandomData.NumberString(8);
-//          P.Kind  := RandomData.City;
-//          C.Phones.Add(P);
-//        end;
   end;
   Result := C;
 end;

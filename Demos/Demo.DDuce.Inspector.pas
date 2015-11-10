@@ -22,7 +22,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages,
-  System.SysUtils, System.Variants, System.Classes, System.ImageList,
+  System.SysUtils, System.Variants, System.Classes,
+  {$IFDEF DELPHIXE8UP}System.ImageList,{$ENDIF}
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.DBGrids,
   Vcl.ImgList, System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.Menus,
   Vcl.StdCtrls,
@@ -54,25 +55,52 @@ type
     FInspector         : TInspector;
     FPropertyInspector : TPropertyInspector;
 
-    procedure FInspectorGetCellText(Sender: TObject; Cell: TGridCell;
-      var Value: string);
-    procedure FInspectorSetEditText(Sender: TObject; Cell: TGridCell;
-      var Value: String);
-    procedure FInspectorGetCellReadOnly(Sender: TObject; Cell: TGridCell;
-      var CellReadOnly: Boolean);
-    procedure FInspectorEditCanModify(Sender: TObject; Cell: TGridCell;
-      var CanModify: Boolean);
-    procedure FInspectorGetEditStyle(Sender: TObject; Cell: TGridCell;
-      var Style: TGridEditStyle);
-    procedure FInspectorGetCheckKind(Sender: TObject; Cell: TGridCell;
-      var CheckKind: TGridCheckKind);
-    procedure FInspectorGetCheckAlignment(Sender: TObject; Cell: TGridCell;
-      var CheckAlignment: TAlignment);
-    procedure FInspectorGetCheckState(Sender: TObject; Cell: TGridCell;
-      var CheckState: TCheckBoxState);
+    procedure FInspectorGetCellText(
+          Sender : TObject;
+          Cell   : TGridCell;
+      var Value  : string
+    );
+    procedure FInspectorSetEditText(
+          Sender : TObject;
+          Cell   : TGridCell;
+      var Value  : string
+    );
+    procedure FInspectorGetCellReadOnly(
+          Sender       : TObject;
+          Cell         : TGridCell;
+      var CellReadOnly : Boolean
+    );
+    procedure FInspectorEditCanModify(
+          Sender    : TObject;
+          Cell      : TGridCell;
+      var CanModify : Boolean
+    );
+    procedure FInspectorGetEditStyle(
+          Sender : TObject;
+          Cell   : TGridCell;
+      var Style  : TGridEditStyle
+    );
+    procedure FInspectorGetCheckKind(
+          Sender    : TObject;
+          Cell      : TGridCell;
+      var CheckKind : TGridCheckKind
+    );
+    procedure FInspectorGetCheckAlignment(
+          Sender         : TObject;
+          Cell           : TGridCell;
+      var CheckAlignment : TAlignment
+    );
+    procedure FInspectorGetCheckState(
+          Sender     : TObject;
+          Cell       : TGridCell;
+      var CheckState : TCheckBoxState
+    );
     procedure FInspectorCheckClick(Sender: TObject; Cell: TGridCell);
-    procedure FInspectorEditCanShow(Sender: TObject; Cell: TGridCell;
-      var CanShow: Boolean);
+    procedure FInspectorEditCanShow(
+          Sender  : TObject;
+          Cell    : TGridCell;
+      var CanShow : Boolean
+    );
 
   protected
     procedure UpdateView;
@@ -81,7 +109,6 @@ type
     function IsCellCheckBox(const ACell: TGridCell): Boolean; inline;
 
     function FieldOf(const ACell: TGridCell): TField;
-
 
   public
     procedure AfterConstruction; override;

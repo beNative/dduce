@@ -22,9 +22,10 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages,
-  System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, System.Actions,
-  Vcl.ActnList, System.ImageList, Vcl.ImgList,
+  System.SysUtils, System.Variants, System.Classes, System.Actions,
+  {$IFDEF DELPHIXE8UP}System.ImageList,{$ENDIF}
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
+  Vcl.ActnList, Vcl.ImgList,
 
   {$IFDEF SPRING}
   Spring, Spring.Collections,
@@ -32,7 +33,7 @@ uses
 
   DDuce.Components.GridView, DDuce.Components.PropertyInspector,
 
-  Demo.Contact;
+  Demo.Contact, System.ImageList;
 
 type
   TfrmGridView = class(TForm)
@@ -59,6 +60,7 @@ implementation
 uses
   Demo.Factories, DDuce.RandomData;
 
+{$REGION 'construction and destruction'}
 procedure TfrmGridView.AfterConstruction;
 begin
   inherited AfterConstruction;
@@ -67,5 +69,6 @@ begin
     TDemoFactories.CreatePropertyInspector(Self, pnlLeft, FGridView);
   FList := TDemoFactories.CreateContactList(1000);
 end;
+{$ENDREGION}
 
 end.

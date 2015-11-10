@@ -22,6 +22,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.Actions,
+  {$IFDEF DELPHIXE8UP}System.ImageList, {$ENDIF}
 
   Vcl.Controls, Vcl.Forms, Vcl.StdCtrls,
   Vcl.ComCtrls, Vcl.StdActns, Vcl.ActnList, Vcl.Menus, Vcl.ImgList,

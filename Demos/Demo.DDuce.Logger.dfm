@@ -189,7 +189,6 @@ object frmLogger: TfrmLogger
     end
   end
   object aclMain: TActionList
-    Images = dmData.imlMain
     Left = 416
     Top = 64
     object actSendInfo: TAction
