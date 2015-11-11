@@ -23,17 +23,15 @@ interface
 uses
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, System.Actions,
-  {$IFDEF DELPHIXE8UP}System.ImageList,{$ENDIF}
+  System.ImageList,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
   Vcl.ActnList, Vcl.ImgList,
 
-  {$IFDEF SPRING}
   Spring, Spring.Collections,
-  {$ENDIF}
 
   DDuce.Components.GridView, DDuce.Components.PropertyInspector,
 
-  Demo.Contact, System.ImageList;
+  Demo.Contact;
 
 type
   TfrmGridView = class(TForm)

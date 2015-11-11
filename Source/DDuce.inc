@@ -17,10 +17,11 @@
 {$IFNDEF DDUCE_INC}
 {$DEFINE DDUCE_INC}
 
-{$DEFINE SPRING}
-{.$DEFINE DSHARP}
-
 {$I jedi.inc}                // Import JEDI Development environment directives
+
+{$IFDEF DELPHIXE8_UP}
+  {$DEFINE HAS_UNIT_SYSTEM_IMAGELIST}
+{$ENDIF}
 
 {$IFNDEF DELPHIXE2_UP}
   {$MESSAGE ERROR 'This library requires Delphi XE2 or higher.'}

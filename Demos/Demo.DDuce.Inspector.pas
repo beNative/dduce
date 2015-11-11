@@ -22,8 +22,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages,
-  System.SysUtils, System.Variants, System.Classes,
-  {$IFDEF DELPHIXE8UP}System.ImageList,{$ENDIF}
+  System.SysUtils, System.Variants, System.Classes, System.ImageList,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.DBGrids,
   Vcl.ImgList, System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.Menus,
   Vcl.StdCtrls,

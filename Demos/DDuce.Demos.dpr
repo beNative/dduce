@@ -13,7 +13,6 @@ uses
   Demo.DDuce.ScopedReference in 'Demo.DDuce.ScopedReference.pas' {frmScopedReferences},
   Demo.DDuce.XMLTree in 'Demo.DDuce.XMLTree.pas' {frmXMLTree},
   Demo.Factories in 'Demo.Factories.pas',
-  Demo.Helpers in 'Demo.Helpers.pas',
   Demo.MainForm in 'Demo.MainForm.pas' {frmMainMenu},
   Demo.Manager in 'Demo.Manager.pas',
   Demo.Registration in 'Demo.Registration.pas',
