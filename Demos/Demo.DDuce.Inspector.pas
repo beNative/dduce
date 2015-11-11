@@ -125,7 +125,7 @@ uses
 procedure TfrmInspector.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FDataSet := Demo.Data.Data.DataSet;
+  FDataSet := TDemoFactories.CreateContactDataSet(Self, 10000);
 
   FInspector := TDemoFactories.CreateInspector(Self, pnlInspector);
   FInspector.OnGetCellText       := FInspectorGetCellText;

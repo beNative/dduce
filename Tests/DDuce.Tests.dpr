@@ -28,7 +28,12 @@ uses
   Test.DDuce.DynamicRecord.Generic in 'Test.DDuce.DynamicRecord.Generic.pas',
   Test.Registration in 'Test.Registration.pas',
   Test.DDuce.Reflect in 'Test.DDuce.Reflect.pas',
-  Test.Utils in 'Test.Utils.pas';
+  Test.Utils in 'Test.Utils.pas',
+  DDuce.DynamicRecord in '..\Source\DDuce.DynamicRecord.pas',
+  DDuce.Logger in '..\Source\DDuce.Logger.pas',
+  DDuce.RandomData in '..\Source\DDuce.RandomData.pas',
+  DDuce.Reflect in '..\Source\DDuce.Reflect.pas',
+  DDuce.ScopedReference in '..\Source\DDuce.ScopedReference.pas';
 
 {$R *.RES}
 

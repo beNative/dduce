@@ -539,9 +539,7 @@ procedure TfrmDynamicRecords.actCustomTestExecute(Sender: TObject);
 var
   R : TRecord<TContact>;
   Rn : TRecord;
-  C : TContact;
   F : IDynamicField;
-  DR : IDynamicRecord;
 begin
   R.Data.FirstName := 'John';
   R.Data.LastName  := 'Doe';

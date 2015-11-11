@@ -24,9 +24,7 @@ interface
 
 uses
   System.SysUtils,
-{$IFDEF SPRING}
   Spring;
-{$ENDIF}
 
 type
   TTestClass = class(TObject)

@@ -256,7 +256,7 @@ var
 procedure TfrmDBGridView.AfterConstruction;
 begin
   inherited AfterConstruction;
-  dscMain.DataSet := Demo.Data.Data.DataSet;
+  dscMain.DataSet := TDemoFactories.CreateContactDataSet(Self, 10000);
   CreateDBGridView;
 
   FVLT := TLogTree.Create(Self);

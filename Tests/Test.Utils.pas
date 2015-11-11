@@ -18,6 +18,8 @@ unit Test.Utils;
 
 { Common routines used in our set of unit tests. }
 
+{$I Test.DDuce.inc}
+
 interface
 
 uses

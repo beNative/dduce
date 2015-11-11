@@ -110,6 +110,17 @@ type
       const AName       : string = ''
     ): TDBGrid; static;
 
+    class function CreateContactDataSet(
+            AOwner : TComponent;
+            ACount : Integer = 0;
+      const AName  : string = ''
+    ): TDataSet; static;
+
+    class procedure FillDataSetWithContacts(
+      ADataSet : TDataSet;
+      ACount   : Integer = 0
+    ); static;
+
     class function CreateRandomContact: TContact; static;
 
     class function CreateContactList(
@@ -123,6 +134,7 @@ implementation
 uses
   System.Rtti,
   Vcl.Forms,
+  Datasnap.DBClient,
 
   DSharp.Windows.ColumnDefinitions.ControlTemplate,
 
@@ -346,6 +358,49 @@ const
 {$ENDREGION}
 
 {$REGION 'TDemoFactories'}
+class function TDemoFactories.CreateContactDataSet(AOwner: TComponent;
+  ACount: Integer; const AName: string): TDataSet;
+var
+  CDS: TClientDataSet;
+begin
+  CDS := TClientDataSet.Create(AOwner);
+  if AName <> '' then
+    CDS.Name := AName;
+  with CDS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Name     := 'Name';
+  end;
+  with CDS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftDate;
+    Name     := 'BirthDate';
+  end;
+  with CDS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Name     := 'Email';
+  end;
+  with CDS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Name     := 'Address';
+  end;
+  with CDS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Name     := 'Company';
+  end;
+  with CDS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftBoolean;
+    Name     := 'Active';
+  end;
+  CDS.CreateDataSet;
+  FillDataSetWithContacts(CDS, ACount);
+  Result := CDS;
+end;
+
 class function TDemoFactories.CreateContactList(
   const ACount: Integer): IList<TContact>;
 begin
@@ -477,6 +532,28 @@ begin
   VST.TreeOptions.AnimationOptions := DEFAULT_VST_ANIMATIONOPTIONS;
   VST.TreeOptions.AutoOptions      := DEFAULT_VST_AUTOOPTIONS;
   Result := VST;
+end;
+
+class procedure TDemoFactories.FillDataSetWithContacts(ADataSet: TDataSet;
+  ACount: Integer);
+var
+  I  : Integer;
+  S  : string;
+begin
+  ADataSet.Active := True;
+  for I := 0 to Pred(ACount) do
+  begin
+    ADataSet.Append;
+    S := RandomData.PersonName;
+    ADataSet.FieldByName('Name').AsString := S;
+    ADataSet.FieldByName('Email').AsString := RandomData.Email(S, RandomData.Name);
+    ADataSet.FieldByName('BirthDate').AsDateTime := RandomData.BirthDate(1920, 1998);
+    ADataSet.FieldByName('Company').AsString := RandomData.AlliteratedCompanyName;
+    ADataSet.FieldByName('Address').AsString := RandomData.Address;
+    ADataSet.FieldByName('Active').AsBoolean := RandomData.Bool;
+    ADataSet.Post;
+  end;
+  ADataSet.First;
 end;
 
 class procedure TDemoFactories.FillListWithContacts(AList: IList<TContact>;

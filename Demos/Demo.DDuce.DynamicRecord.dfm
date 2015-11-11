@@ -409,6 +409,10 @@ object frmDynamicRecords: TfrmDynamicRecords
       TabOrder = 0
       object tsContactObject: TTabSheet
         Caption = 'TContact object'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object lblContact: TLabel
           AlignWithMargins = True
           Left = 3
@@ -437,6 +441,10 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsDataSet: TTabSheet
         Caption = 'DataSet'
         ImageIndex = 1
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object grdTest: TDBGrid
           AlignWithMargins = True
           Left = 3
@@ -457,6 +465,10 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsTestClass: TTabSheet
         Caption = 'TTestClass'
         ImageIndex = 2
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object lblTestClass: TLabel
           AlignWithMargins = True
           Left = 3
@@ -485,6 +497,10 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsTestRecord: TTabSheet
         Caption = 'TTestRecord'
         ImageIndex = 3
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object lblTestRecord: TLabel
           AlignWithMargins = True
           Left = 3
@@ -513,6 +529,10 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsTRecord: TTabSheet
         Caption = 'TRecord'
         ImageIndex = 4
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object lblTestTRecord: TLabel
           AlignWithMargins = True
           Left = 3
@@ -541,6 +561,10 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsAssignments: TTabSheet
         Caption = 'Assignments'
         ImageIndex = 6
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object pnlAssignments: TGridPanel
           Left = 0
           Top = 0
@@ -776,7 +800,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 148
             Top = 3
             Width = 137
-            Height = 28
+            Height = 25
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -799,7 +823,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 291
             Top = 3
             Width = 137
-            Height = 28
+            Height = 25
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -822,7 +846,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 434
             Top = 3
             Width = 136
-            Height = 28
+            Height = 25
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -845,7 +869,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 576
             Top = 3
             Width = 136
-            Height = 28
+            Height = 25
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -1163,7 +1187,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 148
             Top = 153
             Width = 137
-            Height = 85
+            Height = 82
             Align = alClient
             AutoSize = False
             Color = clCream
@@ -1185,7 +1209,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 291
             Top = 153
             Width = 137
-            Height = 85
+            Height = 82
             Align = alClient
             AutoSize = False
             Color = clCream
@@ -1207,7 +1231,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 434
             Top = 153
             Width = 136
-            Height = 85
+            Height = 82
             Align = alClient
             AutoSize = False
             Color = clCream
@@ -1229,7 +1253,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 576
             Top = 153
             Width = 136
-            Height = 85
+            Height = 82
             Align = alClient
             AutoSize = False
             Color = clCream

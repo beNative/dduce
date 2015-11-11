@@ -1681,10 +1681,11 @@ end;
 procedure TXMLTree.NewNode(ANode: PVirtualNode; ANewNodeType: TNodeType;
   AValue: string = ''; AName: string = ''; ABefore: Boolean = False;
   AAddBreak: Boolean = False; AXmlNode: TXmlNode = nil);
-var
-  N : TXmlNode;
+//var
+//  N : TXmlNode;
 begin
   Logger.EnterMethod(Self, 'NewNode');
+
 
   if not Assigned(ANode) then
     AXmlNode := GetXMLNode(FocusedNode);
@@ -1715,7 +1716,7 @@ begin
 //        xeElement
 //      );
       //AXmlNode.NodeAdd(N);
-      AXmlNode.NodeAdd(N);
+//      AXmlNode.NodeAdd(N);
       //Parent.NodeNew(AName).Value := AValue;
         //N := AXmlNode.Document.NodeNewType(Name, xeElement);
         //if Value <> '' then
@@ -1734,13 +1735,13 @@ begin
           //AppendChild(Document.NodeNewType(Value, xeComment));
       //N :=  XMLDocument.NodeNewType(UTF8String(AValue), xeComment);
       //AXmlNode.NodeAdd(N);
-      AXmlNode.NodeAdd(N);
+//      AXmlNode.NodeAdd(N);
     end;
     ntText:
     begin
       //N :=  XMLDocument.NodeNewType(UTF8String(AValue), xeQuotedText);
       //AXmlNode.NodeAdd(N);
-      AXmlNode.NodeAdd(N);
+  //    AXmlNode.NodeAdd(N);
     end;
   end;
 //    if AAddBreak then

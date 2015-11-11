@@ -28,12 +28,10 @@ uses
   DDuce.Components.DBGridView in '..\Source\Components\DDuce.Components.DBGridView.pas',
   DDuce.Components.GridView in '..\Source\Components\DDuce.Components.GridView.pas',
   DDuce.Components.Inspector in '..\Source\Components\DDuce.Components.Inspector.pas',
-  DDuce.Components.ListDataSet in '..\Source\Components\DDuce.Components.ListDataSet.pas',
   DDuce.Components.LogTree in '..\Source\Components\DDuce.Components.LogTree.pas',
   DDuce.Components.PropertyInspector.CollectionEditor in '..\Source\Components\DDuce.Components.PropertyInspector.CollectionEditor.pas' {frmCollectionEditor},
   DDuce.Components.PropertyInspector in '..\Source\Components\DDuce.Components.PropertyInspector.pas',
   DDuce.Components.PropertyInspector.StringsEditor in '..\Source\Components\DDuce.Components.PropertyInspector.StringsEditor.pas' {StringsEditorDialog},
-  DDuce.Components.VirtualDataSet in '..\Source\Components\DDuce.Components.VirtualDataSet.pas',
   DDuce.Components.XMLTree.Editors in '..\Source\Components\DDuce.Components.XMLTree.Editors.pas',
   DDuce.Components.XMLTree.NodeAttributes in '..\Source\Components\DDuce.Components.XMLTree.NodeAttributes.pas',
   DDuce.Components.XMLTree in '..\Source\Components\DDuce.Components.XMLTree.pas',
@@ -66,6 +64,7 @@ uses
 {$R *.res}
 
 begin
+  ReportMemoryLeaksOnShutdown := True;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   RegisterDemos;

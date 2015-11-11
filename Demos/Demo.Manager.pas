@@ -56,7 +56,6 @@ type
     class procedure Execute(AConcept: TObject); static;
 
     class constructor Create;
-    class destructor Destroy;
 
     class property ItemList: IList<TDemo>
       read GetItemList;
@@ -73,11 +72,6 @@ uses
 class constructor TDemoManager.Create;
 begin
   FList := TCollections.CreateObjectList<TDemo>(True);
-end;
-
-class destructor TDemoManager.Destroy;
-begin
-  FList := nil;
 end;
 {$ENDREGION}
 

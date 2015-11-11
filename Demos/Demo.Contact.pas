@@ -22,8 +22,11 @@ unit Demo.Contact;
 
 interface
 
+uses
+  System.Classes;
+
 type
-  TContact = class
+  TContact = class(TPersistent)
   private
     FLastName    : string;
     FFirstName   : string;
