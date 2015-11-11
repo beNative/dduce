@@ -133,7 +133,7 @@ implementation
 
 uses
   System.Rtti,
-  Vcl.Forms,
+  Vcl.Forms, Vcl.Graphics,
   Datasnap.DBClient,
 
   DSharp.Windows.ColumnDefinitions.ControlTemplate,
@@ -454,6 +454,7 @@ begin
   PI                  := TPropertyInspector.Create(AOwner);
   PI.AlignWithMargins := True;
   PI.Parent           := AParent;
+  PI.Color            := clWhite;
   PI.BorderStyle      := bsSingle;
   PI.PropKinds        := PI.PropKinds + [pkReadOnly];
   PI.Align            := alClient;

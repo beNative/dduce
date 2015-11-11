@@ -41,22 +41,12 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   ImgList,
 
-{$IFDEF FPC}
-  Editors, LMessages,
-{$ENDIF}
   NativeXML,
 
   VirtualTrees,
 
   DDuce.Logger,
-
   DDuce.Components.XMLTree.NodeAttributes;
-
-{$IFDEF FPC}
-type
-  TMessage   = TLMessage;
-  NativeUint = PtrInt;
-{$ENDIF}
 
 const
   // Helper message to decouple node change handling from edit handling.

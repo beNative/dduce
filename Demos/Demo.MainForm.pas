@@ -168,9 +168,9 @@ begin
     Alignment         := taCenter;
     OnCustomDraw      := FTVPColumnDefinitionsCustomDrawColumn;
   end;
-  with FTVP.ColumnDefinitions.Add('UnitName') do
+  with FTVP.ColumnDefinitions.Add('SourceFileName') do
   begin
-    ValuePropertyName := 'UnitName';
+    ValuePropertyName := 'SourceFileName';
     AutoSize          := True;
   end;
   FTVP.TreeView := FVST;
