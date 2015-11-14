@@ -10,3 +10,4 @@ __history
 *.stat
 *.log
 /Source/Components/__recovery
+/Source/__recovery
