@@ -55,49 +55,52 @@ type
     FPropertyInspector : TPropertyInspector;
 
     procedure FInspectorGetCellText(
-          Sender : TObject;
-          Cell   : TGridCell;
-      var Value  : string
+      Sender    : TObject;
+      Cell      : TGridCell;
+      var Value : string
     );
     procedure FInspectorSetEditText(
-          Sender : TObject;
-          Cell   : TGridCell;
-      var Value  : string
+      Sender    : TObject;
+      Cell      : TGridCell;
+      var Value : string
     );
     procedure FInspectorGetCellReadOnly(
-          Sender       : TObject;
-          Cell         : TGridCell;
+      Sender           : TObject;
+      Cell             : TGridCell;
       var CellReadOnly : Boolean
     );
     procedure FInspectorEditCanModify(
-          Sender    : TObject;
-          Cell      : TGridCell;
+      Sender        : TObject;
+      Cell          : TGridCell;
       var CanModify : Boolean
     );
     procedure FInspectorGetEditStyle(
-          Sender : TObject;
-          Cell   : TGridCell;
-      var Style  : TGridEditStyle
+      Sender    : TObject;
+      Cell      : TGridCell;
+      var Style : TGridEditStyle
     );
     procedure FInspectorGetCheckKind(
-          Sender    : TObject;
-          Cell      : TGridCell;
+      Sender        : TObject;
+      Cell          : TGridCell;
       var CheckKind : TGridCheckKind
     );
     procedure FInspectorGetCheckAlignment(
-          Sender         : TObject;
-          Cell           : TGridCell;
+      Sender             : TObject;
+      Cell               : TGridCell;
       var CheckAlignment : TAlignment
     );
     procedure FInspectorGetCheckState(
-          Sender     : TObject;
-          Cell       : TGridCell;
+      Sender         : TObject;
+      Cell           : TGridCell;
       var CheckState : TCheckBoxState
     );
-    procedure FInspectorCheckClick(Sender: TObject; Cell: TGridCell);
+    procedure FInspectorCheckClick(
+      Sender : TObject;
+      Cell   : TGridCell
+    );
     procedure FInspectorEditCanShow(
-          Sender  : TObject;
-          Cell    : TGridCell;
+      Sender      : TObject;
+      Cell        : TGridCell;
       var CanShow : Boolean
     );
 
@@ -126,7 +129,6 @@ procedure TfrmInspector.AfterConstruction;
 begin
   inherited AfterConstruction;
   FDataSet := TDemoFactories.CreateContactDataSet(Self, 10000);
-
   FInspector := TDemoFactories.CreateInspector(Self, pnlInspector);
   FInspector.OnGetCellText       := FInspectorGetCellText;
   FInspector.OnSetEditText       := FInspectorSetEditText;

@@ -59,10 +59,11 @@ object frmInspector: TfrmInspector
       TabOrder = 0
     end
     object grdMain: TDBGrid
-      Left = 0
-      Top = 0
-      Width = 657
-      Height = 481
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 651
+      Height = 475
       Align = alClient
       DataSource = dscMain
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]

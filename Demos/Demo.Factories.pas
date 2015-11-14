@@ -57,9 +57,9 @@ type
     ); static;
 
     class function CreateLogTree(
-            AOwner  : TComponent;
-            AParent : TWinControl;
-      const AName   : string = ''
+      AOwner      : TComponent;
+      AParent     : TWinControl;
+      const AName : string = ''
     ): TLogTree; static;
 
     class function CreatePropertyInspector(
@@ -69,15 +69,15 @@ type
     ): TPropertyInspector; static;
 
     class function CreateInspector(
-            AOwner  : TComponent;
-            AParent : TWinControl;
-      const AName   : string = ''
+      AOwner      : TComponent;
+      AParent     : TWinControl;
+      const AName : string = ''
     ): TInspector; static;
 
     class function CreateGridView(
-            AOwner  : TComponent;
-            AParent : TWinControl;
-      const AName   : string = ''
+      AOwner      : TComponent;
+      AParent     : TWinControl;
+      const AName : string = ''
     ): TGridView; static;
 
     class function CreateDBGridView(
@@ -94,26 +94,26 @@ type
     ): TVirtualStringTree; static;
 
     class function CreateTVP(
-            AOwner    : TComponent;
-            AVST      : TVirtualStringTree = nil;
-            ASource   : IObjectList = nil;
-            ATemplate : IDataTemplate = nil;
-            AFilter   : TFilterEvent = nil;
-      const AName     : string = ''
+      AOwner      : TComponent;
+      AVST        : TVirtualStringTree = nil;
+      ASource     : IObjectList = nil;
+      ATemplate   : IDataTemplate = nil;
+      AFilter     : TFilterEvent = nil;
+      const AName : string = ''
     ): TTreeViewPresenter; static;
 
     { Create standard VCL DB Grid. }
     class function CreateDBGrid(
-            AOwner      : TComponent;
-            AParent     : TWinControl;
-            ADataSource : TDataSource = nil;
-      const AName       : string = ''
+      AOwner      : TComponent;
+      AParent     : TWinControl;
+      ADataSource : TDataSource = nil;
+      const AName : string = ''
     ): TDBGrid; static;
 
     class function CreateContactDataSet(
-            AOwner : TComponent;
-            ACount : Integer = 0;
-      const AName  : string = ''
+      AOwner      : TComponent;
+      ACount      : Integer = 0;
+      const AName : string = ''
     ): TDataSet; static;
 
     class procedure FillDataSetWithContacts(
@@ -607,8 +607,9 @@ begin
   I := TInspector.Create(AOwner);
   if AName <> '' then
     I.Name := AName;
+  I.Color  := clWhite;
   I.Parent := AParent;
-  I.Align := alClient;
+  I.Align  := alClient;
   Result := I;
 end;
 

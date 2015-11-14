@@ -29,7 +29,7 @@ uses
 type
   TfrmReflect = class(TForm)
     mmoMain      : TMemo;
-    pnlReflected: TPanel;
+    pnlReflected : TPanel;
 
   public
     procedure AfterConstruction; override;

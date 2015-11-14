@@ -55,10 +55,16 @@ type
 
   PLogNodeData = ^TLogNodeData;
 
-  TOnLog = procedure(Sender: TObject; var LogText: string; var
-    CancelEntry: Boolean; LogLevel: TLogLevel) of object;
-  TOnPopupMenuItemClick = procedure(Sender: TObject; MenuItem:
-    TMenuItem) of object;
+  TOnLog = procedure(
+    Sender          : TObject;
+    var LogText     : string;
+    var CancelEntry : Boolean;
+    LogLevel        : TLogLevel
+  ) of object;
+  TOnPopupMenuItemClick = procedure(
+    Sender   : TObject;
+    MenuItem : TMenuItem
+  ) of object;
 
   TLogPopupmenu = class(TPopupMenu)
   private
