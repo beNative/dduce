@@ -117,9 +117,6 @@ object frmDynamicRecords: TfrmDynamicRecords
         ParentBackground = False
         ParentFont = False
         TabOrder = 0
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 604
       end
       object pnlTRecordRepresentations: TGridPanel
         Left = 0
@@ -167,8 +164,6 @@ object frmDynamicRecords: TfrmDynamicRecords
             Value = 24.990891538070580000
           end>
         TabOrder = 1
-        ExplicitTop = 19
-        ExplicitHeight = 374
         object grpAsCommaText: TGroupBox
           AlignWithMargins = True
           Left = 3
@@ -178,7 +173,6 @@ object frmDynamicRecords: TfrmDynamicRecords
           Align = alClient
           Caption = 'AsCommaText'
           TabOrder = 0
-          ExplicitHeight = 87
           object mmoAsCommaText: TMemo
             AlignWithMargins = True
             Left = 5
@@ -202,7 +196,6 @@ object frmDynamicRecords: TfrmDynamicRecords
             ParentFont = False
             ScrollBars = ssVertical
             TabOrder = 0
-            ExplicitHeight = 67
           end
         end
         object grpAsDelimitedText: TGroupBox
@@ -220,8 +213,6 @@ object frmDynamicRecords: TfrmDynamicRecords
           Font.Style = []
           ParentFont = False
           TabOrder = 1
-          ExplicitTop = 96
-          ExplicitHeight = 87
           object chkQuoteValues: TCheckBox
             Left = 11
             Top = 22
@@ -294,7 +285,6 @@ object frmDynamicRecords: TfrmDynamicRecords
             ParentFont = False
             ScrollBars = ssVertical
             TabOrder = 3
-            ExplicitHeight = 67
           end
         end
         object grpToStrings: TGroupBox
@@ -306,8 +296,6 @@ object frmDynamicRecords: TfrmDynamicRecords
           Align = alClient
           Caption = 'ToStrings'
           TabOrder = 2
-          ExplicitTop = 189
-          ExplicitHeight = 87
           object mmoToStrings: TMemo
             AlignWithMargins = True
             Left = 5
@@ -331,7 +319,6 @@ object frmDynamicRecords: TfrmDynamicRecords
             ParentFont = False
             ScrollBars = ssVertical
             TabOrder = 0
-            ExplicitHeight = 67
           end
         end
         object grpToString: TGroupBox
@@ -343,8 +330,6 @@ object frmDynamicRecords: TfrmDynamicRecords
           Align = alClient
           Caption = 'ToString'
           TabOrder = 3
-          ExplicitTop = 282
-          ExplicitHeight = 89
           DesignSize = (
             598
             88)
@@ -382,7 +367,6 @@ object frmDynamicRecords: TfrmDynamicRecords
             ParentFont = False
             ScrollBars = ssVertical
             TabOrder = 1
-            ExplicitHeight = 69
           end
         end
       end
@@ -404,15 +388,11 @@ object frmDynamicRecords: TfrmDynamicRecords
       Top = 8
       Width = 869
       Height = 266
-      ActivePage = tsAssignments
+      ActivePage = tsContactObject
       Anchors = [akLeft, akTop, akRight, akBottom]
       TabOrder = 0
       object tsContactObject: TTabSheet
         Caption = 'TContact object'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object lblContact: TLabel
           AlignWithMargins = True
           Left = 3
@@ -561,10 +541,6 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsAssignments: TTabSheet
         Caption = 'Assignments'
         ImageIndex = 6
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object pnlAssignments: TGridPanel
           Left = 0
           Top = 0
@@ -800,7 +776,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 148
             Top = 3
             Width = 137
-            Height = 25
+            Height = 28
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -823,7 +799,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 291
             Top = 3
             Width = 137
-            Height = 25
+            Height = 28
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -846,7 +822,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 434
             Top = 3
             Width = 136
-            Height = 25
+            Height = 28
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -869,7 +845,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 576
             Top = 3
             Width = 136
-            Height = 25
+            Height = 28
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -1187,7 +1163,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 148
             Top = 153
             Width = 137
-            Height = 82
+            Height = 85
             Align = alClient
             AutoSize = False
             Color = clCream
@@ -1209,7 +1185,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 291
             Top = 153
             Width = 137
-            Height = 82
+            Height = 85
             Align = alClient
             AutoSize = False
             Color = clCream
@@ -1231,7 +1207,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 434
             Top = 153
             Width = 136
-            Height = 82
+            Height = 85
             Align = alClient
             AutoSize = False
             Color = clCream
@@ -1253,7 +1229,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 576
             Top = 153
             Width = 136
-            Height = 82
+            Height = 85
             Align = alClient
             AutoSize = False
             Color = clCream

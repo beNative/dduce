@@ -75,10 +75,10 @@ type
   }
 
   TInspectorCategoryRowEvent = procedure(
-        Sender   : TObject;
-        Row      : Longint;
+    Sender       : TObject;
+    Row          : Longint;
     var Category : Boolean
-  ) of object;
+    ) of object;
 
   TCustomInspector = class(TCustomGridView)
   private

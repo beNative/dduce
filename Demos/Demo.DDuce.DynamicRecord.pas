@@ -307,25 +307,25 @@ type
     FDynamicRecord2   : IDynamicRecord;
 
     procedure FInspectorGetCellText(
-          Sender : TObject;
-          Cell   : TGridCell;
-      var Value  : string
-    );
+      Sender    : TObject;
+      Cell      : TGridCell;
+      var Value : string
+      );
     procedure FInspectorSetEditText(
-          Sender : TObject;
-          Cell   : TGridCell;
-      var Value  : string
-    );
+      Sender    : TObject;
+      Cell      : TGridCell;
+      var Value : string
+      );
     procedure FInspectorGetEditStyle(
-          Sender  : TObject;
-          Cell    : TGridCell;
-      var Style   : TGridEditStyle
-    );
+      Sender    : TObject;
+      Cell      : TGridCell;
+      var Style : TGridEditStyle
+      );
     procedure FInspectorGetEditText(
-          Sender : TObject;
-          Cell   : TGridCell;
-      var Value  : string
-    );
+      Sender    : TObject;
+      Cell      : TGridCell;
+      var Value : string
+      );
 
     function CreateInspector(AParent : TWinControl): TInspector;
 
@@ -405,7 +405,7 @@ end;
 
 procedure TfrmDynamicRecords.BeforeDestruction;
 begin
-  FreeAndNil(FInspector);
+//  FreeAndNil(FInspector);
   FreeAndNil(FStrings);
   FreeAndNil(FContact);
   FreeAndNil(FTestClass);
@@ -537,19 +537,36 @@ end;
 
 procedure TfrmDynamicRecords.actCustomTestExecute(Sender: TObject);
 var
-  R : TRecord<TContact>;
+  R  : TRecord;
+  Rg : TRecord<TContact>;
   Rn : TRecord;
   F : IDynamicField;
+  O : TContact;
 begin
-  R.Data.FirstName := 'John';
-  R.Data.LastName  := 'Doe';
-  Rn := R;
-  Rn.Data.Extra := 'extra';
-  Rn.Data.FirstName := 'Test';
+  CreateContact;
+  R.From(FContact);
+  ShowMessage(R.ToString);
 
-  R.Assign(Rn);
-  for F in R do
-    ShowMessage(F.ToString);
+
+//  R.Data.FirstName := 'John';
+//  R.Data.LastName  := 'Doe';
+//  R.Data.Address := 'ReetStreet';
+//
+//  Rg := R;        // copy
+//
+//
+//  Rg.Data.Address := 'Geen reetstreet hier';
+
+//  Rn.Data.Extra := 'extra';
+//  Rn.Data.FirstName := 'Test';
+  ShowMessage(Rg.ToString);
+
+
+
+
+//  R.Assign(Rn);
+//  for F in R do
+//    ShowMessage(F.ToString);
 end;
 
 procedure TfrmDynamicRecords.actFDynamicRecord1ClearExecute(Sender: TObject);
@@ -724,6 +741,9 @@ begin
   FContact := TContact.Create;
   FContact.FirstName := 'John';
   FContact.LastName  := 'Doe';
+  FContact.CompanyName := 'Calligram Laboratories';
+  FContact.Address   := 'Highway''s creek 48';
+  FContact.Country   := 'USA';
   FContact.Number    := 5;
   FContact.BirthDate := Now - 20000;
 end;
@@ -892,8 +912,8 @@ begin
     lblTestTRecord.Caption := FTestTRecord.ToString;
 
     FRecord.ToStrings(FStrings);
-    mmoAsCommaText.Text     := FRecord.AsCommaText;
-    mmoAsDelimitedText.Text := FRecord.AsDelimitedText(
+    mmoAsCommaText.Text     := FRecord.ToCommaText;
+    mmoAsDelimitedText.Text := FRecord.ToDelimitedText(
       edtDelimiter.Text,
       chkQuoteValues.Checked,
       edtQuoteChar.Text[1]

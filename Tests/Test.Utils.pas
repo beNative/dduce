@@ -84,21 +84,21 @@ class function TTestUtils.CreateTestObject: TTestClass;
 begin
   Result := TTestClass.Create;
   Result.TestBoolean  := True;
-  Result.TestChar     := 'C';
+  Result.TestChar     := RandomData.Letter;
   Result.TestDateTime := Now;
   Result.TestDouble   := Pi;
-  Result.TestInteger  := 5;
-  Result.TestString   := 'TEST';
+  Result.TestInteger  := RandomData.Number(100);
+  Result.TestString   := RandomData.Vegetable;
 end;
 
 class function TTestUtils.CreateTestRecord: TTestRecord;
 begin
   Result.TestBoolean  := True;
-  Result.TestChar     := 'C';
+  Result.TestChar     := RandomData.Letter;
   Result.TestDateTime := Now;
   Result.TestDouble   := Pi;
-  Result.TestInteger  := 5;
-  Result.TestString   := 'TEST';
+  Result.TestInteger  := RandomData.Number(100);
+  Result.TestString   := RandomData.Vegetable;
 end;
 
 procedure AppendLine(var AToString : string; const ALine : string); overload;

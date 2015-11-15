@@ -44,7 +44,8 @@ begin
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
   DemoManager.Register(TfrmReflect, 'Reflect');
-  DemoManager.Register(TfrmXMLTree, 'XMLTree');
+  // not working yet
+  //DemoManager.Register(TfrmXMLTree, 'XMLTree');
   DemoManager.Register(TfrmLogger, 'Logger');
   DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
   DemoManager.Register(TfrmInspector, 'Inspector');

@@ -94,11 +94,12 @@ type
 
     procedure Test_FromDataSet_method;
     procedure Test_FromStrings_method;
-    procedure Test_From_method;
+    procedure Test_From_method_for_object;
+    procedure Test_From_method_for_record;
 
-    procedure Test_AsDelimitedText_method;
-    procedure Test_AsVarArray_method;
-    procedure Test_AsCommaText_method;
+    procedure Test_ToDelimitedText_method;
+    procedure Test_ToVarArray_method;
+    procedure Test_ToCommaText_method;
     procedure Test_ToStrings_method;
 
     procedure Test_AssignProperty_method;
@@ -237,21 +238,21 @@ end;
 {$ENDREGION}
 
 {$REGION 'Test methods that convert all content to another format'}
-procedure TestTRecord.Test_AsCommaText_method;
+procedure TestTRecord.Test_ToCommaText_method;
 begin
   CheckEqualsString(
     '5,Test,5,3,14,True,3,14,C',
-    FRecord.AsCommaText
+    FRecord.ToCommaText
   );
 end;
 
-procedure TestTRecord.Test_AsDelimitedText_method;
+procedure TestTRecord.Test_ToDelimitedText_method;
 begin
-  CheckEqualsString('5,Test,5,3,14,True,3,14,C', FRecord.AsDelimitedText(','));
-  CheckEqualsString('5', FRecord.AsDelimitedText(TEST_INTEGER, ','));
+  CheckEqualsString('5,Test,5,3,14,True,3,14,C', FRecord.ToDelimitedText(','));
+  CheckEqualsString('5', FRecord.ToDelimitedText(TEST_INTEGER, ','));
 end;
 
-procedure TestTRecord.Test_AsVarArray_method;
+procedure TestTRecord.Test_ToVarArray_method;
 var
   VA : Variant;
   I  : Integer;
@@ -259,7 +260,7 @@ var
   V  : Variant;
   S  : string;
 begin
-  VA := FRecord.AsVarArray;
+  VA := FRecord.ToVarArray;
   N := VarArrayDimCount(VA);
   for I := VarArrayLowBound(VA, N) to VarArrayHighBound(VA, N) do
   begin
@@ -695,7 +696,7 @@ begin
   CheckEqualsString('Good', FRecord[TEST_STRING].AsString);
 end;
 
-procedure TestTRecord.Test_From_method;
+procedure TestTRecord.Test_From_method_for_object;
 var
   R  : TRecord;
   O1 : TTestClass;
@@ -716,7 +717,19 @@ begin
   end;
 end;
 
-procedure TestTRecord.Test_AssignTo_method_for_Object;
+procedure TestTRecord.Test_From_method_for_record;
+var
+  R  : TRecord;
+  R1 : TTestRecord;
+  R2 : TTestRecord;
+begin
+  R1 := TTestUtils.CreateTestRecord;
+  R.From(R1, False, True); // REMARK: only fieldvalues can be copied from records. There is no RTTI for record properties
+  R.AssignTo(R2);
+  CheckEquals(R1.TestInteger, R2.TestInteger);
+end;
+
+procedure TestTRecord.Test_AssignTo_method_for_object;
 var
   R  : TRecord;
   O1 : TTestClass;

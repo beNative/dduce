@@ -280,7 +280,7 @@ end;
 procedure TestGenericTRecord.Test_assignment_operator_for_generic_IDynamicRecord_to_generic_IDynamicRecord;
 var
   DR : IDynamicRecord<TTestClass>;
-  F : IDynamicField;
+  F  : IDynamicField;
 begin
   DR := TRecord<TTestClass>.CreateDynamicRecord;
   DR := FDynamicRecord; // reference is copied
@@ -304,7 +304,7 @@ begin
   begin
     CheckTrue(F.Value.Equals(DR[F.Name]), F.Name);
   end;
-  //DR.Data.TestInteger := 78;
+  DR.Data.TestInteger := 78;
   CheckEquals(DR.Data.TestInteger, FDynamicRecord.Data.TestInteger);
 end;
 {$ENDREGION}
