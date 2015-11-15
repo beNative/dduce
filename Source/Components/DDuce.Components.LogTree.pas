@@ -27,8 +27,8 @@ unit DDuce.Components.LogTree;
 interface
 
 uses
-  System.Classes, System.SysUtils, System.Types,
   WinApi.Windows,
+  System.Classes, System.SysUtils, System.Types,
   Vcl.Graphics, Vcl.ImgList, Vcl.Menus,
 
   VirtualTrees;

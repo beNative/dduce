@@ -59,7 +59,9 @@ uses
   NativeXmlNodes in '..\Source\Dependencies\NativeXml\NativeXmlNodes.pas',
   sdDebug in '..\Source\Dependencies\NativeXml\sdDebug.pas',
   sdStreams in '..\Source\Dependencies\NativeXml\sdStreams.pas',
-  sdStringTable in '..\Source\Dependencies\NativeXml\sdStringTable.pas';
+  sdStringTable in '..\Source\Dependencies\NativeXml\sdStringTable.pas',
+  DDuce.Logging.Appenders.LogTree in '..\Source\Logging\DDuce.Logging.Appenders.LogTree.pas',
+  DDuce.Logging.Appenders.WinIPC in '..\Source\Logging\DDuce.Logging.Appenders.WinIPC.pas';
 
 {$R *.res}
 

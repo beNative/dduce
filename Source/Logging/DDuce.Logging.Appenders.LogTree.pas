@@ -14,7 +14,7 @@
   limitations under the License.
 }
 
-{  }
+{ Spring-compatible ILogAppender implementation for the TLogTree component. }
 
 unit DDuce.Logging.Appenders.LogTree;
 
@@ -31,11 +31,12 @@ type
     FLogTree : TLogTree;
 
   protected
-
     procedure DoSend(const entry: TLogEntry); override;
 
   public
     constructor Create(ALogTree: TLogTree);
+    procedure BeforeDestruction; override;
+
   end;
 
 implementation
@@ -45,18 +46,48 @@ uses
 
 { TLogTreeAppender }
 
+{$REGION 'construction and destruction'}
 constructor TLogTreeAppender.Create(ALogTree: TLogTree);
 begin
   Guard.CheckNotNull(ALogTree, 'ALogTree');
   FLogTree := ALogTree;
+  inherited Create;
 end;
 
-procedure TLogTreeAppender.DoSend(const entry: TLogEntry);
+procedure TLogTreeAppender.BeforeDestruction;
 begin
-  //FLogTree.
-
-
-
+  FLogTree := nil;
+  inherited BeforeDestruction;
 end;
+{$ENDREGION}
+
+{$REGION 'protected methods'}
+procedure TLogTreeAppender.DoSend(const entry: TLogEntry);
+var
+  LL : TLogLevel;
+begin
+  case entry.EntryType of
+    TLogEntryType.Text:
+    begin
+      case entry.Level of
+        Spring.Logging.TLogLevel.Unknown: LL := llNone;
+        Spring.Logging.TLogLevel.Trace: LL := llNone;
+        Spring.Logging.TLogLevel.Debug: LL := llDebug;
+        Spring.Logging.TLogLevel.Text: LL := llNone;
+        Spring.Logging.TLogLevel.Info: LL := llInfo;
+        Spring.Logging.TLogLevel.Warn: LL := llWarning;
+        Spring.Logging.TLogLevel.Error: LL := llError;
+        Spring.Logging.TLogLevel.Fatal: LL := llError;
+      end;
+    end;
+    TLogEntryType.Value: LL := llInfo;
+    TLogEntryType.CallStack: LL := llInfo;
+    TLogEntryType.SerializedData: LL := llInfo;
+    TLogEntryType.Entering: LL := llInfo;
+    TLogEntryType.Leaving: LL := llInfo;
+  end;
+  FLogTree.Log(entry.Msg, LL, entry.TimeStamp);
+end;
+{$ENDREGION}
 
 end.
