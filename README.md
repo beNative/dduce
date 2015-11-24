@@ -13,7 +13,7 @@ In addition some lesser known but excellent open source Delphi components were p
 ## TPropertyInspector ##
 
 This component is based on the work of **Evgeny Balabuyev**. You may obtain a copy of the original code at http://www.torry.net/vcl/packs/lite/extlib.zip.
-It mimics Delphi's object inspector and makes it possible to edit any published property of a component (or other class compiled with RTTI with {$M+}). at runtime.
+It mimics Delphi's object inspector and makes it possible to edit any published property of a component (or other class compiled with RTTI enabled with `{$M+}`) at runtime.
 
 ## TGridView ##
 
