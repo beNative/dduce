@@ -25,7 +25,7 @@ A `TGridView` descendant which can be linked to a `TDataSource` and can be used 
 
 ## TInspector ##
 
-A `TGridView` descendant that displays data in a vertical object inspector-like way. Just like its ancestor this is a virtual grid control..
+A `TGridView` descendant that displays data in a vertical object inspector-like way. Just like its ancestor this is a virtual grid control so it does not own the data it displays.
 
 ## TXMLTree ##
 
