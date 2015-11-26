@@ -13,6 +13,7 @@ In addition some lesser known but excellent open source Delphi components were p
 ## TPropertyInspector ##
 
 This component is based on the work of **Evgeny Balabuyev**. You may obtain a copy of the original code at http://www.torry.net/vcl/packs/lite/extlib.zip.
+It mimics Delphi's object inspector and makes it possible to edit any published property of a component (or other class compiled with RTTI enabled with `{$M+}`) at runtime.
 
 ## TGridView ##
 
@@ -21,6 +22,10 @@ A native and very fast virtual VCL grid component. It is based on the work of **
 ## TDBGridView ##
 
 A `TGridView` descendant which can be linked to a `TDataSource` and can be used like a `TDBGrid`. It is based on the work of **Roman M. Mochalov**.
+
+## TInspector ##
+
+A `TGridView` descendant that displays data in a vertical object inspector-like way. Just like its ancestor this is a virtual grid control so it does not own the data it displays.
 
 ## TXMLTree ##
 
