@@ -339,6 +339,8 @@ type
   { TRecord<T> manages a IDynamicRecord<T> instance. The data is stored in the
     provided class type. }
 
+    { TODO: Items property }
+
   TRecord<T: class, constructor> = record
   private
     FDynamicRecord : IDynamicRecord<T>;
@@ -532,6 +534,13 @@ type
       const ANames    : array of string
     ); overload;
 
+//    procedure From<T>(
+//      const AInstance         : T;
+//      const AAssignProperties : Boolean;
+//      const AAssignFields     : Boolean;
+//      const AAssignNulls      : Boolean;
+//      const ANames            : array of string
+//    );
     procedure From(
       const AInstance         : TValue;
       const AAssignProperties : Boolean;
