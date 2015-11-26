@@ -621,20 +621,21 @@ begin
   GV := TGridView.Create(AOwner);
   if AName <> '' then
     GV.Name := AName;
-  GV.Parent := AParent;
-  GV.Align := alClient;
-  GV.Header.Flat      := False;
-  GV.AlignWithMargins := True;
-  GV.Parent           := AParent;
-  GV.Align            := alClient;
-  GV.CursorKeys       := GV.CursorKeys + [gkReturn];
-  GV.GridStyle        := GV.GridStyle + [gsDotLines];
-  GV.ColumnsFullDrag  := True;
-  GV.DoubleBuffered   := True;
-  GV.CheckBoxes       := True;
-  GV.ShowFocusRect    := False;
-  GV.CheckStyle       := csFlat;
-  GV.ColumnClick      := True;
+  GV.Parent                   := AParent;
+  GV.Align                    := alClient;
+  GV.Header.Flat              := False;
+  GV.Header.FullSynchronizing := True;
+  GV.AlignWithMargins         := True;
+  GV.Parent                   := AParent;
+  GV.Align                    := alClient;
+  GV.CursorKeys               := GV.CursorKeys + [gkReturn];
+  GV.GridStyle                := GV.GridStyle + [gsDotLines];
+  GV.ColumnsFullDrag          := True;
+  GV.DoubleBuffered           := True;
+  GV.CheckBoxes               := True;
+  GV.ShowFocusRect            := False;
+  GV.CheckStyle               := csFlat;
+  GV.ColumnClick              := True;
   Result := GV;
 end;
 {$ENDREGION}

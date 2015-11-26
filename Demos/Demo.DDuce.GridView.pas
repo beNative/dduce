@@ -25,7 +25,7 @@ uses
   System.SysUtils, System.Variants, System.Classes, System.Actions,
   System.ImageList,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
-  Vcl.ActnList, Vcl.ImgList,
+  Vcl.ActnList, Vcl.ImgList, Vcl.StdCtrls,
 
   Spring, Spring.Collections,
 
@@ -46,6 +46,28 @@ type
     FPropertyInspector : TPropertyInspector;
     FList              : IList<TContact>;
 
+    procedure FGridViewDrawCell(
+      Sender             : TObject;
+      Cell               : TGridCell;
+      var Rect           : TRect;
+      var DefaultDrawing : Boolean
+    );
+    procedure FGridViewGetCellText(
+      Sender    : TObject;
+      Cell      : TGridCell;
+      var Value : string
+    );
+    procedure FGridViewGetCheckState(
+      Sender         : TObject;
+      Cell           : TGridCell;
+      var CheckState : TCheckBoxState
+    );
+    procedure FGridViewGetCellColors(
+      Sender : TObject;
+      Cell   : TGridCell;
+      Canvas : TCanvas
+    );
+
   public
     procedure AfterConstruction; override;
 
@@ -56,17 +78,113 @@ implementation
 {$R *.dfm}
 
 uses
-  Demo.Factories, DDuce.RandomData;
+  Demo.Factories, Spring.Helpers,
+
+  DDuce.RandomData, DDuce.DynamicRecord;
 
 {$REGION 'construction and destruction'}
 procedure TfrmGridView.AfterConstruction;
+var
+  R: TRecord;
+  F : IDynamicField;
 begin
   inherited AfterConstruction;
   FGridView := TDemoFactories.CreateGridView(Self, pnlRight);
   FPropertyInspector :=
     TDemoFactories.CreatePropertyInspector(Self, pnlLeft, FGridView);
   FList := TDemoFactories.CreateContactList(1000);
+  R.From(FList[0]);
+
+  for F in R do
+  begin
+    with FGridView.Columns.Add do
+    begin
+      Caption := F.Name;
+      if F.Value.IsType<Boolean> then
+      begin
+        CheckKind      := gcCheckBox;
+        CheckAlignment := taCenter;
+      end
+      else if F.Value.IsOrdinal then
+      begin
+        Alignment := taCenter;
+      end
+      else if F.Value.IsType<TDateTime> then
+      begin
+        Alignment := taCenter;
+      end;
+
+    end;
+  end;
+
+  FGridView.Rows.Count := FList.Count;
+  FGridView.OnDrawCell := FGridViewDrawCell;
+  FGridView.OnGetCellText := FGridViewGetCellText;
+  FGridView.OnGetCheckState := FGridViewGetCheckState;
+  FGridView.OnGetCellColors := FGridViewGetCellColors;
+  FGridView.AutoSizeCols;
 end;
 {$ENDREGION}
+
+procedure TfrmGridView.FGridViewGetCellColors(Sender: TObject; Cell: TGridCell;
+  Canvas: TCanvas);
+var
+  R  : TRecord;
+  GV : TGridView;
+  D  : Double;
+  V  : TValue;
+begin
+  R.From(FList[Cell.Row]);
+  GV := Sender as TGridView;
+  if Cell.Col > 0 then
+  begin
+    V := R.Items[Cell.Col].Value;
+    if not GV.IsCellHighlighted(Cell) then
+    begin
+     if V.IsOrdinal then
+     begin
+      Canvas.Font.Color := clGreen;
+      Canvas.Font.Style := [fsBold];
+     end
+     else if V.IsType<TDateTime> then
+     begin
+      Canvas.Font.Color := clBlue
+     end
+    end
+  end;
+end;
+
+procedure TfrmGridView.FGridViewDrawCell(Sender: TObject; Cell: TGridCell;
+  var Rect: TRect; var DefaultDrawing: Boolean);
+begin
+//
+end;
+
+procedure TfrmGridView.FGridViewGetCellText(Sender: TObject; Cell: TGridCell;
+  var Value: string);
+var
+  R: TRecord;
+begin
+  R.From(FList[Cell.Row]);
+
+
+
+
+  if not R.Items[Cell.Col].Value.IsType<Boolean> then
+    Value := R.Items[Cell.Col].Value.ToString;
+end;
+
+procedure TfrmGridView.FGridViewGetCheckState(Sender: TObject; Cell: TGridCell;
+  var CheckState: TCheckBoxState);
+var
+  GV : TGridView;
+  R  : TRecord;
+begin
+  R.From(FList[Cell.Row]);
+  if R.Items[Cell.Col].Value.AsBoolean then
+    CheckState := cbChecked
+  else
+    CheckState := cbUnchecked;
+end;
 
 end.
