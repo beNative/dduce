@@ -50,6 +50,13 @@
       versions.
     - Code ported to support unicode and later versions of Delphi.
     - Added theming support
+    - Removed following properties:
+          - Ctl3D
+          - ParentCtl3D
+    - Renamed property ThemeXPEnabled to ThemingEnabled
+    - Renamed property TCustomGridColumn.Title to HeaderSection
+    - Added property EditAlighnment to TGridColumn
+
 
   TODO:
     * Columns (or sections?) :
@@ -75,6 +82,12 @@
   KNOWN BUGS:
     * RETURN in edit mode on last cell resulted in unwanted saving of #13#10
       sequences.
+
+
+  TODO
+    - ColumnsFullDrag property does not work
+    - DefaultEditMenu property does not work
+
 }
 
 unit DDuce.Components.GridView;
@@ -93,7 +106,8 @@ type
   TBitmap = Vcl.Graphics.TBitmap;
 
 const
-  MaxColumnWidth = MaxInt div 2;
+  MAX_COLUMN_WIDTH = MaxInt div 2;
+
 type
   TGridHeaderSections = class;
   TCustomGridHeader   = class;
@@ -347,12 +361,6 @@ type
                         published property AutoHeight it is selected taking into
                         account the height pictures, 3D effect, the value of
                         property GridColor and the height of type.
-    Sections -          the list of subtitles.
-    Synchronized -      the sections of title are synchronized with the columns
-                        table.
-
-  Events:
-    OnChange -          Event to track property changes.
  }
 
   TCustomGridHeader = class(TPersistent)
@@ -459,6 +467,7 @@ type
     property SectionHeight: Integer
       read FSectionHeight write SetSectionHeight default 17;
 
+    { If enabled the header sections synchronized with the columns. }
     property Synchronized: Boolean
       read FSynchronized write SetSynchronized stored True;
   end;
@@ -507,7 +516,6 @@ type
                   line. If WantReturns is advanced in False, then the pressure
                   key ENTER in the line of introduction it will be been ignored, simovly
                   transfer they will be reflected as usual symbols.
-    WordWrap -    is permitted the automatic transfer of the words of the text of cell.
     ReadOnly  -   Specifies if the cells of this column can be edited.
     TabStop -     Determinates if it is possible to establish a cursor in this
                   column. (This behaviour can be overridden in the grid's
@@ -516,8 +524,8 @@ type
     Visible -     Toggles column visibility.
     Width -       The physical width of the column. If the column is set
                   invisible this property will return zero.
-    DefWidth -    The real width of column. It does not depend on the visibility
-                  of the column.
+    DefWidth -    The default width of column. It does not depend on the
+                  visibility of the column.
 }
 
   TGridEditWordWrap = (
@@ -558,7 +566,7 @@ type
     function GetGrid: TCustomGridView;
     function GetPickList: TStrings;
     function GetPickListCount: Integer;
-    function GetTitle: TGridHeaderSection;
+    function GetHeaderSection: TGridHeaderSection;
     function GetWidth: Integer;
     function IsPickListStored: Boolean;
     procedure SetAlignEdit(Value: Boolean);
@@ -659,8 +667,8 @@ type
     property Tag: Integer
       read FTag write FTag default 0;
 
-    property Title: TGridHeaderSection
-      read GetTitle;
+    property HeaderSection: TGridHeaderSection
+      read GetHeaderSection;
 
     property Visible: Boolean
       read FVisible write SetVisible default True;
@@ -685,10 +693,12 @@ type
     property CheckAlignment;
     property CheckKind;
     property DefWidth;
+    property EditAlignment;
     property EditMask;
     property EditStyle;
     property EditWordWrap;
     property FixedSize;
+    property HeaderSection;
     property MaxLength;
     property MaxWidth;
     property MinWidth;
@@ -703,20 +713,6 @@ type
   end;
 
 { TGridColumns }
-{
-  List of the columns of table.
-
-  Procedures:
-    Add -     Adds a new column.
-
-  Properties:
-    Columns - Column list.
-    Layout -  the line of the state of columns. The list of the numbers, divided contains
-              the comma, which determines visibility and width of each column.
-              Is suitable for retaining the apportionment of columns into the list or INI
-              file.
-    Grid -    reference to the table.
-}
 
   TGridColumns = class(TCollection)
   private
@@ -746,6 +742,8 @@ type
     property Grid: TCustomGridView
       read FGrid;
 
+    { A comma seperated list of column widths. The values are automatically
+      syncronized with the column properties }
     property Layout: string
       read GetLayout write SetLayout;
   end;
@@ -821,6 +819,7 @@ type
     property AutoHeight;
     property Count;
     property Height;
+    property OnChange;
   end;
 
 { TCustomGridFixed }
@@ -862,7 +861,9 @@ type
 
     function IsColorStored: Boolean;
     function IsFontStored: Boolean;
+
     procedure FontChange(Sender: TObject);
+
     procedure SetColor(Value: TColor);
     procedure SetFlat(Value: Boolean);
     procedure SetFont(Value: TFont);
@@ -1296,6 +1297,8 @@ type
   end;
 
 { TCustomGridView }
+
+{$REGION 'Documentation'}
 {
   Procedures:
     AcquireFocus -         the installation of focus to talitsu or line of introduction.
@@ -1877,6 +1880,7 @@ type
                            movement of cursor. If text does not start,
                            should be caused exception.
   }
+{$ENDREGION}
 
   TGridStyle = (
     gsHorzLine,
@@ -2218,7 +2222,7 @@ type
     FTextLeftIndent       : Integer;
     FTextRightIndent      : Integer;
     FTextTopIndent        : Integer;
-    FThemeXPEnabled       : Boolean;
+    FThemingEnabled       : Boolean;
     FTipsCell             : TGridCell;
     FTipsText             : string;
     FUpdateLock           : Integer;
@@ -2298,7 +2302,7 @@ type
     procedure SetTextRightIndent(Value: Integer);
     procedure SetTextTopIndent(Value: Integer);
     procedure SetTopRow(Value: Integer);
-    procedure SetThemeXPEnabled(const Value: Boolean);
+    procedure SetThemingEnabled(const Value: Boolean);
     procedure SetVertScrollBar(Value: TGridScrollBar);
     procedure SetVisOrigin(Value: TGridCell);
 
@@ -2484,7 +2488,11 @@ type
     function GetCellsRect(Cell1, Cell2: TGridCell): TRect;
     function GetColumnAt(X, Y: Integer): Integer; virtual;
     function GetColumnLeftRight(Column: Integer): TRect;
-    function GetColumnMaxWidth(Column: Integer; IncludeTitles: Boolean = False; OnlyVisibleRows: Boolean = True): Integer; virtual;
+    function GetColumnMaxWidth(
+      Column          : Integer;
+      IncludeTitles   : Boolean = False;
+      OnlyVisibleRows : Boolean = True
+    ) : Integer; virtual;
     function GetColumnRect(Column: Integer): TRect;
     function GetColumnsRect(Column1, Column2: Integer): TRect;
     function GetColumnsWidth(Column1, Column2: Integer): Integer;
@@ -2506,6 +2514,7 @@ type
     function GetRowsHeight(Row1, Row2: Integer): Integer;
     function GetRowTopBottom(Row: Integer): TRect;
     function GetSectionAt(X, Y: Integer): TGridHeaderSection;
+
     procedure Invalidate; override;
     procedure InvalidateCell(Cell: TGridCell);
     procedure InvalidateCheck(Cell: TGridCell);
@@ -2519,6 +2528,7 @@ type
     procedure InvalidateRect(Rect: TRect);
     procedure InvalidateRow(Row: Integer);
     procedure InvalidateRows(Row1, Row2: Integer);
+
     function IsActiveControl: Boolean;
     function IsCellAcceptCursor(Cell: TGridCell): Boolean; virtual;
     function IsCellHighlighted(Cell: TGridCell): Boolean; virtual;
@@ -2752,8 +2762,8 @@ type
     property TextTopIndent: Integer
       read FTextTopIndent write SetTextTopIndent default 2;
 
-    property ThemeXPEnabled: Boolean
-      read FThemeXPEnabled write SetThemeXPEnabled default True;
+    property ThemingEnabled: Boolean
+      read FThemingEnabled write SetThemingEnabled default True;
 
     property TipsCell: TGridCell
       read FTipsCell;
@@ -2963,7 +2973,6 @@ type
     property Columns;
     property ColumnsFullDrag;
     property Constraints;
-    property Ctl3D;
     property CursorKeys;
     property DefaultEditMenu;
     property DragCursor;
@@ -2987,7 +2996,6 @@ type
     property ImageHighlight;
     property Images;
     property ParentColor default False;
-    property ParentCtl3D;
     property ParentFont;
     property ParentShowHint;
     property PopupMenu;
@@ -3001,9 +3009,10 @@ type
     property ShowHint;
     property TabOrder;
     property TabStop default True;
-    property ThemeXPEnabled;
+    property ThemingEnabled;
     property VertScrollBar;
     property Visible;
+
     property OnAppendRow;
     property OnCellAcceptCursor;
     property OnCellClick;
@@ -4393,7 +4402,7 @@ begin
     Result := FPickList.Count;
 end;
 
-function TCustomGridColumn.GetTitle: TGridHeaderSection;
+function TCustomGridColumn.GetHeaderSection: TGridHeaderSection;
 begin
   Result := nil;
   if Grid <> nil then
@@ -4884,7 +4893,6 @@ begin
   if FFlat <> Value then
   begin
     FFlat := Value;
-    { correct 3D effect of title}
     if (not Value) and (Grid <> nil) then
       Grid.Header.Flat := False;
     Change;
@@ -6230,7 +6238,7 @@ begin
   Color                   := clWindow;
   ParentColor             := False;
   TabStop                 := True;
-  FThemeXPEnabled         := true;
+  FThemingEnabled         := true;
   FHorzScrollBar          := CreateScrollBar(sbHorizontal);
   FHorzScrollBar.OnScroll := HorzScroll;
   FHorzScrollBar.OnChange := HorzScrollChange;
@@ -6901,11 +6909,11 @@ begin
   end;
 end;
 
-procedure TCustomGridView.SetThemeXPEnabled(const Value: Boolean);
+procedure TCustomGridView.SetThemingEnabled(const Value: Boolean);
 begin
-  if Value = FThemeXPEnabled then
+  if Value = FThemingEnabled then
     Exit;
-  FThemeXPEnabled := Value;
+  FThemingEnabled := Value;
   Invalidate;
 end;
 
@@ -8778,7 +8786,7 @@ begin
         end;
       end;
     end;
-  if FThemeXPEnabled and StyleServices.Enabled then
+  if FThemingEnabled and StyleServices.Enabled then
   begin
     UpdateHotHeader(GetSectionAt(X, Y));
   end;
@@ -9539,7 +9547,7 @@ begin
   R.Left := GetClientRect.Left + Header.GetWidth + GetGridOrigin.X;
   if R.Left < R.Right then
   begin
-    if FThemeXPEnabled and StyleServices.Enabled then
+    if FThemingEnabled and StyleServices.Enabled then
     begin
       ThemedHeader := thHeaderItemRightNormal;
       Details := StyleServices.GetElementDetails(ThemedHeader);
@@ -9975,7 +9983,7 @@ begin
       FColResizeRect := BoundsRect;
       FColResizeRect.Bottom := GetClientRect.Bottom;
       FColResizeMinWidth := 0;
-      FColResizeMaxWidth := MaxColumnWidth;
+      FColResizeMaxWidth := MAX_COLUMN_WIDTH;
     end;
 
     FColResizeRect.Top := Level * Header.SectionHeight;
@@ -10425,7 +10433,7 @@ var
 begin
   DefRect := Rect;
   IsPressed := IsHeaderPressed(Section);
-  if FThemeXPEnabled and StyleServices.Enabled then
+  if FThemingEnabled and StyleServices.Enabled then
   begin
     if IsPressed then
       ThemedHeader := thHeaderItemPressed
@@ -10562,7 +10570,7 @@ begin
       end;
     end;
   end;
-  if not FThemeXPEnabled or not StyleServices.Enabled then
+  if not FThemingEnabled or not StyleServices.Enabled then
   { draw separator}
   with Canvas do
   begin
