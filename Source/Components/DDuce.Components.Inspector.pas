@@ -134,7 +134,6 @@ type
     property CategoryFont;
     property Color default clBtnFace;
     property Constraints;
-    property Ctl3D;
     property ColumnsFullDrag default True;
     property DoubleBuffered default True;
     property Enabled;
@@ -143,7 +142,6 @@ type
     property Font;
     property NameFont;
     property ParentColor default False;
-    property ParentCtl3D;
     property ParentFont;
     property ParentShowHint;
     property PopupMenu;
@@ -154,6 +152,7 @@ type
     property TabStop default True;
     property ValueFont;
     property Visible;
+
     property OnCellClick;
     property OnChange;
     property OnChanging;
