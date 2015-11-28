@@ -131,7 +131,6 @@ procedure TfrmGridView.FGridViewGetCellColors(Sender: TObject; Cell: TGridCell;
 var
   R  : TRecord;
   GV : TGridView;
-  D  : Double;
   V  : TValue;
 begin
   R.From(FList[Cell.Row]);
@@ -167,9 +166,6 @@ var
 begin
   R.From(FList[Cell.Row]);
 
-
-
-
   if not R.Items[Cell.Col].Value.IsType<Boolean> then
     Value := R.Items[Cell.Col].Value.ToString;
 end;
@@ -177,7 +173,6 @@ end;
 procedure TfrmGridView.FGridViewGetCheckState(Sender: TObject; Cell: TGridCell;
   var CheckState: TCheckBoxState);
 var
-  GV : TGridView;
   R  : TRecord;
 begin
   R.From(FList[Cell.Row]);
