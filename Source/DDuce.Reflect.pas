@@ -228,7 +228,7 @@ var
   TI : PTypeInfo;
 begin
   TI := TypeInfo(T);
-  Result := TI.Name;
+  Result := string(TI.Name);
 end;
 
 class function Reflect.EnumNamesFromSet<T>(const AArg: T): string;

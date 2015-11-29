@@ -73,14 +73,12 @@ begin
   inherited SetUp;
   FTestObject := TTestUtils.CreateTestObject;
   FTestRecord := TTestUtils.CreateTestRecord;
-//
 end;
 
 procedure TestReflect.TearDown;
 begin
   inherited TearDown;
   FTestObject.Free;
-//
 end;
 {$ENDREGION}
 
@@ -218,6 +216,5 @@ begin
   CheckEqualsString('Variant', Reflect.TypeName(T));
 end;
 {$ENDREGION}
-
 
 end.

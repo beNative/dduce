@@ -158,8 +158,14 @@ begin
 end;
 
 procedure TfrmLogger.actSendObjectExecute(Sender: TObject);
+var
+  SL : TStringList;
 begin
-  Logger.Send('Self', Self);
+  SL := TStringList.Create;
+  SL.Add('Line 1');
+  SL.Add('Line 2');
+  Logger.Send('SL', SL);
+  SL.Free;
 end;
 
 procedure TfrmLogger.actAddCheckpointExecute(Sender: TObject);

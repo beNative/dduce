@@ -363,8 +363,6 @@ begin
 end;
 
 procedure TestGenericTRecord.Test_Assign_method_for_generic_argument;
-var
-  F : IDynamicField;
 begin
   FRecord.Assign(FObject);
   CheckEquals(FObject.TestInteger, FRecord.Data.TestInteger);

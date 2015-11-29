@@ -300,12 +300,10 @@ begin
     while not DS.Eof do
     begin
       R.FromDataSet(DS);
-      {$IFDEF SPRING}
       for F in R do
       begin
         CheckTrue(F.Value.Equals(TValue.FromVariant(DS[F.Name])));
       end;
-      {$ENDIF}
       Status(R.ToString);
       DS.Next;
     end;
@@ -339,12 +337,10 @@ var
   F : IDynamicField;
 begin
   R.Assign(FDynamicRecord);
-  {$IFDEF SPRING}
   for F in R do
   begin
     CheckTrue(FDynamicRecord[F.Name].Equals(F.Value));
   end;
-  {$ENDIF}
   CheckEquals(FDynamicRecord.Data.TestBoolean, R[TEST_BOOLEAN].AsBoolean, TEST_BOOLEAN);
   CheckEquals(FDynamicRecord.Data.TestInteger, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
   CheckEquals(FDynamicRecord.Data.TestString, R[TEST_STRING].AsString, TEST_STRING);
@@ -356,12 +352,10 @@ var
   F : IDynamicField;
 begin
   R.Assign(FRecord);
-  {$IFDEF SPRING}
   for F in R do
   begin
     CheckTrue(FRecord[F.Name].Equals(F.Value));
   end;
-  {$ENDIF}
   CheckEquals(FRecord.Data.TestBoolean, R[TEST_BOOLEAN].AsBoolean, TEST_BOOLEAN);
   CheckEquals(FRecord.Data.TestInteger, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
   CheckEquals(FRecord.Data.TestString, R[TEST_STRING].AsString, TEST_STRING);

@@ -214,18 +214,18 @@ type
     procedure Send(const AName: string; AArgs: array of const); overload;
     procedure Send(const AName: string; const AValue: string = ''); overload;
 
-    //procedure Send(const AName: string; const AValue: TPoint); overload;
     procedure Send(const AName: string; AValue: TStrings); overload;
 
     { All primary types that are are implicitely ba cast to TValue will be
       handled through this call. }
     procedure Send(const AName: string; AValue: TValue); overload;
 
-    // Send methods for types that do not have an implicit cast to TValue
-    // These are equivalent to Send(AName, TValue.From(AValue));
+    { Send methods for types that do not have an implicit cast to TValue
+      These are equivalent to Send(AName, TValue.From(AValue)); }
     procedure SendDateTime(const AName: string; AValue: TDateTime);
     procedure SendDate(const AName: string; AValue: TDate);
     procedure SendTime(const AName: string; AValue: TTime);
+    { Send methods for types that need a custom representation. }
     procedure SendRect(const AName: string; const AValue: TRect);
 
     procedure IncCounter(const AName: string);
@@ -284,7 +284,6 @@ type
 
     // Helper functions
     function RectToStr(const ARect: TRect): string;
-    function PointToStr(const APoint: TPoint): string;
 
   strict protected
     procedure InternalSend(
@@ -311,7 +310,6 @@ type
     procedure Send(const AName: string; AArgs: array of const); overload;
     procedure Send(const AName: string; const AValue: string = ''); overload;
 
-    procedure Send(const AName: string; const AValue: TPoint); overload;
     procedure Send(const AName: string; AValue: TStrings); overload;
     procedure Send(const AName: string; AValue: TObject); overload;
 
@@ -402,7 +400,7 @@ uses
   WinApi.Messages,
   Vcl.Forms,
 
-  DDuce.Reflect, Test.Utils;
+  DDuce.Reflect;
 
 resourcestring
   SErrServerNotActive = 'Server with ID %s is not active.';
@@ -479,11 +477,6 @@ begin
   Result := Format('(Left: %d; Top: %d; Right: %d; Bottom: %d)',
     [ARect.Left, ARect.Top, ARect.Right, ARect.Bottom]);
 end;
-
-function TLogger.PointToStr(const APoint: TPoint): string;
-begin
-  Result := Format('(X: %d; Y: %d)', [APoint.X, APoint.Y]);
-end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
@@ -555,11 +548,6 @@ end;
 procedure TLogger.SendRect(const AName: string; const AValue: TRect);
 begin
   InternalSend(lmtValue, AName + ' = ' + RectToStr(AValue));
-end;
-
-procedure TLogger.Send(const AName: string; const AValue: TPoint);
-begin
-  InternalSend(lmtValue, AName + ' = ' + PointToStr(AValue));
 end;
 
 procedure TLogger.Send(const AName: string; AValue: TStrings);
@@ -648,9 +636,7 @@ begin
     tkInt64:
       InternalSend(lmtValue, AName + ' = ' + IntToStr(AValue.AsInt64));
     tkRecord:
-      //InternalSend(lmtValue, AName + ' = ' +   );
       InternalSend(lmtValue, AName + ' = ' + Reflect.Fields(AValue).ToString);
-
   else
     InternalSend(lmtValue, AName + ' = ' + AValue.ToString);
   end;

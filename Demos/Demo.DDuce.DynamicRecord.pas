@@ -539,9 +539,9 @@ procedure TfrmDynamicRecords.actCustomTestExecute(Sender: TObject);
 var
   R  : TRecord;
   Rg : TRecord<TContact>;
-  Rn : TRecord;
-  F : IDynamicField;
-  O : TContact;
+  //Rn : TRecord;
+  //F : IDynamicField;
+  //O : TContact;
 begin
   CreateContact;
   R.From(FContact);

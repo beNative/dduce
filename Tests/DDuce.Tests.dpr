@@ -33,7 +33,8 @@ uses
   DDuce.Logger in '..\Source\DDuce.Logger.pas',
   DDuce.RandomData in '..\Source\DDuce.RandomData.pas',
   DDuce.Reflect in '..\Source\DDuce.Reflect.pas',
-  DDuce.ScopedReference in '..\Source\DDuce.ScopedReference.pas';
+  DDuce.ScopedReference in '..\Source\DDuce.ScopedReference.pas',
+  Test.DDuce.Logger in 'Test.DDuce.Logger.pas';
 
 {$R *.RES}
 
