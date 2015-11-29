@@ -28,13 +28,14 @@ uses
   TestFramework,
 
   Test.DDuce.DynamicRecord, Test.DDuce.DynamicRecord.Generic,
-  Test.DDuce.Reflect;
+  Test.DDuce.Reflect, Test.DDuce.Logger;
 
 procedure RegisterTests;
 begin
   RegisterTest('TRecord', TestTRecord.Suite);
   RegisterTest('TRecord<T>', TestGenericTRecord.Suite);
   RegisterTest('Reflect', TestReflect.Suite);
+  RegisterTest('Logger', TestLogger.Suite);
 end;
 
 end.
