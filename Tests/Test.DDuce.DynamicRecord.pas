@@ -31,9 +31,7 @@ uses
 
   DDuce.DynamicRecord, DDuce.RandomData,
 
-  {$IFDEF SPRING}
   Spring,
-  {$ENDIF}
 
   TestFramework, // DUnit
 
