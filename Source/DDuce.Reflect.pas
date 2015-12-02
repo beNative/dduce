@@ -19,12 +19,10 @@ unit DDuce.Reflect;
 {$I DDuce.inc}
 
 {
-  Reflect provides some static routines to expose the contents of a type
-  using the RTTI.
-  As the compiler features type inferience, the generic parameters can be
-  omitted when calling these methods.
-
-
+  Reflect provides some static routines to expose the contents and type
+  information of a type using the extended RTTI.
+  As the compiler features type inference for arguments passed by value, the
+  generic parameters can be omitted when calling these methods.
 }
 
 interface
@@ -161,8 +159,6 @@ class function Reflect.EnumName<T>(const AArg: T): string;
 begin
   Result := GetEnumName(TypeInfo(T), OrdValue(AArg));
 end;
-
-// fields are read-only for the moment.
 
 { Returns a copy of the fields of the given instance (record or object). }
 

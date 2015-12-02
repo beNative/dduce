@@ -47,13 +47,13 @@ type
     procedure Test_TypeName_method_for_Single_argument;
     procedure Test_TypeName_method_for_Double_argument;
     procedure Test_TypeName_method_for_Variant_argument;
-
     procedure Test_TypeName_method_for_Extended_argument;
     procedure Test_TypeName_method_for_string_argument;
 
     procedure Test_Fields_method_for_class_argument;
     procedure Test_Fields_method_for_record_argument;
     procedure Test_Fields_method_for_TValue_argument;
+
     procedure Test_Properties_method_for_class_argument;
 
   end;
@@ -82,7 +82,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION 'TypeName method'}
+{$REGION 'Test Fields method'}
 procedure TestReflect.Test_Fields_method_for_class_argument;
 var
   DR : IDynamicRecord;
@@ -123,7 +123,9 @@ begin
   CheckEquals(FTestRecord.TestDouble, DR['FTestDouble'].AsExtended);
   CheckEquals(FTestRecord.TestInteger, DR['FTestInteger'].AsInteger);
 end;
+{$ENDREGION}
 
+{$REGION 'Test Properties method'}
 procedure TestReflect.Test_Properties_method_for_class_argument;
 var
   DR : IDynamicRecord;
@@ -143,7 +145,9 @@ begin
   CheckEquals(FTestObject.TestDouble, DR.Data.TestDouble);
   CheckEquals(FTestObject.TestInteger, DR.Data.TestInteger);
 end;
+{$ENDREGION}
 
+{$REGION 'TypeName method'}
 procedure TestReflect.Test_TypeName_method_for_Boolean_argument;
 var
   T : Boolean;

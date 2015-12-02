@@ -83,7 +83,7 @@ begin
 
 end;
 
-{$REGION 'Tests for method Send'}
+{$REGION 'Test Send method'}
 procedure TestLogger.Test_Send_method;
 var
   T : TPoint;
@@ -198,6 +198,7 @@ begin
 end;
 {$ENDREGION}
 
+{$REGION 'Test custom Send methods'}
 procedure TestLogger.Test_SendDateTime_method;
 var
   T : TDateTime;
@@ -230,5 +231,6 @@ begin
   T := Now;
   Logger.SendTime(Reflect.TypeName(T), T);
 end;
+{$ENDREGION}
 
 end.
