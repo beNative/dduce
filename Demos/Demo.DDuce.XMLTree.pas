@@ -59,17 +59,29 @@ type
 
     procedure InitializeTree;
 
-    procedure XMLTreeEditing(Sender: TBaseVirtualTree; Node: PVirtualNode;
-      Column: TColumnIndex; var Allowed: Boolean);
-    procedure XMLTreePaintText(Sender: TBaseVirtualTree;
-      const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
-      TextType: TVSTTextType);
-    procedure XMLTreeColumnClick(Sender: TBaseVirtualTree; Column: TColumnIndex;
-      Shift: TShiftState);
-    procedure XMLTreeColumnDblClick(Sender: TBaseVirtualTree;
-      Column: TColumnIndex; Shift: TShiftState);
-    procedure XMLTreeEdited(Sender: TBaseVirtualTree; Node: PVirtualNode;
-      Column: TColumnIndex);
+    procedure XMLTreeEditing(
+      Sender      : TBaseVirtualTree;
+      Node        : PVirtualNode;
+      Column      : TColumnIndex;
+      var Allowed : Boolean
+    );
+    procedure XMLTreePaintText(
+      Sender             : TBaseVirtualTree;
+      const TargetCanvas : TCanvas;
+      Node               : PVirtualNode;
+      Column             : TColumnIndex;
+      TextType           : TVSTTextType
+    );
+    procedure XMLTreeColumnDblClick(
+      Sender : TBaseVirtualTree;
+      Column : TColumnIndex;
+      Shift  : TShiftState
+    );
+    procedure XMLTreeEdited(
+      Sender : TBaseVirtualTree;
+      Node   : PVirtualNode;
+      Column : TColumnIndex
+    );
 
   protected
     procedure UpdateActions; override;
@@ -280,16 +292,14 @@ end;
 {$ENDREGION}
 
 {$REGION 'event handlers'}
-procedure TfrmXMLTree.XMLTreeColumnClick(Sender: TBaseVirtualTree;
-  Column: TColumnIndex; Shift: TShiftState);
-begin
-  //Sender.EditNode(Sender.GetFirstSelected , Column);
-end;
-
 procedure TfrmXMLTree.XMLTreeColumnDblClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
+var
+  N : PVirtualNode;
 begin
-  Sender.EditNode(Sender.GetFirstSelected , Column);
+  N := Sender.GetFirstSelected;
+  if Assigned(N) then
+    Sender.EditNode(N, Column);
 end;
 
 procedure TfrmXMLTree.XMLTreeEdited(Sender: TBaseVirtualTree;
@@ -341,7 +351,6 @@ begin
   end;
   FXMLTree.OnEditing        := XMLTreeEditing;
   FXMLTree.OnPaintText      := XMLTreePaintText;
-  FXMLTree.OnColumnClick    := XMLTreeColumnClick;
   FXMLTree.OnColumnDblClick := XMLTreeColumnDblClick;
   FXMLTree.OnEdited         := XMLTreeEdited;
   FXMLTree.LineMode := lmBands;
@@ -369,10 +378,8 @@ begin
     toShowRoot,
     toShowTreeLines,
     toShowVertGridLines,
-//    toThemeAware,
     toUseBlendedImages,
     toUseBlendedSelection
-//    toUseExplorerTheme   // required to show triangle buttons
   ];
   FXMLTree.TreeOptions.AutoOptions := [
     toAutoSpanColumns
@@ -395,4 +402,3 @@ end;
 {$ENDREGION}
 
 end.
-
