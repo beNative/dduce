@@ -96,7 +96,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Demo.Factories;
+  DDuce.Components.Factories;
 
 {$REGION 'XML string'}
 const
@@ -275,7 +275,7 @@ begin
   FXML := XML_STRING;
   mmoXML.Text := FXML;
   InitializeTree;
-  FPI := TDemoFactories.CreatePropertyInspector(Self, pnlInspector, FXMLTree);
+  FPI := TDDuceComponents.CreatePropertyInspector(Self, pnlInspector, FXMLTree);
 end;
 {$ENDREGION}
 

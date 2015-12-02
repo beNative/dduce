@@ -122,6 +122,8 @@ implementation
 {$R *.dfm}
 
 uses
+  DDuce.Components.Factories,
+
   Demo.Factories, Demo.Data;
 
 {$REGION 'construction and destruction'}
@@ -129,7 +131,7 @@ procedure TfrmInspector.AfterConstruction;
 begin
   inherited AfterConstruction;
   FDataSet := TDemoFactories.CreateContactDataSet(Self, 10000);
-  FInspector := TDemoFactories.CreateInspector(Self, pnlInspector);
+  FInspector := TDDuceComponents.CreateInspector(Self, pnlInspector);
   FInspector.OnGetCellText       := FInspectorGetCellText;
   FInspector.OnSetEditText       := FInspectorSetEditText;
   FInspector.OnGetCellReadOnly   := FInspectorGetCellReadOnly;
@@ -141,7 +143,7 @@ begin
   FInspector.OnCheckClick        := FInspectorCheckClick;
   FInspector.OnEditCanShow       := FInspectorEditCanShow;
   FPropertyInspector :=
-    TDemoFactories.CreatePropertyInspector(Self, pnlLeft, FInspector);
+    TDDuceComponents.CreatePropertyInspector(Self, pnlLeft, FInspector);
   dscMain.DataSet := FDataSet;
 end;
 {$ENDREGION}

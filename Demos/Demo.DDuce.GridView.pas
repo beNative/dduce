@@ -78,20 +78,22 @@ implementation
 {$R *.dfm}
 
 uses
-  Demo.Factories, Spring.Helpers,
+  Spring.Helpers,
 
-  DDuce.RandomData, DDuce.DynamicRecord;
+  DDuce.RandomData, DDuce.DynamicRecord, DDuce.Components.Factories,
+
+  Demo.Factories;
 
 {$REGION 'construction and destruction'}
 procedure TfrmGridView.AfterConstruction;
 var
-  R: TRecord;
+  R : TRecord;
   F : IDynamicField;
 begin
   inherited AfterConstruction;
-  FGridView := TDemoFactories.CreateGridView(Self, pnlRight);
+  FGridView := TDDuceComponents.CreateGridView(Self, pnlRight);
   FPropertyInspector :=
-    TDemoFactories.CreatePropertyInspector(Self, pnlLeft, FGridView);
+    TDDuceComponents.CreatePropertyInspector(Self, pnlLeft, FGridView);
   FList := TDemoFactories.CreateContactList(1000);
   R.From(FList[0]);
 

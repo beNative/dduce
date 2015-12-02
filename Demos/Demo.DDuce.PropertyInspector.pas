@@ -58,7 +58,9 @@ type
 implementation
 
 uses
-  Demo.Factories, Demo.Data;
+  DDuce.Components.Factories,
+
+  Demo.Data;
 
 {$R *.dfm}
 
@@ -76,7 +78,7 @@ begin
     with bgMain.Items.Add do
       ImageIndex := I;
 
-  FPropertyInspector := TDemoFactories.CreatePropertyInspector(
+  FPropertyInspector := TDDuceComponents.CreatePropertyInspector(
     Self,
     pnlLeft,
     bgMain
