@@ -12,3 +12,9 @@ __history
 /Source/Components/__recovery
 /Source/__recovery
 /Library/Win32/Debug
+/Demos/FastMM_FullDebugMode.dll
+/Demos/Win32/Debug/DDuce.Demos_MemoryManager_EventLog.txt
+/Demos/Win32/Debug/FastMM_FullDebugMode.dll
+/FastMM_FullDebugMode.dll
+/Packages/jedi.inc
+/Tests/DDuce.Tests.exe
