@@ -3221,7 +3221,6 @@ const
 function WinPosToScrollPos(WinPos, ScrollMin, ScrollMax: Integer): Integer;
 function ScrollPosToWinPos(ScrollPos, ScrollMin, ScrollMax: Integer): Integer;
 
-procedure PaintResizeRectDC(DC: HDC; Rect: TRect);
 function GetFontWidth(Font: TFont; TextLength: Integer): Integer;
 
 procedure FillDWord(var Dest; Count, Value: Integer); register;
@@ -3237,43 +3236,6 @@ uses
 type
   PIntArray = ^TIntArray;
   TIntArray = array[0..MaxInt div 16 - 1] of Integer;
-var
-  FPatternBitmap: Vcl.Graphics.TBitmap;
-
-function PatternBitmap: Vcl.Graphics.TBitmap;
-const
-  C: array[Boolean] of TColor = (clBlack, clWhite);
-var
-  X, Y: Integer;
-begin
-  if not Assigned(FPatternBitmap) then
-  begin
-    FPatternBitmap :=  Vcl.Graphics.TBitmap.Create;
-    with FPatternBitmap do
-    begin
-      Monochrome := TRUE;
-      Width := 8;
-      Height := 8;
-      for X := 0 to 7 do
-        for Y := 0 to 7 do
-          Canvas.Pixels[X, Y] := C[(X and 1) <> (Y and 1)];
-    end;
-  end;
-  Result := FPatternBitmap;
-end;
-
-procedure PaintResizeRectDC(DC: HDC; Rect: TRect);
-var
-  NewBrush, OldBrush: HBRUSH;
-begin
-  NewBrush := CreatePatternBrush(PatternBitmap.Handle);
-  UnrealizeObject(NewBrush);
-  SetBrushOrgEx(DC, 0, 0, nil);
-  OldBrush := SelectObject(DC, NewBrush);
-  with Rect do
-    PatBlt(DC, Left, Top, Right - Left, Bottom - Top, PATINVERT);
-  DeleteObject(SelectObject(DC, OldBrush));
-end;
 
 function CasePos(Substr: string; S: string; MatchCase: Boolean): Integer;
 begin

@@ -1693,7 +1693,7 @@ begin
         1 + (12 + Ident) * Ord(ACol = 0),
         1,
         S
-        );
+      );
       if ExpandButton and (ACol = 0) then
         _DrawExpandButton(2 + Ident, 3, Expanded);
 
@@ -1701,23 +1701,34 @@ begin
       begin
         { Splitter }
         Pen.Color := clBtnShadow;
-        Polyline([Point(FCellBitmap.Width - 2, 0), Point(FCellBitmap.Width - 2,
-          FCellBitmap.Height)]);
+        Polyline([
+          Point(FCellBitmap.Width - 2, 0),
+          Point(FCellBitmap.Width - 2,
+          FCellBitmap.Height
+        )]);
         Pen.Color := clBtnHighlight;
-        Polyline([Point(FCellBitmap.Width - 1, 0), Point(FCellBitmap.Width - 1,
-          FCellBitmap.Height)]);
+        Polyline([
+          Point(FCellBitmap.Width - 1, 0),
+          Point(FCellBitmap.Width - 1,
+          FCellBitmap.Height)]
+        );
       end;
       if ARow = Row - 1 then
       begin
         Pen.Color := cl3DDkShadow;
-        Polyline([Point(0, FCellBitmap.Height - 2), Point(FCellBitmap.Width,
-          FCellBitmap.Height - 2)]);
+        Polyline([
+          Point(0, FCellBitmap.Height - 2),
+          Point(FCellBitmap.Width,
+          FCellBitmap.Height - 2)
+        ]);
         Pen.Color := clBtnShadow;
-        Polyline([Point(0, FCellBitmap.Height - 1), Point(FCellBitmap.Width,
-          FCellBitmap.Height - 1)]);
+        Polyline([
+          Point(0, FCellBitmap.Height - 1),
+          Point(FCellBitmap.Width,
+          FCellBitmap.Height - 1)
+        ]);
       end
-      else
-        if ARow = Row then
+      else if ARow = Row then
       begin
         if ACol = 0 then
         begin
@@ -1727,19 +1738,28 @@ begin
           Polyline([Point(1, 0), Point(1, FCellBitmap.Height)]);
         end;
         Pen.Color := clBtnHighlight;
-        Polyline([Point(0, FCellBitmap.Height - 2), Point(FCellBitmap.Width,
-          FCellBitmap.Height - 2)]);
+        Polyline([
+          Point(0, FCellBitmap.Height - 2),
+          Point(FCellBitmap.Width,
+          FCellBitmap.Height - 2)
+        ]);
         Pen.Color := cl3DLight;
-        Polyline([Point(0, FCellBitmap.Height - 1), Point(FCellBitmap.Width,
-          FCellBitmap.Height - 1)]);
+        Polyline([
+          Point(0, FCellBitmap.Height - 1),
+          Point(FCellBitmap.Width,
+          FCellBitmap.Height - 1)
+        ]);
       end
       else
       begin
         { Row line }
         if FBitmapBkColor <> Color then
           UpdatePattern;
-        Winapi.Windows.FillRect(Handle, Rect(0, FCellBitmap.Height - 1,
-          FCellBitmap.Width, FCellBitmap.Height), FBrush);
+        Winapi.Windows.FillRect(
+          Handle,
+          Rect(0, FCellBitmap.Height - 1, FCellBitmap.Width, FCellBitmap.Height),
+          FBrush
+        );
       end;
     end;
     Canvas.Draw(ARect.Left, ARect.Top, FCellBitmap);
@@ -1748,11 +1768,15 @@ begin
     with Canvas do
     begin
       Pen.Color := clBtnHighlight;
-      Polyline([Point(ARect.Left, ARect.Bottom - 2), Point(ARect.Right,
-        ARect.Bottom - 2)]);
+      Polyline([
+        Point(ARect.Left, ARect.Bottom - 2),
+        Point(ARect.Right, ARect.Bottom - 2)
+      ]);
       Pen.Color := cl3DLight;
-      Polyline([Point(ARect.Left, ARect.Bottom - 1), Point(ARect.Right,
-        ARect.Bottom - 1)]);
+      Polyline([
+        Point(ARect.Left, ARect.Bottom - 1),
+        Point(ARect.Right, ARect.Bottom - 1)
+      ]);
     end;
 end;
 
@@ -1771,7 +1795,7 @@ end;
 
 procedure TCustomPropsPage.Paint;
 begin
-  inherited;
+  inherited Paint;
   DrawCell(Col, Row, CellRect(Col, Row), []);
 end;
 
@@ -1793,7 +1817,7 @@ end;
 
 procedure TCustomPropsPage.CreateHandle;
 begin
-  inherited;
+  inherited CreateHandle;
   UpdateScrollBar;
   ShowEditor;
   UpdateColWidths;
@@ -1816,7 +1840,7 @@ var
 begin
   if not (ppsMovingSplitter in FState) then
   begin
-    inherited;
+    inherited MouseMove(Shift, X, Y);
     if MouseCapture then
     begin
       LGridCoord := MouseCoord(X, Y);
@@ -1861,7 +1885,7 @@ begin
     end
     else
     begin
-      inherited;
+      inherited MouseDown(Button, Shift, X, Y);
       InvalidateEditor;
       LGridCoord := MouseCoord(X, Y);
       if (LGridCoord.X = 0) and (LGridCoord.Y <> -1) then
@@ -1897,7 +1921,7 @@ begin
         LForm.Designer.Modified;
     end
     else
-      inherited;
+      inherited MouseUp(Button, Shift, X, Y);
   Exclude(FState, ppsMovingSplitter);
 end;
 
