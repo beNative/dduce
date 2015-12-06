@@ -135,26 +135,26 @@ end;
 
 procedure TfrmLogger.actEnterMethod1Execute(Sender: TObject);
 begin
-  Logger.EnterMethod('Method1');
+  Logger.Enter('Method1');
   FM1Entered := True;
 end;
 
 procedure TfrmLogger.actEnterMethod2Execute(Sender: TObject);
 begin
-  Logger.EnterMethod('Method2');
+  Logger.Enter('Method2');
   FM2Entered := True;
 end;
 
 procedure TfrmLogger.actExitMethod1Execute(Sender: TObject);
 begin
   FM1Entered := False;
-  Logger.ExitMethod('Method1');
+  Logger.Leave('Method1');
 end;
 
 procedure TfrmLogger.actExitMethod2Execute(Sender: TObject);
 begin
   FM2Entered := False;
-  Logger.ExitMethod('Method2');
+  Logger.Leave('Method2');
 end;
 
 procedure TfrmLogger.actSendObjectExecute(Sender: TObject);

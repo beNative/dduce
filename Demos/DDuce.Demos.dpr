@@ -62,7 +62,9 @@ uses
   sdStringTable in '..\Source\Dependencies\NativeXml\sdStringTable.pas',
   DDuce.Logging.Appenders.LogTree in '..\Source\Logging\DDuce.Logging.Appenders.LogTree.pas',
   DDuce.Logging.Appenders.WinIPC in '..\Source\Logging\DDuce.Logging.Appenders.WinIPC.pas',
-  DDuce.Components.Factories in '..\Source\Components\DDuce.Components.Factories.pas';
+  DDuce.Components.Factories in '..\Source\Components\DDuce.Components.Factories.pas',
+  DDuce.Forms.ComponentInspector in '..\Source\Forms\DDuce.Forms.ComponentInspector.pas' {frmComponentInspector},
+  DDuce.Forms.RTTEye in '..\Source\Forms\DDuce.Forms.RTTEye.pas' {frmRTTEye};
 
 {$R *.res}
 
