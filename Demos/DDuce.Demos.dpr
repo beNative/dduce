@@ -1,6 +1,7 @@
 program DDuce.Demos;
 
 uses
+  FastMM4,
   Vcl.Forms,
   Vcl.Themes,
   Vcl.Styles,
