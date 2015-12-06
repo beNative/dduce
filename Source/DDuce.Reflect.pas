@@ -52,7 +52,7 @@ type
     class function Fields<T>(const AArg: T): IDynamicRecord; overload; static;
 
     class function Properties(const AArg: TValue): IDynamicRecord; overload; static;
-    class function Properties<T: class, constructor>(const AArg: T)
+    class function Properties<T{: class, constructor}>(const AArg: T)
       : IDynamicRecord; overload; static;
   end;
 

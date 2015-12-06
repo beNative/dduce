@@ -11,3 +11,4 @@ __history
 *.log
 /Source/Components/__recovery
 /Source/__recovery
+/Library/Win32/Debug

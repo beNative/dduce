@@ -53,7 +53,7 @@ type
     class function CreatePropertyInspector(
       AOwner  : TComponent;
       AParent : TWinControl;
-      AObject : TPersistent = nil
+      AObject : TObject = nil
     ): TPropertyInspector; static;
 
     class function CreateLogTree(
@@ -152,7 +152,7 @@ begin
 end;
 
 class function TDDuceComponents.CreatePropertyInspector(AOwner: TComponent;
-  AParent: TWinControl; AObject: TPersistent): TPropertyInspector;
+  AParent: TWinControl; AObject: TObject): TPropertyInspector;
 var
   PI : TPropertyInspector;
 begin

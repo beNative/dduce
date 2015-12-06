@@ -857,7 +857,7 @@ procedure TLogger.Leave(ASender: TObject; const AName: string);
 var
   I: Integer;
 begin
-  // ensure that ExitMethod will be called allways if there's a unpaired Entermethod
+  // ensure that Leave will be called allways if there's a unpaired Enter
   // even if Classes is not Active
   if FLogStack.Count = 0 then
     Exit;
