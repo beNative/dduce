@@ -2471,6 +2471,7 @@ type
     function LimitColumnWidth(ACol, AWidth: Integer): Integer;
 
   public
+    class constructor Create;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
@@ -6190,17 +6191,25 @@ end;
 
 { TCustomGridView }
 
+{  Initializes support for VCL styles.  }
+class constructor TCustomGridView.Create;
+begin
+  TCustomStyleEngine.RegisterStyleHook(
+    TCustomGridView,
+    TGridViewVclStyleScrollBarsHook
+  );
+end;
+
 constructor TCustomGridView.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-//  TCustomStyleEngine.RegisterStyleHook(TCustomGridView, TGridViewVclStyleScrollBarsHook);
   ControlStyle := ControlStyle + [csOpaque, csNeedsBorderPaint];
   Width                   := 185;
   Height                  := 105;
   Color                   := clWindow;
   ParentColor             := False;
   TabStop                 := True;
-  FThemingEnabled         := true;
+  FThemingEnabled         := True;
   FHorzScrollBar          := CreateScrollBar(sbHorizontal);
   FHorzScrollBar.OnScroll := HorzScroll;
   FHorzScrollBar.OnChange := HorzScrollChange;
@@ -6873,10 +6882,11 @@ end;
 
 procedure TCustomGridView.SetThemingEnabled(const Value: Boolean);
 begin
-  if Value = FThemingEnabled then
-    Exit;
-  FThemingEnabled := Value;
-  Invalidate;
+  if Value <> ThemingEnabled then
+  begin
+    FThemingEnabled := Value;
+    Invalidate;
+  end;
 end;
 
 procedure TCustomGridView.VertScroll(Sender: TObject; ScrollCode: Integer;
@@ -8569,13 +8579,11 @@ end;
 procedure TCustomGridView.Loaded;
 begin
   inherited Loaded;
-  { correct the parameters}
   UpdateFixed;
   UpdateHeader;
   UpdateColors;
   UpdateFonts;
   UpdateEdit(AlwaysEdit);
-  { search for the first cell of focus}
   FCellSelected := AlwaysSelected;
   UpdateCursor;
 end;
@@ -8588,24 +8596,19 @@ var
   C, P: TGridCell;
   AllowClicking: Boolean;
 begin
-  { establish focus on itself}
   if not AcquireFocus then
   begin
     MouseCapture := False;
     Exit;
   end;
-  { check for title clicks }
   if Button = mbLeft then
-    { if title is visible and clicked }
     if ShowHeader and PtInRect(GetHeaderRect, Point(X, Y)) then
     begin
-      { if clicked on the right/left header sections }
       S := GetResizeSectionAt(X, Y);
       if S <> nil then
       begin
         if ssDouble in Shift then
         begin
-          { establish the width of column to the equal maximum width of text }
           I := S.ResizeColumnIndex;
           if I < Columns.Count then
           begin
@@ -8621,13 +8624,10 @@ begin
           end;
         end
         else
-          { begin a change in the size}
           StartColResize(S, X, Y);
       end
-      {flick in the section - only single}
       else if not (ssDouble in Shift) then
       begin
-        {burn by mouse on title}
         S := GetSectionAt(X, Y);
         if S <> nil then
         begin
@@ -8637,12 +8637,9 @@ begin
             StartHeaderClick(S, X, Y);
         end;
       end;
-      {they clicked to the title - we do not release further}
       Exit;
     end;
-  { check the new chosen cell}
   if (Button = mbLeft) or ((Button = mbRight) and RightClickSelect) then
-    {if we possible separate by mouse burn on cells}
     if (gkMouse in CursorKeys) and (PtInRect(GetGridRect, Point(X, Y))) then
     begin
       if RowSelect and (gsFullRowPaint in GridStyle) then
@@ -8651,58 +8648,43 @@ begin
         C.Col := 0;
       end
       else
-      C := GetCellAt(X, Y);
-      { discard the cell of last flick (because of possibility Exit)}
+        C := GetCellAt(X, Y);
       P := FClickPos;
       FClickPos := GridCell(-1, -1);
       if IsCellEmpty(C) then
       begin
-        {anywhere - we dissipate the isolation of cursor}
         Editing := False;
         SetCursor(CellFocused, False, False);
       end
       else
       begin
-        {into the cell - we separate it}
         SetCursor(C, True, True);
         CellClick(C, Shift, X, Y);
-        { check entry against the flag}
         if PtInRect(GetCheckRect(C), Point(X, Y)) then
         begin
           CheckClick(C);
           Exit;
         end;
-        { check the beginning of editing (sense left button)}
         if (Button = mbLeft) and IsCellEqual(C, CellFocused) and AllowEdit then
-          {editing on the dual or repeated flick on one and
-            to the same cell}
           if (ssDouble in Shift) or IsCellEqual(C, P) then
           begin
-            { show the line of introduction}
             Editing := True;
             if Editing then
               Exit;
           end;
       end;
-      { memorize the position of last flick}
       FClickPos := C;
     end;
   if Button = mbRight then
   begin
-    {if occurs a change in the size - to end}
     if FColResizing then
     begin
-      { cease change}
       StopColResize(True);
-      { do not release further}
       Exit;
     end;
-    {if goes pressure on the title - to end}
     if FHeaderClicking then
     begin
-      { cease change}
       StopHeaderClick(True);
-      { do not release further}
       Exit;
     end;
   end;
@@ -8713,33 +8695,23 @@ procedure TCustomGridView.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
   C: TGridCell;
 begin
-  {does occur a change in the size of kolonki }
   if FColResizing then
   begin
-    { continue change}
     StepColResize(X, Y);
-    { do not release further}
     Exit;
   end;
-  {does go pressure on the title}
   if FHeaderClicking then
   begin
     StepHeaderClick(X, Y);
-    { do not release further}
     Exit;
   end;
-  { check the new chosen cell}
   if (ssLeft in Shift) or ((ssRight in Shift) and RightClickSelect) then
-    {is it possible to separate by mouse}
     if gkMouseMove in CursorKeys then
     begin
       C := GetCellAt(X, Y);
-      {but burn into the new cell}
       if (not IsCellEmpty(C)) and (not IsCellEqual(C, CellFocused)) then
       begin
-        { separate new cell}
         SetCursor(C, True, True);
-        { check the beginning of editing}
         if IsCellEqual(C, CellFocused) and AlwaysEdit then
         begin
           Editing := True;
@@ -8758,23 +8730,16 @@ end;
 procedure TCustomGridView.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 begin
-  {does occur a change in the size of column}
   if FColResizing then
   begin
-    { conclude change}
     StopColResize(False);
-    { do not release further}
     Exit;
   end;
-  {does go pressure on the title}
   if FHeaderClicking then
   begin
-    { conclude pressure}
     StopHeaderClick(False);
-    { do not release further}
     Exit;
   end;
-  {processor for silence}
   inherited MouseUp(Button, Shift, X, Y);
 end;
 
@@ -8802,7 +8767,6 @@ var
   DefDraw: Boolean;
   R: TRect;
 begin
-  {drawing of user}
   DefDraw := True;
   try
     if Assigned(FOnDraw) then
@@ -8810,7 +8774,6 @@ begin
   except
     Application.HandleException(Self);
   end;
-  {is necessary drawing on silence}
   if not DefDraw then
     Exit;
   with GetClientRect do
@@ -8820,55 +8783,39 @@ begin
     ExcludeClipRect(Canvas.Handle, Right, Top, Width, Bottom);
     ExcludeClipRect(Canvas.Handle, Left, Bottom, Right, Height);
   end;
-  {title}
   if ShowHeader and RectVisible(Canvas.Handle, GetHeaderRect) then
   begin
-    {the fixed part}
     PaintHeaders(True);
-    { intercept the rectangle of the fixed title}
     with GetHeaderRect do
     begin
       R := GetFixedRect;
       ExcludeClipRect(Canvas.Handle, R.Left, Top, R.Right, Bottom);
     end;
-    {usual part}
     PaintHeaders(False);
-    { intercept the rectangle of title}
     with GetHeaderRect do
       ExcludeClipRect(Canvas.Handle, Left, Top, Right, Bottom);
   end;
-  {field to the right and from below}
   PaintFreeField;
-  {the fixed cells}
   if (Fixed.Count > 0) and RectVisible(Canvas.Handle, GetFixedRect) then
   begin
-    {cell}
     PaintFixed;
-    {grid}
     if GridLines then
       PaintFixedGrid;
-    { intercept the rectangle of those fixed}
     with GetFixedRect do
       ExcludeClipRect(Canvas.Handle, Left, Top, Right, Bottom);
   end;
-  {usual cells}
   if (VisSize.Col > 0) and (VisSize.Row > 0) then
   begin
-    { intercept the rectangle of the line of editing}
     if Editing then
       with GetEditRect(EditCell) do
         ExcludeClipRect(Canvas.Handle, Left, Top, Right, Bottom);
-    {cell}
     PaintCells;
-    {the rectangle of focus}
     if IsFocusAllowed then
       PaintFocus;
   end;
-  {grid}
   if GridLines then
     PaintGridLines;
 
-  {the line of a change in the width of column}
   if FColResizing and (FColResizeCount > 0) and not FColumnsFullDrag then
     PaintResizeLine;
 end;
@@ -8913,31 +8860,22 @@ var
   R       : TRect;
   C       : TGridCell;
 begin
-  { get the horizontal and vertical bounds of the visible cells }
   L := GetColumnRect(VisOrigin.Col).Left;
   T := GetRowRect(VisOrigin.Row).Top;
-  { initialize upper boundary}
   R.Bottom := T;
-  { sort out lines}
   for J := 0 to FVisSize.Row - 1 do
   begin
-    { displace rectangle on the vertical line}
     R.Top := R.Bottom;
     R.Bottom := R.Bottom + Rows.Height;
-    { initialize left boundary}
     R.Right := L;
     for I := 0 to FVisSize.Col - 1 do
     begin
-      {cell and its width}
       C := GridCell(VisOrigin.Col + I, VisOrigin.Row + J);
       W := Columns[C.Col].Width;
-      { draw only visible cells}
       if W > 0 then
       begin
-        { displace rectangle along horizontal}
         R.Left := R.Right;
         R.Right := R.Right + W;
-        { draw cell}
         if RectVisible(Canvas.Handle, R) then
           PaintCell(C, R);
       end;
@@ -8953,11 +8891,9 @@ var
 begin
   PreparePatternBitmap(Canvas, GetGridLineColor(Color), False);
   try
-    { draw lines}
     I := 0;
     while I < Count * 2 do
     begin
-      {the coordinate of line}
       R.Left := P^[I];
       Inc(I);
       R.Top := P^[I];
@@ -8966,13 +8902,10 @@ begin
       Inc(I);
       R.Bottom := P^[I];
       Inc(I);
-      {filling will not be drawn, if width or the height of the rectangle
-        zero}
       if (R.Left = R.Right) and (R.Top <> R.Bottom) then
         Inc(R.Right)
       else if (R.Left <> R.Right) and (R.Top = R.Bottom) then
         Inc(R.Bottom);
-      { draw line}
       Canvas.FillRect(R);
     end;
   finally
@@ -8988,15 +8921,12 @@ var
   R: TRect;
   C: TGridCell;
 begin
-  {upper boundary of lines}
   R.Bottom := GetRowRect(VisOrigin.Row).Top;
-  { sort out lines}
   for J := 0 to FVisSize.Row - 1 do
   begin
     R.Top := R.Bottom;
     R.Bottom := R.Bottom + Rows.Height;
     R.Right := GetGridRect.Left;
-    { sort out columns}
     for I := 0 to Fixed.Count - 1 do
     begin
       C := GridCell(I, VisOrigin.Row + J);
@@ -9010,12 +8940,9 @@ begin
       end;
     end;
   end;
-  {strip to the right}
   if Fixed.Flat and (Fixed.ShowDivider or (gsFullVertLine in GridStyle)) then
   begin
     R := GetFixedRect;
-    {if the colors of those fixed and table coincide - we draw the strip
-      of one linii }
     if Fixed.GridColor then
     begin
       if not (gsDotLines in GridStyle) then
@@ -9032,7 +8959,6 @@ begin
       end;
     end
     else
-      { otherwise draw dual strip}
       with Canvas do
       begin
         Pen.Color := clBtnShadow;
@@ -9063,14 +8989,12 @@ var
     I: Integer;
   begin
     I := 0;
-    { first shift vertical lines along x axis}
     while I < Fixed.Count * Ord(gsVertLine in GridStyle) * 4 do
     begin
       if I mod 2 = 0 then
         Points^[I] := Points^[I] + DX;
       Inc(I);
     end;
-    {then - horizontal along axis Y}
     while I < PointCount * 2 do
     begin
       if I mod 2 = 1 then
@@ -9086,13 +9010,11 @@ var
   begin
     R := Rect;
     R.Bottom := R.Top;
-    {line}
     while R.Bottom < Rect.Bottom do
     begin
       R.Top := R.Bottom;
       R.Bottom := R.Bottom + Rows.Height;
       R.Right := GetFixedRect.Left;
-      {column}
       for I := 0 to Fixed.Count - 1 do
       begin
         W := Columns[I].Width;
@@ -9113,7 +9035,6 @@ var
   begin
     R := Rect;
     R.Bottom := R.Top;
-    {line}
     repeat
       R.Top := R.Bottom;
       R.Bottom := R.Bottom + Rows.Height;
@@ -9131,7 +9052,6 @@ var
   begin
     R := Rect;
     R.Right := R.Left;
-    {column}
     for I := 0 to Fixed.Count - 1 do
     begin
       W := Columns[I].Width;
@@ -9152,10 +9072,8 @@ var
   end;
 
 begin
-  {it is necessary whether to draw flat grid}
   if Fixed.Flat then
   begin
-    {opreleyaem a quantity of lines of grid}
     StrokeCount := 0;
     if gsHorzLine in GridStyle then
     begin
@@ -9165,18 +9083,13 @@ begin
     end;
     if gsVertLine in GridStyle then
       StrokeCount := StrokeCount + Fixed.Count;
-    {but there is whether grid}
     if StrokeCount > 0 then
     begin
-      {opreleyaem a quantity of points of grid}
       PointCount := StrokeCount * 2;
-      { separate memory under the lines}
       StrokeList := AllocMem(StrokeCount * SizeOf(Integer));
       Points := AllocMem(PointCount * SizeOf(TPoint));
-      {the initialization of the massif of a quantity of points of poly-lines}
       FillDWord(StrokeList^, StrokeCount, 2);
       Rect := GetFixedRect;
-      {the point of vertical lines}
       if gsVertLine in GridStyle then
       begin
         T := Rect.Top;
@@ -9194,7 +9107,6 @@ begin
           Points^[Index + 3] := B;
         end;
       end;
-      {the point of horizontal lines}
       if gsHorzLine in GridStyle then
       begin
         L := Rect.Left;
@@ -9213,14 +9125,10 @@ begin
           Points^[Index + 3] := Y - 2;
         end;
       end;
-      {but dual or single lines}
       if Fixed.GridColor then
-        { draw single strip}
         with Canvas do
         begin
-          { shift the lines (they they are calculated for the first twin circuit)}
           ShiftGridPoints(1, 1);
-          {grid}
           if not (gsDotLines in GridStyle) then
           begin
             Pen.Color := GetGridLineColor(Color);
@@ -9231,53 +9139,41 @@ begin
             PaintDotGridLines(Points, PointCount);
         end
       else
-        { draw dual strip}
         with Canvas do
         begin
-          {dark lines}
           Pen.Color := clBtnShadow;
           Pen.Width := 1;
           PolyPolyLine(Handle, Points^, StrokeList^, StrokeCount);
-          { shift lines}
           ShiftGridPoints(1, 1);
-          {bright lines}
           Pen.Color := clBtnHighlight;
           PolyPolyLine(Handle, Points^, StrokeList^, StrokeCount);
         end;
-      { free memory}
       FreeMem(Points);
       FreeMem(StrokeList);
     end;
   end
-  {it is necessary whether to draw all 3D cells}
   else if (gsHorzLine in GridStyle) and (gsVertLine in GridStyle) then
   begin
     Rect := GetFixedRect;
     if not (gsListViewLike in GridStyle) then
       Rect.Bottom := Rect.Top + FVisSize.Row * Rows.Height;
-    {3D cell}
     Paint3DCells(Rect);
-    {the remained place}
     if not (gsListViewLike in GridStyle) then
     begin
       Rect.Top := Rect.Bottom;
       Rect.Bottom := GetFixedRect.Bottom;
       if gsFullVertLine in GridStyle then
-        {only vertical lines}
         PaintVert3DLines(Rect, False)
       else
-        {remainder from below}
         PaintBottom3DMargin(Rect);
     end;
   end
-    {it is necessary whether to draw only horizontal 3D strips}
   else if (gsHorzLine in GridStyle) and (not (gsVertLine in GridStyle)) then
   begin
     Rect := GetFixedRect;
     if not (gsListViewLike in GridStyle) then
       Rect.Bottom := Rect.Top + FVisSize.Row * Rows.Height;
     PaintHorz3DLines(Rect);
-    {the remained place}
     if not (gsListViewLike in GridStyle) then
     begin
       Rect.Top := Rect.Bottom;
@@ -9285,14 +9181,12 @@ begin
       PaintBottom3DMargin(Rect);
     end;
   end
-  {it is necessary whether to draw only vertical 3D strips}
   else if (not (gsHorzLine in GridStyle)) and (gsVertLine in GridStyle) then
   begin
     Rect := GetFixedRect;
     PaintVert3DLines(Rect, False);
   end
   else
-  {are simple 3D framework of those of all around fixed}
   begin
     Rect := GetFixedRect;
     PaintBottom3DMargin(Rect);
@@ -9303,12 +9197,9 @@ procedure TCustomGridView.PaintFocus;
 var
   R: TRect;
 begin
-  { and we do see focus}
   if ShowFocusRect and Focused and (VisSize.Row > 0) and (not Editing) then
   begin
-    {the rectangle of focus}
     R := GetFocusRect;
-    { consider grid}
     if GridLines then
     begin
       if gsVertLine in GridStyle then
@@ -9316,10 +9207,8 @@ begin
       if gsHorzLine in GridStyle then
         Dec(R.Bottom, FGridLineWidth);
     end;
-    { draw}
     with Canvas do
     begin
-      {color}
       SetTextColor(Handle, ColorToRGB(clWhite));
       SetBkColor(Handle, ColorToRGB(clBlack));
       SetBkMode(Handle, OPAQUE);
