@@ -57,7 +57,6 @@
     - Renamed property TCustomGridColumn.Title to HeaderSection
     - Added property EditAlighnment to TGridColumn
 
-
   TODO:
     * Columns (or sections?) :
         - Add Hint property
@@ -1175,10 +1174,10 @@ type
     procedure WMLButtonDown(var Message: TWMLButtonDown); message WM_LBUTTONDOWN;
     procedure WMLButtonDblClk(var Message: TWMLButtonDblClk); message WM_LBUTTONDBLCLK;
     procedure WMSetCursor(var Message: TWMSetCursor); message WM_SETCURSOR;
+    procedure WMContextMenu(var Message: TMessage); message WM_CONTEXTMENU;
     procedure CMCancelMode(var Message: TCMCancelMode); message CM_CANCELMODE;
     procedure CMEnabledChanged(var Message: TMessage); message CM_ENABLEDCHANGED;
     procedure CMShowingChanged(var Message: TMessage); message CM_SHOWINGCHANGED;
-    procedure WMContextMenu(var Message: TMessage); message WM_CONTEXTMENU;
 
   protected
     procedure Change; override;
@@ -2234,6 +2233,7 @@ type
     FOnGetTipsRect        : TGridRectEvent;
     FOnGetTipsText        : TGridTextEvent;
     FFitColsToClient      : Boolean;
+    FVclStyleEnabled      : Boolean;
 
     function GetCell(Col, Row: Integer): string;
     function GetChecked(Col, Row: Integer): Boolean;
@@ -2278,6 +2278,7 @@ type
     procedure SetEndEllipsis(Value: Boolean);
     procedure SetFlatBorder(Value: Boolean);
     procedure SetFixed(Value: TGridFixed);
+    procedure SetFitColsToClient(const Value: Boolean);
     procedure SetGridColor(Value: TColor);
     procedure SetGridLines(Value: Boolean);
     procedure SetGridStyle(Value: TGridStyles);
@@ -2321,6 +2322,7 @@ type
     procedure WMNCHitTest(var Message: TWMNCHitTest); message WM_NCHITTEST;
     procedure WMSetCursor(var Message: TWMSetCursor); message WM_SETCURSOR;
     procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
+
     procedure CMCancelMode(var Message: TCMCancelMode); message CM_CANCELMODE;
     procedure CMEnabledChanged(var Message: TMessage); message CM_ENABLEDCHANGED;
     procedure CMCtl3DChanged(var Message: TMessage); message CM_CTL3DCHANGED;
@@ -2329,7 +2331,7 @@ type
     procedure CMShowHintChanged(var Message: TMessage); message CM_SHOWHINTCHANGED;
     procedure CMHintShow(var AMessage: TMessage); message CM_HINTSHOW;
     procedure CMMouseLeave(var AMessage: TMessage); message CM_MOUSELEAVE;
-    procedure SetFitColsToClient(const Value: Boolean);
+    procedure CMStyleChanged(var Message: TMessage); message CM_STYLECHANGED;
 
   protected
     function AcquireFocus: Boolean;
@@ -2358,6 +2360,7 @@ type
     function CreateRows: TCustomGridRows; virtual;
     function CreateScrollBar(Kind: TScrollBarKind): TGridScrollBar; virtual;
     procedure CreateWnd; override;
+
     procedure DoAppendRow(var Append : Boolean); dynamic;
     procedure DoExit; override;
     procedure DoMouseEnter; virtual;
@@ -2366,6 +2369,7 @@ type
       : Boolean; override;
     function DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint)
       : Boolean; override;
+
     procedure EditButtonPress(Cell: TGridCell); virtual;
     function EditCanAcceptKey(Cell: TGridCell; Key: Char): Boolean; virtual;
     procedure EditCanceled(Cell: TGridCell); virtual;
@@ -2469,6 +2473,10 @@ type
     function CanStretchCol(ACol: Integer) : Boolean;
     function CanShrinkCol(ACol: Integer) : Boolean;
     function LimitColumnWidth(ACol, AWidth: Integer): Integer;
+    procedure VclStyleChanged; virtual;
+
+    property VclStyleEnabled: Boolean
+      read FVclStyleEnabled;
 
   public
     class constructor Create;
@@ -3085,23 +3093,21 @@ type
     property OnStartDrag;
   end;
 
-  // XE2+ VCL Style
-{$IF CompilerVersion >= 23}
   TGridViewVclStyleScrollBarsHook = class(TMouseTrackControlStyleHook)
   strict private type
   {$REGION 'TVclStyleScrollBarWindow'}
     TVclStyleScrollBarWindow = class(TWinControl)
-    strict private
-      FScrollBarWindowOwner: TGridViewVclStyleScrollBarsHook;
-      FScrollBarVertical: Boolean;
-      FScrollBarVisible: Boolean;
-      FScrollBarEnabled: Boolean;
+    private
+      FScrollBarWindowOwner : TGridViewVclStyleScrollBarsHook;
+      FScrollBarVertical    : Boolean;
+      FScrollBarVisible     : Boolean;
+      FScrollBarEnabled     : Boolean;
 
       procedure WMNCHitTest(var Msg: TWMNCHitTest); message WM_NCHITTEST;
       procedure WMEraseBkgnd(var Msg: TMessage); message WM_ERASEBKGND;
       procedure WMPaint(var Msg: TWMPaint); message WM_PAINT;
 
-    strict protected
+    protected
       procedure CreateParams(var Params: TCreateParams); override;
 
     public
@@ -3172,43 +3178,12 @@ type
     constructor Create(AControl: TWinControl); override;
     destructor Destroy; override;
   end;
-{$IFEND}
-
-{$IF CompilerVersion <= 21}
-type
-  StyleServices = record
-  strict private
-    class function GetEnabled: Boolean; static;
-
-  public
-    class function GetElementDetails(
-      Detail: TThemedHeader
-    ): TThemedElementDetails; overload; static;
-    class function GetElementDetails(
-      Detail: TThemedComboBox
-    ): TThemedElementDetails; overload; static;
-    class function GetElementDetails(
-      Detail: TThemedButton
-    ): TThemedElementDetails; overload; static;
-    class procedure DrawElement(
-            DC      : HDC;
-            Details : TThemedElementDetails;
-      const R       : TRect
-    ); static;
-
-    class property Enabled: Boolean
-      read GetEnabled;
-  end;
-{$IFEND}
 
 { Several utility routines }
 
 function GridCell(Col, Row: Integer): TGridCell;
-
 function IsCellEqual(Cell1, Cell2: TGridCell): Boolean;
-
 function IsCellEmpty(Cell: TGridCell): Boolean;
-
 function OffsetCell(Cell: TGridCell; C, R: Integer): TGridCell;
 
 { The standard Windows scrollbar has limitation to the the maximum position
@@ -3224,14 +3199,14 @@ function ScrollPosToWinPos(ScrollPos, ScrollMin, ScrollMax: Integer): Integer;
 
 function GetFontWidth(Font: TFont; TextLength: Integer): Integer;
 
-procedure FillDWord(var Dest; Count, Value: Integer); register;
+procedure FillDWord(var Dest; Count, Value: Integer);
 
 implementation
 
 uses
   System.UITypes, System.Types;
 
-{$R *.RES}
+{$R *.res}
 
 // non interfaced routines
 type
@@ -3313,7 +3288,7 @@ procedure PaintScrollBtnFrameEx(DC: HDC; Rect: TRect; Pressed: Boolean; SideFlag
 begin
   if StyleServices.Enabled then
   begin
-//    StyleServices.
+    ///
 
   end
   else
@@ -3409,16 +3384,20 @@ begin
   end;
 end;
 
-procedure FillDWord(var Dest; Count, Value: Integer); register;
+procedure FillDword(var Dest; Count, Value: Integer);
+var
+  I : Integer;
+  E : Integer;
+type
+  PV = ^Integer;
 begin
-// TODO TS portable version!
-//asm
-//  XCHG  EDX, ECX
-//  PUSH  EDI
-//  MOV   EDI, EAX
-//  MOV   EAX, EDX
-//  REP   STOSD
-//  POP   EDI
+  I := Integer(@Dest);
+  E := I + Count * 4;
+  while I < E do
+  begin
+    PV(I)^ := Value;
+    Inc(I, 4);
+  end;
 end;
 
 function ExpandStrings(Strings: TStrings; const Separator: string): string;
@@ -3433,8 +3412,6 @@ begin
       Result := Result + Separator + Strings[I];
   end;
 end;
-
-{Calculation height of a font }
 
 function GetFontHeight(Font: TFont): Integer;
 var
@@ -3503,8 +3480,6 @@ begin
   Result.Col := Cell.Col + C;
   Result.Row := Cell.Row + R;
 end;
-
-{ Scaling of the parameters of scroller}
 
 function WinPosToScrollPos(WinPos, ScrollMin, ScrollMax: Integer): Integer;
 begin
@@ -3930,8 +3905,8 @@ end;
 
 function TCustomGridHeader.GetWidth: Integer;
 var
-  I: Integer;
-  S: TGridHeaderSection;
+  I : Integer;
+  S : TGridHeaderSection;
 begin
   Result := 0;
   for I := 0 to Sections.Count - 1 do
@@ -6129,7 +6104,7 @@ end;
 
 procedure TGridTipsWindow.CMTextChanged(var Message: TMessage);
 begin
-  { ignore event, otherwise "jumps" the size of window}
+  { ignore event, otherwise "jumps" the size of window }
 end;
 
 procedure TGridTipsWindow.Paint;
@@ -6268,6 +6243,7 @@ begin
   FPatternBitmap.Width    := 2;
   FPatternBitmap.Height   := 2;
   FCancelOnExit           := True;
+  VclStyleChanged;
 end;
 
 destructor TCustomGridView.Destroy;
@@ -6889,6 +6865,12 @@ begin
   end;
 end;
 
+procedure TCustomGridView.VclStyleChanged;
+begin
+  FVclStyleEnabled := ThemingEnabled and StyleServices.Enabled
+    and not StyleServices.IsSystemStyle;
+end;
+
 procedure TCustomGridView.VertScroll(Sender: TObject; ScrollCode: Integer;
   var ScrollPos: Integer);
 begin
@@ -7088,6 +7070,11 @@ begin
   ShowCellTips := ShowCellTips and ShowHint;
 end;
 
+procedure TCustomGridView.CMStyleChanged(var Message: TMessage);
+begin
+  RecreateWnd;
+end;
+
 procedure TCustomGridView.CMHintShow(var AMessage: TMessage);
 var
   AllowTips: Boolean;
@@ -7284,10 +7271,8 @@ begin
         try
           for I := 0 to Count - 1 do
           begin
-            {limits}
             Columns[I].FMaxWidth := MulDiv(Columns[I].FMaxWidth, M, D);
             Columns[I].FMinWidth := MulDiv(Columns[I].FMinWidth, M, D);
-            {width}
             Columns[I].DefWidth := MulDiv(Columns[I].DefWidth, M, D);
           end;
         finally
@@ -7797,8 +7782,8 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
 
   function DoMoveUp(O: Integer): TGridCell;
   var
-    J: Integer;
-    C: TGridCell;
+    J : Integer;
+    C : TGridCell;
   begin
     J := MaxIntValue([Cell.Row - O, 0]);
     while J >= 0 do
@@ -7816,9 +7801,9 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
 
   function DoMoveDown(O: Integer; Append : Boolean = False): TGridCell;
   var
-    B: Boolean;
-    J: Integer;
-    C: TGridCell;
+    B : Boolean;
+    J : Integer;
+    C : TGridCell;
   begin
     if Append and ((Cell.Row + O) - (Rows.Count - 1) = 1) then
     begin
@@ -7844,7 +7829,7 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
 
   function DoMoveHome: TGridCell;
   var
-    C: TGridCell;
+    C : TGridCell;
   begin
     C := Cell;
     try
@@ -7857,7 +7842,7 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
 
   function DoMoveEnd: TGridCell;
   var
-    C: TGridCell;
+    C : TGridCell;
   begin
     C := Cell;
     try
@@ -7870,8 +7855,9 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
 
   function DoMoveGridHome: TGridCell;
   var
-    I, J: Integer;
-    C: TGridCell;
+    I : Integer;
+    J : Integer;
+    C : TGridCell;
   begin
     I := Fixed.Count;
     while I <= Cell.Col do
@@ -7894,8 +7880,9 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
 
   function DoMoveGridEnd: TGridCell;
   var
-    I, J: Integer;
-    C: TGridCell;
+    I : Integer;
+    J : Integer;
+    C : TGridCell;
   begin
     I := Columns.Count - 1;
     while I >= Cell.Col do
@@ -7920,8 +7907,8 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
 
     function DoSelectLeft: TGridCell;
     var
-      I: Integer;
-      C: TGridCell;
+      I : Integer;
+      C : TGridCell;
     begin
       I := MaxIntValue([Cell.Col, Fixed.Count]);
       while I <= CellFocused.Col do
@@ -7939,8 +7926,8 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
 
     function DoSelectRight: TGridCell;
     var
-      I: Integer;
-      C: TGridCell;
+      I : Integer;
+      C : TGridCell;
     begin
       I := MinIntValue([Cell.Col, Columns.Count - 1]);
       while I >= CellFocused.Col do
@@ -7958,8 +7945,8 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
 
     function DoSelectUp: TGridCell;
     var
-      J: Integer;
-      C: TGridCell;
+      J : Integer;
+      C : TGridCell;
     begin
       J := MaxIntValue([Cell.Row, 0]);
       while J <= CellFocused.Row do
@@ -7977,8 +7964,8 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
 
     function DoSelectDown: TGridCell;
     var
-      J: Integer;
-      C: TGridCell;
+      J : Integer;
+      C : TGridCell;
     begin
       J := MinIntValue([Cell.Row, Rows.Count - 1]);
       while J >= CellFocused.Row do
@@ -8028,8 +8015,9 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
 
   function DoFirst: TGridCell;
   var
-    C: TGridCell;
-    I, J: Integer;
+    C : TGridCell;
+    I : Integer;
+    J : Integer;
   begin
     J := 0;
     while J <= Rows.Count - 1 do
@@ -8052,9 +8040,10 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
 
   function DoNext: TGridCell;
   var
-    C: TGridCell;
-    I, J: Integer;
-    B: Boolean;
+    C : TGridCell;
+    I : Integer;
+    J : Integer;
+    B : Boolean;
   begin
     I := Cell.Col + 1;
     J := Cell.Row;
@@ -8085,8 +8074,9 @@ function TCustomGridView.GetCursorCell(Cell: TGridCell;
 
   function DoPrev: TGridCell;
   var
-    C: TGridCell;
-    I, J: Integer;
+    C : TGridCell;
+    I : Integer;
+    J : Integer;
   begin
     I := Cell.Col - 1;
     J := Cell.Row;
@@ -11940,7 +11930,7 @@ end;
 
 procedure TGridViewVclStyleScrollBarsHook.MouseLeave;
 begin
-   inherited;
+   inherited MouseLeave;
   if FVertScrollBarSliderState = tsThumbBtnVertHot then
     FVertScrollBarSliderState := tsThumbBtnVertNormal;
 
