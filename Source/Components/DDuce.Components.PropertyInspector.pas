@@ -274,18 +274,19 @@ type
     );
 
   private
-    FState          : TPropsPageState;
-    FOldRow         : Integer;
-    FSplitterOffset : Integer;
-    FEditText       : string;
-    FItems          : TPropsPageItems;
-    FRows           : array of TPropsPageItem;
-    FUpdateCount    : Integer;
-    FValuesColor    : TColor;
-    FBitmap         : TBitmap;
-    FBitmapBkColor  : TColor;
-    FBrush          : HBRUSH;
-    FCellBitmap     : TBitmap;
+    FState           : TPropsPageState;
+    FOldRow          : Integer;
+    FSplitterOffset  : Integer;
+    FEditText        : string;
+    FItems           : TPropsPageItems;
+    FRows            : array of TPropsPageItem;
+    FUpdateCount     : Integer;
+    FValuesColor     : TColor;
+    FBitmap          : TBitmap;
+    FBitmapBkColor   : TColor;
+    FBrush           : HBRUSH;
+    FCellBitmap      : TBitmap;
+    FVclStyleEnabled : Boolean;
 
     procedure WMVScroll(var Message: TWMVScroll); message WM_VSCROLL;
     procedure WMSize(var Message: TWMSize); message WM_SIZE;
@@ -296,7 +297,9 @@ type
       message CM_DESIGNHITTEST;
     procedure CMFontChanged(var Message: TMessage); message CM_FONTCHANGED;
     procedure CMExit(var Message: TMessage); message CM_EXIT;
+    procedure CMStyleChanged(var Message: TMessage); message CM_STYLECHANGED;
 
+    procedure VclStyleChanged;
     procedure ItemsChange;
     function IsOnSplitter(AX: Integer): Boolean;
     procedure UpdateColWidths;
@@ -1135,6 +1138,7 @@ implementation
 
 uses
   System.UITypes,
+  Vcl.Themes,
 
   DDuce.Components.PropertyInspector.CollectionEditor;
 
@@ -1604,26 +1608,27 @@ end;
 
 constructor TCustomPropsPage.Create(AOwner: TComponent);
 begin
-  inherited;
-  Width := 188;
-  Height := 193;
-  DefaultColWidth := 84;
-  DefaultRowHeight := 16;
-  ColCount := 2;
-  RowCount := 0;
-  FixedRows := 0;
-  FixedCols := 1;
-  Color := clBtnFace;
-  Options := [goEditing, goAlwaysShowEditor, goThumbTracking];
+  inherited Create(AOwner);
+  Width              := 188;
+  Height             := 193;
+  DefaultColWidth    := 84;
+  DefaultRowHeight   := 16;
+  ColCount           := 2;
+  RowCount           := 0;
+  FixedRows          := 0;
+  FixedCols          := 1;
+  Color              := clBtnFace;
+  Options            := [goEditing, goAlwaysShowEditor, goThumbTracking];
   DesignOptionsBoost := [];
-  FSaveCellExtents := False;
-  ScrollBars := ssNone;
-  DefaultDrawing := False;
-  FItems := TPropsPageItems.Create(Self);
-  FValuesColor := clNavy;
-  FBitmap := TBitmap.Create;
+  FSaveCellExtents   := False;
+  ScrollBars         := ssNone;
+  DefaultDrawing     := False;
+  FItems             := TPropsPageItems.Create(Self);
+  FValuesColor       := clNavy;
+  FBitmap            := TBitmap.Create;
   UpdatePattern;
   FCellBitmap := TBitmap.Create;
+  VclStyleChanged;
 end;
 
 function TCustomPropsPage.CreateEditor: TInplaceEdit;
@@ -1752,7 +1757,7 @@ begin
       end
       else
       begin
-        { Row line }
+        { Row line }  {TS : flat}
         if FBitmapBkColor <> Color then
           UpdatePattern;
         Winapi.Windows.FillRect(
@@ -1802,17 +1807,33 @@ end;
 function TCustomPropsPage.DoMouseWheelDown(Shift: TShiftState;
   MousePos: TPoint): Boolean;
 begin
-  Result := True;
-  if TopRow < RowCount - VisibleRowCount then
-    TopRow := TopRow + 1;
+  if InplaceEditor is TInplaceEditList
+    and TInplaceEditList(InplaceEditor).ListVisible then
+  begin
+    Result := False
+  end
+  else
+  begin
+    Result := True;
+    if TopRow < RowCount - VisibleRowCount then
+      TopRow := TopRow + 1;
+  end;
 end;
 
 function TCustomPropsPage.DoMouseWheelUp(Shift: TShiftState;
   MousePos: TPoint): Boolean;
 begin
-  Result := True;
-  if TopRow > FixedRows then
-    TopRow := TopRow - 1;
+  if InplaceEditor is TInplaceEditList
+    and TInplaceEditList(InplaceEditor).ListVisible then
+  begin
+    Result := False
+  end
+  else
+  begin
+    Result := True;
+    if TopRow > FixedRows then
+      TopRow := TopRow - 1;
+  end;
 end;
 
 procedure TCustomPropsPage.CreateHandle;
@@ -1945,6 +1966,11 @@ begin
     LSI.nPos := TopRow;
     SetScrollInfo(Self.Handle, SB_VERT, LSI, True);
   end;
+end;
+
+procedure TCustomPropsPage.VclStyleChanged;
+begin
+  FVclStyleEnabled := StyleServices.Enabled and not StyleServices.IsSystemStyle;
 end;
 
 procedure TCustomPropsPage.WMVScroll(var Message: TWMVScroll);
@@ -2238,6 +2264,12 @@ end;
 procedure TCustomPropsPage.CMDesignHitTest(var Msg: TCMDesignHitTest);
 begin
   Msg.Result := Ord(IsOnSplitter(Msg.XPos) or (ppsMovingSplitter in FState));
+end;
+
+procedure TCustomPropsPage.CMStyleChanged(var Message: TMessage);
+begin
+  VclStyleChanged;
+  RecreateWnd;
 end;
 
 procedure TCustomPropsPage.SetSplitter(const Value: Integer);
