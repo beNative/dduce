@@ -21,6 +21,8 @@ It mimics Delphi's object inspector and makes it possible to edit any published 
 
 A native and very fast virtual VCL grid component. It is based on the work of **Roman M. Mochalov**. A copy of the original sources can be found at http://www.tersy.ru/~roman/download/.
 
+![TGridView](https://github.com/beNative/dduce/blob/master/Wiki/dduce_gridview.png)
+
 ## TDBGridView ##
 
 A `TGridView` descendant which can be linked to a `TDataSource` and can be used like a `TDBGrid`. It is based on the work of **Roman M. Mochalov**.
