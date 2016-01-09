@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2015 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2016 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -138,10 +138,13 @@ type
     property Color default clBtnFace;
     property Constraints;
     property ColumnsFullDrag default True;
-    property DoubleBuffered default True;
+    property DoubleBuffered;
     property Enabled;
     property EndEllipsis default False;
     property FlatBorder;
+    property GridColor;
+    property GridLines;
+    property GridStyle;   // TODO!!!
     property Font;
     property NameFont;
     property ParentColor default False;
@@ -475,15 +478,15 @@ begin
   inherited PaintCell(ACell, ARect);
   if ACell.Row <> CellFocused.Row then
   begin
-    R := ARect;
-    R.Top := R.Bottom - 1;
-    with Canvas do
-    begin
-      Brush.Color := clGray xor clSilver;
-      Font.Color := clBlack;
-      UpdatePattern;
-      Winapi.Windows.FillRect(Handle, R, FBrush);
-    end;
+//    R := ARect;
+//    R.Top := R.Bottom - 1;
+//    with Canvas do
+//    begin
+//      Brush.Color := clGray xor clSilver;
+//      Font.Color := clBlack;
+//      UpdatePattern;
+//      Winapi.Windows.FillRect(Handle, R, FBrush);
+//    end;
   end;
   if (ACell.Col = 0) and (not IsCategoryRow(ACell.Row)) then
     with Canvas do

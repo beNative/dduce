@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2015 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2016 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -174,7 +174,7 @@ type
     FOwnerDrawPickList : Boolean;
 
     function CanExpand: Boolean;
-    function Ident: Integer;
+    function Indent: Integer;
     function IsOnExpandButton(AX: Integer): Boolean;
     function GetItems(AIndex: Integer): TPropsPageItem;
     procedure SetExpandable(const Value: TPropsPageItemExpandable);
@@ -264,6 +264,13 @@ type
       read GetItems; default;
   end;
 
+  TPropertyGridStyle = (
+    pgsHorzLine,
+    pgsVertLine,
+    pgsDotLines
+  );
+  TPropertyGridStyles = set of TPropertyGridStyle;
+
   TCustomPropsPage = class(TCustomGrid)
   private type
     TPropsPageState = set of (
@@ -287,6 +294,7 @@ type
     FBrush           : HBRUSH;
     FCellBitmap      : TBitmap;
     FVclStyleEnabled : Boolean;
+    FGridStyle       : TPropertyGridStyles;
 
     procedure WMVScroll(var Message: TWMVScroll); message WM_VSCROLL;
     procedure WMSize(var Message: TWMSize); message WM_SIZE;
@@ -298,6 +306,19 @@ type
     procedure CMFontChanged(var Message: TMessage); message CM_FONTCHANGED;
     procedure CMExit(var Message: TMessage); message CM_EXIT;
     procedure CMStyleChanged(var Message: TMessage); message CM_STYLECHANGED;
+
+    procedure DrawSplitter(
+      ACanvas : TCanvas;
+      AWidth  : Integer;
+      AHeight : Integer
+    );
+
+    procedure DrawExpandButton(
+      ACanvas   : TCanvas;
+      AX        : Integer;
+      AY        : Integer;
+      AExpanded : Boolean
+    );
 
     procedure VclStyleChanged;
     procedure ItemsChange;
@@ -313,6 +334,7 @@ type
     function GetSplitter: Integer;
     procedure SetSplitter(const Value: Integer);
     procedure SetValuesColor(const Value: TColor);
+    procedure SetGridStyle(const Value: TPropertyGridStyles);
 
   protected
     procedure DrawCell(ACol, ARow: Longint; ARect: TRect;
@@ -350,6 +372,9 @@ type
     property ValuesColor: TColor
       read FValuesColor write SetValuesColor default clNavy;
 
+    property GridStyle: TPropertyGridStyles
+      read FGridStyle write SetGridStyle;
+
     property Color
       default clBtnFace;
 
@@ -362,7 +387,6 @@ type
 
     property ActiveItem: TPropsPageItem
       read GetActiveItem;
-
   end;
 
   TPropsPage = class(TCustomPropsPage)
@@ -385,6 +409,7 @@ type
     property DragMode;
     property Enabled;
     property Font;
+    property GridStyle;
     property ParentBiDiMode;
     property ParentColor;
     property ParentFont;
@@ -1097,6 +1122,7 @@ type
     property DragMode;
     property Enabled;
     property Font;
+    property GridStyle;
     property ParentBiDiMode;
     property ParentColor;
     property ParentFont;
@@ -1638,151 +1664,125 @@ end;
 
 procedure TCustomPropsPage.DrawCell(ACol, ARow: Integer; ARect: TRect;
   AState: TGridDrawState);
-
-  procedure _DrawExpandButton(AX, AY: Integer; AExpanded: Boolean);
-  begin
-    with FCellBitmap.Canvas do
-    begin
-      Pen.Color := clBlack;
-      Brush.Color := clWhite;
-      Rectangle(AX, AY, AX + 9, AY + 9);
-      Polyline([Point(AX + 2, AY + 4), Point(AX + 7, AY + 4)]);
-      if not AExpanded then
-        Polyline([Point(AX + 4, AY + 2), Point(AX + 4, AY + 7)]);
-    end;
-  end;
-
 var
-  S                      : string;
-  ExpandButton, Expanded : Boolean;
-  Ident                  : Integer;
-  PI                     : TPropsPageItem;
-  CaptionColor           : TColor;
-
+  S            : string;
+  ExpandButton : Boolean;
+  Expanded     : Boolean;
+  Indent       : Integer;
+  PI           : TPropsPageItem;
+  CaptionColor : TColor;
 begin
   if (ACol <> Col) or (ARow <> Row) or (InplaceEditor = nil) then
   begin
-    FCellBitmap.Width := ARect.Right - ARect.Left;
+    FCellBitmap.Width  := ARect.Right - ARect.Left;
     FCellBitmap.Height := ARect.Bottom - ARect.Top;
-
-    with FCellBitmap.Canvas do
+    FCellBitmap.Canvas.Brush.Color := Color;
+    if ARow = Row then
     begin
-      PI := ItemByRow(ARow);
-      if PI <> nil then
-      begin
-        if ACol = 0 then
-          S := PI.Caption
-        else
-          S := PI.DisplayValue;
-        ExpandButton := PI.CanExpand;
-        Expanded := PI.Expanded;
-        Ident := PI.Ident;
-        CaptionColor := GetItemCaptionColor(PI);
-      end
-      else
-      begin
-        S := '';
-        ExpandButton := False;
-        Expanded := False;
-        Ident := 0;
-        CaptionColor := Font.Color;
-      end;
-      Brush.Color := Color;
-      FCellBitmap.Canvas.Font := Self.Font;
-      if ACol = 0 then
-        Font.Color := CaptionColor
-      else
-        Font.Color := ValuesColor;
-      TextRect(
-        Rect(0, 0, FCellBitmap.Width, FCellBitmap.Height),
-        1 + (12 + Ident) * Ord(ACol = 0),
-        1,
-        S
+      FCellBitmap.Canvas.Brush.Color := cl3DLight;
+      FCellBitmap.Canvas.FillRect(Rect(0, 0, FCellBitmap.Width, FCellBitmap.Height));
+    end
+    else
+    begin
+      { Row line }  {TS : flat}
+      if FBitmapBkColor <> Color then
+        UpdatePattern;
+      Winapi.Windows.FillRect(
+        FCellBitmap.Canvas.Handle,
+        Rect(0, FCellBitmap.Height - 1, FCellBitmap.Width, FCellBitmap.Height),
+        FBrush
       );
-      if ExpandButton and (ACol = 0) then
-        _DrawExpandButton(2 + Ident, 3, Expanded);
+    end;
 
+    PI := ItemByRow(ARow);
+    if PI <> nil then
+    begin
       if ACol = 0 then
-      begin
-        { Splitter }
-        Pen.Color := clBtnShadow;
-        Polyline([
-          Point(FCellBitmap.Width - 2, 0),
-          Point(FCellBitmap.Width - 2,
-          FCellBitmap.Height
-        )]);
-        Pen.Color := clBtnHighlight;
-        Polyline([
-          Point(FCellBitmap.Width - 1, 0),
-          Point(FCellBitmap.Width - 1,
-          FCellBitmap.Height)]
-        );
-      end;
-      if ARow = Row - 1 then
-      begin
-        Pen.Color := cl3DDkShadow;
-        Polyline([
-          Point(0, FCellBitmap.Height - 2),
-          Point(FCellBitmap.Width,
-          FCellBitmap.Height - 2)
-        ]);
-        Pen.Color := clBtnShadow;
-        Polyline([
-          Point(0, FCellBitmap.Height - 1),
-          Point(FCellBitmap.Width,
-          FCellBitmap.Height - 1)
-        ]);
-      end
-      else if ARow = Row then
-      begin
-        if ACol = 0 then
-        begin
-          Pen.Color := cl3DDkShadow;
-          Polyline([Point(0, 0), Point(0, FCellBitmap.Height)]);
-          Pen.Color := clBtnShadow;
-          Polyline([Point(1, 0), Point(1, FCellBitmap.Height)]);
-        end;
-        Pen.Color := clBtnHighlight;
-        Polyline([
-          Point(0, FCellBitmap.Height - 2),
-          Point(FCellBitmap.Width,
-          FCellBitmap.Height - 2)
-        ]);
-        Pen.Color := cl3DLight;
-        Polyline([
-          Point(0, FCellBitmap.Height - 1),
-          Point(FCellBitmap.Width,
-          FCellBitmap.Height - 1)
-        ]);
-      end
+        S := PI.Caption
       else
-      begin
-        { Row line }  {TS : flat}
-        if FBitmapBkColor <> Color then
-          UpdatePattern;
-        Winapi.Windows.FillRect(
-          Handle,
-          Rect(0, FCellBitmap.Height - 1, FCellBitmap.Width, FCellBitmap.Height),
-          FBrush
-        );
-      end;
+        S := PI.DisplayValue;
+      ExpandButton := PI.CanExpand;
+      Expanded     := PI.Expanded;
+      Indent       := PI.Indent;
+      CaptionColor := GetItemCaptionColor(PI);
+    end
+    else
+    begin
+      S            := '';
+      ExpandButton := False;
+      Expanded     := False;
+      Indent       := 0;
+      CaptionColor := Font.Color;
+    end;
+
+    if ExpandButton and (ACol = 0) then
+      DrawExpandButton(FCellBitmap.Canvas, 2 + Indent, 3, Expanded);
+
+    FCellBitmap.Canvas.Font := Self.Font;
+    if ACol = 0 then
+      FCellBitmap.Canvas.Font.Color := CaptionColor
+    else
+      FCellBitmap.Canvas.Font.Color := ValuesColor;
+
+    FCellBitmap.Canvas.TextRect(
+      Rect(0, 0, FCellBitmap.Width, FCellBitmap.Height),
+      1 + (12 + Indent) * Ord(ACol = 0),
+      1,
+      S
+    );
+    if ACol = 0 then
+    begin
+      DrawSplitter(FCellBitmap.Canvas, FCellBitmap.Width, FCellBitmap.Height);
+      if ExpandButton then
+        DrawExpandButton(FCellBitmap.Canvas, 2 + Indent, 3, Expanded);
     end;
     Canvas.Draw(ARect.Left, ARect.Top, FCellBitmap);
   end
   else
-    with Canvas do
-    begin
-      Pen.Color := clBtnHighlight;
-      Polyline([
-        Point(ARect.Left, ARect.Bottom - 2),
-        Point(ARect.Right, ARect.Bottom - 2)
-      ]);
-      Pen.Color := cl3DLight;
-      Polyline([
-        Point(ARect.Left, ARect.Bottom - 1),
-        Point(ARect.Right, ARect.Bottom - 1)
-      ]);
-    end;
+  begin
+    Canvas.Pen.Color := clBtnHighlight;
+    Canvas.Polyline([
+      Point(ARect.Left, ARect.Bottom - 2),
+      Point(ARect.Right, ARect.Bottom - 2)
+    ]);
+    Canvas.Pen.Color := cl3DLight;
+    Canvas.Polyline([
+      Point(ARect.Left, ARect.Bottom - 1),
+      Point(ARect.Right, ARect.Bottom - 1)
+    ]);
+  end;
+
+end;
+
+{ TODO: explorer style expand buttons }
+
+procedure TCustomPropsPage.DrawExpandButton(ACanvas: TCanvas; AX, AY: Integer;
+  AExpanded: Boolean);
+begin
+  ACanvas.Pen.Color := clBlack;
+  ACanvas.Rectangle(AX, AY, AX + 9, AY + 9);
+  ACanvas.Polyline([Point(AX + 2, AY + 4), Point(AX + 7, AY + 4)]);
+  if not AExpanded then
+    ACanvas.Polyline([Point(AX + 4, AY + 2), Point(AX + 4, AY + 7)]);
+end;
+
+{  TODO: configurable line color }
+
+procedure TCustomPropsPage.DrawSplitter(ACanvas: TCanvas; AWidth,
+  AHeight: Integer);
+begin
+  ACanvas.Pen.Color := clBtnShadow;
+  ACanvas.Polyline([
+    Point(AWidth - 2, 0),
+    Point(AWidth - 2,
+    AHeight
+  )]);
+  ACanvas.Pen.Color := clBtnHighlight;
+  ACanvas.Polyline([
+    Point(AWidth - 1, 0),
+    Point(AWidth - 1,
+    AHeight)]
+  );
 end;
 
 function TCustomPropsPage.SelectCell(ACol, ARow: Integer): Boolean;
@@ -2195,6 +2195,15 @@ begin
   end;
 end;
 
+procedure TCustomPropsPage.SetGridStyle(const Value: TPropertyGridStyles);
+begin
+  if Value <> GridStyle then
+  begin
+    FGridStyle := Value;
+    InvalidateGrid;
+  end;
+end;
+
 function TCustomPropsPage.ItemByRow(ARow: Integer): TPropsPageItem;
 begin
   if (ARow >= 0) and (ARow <= High(FRows)) then
@@ -2272,6 +2281,18 @@ begin
   RecreateWnd;
 end;
 
+procedure TCustomPropsPage.CMFontChanged(var Message: TMessage);
+begin
+  inherited;
+  Canvas.Font := Font;
+  DefaultRowHeight := Canvas.TextHeight('Wg') + 3;
+end;
+
+function TCustomPropsPage.GetSplitter: Integer;
+begin
+  Result := ColWidths[0];
+end;
+
 procedure TCustomPropsPage.SetSplitter(const Value: Integer);
 var
   LNewVal: Integer;
@@ -2285,10 +2306,6 @@ begin
   UpdateColWidths;
 end;
 
-function TCustomPropsPage.GetSplitter: Integer;
-begin
-  Result := ColWidths[0];
-end;
 
 procedure TCustomPropsPage.SetValuesColor(const Value: TColor);
 begin
@@ -2303,13 +2320,6 @@ function TCustomPropsPage.GetItemCaptionColor(
   AItem: TPropsPageItem): TColor;
 begin
   Result := Font.Color;
-end;
-
-procedure TCustomPropsPage.CMFontChanged(var Message: TMessage);
-begin
-  inherited;
-  Canvas.Font := Font;
-  DefaultRowHeight := Canvas.TextHeight('Wg') + 3;
 end;
 
 procedure TCustomPropsPage.UpdatePattern;
@@ -2402,9 +2412,13 @@ end;
 
 procedure TPropsPageInplaceEdit.DropDown;
 var
-  LP                                 : TPoint;
-  I, LY, LVisItemCount, LItemHW, LHW: Integer;
-  LItem                              : TPropsPageItem;
+  LP            : TPoint;
+  I             : Integer;
+  LY            : Integer;
+  LVisItemCount : Integer;
+  LItemHW       : Integer;
+  LHW           : Integer;
+  LItem         : TPropsPageItem;
 begin
   LItem := TCustomPropsPage(Grid).ActiveItem;
   if not ListVisible and (LItem <> nil) then
@@ -2707,14 +2721,14 @@ begin
   end;
 end;
 
-function TPropsPageItem.Ident: Integer;
+function TPropsPageItem.Indent: Integer;
 begin
   Result := Level * 10;
 end;
 
 function TPropsPageItem.IsOnExpandButton(AX: Integer): Boolean;
 begin
-  Result := (AX >= Ident) and (AX <= Ident + 13);
+  Result := (AX >= Indent) and (AX <= Indent + 13);
 end;
 
 procedure TPropsPageItem.SetEditStyle(const Value: TEditStyle);

@@ -17,9 +17,9 @@ object frmReflect: TfrmReflect
   object mmoMain: TMemo
     AlignWithMargins = True
     Left = 3
-    Top = 23
+    Top = 26
     Width = 489
-    Height = 736
+    Height = 733
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
@@ -33,18 +33,21 @@ object frmReflect: TfrmReflect
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 0
+    ExplicitTop = 23
+    ExplicitHeight = 736
   end
   object pnlReflected: TPanel
     AlignWithMargins = True
     Left = 3
     Top = 3
     Width = 489
-    Height = 17
+    Height = 20
     Margins.Bottom = 0
     Align = alTop
+    BevelKind = bkFlat
     BevelOuter = bvNone
     Caption = 'Reflected properties of this form:'
-    Color = clAppWorkSpace
+    Color = clSilver
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11

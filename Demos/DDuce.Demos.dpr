@@ -70,8 +70,11 @@ uses
 {$R *.res}
 
 begin
+  {$WARNINGS OFF}
   ReportMemoryLeaksOnShutdown := DebugHook > 0;
+  {$WARNINGS ON}
   Application.Initialize;
+  TStyleManager.TrySetStyle('Windows10');
   Application.MainFormOnTaskbar := True;
   RegisterDemos;
   if DemoManager.ItemList.Count = 1 then

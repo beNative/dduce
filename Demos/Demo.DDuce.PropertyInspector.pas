@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2015 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2016 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -30,19 +30,19 @@ uses
 type
   TfrmPropertyInspector = class(TForm)
     {$REGION 'designer controls'}
-    pnlMain       : TPanel;
-    pnlLeft       : TPanel;
-    pnlRight      : TPanel;
-    btnButton     : TButton;
-    chkCheckBox   : TCheckBox;
-    edtEdit       : TEdit;
-    bgMain: TButtonGroup;
-    cbxControls   : TComboBox;
-    sbrStatusBar  : TStatusBar;
-    trbTrackBar   : TTrackBar;
-    splSplitter   : TSplitter;
-    lblLabel      : TLabel;
-    edtButtonedEdit: TButtonedEdit;
+    pnlMain         : TPanel;
+    pnlLeft         : TPanel;
+    pnlRight        : TPanel;
+    btnButton       : TButton;
+    chkCheckBox     : TCheckBox;
+    edtEdit         : TEdit;
+    bgMain          : TButtonGroup;
+    cbxControls     : TComboBox;
+    sbrStatusBar    : TStatusBar;
+    trbTrackBar     : TTrackBar;
+    splSplitter     : TSplitter;
+    lblLabel        : TLabel;
+    edtButtonedEdit : TButtonedEdit;
     {$ENDREGION}
 
     procedure cbxControlsChange(Sender: TObject);

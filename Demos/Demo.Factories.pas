@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2015 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2016 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -56,42 +56,11 @@ type
       ACount : Integer
     ); static;
 
-//    class function CreateLogTree(
-//      AOwner      : TComponent;
-//      AParent     : TWinControl;
-//      const AName : string = ''
-//    ): TLogTree; static;
-//
-//    class function CreatePropertyInspector(
-//      AOwner  : TComponent;
-//      AParent : TWinControl;
-//      AObject : TPersistent = nil
-//    ): TPropertyInspector; static;
-//
-//    class function CreateInspector(
-//      AOwner      : TComponent;
-//      AParent     : TWinControl;
-//      const AName : string = ''
-//    ): TInspector; static;
-//
-//    class function CreateGridView(
-//      AOwner      : TComponent;
-//      AParent     : TWinControl;
-//      const AName : string = ''
-//    ): TGridView; static;
-//
-//    class function CreateDBGridView(
-//            AOwner      : TComponent;
-//            AParent     : TWinControl;
-//            ADataSource : TDataSource = nil;
-//      const AName       : string = ''
-//    ): TDBGridView; static;
-
     class function CreateVST(
-            AOwner  : TComponent;
-            AParent : TWinControl;
-      const AName   : string = ''
-    ): TVirtualStringTree; static;
+      AOwner      : TComponent;
+      AParent     : TWinControl;
+      const AName : string = ''
+      ) : TVirtualStringTree; static;
 
     class function CreateTVP(
       AOwner      : TComponent;
@@ -421,67 +390,6 @@ begin
   Result := DBG;
 end;
 
-//class function TDemoFactories.CreateDBGridView(AOwner: TComponent;
-//  AParent: TWinControl; ADataSource: TDataSource;
-//  const AName: string): TDBGridView;
-//var
-//  GV: TDBGridView;
-//begin
-//  GV                  := TDBGridView.Create(AOwner);
-//  GV.Header.Flat      := False;
-//  GV.AlignWithMargins := True;
-//  GV.Parent           := AParent;
-//  GV.Align            := alClient;
-//  GV.CursorKeys       := GV.CursorKeys + [gkReturn];
-//  GV.GridStyle        := GV.GridStyle + [gsDotLines];
-//  GV.ColumnsFullDrag  := True;
-//  GV.DoubleBuffered   := True;
-//  GV.CheckBoxes       := True;
-//  GV.ShowFocusRect    := False;
-//  GV.CheckStyle       := csFlat;
-//  GV.ColumnClick      := True;
-//  GV.ShowIndicator    := True;
-//  GV.DataSource       := ADataSource;
-//  GV.AutoSizeCols;
-//  Result := GV;
-//end;
-//
-//class function TDemoFactories.CreatePropertyInspector(AOwner: TComponent;
-//  AParent: TWinControl; AObject: TPersistent): TPropertyInspector;
-//var
-//  PI : TPropertyInspector;
-//begin
-//  PI                  := TPropertyInspector.Create(AOwner);
-//  PI.AlignWithMargins := True;
-//  PI.Parent           := AParent;
-//  PI.Color            := clWhite;
-//  PI.BorderStyle      := bsSingle;
-//  PI.PropKinds        := PI.PropKinds + [pkReadOnly];
-//  PI.Align            := alClient;
-//  PI.Splitter         := PI.Width div 2;
-//  if Assigned(AObject) then
-//  begin
-//    PI.Add(AObject);
-//    PI.UpdateItems;
-//  end;
-//  Result := PI;
-//end;
-//
-//class function TDemoFactories.CreateLogTree(AOwner: TComponent;
-//  AParent: TWinControl; const AName: string): TLogTree;
-//var
-//  VLT : TLogTree;
-//begin
-//  VLT                    := TLogTree.Create(AOwner);
-//  VLT.AlignWithMargins   := True;
-//  VLT.BorderStyle        := bsNone;
-//  VLT.Parent             := AParent;
-//  VLT.Align              := alClient;
-//  VLT.ShowImages         := True;
-//  VLT.Header.Options     := VLT.Header.Options + [hoAutoSpring];
-//  Result := VLT;
-//end;
-
 class function TDemoFactories.CreateRandomContact: TContact;
 var
   C: TContact;
@@ -598,46 +506,6 @@ begin
   if Assigned(AFilter) then
     ATVP.View.Filter.Add(AFilter);
 end;
-
-//class function TDemoFactories.CreateInspector(AOwner: TComponent;
-//  AParent: TWinControl; const AName: string): TInspector;
-//var
-//  I: TInspector;
-//begin
-//  I := TInspector.Create(AOwner);
-//  if AName <> '' then
-//    I.Name := AName;
-//  I.Color  := clWhite;
-//  I.Parent := AParent;
-//  I.Align  := alClient;
-//  Result := I;
-//end;
-//
-//class function TDemoFactories.CreateGridView(AOwner: TComponent;
-//  AParent: TWinControl; const AName: string): TGridView;
-//var
-//  GV: TGridView;
-//begin
-//  GV := TGridView.Create(AOwner);
-//  if AName <> '' then
-//    GV.Name := AName;
-//  GV.Parent                   := AParent;
-//  GV.Align                    := alClient;
-//  GV.Header.Flat              := False;
-//  GV.Header.FullSynchronizing := True;
-//  GV.AlignWithMargins         := True;
-//  GV.Parent                   := AParent;
-//  GV.Align                    := alClient;
-//  GV.CursorKeys               := GV.CursorKeys + [gkReturn];
-//  GV.GridStyle                := GV.GridStyle + [gsDotLines];
-//  GV.ColumnsFullDrag          := True;
-//  GV.DoubleBuffered           := True;
-//  GV.CheckBoxes               := True;
-//  GV.ShowFocusRect            := False;
-//  GV.CheckStyle               := csFlat;
-//  GV.ColumnClick              := True;
-//  Result := GV;
-//end;
 {$ENDREGION}
 
 end.
