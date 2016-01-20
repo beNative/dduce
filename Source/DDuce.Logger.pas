@@ -637,6 +637,8 @@ begin
       InternalSend(lmtValue, AName + ' = ' + IntToStr(AValue.AsInt64));
     tkRecord:
       InternalSend(lmtValue, AName + ' = ' + Reflect.Fields(AValue).ToString);
+    tkInterface:
+      InternalSend(lmtValue, AName + ' = ' + Reflect.Fields(AValue).ToString);
   else
     InternalSend(lmtValue, AName + ' = ' + AValue.ToString);
   end;
