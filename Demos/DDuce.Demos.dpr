@@ -65,7 +65,22 @@ uses
   DDuce.Logging.Appenders.WinIPC in '..\Source\Logging\DDuce.Logging.Appenders.WinIPC.pas',
   DDuce.Components.Factories in '..\Source\Components\DDuce.Components.Factories.pas',
   DDuce.Forms.ComponentInspector in '..\Source\Forms\DDuce.Forms.ComponentInspector.pas' {frmComponentInspector},
-  DDuce.Forms.RTTEye in '..\Source\Forms\DDuce.Forms.RTTEye.pas' {frmRTTEye};
+  DDuce.Forms.RTTEye in '..\Source\Forms\DDuce.Forms.RTTEye.pas' {frmRTTEye},
+  DDuce.Editor.View in '..\Source\Modules\Editor\DDuce.Editor.View.pas' {EditorView},
+  DDuce.Editor.Manager in '..\Source\Modules\Editor\DDuce.Editor.Manager.pas' {dmEditorManager: TDataModule},
+  DDuce.Editor.Commands in '..\Source\Modules\Editor\DDuce.Editor.Commands.pas',
+  DDuce.Editor.Events in '..\Source\Modules\Editor\DDuce.Editor.Events.pas',
+  DDuce.Editor.Factories.Manager in '..\Source\Modules\Editor\DDuce.Editor.Factories.Manager.pas',
+  DDuce.Editor.Factories.Menus in '..\Source\Modules\Editor\DDuce.Editor.Factories.Menus.pas',
+  DDuce.Editor.Factories in '..\Source\Modules\Editor\DDuce.Editor.Factories.pas',
+  DDuce.Editor.Factories.Settings in '..\Source\Modules\Editor\DDuce.Editor.Factories.Settings.pas',
+  DDuce.Editor.Factories.Toolbars in '..\Source\Modules\Editor\DDuce.Editor.Factories.Toolbars.pas',
+  DDuce.Editor.Factories.Views in '..\Source\Modules\Editor\DDuce.Editor.Factories.Views.pas',
+  DDuce.Editor.Interfaces in '..\Source\Modules\Editor\DDuce.Editor.Interfaces.pas',
+  DDuce.Editor.Types in '..\Source\Modules\Editor\DDuce.Editor.Types.pas',
+  DDuce.Editor.Utils in '..\Source\Modules\Editor\DDuce.Editor.Utils.pas',
+  DDuce.Editor.Resources in '..\Source\Modules\Editor\DDuce.Editor.Resources.pas' {ResourcesDataModule: TDataModule},
+  Demo.DDuce.Editor in 'Demo.DDuce.Editor.pas' {frmEditor};
 
 {$R *.res}
 
@@ -74,7 +89,7 @@ begin
   ReportMemoryLeaksOnShutdown := DebugHook > 0;
   {$WARNINGS ON}
   Application.Initialize;
-  TStyleManager.TrySetStyle('Windows10');
+  //TStyleManager.TrySetStyle('Light');
   Application.MainFormOnTaskbar := True;
   RegisterDemos;
   if DemoManager.ItemList.Count = 1 then

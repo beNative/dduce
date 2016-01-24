@@ -202,6 +202,35 @@
         <DCCReference Include="..\Source\Forms\DDuce.Forms.RTTEye.pas">
             <Form>frmRTTEye</Form>
         </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.View.pas">
+            <Form>EditorView</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Manager.pas">
+            <Form>dmEditorManager</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Commands.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Events.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Manager.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Menus.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Toolbars.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Views.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Interfaces.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Types.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Utils.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Resources.pas">
+            <Form>ResourcesDataModule</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Demo.DDuce.Editor.pas">
+            <Form>frmEditor</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

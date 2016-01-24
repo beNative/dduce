@@ -33,6 +33,7 @@ uses
   Demo.DDuce.Logger,
   Demo.DDuce.Inspector,
   Demo.DDuce.GridView,
+  Demo.DDuce.Editor,
 
   Demo.Manager;
 
@@ -44,6 +45,8 @@ begin
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
   DemoManager.Register(TfrmReflect, 'Reflect');
+  DemoManager.Register(TfrmEditor, 'Editor');
+
   // not working yet
   //DemoManager.Register(TfrmXMLTree, 'XMLTree');
   DemoManager.Register(TfrmLogger, 'Logger');
