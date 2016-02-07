@@ -26,8 +26,6 @@ uses
   DDuce.Editor.Interfaces;
 
 type
-{ TEditorManagerFactory }
-
   TEditorManagerFactory = class(TInterfacedObject, IEditorManagerFactory)
     function CreateInstance(
             AOwner            : TComponent = nil;
@@ -47,8 +45,6 @@ uses
   Vcl.Forms,
 
   DDuce.Editor.Manager;
-
-{ TEditorManagerFactory }
 
 function TEditorManagerFactory.CreateInstance(AOwner: TComponent;
   APersistSettings: Boolean; const ASettingsFileName: string): IEditorManager;

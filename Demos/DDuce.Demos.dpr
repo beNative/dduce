@@ -66,9 +66,17 @@ uses
   DDuce.Components.Factories in '..\Source\Components\DDuce.Components.Factories.pas',
   DDuce.Forms.ComponentInspector in '..\Source\Forms\DDuce.Forms.ComponentInspector.pas' {frmComponentInspector},
   DDuce.Forms.RTTEye in '..\Source\Forms\DDuce.Forms.RTTEye.pas' {frmRTTEye},
-  DDuce.Editor.View in '..\Source\Modules\Editor\DDuce.Editor.View.pas' {EditorView},
-  DDuce.Editor.Manager in '..\Source\Modules\Editor\DDuce.Editor.Manager.pas' {dmEditorManager: TDataModule},
+  Demo.DDuce.Editor in 'Demo.DDuce.Editor.pas' {frmEditor},
+  DDuce.Editor.ActionList.Templates in '..\Source\Modules\Editor\DDuce.Editor.ActionList.Templates.pas',
+  DDuce.Editor.ActionList.ToolView in '..\Source\Modules\Editor\DDuce.Editor.ActionList.ToolView.pas' {frmActionListView},
+  DDuce.Editor.AlignLines.Settings in '..\Source\Modules\Editor\DDuce.Editor.AlignLines.Settings.pas',
+  DDuce.Editor.CharacterMap.ToolView in '..\Source\Modules\Editor\DDuce.Editor.CharacterMap.ToolView.pas' {frmCharacterMap},
+  DDuce.Editor.Codeformatters in '..\Source\Modules\Editor\DDuce.Editor.Codeformatters.pas',
+  DDuce.Editor.Codeformatters.Sql in '..\Source\Modules\Editor\DDuce.Editor.Codeformatters.Sql.pas',
+  DDuce.Editor.Codetags in '..\Source\Modules\Editor\DDuce.Editor.Codetags.pas',
+  DDuce.Editor.Colors.Settings in '..\Source\Modules\Editor\DDuce.Editor.Colors.Settings.pas',
   DDuce.Editor.Commands in '..\Source\Modules\Editor\DDuce.Editor.Commands.pas',
+  DDuce.Editor.Commentstripper in '..\Source\Modules\Editor\DDuce.Editor.Commentstripper.pas',
   DDuce.Editor.Events in '..\Source\Modules\Editor\DDuce.Editor.Events.pas',
   DDuce.Editor.Factories.Manager in '..\Source\Modules\Editor\DDuce.Editor.Factories.Manager.pas',
   DDuce.Editor.Factories.Menus in '..\Source\Modules\Editor\DDuce.Editor.Factories.Menus.pas',
@@ -76,11 +84,32 @@ uses
   DDuce.Editor.Factories.Settings in '..\Source\Modules\Editor\DDuce.Editor.Factories.Settings.pas',
   DDuce.Editor.Factories.Toolbars in '..\Source\Modules\Editor\DDuce.Editor.Factories.Toolbars.pas',
   DDuce.Editor.Factories.Views in '..\Source\Modules\Editor\DDuce.Editor.Factories.Views.pas',
+  DDuce.Editor.Filter.Toolview in '..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas' {frmFilter},
+  DDuce.Editor.Highlighterattributes in '..\Source\Modules\Editor\DDuce.Editor.Highlighterattributes.pas',
+  DDuce.Editor.Highlighters in '..\Source\Modules\Editor\DDuce.Editor.Highlighters.pas',
   DDuce.Editor.Interfaces in '..\Source\Modules\Editor\DDuce.Editor.Interfaces.pas',
+  DDuce.Editor.Manager in '..\Source\Modules\Editor\DDuce.Editor.Manager.pas' {dmEditorManager: TDataModule},
+  DDuce.Editor.Options.Settings in '..\Source\Modules\Editor\DDuce.Editor.Options.Settings.pas',
+  DDuce.Editor.Resources in '..\Source\Modules\Editor\DDuce.Editor.Resources.pas' {ResourcesDataModule: TDataModule},
+  DDuce.Editor.Search.Data in '..\Source\Modules\Editor\DDuce.Editor.Search.Data.pas',
+  DDuce.Editor.Search.Engine in '..\Source\Modules\Editor\DDuce.Editor.Search.Engine.pas',
+  DDuce.Editor.Search.Engine.Settings in '..\Source\Modules\Editor\DDuce.Editor.Search.Engine.Settings.pas',
+  DDuce.Editor.Search.Templates in '..\Source\Modules\Editor\DDuce.Editor.Search.Templates.pas',
+  DDuce.Editor.Search.Toolview in '..\Source\Modules\Editor\DDuce.Editor.Search.Toolview.pas' {frmSearchForm},
+  DDuce.Editor.Selection in '..\Source\Modules\Editor\DDuce.Editor.Selection.pas',
+  DDuce.Editor.Selectioninfo.ToolView in '..\Source\Modules\Editor\DDuce.Editor.Selectioninfo.ToolView.pas',
+  DDuce.Editor.Settings in '..\Source\Modules\Editor\DDuce.Editor.Settings.pas',
+  DDuce.Editor.Sortstrings.Settings in '..\Source\Modules\Editor\DDuce.Editor.Sortstrings.Settings.pas',
+  DDuce.Editor.Sortstrings.Toolview in '..\Source\Modules\Editor\DDuce.Editor.Sortstrings.Toolview.pas' {frmSortStrings},
+  DDuce.Editor.Test.ToolView in '..\Source\Modules\Editor\DDuce.Editor.Test.ToolView.pas',
+  DDuce.Editor.Tools.Settings in '..\Source\Modules\Editor\DDuce.Editor.Tools.Settings.pas',
+  DDuce.Editor.ToolView.Base in '..\Source\Modules\Editor\DDuce.Editor.ToolView.Base.pas' {CustomEditorToolView},
+  DDuce.Editor.ToolView.Manager in '..\Source\Modules\Editor\DDuce.Editor.ToolView.Manager.pas',
   DDuce.Editor.Types in '..\Source\Modules\Editor\DDuce.Editor.Types.pas',
   DDuce.Editor.Utils in '..\Source\Modules\Editor\DDuce.Editor.Utils.pas',
-  DDuce.Editor.Resources in '..\Source\Modules\Editor\DDuce.Editor.Resources.pas' {ResourcesDataModule: TDataModule},
-  Demo.DDuce.Editor in 'Demo.DDuce.Editor.pas' {frmEditor};
+  DDuce.Editor.View in '..\Source\Modules\Editor\DDuce.Editor.View.pas' {EditorView},
+  DDuce.Editor.Viewlist.Data in '..\Source\Modules\Editor\DDuce.Editor.Viewlist.Data.pas',
+  DDuce.Editor.Viewlist.ToolView in '..\Source\Modules\Editor\DDuce.Editor.Viewlist.ToolView.pas' {frmViewList};
 
 {$R *.res}
 
@@ -88,8 +117,9 @@ begin
   {$WARNINGS OFF}
   ReportMemoryLeaksOnShutdown := DebugHook > 0;
   {$WARNINGS ON}
+  //StyleManager.TrySetStyle('Windows10');
   Application.Initialize;
-  //TStyleManager.TrySetStyle('Light');
+
   Application.MainFormOnTaskbar := True;
   RegisterDemos;
   if DemoManager.ItemList.Count = 1 then

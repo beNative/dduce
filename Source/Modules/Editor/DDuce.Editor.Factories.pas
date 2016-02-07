@@ -33,9 +33,6 @@ uses
   DDuce.Editor.Interfaces;
 
 type
-
-  { TEditorFactories }
-
   TEditorFactories = class
   public
     class function CreateSettings(

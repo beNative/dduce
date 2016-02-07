@@ -27,9 +27,6 @@ uses
   DDuce.Editor.Interfaces, DDuce.Editor.Resources;
 
 type
-
-  { TEditorMenusFactory }
-
   TEditorMenusFactory = class(TInterfacedObject, IEditorMenusFactory)
   strict private
     FActions : IEditorActions;
@@ -67,9 +64,7 @@ type
 
 implementation
 
-{ TEditorMenusFactory }
-
-{$region 'construction and destruction' /fold}
+{$REGION 'construction and destruction'}
 constructor TEditorMenusFactory.Create(AActions: IEditorActions;
   AMenus: IEditorMenus);
 begin
@@ -84,10 +79,9 @@ begin
   FMenus   := nil;
   inherited BeforeDestruction;
 end;
+{$ENDREGION}
 
-{$endregion}
-
-{$region 'private methods' /fold}
+{$REGION 'private methods'}
 function TEditorMenusFactory.CreateMenuItem(AParent: TMenuItem;
   AAction: TBasicAction): TMenuItem;
 var
@@ -135,9 +129,9 @@ begin
   else
     raise Exception.CreateFmt('Action <%s> not found!', [AActionName]);
 end;
-{$endregion}
+{$ENDREGION}
 
-{$region 'public methods' /fold}
+{$REGION 'public methods'}
 function TEditorMenusFactory.CreateFileMenu(AMenu: TMenu): TMenuItem;
 var
   M   : TMenuItem;
@@ -153,20 +147,20 @@ begin
   CreateMenuItem(MI, 'actSaveAs');
   CreateMenuItem(MI);
   CreateMenuItem(MI, 'actReload');
-  CreateMenuItem(MI);
-  CreateMenuItem(MI, 'actMonitorChanges');
-  CreateMenuItem(MI, 'actCreateDesktopLink');
+//  CreateMenuItem(MI);
+//  CreateMenuItem(MI, 'actMonitorChanges');
+//  CreateMenuItem(MI, 'actCreateDesktopLink');
   CreateMenuItem(MI);
   SMI := CreateMenuItem(MI, 'actEncodingMenu');
   for M in FMenus.EncodingPopupMenu.Items do
   begin
     CreateMenuItem(SMI, M.Action.Name);
   end;
-  SMI := CreateMenuItem(MI, 'actLineBreakStyleMenu');
-  for M in FMenus.LineBreakStylePopupMenu.Items do
-  begin
-    CreateMenuItem(SMI, M.Action.Name);
-  end;
+//  SMI := CreateMenuItem(MI, 'actLineBreakStyleMenu');
+//  for M in FMenus.LineBreakStylePopupMenu.Items do
+//  begin
+//    CreateMenuItem(SMI, M.Action.Name);
+//  end;
   CreateMenuItem(MI, 'actClose');
   CreateMenuItem(MI, 'actCloseOthers');
   CreateMenuItem(MI, 'actExit');
@@ -288,8 +282,8 @@ begin
   CreateMenuItem(MI, 'actSmartSelect');
   CreateMenuItem(MI, 'actFormat');
   CreateMenuItem(MI, 'actAutoGuessHighlighter');
-  CreateMenuItem(MI);
-  CreateMenuItem(MI, 'actMonitorChanges');
+//  CreateMenuItem(MI);
+//  CreateMenuItem(MI, 'actMonitorChanges');
   Result := MI;
 end;
 
@@ -302,12 +296,12 @@ begin
   AMenu.Items.Add(MI);
   CreateMenuItem(MI, 'actShowViews');
   CreateMenuItem(MI, 'actShowActions');
-  CreateMenuItem(MI, 'actShowPreview');
-  CreateMenuItem(MI, 'actShowMiniMap');
-  CreateMenuItem(MI, 'actShowHTMLViewer');
-  CreateMenuItem(MI, 'actShowStructureViewer');
-  CreateMenuItem(MI, 'actShowHexEditor');
-  CreateMenuItem(MI, 'actShowScriptEditor');
+//  CreateMenuItem(MI, 'actShowPreview');
+//  CreateMenuItem(MI, 'actShowMiniMap');
+//  CreateMenuItem(MI, 'actShowHTMLViewer');
+//  CreateMenuItem(MI, 'actShowStructureViewer');
+//  CreateMenuItem(MI, 'actShowHexEditor');
+//  CreateMenuItem(MI, 'actShowScriptEditor');
   Result := MI;
 end;
 
@@ -323,11 +317,11 @@ begin
   CreateMenuItem(MI, 'actShowSpecialCharacters');
   CreateMenuItem(MI, 'actIncFontSize');
   CreateMenuItem(MI, 'actDecFontSize');
-  CreateMenuItem(MI);
-  CreateMenuItem(MI, 'actStayOnTop');
-  CreateMenuItem(MI, 'actToggleMaximized');
-  CreateMenuItem(MI);
-  CreateMenuItem(MI, 'actSingleInstance');
+//  CreateMenuItem(MI);
+//  CreateMenuItem(MI, 'actStayOnTop');
+//  CreateMenuItem(MI, 'actToggleMaximized');
+//  CreateMenuItem(MI);
+//  CreateMenuItem(MI, 'actSingleInstance');
   Result := MI;
 end;
 
@@ -353,7 +347,7 @@ begin
   MI := TMenuItem.Create(AMenu.Owner);
   MI.Caption := SHelpMenuCaption;
   AMenu.Items.Add(MI);
-  CreateMenuItem(MI, 'actAbout');
+  //CreateMenuItem(MI, 'actAbout');
   Result := MI;
 end;
 
@@ -374,7 +368,7 @@ begin
   CreateHelpMenu(MM);
   Result := MM;
 end;
-{$endregion}
+{$ENDREGION}
 
 end.
 

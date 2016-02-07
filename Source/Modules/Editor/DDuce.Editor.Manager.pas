@@ -18,7 +18,7 @@
 
 unit DDuce.Editor.Manager;
 
-{$REGION'documentation' /fold}
+{$REGION'documentation'}
 {
   Datamodule holding common actions, menu's to manage one or more IEditorView
   instances.
@@ -92,6 +92,7 @@ uses
   System.Classes, System.SysUtils, System.Variants, System.Actions,
   System.ImageList,
   Vcl.Controls, Vcl.ActnList, Vcl.Menus, Vcl.Dialogs, Vcl.Forms, Vcl.ImgList,
+  Vcl.ActnPopup,
 
   BCEditor.Editor,
 
@@ -99,6 +100,9 @@ uses
   DDuce.Editor.View,
 
   DDuce.Logger;
+
+type
+  TPopupMenu = DDuce.Editor.Interfaces.TPopupMenu;
 
 type
   { TdmEditorManager }
@@ -110,9 +114,11 @@ type
                                         IEditorEvents,
                                         IEditorCommands,
                                         IEditorMenus,
-                                        IEditorSettings,
-                                        IEditorSearchEngine)
-    {$REGION'designer controls' /fold}
+                                        IEditorSettings
+                                        //,
+                                        //IEditorSearchEngine
+  )
+    {$REGION'designer controls'}
     aclActions                        : TActionList;
     actAlignSelection                 : TAction;
     actAutoFormatXML                  : TAction;
@@ -251,7 +257,6 @@ type
     dlgColor                          : TColorDialog;
     dlgOpen                           : TOpenDialog;
     dlgSave                           : TSaveDialog;
-    imlMain                           : TImageList;
     MenuItem1                         : TMenuItem;
     MenuItem10                        : TMenuItem;
     MenuItem11                        : TMenuItem;
@@ -293,9 +298,10 @@ type
     ppmSettings                       : TPopupMenu;
     ppmSelection                      : TPopupMenu;
     ppmSelectionMode                  : TPopupMenu;
+    imlMain                           : TImageList;
     {$ENDREGION}
 
-    {$REGION'action handlers' /fold}
+    {$REGION'action handlers'}
     procedure aclActionsExecute(AAction: TBasicAction; var Handled: Boolean);
     procedure actAboutExecute(Sender: TObject);
     procedure actAlignAndSortSelectionExecute(Sender: TObject);
@@ -426,15 +432,15 @@ type
     FChanged          : Boolean;
     FCurrentViewIndex : Integer;
     FPersistSettings  : Boolean;
-    FToolViews    : IEditorToolViews;
-    FEvents       : IEditorEvents;
-    FCommands     : IEditorCommands;
-    FSettings     : IEditorSettings;
-    FActiveView   : IEditorView;
-    FViewList     : TEditorViewList;
+    FToolViews        : IEditorToolViews;
+    FEvents           : IEditorEvents;
+    FCommands         : IEditorCommands;
+    FSettings         : IEditorSettings;
+    FActiveView       : IEditorView;
+    FViewList         : TEditorViewList;
 //    FSearchEngine : IEditorSearchEngine;
 
-    {$REGION'property access methods' /fold}
+    {$REGION'property access methods'}
     function GetActionList: TActionList;
     function GetActions: IEditorActions;
     function GetClipboardPopupMenu: TPopupMenu;
@@ -533,10 +539,6 @@ type
     function IEditorViews.Delete = DeleteView;
     procedure IEditorViews.Clear = ClearViews;
     function IEditorViews.GetEnumerator = GetViewsEnumerator;
-
-//        function Delete(AIndex: Integer): Boolean; overload;
-//    function Delete(AView: IEditorView): Boolean; overload;
-//    function Delete(const AName: string): Boolean; overload;
 
     function AddView(
       const AName        : string = '';
@@ -674,8 +676,8 @@ type
       read GetSettings implements IEditorSettings;
 
     { Delegates the implementation of IEditorSearchEngine to an internal object. }
-    property SearchEngine: IEditorSearchEngine
-      read GetSearchEngine implements IEditorSearchEngine;
+//    property SearchEngine: IEditorSearchEngine
+//      read GetSearchEngine implements IEditorSearchEngine;
 
     { Delegates the implementation of IEditorView to the active editor view. }
     property View: IEditorView
@@ -722,59 +724,25 @@ uses
   System.StrUtils, System.TypInfo, System.Contnrs,
   Vcl.Clipbrd,
 
-//  SynEditKeyCmds,
-//  SynEditTypes, SynPluginSyncroEdit, SynEditHighlighterFoldBase,
-//
-//  SynHighlighterPas, SynHighlighterSQL, SynHighlighterLFM, SynHighlighterXML,
-//  SynHighlighterBat, SynHighlighterHTML, SynHighlighterCpp, SynHighlighterJava,
-//  SynHighlighterPerl, SynHighlighterPython, SynHighlighterPHP, SynHighlighterCss,
-//  SynHighlighterJScript, SynHighlighterDiff, SynHighlighterTeX, SynHighlighterPo,
-//  SynhighlighterUnixShellScript, SynHighlighterIni,
+  DDuce.Editor.Settings, DDuce.Editor.Utils,
 
-//  ts.Editor.HighlighterAttributes,
+  DDuce.Editor.ToolView.Manager,
 
-  //DDuce.Editor.Settings,
-  DDuce.Editor.Utils,
+  DDuce.Editor.Filter.ToolView,
+  DDuce.Editor.Search.ToolView,
+  DDuce.Editor.SortStrings.ToolView,
+  DDuce.Editor.ViewList.ToolView,
+  DDuce.Editor.ActionList.ToolView,
+  DDuce.Editor.Test.ToolView,
+  DDuce.Editor.SelectionInfo.ToolView,
+
+  //DDuce.Editor.Filter.Settings,
+  //DDuce.Editor.Search.Settings,
+  DDuce.Editor.SortStrings.Settings,
+  //DDuce.Editor.ViewList.Settings,
+  //DDuce.Editor.ActionList.Settings,
 
   DDuce.Editor.Events, DDuce.Editor.Commands;
-
-//  ts_Editor_ViewList_ToolView,
-//  ts_Editor_CodeShaper_ToolView,
-//  ts_Editor_Preview_ToolView,
-//  ts_Editor_Test_ToolView,
-//  ts_Editor_Search_ToolView,
-//  ts_Editor_Shortcuts_ToolView,
-//  ts_Editor_ActionList_ToolView,
-//  ts_Editor_CodeFilter_ToolView,
-//  ts_Editor_CharacterMap_ToolView,
-//  ts_Editor_Structure_ToolView,
-//  ts_Editor_AlignLines_ToolView,
-//  ts_Editor_HTMLView_ToolView,
-//  ts_Editor_HexEditor_ToolView,
-//  ts_Editor_ScriptEditor_ToolView,
-//  ts_Editor_SelectionInfo_ToolView,
-//  ts_Editor_Filter_ToolView,
-//  ts_Editor_SortStrings_ToolView,
-//
-//  ts.Editor.AlignLines.Settings,
-//  ts.Editor.CodeFilter.Settings,
-//  ts.Editor.CodeShaper.Settings,
-//  ts.Editor.HexEditor.Settings,
-//  ts.Editor.HTMLView.Settings,
-//  ts.Editor.SortStrings.Settings,
-//  ts.Editor.Search.Engine.Settings,
-
-//  ts_Editor_AboutDialog,
-//
-//  ts.Editor.Search.Engine,
-//
-//  ts.Editor.Toolview.Manager,
-//
-//  ts_Editor_SettingsDialog_Old,
-//  ts_Editor_SettingsDialog,
-//  ts_Editor_SettingsDialog_FileAssociations
-
-
 const
   // prefixes used for naming dynamically created actions.
   ACTION_PREFIX_ENCODING       = 'actEncoding';
@@ -782,32 +750,28 @@ const
   ACTION_PREFIX_SELECTIONMODE  = 'actSelectionMode';
   ACTION_PREFIX_LINEBREAKSTYLE = 'actLineBreakStyle';
 
-{$REGION'construction and destruction' /fold}
+{$REGION'construction and destruction'}
 constructor TdmEditorManager.Create(AOwner: TComponent;
   ASettings: IEditorSettings);
 begin
   inherited Create(AOwner);
   FSettings := ASettings;
-//  if not Assigned(FSettings) then
-//    FSettings := TEditorSettings.Create(Self);
+  if not Assigned(FSettings) then
+    FSettings := TEditorSettings.Create(Self);
 end;
 
 procedure TdmEditorManager.AfterConstruction;
 begin
   inherited AfterConstruction;
   FPersistSettings  := False;
-
-//  FSynExporterRTF   := TSynExporterRTF.Create(Self);
-
   { TODO -oTS : Move the construction of these objects to the outside and pass
    the instances to the constructor (dependency injection). This will allow to
    create unit tests for each module. }
-//  FToolViews        := TToolViews.Create(Self);
-//  FEvents           := TEditorEvents.Create(Self);
+  FToolViews        := TToolViews.Create(Self);
+  FEvents           := TEditorEvents.Create(Self);
   FCommands         := TEditorCommands.Create(Self);
   FViewList         := TEditorViewList.Create;
 //  FSearchEngine     := TSearchEngine.Create(Self);
-
   //FSettings.AddEditorSettingsChangedHandler(EditorSettingsChanged);
 
   RegisterToolViews;
@@ -830,7 +794,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION'property access methods' /fold}
+{$REGION'property access methods'}
 function TdmEditorManager.GetEditor: TBCEditor;
 begin
   if Assigned(ActiveView) then
@@ -856,7 +820,7 @@ end;
 
 function TdmEditorManager.GetEvents: IEditorEvents;
 begin
-//  Result := FEvents;
+  Result := FEvents;
 end;
 
 function TdmEditorManager.GetExportPopupMenu: TPopupMenu;
@@ -917,11 +881,7 @@ begin
   for CA in aclActions do
     if CA.Name = AName then
       Break;
-
-
   A := CA as TCustomAction;
-   //A := aclActions.ActionByName(AName) as TCustomAction;
-  //aclActions.
   if Assigned(A) then
     Result := A
   else
@@ -1006,7 +966,7 @@ begin
   if Assigned(AValue) and (AValue <> FActiveView) then
   begin
     FActiveView := AValue;
-    //Events.DoActiveViewChange;
+    Events.DoActiveViewChange;
     ActiveViewChanged;
   end;
 end;
@@ -1099,7 +1059,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION'action handlers' /fold}
+{$REGION'action handlers'}
 procedure TdmEditorManager.actSortSelectionExecute(Sender: TObject);
 begin
   ShowToolView('SortStrings', False, True);
@@ -1186,9 +1146,9 @@ end;
 
 procedure TdmEditorManager.actSearchExecute(Sender: TObject);
 begin
-  if ActiveView.SelectionAvailable then
-    SearchEngine.SearchText := ActiveView.SelectedText;
-  ShowToolView('Search', False, True);
+//  if ActiveView.SelectionAvailable then
+//    SearchEngine.SearchText := ActiveView.SelectedText;
+//  ShowToolView('Search', False, True);
 end;
 
 procedure TdmEditorManager.actSearchReplaceExecute(Sender: TObject);
@@ -1200,12 +1160,12 @@ end;
 
 procedure TdmEditorManager.actShowCodeShaperExecute(Sender: TObject);
 begin
-  ShowToolView('CodeShaper', False, True);
+//  ShowToolView('CodeShaper', False, True);
 end;
 
 procedure TdmEditorManager.actShowCharacterMapExecute(Sender: TObject);
 begin
-  ShowToolView('CharacterMap', False, False);
+//  ShowToolView('CharacterMap', False, False);
 end;
 
 procedure TdmEditorManager.actAlignSelectionExecute(Sender: TObject);
@@ -1623,8 +1583,7 @@ end;
 
 procedure TdmEditorManager.actPlaybackMacroExecute(Sender: TObject);
 begin
-//  Logger.Send(SynMacroRecorder.AsString);
-//  SynMacroRecorder.PlaybackMacro(ActiveView.Editor);
+//
 end;
 
 procedure TdmEditorManager.actPrintExecute(Sender: TObject);
@@ -1639,10 +1598,7 @@ end;
 
 procedure TdmEditorManager.actRecordMacroExecute(Sender: TObject);
 begin
-//  if SynMacroRecorder.State = msRecording then
-//    SynMacroRecorder.Stop
-//  else
-//    SynMacroRecorder.RecordMacro(ActiveView.Editor);
+  ShowMessage(SNotImplementedYet);
 end;
 
 procedure TdmEditorManager.actSaveAllExecute(Sender: TObject);
@@ -1684,8 +1640,8 @@ end;
 
 procedure TdmEditorManager.actFindAllOccurencesExecute(Sender: TObject);
 begin
-  SearchEngine.SearchText := ActiveView.CurrentWord;
-  SearchEngine.Execute;
+//  SearchEngine.SearchText := ActiveView.CurrentWord;
+//  SearchEngine.Execute;
 end;
 
 procedure TdmEditorManager.actIndentExecute(Sender: TObject);
@@ -1740,7 +1696,7 @@ end;
 procedure TdmEditorManager.aclActionsExecute(AAction: TBasicAction;
   var Handled: Boolean);
 begin
-//  Events.DoActionExecute(AAction, Handled);
+  Events.DoActionExecute(AAction, Handled);
 end;
 
 procedure TdmEditorManager.actAlignAndSortSelectionExecute(Sender: TObject);
@@ -1825,7 +1781,7 @@ end;
 
 procedure TdmEditorManager.actEncodingExecute(Sender: TObject);
 begin
-  ActiveView.Encoding := (Sender as TAction).Caption;
+  //ActiveView.Encoding := (Sender as TAction).Caption;
 end;
 
 procedure TdmEditorManager.actLineBreakStyleExecute(Sender: TObject);
@@ -1834,32 +1790,17 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION'event handlers' /fold}
-//procedure TdmEditorManager.SynMacroRecorderStateChange(Sender: TObject);
-//begin
-////  Events.DoMacroStateChange(SynMacroRecorder.State);
-//end;
-
-//procedure TdmEditorManager.SynMacroRecorderUserCommand(
-//  aSender: TCustomSynMacroRecorder; aCmd: TSynEditorCommand;
-//  var aEvent: TSynMacroEvent);
-//begin
-//  Logger.Send(
-//     'SynMacroRecorderUserCommand(Command = %s)',
-//     [EditorCommandToCodeString(aCmd)]
-//   );
-//end;
-
+{$REGION'event handlers'}
 procedure TdmEditorManager.EditorSettingsChanged(ASender: TObject);
 begin
   ApplyHighlighterAttributes;
-  //if Assigned(ActiveView) then
-  //  ActiveView.Editor.Refresh;
+  if Assigned(ActiveView) then
+    ActiveView.Editor.Refresh;
 end;
 {$ENDREGION}
 
-{$REGION'private methods' /fold}
-{$REGION'Helpers' /fold}
+{$REGION'private methods'}
+{$REGION'Helpers'}
 function TdmEditorManager.AddMenuItem(AParent: TMenuItem; AAction: TBasicAction
   ): TMenuItem;
 var
@@ -1878,13 +1819,7 @@ begin
     MI.Action := AAction;
     if (AAction is TAction) and (TAction(AAction).GroupIndex > 0) then
     begin
-//      MI.GlyphShowMode := gsmNever;
       MI.RadioItem := True;
-    end;
-    if (AAction is TAction) and (TAction(AAction).AutoCheck) then
-    begin
-//      MI.GlyphShowMode := gsmNever;
-//      MI.ShowAlwaysCheckable := True;
     end;
     AParent.Add(MI);
     Result := MI;
@@ -1921,7 +1856,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION'Initialization' /fold}
+{$REGION'Initialization'}
 procedure TdmEditorManager.InitializePopupMenus;
 begin
   BuildClipboardPopupMenu;
@@ -2040,7 +1975,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION'Build popup menus' /fold}
+{$REGION'Build popup menus'}
 procedure TdmEditorManager.BuildClipboardPopupMenu;
 var
   MI: TMenuItem;
@@ -2392,23 +2327,20 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION'Registration' /fold}
+{$REGION'Registration'}
 procedure TdmEditorManager.RegisterToolViews;
 begin
-//  ToolViews.Register(TfrmAlignLines, TAlignLinesSettings, 'AlignLines');
+  //ToolViews.Register(TfrmAlignLines, TAlignLinesSettings, 'AlignLines');
 //  ToolViews.Register(TfrmCodeFilterDialog, TCodeFilterSettings, 'CodeFilter');
 //  ToolViews.Register(TfrmHTMLView, THTMLViewSettings, 'HTMLView');
-//  ToolViews.Register(TfrmSortStrings, TSortStringsSettings, 'SortStrings');
-//  ToolViews.Register(TfrmMiniMap, TMiniMapSettings, 'MiniMap');
-//  ToolViews.Register(TfrmHexEditor, THexEditorSettings, 'HexEditor');
-//  ToolViews.Register(TfrmSearchForm, TSearchEngineSettings, 'Search');
-//  ToolViews.Register(TfrmCodeShaper, TCodeShaperSettings, 'CodeShaper');
-//
-//  ToolViews.Register(TfrmViewList, nil, 'ViewList');
-//  ToolViews.Register(TfrmPreview, nil, 'Preview');
-//  ToolViews.Register(TfrmActionListView, nil, 'ActionListView');
-//  ToolViews.Register(TfrmTest, nil,  'Test');
-//  ToolViews.Register(TfrmSelectionInfo, nil, 'SelectionInfo');
+  ToolViews.Register(TfrmSortStrings, TSortStringsSettings, 'SortStrings');
+  //ToolViews.Register(TfrmSearchForm, TSearchEngineSettings, 'Search');
+  //ToolViews.Register(TfrmCodeShaper, TCodeShaperSettings, 'CodeShaper');
+
+  ToolViews.Register(TfrmViewList, nil, 'ViewList');
+  ToolViews.Register(TfrmActionListView, nil, 'ActionListView');
+  ToolViews.Register(TfrmTest, nil,  'Test');
+  ToolViews.Register(TfrmSelectionInfo, nil, 'SelectionInfo');
 //  ToolViews.Register(TfrmStructure, nil, 'Structure');
 //  ToolViews.Register(TfrmCharacterMap, nil, 'CharacterMap');
 //  ToolViews.Register(TfrmScriptEditor, nil, 'ScriptEditor');
@@ -2417,7 +2349,7 @@ end;
 {$ENDREGION}
 {$ENDREGION}
 
-{$REGION'protected methods' /fold}
+{$REGION'protected methods'}
 { Called when the active view is set to another view in the list. }
 procedure TdmEditorManager.ActiveViewChanged;
 begin
@@ -2479,7 +2411,7 @@ begin
     begin
       { This for example can allow the owner to dock the toolview in the main
         application workspace. }
-//      Events.DoShowToolView(ETV);
+      Events.DoShowToolView(ETV);
       ETV.Visible := True;
     end
     else
@@ -2492,7 +2424,7 @@ begin
     ETV.SetFocus;
 end;
 
-{$REGION'IEditorActions' /fold}
+{$REGION'IEditorActions'}
 function TdmEditorManager.AddView(const AName: string; const AFileName: string;
   const AHighlighter: string): IEditorView;
 var
@@ -2505,12 +2437,12 @@ begin
 //  if AName <> '' then
 //    V.Name := AName;
 //  V.FileName := AFileName;
-//  if FileExistsUTF8(V.FileName) then
+//  if FileExists(V.FileName) then
 //    V.Load;
 //  V.HighlighterName := AHighlighter;
 //  V.Form.Caption := '';
   ViewList.Add(V);
-//  Events.DoAddEditorView(V);
+  Events.DoAddEditorView(V);
 //  // TS macro support
 //  SynMacroRecorder.AddEditor(V.Editor);
   V.Activate;
@@ -2533,8 +2465,6 @@ begin
       V := Views[I];
       V.Activate
     end;
-    // TS macro support
-//    SynMacroRecorder.RemoveEditor(Views[AIndex].Editor);
     Views[AIndex].Close;
     ViewList.Delete(AIndex);
     Result := True;
@@ -2562,7 +2492,6 @@ begin
     begin
       if AView = ActiveView then
       begin
-//        SynMacroRecorder.RemoveEditor(AView.Editor);
         AView.Close;
         ViewList.Delete(I);
         Views[0].Activate;
@@ -2570,7 +2499,6 @@ begin
       end
       else
       begin
-  //      SynMacroRecorder.RemoveEditor(AView.Editor);
         AView.Close;
         ViewList.Delete(I);
       end;
@@ -2615,7 +2543,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION'IEditorCommands' /fold}
+{$REGION'IEditorCommands'}
 procedure TdmEditorManager.ExportLines(AFormat: string; AToClipBoard: Boolean;
   ANativeFormat: Boolean);
 //var
@@ -2745,7 +2673,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION'UpdateActions' /fold}
+{$REGION'UpdateActions'}
 procedure TdmEditorManager.UpdateActions;
 var
   B  : Boolean;
@@ -2758,12 +2686,10 @@ begin
     actCut.Enabled   := actCut.Visible and B;
     actCopy.Enabled  := actCopy.Visible and B;
     actPaste.Enabled := actPaste.Visible and ActiveView.CanPaste and B;
-    actFileMenu.DisableIfNoHandler := False;
 
-    B := True;
     //if {Assigned(Settings) and V.Focused {and FChanged} then
     begin
-//      B := V.SelAvail and not Settings.ReadOnly;
+      B := V.SelectionAvailable {and not Settings.ReadOnly};
       actDequoteSelection.Enabled            := B;
       actLowerCaseSelection.Enabled          := B;
       actToggleBlockCommentSelection.Enabled := B;
@@ -2952,26 +2878,26 @@ var
   I : Integer;
 begin
   // Assign fold shortcuts
-//  I := View.Editor.Keystrokes.FindCommand(ecFoldLevel0);
-//  actFoldLevel0.ShortCut := View.Editor.Keystrokes[I].ShortCut;
-//  I := View.Editor.Keystrokes.FindCommand(ecFoldLevel1);
-//  actFoldLevel1.ShortCut := View.Editor.Keystrokes[I].ShortCut;
-//  I := View.Editor.Keystrokes.FindCommand(ecFoldLevel2);
-//  actFoldLevel2.ShortCut := View.Editor.Keystrokes[I].ShortCut;
-//  I := View.Editor.Keystrokes.FindCommand(ecFoldLevel3);
-//  actFoldLevel3.ShortCut := View.Editor.Keystrokes[I].ShortCut;
-//  I := View.Editor.Keystrokes.FindCommand(ecFoldLevel4);
-//  actFoldLevel4.ShortCut := View.Editor.Keystrokes[I].ShortCut;
-//  I := View.Editor.Keystrokes.FindCommand(ecFoldLevel5);
-//  actFoldLevel5.ShortCut := View.Editor.Keystrokes[I].ShortCut;
-//  I := View.Editor.Keystrokes.FindCommand(ecFoldLevel6);
-//  actFoldLevel6.ShortCut := View.Editor.Keystrokes[I].ShortCut;
-//  I := View.Editor.Keystrokes.FindCommand(ecFoldLevel7);
-//  actFoldLevel7.ShortCut := View.Editor.Keystrokes[I].ShortCut;
-//  I := View.Editor.Keystrokes.FindCommand(ecFoldLevel8);
-//  actFoldLevel8.ShortCut := View.Editor.Keystrokes[I].ShortCut;
-//  I := View.Editor.Keystrokes.FindCommand(ecFoldLevel9);
-//  actFoldLevel9.ShortCut := View.Editor.Keystrokes[I].ShortCut;
+//  I := View.Editor.KeyCommands.FindCommand(ecFoldLevel0);
+//  actFoldLevel0.ShortCut := View.Editor.KeyCommands[I].ShortCut;
+//  I := View.Editor.KeyCommands.FindCommand(ecFoldLevel1);
+//  actFoldLevel1.ShortCut := View.Editor.KeyCommands[I].ShortCut;
+//  I := View.Editor.KeyCommands.FindCommand(ecFoldLevel2);
+//  actFoldLevel2.ShortCut := View.Editor.KeyCommands[I].ShortCut;
+//  I := View.Editor.KeyCommands.FindCommand(ecFoldLevel3);
+//  actFoldLevel3.ShortCut := View.Editor.KeyCommands[I].ShortCut;
+//  I := View.Editor.KeyCommands.FindCommand(ecFoldLevel4);
+//  actFoldLevel4.ShortCut := View.Editor.KeyCommands[I].ShortCut;
+//  I := View.Editor.KeyCommands.FindCommand(ecFoldLevel5);
+//  actFoldLevel5.ShortCut := View.Editor.KeyCommands[I].ShortCut;
+//  I := View.Editor.KeyCommands.FindCommand(ecFoldLevel6);
+//  actFoldLevel6.ShortCut := View.Editor.KeyCommands[I].ShortCut;
+//  I := View.Editor.KeyCommands.FindCommand(ecFoldLevel7);
+//  actFoldLevel7.ShortCut := View.Editor.KeyCommands[I].ShortCut;
+//  I := View.Editor.KeyCommands.FindCommand(ecFoldLevel8);
+//  actFoldLevel8.ShortCut := View.Editor.KeyCommands[I].ShortCut;
+//  I := View.Editor.KeyCommands.FindCommand(ecFoldLevel9);
+//  actFoldLevel9.ShortCut := View.Editor.KeyCommands[I].ShortCut;
 end;
 
 procedure TdmEditorManager.ClearHighlightSearch;
@@ -2990,7 +2916,7 @@ function TdmEditorManager.OpenFile(const AFileName: string): IEditorView;
 var
   V : IEditorView;
 begin
-//  Events.DoOpen(AFileName);
+  Events.DoOpen(AFileName);
   { Check if the file is already opened in a view. }
   V := ViewByFileName[AFileName];
   if Assigned(V) then
@@ -3015,7 +2941,7 @@ var
   S : string;
 begin
   S := '';
-//  Events.DoNew(AFileName, AText);
+  Events.DoNew(AFileName, AText);
   if Assigned(ActiveView) then
     S := ActiveView.HighlighterName;
   V := AddView('', AFileName, S);

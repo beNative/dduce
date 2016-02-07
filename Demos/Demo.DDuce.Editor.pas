@@ -34,16 +34,15 @@ type
     splVertical : TSplitter;
 
   private
-    FEditor  : IEditorView;
-    FManager : IEditorManager;
+    FEditor           : IEditorView;
+    FManager          : IEditorManager;
     FMainToolbar      : TToolbar;
-    FSelectionToolbar : TToolbar;
+//    FSelectionToolbar : TToolbar;
     FRightToolbar     : TToolbar;
     FMainMenu         : TMainMenu;
 
   public
     procedure AfterConstruction; override;
-
 
   end;
 
@@ -54,26 +53,26 @@ uses
 
 {$R *.dfm}
 
-{ TfrmEditor }
-
+{$REGION 'construction and destruction'}
 procedure TfrmEditor.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FManager := TEditorFactories.CreateManager(Self);
-  FEditor  := TEditorFactories.CreateView(pnlRight, FManager);
-  FMainMenu := TEditorFactories.CreateMainMenu(Self, FManager.Actions, FManager.Menus);
+  FManager     := TEditorFactories.CreateManager(Self);
+  FEditor      := TEditorFactories.CreateView(pnlRight, FManager);
+  FMainMenu    := TEditorFactories.CreateMainMenu(Self, FManager.Actions, FManager.Menus);
   FMainToolbar := TEditorFactories.CreateMainToolbar(
     Self,
     pnlRight,
     FManager.Actions,
     FManager.Menus
   );
-  FSelectionToolbar := TEditorFactories.CreateSelectionToolbar(
-    Self,
-    pnlRight,
-    FManager.Actions,
-    FManager.Menus
-  );
+//  FSelectionToolbar := TEditorFactories.CreateSelectionToolbar(
+//    Self,
+//    pnlRight,
+//    FManager.Actions,
+//    FManager.Menus
+//  );
 end;
+{$ENDREGION}
 
 end.

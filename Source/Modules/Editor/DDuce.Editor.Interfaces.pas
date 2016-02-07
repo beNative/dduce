@@ -26,12 +26,21 @@ unit DDuce.Editor.Interfaces;
 interface
 
 uses
-  System.Classes, System.Contnrs, System.Types,
+  System.Classes, System.Contnrs, System.Types, System.SysUtils,
   Vcl.ActnList, Vcl.Controls, Vcl.Forms, Vcl.Menus, Vcl.Graphics, Vcl.ComCtrls,
+  Vcl.ActnPopup,
+
+  Spring, Spring.Collections,
 
   BCEditor.Editor, BCEditor.Types,
 
+  DDuce.Editor.Search.Data,
+
+  DDuce.Editor.Tools.Settings,
+
   DDuce.Editor.Types;
+
+
 
 //  ts.Core.FormSettings,
 //
@@ -43,6 +52,14 @@ uses
 //
 //  ts.Editor.Types, ts.Editor.Highlighters, ts.Editor.HighlighterAttributes,
   //ts.Editor.Colors.Settings, ts.Editor.Tools.Settings;
+
+
+// TPopupMenu does not work with Vcl styles! This interposer class is a work-
+// around for this issue.
+// See: https://theroadtodelphi.wordpress.com/2012/03/06/adding-vcl-styles-support-to-a-tpopupmenu-in-2-lines-of-code/
+
+type
+  TPopupMenu = class(Vcl.ActnPopup.TPopupActionBar);
 
 type
   // forward declarations
@@ -93,7 +110,7 @@ type
 
   IEditorView = interface(IControl)
   ['{94689213-B046-45F6-922B-FAE91C02A3FF}']
-    {$region 'property access methods' /fold}
+    {$REGION 'property access methods'}
     function GetActions: IEditorActions;
     function GetBlockBegin: TPoint;
     function GetBlockEnd: TPoint;
@@ -107,11 +124,10 @@ type
     function GetCurrentWord: string;
     function GetEditor: TBCEditor;
     function GetEditorFont: TFont;
-    function GetEncoding: string;
+    function GetEncoding: TEncoding;
     function GetFileName: string;
     function GetFindHistory: TStrings;
     function GetFoldLevel: Integer;
-    function GetFoldState: string;
     function GetForm: TCustomForm;
     //function GetHighlighterItem: THighlighterItem;
     function GetHighlighterName: string;
@@ -150,10 +166,8 @@ type
     procedure SetCaretXY(const AValue: TPoint);
     procedure SetCaretY(const AValue: Integer);
     procedure SetEditorFont(AValue: TFont);
-    procedure SetEncoding(const AValue: string);
     procedure SetFileName(const AValue: string);
     procedure SetFoldLevel(const AValue: Integer);
-    procedure SetFoldState(const AValue: string);
 //    procedure SetHighlighterItem(const AValue: THighlighterItem);
     procedure SetHighlighterName(AValue: string);
     procedure SetInsertMode(AValue: Boolean);
@@ -175,7 +189,7 @@ type
 //    procedure SetShowSpecialChars(const AValue: Boolean);
     procedure SetText(const AValue: string);
     procedure SetTopLine(const AValue: Integer);
-    {$endregion}
+    {$ENDREGION}
 
     // information retrieval
     function GetWordAtPosition(const APosition: TPoint): string;
@@ -337,10 +351,6 @@ type
       read GetLogicalCaretXY write SetLogicalCaretXY;
 
     //---| Folding support |---------------------------------------------------
-    { String identifying the foldstate of current instance }
-    property FoldState: string
-      read GetFoldState write SetFoldState;
-
     property FoldLevel: Integer
       read GetFoldLevel write SetFoldLevel;
 
@@ -383,8 +393,8 @@ type
     property Modified: Boolean
       read GetModified write SetModified;
 
-    property Encoding: string
-      read GetEncoding write SetEncoding;
+    property Encoding: TEncoding
+      read GetEncoding;
 
     property LineBreakStyle: string
       read GetLineBreakStyle write SetLineBreakStyle;
@@ -461,14 +471,14 @@ type
   IEditorSearchEngine = interface
   ['{5403336C-3E81-4A1B-B2BB-170CF0EF0B84}']
     function GetCurrentIndex: Integer;
-    function GetItemGroups: TObjectList;
-    function GetItemList: TObjectList;
-//    function GetOptions: TSynSearchOptions;
+    function GetItemGroups: IList<TSearchResultGroup>;
+    function GetItemList: IList<TSearchResult>;
+    function GetOptions: TBCEditorSearchOptions;
     function GetReplaceText: string;
     function GetSearchAllViews: Boolean;
     function GetSearchText: string;
     procedure SetCurrentIndex(AValue: Integer);
-//    procedure SetOptions(AValue: TSynSearchOptions);
+    procedure SetOptions(AValue: TBCEditorSearchOptions);
     procedure SetReplaceText(AValue: string);
     procedure SetSearchAllViews(AValue: Boolean);
     procedure SetSearchText(AValue: string);
@@ -479,16 +489,11 @@ type
     procedure FindNext;
     procedure FindPrevious;
 
-    procedure AddOnExecuteHandler(AEvent: TNotifyEvent);
-    procedure RemoveOnExecuteHandler(AEvent: TNotifyEvent);
-    procedure AddOnChangeHandler(AEvent: TNotifyEvent);
-    procedure RemoveOnChangeHandler(AEvent: TNotifyEvent);
-
     property CurrentIndex: Integer
       read GetCurrentIndex write SetCurrentIndex;
 
-//    property Options: TSynSearchOptions
-//      read GetOptions write SetOptions;
+    property Options: TBCEditorSearchOptions
+      read GetOptions write SetOptions;
 
     property SearchText : string
       read GetSearchText write SetSearchText;
@@ -499,10 +504,10 @@ type
     property SearchAllViews: Boolean
       read GetSearchAllViews write SetSearchAllViews;
 
-    property ItemList: TObjectList
+    property ItemList: IList<TSearchResult>
       read GetItemList;
 
-    property ItemGroups: TObjectList
+    property ItemGroups: IList<TSearchResultGroup>
       read GetItemGroups;
   end;
 
@@ -512,8 +517,11 @@ type
 
   IEditorEvents = interface
   ['{D078C92D-16DF-4727-A18F-4C76E07D37A2}']
-    {$region 'property access methods' /fold}
+    {$REGION 'property access methods'}
     function GetOnAddEditorView: TAddEditorViewEvent;
+    function GetOnActiveViewChange: IEvent<TNotifyEvent>;
+    function GetOnChange: IEvent<TNotifyEvent>;
+    function GetOnModified: IEvent<TNotifyEvent>;
 //    function GetOnAfterSave: TStorageEvent;
 //    function GetOnBeforeSave: TStorageEvent;
     function GetOnHideEditorToolView: TEditorToolViewEvent;
@@ -537,7 +545,7 @@ type
 //    procedure SetOnSave(const AValue: TStorageEvent);
 //    procedure SetOnShowEditorToolView(AValue: TEditorToolViewEvent);
 //    procedure SetOnStatusChange(const AValue: TStatusChangeEvent);
-    {$endregion}
+    {$ENDREGION}
 
     // event dispatch methods
     procedure DoCaretPositionChange;
@@ -589,6 +597,15 @@ type
     property OnHideEditorToolView: TEditorToolViewEvent
       read GetOnHideEditorToolView write SetOnHideEditorToolView;
 
+    property OnChange: IEvent<TNotifyEvent>
+      read GetOnChange;
+
+    property OnModified: IEvent<TNotifyEvent>
+      read GetOnModified;
+
+    property OnActiveViewChange: IEvent<TNotifyEvent>
+      read GetOnActiveViewChange;
+
 //    property OnStatusChange: TStatusChangeEvent
 //      read GetOnStatusChange write SetOnStatusChange;
 //
@@ -621,7 +638,7 @@ type
 
   IEditorSettings = interface
   ['{CDB18A45-54AA-49F2-82C7-15D68C952197}']
-    {$region 'property access methods' /fold}
+    {$REGION 'property access methods'}
     function GetAutoFormatXML: Boolean;
     function GetAutoGuessHighlighterType: Boolean;
     function GetCloseWithESC: Boolean;
@@ -638,7 +655,7 @@ type
     function GetLanguageCode: string;
     function GetReadOnly: Boolean;
     function GetSingleInstance: Boolean;
-//    function GetToolSettings: TEditorToolSettings;
+    function GetToolSettings: TEditorToolSettings;
     function GetXML: string;
     procedure SetAutoFormatXML(const AValue: Boolean);
     procedure SetAutoGuessHighlighterType(const AValue: Boolean);
@@ -655,8 +672,8 @@ type
     procedure SetLanguageCode(AValue: string);
     procedure SetReadOnly(const AValue: Boolean);
     procedure SetSingleInstance(AValue: Boolean);
-//    procedure SetToolSettings(AValue: TEditorToolSettings);
-    {$endregion}
+    procedure SetToolSettings(AValue: TEditorToolSettings);
+    {$ENDREGION}
 
     procedure Load;
     procedure Save;
@@ -668,8 +685,8 @@ type
 //    property Colors: TEditorColorSettings
 //      read GetColors write SetColors;
 //
-//    property ToolSettings:  TEditorToolSettings
-//      read GetToolSettings write SetToolSettings;
+    property ToolSettings:  TEditorToolSettings
+      read GetToolSettings write SetToolSettings;
 
     property FileName: string
       read GetFileName write SetFileName;
@@ -869,7 +886,7 @@ type
 
   IEditorMenus = interface
   ['{4B6F6B6A-8A72-478B-B3AF-089E72E23CDF}']
-    {$region 'property access methods' /fold}
+    {$REGION 'property access methods'}
     function GetClipboardPopupMenu: TPopupMenu;
     function GetEditorPopupMenu: TPopupMenu;
     function GetEncodingPopupMenu: TPopupMenu;
@@ -886,7 +903,7 @@ type
     function GetSelectionPopupMenu: TPopupMenu;
     function GetSelectPopupMenu: TPopupMenu;
     function GetSettingsPopupMenu: TPopupMenu;
-    {$endregion}
+    {$ENDREGION}
 
     property ClipboardPopupMenu: TPopupMenu
       read GetClipboardPopupMenu;
@@ -961,7 +978,7 @@ type
 
   IEditorManager = interface
   ['{631A126F-1693-4E25-B691-CD2487BCB820}']
-    {$region 'property access methods' /fold}
+    {$REGION 'property access methods'}
     function GetActions: IEditorActions;
     function GetCommands: IEditorCommands;
     function GetEvents: IEditorEvents;
@@ -976,7 +993,7 @@ type
     function GetActiveView: IEditorView;
     procedure SetActiveView(AValue: IEditorView);
 //    function GetHighlighters: THighlighters;
-    {$endregion}
+    {$ENDREGION}
 
     procedure UpdateActions;
     function ActivateView(const AName: string): Boolean;
@@ -1122,7 +1139,7 @@ type
 
 implementation
 
-{$region 'TEditorViewListEnumerator' /fold}
+{$REGION 'TEditorViewListEnumerator'}
 constructor TEditorViewListEnumerator.Create(AList: TEditorViewList);
 begin
   FList := AList;
@@ -1141,9 +1158,9 @@ begin
   if Result then
     Inc(FIndex);
 end;
-{$endregion}
+{$ENDREGION}
 
-{$region 'TEditorToolViewListEnumerator' /fold}
+{$REGION 'TEditorToolViewListEnumerator'}
 constructor TEditorToolViewListEnumerator.Create(AList: IEditorToolViews);
 begin
   FList := AList;
@@ -1167,7 +1184,7 @@ begin
   if Result then
     Inc(FIndex);
 end;
-{$endregion}
+{$ENDREGION}
 
 end.
 

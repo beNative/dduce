@@ -29,9 +29,6 @@ uses
    DDuce.Editor.Interfaces;
 
 type
-
-  { TEditorSettingsFactory }
-
   TEditorSettingsFactory = class(TInterfacedObject, IEditorSettingsFactory)
   public
     procedure AfterConstruction; override;
@@ -73,19 +70,11 @@ uses
 //  DDuce.Editor.SortStrings.Settings,
 //  DDuce.Editor.Search.Engine.Settings,
   //DDuce.Editor.Settings,
-  DDuce.Editor.Resources
+  DDuce.Editor.Resources;
 
+{$REGION 'private methods'}
 
-  ;
-//  ts.Components.UniHighlighter,
-//
-//  ts.Core.Utils;
-
-{ TEditorSettingsFactory }
-
-{$region 'private methods' /fold}
-
-{$region 'construction and destruction' /fold}
+{$REGION 'construction and destruction'}
 procedure TEditorSettingsFactory.AfterConstruction;
 begin
   inherited AfterConstruction;
@@ -97,7 +86,7 @@ begin
 
   inherited BeforeDestruction;
 end;
-{$endregion}
+{$ENDREGION}
 
 //procedure TEditorSettingsFactory.RegisterToolSettings(
 //  ASettings: TEditorToolSettings);
@@ -286,9 +275,9 @@ begin
 //    //TSynFacilSyn
 //  ]);
 end;
-{$endregion}
+{$ENDREGION}
 
-{$region 'public methods' /fold}
+{$REGION 'public methods'}
 function TEditorSettingsFactory.CreateInstance(AOwner: TComponent;
   const AFileName: string): IEditorSettings;
 var
@@ -305,7 +294,7 @@ begin
   end;
   Result := ES;
 end;
-{$endregion}
+{$ENDREGION}
 
 end.
 

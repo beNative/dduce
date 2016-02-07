@@ -33,9 +33,6 @@ const
   DEFAULT_TRANSPARANT  = True;
 
 type
-
-  { TEditorToolbarsFactory }
-
   TEditorToolbarsFactory = class(TInterfacedObject, IEditorToolbarsFactory)
   strict private
     FActions : IEditorActions;
@@ -100,9 +97,7 @@ type
 
 implementation
 
-{ TEditorToolbarsFactory }
-
-{$region 'construction and destruction' /fold}
+{$REGION 'construction and destruction'}
 procedure TEditorToolbarsFactory.AfterConstruction;
 begin
   inherited AfterConstruction;
@@ -119,9 +114,9 @@ begin
   FActions := AActions;
   FMenus   := AMenus;
 end;
-{$endregion}
+{$ENDREGION}
 
-{$region 'private methods' /fold}
+{$REGION 'private methods'}
 procedure TEditorToolbarsFactory.ApplyDefaultProperties(AToolbar: TToolbar);
 begin
   AToolbar.EdgeBorders := EdgeBorders;
@@ -161,9 +156,9 @@ begin
   else
     Result := CreateToolButton(AParent, FActions[AActionName], APopupMenu);
 end;
-{$endregion}
+{$ENDREGION}
 
-{$region 'public methods' /fold}
+{$REGION 'public methods'}
 function TEditorToolbarsFactory.CreateMainToolbar(AOwner: TComponent;
   AParent: TWinControl): TToolbar;
 var
@@ -193,27 +188,26 @@ begin
   CreateToolButton(TB, 'actSearch');
   CreateToolButton(TB, 'actSearchReplace');
   CreateToolButton(TB);
-  CreateToolButton(TB, 'actToggleFoldLevel', FMenus.FoldPopupMenu);
+//  CreateToolButton(TB, 'actToggleFoldLevel', FMenus.FoldPopupMenu);
   CreateToolButton(TB);
   CreateToolButton(TB, 'actToggleHighlighter', FMenus.HighlighterPopupMenu);
-  CreateToolButton(TB, 'actAutoGuessHighlighter');
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actShowCodeShaper');
-  CreateToolButton(TB, 'actShowCodeFilter');
-  CreateToolButton(TB, 'actShowCharacterMap');
+//  CreateToolButton(TB, 'actAutoGuessHighlighter');
+//  CreateToolButton(TB);
+//  CreateToolButton(TB, 'actShowCodeShaper');
+//  CreateToolButton(TB, 'actShowCodeFilter');
+//  CreateToolButton(TB, 'actShowCharacterMap');
 //  CreateToolButton(TB, 'actShowPreview');
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actSmartSelect');
-  CreateToolButton(TB, 'actFormat');
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actSettings');
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actShowSpecialCharacters');
-  CreateToolButton(TB, 'actMonitorChanges');
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actCreateDesktopLink');
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actAbout');
+//  CreateToolButton(TB);
+//  CreateToolButton(TB, 'actSmartSelect');
+//  CreateToolButton(TB, 'actFormat');
+//  CreateToolButton(TB);
+//  CreateToolButton(TB, 'actSettings');
+//  CreateToolButton(TB);
+//  CreateToolButton(TB, 'actShowSpecialCharacters');
+//  CreateToolButton(TB);
+//  CreateToolButton(TB, 'actCreateDesktopLink');
+//  CreateToolButton(TB);
+//  CreateToolButton(TB, 'actAbout');
   Result := TB;
 end;
 
@@ -227,10 +221,10 @@ begin
   TB.Parent := AParent;
   TB.Images := FActions.ActionList.Images;
 
-  CreateToolButton(TB, 'actShowViews');
-  CreateToolButton(TB, 'actSingleInstance');
-  CreateToolButton(TB, 'actStayOnTop');
-  CreateToolButton(TB, 'actClose');
+//  CreateToolButton(TB, 'actShowViews');
+//  CreateToolButton(TB, 'actSingleInstance');
+//  CreateToolButton(TB, 'actStayOnTop');
+//  CreateToolButton(TB, 'actClose');
 
   Result := TB;
 end;
@@ -280,7 +274,7 @@ begin
   CreateToolButton(TB, 'actToggleBlockCommentSelection');
   Result := TB;
 end;
-{$endregion}
+{$ENDREGION}
 
 end.
 

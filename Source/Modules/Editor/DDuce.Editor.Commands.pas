@@ -34,9 +34,6 @@ uses
   DDuce.Editor.Interfaces;
 
 type
-
-  { TEditorCommands }
-
   TEditorCommands = class(TComponent, IEditorCommands)
   strict private
     function GetEvents: IEditorEvents;
@@ -170,29 +167,21 @@ uses
   System.Math, System.StrUtils,
   Vcl.Forms,
 
-  //FileUtil, Base64,
-
-  //SynPluginSyncroEdit, SynEditKeyCmds, SynEditTypes,
-
   BCEditor.Editor.KeyCommands,
-
-  //ts.Core.Utils,
 
   //DDuce.Editor.Highlighters,
   DDuce.Editor.Resources,
-//  ts.Editor.CommentStripper,
-//  ts.Editor.SortStrings.Settings,
 
   DDuce.Editor.Utils;
 
-{$REGION'construction and destruction' /fold}
+{$REGION'construction and destruction'}
 procedure TEditorCommands.AfterConstruction;
 begin
   inherited AfterConstruction;
 end;
 {$ENDREGION}
 
-{$REGION'property access mehods' /fold}
+{$REGION'property access mehods'}
 function TEditorCommands.GetEvents: IEditorEvents;
 begin
   Result := Manager.Events;
@@ -391,7 +380,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION'protected methods' /fold}
+{$REGION'protected methods'}
 procedure TEditorCommands.OpenFileAtCursor;
 var
   FN : string;
@@ -436,23 +425,19 @@ begin
 end;
 
 procedure TEditorCommands.CreateDesktopLink;
-{$IFDEF Windows}
-var
-  PIDL     : LPItemIDList;
-  InFolder : array[0..MAX_PATH] of Char;
-  SL       : TShellLink;
-{$ENDIF}
+//var
+//  PIDL     : LPItemIDList;
+//  InFolder : array[0..MAX_PATH] of Char;
+//  SL       : TShellLink;
 begin
-{$IFDEF Windows}
-  PIDL := nil;
-  SHGetSpecialFolderLocation(0, CSIDL_DESKTOPDIRECTORY, PIDL) ;
-  SHGetPathFromIDList(PIDL, InFolder) ;
-  SL.Filename := InFolder + '\' + ExtractFileName(View.FileName) + '.lnk';
-  SL.WorkingDir := ExtractFilePath(SL.Filename);
-  SL.ShortcutTo := Application.ExeName;
-  SL.Parameters := View.FileName;
-  CreateShellLink(SL);
-{$ENDIF}
+//  PIDL := nil;
+//  SHGetSpecialFolderLocation(0, CSIDL_DESKTOPDIRECTORY, PIDL) ;
+//  SHGetPathFromIDList(PIDL, InFolder) ;
+//  SL.Filename := InFolder + '\' + ExtractFileName(View.FileName) + '.lnk';
+//  SL.WorkingDir := ExtractFilePath(SL.Filename);
+//  SL.ShortcutTo := Application.ExeName;
+//  SL.Parameters := View.FileName;
+//  CreateShellLink(SL);
 end;
 
 procedure TEditorCommands.CompressSpace;
@@ -492,45 +477,37 @@ end;
 
 procedure TEditorCommands.PascalStringFromSelection;
 begin
-  Selection.Store;
-  Selection.Text := PascalStringOf(Selection.Text);
-  Selection.Restore;
-  View.Modified := True;
+  View.SelectedText := PascalStringOf(View.SelectedText);
+  //View.Modified := True;
 end;
 
 procedure TEditorCommands.QuoteLinesInSelection(ADelimit: Boolean);
 begin
-  Selection.Store;
   if ADelimit then
-    Selection.Text := QuoteLinesAndDelimit(Selection.Text)
+    View.SelectedText := QuoteLinesAndDelimit(View.SelectedText)
   else
-    Selection.Text := QuoteLines(Selection.Text);
-  Selection.Restore;
-  View.Modified := True;
+    View.SelectedText := QuoteLines(View.SelectedText);
+
+//  View.Modified := True;
 end;
 
 procedure TEditorCommands.DequoteLinesInSelection;
 begin
-  Selection.Store;
-  Selection.Text := DequoteLines(Selection.Text);
-  Selection.Restore;
-  View.Modified := True;
+  View.SelectedText := DequoteLines(View.SelectedText);
+//  View.Modified := True;
 end;
 
 procedure TEditorCommands.QuoteSelection;
 begin
-  Selection.Store;
-  Selection.Text := AnsiQuotedStr(Selection.Text, '''');
-  Selection.Restore;
-  View.Modified := True;
+  View.SelectedText := AnsiQuotedStr(View.SelectedText, '''');
+
+//  View.Modified := True;
 end;
 
 procedure TEditorCommands.DequoteSelection;
 begin
-  Selection.Store;
-  Selection.Text := AnsiDequotedStr(Selection.Text, '''');
-  Selection.Restore;
-  View.Modified := True;
+  View.SelectedText := AnsiDequotedStr(View.SelectedText, '''');
+//  View.Modified := True;
 end;
 
 procedure TEditorCommands.Base64FromSelection(ADecode: Boolean);
@@ -568,10 +545,8 @@ end;
 
 procedure TEditorCommands.ConvertTabsToSpacesInSelection;
 begin
-  Selection.Store(True, True);
-  //Selection.Text := TabsToSpaces(Selection.Text, View.Editor.TabWidth); // -> use settings?
-  Selection.Restore;
-  View.Modified := True;
+  //View.SelectedText := TabsToSpaces(View.SelectedText, View.Editor.TabWidth); // -> use settings?
+  //View.Modified := True;
 end;
 
 procedure TEditorCommands.SyncEditSelection;
@@ -1038,12 +1013,12 @@ end;
 
 procedure TEditorCommands.FindNext;
 begin
-  SearchEngine.FindNext;
+  View.Editor.FindNext;
 end;
 
 procedure TEditorCommands.FindPrevious;
 begin
-  SearchEngine.FindPrevious;
+  View.Editor.FindPrevious;
 end;
 {$ENDREGION}
 

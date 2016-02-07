@@ -27,8 +27,6 @@ uses
   DDuce.Editor.Interfaces;
 
 type
-{ TEditorViewFactory }
-
   TEditorViewFactory = class(TInterfacedObject, IEditorViewFactory)
     function CreateInstance(
              AParent      : TWinControl;
@@ -44,8 +42,6 @@ implementation
 uses
   Vcl.Forms;
 
-{ TEditorViewFactory }
-
 function TEditorViewFactory.CreateInstance(AParent: TWinControl;
   AManager: IEditorManager; const AName: string; const AFileName: string;
   const AHighlighter: string): IEditorView;
@@ -53,13 +49,13 @@ var
   V: IEditorView;
 begin
   V := AManager.Views.Add(AName, AFileName, AHighlighter);
-  //V.Form.DisableAutoSizing;
+  V.Form.DisableAlign;
   V.Form.BorderStyle := bsNone;
   V.Form.Align := alClient;
   V.Form.Parent := AParent;
   V.PopupMenu := AManager.Menus.EditorPopupMenu;
   V.Form.Visible := True;
-  //V.Form.EnableAutoSizing;
+  V.Form.EnableAlign;
   Result := V;
 end;
 

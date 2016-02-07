@@ -18,10 +18,10 @@
 
 unit DDuce.Editor.View;
 
-{$REGION'documentation' /fold}
+{$REGION'documentation'}
 {
 Form holding a complete customizable text editor based on the open source
-SynEdit components.
+TBCEditor component.
 Features:
   - accepts dropped files
   - auto detect file encoding
@@ -44,12 +44,6 @@ TODO:
   - find a way to fold particular sections (now only levels are supported)
   - send to mail action
 
-  KNOWN ISSUES:
-  - When created at runtime, the cleanup of the TSynEdit instance is magnitudes
-    faster than using a design-time instance. Therefor we rely on a manually
-    created instance.
-    This way it is also easier to adapt to changes in the SynEdit component.
-
   DEPENDENCIES:
   - BCEditor-
 }
@@ -61,20 +55,15 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Graphics, Vcl.Menus, Vcl.Dialogs, Vcl.StdCtrls,
   Vcl.ImgList,
 
-  BCEditor.Editor, BCEditor.Types,
+  BCEditor.Editor, BCEditor.Types, BCEditor.Editor.KeyCommands,
 
   DDuce.Editor.Resources, DDuce.Editor.Interfaces,
 
-  // logging
   DDuce.Logger;
 
 type
-
-  { TEditorView }
-
   TEditorView = class(TForm, IEditorView, IEditorSelection)
   published
-    imlBookmarkImages: TImageList;
 
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
 //    procedure FormShortCut(var Msg: TLMKey; var Handled: Boolean);
@@ -85,33 +74,7 @@ type
       ASender    : TObject;
       AUpdating  : Boolean
     );
-//    procedure EditorSpecialLineMarkup(
-//          Sender  : TObject;
-//          Line    : Integer;
-//      var Special : Boolean;
-//          Markup  : TSynSelectedColor
-//    );
-//    procedure EditorClearBookmark(
-//          Sender : TObject;
-//      var Mark   : TSynEditMark
-//    );
-//    procedure EditorGutterClick(
-//      Sender     : TObject;
-//      X, Y, Line : Integer;
-//      Mark       : TSynEditMark
-//    );
-//    procedure EditorCutCopy(
-//          Sender       : TObject;
-//      var AText        : string;
-//      var AMode        : TSynSelectionMode;
-//          ALogStartPos : TPoint;
-//      var AAction      : TSynCopyPasteAction
-//    );
-//    procedure EditorMouseLink(
-//          Sender         : TObject;
-//          X, Y           : Integer;
-//      var AllowMouseLink : Boolean
-//    );
+
     procedure EditorSpecialLineColors(
           Sender  : TObject;
           Line    : Integer;
@@ -125,102 +88,50 @@ type
       Shift  : TShiftState;
       X, Y   : Integer
     );
-//    procedure EditorPaste(
-//          Sender       : TObject;
-//      var AText        : string;
-//      var AMode        : TSynSelectionMode;
-//          ALogStartPos : TPoint;
-//      var AAction      : TSynCopyPasteAction
-//    );
-//    procedure EditorStatusChange(
-//      Sender  : TObject;
-//      Changes : TSynStatusChanges
-//    );
-//    procedure EditorProcessCommand(
-//          Sender  : TObject;
-//      var Command : TSynEditorCommand;
-//      var AChar   : TUTF8Char;
-//          Data    : Pointer
-//    );
-//    procedure EditorProcessUserCommand(
-//          Sender  : TObject;
-//      var Command : TSynEditorCommand;
-//      var AChar   : TUTF8Char;
-//          Data    : Pointer
-//    );
-//    procedure EditorCommandProcessed(
-//          Sender  : TObject;
-//      var Command : TSynEditorCommand;
-//      var AChar   : TUTF8Char;
-//          Data    : Pointer
-//    );
-//    procedure EditorReplaceText(
-//            Sender        : TObject;
-//      const ASearch       : string;
-//      const AReplace      : string;
-//            Line, Column  : Integer;
-//        var ReplaceAction : TSynReplaceAction
-//    );
-//    function EditorMouseActionExec(
-//          AnAction : TSynEditMouseAction;
-//      var AnInfo   : TSynEditMouseActionInfo
-//    ): Boolean;
-//    function EditorMouseActionSearch(
-//      var AnInfo          : TSynEditMouseActionInfo;
-//          HandleActionProc: TSynEditMouseActionHandler
-//    ): Boolean;
-//    procedure EditorKeyTranslation(
-//          Sender          : TObject;
-//          Code            : Word;
-//          SState          : TShiftState;
-//      var Data            : Pointer;
-//      var IsStartOfCombo  : Boolean;
-//      var Handled         : Boolean;
-//      var Command         : TSynEditorCommand;
-//          FinishComboOnly : Boolean;
-//      var ComboKeyStrokes : TSynEditKeyStrokes
-//    );
 
-//    procedure DirectoryWatchNotify(
-//      const Sender   : TObject;
-//      const AAction  : TWatchAction;
-//      const FileName : string
-//    );
+    procedure EditorCaretChanged(
+      Sender : TObject;
+      X, Y   : Integer
+    );
 
+    procedure EditorCommandProcessed(
+      Sender       : TObject;
+      var ACommand : TBCEditorCommand;
+      var AChar    : Char;
+      AData        : Pointer
+    );
+    procedure EditorReplaceText(
+      Sender         : TObject;
+      const ASearch  : string;
+      const AReplace : string;
+      ALine          : Integer;
+      AColumn        : Integer;
+      ADeleteLine    : Boolean;
+      var AAction    : TBCEditorReplaceAction
+    );
     function IsActive: Boolean;
-
     procedure ApplySettings;
 
   private
     FUpdate          : Boolean;
-//    FDirectoryWatch  : TDirectoryWatch;
     FLineBreakStyle  : string;
     FEditor          : TBCEditor;
     FFindHistory     : TStringList;
 //    FHighlighter     : TSynCustomHighlighter;
     FReplaceHistory  : TStringList;
-//    FSyncronizedEdit : TSynPluginSyncroEdit;
-//    FTemplateEdit    : TSynPluginTemplateEdit;
 //    FHighlighterItem : THighlighterItem;
-//    FMHAC            : TSynEditMarkupHighlightAllCaret;
     FFileName        : string;
     FFoldLevel       : Integer;
-//    FBeautifier      : TSynBeautifier;
     FIsFile          : Boolean;
     FFontChanged     : Boolean;
-//    FSynSelection    : TSynEditSelection;
-
     FSelection       : IEditorSelection;
-
-//    FOnDropFiles     : TDropFilesEvent;
-//    FOnStatusChange  : TStatusChangeEvent;
     FOnChange        : TNotifyEvent;
 
     { search settings }
     FSearchText     : string;
 //    FSearchOptions  : TSynSearchOptions;
 
-    {$REGION'property access methods' /fold}
+    {$REGION'property access methods'}
     function GetActions: IEditorActions;
     function GetBlockBegin: TPoint;
     function GetBlockEnd: TPoint;
@@ -239,12 +150,11 @@ type
     function GetInsertMode: Boolean;
     function GetIsFile: Boolean;
     function GetManager: IEditorManager;
-    function GetEncoding: string;
+    function GetEncoding: TEncoding;
     function GetEvents: IEditorEvents;
     function GetFileName: string;
     function GetFindHistory: TStrings;
     function GetFoldLevel: Integer;
-    function GetFoldState: string;
     function GetForm: TCustomForm;
 //    function GetHighlighterItem: THighlighterItem;
     function GetLineBreakStyle: string;
@@ -283,10 +193,8 @@ type
     procedure SetCaretXY(const AValue: TPoint);
     procedure SetCaretY(const Value: Integer); virtual;
     procedure SetEditorFont(AValue: TFont);
-    procedure SetEncoding(const AValue: string);
     procedure SetFileName(const AValue: string);
     procedure SetFoldLevel(const AValue: Integer);
-    procedure SetFoldState(const AValue: string);
 //    procedure SetHighlighter(const AValue: TSynCustomHighlighter);
 //    procedure SetHighlighterItem(const AValue: THighlighterItem);
     procedure SetHighlighterName(AValue: string);
@@ -301,7 +209,7 @@ type
     procedure SetOnChange(const AValue: TNotifyEvent);
     procedure SetOnDropFiles(const AValue: TBCEditorDropFilesEvent);
 //    procedure SetOnStatusChange(const AValue: TStatusChangeEvent);
-//    procedure SetParent(const AValue: TWinControl); reintroduce;
+
     procedure SetPopupMenu(AValue: TPopupMenu);
 //    procedure SetSearchOptions(AValue: TSynSearchOptions);
     procedure SetSearchText(const Value: string); virtual;
@@ -317,7 +225,10 @@ type
     procedure InitializeEditor(AEditor: TBCEditor);
     procedure EditorSettingsChanged(ASender: TObject);
 
+
   strict protected
+  procedure SetParent(Value: TWinControl);
+
     procedure BeginUpdate;
     procedure EndUpdate;
     procedure BeginUndoBlock;
@@ -463,9 +374,6 @@ type
     property Form: TCustomForm
       read GetForm;
 
-    property FoldState: string
-      read GetFoldState write SetFoldState;
-
     property LineText: string
       read GetLineText write SetLineText;
 
@@ -549,9 +457,8 @@ type
     property Parent: TWinControl
       read GetParent write SetParent;
 
-    { Current file encoding (Editor encoding is always UTF-8). }
-    property Encoding: string
-      read GetEncoding write SetEncoding;
+    property Encoding: TEncoding
+      read GetEncoding;
 
     property EditorFont: TFont
       read GetEditorFont write SetEditorFont;
@@ -577,37 +484,9 @@ uses
   System.TypInfo,
   Vcl.GraphUtil,
 
-  //ts.Core.Utils,
-
   DDuce.Editor.Utils;
 
-//type
-
-//  { TSynEditAccess }
-//
-//  TSynEditAccess = class(TBCEditor)
-//  private
-//    function GetCaret: TSynEditCaret;
-//  public
-//     // As viewed internally (with uncommited spaces / TODO: expanded tabs, folds). This may change, use with care
-//    property ViewedTextBuffer;
-//    // (TSynEditStringList) No uncommited (trailing/trimmable) spaces
-//    property TextBuffer;
-//    property WordBreaker; // TSynWordBreaker
-//    property Caret: TSynEditCaret
-//      read GetCaret;
-//  end;
-
-{ TSynEditAccess }
-
-//{$REGION'TSynEditAccess' /fold}
-//function TSynEditAccess.GetCaret: TSynEditCaret;
-//begin
-//  Result := GetCaretObj;
-//end;
-//{$ENDREGION}
-
-{$REGION'construction and destruction' /fold}
+{$REGION'construction and destruction'}
 procedure TEditorView.AfterConstruction;
 begin
   inherited AfterConstruction;
@@ -646,83 +525,21 @@ begin
 //  if Assigned(Settings) then
 //    Settings.RemoveEditorSettingsChangedHandler(EditorSettingsChanged);
 //  DisableAutoSizing;
-//  FreeAndNil(FDirectoryWatch);
 //  FreeAndNil(FSynSelection);
   FreeAndNil(FReplaceHistory);
   FreeAndNil(FFindHistory);
-//  FreeAndNil(FBeautifier);
-//  FreeAndNil(FSyncronizedEdit);
-//  FreeAndNil(FTemplateEdit);
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
 
-{$REGION'event handlers' /fold}
+{$REGION'event handlers'}
 procedure TEditorView.FormDropFiles(Sender: TObject;
   const FileNames: array of string);
 begin
-//  if Assigned(FOnDropFiles) then
-//    FOnDropFiles(Self, FileNames);
+//  if Assigned(OnDropFiles) then
+//    OnDropFiles(Self, FileNames);
   Events.DoChange;
 end;
-
-//procedure TEditorView.EditorProcessUserCommand(Sender: TObject;
-//  var Command: TSynEditorCommand; var AChar: TUTF8Char; Data: Pointer);
-//begin
-//  Logger.Send(
-//    'EditorProcessUserCommand(Command = %s; AChar = %s; Data)',
-//    [EditorCommandToCodeString(Command), AChar]
-//  );
-//end;
-//
-//procedure TEditorView.EditorReplaceText(Sender: TObject; const ASearch: string;
-//  const AReplace: string; Line, Column: Integer;
-//  var ReplaceAction: TSynReplaceAction);
-//begin
-//  Logger.Send('EditorReplaceText');
-//end;
-//
-//function TEditorView.EditorMouseActionExec(AnAction: TSynEditMouseAction;
-//  var AnInfo: TSynEditMouseActionInfo): Boolean;
-//begin
-//  Result := False;
-//  Logger.Send(
-//    'EditorMouseActionExec(Action = %s)',
-//    [AnAction.DisplayName]
-//  );
-//  if AnAction.Command in [emcWheelZoomOut, emcWheelZoomIn, emcWheelZoomNorm] then
-//  begin
-//    // this is called before the font is actually changed
-//    FFontChanged := True;
-//  end;
-//end;
-//
-//function TEditorView.EditorMouseActionSearch(
-//  var AnInfo: TSynEditMouseActionInfo;
-//  HandleActionProc: TSynEditMouseActionHandler): Boolean;
-//begin
-//  Result := False;
-//  Logger.Send(
-//    'EditorMouseActionSearch(Action = ?)'
-//  );
-//end;
-//
-//procedure TEditorView.EditorKeyTranslation(Sender: TObject; Code: Word;
-//  SState: TShiftState; var Data: Pointer; var IsStartOfCombo: Boolean;
-//  var Handled: Boolean; var Command: TSynEditorCommand;
-//  FinishComboOnly: Boolean; var ComboKeyStrokes: TSynEditKeyStrokes);
-//begin
-//  //
-//end;
-//
-//procedure TEditorView.EditorCommandProcessed(Sender: TObject;
-//  var Command: TSynEditorCommand; var AChar: TUTF8Char; Data: Pointer);
-//begin
-//  Logger.Send(
-//    'EditorCommandProcessed(Command = %s; AChar = %s; Data)',
-//    [EditorCommandToCodeString(Command), AChar]
-//  );
-//end;
 
 procedure TEditorView.EditorChangeUpdating(ASender: TObject;
   AUpdating: Boolean);
@@ -737,75 +554,6 @@ begin
 //    Settings.Apply;
 //    FFontChanged := False;
 //  end;
-end;
-
-//procedure TEditorView.EditorSpecialLineMarkup(Sender: TObject; Line: Integer;
-//  var Special: Boolean; Markup: TSynSelectedColor);
-//var
-//  S : string;
-//begin
-//  S := Markup.ToString;
-//  Logger.Send(
-//    'EditorSpecialLineMarkup(Line = %d; Special = %s; Markup = %s)',
-//    [Line, BoolToStr(Special, 'True', 'False'), S]
-//  );
-//end;
-//
-//procedure TEditorView.EditorClearBookmark(Sender: TObject;
-//  var Mark: TSynEditMark);
-//var
-//  S : string;
-//begin
-//  S := GetEnumName(TypeInfo(TSynEditMark), Integer(Mark));
-//  Logger.Send('EditorClearBookmark(Mark = %s)', [S]);
-//end;
-//
-//procedure TEditorView.EditorGutterClick(Sender: TObject; X, Y, Line: Integer;
-//  Mark: TSynEditMark);
-////var
-////  S : string;
-//begin
-//  //try
-//  //  S := GetEnumName(TypeInfo(TSynEditMark), Integer(Mark));
-//  //  Logger.Send(
-//  //    'EditorGutterClick(X = %d; Y = %d; Line = %d; Mark = %s)',
-//  //    [X, Y, Line, S]
-//  //  );
-//  //except
-//  //  Logger.SendWarning('Logging error on EditorGutterClick exception found');
-//  //end;
-//end;
-//
-//procedure TEditorView.EditorCutCopy(Sender: TObject; var AText: string;
-//  var AMode: TSynSelectionMode; ALogStartPos: TPoint;
-//  var AAction: TSynCopyPasteAction);
-//var
-//  S : string;
-//  T : string;
-//begin
-//  S := GetEnumName(TypeInfo(TSynSelectionMode), Integer(AMode));
-//  T := GetEnumName(TypeInfo(TSynCopyPasteAction), Integer(AAction));
-//  Logger.Send(
-//    'EditorCutCopy(AText = %s; AMode = %s; ALogStartPos = %s; AAction = %s)',
-//    [AText, S, Logger.PointToStr(ALogStartPos), T]
-//  );
-//end;
-
-//procedure TEditorView.EditorMouseLink(Sender: TObject; X, Y: Integer;
-//  var AllowMouseLink: Boolean);
-//begin
-//  Logger.Send(
-//    'EditorMouseLink(X = %d; Y = %d; AllowMouseLink = %s)',
-//    [X, Y, BoolToStr(AllowMouseLink, 'True', 'False')]
-//  );
-//  AllowMouseLink := True;
-//end;
-
-procedure TEditorView.EditorSpecialLineColors(Sender: TObject; Line: Integer;
-  var Special: Boolean; var FG, BG: TColor);
-begin
-  // Workaround for SynEdit bug. Needs to be handled in order to let Editor.LineHighlightColor work.
-  // 21/09/2013
 end;
 
 { Makes actionlist shortcuts work on the form }
@@ -840,32 +588,35 @@ begin
   Commands.OpenFileAtCursor;
 end;
 
-//procedure TEditorView.EditorPaste(Sender: TObject; var AText: string;
-//  var AMode: TSynSelectionMode; ALogStartPos: TPoint;
-//  var AAction: TSynCopyPasteAction);
-//var
-//  S : string;
-//  T : string;
-//begin
-//  S := GetEnumName(TypeInfo(TSynSelectionMode), Integer(AMode));
-//  T := GetEnumName(TypeInfo(TSynCopyPasteAction), Integer(AAction));
-//  Logger.Send(
-//    'EditorPaste(AMode = %s; ALogStartPos = %s; AAction = %s)',
-//    [S, Logger.PointToStr(ALogStartPos), T]
-//  );
-//  if (Lines.Count = 0) and Settings.AutoGuessHighlighterType then
-//    Commands.GuessHighlighterType;
-//  if (HighlighterName = HL_XML) and Settings.AutoFormatXML then
-//  begin
-//    AText := FormatXML(AText);
-//  end;
-//end;
+procedure TEditorView.EditorCommandProcessed(Sender: TObject;
+  var ACommand: TBCEditorCommand; var AChar: Char; AData: Pointer);
+begin
+  Logger.Enter('TEditorView.EditorCommandProcessed');
+
+  Logger.Leave('TEditorView.EditorCommandProcessed');
+end;
+
+procedure TEditorView.EditorReplaceText(Sender: TObject; const ASearch,
+  AReplace: string; ALine, AColumn: Integer; ADeleteLine: Boolean;
+  var AAction: TBCEditorReplaceAction);
+begin
+  Logger.Enter('TEditorView.EditorReplaceText');
+  Logger.Leave('TEditorView.EditorReplaceText');
+end;
+
+procedure TEditorView.EditorCaretChanged(Sender: TObject; X, Y: Integer);
+begin
+  Logger.Enter('TEditorView.EditorCaretChanged');
+  Logger.Leave('TEditorView.EditorCaretChanged');
+end;
 
 procedure TEditorView.EditorChange(Sender: TObject);
 begin
+  Logger.Enter('TEditorView.EditorChange');
   Logger.Send('EditorChange');
   DoChange;
   Events.DoChange;
+  Logger.Leave('TEditorView.EditorChange');
 end;
 
 //procedure TEditorView.EditorStatusChange(Sender: TObject;
@@ -918,7 +669,7 @@ end;
 //end;
 {$ENDREGION}
 
-{$REGION'event dispatch methods' /fold}
+{$REGION'event dispatch methods'}
 procedure TEditorView.DoChange;
 begin
   if Assigned(FOnChange) then
@@ -932,7 +683,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION'property access methods' /fold}
+{$REGION'property access methods'}
 function TEditorView.GetSelectedText: string;
 begin
   Result := Editor.SelectedText;
@@ -1109,18 +860,9 @@ begin
   end;
 end;
 
-function TEditorView.GetEncoding: string;
+function TEditorView.GetEncoding: TEncoding;
 begin
-  Result := Editor.Encoding.EncodingName;
-end;
-
-procedure TEditorView.SetEncoding(const AValue: string);
-begin
-//  if AValue <> Encoding then
-//  begin
-//    FEncoding := AValue;
-//    Modified  := True;
-//  end;
+  Result := Editor.Encoding;
 end;
 
 function TEditorView.GetLineBreakStyle: string;
@@ -1161,7 +903,7 @@ begin
   begin
 //    if AValue then
 //    begin
-//      if FileExistsUTF8(FileName) then
+//      if FileExists(FileName) then
 //      begin
 //        FDirectoryWatch.Directory := ExtractFileDir(FileName);
 //        FDirectoryWatch.Start;
@@ -1201,16 +943,6 @@ procedure TEditorView.SetOnDropFiles(const AValue: TBCEditorDropFilesEvent);
 begin
   Editor.OnDropFiles := AValue;
 end;
-//
-//function TEditorView.GetOnStatusChange: TStatusChangeEvent;
-//begin
-//  Result := FOnStatusChange;
-//end;
-//
-//procedure TEditorView.SetOnStatusChange(const AValue: TStatusChangeEvent);
-//begin
-//  FOnStatusChange := AValue;
-//end;
 
 function TEditorView.GetParent: TWinControl;
 begin
@@ -1219,9 +951,7 @@ end;
 
 //procedure TEditorView.SetParent(const AValue: TWinControl);
 //begin
-//  inherited Parent := AValue;
-//  if Assigned(Parent) then
-//    Visible := True;
+
 //end;
 
 function TEditorView.GetPopupMenu: TPopupMenu;
@@ -1229,19 +959,16 @@ begin
   Result := PopupMenu;
 end;
 
+procedure TEditorView.SetParent(Value: TWinControl);
+begin
+  inherited Parent := Value;
+  if Assigned(Parent) then
+    Visible := True;
+end;
+
 procedure TEditorView.SetPopupMenu(AValue: TPopupMenu);
 begin
   inherited PopupMenu := AValue;
-end;
-
-function TEditorView.GetFoldState: string;
-begin
-//  Result := Editor.FoldState;
-end;
-
-procedure TEditorView.SetFoldState(const AValue: string);
-begin
-//  Editor.FoldState := AValue;
 end;
 
 function TEditorView.GetLogicalCaretXY: TPoint;
@@ -1489,7 +1216,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION'private methods' /fold}
+{$REGION'private methods'}
 procedure TEditorView.AssignHighlighterForFileType(const AFileExt: string);
 begin
 //  HighlighterItem := Manager.Highlighters.FindHighlighterForFileType(AFileExt);
@@ -1651,10 +1378,10 @@ begin
     eoTrimTrailingSpaces
   ];
 
-
-//  AEditor.Gutter.Color := clWhite;
-//  AEditor.Gutter.Width := 29;
-//  AEditor.Gutter.SeparatorPart.Visible := False;
+  AEditor.OnChange           := EditorChange;
+  AEditor.OnReplaceText      := EditorReplaceText;
+  AEditor.OnCaretChanged     := EditorCaretChanged;
+  AEditor.OnCommandProcessed := EditorCommandProcessed;
 
 //  with AEditor.Gutter.LineNumberPart do
 //  begin
@@ -1731,99 +1458,6 @@ begin
 //  AEditor.OnReplaceText        := EditorReplaceText;
 //  AEditor.RegisterMouseActionExecHandler(EditorMouseActionExec);
 //  AEditor.RegisterMouseActionSearchHandler(EditorMouseActionSearch);
-//  AEditor.RegisterStatusChangedHandler(
-//    EditorStatusChange,
-//    [scCaretX, scCaretY, scLeftChar, scTopLine, scLinesInWindow,
-//     scCharsInWindow, scInsertMode, scModified, scSelection, scReadOnly]
-//  );
-//  AEditor.RegisterKeyTranslationHandler(EditorKeyTranslation);
-
-  // Workaround for SynEdit bug. Needs to be handled in order to let
-  // Editor.LineHighlightColor work. 21/09/2013
-//  AEditor.OnSpecialLineColors := EditorSpecialLineColors;
-//
-//  AEditor.Visible := True;
-//
-//  FSyncronizedEdit := TSynPluginSyncroEdit.Create(nil);
-//  FSyncronizedEdit.Editor := Editor;
-//  FSyncronizedEdit.Active := False;
-//
-//  FTemplateEdit := TSynPluginTemplateEdit.Create(nil);
-//  FTemplateEdit.Editor := Editor;
-//  FTemplateEdit.Active := False;
-//
-//  FBeautifier := TSynBeautifier.Create(nil);
-//  FBeautifier.AutoIndent := True;
-//  AEditor.Beautifier := FBeautifier;
-//
-//  // TEMP CODE TS
-//  N := AEditor.Keystrokes.FindShortcut(TextToShortCut('Shift+Ctrl+N'));
-//  AEditor.Keystrokes.Delete(N);
-//  N := AEditor.Keystrokes.FindShortcut(TextToShortCut('Ctrl+N'));
-//  AEditor.Keystrokes.Delete(N);
-
-
-  //N := AEditor.Keystrokes.FindShortcut(TextToShortCut('Ctrl+S'));
-  //AEditor.Keystrokes.Delete(N);
-  //N := AEditor.Keystrokes.FindShortcut(TextToShortCut('F1'));
-  //AEditor.Keystrokes.Delete(N);
-
-  //FCompletionProposal := TSynCompletionProposal.Create(Self);
-  //FCompletionProposal.Editor := Editor;
-  //FCompletionProposal.InsertList.Add('Insert');
-  //FCompletionProposal.InsertList.Add('List');
-  //FCompletionProposal.ItemList.Add('IOnsert');
-  //FCompletionProposal.ItemList.Add('IOn');
-  //FCompletionProposal.Columns.Add;
-  //FCompletionProposal.Resizeable := True;
-  //AEditor.MouseActions.FindCommand();
-  // delete the quickpaste command with middle mouse button
-
-  // highlights all words that are the same as the one surrounding the caret position
-//  FMHAC := Editor.MarkupByClass[TSynEditMarkupHighlightAllCaret]
-//    as TSynEditMarkupHighlightAllCaret;
-//  FMHAC.MarkupInfo.FrameColor := clSilver;
-//  FMHAC.MarkupInfo.FrameStyle := slsSolid;
-//  FMHAC.MarkupInfo.BackAlpha := 128;
-//  FMHAC.WaitTime := 200;
-//  FMHAC.MarkupInfo.Background := $00F0F0F0;
-//  FMHAC.IgnoreKeywords := True;
-//  FMHAC.SearchOptions := [ssoMatchCase, ssoWholeWord];
-//  FMHAC.FullWord := True;
-//  FMHAC.Enabled := True;
-
-  // highlights all strings that are the same as the selected block
-  //FMS :=  Editor.MarkupByClass[TSynEditMarkupSelection]
-  //  as TSynEditMarkupSelection;
-  //FMS.MarkupInfoSeletion.FrameStyle := slsWaved;
-  //FMS.MarkupInfo.FrameStyle := slsWaved;
-  //FMS.MarkupInfoIncr.FrameStyle := slsWaved;
-  //FMS.Enabled := True;
-
-  // highlights all strings that are the same as a particular word (SearchString)
-  //FMHA := Editor.MarkupByClass[TSynEditMarkupHighlightAll]
-  //  as TSynEditMarkupHighlightAll;
-  //  FMHA.MarkupInfo.FrameColor := clBlue;
-  //FMHA.MarkupInfo.FrameStyle := slsSolid;
-  //FMHA.MarkupInfo.Background := clOlive;
-  ////FMHA.SearchString := 'Style';
-  //FMHA.SearchOptions := [ssoMatchCase, ssoWholeWord];
-  //FMHA.Enabled := True;
-
-          {
-   FROM SYNEDIT SOURCES
-    // needed before setting color
-  fMarkupHighCaret := TSynEditMarkupHighlightAllCaret.Create(self);
-  fMarkupHighCaret.Selection := FBlockSelection;
-  fMarkupHighAll   := TSynEditMarkupHighlightAll.Create(self);
-  fMarkupBracket   := TSynEditMarkupBracket.Create(self);
-  fMarkupWordGroup := TSynEditMarkupWordGroup.Create(self);
-  fMarkupCtrlMouse := TSynEditMarkupCtrlMouseLink.Create(self);
-  fMarkupSpecialLine := TSynEditMarkupSpecialLine.Create(self);
-  fMarkupSelection := TSynEditMarkupSelection.Create(self, FBlockSelection);
-  fMarkupSpecialChar := TSynEditMarkupSpecialChar.Create(self);
-
-  }
   ActiveControl := Editor;
 end;
 
@@ -1831,9 +1465,17 @@ procedure TEditorView.EditorSettingsChanged(ASender: TObject);
 begin
   FUpdate := True;
 end;
+procedure TEditorView.EditorSpecialLineColors(Sender: TObject; Line: Integer;
+  var Special: Boolean; var FG, BG: TColor);
+begin
+  Logger.Enter('TEditorView.EditorSpecialLineColors');
+
+  Logger.Leave('TEditorView.EditorSpecialLineColors');
+end;
+
 {$ENDREGION}
 
-{$REGION'protected methods' /fold}
+{$REGION'protected methods'}
 procedure TEditorView.BeginUndoBlock;
 begin
   Editor.BeginUndoBlock;
@@ -2031,7 +1673,7 @@ end;
 
 {$ENDREGION}
 
-{$REGION'public methods' /fold}
+{$REGION'public methods'}
 function TEditorView.CloseQuery: Boolean;
 var
   MR: TModalResult;
@@ -2108,46 +1750,14 @@ begin
   end;
 end;
 
-{ The loaded text always has to be converted to UTF8 because SynEdit only
-  supports UTF8. When we save we convert back to the original file encoding. }
-
 procedure TEditorView.LoadFromStream(AStream: TStream);
-//var
-//  SL: TStringList;
 begin
   Editor.LoadFromStream(AStream);
-
-//  SL := TStringList.Create;
-//  try
-//    SL.LoadFromStream(AStream);    ;
-////    FEncoding := GuessEncoding(SL.Text);
-////    if FEncoding <> EncodingUTF8 then
-////    begin
-////      Text := ConvertEncoding(SL.Text, FEncoding, EncodingUTF8);
-////    end
-////    else
-////      Text := SL.Text;
-//    FLineBreakStyle := ALineBreakStyles[GuessLineBreakStyle(Text)];
-//  finally
-//    FreeAndNil(SL);
-//  end;
 end;
 
 procedure TEditorView.SaveToStream(AStream: TStream);
-//var
-//  S  : string;
 begin
   Editor.SaveToStream(AStream);
-//  if LineBreakStyle <> ALineBreakStyles[GuessLineBreakStyle(Text)] then
-//  begin
-//    Text := ChangeLineBreakStyle(Text, StrToLineBreakStyle(LineBreakStyle));
-//  end;
-//  if Length(Text) > 0 then
-//  begin
-//    S := Text;
-//    //S := ConvertEncoding(Text, EncodingUTF8, FEncoding);
-//    AStream.Write(S[1], Length(S));
-//  end;
 end;
 
 procedure TEditorView.Save(const AStorageName: string);
@@ -2193,7 +1803,7 @@ end;
 
 end.
 
-{$REGION'Keyboard shortcuts' /fold}
+{$REGION'Keyboard shortcuts'}
 (*//F1                      Topic Search
 //Ctrl+F1                Topic Search
   ecNextEditor: SetResult(VK_F6,[]);

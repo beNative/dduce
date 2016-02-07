@@ -46,7 +46,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <Custom_Styles>Windows10|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\17.0\Styles\Windows10.vsf</Custom_Styles>
+        <Custom_Styles>Carbon|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\17.0\Styles\Carbon.vsf;Glossy|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\17.0\Styles\Glossy.vsf;Glow|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\17.0\Styles\Glow.vsf;Light|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\17.0\Styles\Light.vsf;Windows10|VCLSTYLE|$(PUBLIC)\Documents\Embarcadero\Studio\17.0\Styles\Windows10.vsf</Custom_Styles>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <VerInfo_Locale>2067</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=Tim Sinaeve;FileVersion=1.0.0.0</VerInfo_Keys>
@@ -202,16 +202,26 @@
         <DCCReference Include="..\Source\Forms\DDuce.Forms.RTTEye.pas">
             <Form>frmRTTEye</Form>
         </DCCReference>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.View.pas">
-            <Form>EditorView</Form>
+        <DCCReference Include="Demo.DDuce.Editor.pas">
+            <Form>frmEditor</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Manager.pas">
-            <Form>dmEditorManager</Form>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ActionList.Templates.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ActionList.ToolView.pas">
+            <Form>frmActionListView</Form>
             <FormType>dfm</FormType>
-            <DesignClass>TDataModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.AlignLines.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.CharacterMap.ToolView.pas">
+            <Form>frmCharacterMap</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Codeformatters.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Codeformatters.Sql.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Codetags.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Colors.Settings.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Commands.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Commentstripper.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Events.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Manager.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Menus.pas"/>
@@ -219,16 +229,56 @@
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Settings.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Toolbars.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Views.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas">
+            <Form>frmFilter</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Highlighterattributes.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Highlighters.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Interfaces.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Types.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Utils.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Manager.pas">
+            <Form>dmEditorManager</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Options.Settings.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Resources.pas">
             <Form>ResourcesDataModule</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="Demo.DDuce.Editor.pas">
-            <Form>frmEditor</Form>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Data.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Engine.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Engine.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Templates.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Toolview.pas">
+            <Form>frmSearchForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Selection.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Selectioninfo.ToolView.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Sortstrings.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Sortstrings.Toolview.pas">
+            <Form>frmSortStrings</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Test.ToolView.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Tools.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ToolView.Base.pas">
+            <Form>CustomEditorToolView</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ToolView.Manager.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Types.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Utils.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.View.pas">
+            <Form>EditorView</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Viewlist.Data.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Viewlist.ToolView.pas">
+            <Form>frmViewList</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

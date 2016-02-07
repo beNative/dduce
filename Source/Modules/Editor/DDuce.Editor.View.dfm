@@ -8,19 +8,14 @@ object EditorView: TEditorView
   ClientWidth = 624
   Color = clBtnFace
   UseDockManager = True
-  DragMode = dmAutomatic
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Name = 'Tahoma'
   Font.Style = []
   KeyPreview = True
-  OldCreateOrder = True
+  OldCreateOrder = False
   ShowHint = True
   PixelsPerInch = 96
   TextHeight = 13
-  object imlBookmarkImages: TImageList
-    Left = 157
-    Top = 75
-  end
 end

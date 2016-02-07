@@ -30,6 +30,8 @@ interface
 uses
   System.Classes, System.SysUtils,
 
+  Spring,
+
   DDuce.Editor.Types, DDuce.Editor.Interfaces;
 
 type
@@ -54,9 +56,10 @@ type
   TEditorEvents = class(TInterfacedObject, IEditorEvents)
   strict private
     FManager                 : IEditorManager;
-//    FChangeEvents            : TMethodList;
-//    FModifiedEvents          : TMethodList;
-//    FActiveViewChangeEvents  : TMethodList;
+    FOnChange                : Event<TNotifyEvent>;
+    FOnModified              : Event<TNotifyEvent>;
+    FOnActiveViewChange      : Event<TNotifyEvent>;
+
 //    FHighlighterChangeEvents : TMethodList;
 //    FCaretPositionEvents     : TCaretPositionEvents;
 //    FActionExecuteEvents     : TActionExecuteEvents;
@@ -75,7 +78,12 @@ type
 //    FOnStatusChange        : TStatusChangeEvent;
     FOnStatusMessage       : TStatusMessageEvent;
 
-  strict protected
+  strict
+  private
+    function GetOnActiveViewChange: IEvent<TNotifyEvent>;
+    function GetOnChange: IEvent<TNotifyEvent>;
+    function GetOnModified: IEvent<TNotifyEvent>;
+  protected
     function GetOnOpen: TStorageEvent;
     procedure SetOnOpen(AValue: TStorageEvent);
     function GetOnAfterSave: TStorageEvent;
@@ -167,6 +175,15 @@ type
     property OnOpenOtherInstance: TOpenOtherInstanceEvent
       read GetOnOpenOtherInstance write SetOnOpenOtherInstance;
 
+    property OnChange: IEvent<TNotifyEvent>
+      read GetOnChange;
+
+    property OnModified: IEvent<TNotifyEvent>
+      read GetOnModified;
+
+    property OnActiveViewChange: IEvent<TNotifyEvent>
+      read GetOnActiveViewChange;
+
     property View: IEditorView
       read GetView;
 
@@ -191,8 +208,8 @@ implementation
 //    TActionExecuteEvent(Items[I])(Sender, AAction, AHandled);
 //end;
 
-{$region 'TCaretPositionEvents' /fold}
-{$region 'public methods' /fold}
+{$REGION 'TCaretPositionEvents'}
+{$REGION 'public methods'}
 //procedure TCaretPositionEvents.CallEvents(Sender: TObject; X, Y: Integer);
 //var
 //  I: Integer;
@@ -201,11 +218,11 @@ implementation
 //  while NextDownIndex(I) do
 //    TCaretPositionEvent(Items[I])(Sender, X, Y);
 //end;
-{$endregion}
-{$endregion}
+{$ENDREGION}
+{$ENDREGION}
 
-{$region 'TEditorEvents' /fold}
-{$region 'construction and destruction' /fold}
+{$REGION 'TEditorEvents'}
+{$REGION 'construction and destruction'}
 constructor TEditorEvents.Create(AManager: IEditorManager);
 begin
   inherited Create;
@@ -215,9 +232,6 @@ end;
 procedure TEditorEvents.AfterConstruction;
 begin
   inherited AfterConstruction;
-//  FChangeEvents            := TMethodList.Create;
-//  FModifiedEvents          := TMethodList.Create;
-//  FActiveViewChangeEvents  := TMethodList.Create;
 //  FHighlighterChangeEvents := TMethodList.Create;
 //  FCaretPositionEvents     := TCaretPositionEvents.Create;
 //  FActionExecuteEvents     := TActionExecuteEvents.Create;
@@ -226,17 +240,14 @@ end;
 procedure TEditorEvents.BeforeDestruction;
 begin
   FManager := nil;
-//  FChangeEvents.Free;
-//  FModifiedEvents.Free;
-//  FActiveViewChangeEvents.Free;
 //  FCaretPositionEvents.Free;
 //  FActionExecuteEvents.Free;
 //  FHighlighterChangeEvents.Free;
   inherited BeforeDestruction;
 end;
-{$endregion}
+{$ENDREGION}
 
-{$region 'property access mehods' /fold}
+{$REGION 'property access mehods'}
 function TEditorEvents.GetOnOpen: TStorageEvent;
 begin
   Result := FOnOpen;
@@ -257,9 +268,19 @@ begin
   Result := FOnBeforeSave;
 end;
 
+function TEditorEvents.GetOnChange: IEvent<TNotifyEvent>;
+begin
+  Result := FOnChange;
+end;
+
 function TEditorEvents.GetView: IEditorView;
 begin
   Result := FManager as IEditorView;
+end;
+
+function TEditorEvents.GetOnActiveViewChange: IEvent<TNotifyEvent>;
+begin
+  Result := FOnActiveViewChange;
 end;
 
 function TEditorEvents.GetOnAddEditorView: TAddEditorViewEvent;
@@ -295,6 +316,11 @@ end;
 function TEditorEvents.GetOnLoad: TStorageEvent;
 begin
   Result := FOnLoad;
+end;
+
+function TEditorEvents.GetOnModified: IEvent<TNotifyEvent>;
+begin
+  Result := FOnModified;
 end;
 
 procedure TEditorEvents.SetOnLoad(const AValue: TStorageEvent);
@@ -352,17 +378,17 @@ begin
   FOnBeforeSave := AValue;
 end;
 
-{$endregion}
+{$ENDREGION}
 
-{$region 'event dispatch methods' /fold}
+{$REGION 'event dispatch methods'}
 procedure TEditorEvents.DoChange;
 begin
-  //FChangeEvents.CallNotifyEvents(Self);
+  FOnChange.Invoke(Self);
 end;
 
 procedure TEditorEvents.DoModified;
 begin
-  //FModifiedEvents.CallNotifyEvents(Self);
+  FOnModified.Invoke(Self);
 end;
 
 procedure TEditorEvents.DoHighlighterChange;
@@ -372,7 +398,7 @@ end;
 
 procedure TEditorEvents.DoActiveViewChange;
 begin
-  //FActiveViewChangeEvents.CallNotifyEvents(Self);
+  FOnActiveViewChange.Invoke(Self);
 end;
 
 procedure TEditorEvents.DoAddEditorView(AEditorView: IEditorView);
@@ -481,9 +507,9 @@ begin
   if Assigned(FOnNew) then
     FOnNew(Self, S, AText);
 end;
-{$endregion}
+{$ENDREGION}
 
-{$region 'protected methods' /fold}
+{$REGION 'protected methods'}
 procedure TEditorEvents.AddOnChangeHandler(AEvent: TNotifyEvent);
 begin
   //FChangeEvents.Add(TMethod(AEvent));
@@ -543,8 +569,8 @@ procedure TEditorEvents.RemoveOnActionExecuteEvent(AEvent: TActionExecuteEvent);
 begin
   //FActionExecuteEvents.Remove(TMethod(AEvent));
 end;
-{$endregion}
-{$endregion}
+{$ENDREGION}
+{$ENDREGION}
 
 end.
 

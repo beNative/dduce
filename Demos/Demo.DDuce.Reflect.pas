@@ -49,6 +49,7 @@ procedure TfrmReflect.AfterConstruction;
 begin
   inherited AfterConstruction;
   mmoMain.Text := Reflect.Properties(Self).ToString;
+  Reflect.Properties(Self).Fields['Caption'].Value := 'Nieuw';
 end;
 {$ENDREGION}
 

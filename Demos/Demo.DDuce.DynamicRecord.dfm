@@ -78,6 +78,7 @@ object frmDynamicRecords: TfrmDynamicRecords
         Width = 356
         Height = 19
         Align = alTop
+        BevelKind = bkFlat
         BevelOuter = bvNone
         Caption = 'TRecord content'
         Color = clAppWorkSpace
@@ -106,6 +107,7 @@ object frmDynamicRecords: TfrmDynamicRecords
         Width = 598
         Height = 19
         Align = alTop
+        BevelKind = bkFlat
         BevelOuter = bvNone
         Caption = 'Conversion methods'
         Color = clAppWorkSpace
@@ -421,10 +423,6 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsDataSet: TTabSheet
         Caption = 'DataSet'
         ImageIndex = 1
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object grdTest: TDBGrid
           AlignWithMargins = True
           Left = 3
@@ -445,10 +443,6 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsTestClass: TTabSheet
         Caption = 'TTestClass'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object lblTestClass: TLabel
           AlignWithMargins = True
           Left = 3
@@ -477,10 +471,6 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsTestRecord: TTabSheet
         Caption = 'TTestRecord'
         ImageIndex = 3
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object lblTestRecord: TLabel
           AlignWithMargins = True
           Left = 3
@@ -509,10 +499,6 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsTRecord: TTabSheet
         Caption = 'TRecord'
         ImageIndex = 4
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object lblTestTRecord: TLabel
           AlignWithMargins = True
           Left = 3
@@ -541,10 +527,6 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsAssignments: TTabSheet
         Caption = 'Assignments'
         ImageIndex = 6
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object pnlAssignments: TGridPanel
           Left = 0
           Top = 0

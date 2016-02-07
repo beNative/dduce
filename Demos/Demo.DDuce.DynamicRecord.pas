@@ -310,22 +310,22 @@ type
       Sender    : TObject;
       Cell      : TGridCell;
       var Value : string
-      );
+    );
     procedure FInspectorSetEditText(
       Sender    : TObject;
       Cell      : TGridCell;
       var Value : string
-      );
+    );
     procedure FInspectorGetEditStyle(
       Sender    : TObject;
       Cell      : TGridCell;
       var Style : TGridEditStyle
-      );
+    );
     procedure FInspectorGetEditText(
       Sender    : TObject;
       Cell      : TGridCell;
       var Value : string
-      );
+    );
 
     function CreateInspector(AParent : TWinControl): TInspector;
 

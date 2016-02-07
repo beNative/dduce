@@ -18,6 +18,11 @@ unit Test.DDuce.Reflect;
 
 {$I Test.DDuce.inc}
 
+{
+  TODO : test value assignments to reflected members. Assigned values are
+  not assigned to the wrapped instance => bug
+}
+
 interface
 
 uses

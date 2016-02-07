@@ -33,8 +33,6 @@ object frmReflect: TfrmReflect
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 0
-    ExplicitTop = 23
-    ExplicitHeight = 736
   end
   object pnlReflected: TPanel
     AlignWithMargins = True
