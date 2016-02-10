@@ -57,19 +57,17 @@ uses
 
   BCEditor.Editor, BCEditor.Types, BCEditor.Editor.KeyCommands,
 
-  DDuce.Editor.Resources, DDuce.Editor.Interfaces,
+  BCEditor.Highlighter,
+
+  DDuce.Editor.Resources, DDuce.Editor.Highlighters, DDuce.Editor.Interfaces,
 
   DDuce.Logger;
 
 type
   TEditorView = class(TForm, IEditorView, IEditorSelection)
-  published
-
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
-//    procedure FormShortCut(var Msg: TLMKey; var Handled: Boolean);
 
   strict private
-    // SynEdit event handlers
     procedure EditorChangeUpdating(
       ASender    : TObject;
       AUpdating  : Boolean
@@ -109,6 +107,13 @@ type
       ADeleteLine    : Boolean;
       var AAction    : TBCEditorReplaceAction
     );
+
+    procedure EditorDropFiles(
+      Sender : TObject;
+      Pos    : TPoint;
+      AFiles : TStrings
+    );
+
     function IsActive: Boolean;
     procedure ApplySettings;
 
@@ -117,9 +122,8 @@ type
     FLineBreakStyle  : string;
     FEditor          : TBCEditor;
     FFindHistory     : TStringList;
-//    FHighlighter     : TSynCustomHighlighter;
     FReplaceHistory  : TStringList;
-//    FHighlighterItem : THighlighterItem;
+    FHighlighterItem : THighlighterItem;
     FFileName        : string;
     FFoldLevel       : Integer;
     FIsFile          : Boolean;
@@ -156,7 +160,7 @@ type
     function GetFindHistory: TStrings;
     function GetFoldLevel: Integer;
     function GetForm: TCustomForm;
-//    function GetHighlighterItem: THighlighterItem;
+    function GetHighlighterItem: THighlighterItem;
     function GetLineBreakStyle: string;
     function GetLines: TStrings; virtual;
     function GetLinesInWindow: Integer;
@@ -182,8 +186,6 @@ type
     function GetSelectedText: string;
     function GetSettings: IEditorSettings;
     function GetShowSpecialChars: Boolean;
-    function GetSupportsFolding: Boolean;
-//    function GetSynSelection: TSynEditSelection;
     function GetText: string;
     function GetTextSize: Integer;
     function GetTopLine: Integer;
@@ -195,8 +197,7 @@ type
     procedure SetEditorFont(AValue: TFont);
     procedure SetFileName(const AValue: string);
     procedure SetFoldLevel(const AValue: Integer);
-//    procedure SetHighlighter(const AValue: TSynCustomHighlighter);
-//    procedure SetHighlighterItem(const AValue: THighlighterItem);
+    procedure SetHighlighterItem(const AValue: THighlighterItem);
     procedure SetHighlighterName(AValue: string);
     procedure SetInsertMode(AValue: Boolean);
     procedure SetIsFile(AValue: Boolean);
@@ -217,13 +218,15 @@ type
     procedure SetSelEnd(const AValue: Integer);
     procedure SetSelStart(const AValue: Integer);
     procedure SetSelectedText(const AValue: string);
-    //procedure SetShowSpecialChars(const AValue: Boolean);
+    procedure SetShowSpecialChars(const AValue: Boolean);
     procedure SetText(const AValue: string);
     procedure SetTopLine(const AValue: Integer);
     {$ENDREGION}
 
     procedure InitializeEditor(AEditor: TBCEditor);
     procedure EditorSettingsChanged(ASender: TObject);
+    function GetHighlighter: TBCEditorHighlighter;
+    procedure SetHighlighter(const Value: TBCEditorHighlighter);
 
 
   strict protected
@@ -351,8 +354,8 @@ type
     property SelectionMode: TBCEditorSelectionMode
       read GetSelectionMode write SetSelectionMode;
 
-//    property ShowSpecialChars: Boolean
-//      read GetShowSpecialChars write SetShowSpecialChars;
+    property ShowSpecialChars: Boolean
+      read GetShowSpecialChars write SetShowSpecialChars;
 
     property Modified: Boolean
       read GetModified write SetModified;
@@ -376,11 +379,6 @@ type
 
     property LineText: string
       read GetLineText write SetLineText;
-
-    { Text to pass if the preview is shown (this is LineText when nothing is
-      selected and the selected text otherwise). }
-    property PreviewText: string
-      read GetPreviewText;
 
     property SelectionAvailable: Boolean
       read GetSelectionAvailable;
@@ -412,20 +410,17 @@ type
     property ReplaceHistory: TStrings
       read GetReplaceHistory;
 
-//    property Highlighter: TSynCustomHighlighter
-//      read FHighlighter write SetHighlighter;
+    property Highlighter: TBCEditorHighlighter
+      read GetHighlighter write SetHighlighter;
 
     property HighlighterName: string
       read GetHighlighterName write SetHighlighterName;
 
-//    property HighlighterItem: THighlighterItem
-//      read GetHighlighterItem write SetHighlighterItem;
+    property HighlighterItem: THighlighterItem
+      read GetHighlighterItem write SetHighlighterItem;
 
     property Selection: IEditorSelection
       read GetSelection implements IEditorSelection;
-
-//    property SynSelection: TSynEditSelection
-//      read GetSynSelection;
 
     { Shortcut to the text contained in the editor. }
     property Lines: TStrings
@@ -596,6 +591,13 @@ begin
   Logger.Leave('TEditorView.EditorCommandProcessed');
 end;
 
+procedure TEditorView.EditorDropFiles(Sender: TObject; Pos: TPoint;
+  AFiles: TStrings);
+begin
+  Editor.LoadFromFile(AFiles[0]);
+  Editor.Highlighter.LoadFromFile('Object Pascal.json');
+end;
+
 procedure TEditorView.EditorReplaceText(Sender: TObject; const ASearch,
   AReplace: string; ALine, AColumn: Integer; ADeleteLine: Boolean;
   var AAction: TBCEditorReplaceAction);
@@ -763,19 +765,29 @@ begin
   Result := Editor.Font;
 end;
 
+function TEditorView.GetHighlighter: TBCEditorHighlighter;
+begin
+//
+end;
+
 function TEditorView.GetHighlighterName: string;
 begin
   Result := Editor.Highlighter.Name;
 end;
 
+procedure TEditorView.SetHighlighter(const Value: TBCEditorHighlighter);
+begin
+//
+end;
+
 procedure TEditorView.SetHighlighterName(AValue: string);
 begin
-//  if AValue <> HighlighterName then
-//  begin
-//    // HighlighterItem is always assigned
-//    HighlighterItem := Manager.Highlighters.ItemsByName[AValue];
-//  end;
-//  //if no Highlighters defined, we use the number0 Highlighters
+  if AValue <> HighlighterName then
+  begin
+    // HighlighterItem is always assigned
+    //HighlighterItem := Manager.Highlighters.ItemsByName[AValue];
+  end;
+  //if no Highlighters defined, we use the number0 Highlighters
 //  if trim(AValue)='' then
 //     if Manager.Highlighters.Count>0 then
 //         HighlighterItem := Manager.Highlighters.Items[0];
@@ -837,15 +849,6 @@ begin
   Editor.TopLine := AValue;
 end;
 
-//procedure TEditorView.SetHighlighter(const AValue: TSynCustomHighlighter);
-//begin
-//  if AValue <> Highlighter then
-//  begin
-//    FHighlighter := AValue;
-//    Editor.Highlighter := AValue;
-//  end;
-//end;
-
 function TEditorView.GetFileName: string;
 begin
   Result := FEditor.FileName;
@@ -855,8 +858,9 @@ procedure TEditorView.SetFileName(const AValue: string);
 begin
   if AValue <> FileName then
   begin
-//    FEditor.FileName := AValue;
-    Caption := ExtractFileName(AValue);
+    FFileName := AValue;
+    //FEditor.FileName := AValue;
+    //Caption := ExtractFileName(AValue);
   end;
 end;
 
@@ -881,6 +885,7 @@ end;
 
 function TEditorView.GetLineText: string;
 begin
+  //Result := Editor.Get
 //  Result := Editor. LineText;
 end;
 
@@ -949,21 +954,16 @@ begin
   Result := inherited Parent;
 end;
 
-//procedure TEditorView.SetParent(const AValue: TWinControl);
-//begin
-
-//end;
-
-function TEditorView.GetPopupMenu: TPopupMenu;
-begin
-  Result := PopupMenu;
-end;
-
 procedure TEditorView.SetParent(Value: TWinControl);
 begin
   inherited Parent := Value;
   if Assigned(Parent) then
     Visible := True;
+end;
+
+function TEditorView.GetPopupMenu: TPopupMenu;
+begin
+  Result := PopupMenu;
 end;
 
 procedure TEditorView.SetPopupMenu(AValue: TPopupMenu);
@@ -990,8 +990,6 @@ procedure TEditorView.SetModified(const AValue: Boolean);
 begin
   if AValue <> Modified then
   begin
-//    if not AValue then
-//      Editor.MarkTextAsSaved;
     Editor.Modified := AValue;
   end;
 end;
@@ -1052,82 +1050,77 @@ begin
   Result := FFindHistory;
 end;
 
-//function TEditorView.GetHighlighterItem: THighlighterItem;
-//begin
-//  Result := FHighlighterItem;
-//end;
-//
-//procedure TEditorView.SetHighlighterItem(const AValue: THighlighterItem);
-//begin
-//  if HighlighterItem <> AValue then
-//  begin
-//    FHighlighterItem := AValue;
-//    if Assigned(AValue) then
-//    begin
-//      AValue.Reload;
-//      Settings.HighlighterType := FHighlighterItem.Highlighter;
-//      Highlighter := AValue.SynHighlighter;
-//      Actions.UpdateHighLighterActions;
-//    end;
-//    Events.DoHighlighterChange;
-//  end;
-//end;
+function TEditorView.GetHighlighterItem: THighlighterItem;
+begin
+  Result := FHighlighterItem;
+end;
+
+procedure TEditorView.SetHighlighterItem(const AValue: THighlighterItem);
+begin
+  if HighlighterItem <> AValue then
+  begin
+    FHighlighterItem := AValue;
+    if Assigned(AValue) then
+    begin
+      //AValue.Reload;
+      Settings.HighlighterType := FHighlighterItem.Highlighter;
+      //Highlighter := AValue.SynHighlighter;
+      Actions.UpdateHighLighterActions;
+    end;
+    Events.DoHighlighterChange;
+  end;
+end;
 
 function TEditorView.GetShowSpecialChars: Boolean;
 begin
-//  Result := eoShowSpecialChars in Editor.Options;
+  Result := Editor.SpecialChars.Visible;
 end;
 
-//procedure TEditorView.SetShowSpecialChars(const AValue: Boolean);
-//begin
-//  if AValue then
-//    Editor.Options := Editor.Options + [eoShowSpecialChars]
-//  else
-//    Editor.Options := Editor.Options - [eoShowSpecialChars];
-//end;
+procedure TEditorView.SetShowSpecialChars(const AValue: Boolean);
+begin
+  Editor.SpecialChars.Visible := AValue;
+end;
 
 function TEditorView.GetBlockBegin: TPoint;
 begin
-//  Result := Editor.
-//  BlockBegin;
+  Result.X := Editor.SelectionBeginPosition.Char;
+  Result.Y := Editor.SelectionBeginPosition.Line;
 end;
 
 procedure TEditorView.SetBlockBegin(const AValue: TPoint);
+var
+  P : TBCEditorTextPosition;
 begin
-//  Editor.BlockBegin := AValue;
+  P.Char := AValue.X;
+  P.Line := AValue.Y;
+  Editor.SelectionBeginPosition := P;
 end;
 
 function TEditorView.GetBlockEnd: TPoint;
 begin
-//  Result := Editor.BlockEnd;
+  Result.X := Editor.SelectionEndPosition.Char;
+  Result.Y := Editor.SelectionEndPosition.Line;
 end;
 
 procedure TEditorView.SetBlockEnd(const AValue: TPoint);
+var
+  P : TBCEditorTextPosition;
 begin
-//  Editor.BlockEnd := AValue;
+  P.Char := AValue.X;
+  P.Line := AValue.Y;
+  Editor.SelectionEndPosition:= P;
 end;
 
 function TEditorView.GetTextSize: Integer;
 begin
-  Result := Length(Text);
+  //Result := Length(Text);
+  Result := Editor.GetTextLen;
 end;
 
 function TEditorView.GetEvents: IEditorEvents;
 begin
   Result := Owner as IEditorEvents;
 end;
-
-function TEditorView.GetSupportsFolding: Boolean;
-begin
-//  Result := Assigned(HighlighterItem)
-//    and Assigned(HighlighterItem.SynHighlighter)
-//    and (HighlighterItem.SynHighlighter is TSynCustomFoldHighlighter);
-end;
-
-//function TEditorView.GetSynSelection: TSynEditSelection;
-//begin
-//  Result := FSynSelection;
-//end;
 
 function TEditorView.GetLinesInWindow: Integer;
 begin
@@ -1199,6 +1192,8 @@ end;
 
 function TEditorView.GetCurrentChar: WideChar;
 begin
+  //Result := Editor.TextToDisplayPosition()
+
 //  if SelStart < Length(Text) then
 //    Result := Text[SelStart]
 //  else
@@ -1238,6 +1233,49 @@ end;
 
 procedure TEditorView.ApplySettings;
 begin
+  //Editor.LineSpacing.Rule.
+  Editor.Tabs.WantTabs := Settings.EditorOptions.WantTabs;
+  Editor.Tabs.Width    := Settings.EditorOptions.TabWidth;
+
+  if Settings.EditorOptions.TabsToSpaces then
+    Editor.Tabs.Options := Editor.Tabs.Options + [toTabsToSpaces]
+  else
+    Editor.Tabs.Options := Editor.Tabs.Options - [toTabsToSpaces];
+
+  if Settings.EditorOptions.TabIndent then
+    Editor.Tabs.Options := Editor.Tabs.Options + [toSelectedBlockIndent]
+  else
+    Editor.Tabs.Options := Editor.Tabs.Options - [toSelectedBlockIndent];
+
+  if Settings.EditorOptions.AutoIndent then
+    Editor.Options := Editor.Options + [eoAutoIndent]
+  else
+    Editor.Options := Editor.Options - [eoAutoIndent];
+
+  if Settings.EditorOptions.DragDropEditing then
+    Editor.Options := Editor.Options + [eoDragDropEditing]
+  else
+    Editor.Options := Editor.Options - [eoDragDropEditing];
+
+  if Settings.EditorOptions.TrimTrailingSpaces then
+    Editor.Options := Editor.Options + [eoTrimTrailingSpaces]
+  else
+    Editor.Options := Editor.Options - [eoTrimTrailingSpaces];
+
+  Editor.RightMargin.Visible := Settings.EditorOptions.ShowRightEdge;
+
+
+
+//  if Settings.EditorOptions.BlockTabIndent then
+
+
+
+
+  //
+
+
+
+
 //  EditorFont                   := Settings.EditorFont;
 //  ShowSpecialChars             := Settings.EditorOptions.ShowSpecialCharacters;
 //  Editor.ExtraLineSpacing      := Settings.EditorOptions.ExtraLineSpacing;
@@ -1246,13 +1284,8 @@ begin
 //  Editor.BlockTabIndent        := Settings.EditorOptions.BlockTabIndent;
 //  Editor.BlockIndent           := Settings.EditorOptions.BlockIndent;
 //  Editor.RightEdge             := Settings.EditorOptions.RightEdge;
-//  Editor.TabWidth              := Settings.EditorOptions.TabWidth;
-//  Editor.WantTabs              := Settings.EditorOptions.WantTabs;
 
-//  if Settings.EditorOptions.AutoIndent then
-//    Editor.Options := Editor.Options + [eoAutoIndent]
-//  else
-//    Editor.Options := Editor.Options - [eoAutoIndent];
+
 //
 //  if Settings.EditorOptions.AutoIndentOnPaste then
 //    Editor.Options := Editor.Options + [eoAutoIndentOnPaste]
@@ -1269,35 +1302,15 @@ begin
 //  else
 //    Editor.Options := Editor.Options - [eoEnhanceHomeKey];
 //
-//  if Settings.EditorOptions.TabIndent then
-//    Editor.Options := Editor.Options + [eoTabIndent]
-//  else
-//    Editor.Options := Editor.Options - [eoTabIndent];
 //
-//  if Settings.EditorOptions.TabsToSpaces then
-//    Editor.Options := Editor.Options + [eoTabsToSpaces]
-//  else
-//    Editor.Options := Editor.Options - [eoTabsToSpaces];
-//
-//  if Settings.EditorOptions.TrimTrailingSpaces then
-//    Editor.Options := Editor.Options + [eoTrimTrailingSpaces]
-//  else
-//    Editor.Options := Editor.Options - [eoTrimTrailingSpaces];
-//
-//  if Settings.EditorOptions.DragDropEditing then
-//    Editor.Options := Editor.Options + [eoDragDropEditing]
-//  else
-//    Editor.Options := Editor.Options - [eoDragDropEditing];
+
 //
 //  if Settings.EditorOptions.BracketHighlight then
 //    Editor.Options := Editor.Options + [eoBracketHighlight]
 //  else
 //    Editor.Options := Editor.Options - [eoBracketHighlight];
 //
-//  if Settings.EditorOptions.ShowRightEdge then
-//    Editor.Options := Editor.Options - [eoHideRightMargin]
-//  else
-//    Editor.Options := Editor.Options + [eoHideRightMargin];
+
 //
 //  if Settings.EditorOptions.EnhanceEndKey then
 //    Editor.Options2 := Editor.Options2 + [eoEnhanceEndKey]
@@ -1368,7 +1381,8 @@ var
 begin
   AEditor.Parent := Self;
   AEditor.Align := alClient;
-  //AEditor.Font.Assign(Settings.EditorFont);
+  AEditor.Font.Assign(Settings.EditorFont);
+
   AEditor.BorderStyle := bsNone;
   AEditor.DoubleBuffered := True;
   AEditor.Options := [
@@ -1382,6 +1396,28 @@ begin
   AEditor.OnReplaceText      := EditorReplaceText;
   AEditor.OnCaretChanged     := EditorCaretChanged;
   AEditor.OnCommandProcessed := EditorCommandProcessed;
+  AEditor.OnDropFiles        := EditorDropFiles;
+
+  AEditor.Highlighter.Colors.LoadFromFile('tsColors.json');
+
+  //AEditor.CodeFolding.Options := AEditor.CodeFolding.Options + [cfoFoldMultilineComments];
+
+  AEditor.CodeFolding.Visible := True;
+  AEditor.CodeFolding.Options :=  [
+    //cfoFoldMultilineComments,
+    cfoHighlightFoldingLine,
+    //cfoHighlightIndentGuides,
+    cfoHighlightMatchingPair,
+    cfoShowCollapsedCodeHint,
+    //cfoShowCollapsedLine,
+    //cfoShowIndentGuides,
+    cfoUncollapseByHintClick
+
+  ];
+
+  AEditor.URIOpener := True;
+  AEditor.Font.Size := 11;
+
 
 //  with AEditor.Gutter.LineNumberPart do
 //  begin

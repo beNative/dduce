@@ -2,7 +2,7 @@ object frmEditor: TfrmEditor
   Left = 0
   Top = 0
   ClientHeight = 568
-  ClientWidth = 796
+  ClientWidth = 1004
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,29 +16,30 @@ object frmEditor: TfrmEditor
   object sbrMain: TStatusBar
     Left = 0
     Top = 549
-    Width = 796
+    Width = 1004
     Height = 19
     Panels = <>
+    ExplicitWidth = 796
   end
   object pnlLeft: TPanel
     Left = 0
     Top = 0
-    Width = 353
+    Width = 225
     Height = 549
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
   end
   object pnlRight: TPanel
-    Left = 353
+    Left = 225
     Top = 0
-    Width = 443
+    Width = 779
     Height = 549
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 359
-    ExplicitTop = -6
+    ExplicitLeft = 353
+    ExplicitWidth = 443
     object splVertical: TSplitter
       Left = 0
       Top = 0

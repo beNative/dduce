@@ -21,12 +21,9 @@ unit DDuce.Editor.CodeTags;
 interface
 
 uses
-  Classes, SysUtils;
+  System.Classes, System.SysUtils;
 
 type
-
-  { TCodeTagItem }
-
   TCodeTagItem = class(TComponent)
   strict private
     FEndTag   : string;
@@ -60,8 +57,6 @@ type
   end;
 
 implementation
-
-{ TCodeTags }
 
 function TCodeTags.GetItem(Index: Integer): TCodeTagItem;
 begin

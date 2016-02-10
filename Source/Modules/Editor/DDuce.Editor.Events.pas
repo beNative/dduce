@@ -35,39 +35,19 @@ uses
   DDuce.Editor.Types, DDuce.Editor.Interfaces;
 
 type
-
-  { TActionExecuteEvents }
-
-//  TActionExecuteEvents = class(TMethodList)
-//    procedure CallEvents(
-//          Sender   : TObject;
-//          AAction  : TBasicAction;
-//      var AHandled : Boolean);
-//  end;
-
-  { TCaretPositionEvents }
-
-//  TCaretPositionEvents = class(TMethodList)
-//    procedure CallEvents(Sender: TObject; X, Y: Integer);
-//  end;
-
-  { TEditorEvents }
-
   TEditorEvents = class(TInterfacedObject, IEditorEvents)
   strict private
     FManager                 : IEditorManager;
     FOnChange                : Event<TNotifyEvent>;
     FOnModified              : Event<TNotifyEvent>;
     FOnActiveViewChange      : Event<TNotifyEvent>;
+    FOnCaretPositionChange   : Event<TCaretPositionEvent>;
+    FOnActionExecute         : Event<TActionExecuteEvent>;
 
 //    FHighlighterChangeEvents : TMethodList;
-//    FCaretPositionEvents     : TCaretPositionEvents;
-//    FActionExecuteEvents     : TActionExecuteEvents;
-
     FOnAddEditorView       : TAddEditorViewEvent;
     FOnShowEditorToolView  : TEditorToolViewEvent;
     FOnHideEditorToolView  : TEditorToolViewEvent;
-//    FOnMacroStateChange    : TMacroStateChangeEvent;
     FOnNew                 : TNewEvent;
     FOnLoad                : TStorageEvent;
     FOnOpen                : TStorageEvent;
@@ -78,11 +58,6 @@ type
 //    FOnStatusChange        : TStatusChangeEvent;
     FOnStatusMessage       : TStatusMessageEvent;
 
-  strict
-  private
-    function GetOnActiveViewChange: IEvent<TNotifyEvent>;
-    function GetOnChange: IEvent<TNotifyEvent>;
-    function GetOnModified: IEvent<TNotifyEvent>;
   protected
     function GetOnOpen: TStorageEvent;
     procedure SetOnOpen(AValue: TStorageEvent);
@@ -107,6 +82,11 @@ type
 //    procedure SetOnStatusChange(const AValue: TStatusChangeEvent);
     procedure SetOnAfterSave(AValue: TStorageEvent);
     procedure SetOnBeforeSave(AValue: TStorageEvent);
+    function GetOnActionExecute: IEvent<TActionExecuteEvent>;
+    function GetOnCaretPositionChange: IEvent<TCaretPositionEvent>;
+    function GetOnActiveViewChange: IEvent<TNotifyEvent>;
+    function GetOnChange: IEvent<TNotifyEvent>;
+    function GetOnModified: IEvent<TNotifyEvent>;
 
     { will get called by owner to trigger the events }
     procedure DoChange; virtual;
@@ -127,22 +107,8 @@ type
     procedure DoLoad(const AName: string);
     procedure DoNew(
       const AName : string = '';
-      const AText        : string = ''
+      const AText : string = ''
     );
-
-    procedure AddOnChangeHandler(AEvent: TNotifyEvent);
-    procedure AddOnModifiedHandler(AEvent: TNotifyEvent);
-    procedure AddOnHighlighterChangeHandler(AEvent: TNotifyEvent);
-    procedure AddOnActiveViewChangeHandler(AEvent: TNotifyEvent);
-    procedure AddOnCaretPositionEvent(AEvent: TCaretPositionEvent);
-    procedure AddOnActionExecuteEvent(AEvent: TActionExecuteEvent);
-
-    procedure RemoveOnChangeHandler(AEvent: TNotifyEvent);
-    procedure RemoveOnModifiedHandler(AEvent: TNotifyEvent);
-    procedure RemoveOnHighlighterChangeHandler(AEvent: TNotifyEvent);
-    procedure RemoveOnActiveViewChangeHandler(AEvent: TNotifyEvent);
-    procedure RemoveOnCaretPositionEvent(AEvent: TCaretPositionEvent);
-    procedure RemoveOnActionExecuteEvent(AEvent: TActionExecuteEvent);
 
     property OnAddEditorView: TAddEditorViewEvent
       read GetOnAddEditorView write SetOnAddEditorView;
@@ -184,42 +150,22 @@ type
     property OnActiveViewChange: IEvent<TNotifyEvent>
       read GetOnActiveViewChange;
 
+    property OnActionExecute: IEvent<TActionExecuteEvent>
+      read GetOnActionExecute;
+
+    property OnCaretPositionChange: IEvent<TCaretPositionEvent>
+      read GetOnCaretPositionChange;
+
     property View: IEditorView
       read GetView;
 
   public
     constructor Create(AManager: IEditorManager);
-    procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
   end;
 
 implementation
-
-{ TActionExecuteEvents }
-
-//procedure TActionExecuteEvents.CallEvents(Sender: TObject;
-//  AAction: TBasicAction; var AHandled: Boolean);
-//var
-//  I: Integer;
-//begin
-//  I := Count;
-//  while NextDownIndex(I) do
-//    TActionExecuteEvent(Items[I])(Sender, AAction, AHandled);
-//end;
-
-{$REGION 'TCaretPositionEvents'}
-{$REGION 'public methods'}
-//procedure TCaretPositionEvents.CallEvents(Sender: TObject; X, Y: Integer);
-//var
-//  I: Integer;
-//begin
-//  I := Count;
-//  while NextDownIndex(I) do
-//    TCaretPositionEvent(Items[I])(Sender, X, Y);
-//end;
-{$ENDREGION}
-{$ENDREGION}
 
 {$REGION 'TEditorEvents'}
 {$REGION 'construction and destruction'}
@@ -229,20 +175,9 @@ begin
   FManager := AManager;
 end;
 
-procedure TEditorEvents.AfterConstruction;
-begin
-  inherited AfterConstruction;
-//  FHighlighterChangeEvents := TMethodList.Create;
-//  FCaretPositionEvents     := TCaretPositionEvents.Create;
-//  FActionExecuteEvents     := TActionExecuteEvents.Create;
-end;
-
 procedure TEditorEvents.BeforeDestruction;
 begin
   FManager := nil;
-//  FCaretPositionEvents.Free;
-//  FActionExecuteEvents.Free;
-//  FHighlighterChangeEvents.Free;
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
@@ -268,6 +203,11 @@ begin
   Result := FOnBeforeSave;
 end;
 
+function TEditorEvents.GetOnCaretPositionChange: IEvent<TCaretPositionEvent>;
+begin
+  Result := FOnCaretPositionChange;
+end;
+
 function TEditorEvents.GetOnChange: IEvent<TNotifyEvent>;
 begin
   Result := FOnChange;
@@ -276,6 +216,11 @@ end;
 function TEditorEvents.GetView: IEditorView;
 begin
   Result := FManager as IEditorView;
+end;
+
+function TEditorEvents.GetOnActionExecute: IEvent<TActionExecuteEvent>;
+begin
+  Result := FOnActionExecute;
 end;
 
 function TEditorEvents.GetOnActiveViewChange: IEvent<TNotifyEvent>;
@@ -510,65 +455,6 @@ end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-procedure TEditorEvents.AddOnChangeHandler(AEvent: TNotifyEvent);
-begin
-  //FChangeEvents.Add(TMethod(AEvent));
-end;
-
-procedure TEditorEvents.AddOnModifiedHandler(AEvent: TNotifyEvent);
-begin
-  //FModifiedEvents.Add(TMethod(AEvent));
-end;
-
-procedure TEditorEvents.AddOnHighlighterChangeHandler(AEvent: TNotifyEvent);
-begin
-  //FHighlighterChangeEvents.Add(TMethod(AEvent));
-end;
-
-procedure TEditorEvents.AddOnActiveViewChangeHandler(AEvent: TNotifyEvent);
-begin
-  //FActiveViewChangeEvents.Add(TMethod(AEvent));
-end;
-
-procedure TEditorEvents.AddOnCaretPositionEvent(AEvent: TCaretPositionEvent);
-begin
-  //FCaretPositionEvents.Add(TMethod(AEvent));
-end;
-
-procedure TEditorEvents.AddOnActionExecuteEvent(AEvent: TActionExecuteEvent);
-begin
-  //FActionExecuteEvents.Add(TMethod(AEvent));
-end;
-
-procedure TEditorEvents.RemoveOnChangeHandler(AEvent: TNotifyEvent);
-begin
-  //FChangeEvents.Remove(TMethod(AEvent));
-end;
-
-procedure TEditorEvents.RemoveOnModifiedHandler(AEvent: TNotifyEvent);
-begin
-  //FModifiedEvents.Remove(TMethod(AEvent));
-end;
-
-procedure TEditorEvents.RemoveOnHighlighterChangeHandler(AEvent: TNotifyEvent);
-begin
- // FHighlighterChangeEvents.Remove(TMethod(AEvent));
-end;
-
-procedure TEditorEvents.RemoveOnActiveViewChangeHandler(AEvent: TNotifyEvent);
-begin
-  //FActiveViewChangeEvents.Remove(TMethod(AEvent));
-end;
-
-procedure TEditorEvents.RemoveOnCaretPositionEvent(AEvent: TCaretPositionEvent);
-begin
-//FCaretPositionEvents.Remove(TMethod(AEvent));
-end;
-
-procedure TEditorEvents.RemoveOnActionExecuteEvent(AEvent: TActionExecuteEvent);
-begin
-  //FActionExecuteEvents.Remove(TMethod(AEvent));
-end;
 {$ENDREGION}
 {$ENDREGION}
 

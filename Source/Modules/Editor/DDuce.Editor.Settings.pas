@@ -18,7 +18,9 @@
 
 unit DDuce.Editor.Settings;
 
-{$REGION Documentation /fold}
+interface
+
+{$REGION 'Documentation'}
 {
   TEditorSettings is a component that implements IEditorSettings and holds
   all settings that can be persisted.
@@ -54,13 +56,13 @@ unit DDuce.Editor.Settings;
 }
 {$ENDREGION}
 
-interface
-
 uses
   System.Classes, System.SysUtils,
   Vcl.Graphics, Vcl.ActnList,
 
   //ts.Core.FormSettings,
+
+  Spring,
 
   DDuce.Editor.Interfaces, DDuce.Editor.Highlighters, DDuce.Editor.HighlighterAttributes,
   DDuce.Editor.Colors.Settings, DDuce.Editor.Tools.Settings,
@@ -85,7 +87,6 @@ type
     procedure FEditorOptionsChanged(Sender: TObject);
   private
     FAutoFormatXML            : Boolean;
-    //FChangedEventList         : TMethodList;
     FReadOnly                 : Boolean;
     FHighlighterType          : string;
     FAutoGuessHighlighterType : Boolean;
@@ -102,6 +103,7 @@ type
     FColors                   : TEditorColorSettings;
     FToolSettings             : TEditorToolSettings;
     FEditorOptions            : TEditorOptionsSettings;
+    FOnChanged                : Event<TNotifyEvent>;
 
     procedure FFormSettingsChanged(Sender: TObject);
     procedure FColorsChanged(Sender: TObject);
@@ -142,12 +144,12 @@ type
     procedure SetReadOnly(const AValue: Boolean);
     procedure SetSingleInstance(AValue: Boolean);
     procedure SetToolSettings(AValue: TEditorToolSettings);
+    function GetOnChanged: IEvent<TNotifyEvent>;
     {$ENDREGION}
 
   protected
     procedure AssignDefaultColors;
     procedure InitializeHighlighterAttributes;
-    procedure InitializeHighlighters;
     procedure Changed;
 
   public
@@ -221,6 +223,9 @@ type
     property SingleInstance: Boolean
       read GetSingleInstance write SetSingleInstance
       default DEFAULT_SINGLE_INSTANCE;
+
+    property OnChanged: IEvent<TNotifyEvent>
+      read GetOnChanged;
   end;
 
 implementation
@@ -263,7 +268,6 @@ begin
   FDimInactiveView := DEFAULT_DIM_ACTIVE_VIEW;
   FLanguageCode    := DEFAULT_LANGUAGE_CODE;
 
-//  RegisterClass(TSynSelectedColor);
   AssignDefaultColors;
 end;
 
@@ -276,7 +280,6 @@ begin
   FHighlighters.Free;
   FEditorFont.Free;
   FHighlighterAttributes.Free;
-//  FChangedEventList.Free;
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
@@ -385,11 +388,8 @@ end;
 
 procedure TEditorSettings.SetEditorFont(AValue: TFont);
 begin
-//  if not FEditorFont.IsEqual(AValue) then
-//  begin
-//    FEditorFont.Assign(AValue);
-//    Changed;
-//  end;
+  FEditorFont.Assign(AValue);
+  Changed;
 end;
 
 function TEditorSettings.GetFileName: string;
@@ -454,6 +454,11 @@ end;
 function TEditorSettings.GetLanguageCode: string;
 begin
   Result := FLanguageCode;
+end;
+
+function TEditorSettings.GetOnChanged: IEvent<TNotifyEvent>;
+begin
+  Result := FOnChanged;
 end;
 
 procedure TEditorSettings.SetLanguageCode(AValue: string);
@@ -762,16 +767,6 @@ begin
 //      ]
 //    );
 //  end;
-end;
-
-procedure TEditorSettings.InitializeHighlighters;
-var
-  HI: THighlighterItem;
-begin
-  for HI in Highlighters do
-  begin
-    //HI.InitSynHighlighter(HI.SynHighlighter);
-  end;
 end;
 {$ENDREGION}
 

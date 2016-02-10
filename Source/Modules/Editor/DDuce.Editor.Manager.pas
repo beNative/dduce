@@ -97,7 +97,7 @@ uses
   BCEditor.Editor,
 
   DDuce.Editor.Types, DDuce.Editor.Interfaces, DDuce.Editor.Resources,
-  DDuce.Editor.View,
+  DDuce.Editor.View, DDuce.Editor.Highlighters,
 
   DDuce.Logger;
 
@@ -105,8 +105,6 @@ type
   TPopupMenu = DDuce.Editor.Interfaces.TPopupMenu;
 
 type
-  { TdmEditorManager }
-
   TdmEditorManager = class(TDataModule, IEditorManager,
                                         IEditorActions,
                                         IEditorView,   // active view
@@ -114,9 +112,8 @@ type
                                         IEditorEvents,
                                         IEditorCommands,
                                         IEditorMenus,
-                                        IEditorSettings
-                                        //,
-                                        //IEditorSearchEngine
+                                        IEditorSettings,
+                                        IEditorSearchEngine
   )
     {$REGION'designer controls'}
     aclActions                        : TActionList;
@@ -438,7 +435,7 @@ type
     FSettings         : IEditorSettings;
     FActiveView       : IEditorView;
     FViewList         : TEditorViewList;
-//    FSearchEngine : IEditorSearchEngine;
+    FSearchEngine     : IEditorSearchEngine;
 
     {$REGION'property access methods'}
     function GetActionList: TActionList;
@@ -470,7 +467,7 @@ type
     function GetSelectPopupMenu: TPopupMenu;
     function GetSettings: IEditorSettings;
     function GetActiveView: IEditorView;
-//    function GetHighlighters: THighlighters;
+    function GetHighlighters: THighlighters;
     function GetSettingsPopupMenu: TPopupMenu;
     function GetToolViews: IEditorToolViews;
     function GetView(AIndex: Integer): IEditorView;
@@ -644,8 +641,8 @@ type
     property PersistSettings: Boolean
       read GetPersistSettings write SetPersistSettings;
 
-//    property Highlighters: THighlighters
-//      read GetHighlighters;
+    property Highlighters: THighlighters
+      read GetHighlighters;
 
     { Set/get the reference to the active view. }
     property ActiveView: IEditorView
@@ -676,8 +673,8 @@ type
       read GetSettings implements IEditorSettings;
 
     { Delegates the implementation of IEditorSearchEngine to an internal object. }
-//    property SearchEngine: IEditorSearchEngine
-//      read GetSearchEngine implements IEditorSearchEngine;
+    property SearchEngine: IEditorSearchEngine
+      read GetSearchEngine implements IEditorSearchEngine;
 
     { Delegates the implementation of IEditorView to the active editor view. }
     property View: IEditorView
@@ -737,8 +734,9 @@ uses
   DDuce.Editor.SelectionInfo.ToolView,
 
   //DDuce.Editor.Filter.Settings,
-  //DDuce.Editor.Search.Settings,
+  DDuce.Editor.Search.Engine.Settings,
   DDuce.Editor.SortStrings.Settings,
+  DDuce.Editor.Search.Engine,
   //DDuce.Editor.ViewList.Settings,
   //DDuce.Editor.ActionList.Settings,
 
@@ -771,9 +769,8 @@ begin
   FEvents           := TEditorEvents.Create(Self);
   FCommands         := TEditorCommands.Create(Self);
   FViewList         := TEditorViewList.Create;
-//  FSearchEngine     := TSearchEngine.Create(Self);
-  //FSettings.AddEditorSettingsChangedHandler(EditorSettingsChanged);
-
+  FSearchEngine     := TSearchEngine.Create(Self);
+  FSettings.OnChanged.Add(EditorSettingsChanged);
   RegisterToolViews;
   CreateActions;
   InitializePopupMenus;
@@ -784,7 +781,7 @@ begin
   FActiveView := nil;
   if PersistSettings then
     FSettings.Save;
-//  FSearchEngine := nil;
+  FSearchEngine := nil;
   FSettings := nil;
   FEvents   := nil;
   FCommands := nil;
@@ -913,7 +910,7 @@ end;
 
 function TdmEditorManager.GetSearchEngine: IEditorSearchEngine;
 begin
-  //Result := FSearchEngine;
+  Result := FSearchEngine;
 end;
 
 function TdmEditorManager.GetSearchPopupMenu: TPopupMenu;
@@ -971,10 +968,10 @@ begin
   end;
 end;
 
-//function TdmEditorManager.GetHighlighters: THighlighters;
-//begin
-//  Result := Settings.Highlighters;
-//end;
+function TdmEditorManager.GetHighlighters: THighlighters;
+begin
+  Result := Settings.Highlighters;
+end;
 
 function TdmEditorManager.GetSettingsPopupMenu: TPopupMenu;
 begin
@@ -2334,7 +2331,7 @@ begin
 //  ToolViews.Register(TfrmCodeFilterDialog, TCodeFilterSettings, 'CodeFilter');
 //  ToolViews.Register(TfrmHTMLView, THTMLViewSettings, 'HTMLView');
   ToolViews.Register(TfrmSortStrings, TSortStringsSettings, 'SortStrings');
-  //ToolViews.Register(TfrmSearchForm, TSearchEngineSettings, 'Search');
+  ToolViews.Register(TfrmSearchForm, TSearchEngineSettings, 'Search');
   //ToolViews.Register(TfrmCodeShaper, TCodeShaperSettings, 'CodeShaper');
 
   ToolViews.Register(TfrmViewList, nil, 'ViewList');
@@ -2687,7 +2684,7 @@ begin
     actCopy.Enabled  := actCopy.Visible and B;
     actPaste.Enabled := actPaste.Visible and ActiveView.CanPaste and B;
 
-    //if {Assigned(Settings) and V.Focused {and FChanged} then
+    if Assigned(Settings) and V.Focused {and FChanged} then
     begin
       B := V.SelectionAvailable {and not Settings.ReadOnly};
       actDequoteSelection.Enabled            := B;
@@ -2721,7 +2718,7 @@ begin
       actIndent.Enabled                      := B;
       actUnindent.Enabled                    := B;
 
-      //B := not Settings.ReadOnly;
+      B := not Settings.ReadOnly;
       actAlignSelection.Visible          := B;
       actCut.Visible                     := B;
       actDelete.Visible                  := B;
@@ -2745,7 +2742,8 @@ begin
       actRedo.Enabled := B and V.CanRedo;
       actUndo.Enabled := B and V.CanUndo;
 
-      B := V.SupportsFolding;
+//      B := V.SupportsFolding;
+      B := True;
       actToggleFoldLevel.Enabled := B;
       actFoldLevel0.Enabled      := B;
       actFoldLevel1.Enabled      := B;
@@ -2760,8 +2758,8 @@ begin
       actFoldLevel10.Enabled     := B;
 
       actToggleFoldLevel.ImageIndex    := 59 + V.FoldLevel;
-//      actShowSpecialCharacters.Checked :=
-//        Settings.EditorOptions.ShowSpecialCharacters;
+      actShowSpecialCharacters.Checked :=
+        Settings.EditorOptions.ShowSpecialCharacters;
 
       actSave.Enabled := ActiveView.Modified;
       actCloseOthers.Visible := ViewCount > 1;

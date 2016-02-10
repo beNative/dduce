@@ -155,9 +155,6 @@ type
     property Manager: IEditorManager
       read GetManager;
 
-  public
-    procedure AfterConstruction; override;
-
   end;
 
 implementation
@@ -173,13 +170,6 @@ uses
   DDuce.Editor.Resources,
 
   DDuce.Editor.Utils;
-
-{$REGION'construction and destruction'}
-procedure TEditorCommands.AfterConstruction;
-begin
-  inherited AfterConstruction;
-end;
-{$ENDREGION}
 
 {$REGION'property access mehods'}
 function TEditorCommands.GetEvents: IEditorEvents;
@@ -392,17 +382,17 @@ begin
 end;
 
 procedure TEditorCommands.ToggleHighlighter;
-//var
-//  I : Integer;
-//  N : Integer;
+var
+  I : Integer;
+  N : Integer;
 begin
-//  if Assigned(View.HighlighterItem) then
-//  begin
-//    I := View.HighlighterItem.Index;
-//    N := Manager.Highlighters.Count;
-//    View.HighlighterItem := Manager.Highlighters[(I + 1) mod N];
-//    Settings.HighlighterType := View.HighlighterItem.Name;
-//  end;
+  if Assigned(View.HighlighterItem) then
+  begin
+    I := View.HighlighterItem.Index;
+    N := Manager.Highlighters.Count;
+    View.HighlighterItem := Manager.Highlighters[(I + 1) mod N];
+    Settings.HighlighterType := View.HighlighterItem.Name;
+  end;
 end;
 
 procedure TEditorCommands.AssignHighlighter(const AName: string);

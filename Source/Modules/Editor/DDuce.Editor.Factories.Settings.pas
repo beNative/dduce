@@ -24,17 +24,12 @@ uses
   System.Classes, System.SysUtils,
   Vcl.Controls,
 
-  //DDuce.Editor.Tools.Settings,
-   //DDuce.Editor.Highlighters,
-   DDuce.Editor.Interfaces;
+  DDuce.Editor.Tools.Settings, DDuce.Editor.Highlighters, DDuce.Editor.Interfaces;
 
 type
   TEditorSettingsFactory = class(TInterfacedObject, IEditorSettingsFactory)
   public
-    procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
-
-    //procedure RegisterToolSettings(ASettings: TEditorToolSettings);
+    procedure RegisterToolSettings(ASettings: TEditorToolSettings);
     //procedure RegisterHighlighters(AHighlighters: THighlighters);
     //class procedure InitializeFoldHighlighters(AHighlighters: THighlighters);
     procedure RegisterClasses;
@@ -50,15 +45,6 @@ implementation
 uses
   Vcl.Forms,
 
-//  SynEditHighlighter, SynEditHighlighterFoldBase,
-//  SynHighlighterPas, SynHighlighterSQL, SynHighlighterLFM, SynHighlighterXML,
-//  SynHighlighterBat, SynHighlighterHTML, SynHighlighterCpp, SynHighlighterJava,
-//  SynHighlighterPerl, SynHighlighterPython, SynHighlighterPHP, SynHighlighterCss,
-//  SynHighlighterJScript, SynHighlighterDiff, SynHighlighterTeX, SynHighlighterPo,
-//  SynhighlighterUnixShellScript, SynHighlighterIni, SynHighlighterLua,
-
-  //SynFacilHighlighter,
-
 //  DDuce.Editor.CodeFormatters,
 //  DDuce.Editor.CodeFormatters.SQL,
 //  DDuce.Editor.AlignLines.Settings,
@@ -68,38 +54,24 @@ uses
 //  DDuce.Editor.HTMLView.Settings,
 //  DDuce.Editor.MiniMap.Settings,
 //  DDuce.Editor.SortStrings.Settings,
-//  DDuce.Editor.Search.Engine.Settings,
-  //DDuce.Editor.Settings,
+  DDuce.Editor.Search.Engine.Settings,
+  DDuce.Editor.Settings,
   DDuce.Editor.Resources;
 
 {$REGION 'private methods'}
 
-{$REGION 'construction and destruction'}
-procedure TEditorSettingsFactory.AfterConstruction;
+procedure TEditorSettingsFactory.RegisterToolSettings(
+  ASettings: TEditorToolSettings);
 begin
-  inherited AfterConstruction;
-
-end;
-
-procedure TEditorSettingsFactory.BeforeDestruction;
-begin
-
-  inherited BeforeDestruction;
-end;
-{$ENDREGION}
-
-//procedure TEditorSettingsFactory.RegisterToolSettings(
-//  ASettings: TEditorToolSettings);
-//begin
 //  ASettings.RegisterSettings(TAlignLinesSettings, 'AlignLinesSettings');
 //  ASettings.RegisterSettings(TCodeFilterSettings, 'CodeFilterSettings');
 //  ASettings.RegisterSettings(THTMLViewSettings, 'HTMLViewSettings');
 //  ASettings.RegisterSettings(TSortStringsSettings, 'SortStringsSettings');
 //  ASettings.RegisterSettings(TMiniMapSettings, 'MiniMapSettings');
-//  ASettings.RegisterSettings(THexEditorSettings, 'HexEditorSettings');
-//  ASettings.RegisterSettings(TSearchEngineSettings, 'SearchSettings');
+  //ASettings.RegisterSettings(THexEditorSettings, 'HexEditorSettings');
+  ASettings.RegisterSettings(TSearchEngineSettings, 'SearchSettings');
 //  ASettings.RegisterSettings(TCodeShaperSettings, 'CodeShaperSettings');
-//end;
+end;
 //
 //procedure TEditorSettingsFactory.RegisterHighlighters(
 //  AHighlighters: THighlighters);
@@ -284,8 +256,8 @@ var
   ES : IEditorSettings;
 begin
   RegisterClasses;
-  //ES := TEditorSettings.Create(AOwner);
-//  RegisterToolSettings(ES.ToolSettings);
+  ES := TEditorSettings.Create(AOwner);
+  RegisterToolSettings(ES.ToolSettings);
 //  RegisterHighlighters(ES.Highlighters);
   if AFileName <> '' then
   begin

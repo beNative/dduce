@@ -20,6 +20,17 @@ unit DDuce.Editor.Highlighters;
 
 { Holds settings that are specific to each supported highlighter. }
 
+{ REMARKS about TBCEditorHighlighter:
+  - a TBCEditorHighlighter requires a TBCEditor component to be able to load
+    its properties from the definition file.
+  - It uses a TBCEditorHighlighterJSONImporter object to load its settings. It
+    is not possible to save its settings back to JSON.
+  - It is not intended as a persistable settings object, but is rather a helper
+    object that works closely with the associated editor instance to render its
+    text.
+
+ }
+
 interface
 
 uses
@@ -27,13 +38,14 @@ uses
 
   DDuce.Editor.Utils, DDuce.Editor.CodeFormatters, DDuce.Editor.CodeTags,
 
+  BCEditor.Highlighter,
+
   DDuce.Logger;
 
 type
-  //TSynHighlighterClass = class of TSynCustomHighlighter;
   THighlighters        = class;
 
-  { THighlighterItem }
+  { THighlighterItem  }
 
   THighlighterItem = class(TComponent)
   private
@@ -47,43 +59,28 @@ type
     FDefaultFilter        : string;
     FHighlighter          : string;
     FSmartSelectionTags   : TCodeTags;
-//    FSynHighlighter       : TSynCustomHighlighter;
-//    FSynHighlighterClass  : TSynHighlighterClass;
     FFileExtensions       : TStringList;
     FUseCommonAttributes  : Boolean;
+    FBCEditorHighlighter  : TBCEditorHighlighter;
 
     // private property access methods
     function GetDefaultFilter: string;
     function GetFileExtensions: string;
     function GetIndex: Integer;
-//    function GetSynHighlighter: TSynCustomHighlighter;
     procedure SetDefaultFilter(AValue: string);
     procedure SetFileExtensions(AValue: string);
     procedure SetFormatterSupport(const AValue: Boolean);
     procedure SetSmartSelectionTags(AValue: TCodeTags);
-//    procedure SetSynHighlighterClass(AValue: TSynHighlighterClass);
-    procedure SetUseCommonAttributes(AValue: Boolean);
 
   public
     // constructors and destructors
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
-//    procedure InitSynHighlighter(
-//      { Optional instance to assign the settings to. }
-//      ASynHighlighter: TSynCustomHighlighter = nil
-//    );
     procedure Assign(Source: TPersistent); override;
-    function AsString: string;
-
-//    property SynHighlighterClass: TSynHighlighterClass
-//      read FSynHighlighterClass write SetSynHighlighterClass;
 
     property CodeFormatter: ICodeFormatter
       read FCodeFormatter write FCodeFormatter;
-
-//    property SynHighlighter: TSynCustomHighlighter
-//      read GetSynHighlighter;
 
     property Index: Integer
       read GetIndex;
@@ -95,18 +92,6 @@ type
   published
     property Highlighter: string
       read FHighlighter write FHighlighter;
-
-    { Character sequence that designates the start of a block comment. }
-    property BlockCommentStartTag: string
-      read FBlockCommentStartTag write FBlockCommentStartTag;
-
-    { Character sequence that designates the end of a block comment. }
-    property BlockCommentEndTag: string
-      read FBlockCommentEndTag write FBlockCommentEndTag;
-
-    { Character sequence that designates a line comment. }
-    property LineCommentTag: string
-      read FLineCommentTag write FLineCommentTag;
 
     property FormatterSupport: Boolean
       read FFormatterSupport write SetFormatterSupport;
@@ -124,9 +109,6 @@ type
     property LayoutFileName: string
       read FLayoutFileName write FLayoutFileName;
 
-    { Assign common attribute settings. }
-    property UseCommonAttributes: Boolean
-      read FUseCommonAttributes write SetUseCommonAttributes default True;
   end;
 
   THighlighterItemClass = class of THighlighterItem;
@@ -164,7 +146,6 @@ type
     procedure BeforeDestruction; override;
 
     function Add: THighlighterItem;
-    function AsString: string;
     function Exists(const AName: string): Boolean;
 
     function GetEnumerator: THighlighterEnumerator;
@@ -294,19 +275,6 @@ begin
   Result := THighlighterItem.Create(Self);
 end;
 
-function THighlighters.AsString: string;
-var
-  I : Integer;
-  S : string;
-begin
-  S := '';
-  for I :=  0 to Count - 1 do
-  begin
-    S := S + LineEnding + Items[I].AsString;
-  end;
-  Result := S;
-end;
-
 function THighlighters.Exists(const AName: string): Boolean;
 begin
   Result := Assigned(Find(AName));
@@ -421,7 +389,8 @@ begin
   FFileExtensions.Duplicates := dupIgnore;
   FFileExtensions.Sorted     := True;
   FSmartSelectionTags        := TCodeTags.Create(nil);
-  //FSmartSelectionTags.Name := 'SmartSelectionTags';
+
+  //FBCEditorHighlighter       := TBCEditorHighlighter.C
 
   FUseCommonAttributes       := True;
 end;
@@ -429,8 +398,6 @@ end;
 procedure THighlighterItem.BeforeDestruction;
 begin
   FCodeFormatter := nil;
-  //if Assigned(FSynHighlighter) then
-  //  FreeAndNil(FSynHighlighter);
   FreeAndNil(FFileExtensions);
   FreeAndNil(FSmartSelectionTags);
   inherited BeforeDestruction;
@@ -455,29 +422,6 @@ function THighlighterItem.GetIndex: Integer;
 begin
   Result := ComponentIndex;
 end;
-
-//function THighlighterItem.GetSynHighlighter: TSynCustomHighlighter;
-//var
-//  I : Integer;
-//  B : Boolean;
-//begin
-//  if (FSynHighlighter=nil) and (ComponentCount > 0) then
-//  begin
-//    I := 0;
-//    B := False;
-//    while not B and (I < ComponentCount) do
-//    begin
-//      if Components[I] is TSynCustomHighlighter then
-//      begin
-//        B := True;
-//        FSynHighlighter := TSynCustomHighlighter(Components[0]);
-//      end
-//      else
-//        Inc(B);
-//    end;
-//  end;
-//  Result := FSynHighlighter;
-//end;
 
 function THighlighterItem.GetFileExtensions: string;
 begin
@@ -504,23 +448,6 @@ procedure THighlighterItem.SetSmartSelectionTags(AValue: TCodeTags);
 begin
   FSmartSelectionTags.Assign(AValue);
 end;
-
-//procedure THighlighterItem.SetSynHighlighterClass(AValue: TSynHighlighterClass);
-//begin
-//  if AValue <> SynHighlighterClass then
-//  begin
-//    FSynHighlighterClass := AValue;
-//  end;
-//end;
-
-procedure THighlighterItem.SetUseCommonAttributes(AValue: Boolean);
-begin
-  if AValue <> UseCommonAttributes then
-  begin
-    FUseCommonAttributes := AValue;
-  end;
-end;
-
 {$ENDREGION}
 
 {$REGION 'public methods'}
@@ -531,52 +458,18 @@ begin
   if (Source <> Self) and (Source is THighlighterItem) then
   begin
     HLI := THighlighterItem(Source);
-//    SynHighlighterClass  := HLI.SynHighlighterClass;
-//    SynHighlighter.Assign(HLI.SynHighlighter);
     SmartSelectionTags.Assign(HLI.SmartSelectionTags);
     Highlighter          := HLI.Highlighter;
     Description          := HLI.Description;
     LayoutFileName       := HLI.LayoutFileName;
-    BlockCommentEndTag   := HLI.BlockCommentEndTag;
-    BlockCommentStartTag := HLI.BlockCommentStartTag;
-    LineCommentTag       := HLI.LineCommentTag;
     FileExtensions       := HLI.FileExtensions;
     SmartSelectionTags   := HLI.SmartSelectionTags;
     DefaultFilter        := HLI.DefaultFilter;
     FormatterSupport     := HLI.FormatterSupport;
-    UseCommonAttributes  := HLI.UseCommonAttributes;
   end
   else
     inherited Assign(Source);
 end;
-
-function THighlighterItem.AsString: string;
-const
-  DATA =
-    'SynHighlighter = %s' + #13#10 +
-    'Name           = %s' + #13#10 +
-    'Description    = %s' + #13#10 +
-    'LayoutFileName = %s';
-begin
-  //Result := Format(DATA, [SynHighlighter.ClassName, Highlighter, Description, LayoutFileName]);
-end;
-
-//procedure THighlighterItem.InitSynHighlighter(ASynHighlighter: TSynCustomHighlighter);
-//begin
-//  if not Assigned(SynHighlighter) and Assigned(SynHighlighterClass) then
-//  begin
-//    FSynHighlighter := SynHighlighterClass.Create(Self);
-//    FSynHighlighter.Name := 'SynHighlighter';
-//  end;
-//  if Assigned(ASynHighlighter) then
-//    SynHighlighter.Assign(ASynHighlighter);
-//
-//  if (SynHighlighterClass = TSynUniSyn) and FileExistsUTF8(LayoutFileName) then
-//  begin
-//    if Assigned(SynHighlighter) then
-//      TSynUniSyn(SynHighlighter).LoadFromFile(LayoutFileName);
-//  end;
-//end;
 {$ENDREGION}
 {$ENDREGION}
 
