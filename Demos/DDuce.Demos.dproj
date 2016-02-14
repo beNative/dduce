@@ -233,7 +233,6 @@
             <Form>frmFilter</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Highlighterattributes.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Highlighters.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Interfaces.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Manager.pas">

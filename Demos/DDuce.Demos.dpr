@@ -85,7 +85,6 @@ uses
   DDuce.Editor.Factories.Toolbars in '..\Source\Modules\Editor\DDuce.Editor.Factories.Toolbars.pas',
   DDuce.Editor.Factories.Views in '..\Source\Modules\Editor\DDuce.Editor.Factories.Views.pas',
   DDuce.Editor.Filter.Toolview in '..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas' {frmFilter},
-  DDuce.Editor.Highlighterattributes in '..\Source\Modules\Editor\DDuce.Editor.Highlighterattributes.pas',
   DDuce.Editor.Highlighters in '..\Source\Modules\Editor\DDuce.Editor.Highlighters.pas',
   DDuce.Editor.Interfaces in '..\Source\Modules\Editor\DDuce.Editor.Interfaces.pas',
   DDuce.Editor.Manager in '..\Source\Modules\Editor\DDuce.Editor.Manager.pas' {dmEditorManager: TDataModule},

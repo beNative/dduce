@@ -65,8 +65,8 @@ uses
   DDuce.FormSettings,
 
   DDuce.Editor.Interfaces, DDuce.Editor.Highlighters,
-  DDuce.Editor.Tools.Settings, DDuce.Editor.HighlighterAttributes,
-  DDuce.Editor.Colors.Settings, DDuce.Editor.Options.Settings,
+  DDuce.Editor.Tools.Settings, DDuce.Editor.Colors.Settings,
+  DDuce.Editor.Options.Settings,
 
   DDuce.Editor.CodeTags, DDuce.Logger;
 
@@ -97,7 +97,6 @@ type
     FDimInactiveView          : Boolean;
     FFormSettings             : TFormSettings;
     FEditorFont               : TFont;
-    FHighlighterAttributes    : THighlighterAttributes;
     FColors                   : TEditorColorSettings;
     FToolSettings             : TEditorToolSettings;
     FEditorOptions            : TEditorOptionsSettings;
@@ -116,7 +115,6 @@ type
     function GetEditorFont: TFont;
     function GetFileName: string;
     function GetFormSettings: TFormSettings;
-    function GetHighlighterAttributes: THighlighterAttributes;
     function GetHighlighters: THighlighters;
     function GetHighlighterType: string;
     function GetLanguageCode: string;
@@ -134,7 +132,6 @@ type
     procedure SetEditorFont(AValue: TFont);
     procedure SetFileName(const AValue: string);
     procedure SetFormSettings(const AValue: TFormSettings);
-    procedure SetHighlighterAttributes(AValue: THighlighterAttributes);
     procedure SetHighlighters(const AValue: THighlighters);
     procedure SetHighlighterType(const AValue: string);
     procedure SetLanguageCode(AValue: string);
@@ -176,9 +173,6 @@ type
 
     property EditorOptions: TEditorOptionsSettings
       read GetEditorOptions write SetEditorOptions;
-
-    property HighlighterAttributes: THighlighterAttributes
-      read GetHighlighterAttributes write SetHighlighterAttributes;
 
     { Default highlighter type to use. }
     property HighlighterType: string
@@ -248,7 +242,6 @@ begin
 
   FHighlighters := THighLighters.Create(Self);
   FHighlighters.Name := 'Highlighters';
-  FHighlighterAttributes := THighlighterAttributes.Create(Self);
 
   FFileName := DEFAULT_SETTINGS_FILE;
   FHighlighterType := HL_TXT;
@@ -273,7 +266,6 @@ begin
   FFormSettings.Free;
   FHighlighters.Free;
   FEditorFont.Free;
-  FHighlighterAttributes.Free;
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
@@ -407,17 +399,6 @@ end;
 procedure TEditorSettings.SetFormSettings(const AValue: TFormSettings);
 begin
   FFormSettings.Assign(AValue);
-  Changed;
-end;
-
-function TEditorSettings.GetHighlighterAttributes: THighlighterAttributes;
-begin
-  Result := FHighlighterAttributes;
-end;
-
-procedure TEditorSettings.SetHighlighterAttributes(AValue: THighlighterAttributes);
-begin
-  FHighlighterAttributes.Assign(AValue);
   Changed;
 end;
 
