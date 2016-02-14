@@ -1719,6 +1719,7 @@ begin
       List.AddRange(ANames);
       if AAssignProperties then
       begin
+        //for P in FRttiContext.GetType(AInstance.TypeInfo).GetProperties do
         for P in FRttiContext.GetType(AInstance.TypeInfo).GetProperties do
         begin
           if (List.Count = 0) or List.Contains(P.Name) then

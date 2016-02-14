@@ -59,6 +59,10 @@ inherited frmCharacterMap: TfrmCharacterMap
     end
     object tsUnicode: TTabSheet
       Caption = 'Unicode'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         361
         376)

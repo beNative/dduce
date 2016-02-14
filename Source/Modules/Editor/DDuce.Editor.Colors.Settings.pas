@@ -25,15 +25,12 @@ uses
   Vcl.Graphics;
 
 const
-    DEFAULT_RIGHT_EDGE_COLOR = clSilver;
+  DEFAULT_RIGHT_EDGE_COLOR = clSilver;
 
 type
   TSynSelectedColor = TColor;
 
 type
-
-  { TEditorColorSettings }
-
   TEditorColorSettings = class(TPersistent)
   strict private
     FIncrementColor     : TSynSelectedColor;

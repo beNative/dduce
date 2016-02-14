@@ -27,6 +27,8 @@ uses
 
   Spring.Collections,
 
+  BCEditor.Editor.KeyCommands,
+
   VirtualTrees,
 
   DSharp.Windows.TreeViewPresenter, DSharp.Windows.ColumnDefinitions,
@@ -41,7 +43,6 @@ type
     pnlActions       : TPanel;
     pgcMain          : TPageControl;
     pnlEditorList    : TPanel;
-    tsMouseActions   : TTabSheet;
     tsCommands       : TTabSheet;
     tsActions        : TTabSheet;
 
@@ -68,26 +69,22 @@ type
   private
     FVSTActions      : TVirtualStringTree;
     FVSTCommands     : TVirtualStringTree;
-    FVSTMouseActions : TVirtualStringTree;
     FTVPActions      : TTreeViewPresenter;
     FTVPCommands     : TTreeViewPresenter;
-    FTVPMouseActions : TTreeViewPresenter;
     FActionItems     : IObjectList;
-    FKeyStrokeItems  : IObjectList;
-    FMouseItems      : IObjectList;
+    FCommandItems    : IObjectList;
     FVKPressed       : Boolean;
     //FTextStyle       : TTextStyle;
 
     function GetFilter: string;
+    procedure SetFilter(AValue: string);
     function GetForm: TForm;
     function GetManager: IEditorManager;
     function GetName: string;
-    procedure SetFilter(AValue: string);
 
   protected
     procedure CreateActionsView;
     procedure CreateCommandsView;
-    procedure CreateMouseActionsView;
     procedure UpdateLists;
     property Manager: IEditorManager
       read GetManager;
@@ -119,7 +116,6 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
 
   end;
 
@@ -129,30 +125,13 @@ implementation
 
 uses
   Winapi.Windows, Winapi.Messages,
-  System.TypInfo, System.StrUtils, System.Variants, System.Actions,
-  Vcl.GraphUtil,
+  System.TypInfo, System.StrUtils, System.Variants, System.Actions, System.Rtti,
+  Vcl.GraphUtil, Vcl.Menus,
 
-  DSharp.Windows.ColumnDefinitions.ControlTemplate,
   DSharp.Windows.ControlTemplates,
 
-  DDuce.Editor.Utils;
-
-resourcestring
-  SName       = 'Name';
-  SCategory   = 'Category';
-  SCaption    = 'Caption';
-  SShortcut   = 'Shortcut';
-  SShortcut2  = 'Shortcut2';
-  SHint       = 'Hint';
-  SVisible    = 'Visible';
-  SEnabled    = 'Enabled';
-  SCommand    = 'Command';
-  SButton     = 'Button';
-  SShift      = 'Shift';
-  SShiftMask  = 'ShiftMask';
-  SClickCount = 'ClickCount';
-  SClickDir   = 'ClickDir';
-  SMoveCaret  = 'MoveCaret';
+  DDuce.Editor.Utils, DDuce.Editor.ActionList.Templates,
+  DDuce.Factories;
 
 type
   TVKSet = set of Byte;
@@ -195,146 +174,15 @@ var
     VK_END
   ];
 
-{$REGION 'TActionListTemplate'}
-type
-
-  { TActionListTemplate }
-
-  TActionListTemplate = class(TColumnDefinitionsControlTemplate)
-    function GetImageIndex(
-      const Item        : TObject;
-      const ColumnIndex : Integer
-    ): Integer; override;
-//    function GetValueForProperty(
-//      const Item          : TObject;
-//      const APropertyName : string
-//    ): TValue; override;
-//    procedure SetValueForProperty(
-//      const Item: TObject;
-//      const APropertyName: string;
-//      const AValue: TValue
-//    ); override;
-//    procedure SetValue(const Item: TObject; const ColumnIndex: Integer;
-//      const Value: TValue); override;
-  end;
-
-function TActionListTemplate.GetImageIndex(const Item: TObject;
-  const ColumnIndex: Integer): Integer;
-var
-  CD: TColumnDefinition;
-begin
-  Result := -1;
-  if Assigned(Item) and Assigned(ColumnDefinitions)
-    and (ColumnIndex < ColumnDefinitions.Count) and (ColumnIndex > -1) then
-  begin
-    CD := TColumnDefinition(ColumnDefinitions[ColumnIndex]);
-    if CD.Caption = '' then
-    begin
-      if IsPublishedProp(Item, 'ImageIndex') then
-        Result := GetPropValue(Item, 'ImageIndex')
-      else
-        Result := -1;
-      end
-    end;
-end;
-
-//function TActionListTemplate.GetValueForProperty(const Item: TObject;
-//  const APropertyName: string): TValue;
-//begin
-//  Result := inherited GetValueForProperty(Item, APropertyName);
-//  if SameText(APropertyName, 'Shortcut') then
-//  begin
-//    if not Result.IsEmpty then
-//    begin
-//      Result := ShortCutToText(TShortCut(Result.AsInteger));
-//    end;
-//  end;
-//end;
-//
-//procedure TActionListTemplate.SetValueForProperty(const Item: TObject;
-//  const APropertyName: string; const AValue: TValue);
-//begin
-//  inherited SetValueForProperty(Item, APropertyName, AValue);
-//end;
-
-//procedure TActionListTemplate.SetValue(const Item: TObject;
-//  const ColumnIndex: Integer; const Value: TValue);
-//begin
-//  inherited SetValue(Item, ColumnIndex, Value);
-//end;
-{$ENDREGION}
-
-{$REGION 'TKeyStrokeTemplate'}
-type
-  TKeyStrokeTemplate = class(TColumnDefinitionsControlTemplate)
-//    function GetValueForProperty(
-//      const Item          : TObject;
-//      const APropertyName : string
-//    ): TValue; override;
-  end;
-
-//function TKeyStrokeTemplate.GetValueForProperty(const Item: TObject;
-//  const APropertyName: string): TValue;
-//var
-//  C: TSynEditorCommand;
-//  S : string;
-//begin
-//  Result := inherited GetValueForProperty(Item, APropertyName);
-//  if SameText(APropertyName, 'Command') then
-//  begin
-//    C := TSynEditorCommand(Integer(Result));
-//    S := EditorCommandToCodeString(C);
-//    if Length(S) > 0 then
-//      S[1] := LowerCase(S[1]);
-//    Result := S;
-//  end
-//  else if SameText(APropertyName, 'Hint') then
-//  begin
-//    C := TSynEditorCommand(Integer((Item as TSynEditKeyStroke).Command));
-//    Result := EditorCommandToDescrString(C);
-//  end
-//  else if AnsiMatchText(APropertyName, ['Shortcut', 'Shortcut2']) then
-//  begin
-//    Result := ShortCutToText(TShortCut(Result.AsInteger));
-//  end;
-//end;
-{$ENDREGION}
-
-{$REGION 'TMouseActionTemplate'}
-type
-  TMouseActionTemplate = class(TColumnDefinitionsControlTemplate)
-//    function GetValueForProperty(
-//      const Item          : TObject;
-//      const APropertyName : string
-//    ): TValue; override;
-  end;
-
-//function TMouseActionTemplate.GetValueForProperty(const Item: TObject;
-//  const APropertyName: string): TValue;
-//var
-//  C: TSynEditorMouseCommand;
-//begin
-//  Result := inherited GetValueForProperty(Item, APropertyName);
-//  if SameText(APropertyName, 'Command') then
-//  begin
-//    C := TSynEditorMouseCommand(Integer(Result));
-//    Result := MouseCommandName(C);
-//  end;
-//end;
-{$ENDREGION}
-
 {$REGION 'TfrmActionListView'}
 {$REGION 'construction and destruction'}
 procedure TfrmActionListView.AfterConstruction;
 begin
   inherited AfterConstruction;
-
-//  FActionItems    := TObjectList.Create(False);
-//  FKeyStrokeItems := TObjectList.Create(False);
-//  FMouseItems     := TObjectList.Create(False);
+  FActionItems    := TCollections.CreateList<TContainedAction>(False) as IObjectList;
+  FCommandItems := TCollections.CreateList<TBCEditorKeyCommand>(False) as IObjectList;
   CreateActionsView;
   CreateCommandsView;
-  CreateMouseActionsView;
 
 //  FTextStyle.SingleLine := True;
 //  FTextStyle.Opaque := False;
@@ -345,14 +193,6 @@ begin
 //  FTextStyle.SystemFont := False;
 //  FTextStyle.Alignment := taLeftJustify;
 //  FTextStyle.Layout := tlCenter;
-end;
-
-procedure TfrmActionListView.BeforeDestruction;
-begin
-  FreeAndNil(FActionItems);
-  FreeAndNil(FKeyStrokeItems);
-  FreeAndNil(FMouseItems);
-  inherited BeforeDestruction;
 end;
 {$ENDREGION}
 
@@ -576,96 +416,79 @@ procedure TfrmActionListView.CreateActionsView;
 var
   CD : IColumnDefinitions;
 begin
-  //FVSTActions := VST.Create(Self, pnlActions);
+  FVSTActions := TFactories.CreateVirtualStringTree(Self, pnlActions);
   FVSTActions.OnKeyPress := FVSTActionsKeyPress;
-
   FTVPActions := TTreeViewPresenter.Create(Self);
   FTVPActions.ListMode := True;
-  FTVPActions.ListMode := False;
   FTVPActions.AllowMove := False;
   FTVPActions.SyncMode := True;
   FTVPActions.ImageList := Manager.Actions.ActionList.Images as TImageList;
-
-//  CD := FTVPActions.ColumnDefinitions;
-//  FTVPActions.View.ItemTemplate := TActionListTemplate.Create(CD);
-//  CD.Add('Category', SCategory, dtString, 100);
-//  with CD.Add('Name', SName, dtString, 150, 150, 200) do
-//  begin
+  CD := FTVPActions.ColumnDefinitions;
+  FTVPActions.View.ItemTemplate := TActionListTemplate.Create(CD);
+  with CD.Add(SCategory) do
+  begin
+    ValuePropertyName := 'Category';
+  end;
+  with CD.Add(SName, 150) do
+  begin
+    ValuePropertyName := 'Name';
 //    OnCustomDraw := FTVPActionsCustomDraw;
-//  end;
-//  CD.Add('', dtString, 24);
-//  with CD.Add('Caption', SCaption, dtString, 120, 100, 200) do
-//  begin
+  end;
+  with CD.Add('', 24) do
+  begin
+    ImageIndexPropertyName := 'ImageIndex';
+  end;
+  with CD.Add(SCaption, 120) do
+  begin
+     ValuePropertyName := 'Caption';
 //    OnCustomDraw := FTVPActionsCustomDraw;
-//  end;
-//  with CD.Add('Shortcut', SShortcut, dtString, 100) do
-//  begin
-//    AllowEdit := False;
-//  end;
-//  with CD.Add('Hint', SHint, dtString, 200, 200, 400) do
-//  begin
-//    AllowEdit := True;
-//  end;
-//  with CD.Add('Visible', SVisible, dtString, 50) do
-//  begin
-//    ColumnType := TColumnType.ctCheckBox;
-//    AllowEdit := True;
-//  end;
-//  with CD.Add('Enabled', SEnabled, dtString, 55) do
-//  begin
-//    ColumnType := TColumnType.ctCheckBox;
-//    AllowEdit := True;
-//  end;
-//  FTVPActions.OnFilter    := FTVPActionsFilter;
-//  FTVPActions.ItemsSource := FActionItems;
-//  FTVPActions.TreeView    := FVSTActions;
+  end;
+  with CD.Add(SShortcut,100) do
+  begin
+    AllowEdit := False;
+  end;
+  with CD.Add(SHint, 200) do
+  begin
+    ValuePropertyName := 'Hint';
+    AllowEdit := True;
+  end;
+  with CD.Add(SVisible, 50) do
+  begin
+    ValuePropertyName := 'Visible';
+    ColumnType := TColumnType.ctCheckBox;
+    AllowEdit := True;
+  end;
+  with CD.Add(SEnabled, 55) do
+  begin
+    ValuePropertyName := 'Enabled';
+    ColumnType := TColumnType.ctCheckBox;
+    AllowEdit := True;
+  end;
+  FTVPActions.View.Filter.Add(FTVPActionsFilter);
+  FTVPActions.View.ItemsSource := FActionItems;
+  FTVPActions.TreeView    := FVSTActions;
 end;
 
 procedure TfrmActionListView.CreateCommandsView;
 var
   CD : IColumnDefinitions;
 begin
-//  FVSTCommands := VST.Create(Self, tsCommands);
+  FVSTCommands := TFactories.CreateVirtualStringTree(Self, tsCommands);
   FTVPCommands := TTreeViewPresenter.Create(Self);
   FTVPCommands.ListMode := True;
   CD := FTVPCommands.ColumnDefinitions;
-  FTVPCommands.View.ItemTemplate := TKeyStrokeTemplate.Create(CD);
-//  CD.Add('Command', SCommand, dtString, 200, 100, 400);
-//  CD.Add('Shortcut', SShortcut, dtString, 120);
-//  CD.Add('Shortcut2', SShortcut2, dtString, 120);
-//  CD.Add('Hint', SHint, dtString, 200, 100, 600);
-  FTVPCommands.View.ItemsSource := FKeyStrokeItems;
+  FTVPCommands.View.ItemTemplate := TKeyCommandTemplate.Create(CD);
+  CD.Add(SCommand, 200);
+  CD.Add(SShortcut, 120);
+  CD.Add(SShortcut2, 120);
+  FTVPCommands.View.ItemsSource := FCommandItems;
   FTVPCommands.TreeView    := FVSTCommands;
-end;
-
-procedure TfrmActionListView.CreateMouseActionsView;
-var
-  CD: IColumnDefinitions;
-begin
-  //FVSTMouseActions := VST.Create(Self, tsMouseActions);
-  FTVPMouseActions := TTreeViewPresenter.Create(Self);
-  FTVPMouseActions.ListMode := True;
-  CD := FTVPMouseActions.ColumnDefinitions;
-  FTVPMouseActions.View.ItemTemplate := TMouseActionTemplate.Create(CD);
-//  CD.Add('Command', SCommand, dtString, 200, 100, 400);
-//  CD.Add('Button', SButton, dtString, 120);
-//  CD.Add('Shift', SShift, dtString, 120);
-//  CD.Add('ShiftMask', SShiftMask, dtString, 120);
-//  CD.Add('ClickCount', SClickCount, dtNumeric, 100);
-//  CD.Add('ClickDir', SClickDir, dtString, 100);
-//  with CD.Add('MoveCaret', SMoveCaret, dtString, 100) do
-//  begin
-//    ColumnType := TColumnType.ctCheckBox;
-//  end;
-  FTVPMouseActions.View.ItemsSource := FMouseItems;
-  FTVPMouseActions.TreeView    := FVSTMouseActions;
 end;
 
 procedure TfrmActionListView.UpdateView;
 begin
   FVSTActions.Invalidate;
   FVSTCommands.Invalidate;
-  FVSTMouseActions.Invalidate;
 end;
 
 procedure TfrmActionListView.UpdateLists;
@@ -674,17 +497,13 @@ var
   A: TContainedAction;
 begin
   FActionItems.Clear;
-  FKeyStrokeItems.Clear;
-  FMouseItems.Clear;
-//  for K in Manager.ActiveView.Editor.MouseActions do
-//    FMouseItems.Add(K);
-//  for K in Manager.ActiveView.Editor.Keystrokes do
-//    FKeyStrokeItems.Add(K);
-//  for A in Manager.Actions.ActionList do
-//    FActionItems.Add(A);
+  FCommandItems.Clear;
+  for K in Manager.KeyCommands do
+    FCommandItems.Add(K);
+  for A in Manager.Actions.ActionList do
+    FActionItems.Add(A);
   FTVPActions.Refresh;
   FTVPCommands.Refresh;
-  FTVPMouseActions.Refresh;
 end;
 
 function TfrmActionListView.IsMatch(const AString: string): Boolean;
@@ -714,4 +533,5 @@ begin
 end;
 {$ENDREGION}
 {$ENDREGION}
+
 end.

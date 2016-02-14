@@ -3,7 +3,7 @@ object frmPropertyInspector: TfrmPropertyInspector
   Top = 0
   Caption = 'PropertyInspector Demo'
   ClientHeight = 586
-  ClientWidth = 682
+  ClientWidth = 830
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -18,11 +18,12 @@ object frmPropertyInspector: TfrmPropertyInspector
   object pnlMain: TPanel
     Left = 0
     Top = 0
-    Width = 682
+    Width = 830
     Height = 586
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 682
     object splSplitter: TSplitter
       Left = 313
       Top = 0
@@ -58,18 +59,19 @@ object frmPropertyInspector: TfrmPropertyInspector
     object pnlRight: TPanel
       Left = 321
       Top = 0
-      Width = 361
+      Width = 509
       Height = 567
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 361
       DesignSize = (
-        361
+        509
         567)
       object lblLabel: TLabel
         Left = 6
         Top = 3
-        Width = 350
+        Width = 498
         Height = 62
         Alignment = taCenter
         Anchors = [akLeft, akTop, akRight]
@@ -104,12 +106,13 @@ object frmPropertyInspector: TfrmPropertyInspector
       object chkCheckBox: TCheckBox
         Left = 6
         Top = 132
-        Width = 101
+        Width = 249
         Height = 17
         Anchors = [akLeft, akTop, akRight]
         Caption = 'TCheckBox'
         State = cbGrayed
         TabOrder = 2
+        ExplicitWidth = 101
       end
       object edtEdit: TEdit
         Left = 6
@@ -122,7 +125,7 @@ object frmPropertyInspector: TfrmPropertyInspector
       object bgMain: TButtonGroup
         Left = 6
         Top = 155
-        Width = 350
+        Width = 498
         Height = 406
         Anchors = [akLeft, akTop, akRight, akBottom]
         BevelInner = bvNone
@@ -131,16 +134,18 @@ object frmPropertyInspector: TfrmPropertyInspector
         ButtonOptions = [gboAllowReorder, gboShowCaptions]
         Items = <>
         TabOrder = 3
+        ExplicitWidth = 350
       end
       object trbTrackBar: TTrackBar
         Left = 6
         Top = 100
-        Width = 350
+        Width = 498
         Height = 26
         Anchors = [akLeft, akTop, akRight]
         PositionToolTip = ptTop
         ShowSelRange = False
         TabOrder = 4
+        ExplicitWidth = 350
       end
       object edtButtonedEdit: TButtonedEdit
         Left = 121
@@ -159,11 +164,12 @@ object frmPropertyInspector: TfrmPropertyInspector
     object sbrStatusBar: TStatusBar
       Left = 0
       Top = 567
-      Width = 682
+      Width = 830
       Height = 19
       Panels = <>
       ParentShowHint = False
       ShowHint = True
+      ExplicitWidth = 682
     end
   end
 end

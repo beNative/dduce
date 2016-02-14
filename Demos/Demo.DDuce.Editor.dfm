@@ -13,41 +13,37 @@ object frmEditor: TfrmEditor
   ShowHint = True
   PixelsPerInch = 96
   TextHeight = 13
+  object splVertical: TSplitter
+    Left = 377
+    Top = 0
+    Width = 5
+    Height = 549
+    ExplicitLeft = 8
+    ExplicitTop = 8
+  end
   object sbrMain: TStatusBar
     Left = 0
     Top = 549
     Width = 1004
     Height = 19
     Panels = <>
-    ExplicitWidth = 796
   end
   object pnlLeft: TPanel
     Left = 0
     Top = 0
-    Width = 225
+    Width = 377
     Height = 549
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
   end
   object pnlRight: TPanel
-    Left = 225
+    Left = 382
     Top = 0
-    Width = 779
+    Width = 622
     Height = 549
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 353
-    ExplicitWidth = 443
-    object splVertical: TSplitter
-      Left = 0
-      Top = 0
-      Width = 5
-      Height = 549
-      ExplicitLeft = -1
-      ExplicitTop = 1
-      ExplicitHeight = 547
-    end
   end
 end

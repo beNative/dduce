@@ -94,7 +94,7 @@ uses
   Vcl.Controls, Vcl.ActnList, Vcl.Menus, Vcl.Dialogs, Vcl.Forms, Vcl.ImgList,
   Vcl.ActnPopup,
 
-  BCEditor.Editor,
+  BCEditor.Editor, BCEditor.Editor.KeyCommands,
 
   DDuce.Editor.Types, DDuce.Editor.Interfaces, DDuce.Editor.Resources,
   DDuce.Editor.View, DDuce.Editor.Highlighters,
@@ -163,7 +163,7 @@ type
     actSettingsMenu                   : TAction;
     actShowFilterTest                 : TAction;
     actShowScriptEditor               : TAction;
-    actShowMiniMap                    : TAction;
+    actToggleMiniMap                  : TAction;
     actShowHexEditor                  : TAction;
     actShowHTMLViewer                 : TAction;
     actUnindent                       : TAction;
@@ -246,7 +246,7 @@ type
     actSaveAs                         : TAction;
     actSettings                       : TAction;
     actShowCodeShaper                 : TAction;
-    actSortSelection                  : TAction;
+    actSortSelectedLines: TAction;
     actToggleComment                  : TAction;
     actToggleFoldLevel                : TAction;
     actToggleHighlighter              : TAction;
@@ -255,15 +255,6 @@ type
     dlgOpen                           : TOpenDialog;
     dlgSave                           : TSaveDialog;
     MenuItem1                         : TMenuItem;
-    MenuItem10                        : TMenuItem;
-    MenuItem11                        : TMenuItem;
-    MenuItem12                        : TMenuItem;
-    MenuItem19                        : TMenuItem;
-    MenuItem2                         : TMenuItem;
-    MenuItem21                        : TMenuItem;
-    MenuItem22                        : TMenuItem;
-    MenuItem3                         : TMenuItem;
-    MenuItem4                         : TMenuItem;
     MenuItem43                        : TMenuItem;
     MenuItem44                        : TMenuItem;
     MenuItem45                        : TMenuItem;
@@ -271,14 +262,9 @@ type
     MenuItem47                        : TMenuItem;
     MenuItem48                        : TMenuItem;
     MenuItem49                        : TMenuItem;
-    MenuItem5                         : TMenuItem;
     MenuItem50                        : TMenuItem;
     MenuItem51                        : TMenuItem;
     MenuItem52                        : TMenuItem;
-    MenuItem6                         : TMenuItem;
-    MenuItem7                         : TMenuItem;
-    MenuItem8                         : TMenuItem;
-    MenuItem9                         : TMenuItem;
     ppmClipboard                      : TPopupMenu;
     ppmEditor                         : TPopupMenu;
     ppmEncoding                       : TPopupMenu;
@@ -323,7 +309,7 @@ type
     procedure actShowFilterTestExecute(Sender: TObject);
     procedure actShowHexEditorExecute(Sender: TObject);
     procedure actShowHTMLViewerExecute(Sender: TObject);
-    procedure actShowMiniMapExecute(Sender: TObject);
+    procedure actToggleMiniMapExecute(Sender: TObject);
     procedure actShowScriptEditorExecute(Sender: TObject);
     procedure actStripCommentsExecute(Sender: TObject);
     procedure actUnindentExecute(Sender: TObject);
@@ -408,7 +394,7 @@ type
     procedure actShowTestExecute(Sender: TObject);
     procedure actShowViewsExecute(Sender: TObject);
     procedure actSmartSelectExecute(Sender: TObject);
-    procedure actSortSelectionExecute(Sender: TObject);
+    procedure actSortSelectedLinesExecute(Sender: TObject);
     procedure actStripFirstCharExecute(Sender: TObject);
     procedure actStripMarkupExecute(Sender: TObject);
     procedure actStripLastCharExecute(Sender: TObject);
@@ -454,6 +440,7 @@ type
     function GetHighlighterPopupMenu: TPopupMenu;
     function GetInsertPopupMenu: TPopupMenu;
     function GetItem(AName: string): TCustomAction;
+    function GetKeyCommands: TBCEditorKeyCommands;
     function GetLineBreakStylePopupMenu: TPopupMenu;
     function GetMenus: IEditorMenus;
     function GetPersistSettings: Boolean;
@@ -512,8 +499,6 @@ type
     procedure BuildFoldPopupMenu;
     procedure BuildEditorPopupMenu;
     procedure BuildExportPopupMenu;
-
-    procedure ApplyHighlighterAttributes;
 
   protected
     procedure ActiveViewChanged;
@@ -665,6 +650,9 @@ type
     property Commands: IEditorCommands
       read GetCommands implements IEditorCommands;
 
+    property KeyCommands: TBCEditorKeyCommands
+      read GetKeyCommands;
+
     property Selection: IEditorSelection
       read GetSelection;
 
@@ -730,6 +718,8 @@ uses
   DDuce.Editor.SortStrings.ToolView,
   DDuce.Editor.ViewList.ToolView,
   DDuce.Editor.ActionList.ToolView,
+  DDuce.Editor.CharacterMap.ToolView,
+  //DDuce.Editor.AlignLines.ToolView,
   DDuce.Editor.Test.ToolView,
   DDuce.Editor.SelectionInfo.ToolView,
 
@@ -737,8 +727,6 @@ uses
   DDuce.Editor.Search.Engine.Settings,
   DDuce.Editor.SortStrings.Settings,
   DDuce.Editor.Search.Engine,
-  //DDuce.Editor.ViewList.Settings,
-  //DDuce.Editor.ActionList.Settings,
 
   DDuce.Editor.Events, DDuce.Editor.Commands;
 const
@@ -883,6 +871,11 @@ begin
     Result := A
   else
     Logger.SendWarning(Format('Action with name (%s) not found!', [AName]));
+end;
+
+function TdmEditorManager.GetKeyCommands: TBCEditorKeyCommands;
+begin
+  Result := ActiveView.Editor.KeyCommands;
 end;
 
 function TdmEditorManager.GetLineBreakStylePopupMenu: TPopupMenu;
@@ -1057,14 +1050,14 @@ end;
 {$ENDREGION}
 
 {$REGION'action handlers'}
-procedure TdmEditorManager.actSortSelectionExecute(Sender: TObject);
+procedure TdmEditorManager.actSortSelectedLinesExecute(Sender: TObject);
 begin
-  ShowToolView('SortStrings', False, True);
+  Commands.SortSelectedLines;
 end;
 
 procedure TdmEditorManager.actToggleCommentExecute(Sender: TObject);
 begin
-  Commands.UpdateCommentSelection(False, True);
+  Commands.ToggleLineComment;
 end;
 
 procedure TdmEditorManager.actToggleHighlighterExecute(Sender: TObject);
@@ -1076,11 +1069,11 @@ procedure TdmEditorManager.actToggleMaximizedExecute(Sender: TObject);
 var
   A : TAction;
 begin
-//  A := Sender as TAction;
-//  if A.Checked then
-//    Settings.FormSettings.WindowState := wsMaximized
-//  else
-//    Settings.FormSettings.WindowState := wsNormal;
+  A := Sender as TAction;
+  if A.Checked then
+    Settings.FormSettings.WindowState := wsMaximized
+  else
+    Settings.FormSettings.WindowState := wsNormal;
 end;
 
 procedure TdmEditorManager.actUndoExecute(Sender: TObject);
@@ -1095,12 +1088,13 @@ end;
 
 procedure TdmEditorManager.actOpenExecute(Sender: TObject);
 begin
-//  if Assigned(ActiveView) and Assigned(ActiveView.Editor.Highlighter) then
-//    dlgOpen.Filter := ActiveView.Editor.Highlighter.DefaultFilter;
-//  if dlgOpen.Execute then
-//  begin
-//    OpenFile(dlgOpen.FileName);
-//  end;
+  if Assigned(ActiveView) and Assigned(ActiveView.Editor.Highlighter)
+    and Assigned(ActiveView.HighlighterItem) then
+    dlgOpen.Filter := ActiveView.HighlighterItem.DefaultFilter;
+  if dlgOpen.Execute then
+  begin
+    OpenFile(dlgOpen.FileName);
+  end;
 end;
 
 procedure TdmEditorManager.actPascalStringOfSelectionExecute(Sender: TObject);
@@ -1143,16 +1137,16 @@ end;
 
 procedure TdmEditorManager.actSearchExecute(Sender: TObject);
 begin
-//  if ActiveView.SelectionAvailable then
-//    SearchEngine.SearchText := ActiveView.SelectedText;
-//  ShowToolView('Search', False, True);
+  if ActiveView.SelectionAvailable then
+    SearchEngine.SearchText := ActiveView.SelectedText;
+  ShowToolView('Search', False, True);
 end;
 
 procedure TdmEditorManager.actSearchReplaceExecute(Sender: TObject);
 begin
   if ActiveView.SelectionAvailable then
     ActiveView.Editor.SearchString := ActiveView.SelectedText;
-//  ShowToolView('Search', False, True);
+  ShowToolView('Search', False, True);
 end;
 
 procedure TdmEditorManager.actShowCodeShaperExecute(Sender: TObject);
@@ -1217,14 +1211,14 @@ begin
   ShowToolView('HTMLView', False, False);
 end;
 
-procedure TdmEditorManager.actShowMiniMapExecute(Sender: TObject);
+procedure TdmEditorManager.actToggleMiniMapExecute(Sender: TObject);
 begin
-  ShowToolView('MiniMap', False, False);
+  ActiveView.Editor.Minimap.Visible := not ActiveView.Editor.Minimap.Visible;
 end;
 
 procedure TdmEditorManager.actShowScriptEditorExecute(Sender: TObject);
 begin
-  ShowToolView('ScriptEditor', False, False);
+  //ShowToolView('ScriptEditor', False, False);
 end;
 
 procedure TdmEditorManager.actShowStructureViewerExecute(Sender: TObject);
@@ -1669,15 +1663,15 @@ var
   A : TAction;
 begin
   A := Sender as TAction;
-//  if A.Checked then
-//    Settings.FormSettings.FormStyle := fsSystemStayOnTop
-//  else
-//    Settings.FormSettings.FormStyle := fsNormal;
+  if A.Checked then
+    Settings.FormSettings.FormStyle := fsStayOnTop
+  else
+    Settings.FormSettings.FormStyle := fsNormal;
 end;
 
 procedure TdmEditorManager.actToggleBlockCommentSelectionExecute(Sender: TObject);
 begin
-  Commands.ToggleBlockCommentSelection;
+  Commands.ToggleBlockComment;
 end;
 
 procedure TdmEditorManager.actClearExecute(Sender: TObject);
@@ -1790,7 +1784,6 @@ end;
 {$REGION'event handlers'}
 procedure TdmEditorManager.EditorSettingsChanged(ASender: TObject);
 begin
-  ApplyHighlighterAttributes;
   if Assigned(ActiveView) then
     ActiveView.Editor.Refresh;
 end;
@@ -1856,11 +1849,12 @@ end;
 {$REGION'Initialization'}
 procedure TdmEditorManager.InitializePopupMenus;
 begin
+  BuildHighlighterPopupMenu;
   BuildClipboardPopupMenu;
   BuildEncodingPopupMenu;
-  BuildExportPopupMenu;
   BuildFoldPopupMenu;
-  BuildHighlighterPopupMenu;
+
+  BuildExportPopupMenu;
   BuildInsertPopupMenu;
   BuildLineBreakStylePopupMenu;
   BuildSearchPopupMenu;
@@ -1872,6 +1866,7 @@ begin
   BuildSettingsPopupMenu;
   BuildFilePopupMenu;
   BuildEditorPopupMenu;
+
 end;
 
 procedure TdmEditorManager.CreateActions;
@@ -1879,8 +1874,7 @@ var
   A  : TAction;
   SL : TStringList;
   S  : string;
-  //HI : THighlighterItem;
-  //SM : TSynSelectionMode;
+  HI : THighlighterItem;
 begin
   SL := TStringList.Create;
   try
@@ -1890,7 +1884,7 @@ begin
       A := TAction.Create(ActionList);
       A.ActionList := ActionList;
       A.Caption := S;
-//      A.Name    := ACTION_PREFIX_ENCODING + DelChars(S, '-');
+      //A.Name    := ACTION_PREFIX_ENCODING + DelChars(S, '-');
       A.AutoCheck := True;
       A.GroupIndex := 3;
       A.Category   := actEncodingMenu.Category;
@@ -1907,18 +1901,18 @@ begin
       A.Category := actLineBreakStyleMenu.Category;
       A.OnExecute  := actLineBreakStyleExecute;
     end;
-//    for HI in Highlighters do
-//    begin
-//      A := TAction.Create(ActionList);
-//      A.ActionList := ActionList;
-//      A.Caption := HI.Name;
-//      A.Hint := HI.Description;
-//      A.Name := ACTION_PREFIX_HIGHLIGHTER + HI.Name;
-//      A.AutoCheck := True;
-//      A.Category := actHighlighterMenu.Category;
-//      A.OnExecute := actHighlighterExecute;
-//      A.GroupIndex := 5;
-//    end;
+    for HI in Highlighters do
+    begin
+      A := TAction.Create(ActionList);
+      A.ActionList := ActionList;
+      A.Caption := HI.Name;
+      A.Hint := HI.Description;
+      A.Name := ACTION_PREFIX_HIGHLIGHTER + HI.Name;
+      A.AutoCheck := True;
+      A.Category := actHighlighterMenu.Category;
+      A.OnExecute := actHighlighterExecute;
+      A.GroupIndex := 5;
+    end;
 //    for SM := Low(TSynSelectionMode) to High(TSynSelectionMode) do
 //    begin
 //      A := TAction.Create(ActionList);
@@ -1936,39 +1930,6 @@ begin
   finally
     FreeAndNil(SL);
   end;
-end;
-
-{ Applies common highlighter attributes }
-procedure TdmEditorManager.ApplyHighlighterAttributes;
-var
-  I   : Integer;
-//  HL  : THighlighterItem;
-//  HAI : THighlighterAttributesItem;
-//  A   : TSynHighlighterAttributes;
-begin
-//  for HL in Settings.Highlighters do
-//  begin
-//    if Assigned(HL.SynHighlighter) and HL.UseCommonAttributes then
-//    begin
-//      for HAI in Settings.HighlighterAttributes do
-//      begin
-//        for I := 0 to HL.SynHighlighter.AttrCount - 1 do
-//        begin
-//          A := HL.SynHighlighter.Attribute[I];
-//          if (A.Name = HAI.Name) or (HAI.AliasNames.IndexOf(A.Name) >= 0) then
-//          begin
-////  A.Assign(HAI.Attributes); don't do this => you will loose the attribute name!
-//            A.Foreground := HAI.Attributes.Foreground;
-//            A.Background := HAI.Attributes.Background;
-//            A.FrameColor := HAI.Attributes.FrameColor;
-//            A.FrameEdges := HAI.Attributes.FrameEdges;
-//            A.Style      := HAI.Attributes.Style;
-//            A.StyleMask  := HAI.Attributes.StyleMask;
-//          end;
-//        end;
-//      end;
-//    end;
-//  end;
 end;
 {$ENDREGION}
 
@@ -2049,9 +2010,6 @@ begin
       MI.Caption    := A.Caption;
       MI.AutoCheck  := A.AutoCheck;
       MI.RadioItem  := True;
-      {$IFDEF LCLGTK2}
-      MI.RadioItem  := False;
-      {$ENDIF}
       MI.GroupIndex := A.GroupIndex;
     end;
     LineBreakStylePopupMenu.Items.Add(MI);
@@ -2087,29 +2045,26 @@ procedure TdmEditorManager.BuildHighlighterPopupMenu;
 var
   MI : TMenuItem;
   S  : string;
-//  HI : THighlighterItem;
+  HI : THighlighterItem;
   A  : TCustomAction;
 begin
   HighlighterPopupMenu.Items.Action := actHighlighterMenu;
   HighlighterPopupMenu.Items.Clear;
-//  for HI in Highlighters do
-//  begin
-//    MI := TMenuItem.Create(HighlighterPopupMenu);
-//    S  := ACTION_PREFIX_HIGHLIGHTER + HI.Name;
-//    A  := Items[S];
-//    if Assigned(A) then
-//    begin
-//      MI.Action     := A;
-//      MI.Hint       := HI.Description;
-//      MI.Caption    := A.Caption;
-//      MI.AutoCheck  := A.AutoCheck;
-//      // RadioItem True causes all items in the group to be checked on gtk2
-//      {$IFDEF LCLGTK2}
-//      MI.RadioItem  := False;
-//      {$ENDIF}
-//    end;
-//    HighlighterPopupMenu.Items.Add(MI);
-//  end;
+  for HI in Highlighters do
+  begin
+    MI := TMenuItem.Create(HighlighterPopupMenu);
+    S  := ACTION_PREFIX_HIGHLIGHTER + HI.Name;
+    A  := Items[S];
+    if Assigned(A) then
+    begin
+      MI.Action     := A;
+      MI.Hint       := HI.Description;
+      MI.Caption    := A.Caption;
+      MI.AutoCheck  := A.AutoCheck;
+      MI.RadioItem  := False;
+    end;
+    HighlighterPopupMenu.Items.Add(MI);
+  end;
 end;
 
 procedure TdmEditorManager.BuildSearchPopupMenu;
@@ -2156,7 +2111,7 @@ begin
   actSelectionMenu.DisableIfNoHandler := False;
   AddMenuItem(MI, actSyncEdit);
   AddMenuItem(MI, actAlignSelection);
-  AddMenuItem(MI, actSortSelection);
+  AddMenuItem(MI, actSortSelectedLines);
   AddMenuItem(MI);
   AddMenuItem(MI, actIndent);
   AddMenuItem(MI, actUnindent);
@@ -2315,8 +2270,9 @@ begin
   AddMenuItem(MI, SelectionPopupMenu);
   AddMenuItem(MI, InsertPopupMenu);
   AddMenuItem(MI, ClipboardPopupMenu);
-  AddMenuItem(MI, ExportPopupMenu);
   AddMenuItem(MI, HighlighterPopupMenu);
+  AddMenuItem(MI, ExportPopupMenu);
+
   AddMenuItem(MI, FoldPopupMenu);
   AddMenuItem(MI);
   AddMenuItem(MI, actClose);
@@ -2328,8 +2284,8 @@ end;
 procedure TdmEditorManager.RegisterToolViews;
 begin
   //ToolViews.Register(TfrmAlignLines, TAlignLinesSettings, 'AlignLines');
-//  ToolViews.Register(TfrmCodeFilterDialog, TCodeFilterSettings, 'CodeFilter');
-//  ToolViews.Register(TfrmHTMLView, THTMLViewSettings, 'HTMLView');
+//ToolViews.Register(TfrmCodeFilterDialog, TCodeFilterSettings, 'CodeFilter');
+//ToolViews.Register(TfrmHTMLView, THTMLViewSettings, 'HTMLView');
   ToolViews.Register(TfrmSortStrings, TSortStringsSettings, 'SortStrings');
   ToolViews.Register(TfrmSearchForm, TSearchEngineSettings, 'Search');
   //ToolViews.Register(TfrmCodeShaper, TCodeShaperSettings, 'CodeShaper');
@@ -2339,7 +2295,7 @@ begin
   ToolViews.Register(TfrmTest, nil,  'Test');
   ToolViews.Register(TfrmSelectionInfo, nil, 'SelectionInfo');
 //  ToolViews.Register(TfrmStructure, nil, 'Structure');
-//  ToolViews.Register(TfrmCharacterMap, nil, 'CharacterMap');
+  ToolViews.Register(TfrmCharacterMap, nil, 'CharacterMap');
 //  ToolViews.Register(TfrmScriptEditor, nil, 'ScriptEditor');
 //  ToolViews.Register(TfrmFilter, nil, 'Filter');
 end;
@@ -2429,19 +2385,17 @@ var
 begin
   Logger.Enter(Self, 'AddView');
   V := TEditorView.Create(Self);
-//  // if no name is provided, the view will get an automatically generated one.
-//  { TODO -oTS : Needs to be refactored. }
-//  if AName <> '' then
-//    V.Name := AName;
-//  V.FileName := AFileName;
-//  if FileExists(V.FileName) then
-//    V.Load;
-//  V.HighlighterName := AHighlighter;
-//  V.Form.Caption := '';
+  // if no name is provided, the view will get an automatically generated one.
+  { TODO -oTS : Needs to be refactored. }
+  if AName <> '' then
+    V.Name := AName;
+  V.FileName := AFileName;
+  if FileExists(V.FileName) then
+    V.Load;
+  V.HighlighterName := AHighlighter;
+  V.Form.Caption := '';
   ViewList.Add(V);
   Events.DoAddEditorView(V);
-//  // TS macro support
-//  SynMacroRecorder.AddEditor(V.Editor);
   V.Activate;
   Result := V;
   Logger.Watch('ViewCount', ViewCount);
@@ -2635,8 +2589,8 @@ begin
   begin
     if Assigned(ActiveView.Editor.Highlighter) then
     begin
-//      dlgSave.Filter := ActiveView.HighlighterItem.SynHighlighter.DefaultFilter;
-//      dlgSave.FilterIndex := ActiveView.HighlighterItem.Index + 1;
+      dlgSave.Filter := ActiveView.HighlighterItem.DefaultFilter;
+      dlgSave.FilterIndex := ActiveView.HighlighterItem.Index + 1;
     end;
     dlgSave.FileName := S;
     if dlgSave.Execute then
@@ -2694,7 +2648,7 @@ begin
       actStripMarkup.Enabled                 := B;
       actQuoteSelection.Enabled              := B;
       actQuoteLinesAndDelimit.Enabled        := B;
-      actSortSelection.Enabled               := B;
+      actSortSelectedLines.Enabled           := B;
       actUpperCaseSelection.Enabled          := B;
       actStripComments.Enabled               := B;
       actStripFirstChar.Enabled              := B;
@@ -2742,7 +2696,6 @@ begin
       actRedo.Enabled := B and V.CanRedo;
       actUndo.Enabled := B and V.CanUndo;
 
-//      B := V.SupportsFolding;
       B := True;
       actToggleFoldLevel.Enabled := B;
       actFoldLevel0.Enabled      := B;
@@ -2764,11 +2717,11 @@ begin
       actSave.Enabled := ActiveView.Modified;
       actCloseOthers.Visible := ViewCount > 1;
 
-//      actToggleMaximized.Checked :=
-//        Settings.FormSettings.WindowState = wsMaximized;
+      actToggleMaximized.Checked :=
+        Settings.FormSettings.WindowState = wsMaximized;
 //      actStayOnTop.Checked :=
 //        Settings.FormSettings.FormStyle = fsSystemStayOnTop;
-      //actSingleInstance.Checked := Settings.SingleInstance;
+      actSingleInstance.Checked := Settings.SingleInstance;
 
       actSaveAll.Enabled := ViewsModified;
 
@@ -2779,14 +2732,15 @@ begin
     actClose.Enabled       := not B;
     actCloseOthers.Visible := not B;
     { TODO -oTS : Cleanup popup menu (hide orphaned seperators) }
-    //
-    //if EditorPopupMenu.Items.Count > 0 then
-    //begin
-    //  MI := EditorPopupMenu.Items[EditorPopupMenu.Items.Count - 1];
-    //  if MI.Caption = '-' then
-    //    MI.Visible := False;
-    //end;
+
+//    if EditorPopupMenu.Items.Count > 0 then
+//    begin
+//      MI := EditorPopupMenu.Items[EditorPopupMenu.Items.Count - 1];
+//      if MI.Caption = '-' then
+//        MI.Visible := False;
+//    end;
   end;
+  actHighlighterMenu.Enabled := True;
 end;
 
 procedure TdmEditorManager.UpdateEncodingActions;
@@ -2795,13 +2749,13 @@ var
   A : TCustomAction;
 begin
   S := '';
-//  if Assigned(ActiveView) then
-//  begin
-////    S := ACTION_PREFIX_ENCODING + DelChars(ActiveView.Encoding, '-');
-//    A := Items[S];
-//    if Assigned(A) then
-//      A.Checked := True;
-//  end;
+  if Assigned(ActiveView) then
+  begin
+//    S := ACTION_PREFIX_ENCODING + DelChars(ActiveView.Encoding, '-');
+    A := Items[S];
+    if Assigned(A) then
+      A.Checked := True;
+  end;
 end;
 
 procedure TdmEditorManager.UpdateLineBreakStyleActions;
@@ -2861,14 +2815,14 @@ var
   A : TCustomAction;
 begin
   S := '';
-//  if Assigned(ActiveView) and Assigned(ActiveView.HighlighterItem) then
-//  begin
-//    S := ACTION_PREFIX_HIGHLIGHTER + ActiveView.HighlighterItem.Name;
-//    A := Items[S];
-//    // TS TODO!!!
-//    if Assigned(A) then
-//      A.Checked := True;
-//  end;
+  if Assigned(ActiveView) and Assigned(ActiveView.HighlighterItem) then
+  begin
+    S := ACTION_PREFIX_HIGHLIGHTER + ActiveView.HighlighterItem.Name;
+    A := Items[S];
+    // TS TODO!!!
+    if Assigned(A) then
+      A.Checked := True;
+  end;
 end;
 
 procedure TdmEditorManager.UpdateFoldingActions;

@@ -267,10 +267,8 @@ begin
   begin
     FOptions := AValue;
     Settings.Options := AValue;
-    //FEditorSearch.WholeWordsOnly :=
-    //FEditorSearch.CaseSensitive :=
-
-
+    FEditorSearch.WholeWordsOnly := soWholeWordsOnly in Options;
+    FEditorSearch.CaseSensitive  := soCaseSensitive in Options;
 //    FSESearch.Sensitive          := ssoMatchCase in Options;
 //    FSESearch.Whole              := ssoWholeWord in Options;
 //    FSESearch.RegularExpressions := ssoRegExpr in Options;

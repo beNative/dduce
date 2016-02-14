@@ -23,7 +23,6 @@ procedure RegisterDemos;
 implementation
 
 uses
-  //Demo.DDuce.ListDataSet,
   Demo.DDuce.ScopedReference,
   Demo.DDuce.XMLTree,
   Demo.DDuce.PropertyInspector,
@@ -40,7 +39,6 @@ uses
 {$REGION 'interfaced routines'}
 procedure RegisterDemos;
 begin
-  //DemoManager.Register(TfrmListDataSet, 'ListDataSet');
   DemoManager.Register(TfrmScopedReferences, 'Scoped references');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');

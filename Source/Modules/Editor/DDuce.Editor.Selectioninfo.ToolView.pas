@@ -24,35 +24,39 @@ uses
   System.SysUtils, System.Classes,
   Vcl.Forms, Vcl.StdCtrls, Vcl.Controls,
 
-  DDuce.Editor.Interfaces;
+  DDuce.Editor.Interfaces, Vcl.ExtCtrls, Vcl.ComCtrls;
 
 type
   TfrmSelectionInfo = class(TForm, IEditorToolView)
-    {$REGION 'designer controls'}
-    btnStore                         : TButton;
-    btnRestore                       : TButton;
-    chkLockUpdates                   : TCheckBox;
-    chkExcludeEmptyLines             : TCheckBox;
-    lblCaretXY                       : TLabel;
-    lblLineCount                     : TLabel;
-    lblLineCountValue                : TLabel;
-    lblLogicalCaretXY                : TLabel;
-    lblCaretXYValue                  : TLabel;
-    lblLogicalCaretXYValue           : TLabel;
-    lblStoredBlockBegin              : TLabel;
-    lblBlockBegin                    : TLabel;
-    lblStoredBlockBeginValue         : TLabel;
-    lblBlockBeginValue               : TLabel;
-    lblBlockEnd                      : TLabel;
-    lblBlockEndValue                 : TLabel;
-    lblStoredCaretXY                 : TLabel;
-    lblStoredCaretXYValue            : TLabel;
-    lblStoredBlockSelectionMode      : TLabel;
-    lblStoredBlockEndValue           : TLabel;
-    lblStoredBlockEnd                : TLabel;
-    lblStoredBlockLines              : TLabel;
-    lblStoredBlockSelectionModeValue : TLabel;
-    mmoBlock                         : TMemo;
+    pgc1: TPageControl;
+    ts1: TTabSheet;
+    ts2: TTabSheet;
+    pnl1: TPanel;
+    lblStoredBlockBegin: TLabel;
+    lblStoredBlockEnd: TLabel;
+    lblStoredBlockBeginValue: TLabel;
+    lblStoredBlockEndValue: TLabel;
+    lblStoredBlockLines: TLabel;
+    lblStoredBlockSelectionMode: TLabel;
+    lblStoredBlockSelectionModeValue: TLabel;
+    lblBlockBegin: TLabel;
+    lblBlockEnd: TLabel;
+    lblBlockBeginValue: TLabel;
+    lblBlockEndValue: TLabel;
+    lblCaretXY: TLabel;
+    lblCaretXYValue: TLabel;
+    lblLogicalCaretXY: TLabel;
+    lblLogicalCaretXYValue: TLabel;
+    lblStoredCaretXY: TLabel;
+    lblStoredCaretXYValue: TLabel;
+    lblLineCount: TLabel;
+    lblLineCountValue: TLabel;
+    btnStore: TButton;
+    btnRestore: TButton;
+    chkLockUpdates: TCheckBox;
+    chkExcludeEmptyLines: TCheckBox;
+    mmoBlock: TMemo;
+    mmoReflected: TMemo;
     {$ENDREGION}
 
     procedure btnRestoreClick(Sender: TObject);
@@ -74,7 +78,7 @@ type
       read GetView;
 
     procedure UpdateDisplay;
-    //procedure Refresh; TODO: refresh all items
+
     procedure UpdateActions; override;
 
   public
@@ -88,13 +92,9 @@ implementation
 uses
   System.TypInfo,
 
-  DDuce.Editor.Selection;
-{
-  StoredBlockBegin X Y
-  StoredBlockEnd   X Y
-  StoredBlockSelectionMode
-  StoredBlockLines
-}
+  BCEditor.Editor,
+
+  DDuce.Editor.Selection, DDuce.Reflect;
 
 {$REGION 'property access mehods'}
 function TfrmSelectionInfo.GetView: IEditorView;
@@ -121,12 +121,12 @@ end;
 {$REGION 'event handlers'}
 procedure TfrmSelectionInfo.btnStoreClick(Sender: TObject);
 begin
-  View.Selection.Store(chkLockUpdates.Checked, chkExcludeEmptyLines.Checked);
+//  View.Selection.Store(chkLockUpdates.Checked, chkExcludeEmptyLines.Checked);
 end;
 
 procedure TfrmSelectionInfo.mmoBlockChange(Sender: TObject);
 begin
-  View.Selection.Text := mmoBlock.Text;
+  //View.Selection.Text := mmoBlock.Text;
 end;
 
 procedure TfrmSelectionInfo.SetVisible(AValue: Boolean);
@@ -136,7 +136,7 @@ end;
 
 procedure TfrmSelectionInfo.btnRestoreClick(Sender: TObject);
 begin
-  View.Selection.Restore;
+//  View.Selection.Restore;
 end;
 {$ENDREGION}
 
@@ -148,47 +148,51 @@ end;
 
 procedure TfrmSelectionInfo.UpdateDisplay;
 var
-  ES : IEditorSelection;
+  ES : TBCEditor;
 begin
-  ES := View.Selection;
+  ES := View.Editor;
   lblStoredBlockBeginValue.Caption := Format(
-    '(%d, %d)', [ES.BlockBegin.X, ES.BlockBegin.Y]
+    '(%d, %d)', [ES.SelectionBeginPosition.Char, ES.SelectionBeginPosition.Line]
   );
   lblStoredBlockEndValue.Caption := Format(
-    '(%d, %d)', [ES.BlockEnd.X, ES.BlockEnd.Y]
+    '(%d, %d)', [ES.SelectionEndPosition.Char, ES.SelectionEndPosition.Line]
   );
+
   lblStoredCaretXYValue.Caption := Format(
-    '(%d, %d)', [ES.CaretXY.X, ES.CaretXY.Y]
+    '(%d, %d)', [ES.TextCaretPosition.Char, ES.TextCaretPosition.Line]
   );
 
 //  lblStoredBlockSelectionModeValue.Caption :=
 //    GetEnumName(TypeInfo(TSynSelectionMode), Ord(ES.SelectionMode));
 
-    lblBlockBeginValue.Caption := Format(
-      '(%d, %d)', [View.BlockBegin.X, View.BlockBegin.Y]
-    );
-    lblBlockEndValue.Caption := Format(
-      '(%d, %d)', [View.BlockEnd.X, View.BlockEnd.Y]
-    );
+  lblBlockBeginValue.Caption := Format(
+    '(%d, %d)', [View.BlockBegin.X, View.BlockBegin.Y]
+  );
+  lblBlockEndValue.Caption := Format(
+    '(%d, %d)', [View.BlockEnd.X, View.BlockEnd.Y]
+  );
 
-    lblCaretXYValue.Caption := Format(
-      '(%d, %d)', [View.CaretX, View.CaretY]
-    );
-    lblLogicalCaretXYValue.Caption := Format(
-      '(%d, %d)', [View.LogicalCaretXY.X, View.LogicalCaretXY.Y]
-    );
+  lblCaretXYValue.Caption := Format(
+    '(%d, %d)', [View.CaretX, View.CaretY]
+  );
+  lblLogicalCaretXYValue.Caption := Format(
+    '(%d, %d)', [View.LogicalCaretXY.X, View.LogicalCaretXY.Y]
+  );
 
-    lblLineCountValue.Caption := IntToStr(ES.Lines.Count);
-    lblStoredBlockLines.Caption := ES.Text;
-    mmoBlock.Lines.Text         := ES.Text;
-  end;
+  lblLineCountValue.Caption := IntToStr(ES.Lines.Count);
+  //lblStoredBlockLines.Caption := ES.Text;
+  mmoBlock.Lines.Text         := ES.SelectedText;
 
-  procedure TfrmSelectionInfo.UpdateActions;
-  begin
-    inherited UpdateActions;
-    UpdateDisplay;
-  end;
-  {$ENDREGION}
+  mmoReflected.Text := Reflect.Properties(ES).ToString;
+
+end;
+
+procedure TfrmSelectionInfo.UpdateActions;
+begin
+  inherited UpdateActions;
+  UpdateDisplay;
+end;
+{$ENDREGION}
 
 end.
 

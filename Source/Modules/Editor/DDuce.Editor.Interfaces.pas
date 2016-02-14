@@ -32,7 +32,9 @@ uses
 
   Spring, Spring.Collections,
 
-  BCEditor.Editor, BCEditor.Types,
+  BCEditor.Editor, BCEditor.Types, BCEditor.Editor.KeyCommands,
+
+  DDuce.FormSettings,
 
   DDuce.Editor.Search.Data,
 
@@ -41,16 +43,10 @@ uses
 
   DDuce.Editor.Types;
 
-//  ts.Core.FormSettings,
-//
-//  ts.Editor.AlignLines.Settings, ts.Editor.Search.Engine.Settings,
+//  ts.Editor.AlignLines.Settings,
 //  ts.Editor.CodeShaper.Settings, ts.Editor.CodeFilter.Settings,
-//  ts.Editor.HTMLView.Settings, ts.Editor.MiniMap.Settings,
+//  ts.Editor.HTMLView.Settings,
 //  ts.Editor.HexEditor.Settings, ts.Editor.SortStrings.Settings,
-
-//
-//  ts.Editor.HighlighterAttributes,
-
 
 // TPopupMenu does not work with Vcl styles! This interposer class is a work-
 // around for this issue.
@@ -475,6 +471,8 @@ type
     procedure SetReplaceText(AValue: string);
     procedure SetSearchAllViews(AValue: Boolean);
     procedure SetSearchText(AValue: string);
+    function GetOnChange: IEvent<TNotifyEvent>;
+    function GetOnExecute: IEvent<TNotifyEvent>;
 
     procedure Execute;
     procedure Replace;
@@ -502,6 +500,12 @@ type
 
     property ItemGroups: IList<TSearchResultGroup>
       read GetItemGroups;
+
+    property OnChange: IEvent<TNotifyEvent>
+      read GetOnChange;
+
+    property OnExecute: IEvent<TNotifyEvent>
+      read GetOnExecute;
   end;
 
   { IEditorEvents }
@@ -511,31 +515,20 @@ type
   IEditorEvents = interface
   ['{D078C92D-16DF-4727-A18F-4C76E07D37A2}']
     {$REGION 'property access methods'}
-    function GetOnAddEditorView: TAddEditorViewEvent;
+    function GetOnAddEditorView: IEvent<TAddEditorViewEvent>;
     function GetOnActiveViewChange: IEvent<TNotifyEvent>;
     function GetOnChange: IEvent<TNotifyEvent>;
     function GetOnModified: IEvent<TNotifyEvent>;
-    function GetOnAfterSave: TStorageEvent;
-    function GetOnBeforeSave: TStorageEvent;
-    function GetOnHideEditorToolView: TEditorToolViewEvent;
-    function GetOnLoad: TStorageEvent;
-    function GetOnOpen: TStorageEvent;
-    function GetOnOpenOtherInstance: TOpenOtherInstanceEvent;
-    function GetOnSave: TStorageEvent;
-    function GetOnShowEditorToolView: TEditorToolViewEvent;
-    procedure SetOnAddEditorView(AValue: TAddEditorViewEvent);
-    procedure SetOnAfterSave(AValue: TStorageEvent);
-    procedure SetOnBeforeSave(AValue: TStorageEvent);
-    procedure SetOnHideEditorToolView(AValue: TEditorToolViewEvent);
-    procedure SetOnLoad(const AValue: TStorageEvent);
-    function GetOnNew: TNewEvent;
+    function GetOnAfterSave: IEvent<TStorageEvent>;
+    function GetOnBeforeSave: IEvent<TStorageEvent>;
+    function GetOnHideEditorToolView: IEvent<TEditorToolViewEvent>;
+    function GetOnLoad: IEvent<TStorageEvent>;
+    function GetOnOpen: IEvent<TStorageEvent>;
+    function GetOnOpenOtherInstance: IEvent<TOpenOtherInstanceEvent>;
+    function GetOnSave: IEvent<TStorageEvent>;
+    function GetOnShowEditorToolView: IEvent<TEditorToolViewEvent>;
+    function GetOnNew: IEvent<TNewEvent>;
 //    function GetOnStatusChange: TStatusChangeEvent;
-    procedure SetOnNew(const AValue: TNewEvent);
-    procedure SetOnOpen(AValue: TStorageEvent);
-    procedure SetOnOpenOtherInstance(AValue: TOpenOtherInstanceEvent);
-    procedure SetOnSave(const AValue: TStorageEvent);
-    procedure SetOnShowEditorToolView(AValue: TEditorToolViewEvent);
-  //  procedure SetOnStatusChange(const AValue: TStatusChangeEvent);
       function GetOnActionExecute: IEvent<TActionExecuteEvent>;
       function GetOnCaretPositionChange: IEvent<TCaretPositionEvent>;
     {$ENDREGION}
@@ -557,8 +550,6 @@ type
     procedure DoChange;
     procedure DoModified;
     procedure DoOpen(const AName: string);
-    procedure DoBeforeSave(const AName: string);
-    procedure DoAfterSave(const AName: string);
     procedure DoLoad(const AName: string);
     procedure DoNew(
       const AFileName : string = '';
@@ -566,14 +557,14 @@ type
     );
 
     // events
-    property OnAddEditorView: TAddEditorViewEvent
-      read GetOnAddEditorView write SetOnAddEditorView;
+    property OnAddEditorView: IEvent<TAddEditorViewEvent>
+      read GetOnAddEditorView;
 
 //    property OnShowEditorToolView: TEditorToolViewEvent
 //      read GetOnShowEditorToolView write SetOnShowEditorToolView;
 
-    property OnHideEditorToolView: TEditorToolViewEvent
-      read GetOnHideEditorToolView write SetOnHideEditorToolView;
+    property OnHideEditorToolView: IEvent<TEditorToolViewEvent>
+      read GetOnHideEditorToolView;
 
     property OnChange: IEvent<TNotifyEvent>
       read GetOnChange;
@@ -587,23 +578,23 @@ type
 //    property OnStatusChange: TStatusChangeEvent
 //      read GetOnStatusChange write SetOnStatusChange;
 
-    property OnLoad: TStorageEvent
-      read GetOnLoad write SetOnLoad;
+    property OnLoad: IEvent<TStorageEvent>
+      read GetOnLoad;
 
-    property OnNew: TNewEvent
-      read GetOnNew write SetOnNew;
+    property OnNew: IEvent<TNewEvent>
+      read GetOnNew;
 
-    property OnOpen: TStorageEvent
-      read GetOnOpen write SetOnOpen;
+    property OnOpen: IEvent<TStorageEvent>
+      read GetOnOpen;
 
-    property OnBeforeSave: TStorageEvent
-      read GetOnBeforeSave write SetOnBeforeSave;
+    property OnBeforeSave: IEvent<TStorageEvent>
+      read GetOnBeforeSave;
 
-    property OnAfterSave: TStorageEvent
-      read GetOnAfterSave write SetOnAfterSave;
+    property OnAfterSave: IEvent<TStorageEvent>
+      read GetOnAfterSave;
 
-    property OnOpenOtherInstance: TOpenOtherInstanceEvent
-      read GetOnOpenOtherInstance write SetOnOpenOtherInstance;
+    property OnOpenOtherInstance: IEvent<TOpenOtherInstanceEvent>
+      read GetOnOpenOtherInstance;
 
     property OnActionExecute: IEvent<TActionExecuteEvent>
       read GetOnActionExecute;
@@ -629,7 +620,7 @@ type
     function GetEditorFont: TFont;
     function GetEditorOptions: TEditorOptionsSettings;
     function GetFileName: string;
-//    function GetFormSettings: TFormSettings;
+    function GetFormSettings: TFormSettings;
 //    function GetHighlighterAttributes: THighlighterAttributes;
     function GetHighlighters: THighlighters;
     function GetHighlighterType: string;
@@ -648,7 +639,7 @@ type
     procedure SetEditorFont(AValue: TFont);
     procedure SetEditorOptions(AValue: TEditorOptionsSettings);
     procedure SetFileName(const AValue: string);
-//    procedure SetFormSettings(const AValue: TFormSettings);
+    procedure SetFormSettings(const AValue: TFormSettings);
 //    procedure SetHighlighterAttributes(AValue: THighlighterAttributes);
     procedure SetHighlighterType(const AValue: string);
     procedure SetLanguageCode(AValue: string);
@@ -660,9 +651,6 @@ type
     procedure Load;
     procedure Save;
     procedure Apply;
-
-    procedure AddEditorSettingsChangedHandler(AEvent: TNotifyEvent);
-    procedure RemoveEditorSettingsChangedHandler(AEvent: TNotifyEvent);
 
     property Colors: TEditorColorSettings
       read GetColors write SetColors;
@@ -700,10 +688,10 @@ type
 
     property Highlighters: THighlighters
       read GetHighlighters;
-//
-//    property FormSettings: TFormSettings
-//      read GetFormSettings write SetFormSettings;
-//
+
+    property FormSettings: TFormSettings
+      read GetFormSettings write SetFormSettings;
+
 //    property HighlighterAttributes: THighlighterAttributes
 //      read GetHighlighterAttributes write SetHighlighterAttributes;
 
@@ -754,8 +742,8 @@ type
     property ViewByFileName[AFileName: string]: IEditorView
       read GetViewByFileName;
 
-//    property ViewList: TEditorViewList
-//      read GetViewList;
+    property ViewList: TEditorViewList
+      read GetViewList;
 
     property Count: Integer
       read GetCount;
@@ -811,26 +799,7 @@ type
 
   IEditorCommands = interface
   ['{5CB77731-425D-44FD-93BA-2137875F76B5}']
-    procedure OpenFileAtCursor;
-    procedure ToggleHighlighter;
-    procedure AssignHighlighter(const AName: string);
-    procedure CompressSpace;
-    procedure CompressWhitespace;
-    procedure CreateDesktopLink;
-    procedure CopyToClipboard;
-    procedure UpperCaseSelection;
-    procedure LowerCaseSelection;
-    procedure PascalStringFromSelection;
-    procedure QuoteLinesInSelection(ADelimit : Boolean = False);
-    procedure DequoteLinesInSelection;
-    procedure QuoteSelection;
-    procedure DequoteSelection;
-    procedure Base64FromSelection(ADecode: Boolean = False);
-    procedure URLFromSelection(ADecode: Boolean = False);
-    procedure XMLFromSelection(ADecode: Boolean = False);
-    procedure ConvertTabsToSpacesInSelection;
-    procedure SortStrings;
-    procedure SyncEditSelection;
+    procedure AdjustFontSize(AOffset: Integer);
     procedure AlignSelection(
       const AToken                  : string;
             ACompressWS             : Boolean;
@@ -838,33 +807,51 @@ type
             AInsertSpaceAfterToken  : Boolean;
             AAlignInParagraphs      : Boolean
     );
-    procedure MergeBlankLinesInSelection;
-    procedure StripCommentsFromSelection;
-    procedure StripMarkupFromSelection;
-    procedure StripCharsFromSelection(
-      AFirst : Boolean;
-      ALast  : Boolean
-    );
-    procedure Indent;
-    procedure UnIndent;
-    procedure UpdateCommentSelection(ACommentOn, AToggle: Boolean);
-    procedure ToggleBlockCommentSelection;
-    procedure InsertTextAtCaret(const AText: string);
+    procedure AssignHighlighter(const AName: string);
+    procedure Base64FromSelection(ADecode: Boolean = False);
+    procedure CompressSpace;
+    procedure CompressWhitespace;
+    procedure ConvertTabsToSpacesInSelection;
+    procedure CopyToClipboard;
+    procedure CreateDesktopLink;
+    procedure DequoteLinesInSelection;
+    procedure DequoteSelection;
+    procedure FindNext;
+    procedure FindPrevious;
     procedure FormatCode;
-    procedure SmartSelect;
     procedure GuessHighlighterType;
+    procedure Indent;
+    procedure InsertTextAtCaret(const AText: string);
+    procedure LowerCaseSelection;
+    procedure OpenFileAtCursor;
+    procedure PascalStringFromSelection;
+    procedure QuoteLinesInSelection(ADelimit : Boolean = False);
+    procedure QuoteSelection;
+    procedure SortSelectedLines;
+    procedure SyncEditSelection;
+    procedure ToggleBlockComment;
+    procedure ToggleHighlighter;
+    procedure ToggleLineComment;
+    procedure UpperCaseSelection;
+    procedure URLFromSelection(ADecode: Boolean = False);
+    procedure XMLFromSelection(ADecode: Boolean = False);
+    procedure MergeBlankLinesInSelection;
+    procedure Save;
+    procedure SaveAll;
     function SelectBlockAroundCursor(
       const AStartTag        : string;
       const AEndTag          : string;
             AIncludeStartTag : Boolean;
             AIncludeEndTag   : Boolean
     ): Boolean;
-    procedure AdjustFontSize(AOffset: Integer);
-    procedure Save;
-    procedure SaveAll;
-
-    procedure FindNext;
-    procedure FindPrevious;
+    procedure SmartSelect;
+    procedure StripCommentsFromSelection;
+    procedure StripMarkupFromSelection;
+    procedure StripCharsFromSelection(
+      AFirst : Boolean;
+      ALast  : Boolean
+    );
+    procedure UnIndent;
   end;
 
   { IEditorMenus }
@@ -978,6 +965,7 @@ type
     function GetActiveView: IEditorView;
     procedure SetActiveView(AValue: IEditorView);
     function GetHighlighters: THighlighters;
+    function GetKeyCommands: TBCEditorKeyCommands;
     {$ENDREGION}
 
     procedure UpdateActions;
@@ -1019,6 +1007,9 @@ type
 
     property Commands: IEditorCommands
       read GetCommands;
+
+    property KeyCommands: TBCEditorKeyCommands
+      read GetKeyCommands;
 
     property Selection: IEditorSelection
       read GetSelection;

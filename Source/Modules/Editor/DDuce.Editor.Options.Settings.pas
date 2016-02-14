@@ -42,7 +42,6 @@ type
     FExtraCharSpacing      : Integer;
     FExtraLineSpacing      : Integer;
     FRightEdge             : Integer;
-
     FBracketHighlight      : Boolean;
     FEnhanceHomeKey        : Boolean;
     FEnhanceEndKey         : Boolean;
@@ -63,6 +62,7 @@ type
     FPersistentBlock       : Boolean;
     FOverwriteBlock        : Boolean;
     FAutoHideCursor        : Boolean;
+    FWordWrapEnabled       : Boolean;
 
     function GetAlwaysVisibleCaret: Boolean;
     function GetAutoHideCursor: Boolean;
@@ -116,6 +116,8 @@ type
     procedure SetTabWidth(AValue: Integer);
     procedure SetTrimTrailingSpaces(AValue: Boolean);
     procedure SetWantTabs(AValue: Boolean);
+    function GetWordWrapEnabled: Boolean;
+    procedure SetWordWrapEnabled(const Value: Boolean);
 
   protected
     procedure Changed;
@@ -219,11 +221,12 @@ type
 
     property RightEdge: Integer
       read GetRightEdge write SetRightEdge default DEFAULT_RIGHT_EDGE;
+
+    property WordWrapEnabled: Boolean
+      read GetWordWrapEnabled write SetWordWrapEnabled default False;
   end;
 
 implementation
-
-{ TEditorOptionsSettings }
 
 {$REGION 'construction and destruction'}
 procedure TEditorOptionsSettings.AfterConstruction;
@@ -569,6 +572,20 @@ end;
 function TEditorOptionsSettings.GetWantTabs: Boolean;
 begin
   Result := FWantTabs;
+end;
+
+function TEditorOptionsSettings.GetWordWrapEnabled: Boolean;
+begin
+  Result := FWordWrapEnabled;
+end;
+
+procedure TEditorOptionsSettings.SetWordWrapEnabled(const Value: Boolean);
+begin
+  if Value <> WordWrapEnabled then
+  begin
+    FWordWrapEnabled := Value;
+    Changed;
+  end;
 end;
 
 function TEditorOptionsSettings.GetAlwaysVisibleCaret: Boolean;

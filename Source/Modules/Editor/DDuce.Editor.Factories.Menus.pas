@@ -99,17 +99,10 @@ begin
     MI.Action := AAction;
     if (AAction is TAction) and (TAction(AAction).GroupIndex > 0) then
     begin
-      // On Windows 7 or above with themes enabled, the menu item will not
-      // be drawn as checked when it has a glyph assigned to it.
-      // Qt does not have this problem.
-      //MI.GlyphShowMode := gsmNever;
       MI.RadioItem := True;
     end;
     if (AAction is TAction) and (TAction(AAction).AutoCheck) then
     begin
-      // Onn Windows 7 or above with themes enabled, the menu item will not
-      // be drawn as checked when it has a glyph assigned to it.
-      // Qt does not have this problem.
       //MI.GlyphShowMode := gsmNever;
       //MI.ShowAlwaysCheckable := True;
     end;
@@ -156,11 +149,11 @@ begin
   begin
     CreateMenuItem(SMI, M.Action.Name);
   end;
-//  SMI := CreateMenuItem(MI, 'actLineBreakStyleMenu');
-//  for M in FMenus.LineBreakStylePopupMenu.Items do
-//  begin
-//    CreateMenuItem(SMI, M.Action.Name);
-//  end;
+  SMI := CreateMenuItem(MI, 'actLineBreakStyleMenu');
+  for M in FMenus.LineBreakStylePopupMenu.Items do
+  begin
+    CreateMenuItem(SMI, M.Action.Name);
+  end;
   CreateMenuItem(MI, 'actClose');
   CreateMenuItem(MI, 'actCloseOthers');
   CreateMenuItem(MI, 'actExit');

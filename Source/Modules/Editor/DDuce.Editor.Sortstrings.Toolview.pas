@@ -83,7 +83,7 @@ end;
 {$REGION 'action handlers'}
 procedure TfrmSortStrings.actExecuteExecute(Sender: TObject);
 begin
-  Manager.Commands.SortStrings;
+  Manager.Commands.SortSelectedLines;
 end;
 {$ENDREGION}
 

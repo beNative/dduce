@@ -311,8 +311,6 @@ inherited frmSearchForm: TfrmSearchForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 409
-    ExplicitHeight = 213
   end
   object pnlStatus: TPanel
     Left = 0

@@ -33,7 +33,7 @@ uses
   DDuce.Editor.Interfaces;
 
 type
-  TEditorFactories = class
+  TEditorFactories = class sealed
   public
     class function CreateSettings(
             AOwner    : TComponent;
@@ -89,8 +89,6 @@ uses
   DDuce.Editor.Factories.Settings, DDuce.Editor.Factories.Manager,
   DDuce.Editor.Factories.Views, DDuce.Editor.Factories.Menus,
   DDuce.Editor.Factories.Toolbars;
-
-{ TEditorFactories }
 
 class function TEditorFactories.CreateManager(AOwner: TComponent;
   ASettings: IEditorSettings): IEditorManager;

@@ -30,9 +30,6 @@ uses
   DDuce.Editor.ToolView.Base;
 
 type
-
-  { TToolView }
-
   TToolView = class(TInterfacedObject, IEditorToolView)
   strict private
     FName          : string;
@@ -122,8 +119,7 @@ uses
 
   DDuce.Logger;
 
-{ TToolView }
-
+{$REGION 'TToolView'}
 {$REGION 'construction and destruction'}
 constructor TToolView.Create(AManager: IEditorManager;
   AFormClass: TComponentClass; ASettingsClass: TComponentClass;
@@ -182,7 +178,7 @@ end;
 
 procedure TToolView.SetFocus;
 begin
-  if Assigned(FForm) and FForm.CanFocus then
+  if Assigned(FForm) and FForm.Visible and FForm.CanFocus then
     FForm.SetFocus;
 end;
 
@@ -204,9 +200,9 @@ begin
   Result := Assigned(FForm) and FForm.Focused;
 end;
 {$ENDREGION}
+{$ENDREGION}
 
-{ TToolViews }
-
+{$REGION 'TToolViews'}
 {$REGION 'construction and destruction'}
 constructor TToolViews.Create(AEditorManager: IEditorManager);
 begin
@@ -281,6 +277,7 @@ begin
     FManager.Events.DoHideToolView(TV);
   end;
 end;
+{$ENDREGION}
 {$ENDREGION}
 
 end.

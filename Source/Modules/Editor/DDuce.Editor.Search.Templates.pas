@@ -24,7 +24,7 @@ unit DDuce.Editor.Search.Templates;
 interface
 
 uses
-  Classes, SysUtils, Contnrs,
+  System.Classes, System.SysUtils, System.Contnrs,
 
   Spring.Collections,
 

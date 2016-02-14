@@ -24,6 +24,8 @@ uses
   System.Classes, System.SysUtils, System.Contnrs, System.Actions,
   Vcl.Forms, Vcl.ActnList, Vcl.Menus, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Controls,
 
+  Spring.Collections,
+
   VirtualTrees,
 
   DSharp.Windows.TreeViewPresenter,
@@ -46,7 +48,7 @@ type
 
   private
     FVST      : TVirtualStringTree;
-    FItemList : TObjectList;
+    FItemList : IObjectList;
     FTVP      : TTreeViewPresenter;
 
     procedure FTVPSelectionChanged(Sender: TObject);
@@ -66,7 +68,9 @@ implementation
 {$R *.dfm}
 
 uses
-  DDuce.Editor.ViewList.Data;
+  DSharp.Windows.ColumnDefinitions,
+
+  DDuce.Factories, DDuce.Editor.ViewList.Data;
 
 resourcestring
   SFileName    = 'Filename';
@@ -78,27 +82,27 @@ resourcestring
 procedure TfrmViewList.AfterConstruction;
 begin
   inherited AfterConstruction;
-//  FVST := VST.Create(Self, pnlVST);
-//  FTVP := TTreeViewPresenter.Create(Self);
-//  FTVP.MultiSelect := True;
-//  with FTVP.ColumnDefinitions.AddColumn('FileName', SFileName, dtString, 200, 30, 1000) do
-//  begin
-//
-//  end;
-//  FTVP.ColumnDefinitions.AddColumn('Highlighter', SHighlighter, dtString, 80);
-//  with FTVP.ColumnDefinitions.AddColumn('Modified', SModified, dtString, 80) do
-//  begin
-//    ColumnType := TColumnType.ctCheckBox;
-//  end;
-//  with FTVP.ColumnDefinitions.AddColumn('Path', SPath, dtString, 100, 30, 1000) do
-//  begin
-//  end;
-//  FItemList := TObjectList.Create;
-//  Refresh;
-//  FTVP.ItemsSource        := FItemList;
-//  FTVP.PopupMenu          := ppmMain;
-//  FTVP.TreeView           := FVST;
-//  FTVP.OnSelectionChanged := FTVPSelectionChanged;
+  FVST := TFactories.CreateVirtualStringTree(Self, pnlVST);
+  FTVP := TTreeViewPresenter.Create(Self);
+  //FTVP.MultiSelect := True;
+  with FTVP.ColumnDefinitions.Add(SFileName, 200) do
+  begin
+
+  end;
+  FTVP.ColumnDefinitions.Add(SHighlighter, 80);
+  with FTVP.ColumnDefinitions.Add(SModified, 80) do
+  begin
+    ColumnType := TColumnType.ctCheckBox;
+  end;
+  with FTVP.ColumnDefinitions.Add(SPath, 100) do
+  begin
+  end;
+  FItemList := TCollections.CreateObjectList<TEditorViewInfo> as IObjectList;
+  Refresh;
+  FTVP.View.ItemsSource   := FItemList;
+  FTVP.PopupMenu          := ppmMain;
+  FTVP.TreeView           := FVST;
+  FTVP.OnSelectionChanged := FTVPSelectionChanged;
 end;
 
 procedure TfrmViewList.BeforeDestruction;

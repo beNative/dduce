@@ -47,6 +47,7 @@ type
 
 implementation
 
+{$REGION 'public methods'}
 procedure TSearchEngineSettings.AssignTo(Dest: TPersistent);
 var
   SES: TSearchEngineSettings;
@@ -74,6 +75,7 @@ begin
   else
     inherited Assign(Source);
 end;
+{$ENDREGION}
 
 initialization
   RegisterClass(TSearchEngineSettings);

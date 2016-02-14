@@ -33,8 +33,8 @@ type
     actDecCounter           : TAction;
     actEnterMethod1         : TAction;
     actEnterMethod2         : TAction;
-    actExitMethod1          : TAction;
-    actExitMethod2          : TAction;
+    actLeaveMethod1         : TAction;
+    actLeaveMethod2         : TAction;
     actIncCounter           : TAction;
     actResetCounter         : TAction;
     actSendError            : TAction;
@@ -68,8 +68,8 @@ type
     procedure actSendWarningExecute(Sender: TObject);
     procedure actEnterMethod1Execute(Sender: TObject);
     procedure actEnterMethod2Execute(Sender: TObject);
-    procedure actExitMethod1Execute(Sender: TObject);
-    procedure actExitMethod2Execute(Sender: TObject);
+    procedure actLeaveMethod1Execute(Sender: TObject);
+    procedure actLeaveMethod2Execute(Sender: TObject);
     procedure actSendErrorExecute(Sender: TObject);
     procedure actAddCheckpointExecute(Sender: TObject);
     procedure actIncCounterExecute(Sender: TObject);
@@ -145,13 +145,13 @@ begin
   FM2Entered := True;
 end;
 
-procedure TfrmLogger.actExitMethod1Execute(Sender: TObject);
+procedure TfrmLogger.actLeaveMethod1Execute(Sender: TObject);
 begin
   FM1Entered := False;
   Logger.Leave('Method1');
 end;
 
-procedure TfrmLogger.actExitMethod2Execute(Sender: TObject);
+procedure TfrmLogger.actLeaveMethod2Execute(Sender: TObject);
 begin
   FM2Entered := False;
   Logger.Leave('Method2');
@@ -201,9 +201,9 @@ procedure TfrmLogger.UpdateActions;
 begin
   inherited UpdateActions;
   actEnterMethod1.Enabled := not FM1Entered;
-  actExitMethod1.Enabled  := FM1Entered;
+  actLeaveMethod1.Enabled := FM1Entered;
   actEnterMethod2.Enabled := not FM2Entered;
-  actExitMethod2.Enabled  := FM2Entered;
+  actLeaveMethod2.Enabled := FM2Entered;
 end;
 {$ENDREGION}
 

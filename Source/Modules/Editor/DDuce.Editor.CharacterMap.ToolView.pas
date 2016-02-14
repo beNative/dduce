@@ -21,7 +21,8 @@ unit DDuce.Editor.CharacterMap.Toolview;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, StdCtrls, Grids, ComCtrls, ExtCtrls,
+  System.Classes, System.SysUtils,
+  Vcl.Forms, Vcl.Controls, Vcl.StdCtrls, Vcl.Grids, Vcl.ComCtrls, Vcl.ExtCtrls,
 
   DDuce.Editor.Interfaces, DDuce.Editor.ToolView.Base;
 
@@ -136,7 +137,7 @@ begin
   pcMain.ActivePageIndex := 0;
   cbxUnicodeRange.ItemIndex := 0;
   cbxUnicodeRangeSelect(nil);
-  Manager.Settings.AddEditorSettingsChangedHandler(EditorSettingsChanged);
+  Manager.Settings.OnChanged.Add(EditorSettingsChanged);
 end;
 {$ENDREGION}
 

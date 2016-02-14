@@ -44,8 +44,6 @@ object frmActionListView: TfrmActionListView
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
-          ExplicitTop = 23
-          ExplicitHeight = 473
         end
         object edtFilterActions: TEdit
           Left = 0
@@ -61,9 +59,10 @@ object frmActionListView: TfrmActionListView
       end
       object tsCommands: TTabSheet
         Caption = 'Editor key commands'
-      end
-      object tsMouseActions: TTabSheet
-        Caption = 'Editor mouse commands'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
       end
     end
   end

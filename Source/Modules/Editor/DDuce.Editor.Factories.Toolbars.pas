@@ -170,27 +170,31 @@ begin
   TB.Images := FActions.ActionList.Images;
   TB.ButtonWidth:= 10;
 
-  CreateToolButton(TB, 'actNew');
-  CreateToolButton(TB, 'actOpen');
-  CreateToolButton(TB, 'actSave');
-  CreateToolButton(TB, 'actSaveAs');
+
   CreateToolButton(TB, 'actSaveAll');
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actReload');
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actCut');
-  CreateToolButton(TB, 'actCopy');
-  CreateToolButton(TB, 'actPaste');
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actUndo');
-  CreateToolButton(TB, 'actRedo');
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actSearch');
-  CreateToolButton(TB, 'actSearchReplace');
-  CreateToolButton(TB);
+  CreateToolButton(TB, 'actSaveAs');
+  CreateToolButton(TB, 'actSave');
+  CreateToolButton(TB, 'actOpen');
+  CreateToolButton(TB, 'actNew');
+
+
+
+//  CreateToolButton(TB);
+//  CreateToolButton(TB, 'actReload');
+//  CreateToolButton(TB);
+//  CreateToolButton(TB, 'actCut');
+//  CreateToolButton(TB, 'actCopy');
+//  CreateToolButton(TB, 'actPaste');
+//  CreateToolButton(TB);
+//  CreateToolButton(TB, 'actUndo');
+//  CreateToolButton(TB, 'actRedo');
+//  CreateToolButton(TB);
+//  CreateToolButton(TB, 'actSearch');
+//  CreateToolButton(TB, 'actSearchReplace');
+  //CreateToolButton(TB);
 //  CreateToolButton(TB, 'actToggleFoldLevel', FMenus.FoldPopupMenu);
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actToggleHighlighter', FMenus.HighlighterPopupMenu);
+//  CreateToolButton(TB);
+  //CreateToolButton(TB, 'actToggleHighlighter', FMenus.HighlighterPopupMenu);
 //  CreateToolButton(TB, 'actAutoGuessHighlighter');
 //  CreateToolButton(TB);
 //  CreateToolButton(TB, 'actShowCodeShaper');

@@ -21,7 +21,7 @@ unit DDuce.Editor.CodeFormatters;
 interface
 
 uses
-  Classes, SysUtils;
+  System.Classes, System.SysUtils;
 
 type
   ICodeFormatter = interface

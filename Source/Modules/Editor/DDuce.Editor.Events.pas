@@ -37,51 +37,37 @@ uses
 type
   TEditorEvents = class(TInterfacedObject, IEditorEvents)
   strict private
-    FManager                 : IEditorManager;
-    FOnChange                : Event<TNotifyEvent>;
-    FOnModified              : Event<TNotifyEvent>;
-    FOnActiveViewChange      : Event<TNotifyEvent>;
-    FOnCaretPositionChange   : Event<TCaretPositionEvent>;
-    FOnActionExecute         : Event<TActionExecuteEvent>;
-
-//    FHighlighterChangeEvents : TMethodList;
-    FOnAddEditorView       : TAddEditorViewEvent;
-    FOnShowEditorToolView  : TEditorToolViewEvent;
-    FOnHideEditorToolView  : TEditorToolViewEvent;
-    FOnNew                 : TNewEvent;
-    FOnLoad                : TStorageEvent;
-    FOnOpen                : TStorageEvent;
-    FOnBeforeSave          : TStorageEvent;
-    FOnAfterSave           : TStorageEvent;
-    FOnSave                : TStorageEvent;
-    FOnOpenOtherInstance   : TOpenOtherInstanceEvent;
-//    FOnStatusChange        : TStatusChangeEvent;
-    FOnStatusMessage       : TStatusMessageEvent;
+    FManager               : IEditorManager;
+    FOnChange              : Event<TNotifyEvent>;
+    FOnModified            : Event<TNotifyEvent>;
+    FOnActiveViewChange    : Event<TNotifyEvent>;
+    FOnCaretPositionChange : Event<TCaretPositionEvent>;
+    FOnActionExecute       : Event<TActionExecuteEvent>;
+    FOnNew                 : Event<TNewEvent>;
+    FOnLoad                : Event<TStorageEvent>;
+    FOnOpen                : Event<TStorageEvent>;
+    FOnBeforeSave          : Event<TStorageEvent>;
+    FOnAfterSave           : Event<TStorageEvent>;
+    FOnSave                : Event<TStorageEvent>;
+    FOnAddEditorView       : Event<TAddEditorViewEvent>;
+    FOnShowEditorToolView  : Event<TEditorToolViewEvent>;
+    FOnHideEditorToolView  : Event<TEditorToolViewEvent>;
+    FOnOpenOtherInstance   : Event<TOpenOtherInstanceEvent>;
+    FOnStatusMessage       : Event<TStatusMessageEvent>;
 
   protected
-    function GetOnOpen: TStorageEvent;
-    procedure SetOnOpen(AValue: TStorageEvent);
-    function GetOnAfterSave: TStorageEvent;
-    function GetOnBeforeSave: TStorageEvent;
+    function GetOnOpen: IEvent<TStorageEvent>;
+    function GetOnAfterSave: IEvent<TStorageEvent>;
+    function GetOnBeforeSave: IEvent<TStorageEvent>;
     function GetView: IEditorView;
-    function GetOnAddEditorView: TAddEditorViewEvent;
-    function GetOnHideEditorToolView: TEditorToolViewEvent;
-    function GetOnNew: TNewEvent;
-    function GetOnLoad: TStorageEvent;
-    function GetOnOpenOtherInstance: TOpenOtherInstanceEvent;
-    function GetOnSave: TStorageEvent;
-    function GetOnShowEditorToolView: TEditorToolViewEvent;
+    function GetOnAddEditorView: IEvent<TAddEditorViewEvent>;
+    function GetOnHideEditorToolView: IEvent<TEditorToolViewEvent>;
+    function GetOnNew: IEvent<TNewEvent>;
+    function GetOnLoad: IEvent<TStorageEvent>;
+    function GetOnOpenOtherInstance: IEvent<TOpenOtherInstanceEvent>;
+    function GetOnSave: IEvent<TStorageEvent>;
+    function GetOnShowEditorToolView: IEvent<TEditorToolViewEvent>;
 //    function GetOnStatusChange: TStatusChangeEvent;
-    procedure SetOnAddEditorView(AValue: TAddEditorViewEvent);
-    procedure SetOnHideEditorToolView(AValue: TEditorToolViewEvent);
-    procedure SetOnNew(const AValue: TNewEvent);
-    procedure SetOnLoad(const AValue: TStorageEvent);
-    procedure SetOnSave(const AValue: TStorageEvent);
-    procedure SetOnOpenOtherInstance(AValue: TOpenOtherInstanceEvent);
-    procedure SetOnShowEditorToolView(AValue: TEditorToolViewEvent);
-//    procedure SetOnStatusChange(const AValue: TStatusChangeEvent);
-    procedure SetOnAfterSave(AValue: TStorageEvent);
-    procedure SetOnBeforeSave(AValue: TStorageEvent);
     function GetOnActionExecute: IEvent<TActionExecuteEvent>;
     function GetOnCaretPositionChange: IEvent<TCaretPositionEvent>;
     function GetOnActiveViewChange: IEvent<TNotifyEvent>;
@@ -102,44 +88,42 @@ type
     procedure DoStatusMessage(AText: string); virtual;
 //    procedure DoStatusChange(AChanges: TSynStatusChanges); virtual;
     procedure DoOpen(const AName: string);
-    procedure DoBeforeSave(const AName: string);
-    procedure DoAfterSave(const AName: string);
     procedure DoLoad(const AName: string);
     procedure DoNew(
       const AName : string = '';
       const AText : string = ''
     );
 
-    property OnAddEditorView: TAddEditorViewEvent
-      read GetOnAddEditorView write SetOnAddEditorView;
+    property OnAddEditorView: IEvent<TAddEditorViewEvent>
+      read GetOnAddEditorView;
 
-    property OnShowEditorToolView: TEditorToolViewEvent
-      read GetOnShowEditorToolView write SetOnShowEditorToolView;
+    property OnShowEditorToolView: IEvent<TEditorToolViewEvent>
+      read GetOnShowEditorToolView;
 
-    property OnHideEditorToolView: TEditorToolViewEvent
-      read GetOnHideEditorToolView write SetOnHideEditorToolView;
+    property OnHideEditorToolView: IEvent<TEditorToolViewEvent>
+      read GetOnHideEditorToolView;
 
 //    property OnStatusChange: TStatusChangeEvent
 //      read GetOnStatusChange write SetOnStatusChange;
 
     { Called when content is loaded into the editor's buffer. }
-    property OnLoad: TStorageEvent
-      read GetOnLoad write SetOnLoad;
+    property OnLoad: IEvent<TStorageEvent>
+      read GetOnLoad;
 
     { Called when the 'New' action is executed by user }
-    property OnNew: TNewEvent
-      read GetOnNew write SetOnNew;
+    property OnNew: IEvent<TNewEvent>
+      read GetOnNew;
 
     { Called when the editor's content is about to be saved. }
-    property OnSave: TStorageEvent
-      read GetOnSave write SetOnSave;
+    property OnSave: IEvent<TStorageEvent>
+      read GetOnSave;
 
     { Called when the 'Open file' action is executed by user. }
-    property OnOpen: TStorageEvent
-      read GetOnOpen write SetOnOpen;
+    property OnOpen: IEvent<TStorageEvent>
+      read GetOnOpen;
 
-    property OnOpenOtherInstance: TOpenOtherInstanceEvent
-      read GetOnOpenOtherInstance write SetOnOpenOtherInstance;
+    property OnOpenOtherInstance: IEvent<TOpenOtherInstanceEvent>
+      read GetOnOpenOtherInstance;
 
     property OnChange: IEvent<TNotifyEvent>
       read GetOnChange;
@@ -183,22 +167,17 @@ end;
 {$ENDREGION}
 
 {$REGION 'property access mehods'}
-function TEditorEvents.GetOnOpen: TStorageEvent;
+function TEditorEvents.GetOnOpen: IEvent<TStorageEvent>;
 begin
   Result := FOnOpen;
 end;
 
-procedure TEditorEvents.SetOnOpen(AValue: TStorageEvent);
-begin
-  FOnOpen := AValue;
-end;
-
-function TEditorEvents.GetOnAfterSave: TStorageEvent;
+function TEditorEvents.GetOnAfterSave: IEvent<TStorageEvent>;
 begin
   Result := FOnAfterSave;
 end;
 
-function TEditorEvents.GetOnBeforeSave: TStorageEvent;
+function TEditorEvents.GetOnBeforeSave: IEvent<TStorageEvent>;
 begin
   Result := FOnBeforeSave;
 end;
@@ -228,37 +207,32 @@ begin
   Result := FOnActiveViewChange;
 end;
 
-function TEditorEvents.GetOnAddEditorView: TAddEditorViewEvent;
+function TEditorEvents.GetOnAddEditorView: IEvent<TAddEditorViewEvent>;
 begin
   Result := FOnAddEditorView;
 end;
 
-function TEditorEvents.GetOnHideEditorToolView: TEditorToolViewEvent;
+function TEditorEvents.GetOnHideEditorToolView: IEvent<TEditorToolViewEvent>;
 begin
   Result := FOnHideEditorToolView;
 end;
 
-function TEditorEvents.GetOnNew: TNewEvent;
+function TEditorEvents.GetOnNew: IEvent<TNewEvent>;
 begin
   Result := FOnNew;
 end;
 
-function TEditorEvents.GetOnOpenOtherInstance: TOpenOtherInstanceEvent;
+function TEditorEvents.GetOnOpenOtherInstance: IEvent<TOpenOtherInstanceEvent>;
 begin
   Result := FOnOpenOtherInstance;
 end;
 
-function TEditorEvents.GetOnSave: TStorageEvent;
+function TEditorEvents.GetOnSave: IEvent<TStorageEvent>;
 begin
   Result := FOnSave;
 end;
 
-procedure TEditorEvents.SetOnSave(const AValue: TStorageEvent);
-begin
-  FOnSave :=  AValue;
-end;
-
-function TEditorEvents.GetOnLoad: TStorageEvent;
+function TEditorEvents.GetOnLoad: IEvent<TStorageEvent>;
 begin
   Result := FOnLoad;
 end;
@@ -268,61 +242,10 @@ begin
   Result := FOnModified;
 end;
 
-procedure TEditorEvents.SetOnLoad(const AValue: TStorageEvent);
-begin
-  FOnLoad := AValue;
-end;
-
-function TEditorEvents.GetOnShowEditorToolView: TEditorToolViewEvent;
+function TEditorEvents.GetOnShowEditorToolView: IEvent<TEditorToolViewEvent>;
 begin
   Result := FOnShowEditorToolView;
 end;
-
-//function TEditorEvents.GetOnStatusChange: TStatusChangeEvent;
-//begin
-//  Result := FOnStatusChange;
-//end;
-
-procedure TEditorEvents.SetOnAddEditorView(AValue: TAddEditorViewEvent);
-begin
-  FOnAddEditorView := AValue;
-end;
-
-procedure TEditorEvents.SetOnHideEditorToolView(AValue: TEditorToolViewEvent);
-begin
-  FOnHideEditorToolView := AValue;
-end;
-
-procedure TEditorEvents.SetOnNew(const AValue: TNewEvent);
-begin
-  FOnNew := AValue;
-end;
-
-procedure TEditorEvents.SetOnOpenOtherInstance(AValue: TOpenOtherInstanceEvent);
-begin
-  FOnOpenOtherInstance := AValue;
-end;
-
-procedure TEditorEvents.SetOnShowEditorToolView(AValue: TEditorToolViewEvent);
-begin
-  FOnShowEditorToolView := AValue;
-end;
-
-//procedure TEditorEvents.SetOnStatusChange(const AValue: TStatusChangeEvent);
-//begin
-//  FOnStatusChange := AValue;
-//end;
-
-procedure TEditorEvents.SetOnAfterSave(AValue: TStorageEvent);
-begin
-  FOnAfterSave := AValue;
-end;
-
-procedure TEditorEvents.SetOnBeforeSave(AValue: TStorageEvent);
-begin
-  FOnBeforeSave := AValue;
-end;
-
 {$ENDREGION}
 
 {$REGION 'event dispatch methods'}
@@ -343,89 +266,52 @@ end;
 
 procedure TEditorEvents.DoActiveViewChange;
 begin
-  FOnActiveViewChange.Invoke(Self);
+  OnActiveViewChange.Invoke(Self);
 end;
 
 procedure TEditorEvents.DoAddEditorView(AEditorView: IEditorView);
 begin
-  if Assigned(FOnAddEditorView) then
-    FOnAddEditorView(Self, AEditorView);
+  OnAddEditorView.Invoke(Self, AEditorView);
 end;
 
 procedure TEditorEvents.DoShowToolView(AToolView: IEditorToolView);
 begin
-  if Assigned(FOnShowEditorToolView) then
-    FOnShowEditorToolView(Self, AToolView);
+  OnShowEditorToolView.Invoke(Self, AToolView);
 end;
 
 procedure TEditorEvents.DoHideToolView(AToolView: IEditorToolView);
 begin
-  if Assigned(FOnHideEditorToolView) then
-    FOnHideEditorToolView(Self, AToolView);
+  OnHideEditorToolView.Invoke(Self, AToolView);
 end;
 
 procedure TEditorEvents.DoCaretPositionChange;
 begin
-  //FCaretPositionEvents.CallEvents(Self, View.CaretX, View.CaretY);
+  OnCaretPositionChange.Invoke(Self, View.CaretX, View.CaretY);
 end;
 
 procedure TEditorEvents.DoActionExecute(AAction: TBasicAction;
   var AHandled: Boolean);
 begin
-  //FActionExecuteEvents.CallEvents(Self, AAction, AHandled);
+  OnActionExecute.Invoke(Self, AAction, AHandled);
 end;
 
 procedure TEditorEvents.DoOpenOtherInstance(const AParams: array of string);
 begin
-  if Assigned(FOnOpenOtherInstance) then
-    FOnOpenOtherInstance(Self, AParams);
+  OnOpenOtherInstance.Invoke(Self, AParams);
 end;
 
 procedure TEditorEvents.DoStatusMessage(AText: string);
 begin
-  if Assigned(FOnStatusMessage) then
-    FOnStatusMessage(Self, AText);
+//  if Assigned(FOnStatusMessage) then
+//    FOnStatusMessage(Self, AText);
 end;
-
-//procedure TEditorEvents.DoStatusChange(AChanges: TSynStatusChanges);
-//begin
-//  if Assigned(FOnStatusChange) then
-//    FOnStatusChange(Self, AChanges);
-//end;
 
 procedure TEditorEvents.DoOpen(const AName: string);
 var
   S : string;
 begin
   S  := AName;
-  if Assigned(FOnOpen) then
-    FOnOpen(Self, S);
-end;
-
-procedure TEditorEvents.DoBeforeSave(const AName: string);
-var
-  S: string;
-begin
-  if Assigned(FOnBeforeSave) then
-  begin
-    S := View.FileName;
-    FOnBeforeSave(Self, S);
-    if View.IsFile then
-      View.FileName := S;
-  end;
-end;
-
-procedure TEditorEvents.DoAfterSave(const AName: string);
-var
-  S: string;
-begin
-  if Assigned(FOnAfterSave) then
-  begin
-    S := View.FileName;
-    FOnAfterSave(Self, S);
-    if View.IsFile then
-      View.FileName := S;
-  end;
+  OnOpen.Invoke(Self, S);
 end;
 
 { Called by an editor view to dispatch an event when the editor is about to
@@ -438,8 +324,7 @@ var
   S : string;
 begin
   S  := AName;
-  if Assigned(FOnLoad) then
-    FOnLoad(Self, S);
+  OnLoad.Invoke(Self, S);
 end;
 
 { Called by the manager instance to dispatch an event when actNew is executed. }
@@ -449,8 +334,7 @@ var
   S : string;
 begin
   S  := AName;
-  if Assigned(FOnNew) then
-    FOnNew(Self, S, AText);
+  OnNew.Invoke(Self, S, AText);
 end;
 {$ENDREGION}
 

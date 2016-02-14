@@ -109,7 +109,9 @@ uses
   DDuce.Editor.Utils in '..\Source\Modules\Editor\DDuce.Editor.Utils.pas',
   DDuce.Editor.View in '..\Source\Modules\Editor\DDuce.Editor.View.pas' {EditorView},
   DDuce.Editor.Viewlist.Data in '..\Source\Modules\Editor\DDuce.Editor.Viewlist.Data.pas',
-  DDuce.Editor.Viewlist.ToolView in '..\Source\Modules\Editor\DDuce.Editor.Viewlist.ToolView.pas' {frmViewList};
+  DDuce.Editor.Viewlist.ToolView in '..\Source\Modules\Editor\DDuce.Editor.Viewlist.ToolView.pas' {frmViewList},
+  DDuce.FormSettings in '..\Source\Modules\DDuce.FormSettings.pas',
+  DDuce.Factories in '..\Source\Modules\DDuce.Factories.pas';
 
 {$R *.res}
 

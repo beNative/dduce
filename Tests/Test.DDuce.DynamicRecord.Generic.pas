@@ -25,11 +25,11 @@ interface
 
     - FromStrings should cast to the field type
 
-
    In a standard TRecord the data is stored in a collection of named TValue
    variables.
 
-   In the generic version the data is stored in the provided type.
+   In the generic version the data is stored in (a copy of the instance of)
+   the provided type.
 }
 
 uses

@@ -24,6 +24,7 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Menus,
   Vcl.ComCtrls,
 
+  DDuce.Components.PropertyInspector, DDuce.Components.Factories,
   DDuce.Editor.Interfaces;
 
 type
@@ -31,18 +32,21 @@ type
     sbrMain     : TStatusBar;
     pnlLeft     : TPanel;
     pnlRight    : TPanel;
-    splVertical : TSplitter;
+    splVertical: TSplitter;
 
   private
+    FSettings         : IEditorSettings;
     FEditor           : IEditorView;
     FManager          : IEditorManager;
     FMainToolbar      : TToolbar;
-//    FSelectionToolbar : TToolbar;
+    //FSelectionToolbar : TToolbar;
     FRightToolbar     : TToolbar;
     FMainMenu         : TMainMenu;
+    FPI               : TPropertyInspector;
 
   public
     procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
 
   end;
 
@@ -57,22 +61,46 @@ uses
 procedure TfrmEditor.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FManager     := TEditorFactories.CreateManager(Self);
+  FSettings    := TEditorFactories.CreateSettings(Self);
+  FManager     := TEditorFactories.CreateManager(Self, FSettings);
   FEditor      := TEditorFactories.CreateView(pnlRight, FManager);
-  FMainMenu    := TEditorFactories.CreateMainMenu(Self, FManager.Actions, FManager.Menus);
+  FMainMenu    := TEditorFactories.CreateMainMenu(
+    Self,
+    FManager.Actions,
+    FManager.Menus
+  );
   FMainToolbar := TEditorFactories.CreateMainToolbar(
     Self,
     pnlRight,
     FManager.Actions,
     FManager.Menus
   );
+  FPI := TDDuceComponents.CreatePropertyInspector(
+    Self,
+    pnlLeft, (
+    FSettings as IInterfaceComponentReference).GetComponent
+  );
+
+//  FRightToolbar := TEditorFactories.CreateTopRightToolbar(
+//    Self,
+//    pnlRight,
+//    FManager.Actions,
+//    FManager.Menus
+//  );
 //  FSelectionToolbar := TEditorFactories.CreateSelectionToolbar(
 //    Self,
 //    pnlRight,
 //    FManager.Actions,
 //    FManager.Menus
 //  );
+  //FSelectionToolbar.Align := alRight;
 end;
 {$ENDREGION}
+
+procedure TfrmEditor.BeforeDestruction;
+begin
+  FPI.Free;
+  inherited;
+end;
 
 end.

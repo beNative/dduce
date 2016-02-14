@@ -16,6 +16,7 @@ object EditorView: TEditorView
   KeyPreview = True
   OldCreateOrder = False
   ShowHint = True
+  OnShortCut = FormShortCut
   PixelsPerInch = 96
   TextHeight = 13
 end

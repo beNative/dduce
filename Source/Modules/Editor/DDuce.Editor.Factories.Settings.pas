@@ -24,15 +24,15 @@ uses
   System.Classes, System.SysUtils,
   Vcl.Controls,
 
+  Spring.Collections,
+
   DDuce.Editor.Tools.Settings, DDuce.Editor.Highlighters, DDuce.Editor.Interfaces;
 
 type
   TEditorSettingsFactory = class(TInterfacedObject, IEditorSettingsFactory)
   public
     procedure RegisterToolSettings(ASettings: TEditorToolSettings);
-    //procedure RegisterHighlighters(AHighlighters: THighlighters);
-    //class procedure InitializeFoldHighlighters(AHighlighters: THighlighters);
-    procedure RegisterClasses;
+    procedure RegisterHighlighters(AHighlighters: THighlighters);
 
     function CreateInstance(
             AOwner    : TComponent = nil;
@@ -43,11 +43,12 @@ type
 implementation
 
 uses
+  System.IOUtils,
   Vcl.Forms,
 
-//  DDuce.Editor.CodeFormatters,
+  DDuce.Editor.CodeFormatters,
 //  DDuce.Editor.CodeFormatters.SQL,
-//  DDuce.Editor.AlignLines.Settings,
+  DDuce.Editor.AlignLines.Settings,
 //  DDuce.Editor.CodeFilter.Settings,
 //  DDuce.Editor.CodeShaper.Settings,
 //  DDuce.Editor.HexEditor.Settings,
@@ -63,7 +64,7 @@ uses
 procedure TEditorSettingsFactory.RegisterToolSettings(
   ASettings: TEditorToolSettings);
 begin
-//  ASettings.RegisterSettings(TAlignLinesSettings, 'AlignLinesSettings');
+  ASettings.RegisterSettings(TAlignLinesSettings, 'AlignLinesSettings');
 //  ASettings.RegisterSettings(TCodeFilterSettings, 'CodeFilterSettings');
 //  ASettings.RegisterSettings(THTMLViewSettings, 'HTMLViewSettings');
 //  ASettings.RegisterSettings(TSortStringsSettings, 'SortStringsSettings');
@@ -73,179 +74,90 @@ begin
 //  ASettings.RegisterSettings(TCodeShaperSettings, 'CodeShaperSettings');
 end;
 //
-//procedure TEditorSettingsFactory.RegisterHighlighters(
-//  AHighlighters: THighlighters);
-//var
-//  S  : string;
-//  F  : string;
-//  SU : TSynUniSyn;
-//  //FH : TSynFacilSyn;
-//
-//  procedure Reg(ASynHighlighterClass: TSynHighlighterClass;
-//    ASynHighlighter: TSynCustomHighlighter; const AName: string;
-//    const AFileExtensions: string = ''; const ADescription: string = '';
-//    const ALineCommentTag: string = ''; const ABlockCommentStartTag: string = '';
-//    const ABlockCommentEndTag: string = ''; ACodeFormatter: ICodeFormatter = nil;
-//    const ALayoutFileName: string = '');
-//  begin
-//    AHighlighters.RegisterHighlighter(
-//      ASynHighlighterClass,
-//      ASynHighlighter,
-//      AName,
-//      AFileExtensions,
-//      ALineCommentTag,
-//      ABlockCommentStartTag,
-//      ABlockCommentEndTag,
-//      ACodeFormatter,
-//      ADescription,
-//      ALayoutFileName
-//    );
-//  end;
-//
-//begin
-//  Reg(nil, nil, HL_TXT, FILE_EXTENSIONS_TXT, STXTDescription);
-//  Reg(TSynPasSyn, nil, HL_PAS, FILE_EXTENSIONS_PAS, SPASDescription, '//', '{', '}', TPascalFormatter.Create);
-//  Reg(TSynSQLSyn, nil, HL_SQL, FILE_EXTENSIONS_SQL, SSQLDescription, '--', '/*', '*/', TSQLFormatter.Create);
-//  Reg(TSynXMLSyn, nil, HL_XML, FILE_EXTENSIONS_XML, SXMLDescription, '', '<!--', '-->', TXMLFormatter.Create);
-//  Reg(TSynLFMSyn, nil, HL_LFM, FILE_EXTENSIONS_LFM, SLFMDescription);
-//  Reg(TSynBatSyn, nil, HL_BAT, FILE_EXTENSIONS_BAT, SBATDescription, '::');
-//  Reg(TSynPoSyn, nil, HL_PO, FILE_EXTENSIONS_PO, SPODescription, '#');
-//  Reg(TSynCppSyn, nil, HL_CPP, FILE_EXTENSIONS_CPP, SCPPDescription, '//', '/*', '*/', TCPPFormatter.Create);
-//  Reg(TSynJavaSyn, nil, HL_JAVA, FILE_EXTENSIONS_JAVA, SJavaDescription, '//', '/*', '*/', TJavaFormatter.Create);
-//  Reg(TSynPerlSyn, nil, HL_PERL, FILE_EXTENSIONS_PERL, SPERLDescription, '#', '/*', '*/');
-//  Reg(TSynPythonSyn, nil, HL_PY, FILE_EXTENSIONS_PY, SPYDescription, '#', '/*', '*/');
-//  Reg(TSynHTMLSyn, nil, HL_HTML, FILE_EXTENSIONS_HTML, SHTMLDescription, '', '<!--', '-->', THTMLFormatter.Create);
-//  Reg(TSynJScriptSyn, nil, HL_JS, FILE_EXTENSIONS_JS, SJSDescription);
-//  Reg(TSynPHPSyn, nil, HL_PHP, FILE_EXTENSIONS_PHP, SPHPDescription, '');
-//  Reg(TSynCssSyn, nil, HL_CSS, FILE_EXTENSIONS_CSS, SCSSDescription);
-//  Reg(TSynDiffSyn, nil, HL_DIFF, FILE_EXTENSIONS_DIFF, SDIFFDescription);
-//  Reg(TSynTeXSyn, nil, HL_TEX, FILE_EXTENSIONS_TEX, STEXDescription);
-//  Reg(TSynUNIXShellScriptSyn, nil, HL_SH, FILE_EXTENSIONS_SH, SSHDescription);
-//  Reg(TSynIniSyn, nil, HL_INI, FILE_EXTENSIONS_INI, SINIDescription, ';');
-//  Reg(TSynLuaSyn, nil, HL_LUA, FILE_EXTENSIONS_LUA, SLUADescription, '--');
-//  //Reg(TSynFacilSyn, nil, 'SynFacilSyn', '', 'Test', ';');
-//    // apply common highlighter attributes
-//
-//
-//{
-//  S := GetApplicationPath;
-//  F := S + LAYOUT_LOG;
-//  if FileExistsUTF8(F) then
-//  begin
-//    SU := TSynUniSyn.Create(Application);
-//    Reg(TSynUniSyn, SU, HL_LOG, 'txt log', SLOGDescription, '', '', '', nil, F);
-//  end;
-//  F := S + LAYOUT_RTF;
-//  if FileExistsUTF8(F) then
-//  begin
-//    SU := TSynUniSyn.Create(Application);
-//    Reg(TSynUniSyn, SU, HL_RTF, FILE_EXTENSIONS_RTF, SRTFDescription, '', '', '', nil, F);
-//  end;
-//  F := S + LAYOUT_RES;
-//  if FileExistsUTF8(F) then
-//  begin
-//    SU := TSynUniSyn.Create(Application);
-//    Reg(TSynUniSyn, SU, HL_RES, FILE_EXTENSIONS_RES, SRESDescription, ';', '', '', nil, F);
-//  end;
-//  F := S + LAYOUT_CS;
-//  if FileExistsUTF8(F) then
-//  begin
-//    SU := TSynUniSyn.Create(Application);
-//    Reg(TSynUniSyn, SU, HL_CS, FILE_EXTENSIONS_CS, SCSDescription, '//', '/*', '*/', nil, F);
-//  end;
-//  F := S + LAYOUT_RUBY;
-//  if FileExistsUTF8(F) then
-//  begin
-//    SU := TSynUniSyn.Create(Application);
-//    Reg(TSynUniSyn, SU, HL_RUBY, FILE_EXTENSIONS_RUBY, SRUBYDescription, '#', '/*', '*/', nil, F);
-//  end;
-//  F := S + LAYOUT_LUA;
-//  if FileExistsUTF8(F) then
-//  begin
-//    SU := TSynUniSyn.Create(Application);
-//    Reg(TSynUniSyn, SU, HL_LUA, FILE_EXTENSIONS_LUA, SLUADescription, '--', '', '', nil, F);
-//  end;
-//}
-//end;
-//
-//{ Initializes extra information related to the built-in highlighters like
-//  folding configuration and devider info. }
-//
-//class procedure TEditorSettingsFactory.InitializeFoldHighlighters(
-//  AHighlighters: THighlighters);
-//var
-//  I  : Integer;
-//  N  : Integer;
-//  FH : TSynCustomFoldHighlighter;
-//begin
-//  FH := TSynCustomFoldHighlighter(AHighlighters.ItemsByName[HL_PAS].SynHighlighter);
-//  for I := Low(EditorOptionsDividerInfoPas) to High(EditorOptionsDividerInfoPas) do
-//  begin
-//    FH.DividerDrawConfig[I].MaxDrawDepth :=
-//      EditorOptionsDividerInfoPas[I].MaxLevel;
-//  end;
-//  for I := Low(EditorOptionsFoldInfoPas) to High(EditorOptionsFoldInfoPas) do
-//  begin
-//    N := EditorOptionsFoldInfoPas[I].Index;
-//    if N >= 0 then
-//      FH.FoldConfig[N].Enabled := EditorOptionsFoldInfoPas[I].Enabled;
-//  end;
-//  FH := TSynCustomFoldHighlighter(AHighlighters.ItemsByName[HL_XML].SynHighlighter);
-//  for I := Low(EditorOptionsFoldInfoXML) to High(EditorOptionsFoldInfoXML) do
-//  begin
-//    N := EditorOptionsFoldInfoXML[I].Index;
-//    if N >= 0 then
-//      FH.FoldConfig[N].Enabled := EditorOptionsFoldInfoXML[I].Enabled;
-//  end;
-//  FH := TSynCustomFoldHighlighter(AHighlighters.ItemsByName[HL_LFM].SynHighlighter);
-//  for I := Low(EditorOptionsFoldInfoLFM) to High(EditorOptionsFoldInfoLFM) do
-//  begin
-//    N := EditorOptionsFoldInfoLFM[I].Index;
-//    if N >= 0 then
-//      FH.FoldConfig[N].Enabled := EditorOptionsFoldInfoLFM[I].Enabled;
-//  end;
-//  FH := TSynCustomFoldHighlighter(AHighlighters.ItemsByName[HL_HTML].SynHighlighter);
-//  for I := Low(EditorOptionsFoldInfoHTML) to High(EditorOptionsFoldInfoHTML) do
-//  begin
-//    N := EditorOptionsFoldInfoHTML[I].Index;
-//    if N >= 0 then
-//      FH.FoldConfig[N].Enabled := EditorOptionsFoldInfoHTML[I].Enabled;
-//  end;
-//  FH := TSynCustomFoldHighlighter(AHighlighters.ItemsByName[HL_DIFF].SynHighlighter);
-//  for I := Low(EditorOptionsFoldInfoDiff) to High(EditorOptionsFoldInfoDiff) do
-//  begin
-//    N := EditorOptionsFoldInfoDiff[I].Index;
-//    if N >= 0 then
-//      FH.FoldConfig[N].Enabled := EditorOptionsFoldInfoDiff[I].Enabled;
-//  end;
-//end;
+procedure TEditorSettingsFactory.RegisterHighlighters(
+  AHighlighters: THighlighters);
+var
+  S    : string;
+  F    : string;
+  //HL : IList<string>;
 
-procedure TEditorSettingsFactory.RegisterClasses;
+  procedure Reg(
+    const ALayoutName     : string = '';
+    const AName           : string = '';
+    const ADescription    : string = '';
+    const AFileExtensions : string = '';
+    const ACodeFormatter  : ICodeFormatter = nil
+  );
+  var
+    LPath : string;
+    LExt  : string;
+  begin
+    LPath := '.\Highlighters';
+    LExt  := '.json';
+    AHighlighters.RegisterHighlighter(
+      Format('%s\%s%s', [LPath, ALayoutName, LExt]),
+      AName,
+      ADescription,
+      AFileExtensions,
+      ACodeFormatter
+    );
+  end;
+
 begin
-//  Classes.RegisterClasses([
-//    TSynPasSyn,
-//    TSynSQLSyn,
-//    TSynXMLSyn,
-//    TSynLFMSyn,
-//    TSynBatSyn,
-//    TSynPoSyn,
-//    TSynCppSyn,
-//    TSynJavaSyn,
-//    TSynPerlSyn,
-//    TSynPythonSyn,
-//    TSynHTMLSyn,
-//    TSynJScriptSyn,
-//    TSynPHPSyn,
-//    TSynCssSyn,
-//    TSynDiffSyn,
-//    TSynTeXSyn,
-//    TSynUNIXShellScriptSyn,
-//    TSynINISyn,
-//    TSynUniSyn,
-//    TSynCustomHighlighter,
-//    TSynLuaSyn
-//    //TSynFacilSyn
-//  ]);
+
+
+
+//  HL := TCollections.CreateList<string>;
+//  HL.AddRange(TDirectory.GetFiles('.\Highlighters', '*.json'));
+//  Reg('ActionScript',
+//  Reg('ASP',
+//  Reg('Assembler - 68HC11',
+//  Reg('AutoIt v3',
+//  Reg('AWK',
+//  Reg('C',
+  Reg('C#',                 HL_CS,   SCSDescription,   FILE_EXTENSIONS_CS);
+  Reg('C++',                HL_CPP,  SCPPDescription,  FILE_EXTENSIONS_CPP);
+//  Reg('CoffeeScript',
+//  Reg('CSS',
+//  Reg('D',
+  Reg('Delphi Form Module', HL_LFM,  SLFMDescription,  FILE_EXTENSIONS_LFM);
+//  Reg('Free Pascal',        HL_PAS,  SPASDescription,  FILE_EXTENSIONS_PAS);
+//  Reg('Go',
+//  Reg('Groovy',
+//  Reg('HTML with Scripts',
+  Reg('INI',                HL_INI,  SINIDescription,  FILE_EXTENSIONS_INI);
+  //Reg('Inno Setup',
+  Reg('Java',               HL_JAVA, SJavaDescription, FILE_EXTENSIONS_JAVA);
+  Reg('JavaScript',         HL_JS,   SJSDescription,   FILE_EXTENSIONS_JS);
+  Reg('JSON',               HL_JSON, SJSONDescription, FILE_EXTENSIONS_JSON);
+//  Reg('LaTex',
+//  Reg('Lisp',
+  Reg('Lua',                HL_LUA,  SLUADescription,  FILE_EXTENSIONS_LUA);
+//  Reg('MATLAB',
+  Reg('MS-DOS Batch',       HL_BAT,  SBATDescription,  FILE_EXTENSIONS_BAT);
+  Reg('Object Pascal',      HL_PAS,  SPASDescription,  FILE_EXTENSIONS_PAS);
+//  Reg('Objective-C',
+//  Reg('OCaml',
+  Reg('Perl',               HL_PERL, SPERLDescription, FILE_EXTENSIONS_PERL);
+  Reg('PHP',                HL_PHP,  SPHPDescription,  FILE_EXTENSIONS_PHP);
+//  Reg('PowerShell',
+  Reg('Python',             HL_PY,   SPYDescription,   FILE_EXTENSIONS_PY);
+  Reg('Ruby',               HL_RUBY, SRUBYDescription, FILE_EXTENSIONS_RUBY);
+//  Reg('Rust',
+//  Reg('Scala',
+//  Reg('SQL - Firebird',
+//  Reg('SQL - Oracle',
+//  Reg('SQL - PostgreSQL',
+//  Reg('SQL - SQLite',
+  Reg('SQL - Standard',    HL_SQL,   SSQLDescription, FILE_EXTENSIONS_SQL);
+//  Reg('SQL - Sybase',
+//  Reg('TclTk',
+  Reg('Text',              HL_TXT,   STXTDescription, FILE_EXTENSIONS_TXT);
+//  Reg('UnrealScript',
+//  Reg('Visual Basic',
+  Reg('XML',               HL_XML,   SXMLDescription, FILE_EXTENSIONS_XML);
+//  Reg('XSL',
+
 end;
 {$ENDREGION}
 
@@ -255,10 +167,9 @@ function TEditorSettingsFactory.CreateInstance(AOwner: TComponent;
 var
   ES : IEditorSettings;
 begin
-  RegisterClasses;
   ES := TEditorSettings.Create(AOwner);
   RegisterToolSettings(ES.ToolSettings);
-//  RegisterHighlighters(ES.Highlighters);
+  RegisterHighlighters(ES.Highlighters);
   if AFileName <> '' then
   begin
     ES.FileName := AFileName;

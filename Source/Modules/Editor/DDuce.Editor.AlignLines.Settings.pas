@@ -21,7 +21,8 @@ unit DDuce.Editor.AlignLines.Settings;
 interface
 
 uses
-  Classes, Forms, Controls,
+  System.Classes,
+  Vcl.Forms, Vcl.Controls,
 
   DDuce.Editor.Types;
 
@@ -29,9 +30,6 @@ const
   DEFAULT_WIDTH = 360;
 
 type
-
-  { TAlignLinesSettings }
-
   TAlignLinesSettings = class(TComponent)
   strict private
     FAlignInParagraphs    : Boolean;
@@ -85,7 +83,7 @@ type
 
 implementation
 
-{$REGION 'construction and destruction'}
+{$REGION 'construction and destruction' /fold}
 procedure TAlignLinesSettings.AfterConstruction;
 begin
   inherited AfterConstruction;
@@ -104,7 +102,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION 'property access mehods'}
+{$REGION 'property access mehods' /fold}
 function TAlignLinesSettings.GetTokens: TStrings;
 begin
   Result := FTokens;
@@ -116,7 +114,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION 'public methods'}
+{$REGION 'public methods' /fold}
 procedure TAlignLinesSettings.AssignTo(Dest: TPersistent);
 var
   ALS: TAlignLinesSettings;

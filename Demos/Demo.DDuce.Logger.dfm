@@ -82,7 +82,7 @@ object frmLogger: TfrmLogger
       Top = 22
       Width = 124
       Height = 25
-      Action = actExitMethod1
+      Action = actLeaveMethod1
       ImageMargins.Left = 2
       TabOrder = 2
     end
@@ -91,7 +91,7 @@ object frmLogger: TfrmLogger
       Top = 53
       Width = 124
       Height = 25
-      Action = actExitMethod2
+      Action = actLeaveMethod2
       ImageMargins.Left = 2
       TabOrder = 3
     end
@@ -211,20 +211,20 @@ object frmLogger: TfrmLogger
       ImageIndex = 52
       OnExecute = actEnterMethod1Execute
     end
-    object actExitMethod1: TAction
-      Caption = 'Exit Method1'
+    object actLeaveMethod1: TAction
+      Caption = 'Leave Method1'
       ImageIndex = 46
-      OnExecute = actExitMethod1Execute
+      OnExecute = actLeaveMethod1Execute
     end
     object actEnterMethod2: TAction
       Caption = 'Enter Method2'
       ImageIndex = 52
       OnExecute = actEnterMethod2Execute
     end
-    object actExitMethod2: TAction
-      Caption = 'Exit Method2'
+    object actLeaveMethod2: TAction
+      Caption = 'Leave Method2'
       ImageIndex = 46
-      OnExecute = actExitMethod2Execute
+      OnExecute = actLeaveMethod2Execute
     end
     object actSendError: TAction
       Caption = 'Send Error'

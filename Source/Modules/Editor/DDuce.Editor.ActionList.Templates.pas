@@ -21,149 +21,101 @@ unit DDuce.Editor.ActionList.Templates;
 interface
 
 uses
-  System.Classes, System.SysUtils, System.Actions,
+  System.Classes, System.SysUtils, System.Actions, System.Rtti,
   Vcl.ActnList,
+
+  BCEditor.Editor.KeyCommands,
 
   Spring.Collections,
 
-  DSharp.Core.DataTemplates, DSharp.Windows.ColumnDefinitions.ControlTemplate;
+  DSharp.Windows.ColumnDefinitions,
+  DSharp.Core.DataTemplates, DSharp.Windows.ControlTemplates,
+  DSharp.Windows.ColumnDefinitions.ControlTemplate;
 
+{$REGION 'TActionListTemplate'}
 type
-
-  { TActionTemplate }
-
-  TActionTemplate = class(TColumnDefinitionsControlTemplate)
-    function GetItemTemplate(const Item: TObject): IDataTemplate; override;
-    function GetTemplateDataClass: TClass; override;
-
-    function GetText(const Item: TObject; const ColumnIndex: Integer): string;
-      override;
+  TActionListTemplate = class(TColumnDefinitionsControlTemplate)
+    function GetValue(
+      const Item        : TObject;
+      const ColumnIndex : Integer
+    ) : TValue; override;
   end;
+{$ENDREGION}
 
-  { TActionCategoryTemplate }
 
-  TActionCategoryTemplate = class(TColumnDefinitionsControlTemplate)
-  private
-    FActionTemplate : IDataTemplate;
-
-  public
-    function GetItemTemplate(const Item: TObject): IDataTemplate; override;
-    function GetTemplateDataClass: TClass; override;
-
-    function GetItemCount(const Item: TObject): Integer; override;
-    function GetItems(const Item: TObject): IObjectList; override;
-    function GetItem(const Item: TObject; const Index: Integer): TObject;
-       override;
-
-    function GetText(const Item: TObject; const ColumnIndex: Integer): string;
-      override;
-
-    procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
+{$REGION 'TKeyStrokeTemplate'}
+type
+  TKeyCommandTemplate = class(TColumnDefinitionsControlTemplate)
+    function GetValue(
+      const Item        : TObject;
+      const ColumnIndex : Integer
+    ) : TValue; override;
   end;
+{$ENDREGION}
+
+resourcestring
+  SName       = 'Name';
+  SCategory   = 'Category';
+  SCaption    = 'Caption';
+  SShortcut   = 'Shortcut';
+  SShortcut2  = 'Shortcut2';
+  SHint       = 'Hint';
+  SVisible    = 'Visible';
+  SEnabled    = 'Enabled';
+  SCommand    = 'Command';
+  SButton     = 'Button';
+  SShift      = 'Shift';
+  SShiftMask  = 'ShiftMask';
+  SMoveCaret  = 'MoveCaret';
 
 implementation
 
-{$REGION 'TActionTemplate'}
-function TActionTemplate.GetItemTemplate(const Item: TObject): IDataTemplate;
-begin
-  if Item is TContainedAction then
-    Result := Self
-  else
-    Result := inherited GetItemTemplate(Item);
-end;
+uses
+  Vcl.Menus;
 
-function TActionTemplate.GetTemplateDataClass: TClass;
+{$REGION 'TActionListTemplate'}
+function TActionListTemplate.GetValue(const Item: TObject;
+  const ColumnIndex: Integer): TValue;
+var
+  CA: TContainedAction;
+  CD: TColumnDefinition;
 begin
-  Result := TContainedAction;
-end;
-
-function TActionTemplate.GetText(const Item: TObject;
-  const ColumnIndex: Integer): string;
-begin
-  if Item is TContainedAction then
-  begin
-    if ColumnIndex = 1 then
-      Result := (Item as TAction).Caption;
-  end
+  CA := Item as TContainedAction;
+  CD := TColumnDefinition(ColumnDefinitions[ColumnIndex]);
+  if CD.Caption = SShortcut then
+    Result := ShortCutToText(CA.Shortcut)
   else
-    Result := inherited GetText(Item, ColumnIndex);
+    Result := inherited GetValue(Item, ColumnIndex);
 end;
 {$ENDREGION}
 
-{$REGION 'TActionCategoryTemplate'}
-function TActionCategoryTemplate.GetItemTemplate(
-  const Item: TObject): IDataTemplate;
+{$REGION 'TKeyCommandTemplate'}
+function TKeyCommandTemplate.GetValue(const Item: TObject;
+  const ColumnIndex: Integer): TValue;
+var
+  KC: TBCEditorKeyCommand;
+  CD: TColumnDefinition;
+  S : string;
 begin
-//  if Item is IObjectList then
-//    Result := Self
-//  else
-//    Result := inherited GetItemTemplate(Item);
-end;
-
-function TActionCategoryTemplate.GetTemplateDataClass: TClass;
-begin
-  //Result := TObjectList;
-end;
-
-function TActionCategoryTemplate.GetItemCount(const Item: TObject): Integer;
-begin
-//  if Item is TObjectList then
-//  begin
-//    Result := 1;
-//  end
-//  else
-//    Result := inherited GetItemCount(Item);
-end;
-
-function TActionCategoryTemplate.GetItems(const Item: TObject): IObjectList;
-begin
-//  if Item is TObjectList then
-//  begin
-//    Result := Item as TObjectList;
-//  end
-//  else
-    Result := inherited GetItems(Item);
-end;
-
-function TActionCategoryTemplate.GetItem(const Item: TObject;
-  const Index: Integer): TObject;
-begin
-//  if Item is TObjectList then
-//  begin
-//    Result := Item;
-//  end
-//  else
-    Result := inherited GetItem(Item, Index);
-end;
-
-function TActionCategoryTemplate.GetText(const Item: TObject;
-  const ColumnIndex: Integer): string;
-begin
-  if Item is TContainedAction then
+  KC := Item as TBCEditorKeyCommand;
+  CD := TColumnDefinition(ColumnDefinitions[ColumnIndex]);
+  if CD.Caption = SCommand then
   begin
-    if ColumnIndex = 0 then
-      Result := 'Actions'
-    else
-      Result := '';
+    if not EditorCommandToIdent(KC.Command, S) then
+      S := IntToStr(KC.Command);
+    Result := S;
+  end
+  else if CD.Caption = SShortcut then
+  begin
+     Result := ShortCutToText(KC.ShortCut);
+  end
+  else if CD.Caption = SShortcut2 then
+  begin
+    Result := ShortCutToText(KC.SecondaryShortCut);
   end
   else
-    Result := inherited GetText(Item, ColumnIndex);
-end;
-
-procedure TActionCategoryTemplate.AfterConstruction;
-begin
-  inherited AfterConstruction;
-  FActionTemplate := TActionTemplate.Create(FColumnDefinitions);
-  RegisterDataTemplate(FActionTemplate);
-end;
-
-procedure TActionCategoryTemplate.BeforeDestruction;
-begin
-  FActionTemplate := nil;
-  inherited BeforeDestruction;
+    Result := inherited GetValue(Item, ColumnIndex);
 end;
 {$ENDREGION}
 
 end.
-

@@ -60,13 +60,13 @@ uses
   System.Classes, System.SysUtils,
   Vcl.Graphics, Vcl.ActnList,
 
-  //ts.Core.FormSettings,
-
   Spring,
 
-  DDuce.Editor.Interfaces, DDuce.Editor.Highlighters, DDuce.Editor.HighlighterAttributes,
-  DDuce.Editor.Colors.Settings, DDuce.Editor.Tools.Settings,
-  DDuce.Editor.Options.Settings,
+  DDuce.FormSettings,
+
+  DDuce.Editor.Interfaces, DDuce.Editor.Highlighters,
+  DDuce.Editor.Tools.Settings, DDuce.Editor.HighlighterAttributes,
+  DDuce.Editor.Colors.Settings, DDuce.Editor.Options.Settings,
 
   DDuce.Editor.CodeTags, DDuce.Logger;
 
@@ -81,8 +81,6 @@ const
   DEFAULT_SETTINGS_FILE               = 'settings.xml';
 
 type
-  { TEditorSettings }
-
   TEditorSettings = class(TComponent, IEditorSettings)
     procedure FEditorOptionsChanged(Sender: TObject);
   private
@@ -97,7 +95,7 @@ type
     FLanguageCode             : string;
     FHighlighters             : THighLighters;
     FDimInactiveView          : Boolean;
-    //FFormSettings             : TFormSettings;
+    FFormSettings             : TFormSettings;
     FEditorFont               : TFont;
     FHighlighterAttributes    : THighlighterAttributes;
     FColors                   : TEditorColorSettings;
@@ -117,7 +115,7 @@ type
     function GetDimInactiveView: Boolean;
     function GetEditorFont: TFont;
     function GetFileName: string;
-//    function GetFormSettings: TFormSettings;
+    function GetFormSettings: TFormSettings;
     function GetHighlighterAttributes: THighlighterAttributes;
     function GetHighlighters: THighlighters;
     function GetHighlighterType: string;
@@ -135,7 +133,7 @@ type
     procedure SetDimInactiveView(const AValue: Boolean);
     procedure SetEditorFont(AValue: TFont);
     procedure SetFileName(const AValue: string);
-//    procedure SetFormSettings(const AValue: TFormSettings);
+    procedure SetFormSettings(const AValue: TFormSettings);
     procedure SetHighlighterAttributes(AValue: THighlighterAttributes);
     procedure SetHighlighters(const AValue: THighlighters);
     procedure SetHighlighterType(const AValue: string);
@@ -159,9 +157,6 @@ type
     procedure Apply; // to manually force a notification
     procedure Load; virtual;
     procedure Save; virtual;
-
-    procedure AddEditorSettingsChangedHandler(AEvent: TNotifyEvent);
-    procedure RemoveEditorSettingsChangedHandler(AEvent: TNotifyEvent);
 
     property FileName: string
       read GetFileName write SetFileName;
@@ -211,8 +206,8 @@ type
     property CloseWithESC: Boolean
       read GetCloseWithESC write SetCloseWithESC default False;
 
-//    property FormSettings: TFormSettings
-//      read GetFormSettings write SetFormSettings;
+    property FormSettings: TFormSettings
+      read GetFormSettings write SetFormSettings;
 
     property EditorFont: TFont
       read GetEditorFont write SetEditorFont;
@@ -241,9 +236,8 @@ uses
 procedure TEditorSettings.AfterConstruction;
 begin
   inherited AfterConstruction;
-//  FChangedEventList := TMethodList.Create;
-//  FFormSettings := TFormSettings.Create;
-//  FFormSettings.OnChanged := FFormSettingsChanged;
+  FFormSettings := TFormSettings.Create;
+  FFormSettings.OnChanged := FFormSettingsChanged;
   FColors := TEditorColorSettings.Create;
   FColors.OnChanged := FColorsChanged;
   FEditorOptions := TEditorOptionsSettings.Create;
@@ -276,7 +270,7 @@ begin
   FToolSettings.Free;
   FColors.Free;
   FEditorOptions.Free;
-//  FFormSettings.Free;
+  FFormSettings.Free;
   FHighlighters.Free;
   FEditorFont.Free;
   FHighlighterAttributes.Free;
@@ -405,16 +399,16 @@ begin
   end;
 end;
 
-//function TEditorSettings.GetFormSettings: TFormSettings;
-//begin
-//  Result := FFormSettings;
-//end;
+function TEditorSettings.GetFormSettings: TFormSettings;
+begin
+  Result := FFormSettings;
+end;
 
-//procedure TEditorSettings.SetFormSettings(const AValue: TFormSettings);
-//begin
-//  FFormSettings.Assign(AValue);
-//  Changed;
-//end;
+procedure TEditorSettings.SetFormSettings(const AValue: TFormSettings);
+begin
+  FFormSettings.Assign(AValue);
+  Changed;
+end;
 
 function TEditorSettings.GetHighlighterAttributes: THighlighterAttributes;
 begin
@@ -564,7 +558,7 @@ end;
 
 procedure TEditorSettings.Changed;
 begin
-//  FChangedEventList.CallNotifyEvents(Self);
+  OnChanged.Invoke(Self);
 end;
 {$ENDREGION}
 
@@ -626,16 +620,6 @@ end;
 procedure TEditorSettings.Apply;
 begin
   Changed;
-end;
-
-procedure TEditorSettings.AddEditorSettingsChangedHandler(AEvent: TNotifyEvent);
-begin
-  //FChangedEventList.Add(TMethod(AEvent));
-end;
-
-procedure TEditorSettings.RemoveEditorSettingsChangedHandler(AEvent: TNotifyEvent);
-begin
-  //FChangedEventList.Remove(TMethod(AEvent));
 end;
 
 { TODO -oTS : Refactor this }

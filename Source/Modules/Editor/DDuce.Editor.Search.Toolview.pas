@@ -40,6 +40,8 @@ uses
   DSharp.Core.DataTemplates, DSharp.Windows.TreeViewPresenter,
   DSharp.Windows.ColumnDefinitions.ControlTemplate,
 
+  BCEditor.Types,
+
   DDuce.Editor.ToolView.Base, DDuce.Editor.Interfaces, DDuce.Editor.Types,
 
   DDuce.Logger;
@@ -113,9 +115,9 @@ type
     );
 
     function GetSearchEngine: IEditorSearchEngine;
-    //function GetOptions: TSynSearchOptions;
+    function GetOptions: TBCEditorSearchOptions;
     function GetSearchText: string;
-    //procedure SetOptions(AValue: TSynSearchOptions);
+    procedure SetOptions(AValue: TBCEditorSearchOptions);
     procedure SetSearchText(const AValue: string);
     function GetReplaceText: string;
     procedure SetReplaceText(const AValue: string);
@@ -135,8 +137,8 @@ type
     procedure UpdateActions; override;
     procedure UpdateView; override;
 
-//    property Options : TSynSearchOptions
-//      read GetOptions write SetOptions;
+    property Options : TBCEditorSearchOptions
+      read GetOptions write SetOptions;
 
     property SearchText : string
       read GetSearchText write SetSearchText;
@@ -154,8 +156,7 @@ uses
 
   Spring.Collections,
 
-  DDuce.Components.Factories,
-  DDuce.Editor.Utils,
+  DDuce.Components.Factories, DDuce.Factories,
 
   DDuce.Editor.Search.Engine, DDuce.Editor.Search.Data,
   DDuce.Editor.Search.Templates;
@@ -169,7 +170,7 @@ resourcestring
 procedure TfrmSearchForm.AfterConstruction;
 begin
   inherited AfterConstruction;
-  //FVST := VST.Create(Self, pnlResultList);
+  FVST := TFactories.CreateVirtualStringTree(Self, pnlResultList);
   FVST.TreeOptions.AutoOptions :=
     FVST.TreeOptions.AutoOptions + [toAutoSpanColumns] ;
   FVST.Header.MainColumn := 1;
@@ -186,9 +187,9 @@ begin
   cbxSearchText.Text  := '';
   cbxReplaceWith.Text := '';
 
-//  SearchEngine. AddOnExecuteHandler(SearchEngineExecute);
-//  SearchEngine.AddOnChangeHandler(SearchEngineChange);
-//  Manager.Events.AddOnActionExecuteEvent(ActionExecute);
+  SearchEngine.OnExecute.Add(SearchEngineExecute);
+  SearchEngine.OnChange.Add(SearchEngineChange);
+  Manager.Events.OnActionExecute.Add(ActionExecute);
 end;
 {$ENDREGION}
 
@@ -198,45 +199,45 @@ begin
   Result := Owner as IEditorSearchEngine;
 end;
 
-//function TfrmSearchForm.GetOptions: TSynSearchOptions;
-//begin
-//  Result := [];
-//  if chkCaseSensitive.Checked then
-//    Include(Result, ssoMatchCase);
-//  if chkWholeWordsOnly.Checked then
-//    Include(Result, ssoWholeWord);
+function TfrmSearchForm.GetOptions: TBCEditorSearchOptions;
+begin
+  Result := [];
+  if chkCaseSensitive.Checked then
+    Include(Result, soCaseSensitive);
+  if chkWholeWordsOnly.Checked then
+    Include(Result, soWholeWordsOnly);
 //  if chkRegularExpressions.Checked then
-//    Include(Result, ssoRegExpr);
+//    Include(Result, soRegExpr);
 //  if chkMultiLine.Checked then
-//    Include(Result, ssoRegExprMultiLine);
-//  if rbEntireScope.Checked then
-//    Include(Result, ssoEntireScope);
-//  if rbSelection.Checked then
-//    Include(Result, ssoSelectedOnly);
-//  if rbBackward.Checked then
-//    Include(Result, ssoBackwards);
-//end;
-//
-//procedure TfrmSearchForm.SetOptions(AValue: TSynSearchOptions);
-//begin
-//  chkCaseSensitive.Checked      := ssoMatchCase in AValue;
-//  chkWholeWordsOnly.Checked     := ssoWholeWord in AValue;
-//  chkRegularExpressions.Checked := ssoRegExpr in AValue;
-//  chkMultiLine.Checked          := ssoRegExprMultiLine in AValue;
-//
-//  if ssoEntireScope in AValue then
-//    rbEntireScope.Checked := True
-//  else
-//    rbFromCursor.Checked  := True;
-//  if ssoSelectedOnly in AValue then
-//    rbSelection.Checked := True
-//  else
-//    rbActiveView.Checked   := True;
-//  if ssoBackwards in AValue then
-//    rbBackward.Checked := True
-//  else
-//    rbForward.Checked  := True;
-//end;
+//    Include(Result, soRegExprMultiLine);
+  if rbEntireScope.Checked then
+    Include(Result, soEntireScope);
+  if rbSelection.Checked then
+    Include(Result, soSelectedOnly);
+  if rbBackward.Checked then
+    Include(Result, soBackwards);
+end;
+
+procedure TfrmSearchForm.SetOptions(AValue: TBCEditorSearchOptions);
+begin
+  chkCaseSensitive.Checked      := soCaseSensitive in AValue;
+  chkWholeWordsOnly.Checked     := soWholeWordsOnly in AValue;
+//  chkRegularExpressions.Checked := soRegExpr in AValue;
+//  chkMultiLine.Checked          := soRegExprMultiLine in AValue;
+
+  if soEntireScope in AValue then
+    rbEntireScope.Checked := True
+  else
+    rbFromCursor.Checked  := True;
+  if soSelectedOnly in AValue then
+    rbSelection.Checked := True
+  else
+    rbActiveView.Checked   := True;
+  if soBackwards in AValue then
+    rbBackward.Checked := True
+  else
+    rbForward.Checked  := True;
+end;
 
 function TfrmSearchForm.GetSearchText: string;
 begin
@@ -322,13 +323,10 @@ end;
 
 procedure TfrmSearchForm.FormShow(Sender: TObject);
 begin
-  //Options := SearchEngine.Options;
+  Options := SearchEngine.Options;
   rbAllViews.Checked  := SearchEngine.SearchAllViews;
   cbxSearchText.Text  := SearchEngine.SearchText;
   cbxReplaceWith.Text := SearchEngine.ReplaceText;
-  {$IFDEF DARWIN}//THE FORM IN MACOS HAVE SOME PROBLEMS WITH FOCUS, THIS IS TEMPORARY FIX
-  cbxSearchText.setFocus;
-  {$ENDIF}
 end;
 
 procedure TfrmSearchForm.rbBackwardChange(Sender: TObject);
@@ -383,7 +381,7 @@ begin
     begin
       pnlStatus.Font.Color := clGreen;
       FVST.SetFocus;
-      //FTVP.SelectedItem := FTVP.ItemsSource[0];
+      FTVP.SelectedItem := FTVP.View.ItemsSource[0];
     end
     else
     begin
@@ -398,12 +396,12 @@ procedure TfrmSearchForm.SearchEngineChange(Sender: TObject);
 begin
   SearchText  := SearchEngine.SearchText;
   ReplaceText := SearchEngine.ReplaceText;
-//  if Assigned(FTVP.CurrentItem)
-//    and (TSearchResult(FTVP.CurrentItem).Index <> SearchEngine.CurrentIndex + 1)
-//    then
-//  begin
-//    FTVP.CurrentItem := SearchEngine.ItemList[SearchEngine.CurrentIndex];
-//  end;
+  if Assigned(FTVP.View.CurrentItem)
+    and (TSearchResult(FTVP.View.CurrentItem).Index <> SearchEngine.CurrentIndex + 1)
+    then
+  begin
+    FTVP.View.CurrentItem := SearchEngine.ItemList[SearchEngine.CurrentIndex];
+  end;
 end;
 
 procedure TfrmSearchForm.ActionExecute(Sender: TObject; AAction: TBasicAction;
@@ -419,7 +417,7 @@ begin
   SearchEngine.SearchText := cbxSearchText.Text;
   //cbxSearchText.AddHistoryItem(SearchText, 30, True, True);
   SearchEngine.SearchAllViews := rbAllViews.Checked;
-  //SearchEngine.Options        := Options;
+  SearchEngine.Options        := Options;
 //  Logger.Send(
 //    'SearchOptions',
 //    SetToString(TypeInfo(TSynSearchOptions),
@@ -444,7 +442,7 @@ end;
 procedure TfrmSearchForm.SettingsChanged;
 begin
   inherited SettingsChanged;
-//  Options            := SearchEngine.Options;
+  Options            := SearchEngine.Options;
   rbAllViews.Checked := SearchEngine.SearchAllViews;
 end;
 
@@ -456,36 +454,36 @@ var
   SRL : TSearchResultLine;
   SRG : TSearchResultGroup;
 begin
-//  if FTVP.CurrentItem is TSearchResult then
-//  begin
-//    SR := FTVP.CurrentItem as TSearchResult;
-//    Manager.ActivateView(SR.ViewName);
+  if FTVP.View.CurrentItem is TSearchResult then
+  begin
+    SR := FTVP.View.CurrentItem as TSearchResult;
+    Manager.ActivateView(SR.ViewName);
 //    View.SelStart := SR.StartPos;
 //    View.SelEnd   := PointToPos(View.Lines, SR.BlockEnd);
-//    Modified;
-//    SearchEngine.CurrentIndex := SearchEngine.ItemList.IndexOf(SR);
-//  end
-//  else if FTVP.CurrentItem is TSearchResultLine then
-//  begin
-//    SRL := FTVP.CurrentItem as TSearchResultLine;
-//    SR  := SRL.List[0] as TSearchResult;
-//    Manager.ActivateView(SR.ViewName);
+    Modified;
+    SearchEngine.CurrentIndex := SearchEngine.ItemList.IndexOf(SR);
+  end
+  else if FTVP.View.CurrentItem is TSearchResultLine then
+  begin
+    SRL := FTVP.View.CurrentItem as TSearchResultLine;
+    SR  := SRL.List[0] as TSearchResult;
+    Manager.ActivateView(SR.ViewName);
+    View.SelStart := SR.StartPos;
+    //View.SelEnd   := PointToPos(View.Lines, SR.BlockEnd);
+    Modified;
+    SearchEngine.CurrentIndex := SearchEngine.ItemList.IndexOf(SR);
+  end
+  else if FTVP.View.CurrentItem is TSearchResultGroup then
+  begin
+    SRG := (FTVP.View.CurrentItem as TSearchResultGroup);
+    SRL := SRG.Lines[0] as TSearchResultLine;
+    SR  := SRL.List[0] as TSearchResult;
+    Manager.ActivateView(SRG.ViewName);
 //    View.SelStart := SR.StartPos;
 //    View.SelEnd   := PointToPos(View.Lines, SR.BlockEnd);
-//    Modified;
-//    SearchEngine.CurrentIndex := SearchEngine.ItemList.IndexOf(SR);
-//  end
-//  else if FTVP.CurrentItem is TSearchResultGroup then
-//  begin
-//    SRG := (FTVP.CurrentItem as TSearchResultGroup);
-//    SRL := SRG.Lines[0] as TSearchResultLine;
-//    SR  := SRL.List[0] as TSearchResult;
-//    Manager.ActivateView(SRG.ViewName);
-//    View.SelStart := SR.StartPos;
-//    View.SelEnd   := PointToPos(View.Lines, SR.BlockEnd);
-//    Modified;
-//    SearchEngine.CurrentIndex := SearchEngine.ItemList.IndexOf(SR);
-//  end;
+    Modified;
+    SearchEngine.CurrentIndex := SearchEngine.ItemList.IndexOf(SR);
+  end;
 end;
 
 procedure TfrmSearchForm.UpdateActions;
@@ -505,22 +503,20 @@ begin
   grpDirection.Visible := B;
   if Update then
   begin
-//    SearchEngine.ReplaceText := ReplaceText;
-//    if (SearchEngine.SearchText <> SearchText)
-//      or (SearchEngine.Options <> Options) then
-//    begin
-//      SearchEngine.Options    := Options;
-//      SearchEngine.SearchText := SearchText;
-//      pnlStatus.Caption       := '';
-//      Manager.ClearHighlightSearch;
-//      SearchEngine.ItemGroups.Clear;
-//      SearchEngine.ItemList.Clear;
-//      FTVP.Refresh;
-//    end;
+    SearchEngine.ReplaceText := ReplaceText;
+    if (SearchEngine.SearchText <> SearchText)
+      or (SearchEngine.Options <> Options) then
+    begin
+      SearchEngine.Options    := Options;
+      SearchEngine.SearchText := SearchText;
+      pnlStatus.Caption       := '';
+      Manager.ClearHighlightSearch;
+      SearchEngine.ItemGroups.Clear;
+      SearchEngine.ItemList.Clear;
+      FTVP.Refresh;
+    end;
     Updated;
   end;
-
-  //imgF2Key.Visible := GetFirstParentForm(Screen.ActiveControl) = Self;
 end;
 {$ENDREGION}
 

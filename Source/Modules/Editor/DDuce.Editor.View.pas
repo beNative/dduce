@@ -32,17 +32,11 @@ Features:
   - file monitor function to watch for external file changes.
 
 TODO:
-  - remove bookmark images
-  - macrorecorder
-  - template editor
   - configurable page setup and printing with preview
-  - quickbuttons (like the Delphi version had)
-  - URI opener, to open hyperlinks directly from the editor
   - customizable keystroke-function mappings
   - configurable code completion proposal
   - convert to another encoding (partially implemented)
   - find a way to fold particular sections (now only levels are supported)
-  - send to mail action
 
   DEPENDENCIES:
   - BCEditor-
@@ -51,6 +45,7 @@ TODO:
 
 interface
 uses
+  Winapi.Messages,
   System.Classes, System.SysUtils, System.Types, System.ImageList,
   Vcl.Controls, Vcl.Forms, Vcl.Graphics, Vcl.Menus, Vcl.Dialogs, Vcl.StdCtrls,
   Vcl.ImgList,
@@ -65,19 +60,11 @@ uses
 
 type
   TEditorView = class(TForm, IEditorView, IEditorSelection)
-    procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
-
+    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
   strict private
     procedure EditorChangeUpdating(
       ASender    : TObject;
       AUpdating  : Boolean
-    );
-
-    procedure EditorSpecialLineColors(
-          Sender  : TObject;
-          Line    : Integer;
-      var Special : Boolean;
-      var FG, BG  : TColor
     );
     procedure EditorChange(Sender: TObject);
     procedure EditorClickLink(
@@ -161,6 +148,7 @@ type
     function GetFoldLevel: Integer;
     function GetForm: TCustomForm;
     function GetHighlighterItem: THighlighterItem;
+    function GetHighlighter: TBCEditorHighlighter;
     function GetLineBreakStyle: string;
     function GetLines: TStrings; virtual;
     function GetLinesInWindow: Integer;
@@ -210,7 +198,6 @@ type
     procedure SetOnChange(const AValue: TNotifyEvent);
     procedure SetOnDropFiles(const AValue: TBCEditorDropFilesEvent);
 //    procedure SetOnStatusChange(const AValue: TStatusChangeEvent);
-
     procedure SetPopupMenu(AValue: TPopupMenu);
 //    procedure SetSearchOptions(AValue: TSynSearchOptions);
     procedure SetSearchText(const Value: string); virtual;
@@ -225,12 +212,9 @@ type
 
     procedure InitializeEditor(AEditor: TBCEditor);
     procedure EditorSettingsChanged(ASender: TObject);
-    function GetHighlighter: TBCEditorHighlighter;
-    procedure SetHighlighter(const Value: TBCEditorHighlighter);
-
 
   strict protected
-  procedure SetParent(Value: TWinControl);
+    procedure SetParent(Value: TWinControl);
 
     procedure BeginUpdate;
     procedure EndUpdate;
@@ -411,7 +395,7 @@ type
       read GetReplaceHistory;
 
     property Highlighter: TBCEditorHighlighter
-      read GetHighlighter write SetHighlighter;
+      read GetHighlighter;
 
     property HighlighterName: string
       read GetHighlighterName write SetHighlighterName;
@@ -426,6 +410,7 @@ type
     property Lines: TStrings
       read GetLines;
 
+    { Not yet supported. }
     property MonitorChanges: Boolean
       read GetMonitorChanges write SetMonitorChanges;
 
@@ -486,10 +471,6 @@ procedure TEditorView.AfterConstruction;
 begin
   inherited AfterConstruction;
   FEditor             := TBCEditor.Create(Self);
-
-//  FSynSelection       := TSynEditSelection.Create(E.ViewedTextBuffer, True);
-//  FSynSelection.Caret := E.Caret;
-
 //  FSelection := TEditorSelection.Create(Self);
 
   FFindHistory            := TStringList.Create;
@@ -508,19 +489,16 @@ begin
 //  FDirectoryWatch          := TDirectoryWatch.Create;
 //  FDirectoryWatch.OnNotify := DirectoryWatchNotify;
   // TEST
-  MonitorChanges := True;
-  //Settings.AddEditorSettingsChangedHandler(EditorSettingsChanged);
+  //MonitorChanges := True;
+  Settings.OnChanged.Add(EditorSettingsChanged);
   ApplySettings;
 end;
 
 procedure TEditorView.BeforeDestruction;
 begin
-//  FHighlighter := nil;
 //  FSelection   := nil;
-//  if Assigned(Settings) then
-//    Settings.RemoveEditorSettingsChangedHandler(EditorSettingsChanged);
-//  DisableAutoSizing;
-//  FreeAndNil(FSynSelection);
+  if Assigned(Settings) then
+    Settings.OnChanged.Remove(EditorSettingsChanged);
   FreeAndNil(FReplaceHistory);
   FreeAndNil(FFindHistory);
   inherited BeforeDestruction;
@@ -528,14 +506,6 @@ end;
 {$ENDREGION}
 
 {$REGION'event handlers'}
-procedure TEditorView.FormDropFiles(Sender: TObject;
-  const FileNames: array of string);
-begin
-//  if Assigned(OnDropFiles) then
-//    OnDropFiles(Self, FileNames);
-  Events.DoChange;
-end;
-
 procedure TEditorView.EditorChangeUpdating(ASender: TObject;
   AUpdating: Boolean);
 begin
@@ -708,7 +678,7 @@ begin
   if AValue <> FoldLevel then
   begin
     FFoldLevel := AValue;
-    //Editor.FoldAll(FFoldLevel, True);
+    Editor.CodeFoldingCollapseLevel(AValue);
     Events.DoModified;
   end;
 end;
@@ -767,17 +737,12 @@ end;
 
 function TEditorView.GetHighlighter: TBCEditorHighlighter;
 begin
-//
+  Result := Editor.Highlighter;
 end;
 
 function TEditorView.GetHighlighterName: string;
 begin
   Result := Editor.Highlighter.Name;
-end;
-
-procedure TEditorView.SetHighlighter(const Value: TBCEditorHighlighter);
-begin
-//
 end;
 
 procedure TEditorView.SetHighlighterName(AValue: string);
@@ -894,13 +859,14 @@ begin
 //  Editor.LineText := AValue;
 end;
 
+{ Not yet supported. }
+
 function TEditorView.GetMonitorChanges: Boolean;
 begin
-//  Result := FDirectoryWatch.Running;
-
   Result := False;
-
 end;
+
+{ Not yet supported. }
 
 procedure TEditorView.SetMonitorChanges(const AValue: Boolean);
 begin
@@ -1006,6 +972,7 @@ end;
 
 function TEditorView.GetSelEnd: Integer;
 begin
+
   //Result := Editor.SelectionEndPosition SelEnd;
 end;
 
@@ -1062,9 +1029,8 @@ begin
     FHighlighterItem := AValue;
     if Assigned(AValue) then
     begin
-      //AValue.Reload;
+      Editor.Highlighter.LoadFromFile(AValue.LayoutFileName);
       Settings.HighlighterType := FHighlighterItem.Highlighter;
-      //Highlighter := AValue.SynHighlighter;
       Actions.UpdateHighLighterActions;
     end;
     Events.DoHighlighterChange;
@@ -1233,9 +1199,10 @@ end;
 
 procedure TEditorView.ApplySettings;
 begin
-  //Editor.LineSpacing.Rule.
-  Editor.Tabs.WantTabs := Settings.EditorOptions.WantTabs;
-  Editor.Tabs.Width    := Settings.EditorOptions.TabWidth;
+  Editor.Tabs.WantTabs        := Settings.EditorOptions.WantTabs;
+  Editor.Tabs.Width           := Settings.EditorOptions.TabWidth;
+  Editor.WordWrap.Enabled     := Settings.EditorOptions.WordWrapEnabled;
+  Editor.SpecialChars.Visible := Settings.EditorOptions.ShowSpecialCharacters;
 
   if Settings.EditorOptions.TabsToSpaces then
     Editor.Tabs.Options := Editor.Tabs.Options + [toTabsToSpaces]
@@ -1262,28 +1229,16 @@ begin
   else
     Editor.Options := Editor.Options - [eoTrimTrailingSpaces];
 
-  Editor.RightMargin.Visible := Settings.EditorOptions.ShowRightEdge;
+  Editor.RightMargin.Visible  := Settings.EditorOptions.ShowRightEdge;
+  Editor.RightMargin.Position := Settings.EditorOptions.RightEdge;
 
+  //EditorFont.Assign(Settings.EditorFont);
 
-
-//  if Settings.EditorOptions.BlockTabIndent then
-
-
-
-
-  //
-
-
-
-
-//  EditorFont                   := Settings.EditorFont;
-//  ShowSpecialChars             := Settings.EditorOptions.ShowSpecialCharacters;
 //  Editor.ExtraLineSpacing      := Settings.EditorOptions.ExtraLineSpacing;
 //  Editor.ExtraCharSpacing      := Settings.EditorOptions.ExtraCharSpacing;
 //  Editor.BracketHighlightStyle := Settings.EditorOptions.BracketHighlightStyle;
 //  Editor.BlockTabIndent        := Settings.EditorOptions.BlockTabIndent;
 //  Editor.BlockIndent           := Settings.EditorOptions.BlockIndent;
-//  Editor.RightEdge             := Settings.EditorOptions.RightEdge;
 
 
 //
@@ -1418,35 +1373,6 @@ begin
   AEditor.URIOpener := True;
   AEditor.Font.Size := 11;
 
-
-//  with AEditor.Gutter.LineNumberPart do
-//  begin
-//    Width := 15;
-//    MarkupInfo.Background := clNone;
-//    MarkupInfo.Foreground := clGray;
-//    MarkupInfo.StyleMask := [fsBold];
-//    DigitCount := 2;
-//    ShowOnlyLineNumbersMultiplesOf := 10;
-//    ZeroStart := False;
-//    LeadingZeros := False;
-//  end;
-//  with AEditor.Gutter.ChangesPart do
-//  begin
-//    Width := 4;
-//    ModifiedColor := 59900;
-//    SavedColor := clGreen;
-//  end;
-//  with AEditor.Gutter.CodeFoldPart do
-//  begin
-//    MarkupInfo.Background := clNone;
-//    MarkupInfo.Foreground := clMedGray;
-//  end;
-//  with AEditor.Gutter.MarksPart do
-//  begin
-//    Width := 1;
-//    Visible := True;
-//  end;
-//
 //  AEditor.Options := [
 //    eoAltSetsColumnMode,
 //    eoAutoIndent,        // Will indent the caret on new lines with the same amount of leading white space as the preceding line
@@ -1501,14 +1427,6 @@ procedure TEditorView.EditorSettingsChanged(ASender: TObject);
 begin
   FUpdate := True;
 end;
-procedure TEditorView.EditorSpecialLineColors(Sender: TObject; Line: Integer;
-  var Special: Boolean; var FG, BG: TColor);
-begin
-  Logger.Enter('TEditorView.EditorSpecialLineColors');
-
-  Logger.Leave('TEditorView.EditorSpecialLineColors');
-end;
-
 {$ENDREGION}
 
 {$REGION'protected methods'}
@@ -1660,6 +1578,13 @@ begin
 //  Editor.SearchReplace(Editor.GetWordAtRowCol(LogCaret), '', Flags);
 end;
 
+{ Makes actionlist shortcuts work on the form }
+
+procedure TEditorView.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+begin
+  Handled := Actions.ActionList.IsShortCut(Msg);
+end;
+
 //procedure TEditorView.SetHighlightSearch(const ASearch: string; AOptions: TSynSearchOptions);
 //begin
 ////  try
@@ -1763,25 +1688,26 @@ begin
   begin
     if (AStorageName <> '') and FileExists(AStorageName) then
       FileName := AStorageName;
+      Editor.LoadFromFile(FileName);
 
-    FS := TFileStream.Create(FileName, fmOpenRead + fmShareDenyNone);
-    try
-      LoadFromStream(FS);
-    finally
-      FreeAndNil(FS);
-    end;
-    LineBreakStyle := ALineBreakStyles[GuessLineBreakStyle(Text)];
-    S := ExtractFileExt(FileName);
-    S := System.Copy(S, 2, Length(S));
-    try
-      if FileIsText(FileName) then
-      begin
-        AssignHighlighterForFileType(S);
-      end;
-    except
-      { TODO -oTS : dirty: need to fix this }
-      // for an unknown reason an EAbort is raised
-    end;
+//    FS := TFileStream.Create(FileName, fmOpenRead + fmShareDenyNone);
+//    try
+//      LoadFromStream(FS);
+//    finally
+//      FreeAndNil(FS);
+//    end;
+//    LineBreakStyle := ALineBreakStyles[GuessLineBreakStyle(Text)];
+//    S := ExtractFileExt(FileName);
+//    S := System.Copy(S, 2, Length(S));
+//    try
+//      if FileIsText(FileName) then
+//      begin
+//        AssignHighlighterForFileType(S);
+//      end;
+//    except
+//      { TODO -oTS : dirty: need to fix this }
+//      // for an unknown reason an EAbort is raised
+//    end;
     Modified := False;
   end;
 end;
@@ -1800,7 +1726,6 @@ procedure TEditorView.Save(const AStorageName: string);
 var
   FS : TFileStream;
 begin
-  Events.DoBeforeSave(AStorageName);
   if IsFile then
   begin
     FS := TFileStream.Create(AStorageName, fmCreate);
@@ -1810,18 +1735,12 @@ begin
       FreeAndNil(FS);
     end;
   end;
-  Events.DoAfterSave(AStorageName);
   Modified := False;
 end;
 
 function TEditorView.GetWordAtPosition(const APosition: TPoint): string;
-//var
-//  CaretPos: TPoint;
 begin
-//  Result := '';
-
-//  Caretpos := Editor.PhysicalToLogicalPos(APosition);
-//  Result := GetWordFromCaret(CaretPos);
+  Result := Editor.GetWordAtPixels(APosition.X, APosition.Y);
 end;
 
 function TEditorView.GetWordFromCaret(const ACaretPos: TPoint): string;

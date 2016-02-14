@@ -45,8 +45,6 @@ uses
 type
   THighlighters        = class;
 
-  { THighlighterItem  }
-
   THighlighterItem = class(TComponent)
   private
     FBlockCommentEndTag   : string;
@@ -113,8 +111,6 @@ type
 
   THighlighterItemClass = class of THighlighterItem;
 
-  { THighlighters }
-
   THighlighters = class(TComponent)
   type
     THighlighterEnumerator = class
@@ -154,18 +150,13 @@ type
     function Find(const AName: string): THighlighterItem;
     function FindHighlighterForFileType(const AFileExt: string): THighlighterItem;
 
-//    procedure RegisterHighlighter(
-//            ASynHighlighterClass  : TSynHighlighterClass;
-//            ASynHighlighter       : TSynCustomHighlighter;  // To ASSIGN the settings!!!
-//      const AName                 : string;       // unique name
-//      const AFileExtensions       : string = '';  // comma separated list
-//      const ALineCommentTag       : string = '';
-//      const ABlockCommentStartTag : string = '';
-//      const ABlockCommentEndTag   : string = '';
-//      const ACodeFormatter        : ICodeFormatter = nil;
-//      const ADescription          : string = '';  // highlighter description
-//      const ALayoutFileName       : string = ''   // only for TSynUNIHighlighter
-//    ); virtual;
+    procedure RegisterHighlighter(
+      const ALayoutFileName : string = '';
+      const AName           : string = '';       // unique name
+      const ADescription    : string = '';
+      const AFileExtensions : string = '';  // comma separated list
+      const ACodeFormatter  : ICodeFormatter = nil
+    ); virtual;
 
     // public properties
     { Provides indexed access to the list of items. }
@@ -185,7 +176,7 @@ type
 implementation
 
 uses
-  System.StrUtils,
+  System.StrUtils, System.IOUtils,
   Vcl.Forms, Vcl.Dialogs;
 
 {$REGION 'THighlighterEnumerator'}
@@ -304,6 +295,32 @@ begin
     Result := -1;
 end;
 
+procedure THighlighters.RegisterHighlighter(const ALayoutFileName, AName,
+  ADescription, AFileExtensions: string; const ACodeFormatter: ICodeFormatter);
+var
+  HI : THighlighterItem;
+begin
+  HI := Find(AName);
+  if not Assigned(HI) then
+  begin
+    HI := Add;
+    HI.Name        := AName;
+    HI.Highlighter := AName;
+    Logger.Send('Created highlighter %s', [AName]);
+  end;
+  if ADescription <> '' then
+    HI.Description := ADescription
+  else
+  begin
+    HI.Description := TPath.GetFileNameWithoutExtension(ALayoutFileName);
+  end;
+  HI.CodeFormatter       := ACodeFormatter;
+  if HI.LayoutFileName = '' then
+    HI.LayoutFileName := ALayoutFileName;
+  if HI.FileExtensions = '' then
+    HI.FileExtensions := AFileExtensions;
+end;
+
 function THighlighters.Find(const AName: string): THighlighterItem;
 var
   I: Integer;
@@ -338,44 +355,6 @@ begin
 //    end;
 //  end;
 end;
-
-{ Registers a new highlighter or updates an exiting one if the corresponding
-  properties are not assigned yet. }
-
-  { TODO: ASynHighlighter is of no use? }
-
-//procedure THighlighters.RegisterHighlighter(ASynHighlighterClass:
-//  TSynHighlighterClass; ASynHighlighter: TSynCustomHighlighter;
-//  const AName: string; const AFileExtensions: string;
-//  const ALineCommentTag: string; const ABlockCommentStartTag: string;
-//  const ABlockCommentEndTag: string; const ACodeFormatter: ICodeFormatter;
-//  const ADescription: string; const ALayoutFileName: string);
-//var
-//  HI : THighlighterItem;
-//begin
-//  HI := Find(AName);
-//  if not Assigned(HI) then
-//  begin
-//    HI := Add;
-//    HI.Name        := AName;
-//    HI.Highlighter := AName;
-//    Logger.Send('Created highlighter %s', [AName]);
-//  end;
-//  if ADescription <> '' then
-//    HI.Description := ADescription;
-//  HI.SynHighlighterClass := ASynHighlighterClass;
-//  HI.CodeFormatter       := ACodeFormatter;
-//  if HI.LineCommentTag = '' then
-//    HI.LineCommentTag := ALineCommentTag;
-//  if HI.BlockCommentStartTag = '' then
-//    HI.BlockCommentStartTag := ABlockCommentStartTag;
-//  if HI.BlockCommentEndTag = '' then
-//    HI.BlockCommentEndTag   := ABlockCommentEndTag;
-//  if HI.LayoutFileName = '' then
-//    HI.LayoutFileName := ALayoutFileName;
-//  if HI.FileExtensions = '' then
-//    HI.FileExtensions := AFileExtensions;
-//end;
 {$ENDREGION}
 {$ENDREGION}
 
@@ -389,9 +368,6 @@ begin
   FFileExtensions.Duplicates := dupIgnore;
   FFileExtensions.Sorted     := True;
   FSmartSelectionTags        := TCodeTags.Create(nil);
-
-  //FBCEditorHighlighter       := TBCEditorHighlighter.C
-
   FUseCommonAttributes       := True;
 end;
 

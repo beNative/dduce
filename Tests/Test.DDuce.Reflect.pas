@@ -61,6 +61,8 @@ type
 
     procedure Test_Properties_method_for_class_argument;
 
+    //property Test_Property_Assignment
+
   end;
 
 implementation

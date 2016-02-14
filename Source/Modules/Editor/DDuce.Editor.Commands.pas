@@ -121,11 +121,11 @@ type
     procedure GuessHighlighterType; overload;
     procedure Indent;
     procedure UnIndent;
-    procedure UpdateCommentSelection(ACommentOn, AToggle: Boolean);
-    procedure ToggleBlockCommentSelection;
+    procedure ToggleLineComment;
+    procedure ToggleBlockComment;
     procedure InsertTextAtCaret(const AText: string);
     procedure FormatCode;
-    procedure SortStrings;
+    procedure SortSelectedLines;
     procedure SmartSelect;
     function SelectBlockAroundCursor(
       const AStartTag        : string;
@@ -166,10 +166,7 @@ uses
 
   BCEditor.Editor.KeyCommands,
 
-  //DDuce.Editor.Highlighters,
-  DDuce.Editor.Resources,
-
-  DDuce.Editor.Utils;
+  DDuce.Editor.Highlighters, DDuce.Editor.Resources, DDuce.Editor.Utils;
 
 {$REGION'property access mehods'}
 function TEditorCommands.GetEvents: IEditorEvents;
@@ -396,17 +393,17 @@ begin
 end;
 
 procedure TEditorCommands.AssignHighlighter(const AName: string);
-//var
-//  HLI : THighlighterItem;
+var
+  HLI : THighlighterItem;
 begin
-//  if Assigned(Manager.Highlighters) then
-//  begin
-//    HLI := Manager.Highlighters.ItemsByName[AName];
-//    if Assigned(HLI) then
-//      View.HighlighterItem := HLI
-//    else
-//      raise Exception.CreateFmt('Highlighter %s not found!', [AName]);
-//  end;
+  if Assigned(Manager.Highlighters) then
+  begin
+    HLI := Manager.Highlighters.ItemsByName[AName];
+    if Assigned(HLI) then
+      View.HighlighterItem := HLI
+    else
+      raise Exception.CreateFmt('Highlighter %s not found!', [AName]);
+  end;
 end;
 
 procedure TEditorCommands.CopyToClipboard;
@@ -432,43 +429,27 @@ end;
 
 procedure TEditorCommands.CompressSpace;
 begin
-  Selection.Store;
-  Selection.Text := DDuce.Editor.Utils.CompressSpace(Selection.Text);
-  Selection.Restore;
+  View.SelectedText := DDuce.Editor.Utils.CompressSpace(View.SelectedText);
 end;
 
 procedure TEditorCommands.CompressWhitespace;
 begin
-  Selection.Store;
-  Selection.Text := DDuce.Editor.Utils.CompressWhitespace(Selection.Text);
-  Selection.Restore;
+  View.SelectedText := DDuce.Editor.Utils.CompressWhitespace(View.SelectedText);
 end;
 
 procedure TEditorCommands.UpperCaseSelection;
 begin
   View.Editor.CommandProcessor(ecUpperCaseBlock, #0, nil);
-
-
-//  Selection.Store;
-//  Selection.Text := UpperCase(Selection.Text);
-//  Selection.Restore;
-//  View.Modified := True;
-
 end;
 
 procedure TEditorCommands.LowerCaseSelection;
 begin
   View.Editor.CommandProcessor(ecLowerCaseBlock, #0, nil);
-//  Selection.Store;
-//  Selection.Text := LowerCase(Selection.Text);
-//  Selection.Restore;
-//  View.Modified := True;
 end;
 
 procedure TEditorCommands.PascalStringFromSelection;
 begin
   View.SelectedText := PascalStringOf(View.SelectedText);
-  //View.Modified := True;
 end;
 
 procedure TEditorCommands.QuoteLinesInSelection(ADelimit: Boolean);
@@ -477,27 +458,22 @@ begin
     View.SelectedText := QuoteLinesAndDelimit(View.SelectedText)
   else
     View.SelectedText := QuoteLines(View.SelectedText);
-
-//  View.Modified := True;
 end;
 
 procedure TEditorCommands.DequoteLinesInSelection;
 begin
   View.SelectedText := DequoteLines(View.SelectedText);
-//  View.Modified := True;
 end;
 
 procedure TEditorCommands.QuoteSelection;
 begin
-  View.SelectedText := AnsiQuotedStr(View.SelectedText, '''');
 
-//  View.Modified := True;
+  View.SelectedText := AnsiQuotedStr(View.SelectedText, '''');
 end;
 
 procedure TEditorCommands.DequoteSelection;
 begin
   View.SelectedText := AnsiDequotedStr(View.SelectedText, '''');
-//  View.Modified := True;
 end;
 
 procedure TEditorCommands.Base64FromSelection(ADecode: Boolean);
@@ -535,13 +511,13 @@ end;
 
 procedure TEditorCommands.ConvertTabsToSpacesInSelection;
 begin
-  //View.SelectedText := TabsToSpaces(View.SelectedText, View.Editor.TabWidth); // -> use settings?
-  //View.Modified := True;
+  View.SelectedText :=
+    TabsToSpaces(View.SelectedText, Settings.EditorOptions.TabWidth);
 end;
 
 procedure TEditorCommands.SyncEditSelection;
 begin
-  //View.Editor.CommandProcessor(ecSynPSyncroEdStart, '', nil);
+  //View.Editor.CommandProcessor(ecEd ecSynPSyncroEdStart, '', nil);
 end;
 
 procedure TEditorCommands.Save;
@@ -614,6 +590,7 @@ end;
 
 procedure TEditorCommands.StripCommentsFromSelection;
 begin
+  //View.Editor.KeyCommands
   //View.SelectedText := StripComments()
 end;
 
@@ -654,208 +631,18 @@ begin
   View.Editor.CommandProcessor(ecBlockUnindent, #0, nil);
 end;
 
-{ Comments or uncomments selected code lines based on the line comment tag of
-  the active highlighter. }
-
-// TS TODO: use Selection, and keep selection after updating selected block
-
-procedure TEditorCommands.UpdateCommentSelection(ACommentOn, AToggle: Boolean);
-var
-  OldCaretPos    : TPoint;
-  WasSelAvail    : Boolean;
-  BlockBeginLine : Integer;
-  BlockEndLine   : Integer;
-  CommonIndent   : Integer;
-  Prefix         : string;
-  PrefixLength   : Integer;
-
-  function FirstNonBlankPos(const AText: string; AStart: Integer = 1): Integer;
-  var
-    I: Integer;
-  begin
-    for I := AStart to Length(AText) do
-      if (AText[I] <> #32) and (AText[I] <> #9) then
-        Exit(I);
-    Result := -1;
-  end;
-
-  function MinCommonIndent: Integer;
-  var
-    I, J: Integer;
-  begin
-    if CommonIndent = 0 then
-    begin
-      CommonIndent := Max(FirstNonBlankPos(View.Lines[BlockBeginLine - 1]), 1);
-      for I := BlockBeginLine + 1 to BlockEndLine do
-      begin
-        J := FirstNonBlankPos(View.Lines[I - 1]);
-        if (J < CommonIndent) and (J > 0) then
-          CommonIndent := J;
-      end;
-    end;
-    Result := CommonIndent;
-  end;
-
-  function InsertPos(ALine: Integer): Integer;
-  begin
-    if not WasSelAvail then
-      Result := MinCommonIndent
-    else
-      Result := 1;
-//      case Selection.SelectionMode of
-//        smColumn: // CommonIndent is not used otherwise
-//        begin
-//          if CommonIndent = 0 then
-//            CommonIndent := Min(View.Editor.LogicalToPhysicalPos(Selection.BlockBegin).X,
-//              View.Editor.LogicalToPhysicalPos(Selection.BlockEnd).X);
-//          Result := View.Editor.PhysicalToLogicalPos(Point(CommonIndent, ALine)).X;
-//        end;
-//        smNormal:
-//        begin
-//          if Selection.BlockBegin.Y = Selection.BlockEnd.Y then
-//            Result := Selection.BlockBegin.X
-//          else
-//            Result := MinCommonIndent;
-//        end;
-//        else
-//          Result := 1;
-//      end;
-  end;
-
-  function DeletePos(ALine: Integer): Integer;
-  var
-    S: string;
-    T: string;
-    N: Integer;
-  begin
-    S := View.Lines[ALine - 1];
-    N := Length(S);
-    Result := FirstNonBlankPos(S, InsertPos(ALine));
-//    if (Selection.SelectionMode = smColumn) and ((Result < 1) or (Result > N - 1)) then
-//      Result := N - 1;
-    Result := Max(1, Result);
-    T := System.Copy(S, Result, PrefixLength);
-    if (N < Result + 1) or (T <> Prefix) then
-      Result := -1;
-  end;
-
-var
-  I             : Integer;
-  NonBlankStart : Integer;
-  BB            : TPoint;
-  BE            : TPoint;
+{ Comments or uncomments selected code lines based on the active highlighter. }
+procedure TEditorCommands.ToggleLineComment;
 begin
-  if Settings.ReadOnly then
-    Exit;
-
-//  Prefix := View.HighlighterItem.LineCommentTag;
-  PrefixLength := Length(Prefix);
-
-  if PrefixLength = 0 then
-    ToggleBlockCommentSelection
-  else
-  begin
-    OldCaretPos := View.CaretXY;
-    Selection.Store;
-    WasSelAvail := View.SelectionAvailable;
-    CommonIndent := 0;
-
-    BlockBeginLine := Selection.BlockBegin.Y;
-    BlockEndLine   := Selection.BlockEnd.Y;
-//    if (Selection.BlockEnd.X = 1) and (BlockEndLine > BlockBeginLine)
-//      and (View.SelectionMode <> smLine) then
-//      Dec(BlockEndLine);
-
-    if AToggle then
-    begin
-      ACommentOn := False;
-      for I := BlockBeginLine to BlockEndLine do
-      begin
-        if DeletePos(I) < 0 then
-        begin
-          ACommentOn := True;
-          Break;
-        end;
-      end;
-    end;
-
-    View.BeginUpdate;
-    //View.SelectionMode := smNormal;
-
-    BB := Selection.BlockBegin;
-    BE := Selection.BlockEnd;
-    if ACommentOn then
-    begin
-//      for I := BlockEndLine downto BlockBeginLine do
-//        View.Editor.TextBetweenPoints[Point(InsertPos(I), I), Point(InsertPos(I), I)] := Prefix;
-      if OldCaretPos.X > InsertPos(OldCaretPos.Y) then
-        OldCaretPos.X := OldCaretPos.X + PrefixLength;
-      if BB.X > InsertPos(BB.Y) then
-       BB.X := BB.X + PrefixLength;
-      if BE.X > InsertPos(BE.Y) then
-        BE.X := BE.X + PrefixLength;
-    end
-    else
-    begin
-      for I := BlockEndLine downto BlockBeginLine do
-      begin
-        NonBlankStart := DeletePos(I);
-        if NonBlankStart < 1 then
-          continue;
-//        View.Editor.TextBetweenPoints[Point(NonBlankStart, I),
-//          Point(NonBlankStart + PrefixLength, I)] := '';
-        if (OldCaretPos.Y = I) and (OldCaretPos.X > NonBlankStart) then
-          OldCaretPos.x := Max(OldCaretPos.X - PrefixLength, NonBlankStart);
-        if (BB.Y = I) and (BB.X > NonBlankStart) then
-          BB.X := Max(BB.X - PrefixLength, NonBlankStart);
-        if (BE.Y = I) and (BE.X > NonBlankStart) then
-          BE.X := Max(BE.X - PrefixLength, NonBlankStart);
-      end;
-    end;
-    Selection.BlockBegin := BB;
-    Selection.BlockEnd   := BE;
-    View.EndUpdate;
-    Selection.Text := View.SelectedText;
-    View.CaretXY       := OldCaretPos;
-    Selection.Ignore;
-    Selection.Clear;
-  end;
+  View.Editor.CommandProcessor(ecLineComment, #0, nil);
 end;
 
 { Comments/uncomments the selected block with the block comment tags for the
   current highlighter. }
 
-procedure TEditorCommands.ToggleBlockCommentSelection;
-//var
-//  S  : string;
-//  S1 : string;
-//  S2 : string;
-//  N1 : Integer;
-//  N2 : Integer;
-//  HI : THighlighterItem;
+procedure TEditorCommands.ToggleBlockComment;
 begin
-//  HI := View.HighlighterItem;
-//  if Assigned(HI) and View.SelAvail and (HI.BlockCommentStartTag <> '') then
-//  begin
-//    Selection.Store(True, True);
-//    N1 := Length(HI.BlockCommentStartTag);
-//    N2 := Length(HI.BlockCommentEndTag);
-//    S := Selection.Text;
-//    S1 := System.Copy(S, 1, N1);
-//    S2 := System.Copy(S, Length(S) - N2 + 1, Length(S));
-//    if (S1 = HI.BlockCommentStartTag)
-//      and (S2 = HI.BlockCommentEndTag) then
-//    begin
-//      Selection.Text := System.Copy(S, N1 + 1, Length(S) - N2 - N1);
-//    end
-//    else
-//    begin
-//      Selection.Text := HI.BlockCommentStartTag
-//        + Selection.Text + HI.BlockCommentEndTag;
-//    end;
-//    Selection.Restore;
-//    View.Modified := True;
-//  end;
+  View.Editor.CommandProcessor(ecBlockComment, #0, nil);
 end;
 
 procedure TEditorCommands.InsertTextAtCaret(const AText: string);
@@ -889,21 +676,11 @@ begin
 //      raise Exception.Create('No codeformatter for current highlighter');
 end;
 
-procedure TEditorCommands.SortStrings;
-//var
-//  SSS: TSortStringsSettings;
+procedure TEditorCommands.SortSelectedLines;
 begin
-//  SSS := Settings.ToolSettings
-//    .ItemsByClass[TSortStringsSettings] as TSortStringsSettings;
-//  Selection.Store;
-//  Selection.Text := ts.Editor.Utils.SortStrings(
-//    Selection.Text,
-//    SSS.SortDirection,
-//    SSS.SortScope,
-//    SSS.CaseSensitive,
-//    SSS.IgnoreSpaces
-//  );
-//  Selection.Restore;
+  View.Editor.BeginUndoBlock;
+  View.Editor.Sort;
+  View.Editor.EndUndoBlock;
 end;
 
 { Makes a smart selection of a block around the cursor. }

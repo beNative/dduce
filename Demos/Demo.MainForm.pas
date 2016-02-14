@@ -103,7 +103,7 @@ uses
   System.StrUtils, System.SysUtils,
   Vcl.Graphics,
 
-  Demo.Factories, Demo.Manager;
+  DDuce.Factories, Demo.Factories, Demo.Manager;
 
 type
   TVKSet = set of Byte;
@@ -153,14 +153,14 @@ resourcestring
 procedure TfrmMainMenu.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FVST := TDemoFactories.CreateVST(
+  FVST := TFactories.CreateVirtualStringTree(
     Self,
     pnlVST
   );
   FVST.AlignWithMargins  := True;
   FVST.OnKeyPress        := FVSTKeyPress;
   FVST.OnPaintBackground := FVSTPaintBackground;
-  FTVP := TDemoFactories.CreateTVP(Self);
+  FTVP := TFactories.CreateTreeViewPresenter(Self);
   with FTVP.ColumnDefinitions.Add('Name') do
   begin
     ValuePropertyName := 'Name';
