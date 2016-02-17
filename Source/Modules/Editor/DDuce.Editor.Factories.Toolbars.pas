@@ -96,6 +96,9 @@ type
 
 implementation
 
+uses
+  Spring;
+
 {$REGION 'construction and destruction'}
 procedure TEditorToolbarsFactory.AfterConstruction;
 begin
@@ -110,6 +113,8 @@ constructor TEditorToolbarsFactory.Create(AActions: IEditorActions;
   AMenus: IEditorMenus);
 begin
   inherited Create;
+  Guard.CheckNotNull(AActions, 'AActions');
+  Guard.CheckNotNull(AMenus, 'AMenus');
   FActions := AActions;
   FMenus   := AMenus;
 end;
@@ -118,6 +123,7 @@ end;
 {$REGION 'private methods'}
 procedure TEditorToolbarsFactory.ApplyDefaultProperties(AToolbar: TToolbar);
 begin
+  Guard.CheckNotNull(AToolbar, 'AToolbar');
   AToolbar.EdgeBorders := EdgeBorders;
   AToolbar.EdgeInner   := EdgeInner;
   AToolbar.EdgeOuter   := EdgeOuter;
@@ -134,7 +140,6 @@ var
   N  : Integer;
 begin
   TB := TToolButton.Create(AParent);
-
   N := AParent.ButtonCount - 1;
   if N > -1 then
     TB.Left := AParent.Buttons[N].Left + AParent.Buttons[N].Width
@@ -175,13 +180,13 @@ function TEditorToolbarsFactory.CreateMainToolbar(AOwner: TComponent;
 var
   TB : TToolbar;
 begin
+  Guard.CheckNotNull(AOwner, 'AOwner');
+  Guard.CheckNotNull(AParent, 'AParent');
   TB := TToolBar.Create(AOwner);
   ApplyDefaultProperties(TB);
   TB.Parent := AParent;
   TB.Images := FActions.ActionList.Images;
   TB.ButtonWidth:= 10;
-
-
   CreateToolButton(TB, 'actNew');
   CreateToolButton(TB, 'actOpen');
   CreateToolButton(TB, 'actSave');
@@ -203,25 +208,23 @@ begin
   CreateToolButton(TB, 'actShowSpecialCharacters');
   CreateToolButton(TB, 'actToggleMiniMap');
   CreateToolButton(TB, 'actToggleWordWrap');
-
-//  CreateToolButton(TB, 'actReload');
-//  CreateToolButton(TB);
-
-//  CreateToolButton(TB, 'actAutoGuessHighlighter');
-//  CreateToolButton(TB);
-//  CreateToolButton(TB, 'actShowCodeShaper');
-//  CreateToolButton(TB, 'actShowCodeFilter');
-//  CreateToolButton(TB, 'actShowCharacterMap');
-//  CreateToolButton(TB);
-//  CreateToolButton(TB, 'actSmartSelect');
-//  CreateToolButton(TB, 'actFormat');
-//  CreateToolButton(TB);
-//  CreateToolButton(TB, 'actSettings');
-//  CreateToolButton(TB);
-//  CreateToolButton(TB);
-//  CreateToolButton(TB, 'actCreateDesktopLink');
-//  CreateToolButton(TB);
-//  CreateToolButton(TB, 'actAbout');
+  CreateToolButton(TB, 'actReload');
+  CreateToolButton(TB);
+  CreateToolButton(TB, 'actAutoGuessHighlighter');
+  CreateToolButton(TB);
+  CreateToolButton(TB, 'actShowCodeShaper');
+  CreateToolButton(TB, 'actShowCodeFilter');
+  CreateToolButton(TB, 'actShowCharacterMap');
+  CreateToolButton(TB);
+  CreateToolButton(TB, 'actSmartSelect');
+  CreateToolButton(TB, 'actFormat');
+  CreateToolButton(TB);
+  CreateToolButton(TB, 'actSettings');
+  CreateToolButton(TB);
+  CreateToolButton(TB);
+  CreateToolButton(TB, 'actCreateDesktopLink');
+  CreateToolButton(TB);
+  CreateToolButton(TB, 'actAbout');
   Result := TB;
 end;
 
@@ -230,16 +233,16 @@ function TEditorToolbarsFactory.CreateRightToolbar(AOwner: TComponent;
 var
   TB : TToolbar;
 begin
+  Guard.CheckNotNull(AOwner, 'AOwner');
+  Guard.CheckNotNull(AParent, 'AParent');
   TB := TToolBar.Create(AOwner);
   ApplyDefaultProperties(TB);
   TB.Parent := AParent;
   TB.Images := FActions.ActionList.Images;
-
-//  CreateToolButton(TB, 'actShowViews');
-//  CreateToolButton(TB, 'actSingleInstance');
-//  CreateToolButton(TB, 'actStayOnTop');
-//  CreateToolButton(TB, 'actClose');
-
+  CreateToolButton(TB, 'actShowViews');
+  CreateToolButton(TB, 'actSingleInstance');
+  CreateToolButton(TB, 'actStayOnTop');
+  CreateToolButton(TB, 'actClose');
   Result := TB;
 end;
 
@@ -248,11 +251,12 @@ function TEditorToolbarsFactory.CreateSelectionToolbar(AOwner: TComponent;
 var
   TB : TToolbar;
 begin
+  Guard.CheckNotNull(AOwner, 'AOwner');
+  Guard.CheckNotNull(AParent, 'AParent');
   TB := TToolBar.Create(AOwner);
   ApplyDefaultProperties(TB);
   TB.Parent := AParent;
   TB.Images := FActions.ActionList.Images;
-
   CreateToolButton(TB, 'actAlignSelection');
   CreateToolButton(TB, 'actSortSelection');
   CreateToolButton(TB);

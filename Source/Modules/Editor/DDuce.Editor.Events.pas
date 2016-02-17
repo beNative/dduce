@@ -153,6 +153,7 @@ implementation
 constructor TEditorEvents.Create(AManager: IEditorManager);
 begin
   inherited Create;
+  Guard.CheckNotNull(AManager, 'AManager');
   FManager := AManager;
 end;
 

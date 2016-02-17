@@ -699,6 +699,8 @@ uses
   System.StrUtils, System.TypInfo, System.Contnrs,
   Vcl.Clipbrd,
 
+  Spring,
+
   DDuce.Editor.Settings, DDuce.Editor.Utils,
 
   DDuce.Editor.ToolView.Manager,
@@ -832,18 +834,19 @@ end;
 
 function TdmEditorManager.GetItem(AName: string): TCustomAction;
 var
-  A: TCustomAction;
+  A  : TCustomAction;
   CA : TContainedAction;
 begin
   Result := nil;
   for CA in aclActions do
+  begin
     if CA.Name = AName then
+    begin
+      A := CA as TCustomAction;
+      Result := A;
       Break;
-  A := CA as TCustomAction;
-  if Assigned(A) then
-    Result := A
-  else
-    Logger.SendWarning(Format('Action with name (%s) not found!', [AName]));
+    end;
+  end;
 end;
 
 function TdmEditorManager.GetKeyCommands: TBCEditorKeyCommands;
@@ -1196,7 +1199,7 @@ end;
 
 procedure TdmEditorManager.actShowScriptEditorExecute(Sender: TObject);
 begin
-  //ShowToolView('ScriptEditor', False, False);
+  ShowToolView('ScriptEditor', False, False);
 end;
 
 procedure TdmEditorManager.actShowStructureViewerExecute(Sender: TObject);
@@ -1660,7 +1663,7 @@ end;
 
 procedure TdmEditorManager.actAboutExecute(Sender: TObject);
 begin
-//  ShowAboutDialog;
+  ShowMessage(SNotImplementedYet);
 end;
 
 procedure TdmEditorManager.aclActionsExecute(AAction: TBasicAction;
@@ -2331,6 +2334,7 @@ var
   TV  : IEditorToolView;
 begin
   ETV := ToolViews[AName];
+  Guard.CheckNotNull(ETV, AName);
   for TV in ToolViews do
   begin
     if TV <> ETV then

@@ -39,12 +39,13 @@ uses
   DDuce.Editor.Tools.Settings, DDuce.Editor.Options.Settings,
   DDuce.Editor.Colors.Settings, DDuce.Editor.Highlighters,
 
-  DDuce.Editor.Types;
+  DDuce.Editor.Types,
 
-//  ts.Editor.AlignLines.Settings,
-//  ts.Editor.CodeShaper.Settings, ts.Editor.CodeFilter.Settings,
-//  ts.Editor.HTMLView.Settings,
-//  ts.Editor.HexEditor.Settings, ts.Editor.SortStrings.Settings,
+  DDuce.Editor.AlignLines.Settings, DDuce.Editor.SortStrings.Settings;
+  //DDuce.Editor.CodeShaper.Settings,
+  //DDuce.Editor.CodeFilter.Settings,
+  //DDuce.Editor.HTMLView.Settings,
+  //DDuce.Editor.HexEditor.Settings,
 
 // TPopupMenu does not work with Vcl styles! This interposer class is a work-
 // around for this issue.
@@ -1105,7 +1106,6 @@ type
         AOwner  : TComponent;
         AParent : TWinControl
     ): TToolbar;
-
   end;
 
 implementation

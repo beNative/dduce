@@ -26,8 +26,7 @@ unit DDuce.Editor.Highlighters;
   - It is not intended as a persistable settings object, but is rather a helper
     object that works closely with the associated editor instance to render its
     text.
-
- }
+}
 
 interface
 

@@ -28,6 +28,8 @@ uses
   System.Classes, System.SysUtils,
   Vcl.Controls, Vcl.Menus, Vcl.ComCtrls,
 
+  Spring,
+
   DDuce.Editor.Interfaces;
 
 type
@@ -125,6 +127,8 @@ class function TEditorFactories.CreateMainMenu(AOwner: TComponent;
 var
   EMF : IEditorMenusFactory;
 begin
+  Guard.CheckNotNull(AActions, 'AActions');
+  Guard.CheckNotNull(AMenus, 'AMenus');
   EMF := TEditorMenusFactory.Create(AActions, AMenus);
   Result := EMF.CreateMainMenu(AOwner);
 end;
@@ -135,6 +139,8 @@ class function TEditorFactories.CreateMainToolbar(AOwner: TComponent;
 var
   TBF : IEditorToolbarsFactory;
 begin
+  Guard.CheckNotNull(AActions, 'AActions');
+  Guard.CheckNotNull(AMenus, 'AMenus');
   TBF := TEditorToolbarsFactory.Create(AActions, AMenus);
   Result := TBF.CreateMainToolbar(AOwner, AParent);
 end;
@@ -145,6 +151,8 @@ class function TEditorFactories.CreateSelectionToolbar(AOwner: TComponent;
 var
   TBF : IEditorToolbarsFactory;
 begin
+  Guard.CheckNotNull(AActions, 'AActions');
+  Guard.CheckNotNull(AMenus, 'AMenus');
   TBF := TEditorToolbarsFactory.Create(AActions, AMenus);
   Result := TBF.CreateSelectionToolbar(AOwner, AParent);
 end;
@@ -155,6 +163,8 @@ class function TEditorFactories.CreateTopRightToolbar(AOwner: TComponent;
 var
   TBF : IEditorToolbarsFactory;
 begin
+  Guard.CheckNotNull(AActions, 'AActions');
+  Guard.CheckNotNull(AMenus, 'AMenus');
   TBF := TEditorToolbarsFactory.Create(AActions, AMenus);
   Result := TBF.CreateRightToolbar(AOwner, AParent);
 end;

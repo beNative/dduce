@@ -299,7 +299,8 @@ begin
   ATVP.SyncMode := False;
   ATVP.UseColumnDefinitions := True;
   ATVP.ListMode             := True;
-  ATVP.View.ItemsSource     := ASource as IObjectList;
+  if Assigned(ASource) then
+    ATVP.View.ItemsSource := ASource as IObjectList;
   if Assigned(ATemplate) then
     ATVP.View.ItemTemplate :=
       TColumnDefinitionsControlTemplate.Create(ATVP.ColumnDefinitions);
@@ -312,6 +313,8 @@ class function TFactories.CreateVirtualStringTree(AOwner: TComponent;
 var
   VST : TVirtualStringTree;
 begin
+  Guard.CheckNotNull(AOwner, 'AOwner');
+  Guard.CheckNotNull(AParent, 'AParent');
   VST          := TVirtualStringTree.Create(AOwner);
   VST.AlignWithMargins := True;
   VST.Parent   := AParent;
@@ -335,10 +338,11 @@ class function TFactories.CreateTreeViewPresenter(AOwner: TComponent;
 var
   TVP: TTreeViewPresenter;
 begin
+  Guard.CheckNotNull(AOwner, 'AOwner');
+  Guard.CheckNotNull(AVST, 'AVST');
   TVP := TTreeViewPresenter.Create(AOwner);
   InitializeTVP(TVP, AVST, ASource, ATemplate, AFilter);
   Result := TVP;
 end;
-
 
 end.

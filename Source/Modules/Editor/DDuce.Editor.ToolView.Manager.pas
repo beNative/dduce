@@ -237,8 +237,6 @@ begin
       Result := TV;
     Inc(I);
   end;
-  if not Assigned(Result) then
-    raise Exception.CreateFmt('ToolView (%s) not found!', [AName]);
 end;
 
 function TToolViews.GetCount: Integer;

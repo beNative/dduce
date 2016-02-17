@@ -38,7 +38,9 @@ type
 implementation
 
 uses
-  Vcl.Forms;
+  Vcl.Forms,
+
+  Spring;
 
 function TEditorViewFactory.CreateInstance(AParent: TWinControl;
   AManager: IEditorManager; const AName: string; const AFileName: string;
@@ -46,6 +48,8 @@ function TEditorViewFactory.CreateInstance(AParent: TWinControl;
 var
   V: IEditorView;
 begin
+  Guard.CheckNotNull(AParent, 'AParent');
+  Guard.CheckNotNull(AManager, 'AManager');
   V := AManager.Views.Add(AName, AFileName, AHighlighter);
   V.Form.DisableAlign;
   V.Form.BorderStyle := bsNone;

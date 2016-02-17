@@ -56,19 +56,21 @@ type
     function CreateSettingsMenu(AMenu: TMenu): TMenuItem;
     function CreateHighlightersMenu(AMenu: TMenu): TMenuItem;
     function CreateHelpMenu(AMenu: TMenu): TMenuItem;
-
     function CreateMainMenu(AOwner: TComponent): TMainMenu;
   end;
 
 implementation
+
+uses
+  Spring;
 
 {$REGION 'construction and destruction'}
 constructor TEditorMenusFactory.Create(AActions: IEditorActions;
   AMenus: IEditorMenus);
 begin
   inherited Create;
-  FActions  := AActions;
-  FMenus    := AMenus;
+  FActions := AActions;
+  FMenus   := AMenus;
 end;
 
 procedure TEditorMenusFactory.BeforeDestruction;
@@ -85,6 +87,7 @@ function TEditorMenusFactory.CreateMenuItem(AParent: TMenuItem;
 var
   MI: TMenuItem;
 begin
+  Guard.CheckNotNull(AParent, 'AParent');
   if not Assigned(AAction) then
   begin
     MI := TMenuItem.Create(AParent.Owner);
@@ -110,10 +113,8 @@ var
   A : TBasicAction;
 begin
   A := FActions[AActionName];
-  if Assigned(A) then
-    Result := CreateMenuItem(AParent, A)
-  else
-    raise Exception.CreateFmt('Action <%s> not found!', [AActionName]);
+  Guard.CheckNotNull(A, AActionName);
+  Result := CreateMenuItem(AParent, A)
 end;
 {$ENDREGION}
 
@@ -124,6 +125,7 @@ var
   MI  : TMenuItem;
   SMI : TMenuItem;
 begin
+  Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
   MI.Caption := SFileMenuCaption;
   AMenu.Items.Add(MI);
@@ -133,9 +135,8 @@ begin
   CreateMenuItem(MI, 'actSaveAs');
   CreateMenuItem(MI);
   CreateMenuItem(MI, 'actReload');
-//  CreateMenuItem(MI);
-//  CreateMenuItem(MI, 'actMonitorChanges');
-//  CreateMenuItem(MI, 'actCreateDesktopLink');
+  CreateMenuItem(MI);
+  CreateMenuItem(MI, 'actCreateDesktopLink');
   CreateMenuItem(MI);
   SMI := CreateMenuItem(MI, 'actEncodingMenu');
   for M in FMenus.EncodingPopupMenu.Items do
@@ -157,6 +158,7 @@ function TEditorMenusFactory.CreateEditMenu(AMenu: TMenu): TMenuItem;
 var
   MI : TMenuItem;
 begin
+  Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
   MI.Caption := '&Edit';
   AMenu.Items.Add(MI);
@@ -179,11 +181,12 @@ var
   MI  : TMenuItem;
   SMI : TMenuItem;
 begin
+  Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
   MI.Caption := SSeLectionMenuCaption;
   AMenu.Items.Add(MI);
   CreateMenuItem(MI, 'actAlignSelection');
-  CreateMenuItem(MI, 'actSortSelection');
+  CreateMenuItem(MI, 'actSortSelectedLines');
   CreateMenuItem(MI, 'actSyncEdit');
   CreateMenuItem(MI);
   CreateMenuItem(MI, 'actIndent');
@@ -227,6 +230,7 @@ function TEditorMenusFactory.CreateInsertMenu(AMenu: TMenu): TMenuItem;
 var
   MI: TMenuItem;
 begin
+  Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
   MI.Caption := SInsertMenuCaption;
   AMenu.Items.Add(MI);
@@ -239,6 +243,7 @@ function TEditorMenusFactory.CreateSearchMenu(AMenu: TMenu): TMenuItem;
 var
   MI: TMenuItem;
 begin
+  Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
   MI.Caption := SSearchMenuCaption;
   AMenu.Items.Add(MI);
@@ -258,6 +263,7 @@ function TEditorMenusFactory.CreateToolsMenu(AMenu: TMenu): TMenuItem;
 var
   MI: TMenuItem;
 begin
+  Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
   MI.Caption := SToolsMenuCaption;
   AMenu.Items.Add(MI);
@@ -268,8 +274,8 @@ begin
   CreateMenuItem(MI, 'actSmartSelect');
   CreateMenuItem(MI, 'actFormat');
   CreateMenuItem(MI, 'actAutoGuessHighlighter');
-//  CreateMenuItem(MI);
-//  CreateMenuItem(MI, 'actMonitorChanges');
+  CreateMenuItem(MI);
+  CreateMenuItem(MI, 'actMonitorChanges');
   Result := MI;
 end;
 
@@ -277,6 +283,7 @@ function TEditorMenusFactory.CreateViewsMenu(AMenu: TMenu): TMenuItem;
 var
   MI: TMenuItem;
 begin
+  Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
   MI.Caption := SViewMenuCaption;
   AMenu.Items.Add(MI);
@@ -293,6 +300,7 @@ function TEditorMenusFactory.CreateSettingsMenu(AMenu: TMenu): TMenuItem;
 var
   MI: TMenuItem;
 begin
+  Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
   MI.Caption := SSettingsMenuCaption;
   AMenu.Items.Add(MI);
@@ -302,11 +310,11 @@ begin
   CreateMenuItem(MI, 'actShowSpecialCharacters');
   CreateMenuItem(MI, 'actIncFontSize');
   CreateMenuItem(MI, 'actDecFontSize');
-//  CreateMenuItem(MI);
-//  CreateMenuItem(MI, 'actStayOnTop');
-//  CreateMenuItem(MI, 'actToggleMaximized');
-//  CreateMenuItem(MI);
-//  CreateMenuItem(MI, 'actSingleInstance');
+  CreateMenuItem(MI);
+  CreateMenuItem(MI, 'actStayOnTop');
+  CreateMenuItem(MI, 'actToggleMaximized');
+  CreateMenuItem(MI);
+  CreateMenuItem(MI, 'actSingleInstance');
   Result := MI;
 end;
 
@@ -315,6 +323,7 @@ var
   MI : TMenuItem;
   M  : TMenuItem;
 begin
+  Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
   MI.Caption := SHighlightersMenuCaption;
   AMenu.Items.Add(MI);
@@ -329,6 +338,7 @@ function TEditorMenusFactory.CreateHelpMenu(AMenu: TMenu): TMenuItem;
 var
   MI: TMenuItem;
 begin
+  Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
   MI.Caption := SHelpMenuCaption;
   AMenu.Items.Add(MI);
@@ -340,6 +350,7 @@ function TEditorMenusFactory.CreateMainMenu(AOwner: TComponent): TMainMenu;
 var
   MM : TMainMenu;
 begin
+  Guard.CheckNotNull(AOwner, 'AOwner');
   MM := TMainMenu.Create(AOwner);
   MM.Images := FActions.ActionList.Images;
   CreateFileMenu(MM);
@@ -350,7 +361,7 @@ begin
   CreateSettingsMenu(MM);
   CreateViewsMenu(MM);
   CreateHighlightersMenu(MM);
-  CreateHelpMenu(MM);
+  //CreateHelpMenu(MM);
   Result := MM;
 end;
 {$ENDREGION}

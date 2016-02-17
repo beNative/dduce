@@ -446,6 +446,8 @@ uses
   System.TypInfo, System.UITypes, System.IOUtils,
   Vcl.GraphUtil,
 
+  Spring,
+
   DDuce.Editor.Utils;
 
 {$REGION'construction and destruction'}
@@ -700,13 +702,10 @@ procedure TEditorView.SetHighlighterName(AValue: string);
 begin
   if AValue <> HighlighterName then
   begin
-    // HighlighterItem is always assigned
-    //HighlighterItem := Manager.Highlighters.ItemsByName[AValue];
+    // HighlighterItem should always be assigned
+    HighlighterItem := Manager.Highlighters.ItemsByName[AValue];
+    Guard.CheckNotNull(HighlighterItem, AValue);
   end;
-  //if no Highlighters defined, we use the number0 Highlighters
-//  if trim(AValue)='' then
-//     if Manager.Highlighters.Count>0 then
-//         HighlighterItem := Manager.Highlighters.Items[0];
 end;
 
 function TEditorView.GetInsertMode: Boolean;
