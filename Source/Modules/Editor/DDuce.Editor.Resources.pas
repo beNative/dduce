@@ -127,10 +127,6 @@ const
   FILE_EXTENSIONS_LUA  = 'lua';
   FILE_EXTENSIONS_JSON = 'json';
 
-
-
-
-
 resourcestring
   STextNotFound = 'Text not found';
   SSearching    = 'Searching...';
@@ -246,7 +242,6 @@ const
 type
   TResourcesDataModule = class(TDataModule)
     imlFunctionKeys : TImageList;
-    imlMain         : TImageList;
   end;
 
 implementation

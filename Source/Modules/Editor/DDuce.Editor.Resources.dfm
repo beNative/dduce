@@ -6,10 +6,4 @@ object ResourcesDataModule: TResourcesDataModule
     Left = 64
     Top = 32
   end
-  object imlMain: TImageList
-    AllocBy = 1
-    Masked = False
-    Left = 176
-    Top = 32
-  end
 end

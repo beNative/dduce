@@ -59,22 +59,6 @@ type
       const AString: string
     ): Boolean;
 
-    function IsSQL(
-      const AString: string
-    ): Boolean;
-
-    function IsLOG(
-      const AString: string
-    ): Boolean;
-
-    function IsLFM(
-      const AString: string
-    ): Boolean;
-
-    function IsHTML(
-      const AString: string
-    ): Boolean;
-
   strict protected
     procedure OpenFileAtCursor;
     procedure ToggleHighlighter;
@@ -344,26 +328,6 @@ begin
   finally
     SL.Free;
   end;
-end;
-
-function TEditorCommands.IsSQL(const AString: string): Boolean;
-begin
-  Result := False;
-end;
-
-function TEditorCommands.IsLOG(const AString: string): Boolean;
-begin
-  Result := False;
-end;
-
-function TEditorCommands.IsLFM(const AString: string): Boolean;
-begin
-  Result := False;
-end;
-
-function TEditorCommands.IsHTML(const AString: string): Boolean;
-begin
-  Result := False;
 end;
 {$ENDREGION}
 
@@ -721,6 +685,8 @@ var
   I   : Integer;
   N   : Integer;
 begin
+  N := 0;
+  Result := False;
   if (AStartTag = '') or (AEndTag = '') then
     Exit;
 

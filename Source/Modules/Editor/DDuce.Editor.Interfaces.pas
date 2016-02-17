@@ -560,8 +560,8 @@ type
     property OnAddEditorView: IEvent<TAddEditorViewEvent>
       read GetOnAddEditorView;
 
-//    property OnShowEditorToolView: TEditorToolViewEvent
-//      read GetOnShowEditorToolView write SetOnShowEditorToolView;
+    property OnShowEditorToolView: IEvent<TEditorToolViewEvent>
+      read GetOnShowEditorToolView;
 
     property OnHideEditorToolView: IEvent<TEditorToolViewEvent>
       read GetOnHideEditorToolView;
@@ -692,9 +692,6 @@ type
     property FormSettings: TFormSettings
       read GetFormSettings write SetFormSettings;
 
-//    property HighlighterAttributes: THighlighterAttributes
-//      read GetHighlighterAttributes write SetHighlighterAttributes;
-
     property DebugMode: Boolean
       read GetDebugMode write SetDebugMode;
 
@@ -718,7 +715,7 @@ type
     function GetViewByFileName(AFileName: string): IEditorView;
     function GetViewByName(AName: string): IEditorView;
     function GetCount: Integer;
-    function GetViewList: TEditorViewList;
+    function GetViewList: IList<IEditorView>;
 
     function Add(
       const AName        : string = '';
@@ -742,7 +739,7 @@ type
     property ViewByFileName[AFileName: string]: IEditorView
       read GetViewByFileName;
 
-    property ViewList: TEditorViewList
+    property ViewList: IList<IEditorView>
       read GetViewList;
 
     property Count: Integer
@@ -1026,10 +1023,10 @@ type
   TEditorViewListEnumerator = class
   strict private
     FIndex : Integer;
-    FList  : TEditorViewList;
+    FList  : IList<IEditorView>;
 
   public
-    constructor Create(AList: TEditorViewList);
+    constructor Create(AList: IList<IEditorView>);
     function GetCurrent: IEditorView;
     function MoveNext: Boolean;
     property Current: IEditorView
@@ -1116,7 +1113,7 @@ type
 implementation
 
 {$REGION 'TEditorViewListEnumerator'}
-constructor TEditorViewListEnumerator.Create(AList: TEditorViewList);
+constructor TEditorViewListEnumerator.Create(AList: IList<IEditorView>);
 begin
   FList := AList;
   FIndex := -1;

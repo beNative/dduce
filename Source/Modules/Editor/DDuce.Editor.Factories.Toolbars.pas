@@ -28,6 +28,7 @@ uses
 
 const
   DEFAULT_EDGE_BORDERS = [ebLeft, ebTop, ebRight, ebBottom];
+  //DEFAULT_EDGE_BORDERS = [];
   DEFAULT_EDGE_INNER   = esNone;
   DEFAULT_EDGE_OUTER   = esNone;
   DEFAULT_TRANSPARANT  = True;
@@ -123,18 +124,29 @@ begin
   AToolbar.EdgeInner   := EdgeInner;
   AToolbar.EdgeOuter   := EdgeOuter;
   AToolbar.Transparent := Transparant;
+  AToolbar.ParentColor := True;
+  AToolbar.AutoSize    := True;
+  AToolbar.ShowHint    := True;
 end;
 
 function TEditorToolbarsFactory.CreateToolButton(AParent: TToolBar;
   AAction: TBasicAction; APopupMenu: TPopupMenu): TToolButton;
 var
-  TB: TToolButton;
+  TB : TToolButton;
+  N  : Integer;
 begin
   TB := TToolButton.Create(AParent);
+
+  N := AParent.ButtonCount - 1;
+  if N > -1 then
+    TB.Left := AParent.Buttons[N].Left + AParent.Buttons[N].Width
+  else
+    TB.Left := 0;
   TB.Parent := AParent;
   if not Assigned(AAction) then
   begin
-    TB.Style := tbsDivider;
+    TB.Style := tbsSeparator;
+    TB.Width := 4;
   end
   else
   begin
@@ -145,6 +157,7 @@ begin
     end;
     TB.Action := AAction;
   end;
+  AParent.Realign;
   Result := TB;
 end;
 
@@ -171,43 +184,40 @@ begin
   TB.ButtonWidth:= 10;
 
 
-  CreateToolButton(TB, 'actSaveAll');
-  CreateToolButton(TB, 'actSaveAs');
-  CreateToolButton(TB, 'actSave');
-  CreateToolButton(TB, 'actOpen');
   CreateToolButton(TB, 'actNew');
+  CreateToolButton(TB, 'actOpen');
+  CreateToolButton(TB, 'actSave');
+  CreateToolButton(TB, 'actSaveAs');
+  CreateToolButton(TB, 'actSaveAll');
+  CreateToolButton(TB);
+  CreateToolButton(TB, 'actCut');
+  CreateToolButton(TB, 'actCopy');
+  CreateToolButton(TB, 'actPaste');
+  CreateToolButton(TB);
+  CreateToolButton(TB, 'actUndo');
+  CreateToolButton(TB, 'actRedo');
+  CreateToolButton(TB);
+  CreateToolButton(TB, 'actSearch');
+  CreateToolButton(TB, 'actSearchReplace');
+  CreateToolButton(TB);
+  CreateToolButton(TB, 'actToggleFoldLevel', FMenus.FoldPopupMenu);
+  CreateToolButton(TB, 'actToggleHighlighter', FMenus.HighlighterPopupMenu);
+  CreateToolButton(TB, 'actShowSpecialCharacters');
 
-
-
-//  CreateToolButton(TB);
 //  CreateToolButton(TB, 'actReload');
 //  CreateToolButton(TB);
-//  CreateToolButton(TB, 'actCut');
-//  CreateToolButton(TB, 'actCopy');
-//  CreateToolButton(TB, 'actPaste');
-//  CreateToolButton(TB);
-//  CreateToolButton(TB, 'actUndo');
-//  CreateToolButton(TB, 'actRedo');
-//  CreateToolButton(TB);
-//  CreateToolButton(TB, 'actSearch');
-//  CreateToolButton(TB, 'actSearchReplace');
-  //CreateToolButton(TB);
-//  CreateToolButton(TB, 'actToggleFoldLevel', FMenus.FoldPopupMenu);
-//  CreateToolButton(TB);
-  //CreateToolButton(TB, 'actToggleHighlighter', FMenus.HighlighterPopupMenu);
+
 //  CreateToolButton(TB, 'actAutoGuessHighlighter');
 //  CreateToolButton(TB);
 //  CreateToolButton(TB, 'actShowCodeShaper');
 //  CreateToolButton(TB, 'actShowCodeFilter');
 //  CreateToolButton(TB, 'actShowCharacterMap');
-//  CreateToolButton(TB, 'actShowPreview');
 //  CreateToolButton(TB);
 //  CreateToolButton(TB, 'actSmartSelect');
 //  CreateToolButton(TB, 'actFormat');
 //  CreateToolButton(TB);
 //  CreateToolButton(TB, 'actSettings');
 //  CreateToolButton(TB);
-//  CreateToolButton(TB, 'actShowSpecialCharacters');
 //  CreateToolButton(TB);
 //  CreateToolButton(TB, 'actCreateDesktopLink');
 //  CreateToolButton(TB);

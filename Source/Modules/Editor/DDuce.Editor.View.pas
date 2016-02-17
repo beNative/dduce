@@ -62,18 +62,7 @@ type
   TEditorView = class(TForm, IEditorView, IEditorSelection)
     procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
   strict private
-    procedure EditorChangeUpdating(
-      ASender    : TObject;
-      AUpdating  : Boolean
-    );
     procedure EditorChange(Sender: TObject);
-    procedure EditorClickLink(
-      Sender : TObject;
-      Button : TMouseButton;
-      Shift  : TShiftState;
-      X, Y   : Integer
-    );
-
     procedure EditorCaretChanged(
       Sender : TObject;
       X, Y   : Integer
@@ -114,13 +103,8 @@ type
     FFileName        : string;
     FFoldLevel       : Integer;
     FIsFile          : Boolean;
-    FFontChanged     : Boolean;
     FSelection       : IEditorSelection;
     FOnChange        : TNotifyEvent;
-
-    { search settings }
-    FSearchText     : string;
-//    FSearchOptions  : TSynSearchOptions;
 
     {$REGION'property access methods'}
     function GetActions: IEditorActions;
@@ -214,7 +198,7 @@ type
     procedure EditorSettingsChanged(ASender: TObject);
 
   strict protected
-    procedure SetParent(Value: TWinControl);
+    procedure SetParent(Value: TWinControl); reintroduce;
 
     procedure BeginUpdate;
     procedure EndUpdate;
@@ -461,7 +445,7 @@ implementation
 {$R *.dfm}
 
 uses
-  System.TypInfo,
+  System.TypInfo, System.UITypes,
   Vcl.GraphUtil,
 
   DDuce.Editor.Utils;
@@ -506,52 +490,21 @@ end;
 {$ENDREGION}
 
 {$REGION'event handlers'}
-procedure TEditorView.EditorChangeUpdating(ASender: TObject;
-  AUpdating: Boolean);
-begin
-//  Logger.Send(
-//    'EditorChangeUpdating(AUpdating = %s)',
-//    [BoolToStr(AUpdating, 'True', 'False')]
-//  );
-//  if FFontChanged then
-//  begin
-//    Settings.EditorFont.Assign(EditorFont);
-//    Settings.Apply;
-//    FFontChanged := False;
-//  end;
-end;
-
-{ Makes actionlist shortcuts work on the form }
-
-//procedure TEditorView.FormShortCut(var Msg: TLMKey; var Handled: Boolean);
-//begin
-//  Handled := Actions.ActionList.IsShortCut(Msg);
-//end;
-
-{$IFDEF Windows}
 { Event triggered when MonitorChanges is True }
 
-procedure TEditorView.DirectoryWatchNotify(const Sender: TObject;
-  const AAction: TWatchAction; const FileName: string);
-begin
-  if SameText(FileName, ExtractFileName(Self.FileName)) and (AAction = waModified) then
-  begin
-    Load(Self.FileName);
-    if CanFocus then
-    begin
-      Editor.CaretY := Editor.Lines.Count;
-      Editor.EnsureCursorPosVisible;
-    end;
-  end;
-end;
-{$ENDIF}
-
-procedure TEditorView.EditorClickLink(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  Logger.Send('EditorClickLink');
-  Commands.OpenFileAtCursor;
-end;
+//procedure TEditorView.DirectoryWatchNotify(const Sender: TObject;
+//  const AAction: TWatchAction; const FileName: string);
+//begin
+//  if SameText(FileName, ExtractFileName(Self.FileName)) and (AAction = waModified) then
+//  begin
+//    Load(Self.FileName);
+//    if CanFocus then
+//    begin
+//      Editor.CaretY := Editor.Lines.Count;
+//      Editor.EnsureCursorPosVisible;
+//    end;
+//  end;
+//end;
 
 procedure TEditorView.EditorCommandProcessed(Sender: TObject;
   var ACommand: TBCEditorCommand; var AChar: Char; AData: Pointer);
@@ -972,7 +925,7 @@ end;
 
 function TEditorView.GetSelEnd: Integer;
 begin
-
+  Result := 0;
   //Result := Editor.SelectionEndPosition SelEnd;
 end;
 
@@ -983,6 +936,7 @@ end;
 
 function TEditorView.GetSelStart: Integer;
 begin
+  Result := 0;
   //Result := Editor.SelStart;
 end;
 
@@ -1164,6 +1118,7 @@ begin
 //    Result := Text[SelStart]
 //  else
 //    Result := #0;
+
 end;
 
 function TEditorView.GetEditor: TBCEditor;
@@ -1331,8 +1286,6 @@ begin
 end;
 
 procedure TEditorView.InitializeEditor(AEditor: TBCEditor);
-var
-  N: Integer;
 begin
   AEditor.Parent := Self;
   AEditor.Align := alClient;
@@ -1679,9 +1632,6 @@ end;
   like eg. a database table. }
 
 procedure TEditorView.Load(const AStorageName: string);
-var
-  S  : string;
-  FS : TFileStream;
 begin
   Events.DoLoad(AStorageName);
   if IsFile then

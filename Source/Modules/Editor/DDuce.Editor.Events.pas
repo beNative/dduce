@@ -53,7 +53,6 @@ type
     FOnShowEditorToolView  : Event<TEditorToolViewEvent>;
     FOnHideEditorToolView  : Event<TEditorToolViewEvent>;
     FOnOpenOtherInstance   : Event<TOpenOtherInstanceEvent>;
-    FOnStatusMessage       : Event<TStatusMessageEvent>;
 
   protected
     function GetOnOpen: IEvent<TStorageEvent>;

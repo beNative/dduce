@@ -68,11 +68,11 @@ uses
 
 function RunFormatterProcess(const AExeName: string; const AParams: string;
   const AString: string; const ATempFile: string): string;
-var
+//var
   //Process : TProcess;
-  SL      : TStringList;
-  S       : string;
-  T       : string;
+//  SL      : TStringList;
+//  S       : string;
+//  T       : string;
 begin
 //  S := GetApplicationPath + AExeName;
 //  T := GetApplicationPath + ATempFile;

@@ -72,8 +72,8 @@ const
 var
   CDS     : TCopyDataStruct;
   TextSize : Integer;
-  DataSize : Integer;
-  P        : Pointer;
+//  DataSize : Integer;
+//  P        : Pointer;
   S        : AnsiString;
   LMT      : Integer;
 begin

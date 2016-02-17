@@ -45,9 +45,6 @@ uses
   DDuce.Editor.Interfaces;
 
 type
-
-  { TCustomEditorToolView }
-
   TCustomEditorToolView = class(TForm, IEditorToolView)
   strict private
     // this flag is set when there are pending updates.
@@ -97,7 +94,6 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
   end;
 
 implementation
@@ -108,16 +104,11 @@ implementation
 procedure TCustomEditorToolView.AfterConstruction;
 begin
   inherited AfterConstruction;
-//  Manager.Settings.AddEditorSettingsChangedHandler(EditorSettingsChanged);
-//  Manager.Events.AddOnCaretPositionEvent(EditorCaretPositionChange);
-//  Manager.Events.AddOnActiveViewChangeHandler(EditorActiveViewChanged);
-//  Manager.Events.AddOnChangeHandler(EditorChange);
-//  Manager.Events.AddOnModifiedHandler(EditorModified);
-end;
-
-procedure TCustomEditorToolView.BeforeDestruction;
-begin
-  inherited BeforeDestruction;
+  Manager.Settings.OnChanged.Add(EditorSettingsChanged);
+  Manager.Events.OnCaretPositionChange.Add(EditorCaretPositionChange);
+  Manager.Events.OnActiveViewChange.Add(EditorActiveViewChanged);
+  Manager.Events.OnChange.Add(EditorChange);
+  Manager.Events.OnModified.Add(EditorModified);
 end;
 {$ENDREGION}
 

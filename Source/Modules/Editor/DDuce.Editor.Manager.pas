@@ -35,16 +35,9 @@ unit DDuce.Editor.Manager;
    - macro support
    - spellcheck support
    - apply consistent casing for word under cursor/all words ? => dangerous for strings
-
-   - fix highlighter issues
-   - fix DeleteView methods
-
    - customizable shortcuts for actions.
-
    - show a hintwindow of the selection with the proposed operation!
    - list of all supported actions, category, shortcut, description (treeview)
-
-   - make ts.Editor.Views, ts_Editor_Actions, ts_Editor_Menus, ts_Editor_Images ?
    - goto line
    - goto position
 
@@ -82,7 +75,6 @@ unit DDuce.Editor.Manager;
 
       IEditorCommands
         Set of commands that can be executed on the active editor view.
-
 }
 {$ENDREGION}
 
@@ -93,6 +85,8 @@ uses
   System.ImageList,
   Vcl.Controls, Vcl.ActnList, Vcl.Menus, Vcl.Dialogs, Vcl.Forms, Vcl.ImgList,
   Vcl.ActnPopup,
+
+  Spring.Collections,
 
   BCEditor.Editor, BCEditor.Editor.KeyCommands,
 
@@ -246,7 +240,7 @@ type
     actSaveAs                         : TAction;
     actSettings                       : TAction;
     actShowCodeShaper                 : TAction;
-    actSortSelectedLines: TAction;
+    actSortSelectedLines              : TAction;
     actToggleComment                  : TAction;
     actToggleFoldLevel                : TAction;
     actToggleHighlighter              : TAction;
@@ -292,38 +286,12 @@ type
     procedure actAssociateFilesExecute(Sender: TObject);
     procedure actAutoFormatXMLExecute(Sender: TObject);
     procedure actAutoGuessHighlighterExecute(Sender: TObject);
-    procedure actCompressSpaceExecute(Sender: TObject);
-    procedure actCompressWhitespaceExecute(Sender: TObject);
-    procedure actConvertTabsToSpacesExecute(Sender: TObject);
-    procedure actDecodeURLExecute(Sender: TObject);
-    procedure actDecodeXMLExecute(Sender: TObject);
-    procedure actEncodeURLExecute(Sender: TObject);
-    procedure actEncodeXMLExecute(Sender: TObject);
-    procedure actMergeBlankLinesExecute(Sender: TObject);
-    procedure actPageSetupExecute(Sender: TObject);
-    procedure actPlaybackMacroExecute(Sender: TObject);
-    procedure actPrintExecute(Sender: TObject);
-    procedure actPrintPreviewExecute(Sender: TObject);
-    procedure actRecordMacroExecute(Sender: TObject);
-    procedure actSaveAllExecute(Sender: TObject);
-    procedure actShowFilterTestExecute(Sender: TObject);
-    procedure actShowHexEditorExecute(Sender: TObject);
-    procedure actShowHTMLViewerExecute(Sender: TObject);
-    procedure actToggleMiniMapExecute(Sender: TObject);
-    procedure actShowScriptEditorExecute(Sender: TObject);
-    procedure actStripCommentsExecute(Sender: TObject);
-    procedure actUnindentExecute(Sender: TObject);
-    procedure actFindAllOccurencesExecute(Sender: TObject);
-    procedure actIndentExecute(Sender: TObject);
-    procedure actInsertGUIDExecute(Sender: TObject);
-    procedure actSelectionInfoExecute(Sender: TObject);
-    procedure actSelectionModeExecute(Sender: TObject);
-    procedure actSingleInstanceExecute(Sender: TObject);
-    procedure actStayOnTopExecute(Sender: TObject);
-    procedure actToggleBlockCommentSelectionExecute(Sender: TObject);
     procedure actClearExecute(Sender: TObject);
     procedure actCloseExecute(Sender: TObject);
     procedure actCloseOthersExecute(Sender: TObject);
+    procedure actCompressSpaceExecute(Sender: TObject);
+    procedure actCompressWhitespaceExecute(Sender: TObject);
+    procedure actConvertTabsToSpacesExecute(Sender: TObject);
     procedure actCopyExecute(Sender: TObject);
     procedure actCopyFileNameExecute(Sender: TObject);
     procedure actCopyFilePathExecute(Sender: TObject);
@@ -339,14 +307,19 @@ type
     procedure actCutExecute(Sender: TObject);
     procedure actDecFontSizeExecute(Sender: TObject);
     procedure actDecodeBase64Execute(Sender: TObject);
+    procedure actDecodeURLExecute(Sender: TObject);
+    procedure actDecodeXMLExecute(Sender: TObject);
     procedure actDequoteLinesExecute(Sender: TObject);
     procedure actDequoteSelectionExecute(Sender: TObject);
     procedure actEncodeBase64Execute(Sender: TObject);
+    procedure actEncodeURLExecute(Sender: TObject);
+    procedure actEncodeXMLExecute(Sender: TObject);
+    procedure actEncodingExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
     procedure actExportToHTMLExecute(Sender: TObject);
     procedure actExportToRTFExecute(Sender: TObject);
     procedure actExportToWikiExecute(Sender: TObject);
-    procedure actShowCodeFilterExecute(Sender: TObject);
+    procedure actFindAllOccurencesExecute(Sender: TObject);
     procedure actFindNextExecute(Sender: TObject);
     procedure actFindNextWordExecute(Sender: TObject);
     procedure actFindPreviousExecute(Sender: TObject);
@@ -366,61 +339,81 @@ type
     procedure actHelpExecute(Sender: TObject);
     procedure actHighlighterExecute(Sender: TObject);
     procedure actIncFontSizeExecute(Sender: TObject);
-    procedure actShowCharacterMapExecute(Sender: TObject);
+    procedure actIndentExecute(Sender: TObject);
     procedure actInsertColorValueExecute(Sender: TObject);
+    procedure actInsertGUIDExecute(Sender: TObject);
     procedure actInspectExecute(Sender: TObject);
+    procedure actLineBreakStyleExecute(Sender: TObject);
     procedure actLowerCaseSelectionExecute(Sender: TObject);
+    procedure actMergeBlankLinesExecute(Sender: TObject);
     procedure actMonitorChangesExecute(Sender: TObject);
     procedure actNewExecute(Sender: TObject);
     procedure actOpenExecute(Sender: TObject);
     procedure actOpenFileAtCursorExecute(Sender: TObject);
+    procedure actPageSetupExecute(Sender: TObject);
     procedure actPascalStringOfSelectionExecute(Sender: TObject);
     procedure actPasteExecute(Sender: TObject);
+    procedure actPlaybackMacroExecute(Sender: TObject);
+    procedure actPrintExecute(Sender: TObject);
+    procedure actPrintPreviewExecute(Sender: TObject);
     procedure actQuoteLinesAndDelimitExecute(Sender: TObject);
     procedure actQuoteLinesExecute(Sender: TObject);
     procedure actQuoteSelectionExecute(Sender: TObject);
+    procedure actRecordMacroExecute(Sender: TObject);
     procedure actRedoExecute(Sender: TObject);
     procedure actReloadExecute(Sender: TObject);
+    procedure actSaveAllExecute(Sender: TObject);
     procedure actSaveAsExecute(Sender: TObject);
     procedure actSaveExecute(Sender: TObject);
     procedure actSearchExecute(Sender: TObject);
     procedure actSearchReplaceExecute(Sender: TObject);
     procedure actSelectAllExecute(Sender: TObject);
+    procedure actSelectionInfoExecute(Sender: TObject);
+    procedure actSelectionModeExecute(Sender: TObject);
     procedure actSettingsExecute(Sender: TObject);
-    procedure actShowCodeShaperExecute(Sender: TObject);
     procedure actShowActionsExecute(Sender: TObject);
-    procedure actShowSpecialCharactersExecute(Sender: TObject);
+    procedure actShowCharacterMapExecute(Sender: TObject);
+    procedure actShowCodeFilterExecute(Sender: TObject);
+    procedure actShowCodeShaperExecute(Sender: TObject);
+    procedure actShowFilterTestExecute(Sender: TObject);
+    procedure actShowHexEditorExecute(Sender: TObject);
+    procedure actShowHTMLViewerExecute(Sender: TObject);
     procedure actShowPreviewExecute(Sender: TObject);
+    procedure actShowScriptEditorExecute(Sender: TObject);
+    procedure actShowSpecialCharactersExecute(Sender: TObject);
+    procedure actShowStructureViewerExecute(Sender: TObject);
     procedure actShowTestExecute(Sender: TObject);
     procedure actShowViewsExecute(Sender: TObject);
+    procedure actSingleInstanceExecute(Sender: TObject);
     procedure actSmartSelectExecute(Sender: TObject);
     procedure actSortSelectedLinesExecute(Sender: TObject);
+    procedure actStayOnTopExecute(Sender: TObject);
+    procedure actStripCommentsExecute(Sender: TObject);
     procedure actStripFirstCharExecute(Sender: TObject);
-    procedure actStripMarkupExecute(Sender: TObject);
     procedure actStripLastCharExecute(Sender: TObject);
+    procedure actStripMarkupExecute(Sender: TObject);
     procedure actSyncEditExecute(Sender: TObject);
     procedure actTestFormExecute(Sender: TObject);
+    procedure actToggleBlockCommentSelectionExecute(Sender: TObject);
     procedure actToggleCommentExecute(Sender: TObject);
     procedure actToggleFoldLevelExecute(Sender: TObject);
     procedure actToggleHighlighterExecute(Sender: TObject);
     procedure actToggleMaximizedExecute(Sender: TObject);
+    procedure actToggleMiniMapExecute(Sender: TObject);
     procedure actUndoExecute(Sender: TObject);
+    procedure actUnindentExecute(Sender: TObject);
     procedure actUpperCaseSelectionExecute(Sender: TObject);
-    procedure actEncodingExecute(Sender: TObject);
-    procedure actLineBreakStyleExecute(Sender: TObject);
-    procedure actShowStructureViewerExecute(Sender: TObject);
     {$ENDREGION}
 
   private
     FChanged          : Boolean;
-    FCurrentViewIndex : Integer;
     FPersistSettings  : Boolean;
     FToolViews        : IEditorToolViews;
     FEvents           : IEditorEvents;
     FCommands         : IEditorCommands;
     FSettings         : IEditorSettings;
     FActiveView       : IEditorView;
-    FViewList         : TEditorViewList;
+    FViewList         : IList<IEditorView>;
     FSearchEngine     : IEditorSearchEngine;
 
     {$REGION'property access methods'}
@@ -428,10 +421,7 @@ type
     function GetActions: IEditorActions;
     function GetClipboardPopupMenu: TPopupMenu;
     function GetCommands: IEditorCommands;
-    function GetCurrent: IEditorView;
-    function GetEditor: TBCEditor;
     function GetEditorPopupMenu: TPopupMenu;
-    function GetEditorViews: IEditorViews;
     function GetEncodingPopupMenu: TPopupMenu;
     function GetEvents: IEditorEvents;
     function GetExportPopupMenu: TPopupMenu;
@@ -461,7 +451,7 @@ type
     function GetViewByFileName(AFileName: string): IEditorView;
     function GetViewByName(AName: string): IEditorView;
     function GetViewCount: Integer;
-    function GetViewList: TEditorViewList;
+    function GetViewList: IList<IEditorView>;
     function GetViews: IEditorViews;
     procedure SetActiveView(AValue: IEditorView);
     procedure SetPersistSettings(const AValue: Boolean);
@@ -683,7 +673,7 @@ type
     property ViewByFileName[AFileName: string]: IEditorView
       read GetViewByFileName;
 
-    property ViewList: TEditorViewList
+    property ViewList: IList<IEditorView>
       read GetViewList;
 
     property ViewCount: Integer
@@ -756,7 +746,7 @@ begin
   FToolViews        := TToolViews.Create(Self);
   FEvents           := TEditorEvents.Create(Self);
   FCommands         := TEditorCommands.Create(Self);
-  FViewList         := TEditorViewList.Create;
+  FViewList         := TCollections.CreateInterfaceList<IEditorView>;;
   FSearchEngine     := TSearchEngine.Create(Self);
   FSettings.OnChanged.Add(EditorSettingsChanged);
   RegisterToolViews;
@@ -766,36 +756,23 @@ end;
 
 procedure TdmEditorManager.BeforeDestruction;
 begin
-  FActiveView := nil;
   if PersistSettings then
     FSettings.Save;
-  FSearchEngine := nil;
-  FSettings := nil;
-  FEvents   := nil;
-  FCommands := nil;
-  FToolViews := nil;
-  FreeAndNil(FViewList);
+//  FActiveView := nil;
+//  FSearchEngine := nil;
+//  FSettings := nil;
+//  FEvents   := nil;
+//  FCommands := nil;
+//  FViewList := nil;
+//  FToolViews := nil;
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
 
 {$REGION'property access methods'}
-function TdmEditorManager.GetEditor: TBCEditor;
-begin
-  if Assigned(ActiveView) then
-    Result := ActiveView.Editor
-  else
-    Result := nil;
-end;
-
 function TdmEditorManager.GetEditorPopupMenu: TPopupMenu;
 begin
   Result := ppmEditor;
-end;
-
-function TdmEditorManager.GetEditorViews: IEditorViews;
-begin
-  Result := Self as IEditorViews;
 end;
 
 function TdmEditorManager.GetEncodingPopupMenu: TPopupMenu;
@@ -853,16 +830,12 @@ begin
   Result := FCommands as IEditorCommands;
 end;
 
-function TdmEditorManager.GetCurrent: IEditorView;
-begin
-  Result := FViewList[FCurrentViewIndex] as IEditorView;
-end;
-
 function TdmEditorManager.GetItem(AName: string): TCustomAction;
 var
   A: TCustomAction;
   CA : TContainedAction;
 begin
+  Result := nil;
   for CA in aclActions do
     if CA.Name = AName then
       Break;
@@ -1038,7 +1011,7 @@ begin
     Result := 0;
 end;
 
-function TdmEditorManager.GetViewList: TEditorViewList;
+function TdmEditorManager.GetViewList: IList<IEditorView>;
 begin
   Result := FViewList;
 end;
@@ -1165,8 +1138,8 @@ begin
 end;
 
 procedure TdmEditorManager.actAssociateFilesExecute(Sender: TObject);
-var
-  F : TForm;
+//var
+//  F : TForm;
 begin
 //  F := TfrmOptionsAssociate.Create(Self);
 //  try
@@ -1505,6 +1478,7 @@ end;
 
 procedure TdmEditorManager.actSettingsExecute(Sender: TObject);
 begin
+  ShowMessage(SNotImplementedYet);
 {  with TEditorSettingsDialog.Create(Self) do
   begin
     ShowModal;
@@ -1574,7 +1548,7 @@ end;
 
 procedure TdmEditorManager.actPlaybackMacroExecute(Sender: TObject);
 begin
-//
+  ShowMessage(SNotImplementedYet);
 end;
 
 procedure TdmEditorManager.actPrintExecute(Sender: TObject);
@@ -1767,11 +1741,12 @@ end;
 
 procedure TdmEditorManager.actShowSpecialCharactersExecute(Sender: TObject);
 begin
-//  Settings.EditorOptions.ShowSpecialCharacters := (Sender as TAction).Checked;
+  Settings.EditorOptions.ShowSpecialCharacters := (Sender as TAction).Checked;
 end;
 
 procedure TdmEditorManager.actEncodingExecute(Sender: TObject);
 begin
+  ShowMessage(SNotImplementedYet);
   //ActiveView.Encoding := (Sender as TAction).Caption;
 end;
 
@@ -1853,7 +1828,6 @@ begin
   BuildClipboardPopupMenu;
   BuildEncodingPopupMenu;
   BuildFoldPopupMenu;
-
   BuildExportPopupMenu;
   BuildInsertPopupMenu;
   BuildLineBreakStylePopupMenu;
@@ -1866,7 +1840,6 @@ begin
   BuildSettingsPopupMenu;
   BuildFilePopupMenu;
   BuildEditorPopupMenu;
-
 end;
 
 procedure TdmEditorManager.CreateActions;
@@ -2183,11 +2156,11 @@ begin
 end;
 
 procedure TdmEditorManager.BuildSelectionModePopupMenu;
-var
+//var
 //  SM : TSynSelectionMode;
-  MI : TMenuItem;
-  S  : string;
-  A  : TCustomAction;
+//  MI : TMenuItem;
+//  S  : string;
+//  A  : TCustomAction;
 begin
   SelectionModePopupMenu.Items.Clear;
   SelectionModePopupMenu.Items.Action := actSelectionModeMenu;
@@ -2284,7 +2257,7 @@ end;
 procedure TdmEditorManager.RegisterToolViews;
 begin
   //ToolViews.Register(TfrmAlignLines, TAlignLinesSettings, 'AlignLines');
-//ToolViews.Register(TfrmCodeFilterDialog, TCodeFilterSettings, 'CodeFilter');
+  //ToolViews.Register(TfrmCodeFilterDialog, TCodeFilterSettings, 'CodeFilter');
 //ToolViews.Register(TfrmHTMLView, THTMLViewSettings, 'HTMLView');
   ToolViews.Register(TfrmSortStrings, TSortStringsSettings, 'SortStrings');
   ToolViews.Register(TfrmSearchForm, TSearchEngineSettings, 'Search');
@@ -2435,6 +2408,7 @@ function TdmEditorManager.DeleteView(AView: IEditorView): Boolean;
 var
   I : Integer;
 begin
+  Result := False;
   Logger.Enter(Self, 'DeleteView(AView)');
   if Assigned(AView) and Assigned(ViewList) then
   begin
@@ -2719,8 +2693,7 @@ begin
 
       actToggleMaximized.Checked :=
         Settings.FormSettings.WindowState = wsMaximized;
-//      actStayOnTop.Checked :=
-//        Settings.FormSettings.FormStyle = fsSystemStayOnTop;
+      actStayOnTop.Checked := Settings.FormSettings.FormStyle = fsStayOnTop;
       actSingleInstance.Checked := Settings.SingleInstance;
 
       actSaveAll.Enabled := ViewsModified;
@@ -2759,9 +2732,9 @@ begin
 end;
 
 procedure TdmEditorManager.UpdateLineBreakStyleActions;
-var
-  S : string;
-  A : TCustomAction;
+//var
+//  S : string;
+//  A : TCustomAction;
 begin
 //  S := '';
 //  if Assigned(ActiveView) then
@@ -2826,8 +2799,8 @@ begin
 end;
 
 procedure TdmEditorManager.UpdateFoldingActions;
-var
-  I : Integer;
+//var
+//  I : Integer;
 begin
   // Assign fold shortcuts
 //  I := View.Editor.KeyCommands.FindCommand(ecFoldLevel0);

@@ -40,7 +40,7 @@ type
     FManager          : IEditorManager;
     FMainToolbar      : TToolbar;
     //FSelectionToolbar : TToolbar;
-    FRightToolbar     : TToolbar;
+    //FRightToolbar     : TToolbar;
     FMainMenu         : TMainMenu;
     FPI               : TPropertyInspector;
 

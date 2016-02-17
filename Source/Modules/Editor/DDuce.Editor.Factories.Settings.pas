@@ -49,11 +49,10 @@ uses
   DDuce.Editor.CodeFormatters,
 //  DDuce.Editor.CodeFormatters.SQL,
   DDuce.Editor.AlignLines.Settings,
-//  DDuce.Editor.CodeFilter.Settings,
+  //DDuce.Editor.CodeFilter.Settings,
 //  DDuce.Editor.CodeShaper.Settings,
 //  DDuce.Editor.HexEditor.Settings,
 //  DDuce.Editor.HTMLView.Settings,
-//  DDuce.Editor.MiniMap.Settings,
 //  DDuce.Editor.SortStrings.Settings,
   DDuce.Editor.Search.Engine.Settings,
   DDuce.Editor.Settings,
@@ -65,10 +64,9 @@ procedure TEditorSettingsFactory.RegisterToolSettings(
   ASettings: TEditorToolSettings);
 begin
   ASettings.RegisterSettings(TAlignLinesSettings, 'AlignLinesSettings');
-//  ASettings.RegisterSettings(TCodeFilterSettings, 'CodeFilterSettings');
+  //ASettings.RegisterSettings(TCodeFilterSettings, 'CodeFilterSettings');
 //  ASettings.RegisterSettings(THTMLViewSettings, 'HTMLViewSettings');
 //  ASettings.RegisterSettings(TSortStringsSettings, 'SortStringsSettings');
-//  ASettings.RegisterSettings(TMiniMapSettings, 'MiniMapSettings');
   //ASettings.RegisterSettings(THexEditorSettings, 'HexEditorSettings');
   ASettings.RegisterSettings(TSearchEngineSettings, 'SearchSettings');
 //  ASettings.RegisterSettings(TCodeShaperSettings, 'CodeShaperSettings');
@@ -76,11 +74,6 @@ end;
 //
 procedure TEditorSettingsFactory.RegisterHighlighters(
   AHighlighters: THighlighters);
-var
-  S    : string;
-  F    : string;
-  //HL : IList<string>;
-
   procedure Reg(
     const ALayoutName     : string = '';
     const AName           : string = '';
@@ -104,9 +97,6 @@ var
   end;
 
 begin
-
-
-
 //  HL := TCollections.CreateList<string>;
 //  HL.AddRange(TDirectory.GetFiles('.\Highlighters', '*.json'));
 //  Reg('ActionScript',
@@ -157,7 +147,6 @@ begin
 //  Reg('Visual Basic',
   Reg('XML',               HL_XML,   SXMLDescription, FILE_EXTENSIONS_XML);
 //  Reg('XSL',
-
 end;
 {$ENDREGION}
 

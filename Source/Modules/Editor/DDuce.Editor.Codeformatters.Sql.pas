@@ -66,8 +66,8 @@ end;
 
 {$REGION 'protected methods'}
 function TSQLFormatter.Format(const AString: string): string;
-var
-  SS : TStringStream;
+//var
+//  SS : TStringStream;
 //  LR : TStreamLineReader;
 //  P  : TSQLParser;
 //  S  : TSQLScanner;

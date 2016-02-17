@@ -33,8 +33,7 @@ unit DDuce.Editor.Filter.ToolView;
   - assign TVP events (filter event)
   - assign TVP.ItemsSource property
   - assign TVP.Treeview property
-
-  }
+}
 
 interface
 
@@ -60,10 +59,16 @@ type
     pnlMain            : TPanel;
     sbrMain            : TStatusBar;
 
-    function CCustomDraw(Sender: TObject; ColumnDefinition: TColumnDefinition;
-      Item: TObject; TargetCanvas: TCanvas; CellRect: TRect;
-      ImageList: TCustomImageList; DrawMode: TDrawMode;
-      Selected: Boolean): Boolean;
+    function CCustomDraw(
+      Sender           : TObject;
+      ColumnDefinition : TColumnDefinition;
+      Item             : TObject;
+      TargetCanvas     : TCanvas;
+      CellRect         : TRect;
+      ImageList        : TCustomImageList;
+      DrawMode         : TDrawMode;
+      Selected         : Boolean
+    ) : Boolean;
 
     procedure actFocusFilterTextExecute(Sender: TObject);
 
@@ -145,13 +150,12 @@ implementation
 {$R *.dfm}
 
 uses
-  Winapi.Windows,
+  Winapi.Windows, Winapi.Messages,
   System.Variants,
-
-  DDuce.Logger,
 
   DSharp.Windows.ColumnDefinitions.ControlTemplate,
 
+  DDuce.Logger, DDuce.Factories,
   DDuce.Editor.Utils;
 
 type
@@ -202,11 +206,10 @@ var
 procedure TfrmFilter.AfterConstruction;
 begin
   inherited AfterConstruction;
-//  FVST := VST.Create(Self, pnlView);
-//  FVST.OnKeyPress := FVSTKeyPress;
-//  FVST.OnKeyUp := FVSTKeyUp;
-//  FTVP := CreateTVP(Self, FVST);
-//  FTVP.MultiLine := False;
+  FVST := TFactories.CreateVirtualStringTree(Self, pnlView);
+  FVST.OnKeyPress := FVSTKeyPress;
+  FVST.OnKeyUp := FVSTKeyUp;
+  FTVP := TFactories.CreateTreeViewPresenter(Self, FVST);
 
 //  FTextStyle.SingleLine := True;
 //  FTextStyle.Opaque     := False;
@@ -230,11 +233,11 @@ function TfrmFilter.CCustomDraw(Sender: TObject;
   ColumnDefinition: TColumnDefinition; Item: TObject; TargetCanvas: TCanvas;
   CellRect: TRect; ImageList: TCustomImageList; DrawMode: TDrawMode;
   Selected: Boolean): Boolean;
-var
-  Match  : string;
-  Offset : Integer;
-  R      : TRect;
-  S      : string;
+//var
+//  Match  : string;
+//  Offset : Integer;
+//  R      : TRect;
+//  S      : string;
 begin
 //  if DrawMode = dmBeforeCellPaint then
 //  begin
@@ -358,9 +361,7 @@ begin
   else if not edtFilter.Focused then
   begin
     edtFilter.SetFocus;
-{$IFDEF Windows}
     PostMessage(edtFilter.Handle, WM_CHAR, Ord(Key), 0);
-{$ENDIF}
     edtFilter.SelStart := Length(Filter);
     // required to prevent the invocation of accelerator keys!
     Key := #0;
@@ -532,4 +533,3 @@ begin
 end;
 {$ENDREGION}
 end.
-

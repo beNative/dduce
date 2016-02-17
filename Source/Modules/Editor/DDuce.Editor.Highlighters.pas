@@ -47,19 +47,15 @@ type
 
   THighlighterItem = class(TComponent)
   private
-    FBlockCommentEndTag   : string;
-    FBlockCommentStartTag : string;
     FCodeFormatter        : ICodeFormatter;
     FDescription          : string;
     FFormatterSupport     : Boolean;
     FLayoutFileName       : string;
-    FLineCommentTag       : string;
     FDefaultFilter        : string;
     FHighlighter          : string;
     FSmartSelectionTags   : TCodeTags;
     FFileExtensions       : TStringList;
     FUseCommonAttributes  : Boolean;
-    FBCEditorHighlighter  : TBCEditorHighlighter;
 
     // private property access methods
     function GetDefaultFilter: string;
@@ -335,12 +331,13 @@ end;
 { Finds the corresponding highlighteritem for a given file extension. }
 
 function THighlighters.FindHighlighterForFileType(const AFileExt: string): THighlighterItem;
-var
-  I  : Integer;
+//var
+//  I  : Integer;
   //HL : TSynCustomHighlighter;
-  S  : string;
+//  S  : string;
 begin
-//  Result := nil;
+
+  Result := nil;
 //  S := LowerCase(AFileExt);
 //  for I := 0 to Count - 1 do
 //  begin

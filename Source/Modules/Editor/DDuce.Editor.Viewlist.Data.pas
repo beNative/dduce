@@ -60,7 +60,7 @@ type
 implementation
 
 uses
-  SysUtils;
+  System.SysUtils;
 
 {$REGION 'construction and destruction'}
 constructor TEditorViewInfo.Create(AView: IEditorView);

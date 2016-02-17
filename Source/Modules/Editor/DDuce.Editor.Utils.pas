@@ -41,7 +41,7 @@ type
   );
 
 const
-  AllChars           = [Low(Char) .. High(Char)];
+  AllChars           = [Low(AnsiChar) .. High(AnsiChar)];
   DefaultWordBorders = AllChars - ['a'..'z', 'A'..'Z', '0'..'9', '_'];
   WhiteSpaces        = [' ', #9, #10, #13];
 
@@ -160,16 +160,6 @@ function DequoteLines(
   const AString    : string;
   const AQuoteChar : Char = '''';
         ATrimSpace : Boolean = False
-): string;
-
-function CommentText(
-  const AString      : string;
-        ACommentType : TCommentType
-): string;
-
-function UnCommentText(
-  const AString      : string;
-        ACommentType : TCommentType
 ): string;
 
 function FormatXML(
@@ -518,10 +508,10 @@ end;
 
 { Author: Mattias Gaertner (BasicCodeTools.pas) }
 
-function CompareTextIgnoringSpace(Txt1: PChar; Len1: integer;
-  Txt2: PChar; Len2: integer; CaseSensitive: boolean): integer;
+function CompareTextIgnoringSpace(Txt1: PAnsiChar; Len1: integer;
+  Txt2: PAnsiChar; Len2: integer; CaseSensitive: boolean): integer;
 
-  function IsIdentChar(const AChar: Char): Boolean;
+  function IsIdentChar(const AChar: AnsiChar): Boolean;
   begin
     Result := AChar in ['a'..'z','A'..'Z','_','0'..'9'];
   end;
@@ -600,34 +590,6 @@ begin
     // there is some text at the end of P1
     Result:=-1
   end;
-end;
-
-{ Author: Mattias Gaertner (BasicCodeTools.pas) }
-
-function CompareText(Txt1: PChar; Len1: integer; Txt2: PChar; Len2: integer;
-  CaseSensitive, IgnoreSpace: boolean): integer; overload;
-begin
-  if IgnoreSpace then
-    Result:=CompareTextIgnoringSpace(Txt1,Len1,Txt2,Len2,CaseSensitive)
-  else
-    Result:=CompareText(Txt1,Len1,Txt2,Len2,CaseSensitive);
-end;
-
-{ Author: Mattias Gaertner (BasicCodeTools.pas) }
-
-function CompareTextBlock(Data1, Data2: Pointer): integer;
-var
-  Block1: TTextBlock;
-  Block2: TTextBlock;
-  Settings: TTextBlockCompareSettings;
-begin
-  Block1:=TTextBlock(Data1);
-  Block2:=TTextBlock(Data2);
-  Settings:=Block1.Settings;
-  Result:=CompareText(Block1.Start,Block1.Len,Block2.Start,Block2.Len,
-                      Settings.CaseSensitive,Settings.IgnoreSpace);
-  if not Settings.Ascending then
-    Result:=-Result;
 end;
 
 { Will remove all spaces from the given string, but preserves one space
@@ -1090,243 +1052,6 @@ begin
   end;
 end;
 
-function CommentText(const AString: string; ACommentType: TCommentType): string;
-
-  procedure GetTextInfo(out ALen, ALineCount: Integer; out ALastLineEmpty: Boolean);
-  var
-    P : Integer;
-  begin
-    ALen       := Length(AString);
-    ALineCount := 1;
-    P         := 1;
-    while P <= ALen do
-      if not (AString[P] in [#10, #13]) then
-      begin
-        Inc(P);
-      end
-      else
-      begin
-        Inc(P);
-        Inc(ALineCount);
-        if (P <= ALen) and (AString[P] in [#10, #13]) and (AString[P] <> AString[P - 1]) then
-          Inc(P);
-      end;
-    ALastLineEmpty := (ALen = 0) or (AString[ALen] in [#10, #13]);
-  end;
-
-  procedure DoCommentBlock(const AFirstLineStart, ALineStart, ALastLine: string);
-  var
-    OldLen, NewLen, ALineCount, OldPos, NewPos : Integer;
-    ALastLineEmpty : Boolean;
-  begin
-    GetTextInfo(OldLen, ALineCount, ALastLineEmpty);
-
-    NewLen := OldLen + Length(AFirstLineStart) +
-      (ALineCount - 1) * Length(ALineStart);
-    if ALastLineEmpty then
-      Dec(NewLen, Length(ALineStart))
-    else
-      Inc(NewLen, Length(LineEnding));
-    if (ALastLine <> '') then
-    begin
-      Inc(NewLen, Length(ALastLine) + Length(LineEnding));
-    end;
-
-    SetLength(Result, NewLen);
-    NewPos := 1;
-    OldPos := 1;
-
-    // add first line start
-    if AFirstLineStart <> '' then
-    begin
-      System.Move(AFirstLineStart[1], Result[NewPos], Length(AFirstLineStart));
-      Inc(NewPos, Length(AFirstLineStart));
-    end;
-    // Copy all lines and add new Alinestart
-    while (OldPos <= OldLen) do
-    begin
-      if (not (AString[OldPos] in [#10, #13])) then
-      begin
-        Result[NewPos] := AString[OldPos];
-        Inc(OldPos);
-        Inc(NewPos);
-      end
-      else
-      begin
-        Result[NewPos] := AString[OldPos];
-        Inc(OldPos);
-        Inc(NewPos);
-        if (OldPos <= OldLen) and (AString[OldPos] in [#10, #13]) and
-          (AString[OldPos] <> AString[OldPos - 1]) then
-        begin
-          Result[NewPos] := AString[OldPos];
-          Inc(OldPos);
-          Inc(NewPos);
-        end;
-        // start new line
-        if (ALineStart <> '') and (OldPos < OldLen) then
-        begin
-          System.Move(ALineStart[1], Result[NewPos], Length(ALineStart));
-          Inc(NewPos, Length(ALineStart));
-        end;
-      end;
-    end;
-    if not ALastLineEmpty then
-    begin
-      System.Move(LineEnding[1], Result[NewPos], Length(LineEnding));
-      Inc(NewPos, Length(LineEnding));
-    end;
-    // add last line
-    if ALastLine <> '' then
-    begin
-      System.Move(ALastLine[1], Result[NewPos], Length(ALastLine));
-      Inc(NewPos, Length(ALastLine));
-      System.Move(LineEnding[1], Result[NewPos], Length(LineEnding));
-      Inc(NewPos, Length(LineEnding));
-    end;
-    if NewPos <> NewLen + 1 then
-      raise Exception.Create('CommentText ERROR: ' +
-        IntToStr(NewPos - 1) + '<>' + IntToStr(NewLen));
-  end;
-
-begin
-  Result := AString;
-  if ACommentType = ctNone then
-    Exit;
-  if ACommentType = ctDefault then
-    ACommentType := ctPascal;
-
-  case ACommentType of
-    ctPascal:
-      DoCommentBlock('{ ', '  ', '}');
-    ctDelphi:
-      DoCommentBlock('// ', '// ', '');
-    ctTurboPascal:
-      DoCommentBlock('(* ', ' * ', ' *)');
-    ctCPP:
-      DoCommentBlock('/* ', ' * ', ' */');
-    ctPerl:
-      DoCommentBlock('# ', '# ', '');
-    ctHtml:
-      DoCommentBlock('<!-- ', '  ', '-->');
-    ctBatch:
-      DoCommentBlock(':: ', ':: ', '');
-    ctINI:
-      DoCommentBlock('; ', '; ', '');
-  end;
-end;
-
-function UnCommentText(const AString: string; ACommentType: TCommentType): string;
-begin
-  Result := AString;
-//  function TUnCommentExpert.ProcessSelected(Lines: TStrings): Boolean;
-//
-//  function RemoveFirstString(const SubString, InString: string): string;
-//  var
-//    Success: Boolean;
-//
-//    function RemoveFirstInternal(const SubString, InString: string): string;
-//    var
-//      SubStringPos: Integer;
-//    begin
-//      if StrLComp(PChar(Trim(InString)), PChar(SubString), Length(SubString)) = 0 then
-//      begin
-//        SubStringPos := Pos(SubString, InString);
-//        if SubStringPos > 1 then
-//        begin
-//          Result := Copy(InString, 1, SubStringPos - 1) +
-//            Copy(InString, SubStringPos + Length(SubString), MaxInt)
-//        end
-//        else
-//          Result := Copy(InString, Length(SubString) + 1, MaxInt);
-//
-//        Success := True;
-//      end
-//      else
-//        Result := InString;
-//    end;
-//
-//  begin
-//    Success := False;
-//    // If spaces are to be removed, try to first kill
-//    // WITH space, otherwise continue with default
-//    // comment removal.
-//    if InsertRemoveSpace then
-//    begin
-//      Result := RemoveFirstInternal(SubString + ' ', InString);
-//      if Success then
-//        Exit;
-//    end;
-//
-//    Result := RemoveFirstInternal(SubString, InString);
-//  end;
-//
-//  function RemoveLastString(const SubString, InString: string): string;
-//  var
-//    Success: Boolean;
-//
-//    function RemoveLastInternal(const SubString, InString: string): string;
-//    var
-//      SubStringStartPos: Integer;
-//      TempString: string;
-//    begin
-//      TempString := TrimRight(InString);
-//
-//      SubStringStartPos := Length(TempString) - Length(SubString) + 1;
-//
-//      if SubString = Copy(TempString, SubStringStartPos, Length(SubString)) then
-//      begin
-//        Result := Copy(TempString, 1, SubStringStartPos - 1);
-//        Success := True;
-//      end
-//      else
-//        Result := InString;
-//    end;
-//
-//  begin
-//    Success := False;
-//    // If spaces are to be removed, try to first kill
-//    // WITH space, otherwise continue with default
-//    // comment removal.
-//    if InsertRemoveSpace then
-//    begin
-//      Result := RemoveLastInternal(' ' + SubString, InString);
-//      if Success then
-//        Exit;
-//    end;
-//
-//    Result := RemoveLastInternal(SubString, InString);
-//  end;
-//
-//var
-//  i: Integer;
-//begin
-//  Assert(Assigned(Lines));
-//
-//  case CommentType of
-//    ctSlash:
-//      for i := 0 to Lines.Count - 1 do
-//        Lines[i] := RemoveFirstString('//', Lines[i]);
-//    ctC:
-//      begin
-//        Lines[0] := RemoveFirstString('(*', Lines[0]);
-//        Lines[Lines.Count - 1] := RemoveLastString('*)', Lines[Lines.Count - 1]);
-//      end;
-//    ctCpp:
-//      begin
-//        Lines[0] := RemoveFirstString('/*', Lines[0]);
-//        Lines[Lines.Count - 1] := RemoveLastString('*/', Lines[Lines.Count - 1]);
-//      end;
-//    ctPascal:
-//      begin
-//        Lines[0] := RemoveFirstString('{', Lines[0]);
-//        Lines[Lines.Count - 1] := RemoveLastString('}', Lines[Lines.Count - 1]);
-//      end;
-//  end;
-//  Result := True;
-//end;
-end;
-
 { REMARK: In Delphi we can use a native VCL function to do this! }
 
 function FormatXML(const AXMLString: string): string;
@@ -1534,11 +1259,11 @@ var
   NewLength     : Integer;
   P             : Integer;
   StartPos      : Integer;
-  Src           : PChar;
-  Dest          : PChar;
+  Src           : PAnsiChar;
+  Dest          : PAnsiChar;
   EndLen        : Integer;
-  EndPos        : PChar;
-  NewLineEnding : string;
+  EndPos        : PAnsiChar;
+  NewLineEnding : AnsiString;
 begin
   case ALineBreakStyle of
     tlbsLF   : NewLineEnding := #10;
@@ -1568,8 +1293,8 @@ begin
       Inc(P);
   end;
   SetLength(Result, NewLength);
-  Src := PChar(AString);
-  Dest := PChar(Result);
+  Src := PAnsiChar(AString);
+  Dest := PAnsiChar(Result);
   EndPos := Dest + NewLength;
   while Dest < EndPos do
   begin

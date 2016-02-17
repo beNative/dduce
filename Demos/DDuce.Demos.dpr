@@ -5,6 +5,7 @@ uses
   Vcl.Forms,
   Vcl.Themes,
   Vcl.Styles,
+  Vcl.SysStyles,
   Demo.Contact in 'Demo.Contact.pas',
   Demo.Data in 'Demo.Data.pas' {dmData: TDataModule},
   Demo.DDuce.DBGridView in 'Demo.DDuce.DBGridView.pas' {frmDBGridView},

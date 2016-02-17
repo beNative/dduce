@@ -71,9 +71,6 @@ type
     const AParams : array of string
   ) of object;
 
-  // type aliases
-  TEditorViewList = TInterfaceList;
-
 implementation
 
 end.

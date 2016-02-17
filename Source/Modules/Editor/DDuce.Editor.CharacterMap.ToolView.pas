@@ -143,26 +143,26 @@ end;
 
 {$REGION 'event handlers'}
 procedure TfrmCharacterMap.cbxUnicodeRangeSelect(Sender: TObject);
-var
-  N : Integer;
-  X : Integer;
-  Y : Integer;
-  S : Integer;
-  E : Integer;
+//var
+//  N : Integer;
+//  X : Integer;
+//  Y : Integer;
+//  S : Integer;
+//  E : Integer;
 begin
 //  S := UnicodeBlocks[cbxUnicodeRange.ItemIndex].S;
 //  E := UnicodeBlocks[cbxUnicodeRange.ItemIndex].E;
   //grdUnicode.Clear;
-  grdUnicode.ColCount := 16;
-  grdUnicode.RowCount := RoundUp(E - S, 16);
-  N                   := 0;
-  for Y := 0 to grdUnicode.RowCount - 1 do
-    for X := 0 to grdUnicode.ColCount - 1 do
-    begin
-      if S + N <= E then
-        //grdUnicode.Cells[X, Y] := UnicodeToUTF8(S + N);
-      Inc(N);
-    end;
+//  grdUnicode.ColCount := 16;
+//  grdUnicode.RowCount := RoundUp(E - S, 16);
+//  N                   := 0;
+//  for Y := 0 to grdUnicode.RowCount - 1 do
+//    for X := 0 to grdUnicode.ColCount - 1 do
+//    begin
+//      if S + N <= E then
+//        //grdUnicode.Cells[X, Y] := UnicodeToUTF8(S + N);
+//      Inc(N);
+//    end;
   //grdUnicode.AutoSizeColumns;
 end;
 
@@ -235,12 +235,12 @@ end;
 
 procedure TfrmCharacterMap.grdANSIMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
-var
-  R : Integer;
-  C : Integer;
+//var
+//  R : Integer;
+//  C : Integer;
 begin
-  R := 0;
-  C := 0;
+//  R := 0;
+//  C := 0;
   //if grdANSI.MouseToGridZone(X, Y) = gzNormal then
 //  begin
 //    grdANSI.MouseToCell(X, Y, C, R);
@@ -254,12 +254,12 @@ end;
 
 procedure TfrmCharacterMap.grdUnicodeMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
-var
-  Row   : Integer;
-  Col   : Integer;
+//var
+//  Row   : Integer;
+//  Col   : Integer;
 begin
-  Row := 0;
-  Col := 0;
+//  Row := 0;
+//  Col := 0;
 //  if grdUnicode.MouseToGridZone(X, Y) = gzNormal then
 //  begin
 //    grdUnicode.MouseToCell(X, Y, Col, Row);
@@ -315,11 +315,11 @@ begin
 end;
 
 procedure TfrmCharacterMap.UpdateUnicodeDisplay(ACol, ARow: Integer);
-var
-  I     : Integer;
-  Start : Cardinal;
-  T1    : string;
-  T2    : string;
+//var
+//  I     : Integer;
+//  Start : Cardinal;
+//  T1    : string;
+//  T2    : string;
 begin
 //  Start  := UnicodeBlocks[cbxUnicodeRange.ItemIndex].S + ACol + (ARow * 16);
 //  T1 := UnicodeToUTF8(Start);
@@ -331,8 +331,8 @@ begin
 end;
 
 procedure TfrmCharacterMap.UpdateANSIDisplay(ACol, ARow: Integer);
-var
-  B: Byte;
+//var
+//  B: Byte;
 begin
   if grdANSI.Cells[ACol, ARow] <> '' then
   begin

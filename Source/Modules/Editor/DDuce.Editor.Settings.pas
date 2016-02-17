@@ -77,7 +77,7 @@ const
   DEFAULT_DIM_ACTIVE_VIEW             = True;
   DEFAULT_SINGLE_INSTANCE             = False;
   DEFAULT_LANGUAGE_CODE               = 'en';
-  DEFAULT_FONT_NAME                   = 'Courier New';
+  DEFAULT_FONT_NAME                   = 'Consolas';
   DEFAULT_SETTINGS_FILE               = 'settings.xml';
 
 type

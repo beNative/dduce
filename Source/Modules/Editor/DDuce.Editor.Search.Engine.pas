@@ -320,7 +320,9 @@ begin
   ptStart := Point(1, 1);
   ptEnd.Y := AView.Lines.Count;
   ptEnd.X := Length(AView.Lines[ptEnd.Y - 1]) + 1;
+  B := True;
   try
+
 //    B :=  FSESearch.FindNextOne(
 //      AView.Lines,
 //      ptStart,
@@ -401,7 +403,7 @@ begin
   I := 1;
   while I < APos do
   begin
-    if AString[I] in [#10, #13] then
+    if CharInSet(AString[I], [#10, #13]) then
     begin
       Inc(Result.Y);
       Result.X := 1;
@@ -490,12 +492,12 @@ begin
 end;
 
 procedure TSearchEngine.Replace;
-var
-  SR : TSearchResult;
+//var
+//  SR : TSearchResult;
 begin
   if CurrentIndex >= 0 then
   begin
-    SR := ItemList[CurrentIndex] as TSearchResult;
+    //SR := ItemList[CurrentIndex] as TSearchResult;
     //Options := Options + [ssoReplace];
 //    Manager.ActiveView.Editor.SearchReplaceEx(
 //      SearchText,
