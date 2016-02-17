@@ -195,10 +195,10 @@ begin
   CreateMenuItem(MI, 'actConvertTabsToSpaces');
   CreateMenuItem(MI);
   CreateMenuItem(MI, 'actQuoteSelection');
-  CreateMenuItem(MI, 'actDeQuoteSelection');
+  CreateMenuItem(MI, 'actDequoteSelection');
   CreateMenuItem(MI, 'actQuoteLines');
   CreateMenuItem(MI, 'actQuoteLinesAndDelimit');
-  CreateMenuItem(MI, 'actDeQuoteLines');
+  CreateMenuItem(MI, 'actDequoteLines');
   CreateMenuItem(MI);
   CreateMenuItem(MI, 'actToggleBlockCommentSelection');
   CreateMenuItem(MI, 'actPascalStringOfSelection');
