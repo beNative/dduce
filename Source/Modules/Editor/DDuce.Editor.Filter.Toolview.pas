@@ -1,19 +1,17 @@
 {
   Copyright (C) 2013-2016 Tim Sinaeve tim.sinaeve@gmail.com
 
-  This library is free software; you can redistribute it and/or modify it
-  under the terms of the GNU Library General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or (at your
-  option) any later version.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-  This program is distributed in the hope that it will be useful, but WITHOUT
-  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License
-  for more details.
+      http://www.apache.org/licenses/LICENSE-2.0
 
-  You should have received a copy of the GNU Library General Public License
-  along with this library; if not, write to the Free Software Foundation,
-  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 }
 
 unit DDuce.Editor.Filter.ToolView;
@@ -38,7 +36,7 @@ unit DDuce.Editor.Filter.ToolView;
 interface
 
 uses
-  System.Classes, System.SysUtils, System.Contnrs,
+  System.Classes, System.SysUtils, System.Contnrs, System.Actions,
   Vcl.Forms, Vcl.Controls, Vcl.Graphics, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.ComCtrls,
   Vcl.StdCtrls, Vcl.ActnList,
 
@@ -47,7 +45,7 @@ uses
   DSharp.Windows.TreeViewPresenter, DSharp.Windows.ColumnDefinitions,
   DSharp.Core.DataTemplates,
 
-  DDuce.Editor.ToolView.Base, System.Actions;
+  DDuce.Editor.ToolView.Base;
 
 type
   TfrmFilter = class(TCustomEditorToolView)
@@ -90,13 +88,8 @@ type
     FVKPressed : Boolean;
     //FTextStyle : TTextStyle;
 
-    function GetColumnDefinitions: TColumnDefinitions;
     function GetFilter: string;
-    function GetItemsSource: TObjectList;
-    function GetItemTemplate: IDataTemplate;
     procedure SetFilter(AValue: string);
-    procedure SetItemsSource(AValue: TObjectList);
-    procedure SetItemTemplate(AValue: IDataTemplate);
 
     function IsMatch(const AString : string): Boolean; overload; inline;
     function IsMatch(
@@ -131,18 +124,6 @@ type
     property Filter: string
       read GetFilter write SetFilter;
 
-    property ColumnDefinitions: TColumnDefinitions
-      read GetColumnDefinitions;
-
-    { TObjectlist holding the objects we want to display. If no data template
-      is used the published properties will be shown. }
-    property ItemsSource: TObjectList
-      read GetItemsSource write SetItemsSource;
-
-    { If no ItemTemplate is specified, a default  one will be created that
-      returns the values of all published properties of the objects in the ItemsSource.}
-    property ItemTemplate: IDataTemplate
-      read GetItemTemplate write SetItemTemplate;
   end;
 
 implementation
@@ -170,7 +151,8 @@ var
     VK_HOME,
     VK_END,
     VK_SPACE,
-//    VK_0..VK_Z,
+    Ord('0')..Ord('9'),
+    Ord('A')..Ord('Z'),
     VK_OEM_1..VK_OEM_102,
     VK_NUMPAD0..VK_DIVIDE
   ];
@@ -181,12 +163,11 @@ var
     VK_LEFT,
     VK_RIGHT,
     VK_HOME,
-    VK_END
-    //,
-//    VK_C,
-//    VK_X,
-//    VK_V,
-//    VK_Z
+    VK_END,
+    Ord('C'),
+    Ord('X'),
+    Ord('V'),
+    Ord('Z')
   ];
 
   VK_SHIFT_EDIT_KEYS : TVKSet = [
@@ -199,8 +180,6 @@ var
     VK_HOME,
     VK_END
   ];
-
-{ TfrmFilter }
 
 {$REGION 'construction and destruction'}
 procedure TfrmFilter.AfterConstruction;
@@ -279,14 +258,14 @@ begin
   Logger.Watch('B', B);
   { CTRL-keycombinations that need to be handled by the edit control like
     CTRL-C for clipboard copy. }
-  //C := (Key in VK_CTRL_EDIT_KEYS) and (Shift = [ssCtrlOS]);
+  C := (Key in VK_CTRL_EDIT_KEYS) and (Shift = [ssCtrl]);
   Logger.Watch('C', C);
   { SHIFT-keycombinations that need to be handled by the edit control for
     uppercase characters but also eg. SHIFT-HOME for selections. }
   D := (Key in VK_SHIFT_EDIT_KEYS) and (Shift = [ssShift]);
   Logger.Watch('D', D);
   { Only CTRL key is pressed. }
-  //E := (Key = VK_CONTROL) and (Shift = [ssCtrlOS]);
+  E := (Key = VK_CONTROL) and (Shift = [ssCtrl]);
   Logger.Watch('E', E);
   { Only SHIFT key is pressed. }
   F := (Key = VK_SHIFT) and (Shift = [ssShift]);
@@ -296,7 +275,6 @@ begin
   Logger.Watch('G', G);
   if not (A or B or C or D or E or F or G) then
   begin
-
     FVKPressed := True;
     Key := 0;
   end
@@ -313,7 +291,7 @@ procedure TfrmFilter.edtFilterKeyUp(Sender: TObject; var Key: Word;
 begin
   if FVKPressed and FVST.Enabled then
   begin
-    //FVST.Perform(LM_KEYDOWN, Key, 0);
+    FVST.Perform(WM_KEYDOWN, Key, 0);
     if Visible and FVST.CanFocus then
       FVST.SetFocus;
   end;
@@ -338,9 +316,9 @@ var
   C : TColumnDefinition;
 begin
   B := False;
-  for I := 0 to ColumnDefinitions.Count - 1 do
+  for I := 0 to FTVP.ColumnDefinitions.Count - 1 do
   begin
-    C := ColumnDefinitions[I];
+    C := FTVP.ColumnDefinitions[I];
     //S := GetPropValue(Item, C.Name, True);
     B := B or IsMatch(S);
   end;
@@ -392,37 +370,12 @@ begin
   end;
 end;
 
-function TfrmFilter.GetItemsSource: TObjectList;
-begin
-  //Result := FTVP.ItemsSource;
-end;
-
-procedure TfrmFilter.SetItemsSource(AValue: TObjectList);
-begin
-  //FTVP.ItemsSource := AValue;
-end;
-
-function TfrmFilter.GetItemTemplate: IDataTemplate;
-begin
-  //Result := FTVP.ItemTemplate;
-end;
-
-procedure TfrmFilter.SetItemTemplate(AValue: IDataTemplate);
-begin
-  //FTVP.ItemTemplate := AValue;
-end;
-
-function TfrmFilter.GetColumnDefinitions: TColumnDefinitions;
-begin
-  //Result := FTVP.ColumnDefinitions;
-end;
-
 procedure TfrmFilter.SetVisible(Value: boolean);
 begin
   if Value then
   begin
     // check properties
-    if ItemsSource = nil then
+    if FTVP.View.ItemsSource = nil then
       Exception.Create('ItemSource property not assigned');
     InitializeComponents;
   end;
@@ -459,13 +412,13 @@ var
   I : Integer;
 begin
   // connect custom draw events
-  for I := 0 to ColumnDefinitions.Count - 1 do
+  for I := 0 to FTVP.ColumnDefinitions.Count - 1 do
   begin
-    C := ColumnDefinitions[I];
+    C := FTVP.ColumnDefinitions[I];
     C.OnCustomDraw := CCustomDraw;
   end;
 
-  //FTVP.OnFilter := FTVPFilter;
+  //FTVP. := FTVPFilter;
   FTVP.TreeView := FVST;
 end;
 

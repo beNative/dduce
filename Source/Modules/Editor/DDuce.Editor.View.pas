@@ -1,19 +1,17 @@
 {
   Copyright (C) 2013-2016 Tim Sinaeve tim.sinaeve@gmail.com
 
-  This library is free software; you can redistribute it and/or modify it
-  under the terms of the GNU Library General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or (at your
-  option) any later version.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-  This program is distributed in the hope that it will be useful, but WITHOUT
-  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License
-  for more details.
+      http://www.apache.org/licenses/LICENSE-2.0
 
-  You should have received a copy of the GNU Library General Public License
-  along with this library; if not, write to the Free Software Foundation,
-  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 }
 
 unit DDuce.Editor.View;
@@ -445,7 +443,7 @@ implementation
 {$R *.dfm}
 
 uses
-  System.TypInfo, System.UITypes,
+  System.TypInfo, System.UITypes, System.IOUtils,
   Vcl.GraphUtil,
 
   DDuce.Editor.Utils;
@@ -769,16 +767,18 @@ end;
 
 function TEditorView.GetFileName: string;
 begin
-  Result := FEditor.FileName;
+  Result := FFileName;
 end;
+
+{ TODO: is a setter needed? }
 
 procedure TEditorView.SetFileName(const AValue: string);
 begin
   if AValue <> FileName then
   begin
     FFileName := AValue;
-    //FEditor.FileName := AValue;
-    //Caption := ExtractFileName(AValue);
+//    FEditor.FileName := AValue;
+//    Caption := ExtractFileName(AValue);
   end;
 end;
 
@@ -1135,16 +1135,16 @@ end;
 {$REGION'private methods'}
 procedure TEditorView.AssignHighlighterForFileType(const AFileExt: string);
 begin
-//  HighlighterItem := Manager.Highlighters.FindHighlighterForFileType(AFileExt);
-//  if not Assigned(HighlighterItem) then
-//  begin
-//    if Settings.AutoGuessHighlighterType then
-//    begin
-//      Commands.GuessHighlighterType;
-//    end;
-//    if not Assigned(HighlighterItem) then
-//      HighlighterName := HL_TXT;
-//  end
+  HighlighterItem := Manager.Highlighters.FindHighlighterForFileType(AFileExt);
+  if not Assigned(HighlighterItem) then
+  begin
+    if Settings.AutoGuessHighlighterType then
+    begin
+      Commands.GuessHighlighterType;
+    end;
+    if not Assigned(HighlighterItem) then
+      HighlighterName := HL_TXT;
+  end
 end;
 
 function TEditorView.IsActive: Boolean;
@@ -1632,6 +1632,8 @@ end;
   like eg. a database table. }
 
 procedure TEditorView.Load(const AStorageName: string);
+var
+  S: string;
 begin
   Events.DoLoad(AStorageName);
   if IsFile then
@@ -1647,17 +1649,9 @@ begin
 //      FreeAndNil(FS);
 //    end;
 //    LineBreakStyle := ALineBreakStyles[GuessLineBreakStyle(Text)];
-//    S := ExtractFileExt(FileName);
-//    S := System.Copy(S, 2, Length(S));
-//    try
-//      if FileIsText(FileName) then
-//      begin
-//        AssignHighlighterForFileType(S);
-//      end;
-//    except
-//      { TODO -oTS : dirty: need to fix this }
-//      // for an unknown reason an EAbort is raised
-//    end;
+    S := TPath.GetExtension(FileName);
+    S := System.Copy(S, 2, Length(S));
+    AssignHighlighterForFileType(S);
     Modified := False;
   end;
 end;
@@ -1694,9 +1688,14 @@ begin
 end;
 
 function TEditorView.GetWordFromCaret(const ACaretPos: TPoint): string;
+var
+  P : TBCEditorTextPosition;
+  D : TBCEditorDisplayPosition;
 begin
-//  Result := Editor. GetWordAtRowCol(ACaretPos);
-  //Result := Editor.Get
+  P.Line := ACaretPos.Y;
+  P.Char := ACaretPos.X;
+  D := Editor.TextToDisplayPosition(P);
+  Result := Editor.GetWordAtPixels(D.Column, D.Row);
 end;
 
 //function TEditorView.GetHighlighterAttriAtRowCol(APosition: TPoint;
