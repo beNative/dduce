@@ -436,7 +436,6 @@ type
     function GetPersistSettings: Boolean;
     function GetSearchEngine: IEditorSearchEngine;
     function GetSearchPopupMenu: TPopupMenu;
-    function GetSelection: IEditorSelection;
     function GetSelectionDecodePopupMenu: TPopupMenu;
     function GetSelectionEncodePopupMenu: TPopupMenu;
     function GetSelectionModePopupMenu: TPopupMenu;
@@ -547,7 +546,6 @@ type
 
     {$REGION'IEditorManager'}
     function ActivateView(const AName: string): Boolean;
-    procedure ClearHighlightSearch;
     function OpenFile(const AFileName: string): IEditorView;
     function NewFile(
       const AFileName  : string;
@@ -642,9 +640,6 @@ type
 
     property KeyCommands: TBCEditorKeyCommands
       read GetKeyCommands;
-
-    property Selection: IEditorSelection
-      read GetSelection;
 
     { Delegates the implementation of IEditorSettings to an internal object. }
     property Settings: IEditorSettings
@@ -760,6 +755,7 @@ procedure TdmEditorManager.BeforeDestruction;
 begin
   if PersistSettings then
     FSettings.Save;
+  FSettings.OnChanged.Remove(EditorSettingsChanged);
 //  FActiveView := nil;
 //  FSearchEngine := nil;
 //  FSettings := nil;
@@ -885,11 +881,6 @@ end;
 function TdmEditorManager.GetSearchPopupMenu: TPopupMenu;
 begin
   Result := ppmSearch;
-end;
-
-function TdmEditorManager.GetSelection: IEditorSelection;
-begin
-  Result := ActiveView.Selection;
 end;
 
 function TdmEditorManager.GetSelectionDecodePopupMenu: TPopupMenu;
@@ -2832,16 +2823,6 @@ begin
 //  actFoldLevel8.ShortCut := View.Editor.KeyCommands[I].ShortCut;
 //  I := View.Editor.KeyCommands.FindCommand(ecFoldLevel9);
 //  actFoldLevel9.ShortCut := View.Editor.KeyCommands[I].ShortCut;
-end;
-
-procedure TdmEditorManager.ClearHighlightSearch;
-var
-  V : IInterface;
-begin
-  for V in ViewList do
-  begin
-    (V as IEditorView).ClearHighlightSearch;
-  end;
 end;
 
 { Called by actOpen. }

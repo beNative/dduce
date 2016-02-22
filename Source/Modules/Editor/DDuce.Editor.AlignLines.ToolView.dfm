@@ -20,8 +20,8 @@ inherited frmAlignLines: TfrmAlignLines
     BorderStyle = bsNone
     TabOrder = 0
     object rgpSortDirection: TRadioGroup
-      Left = 0
-      Top = 108
+      Left = 5
+      Top = 164
       Width = 352
       Height = 54
       Caption = 'Sort direction:'

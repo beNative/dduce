@@ -22,69 +22,75 @@ unit DDuce.Editor.Search.Templates;
 interface
 
 uses
-  System.Classes, System.SysUtils, System.Contnrs,
+  System.Classes, System.SysUtils, System.Contnrs, System.Rtti,
 
   Spring.Collections,
 
   DSharp.Windows.TreeViewPresenter, DSharp.Windows.ColumnDefinitions,
-  DSharp.Core.DataTemplates, DSharp.Windows.ColumnDefinitions.ControlTemplate;
+  DSharp.Windows.ControlTemplates,
+  DSharp.Core.DataTemplates, DSharp.Windows.ColumnDefinitions.ControlTemplate,
+
+  DDuce.Editor.Search.Data;
 
 type
-  TSearchResultGroupTemplate = class(TColumnDefinitionsControlTemplate, IDataTemplate)
+  TSearchResultGroupTemplate = class(TControlTemplate<TSearchResultGroup>)
   public
-    function GetItemTemplate(const Item: TObject): IDataTemplate; override;
-    function GetTemplateDataClass: TClass; override;
-
-    function GetItemCount(const Item: TObject): Integer; override;
-
-    function GetItems(const Item: TObject): IObjectList; override;
-    function GetItem(const Item: TObject; const Index: Integer): TObject;
-      override;
-
+    function GetItemCount(const Item: TSearchResultGroup): Integer; override;
+    function GetItems(const Item: TSearchResultGroup): IObjectList; override;
+    function GetValue(
+      const Item        : TSearchResultGroup;
+      const ColumnIndex : Integer
+    ) : TValue; override;
     procedure AfterConstruction; override;
   end;
 
   { TSearchResultLineTemplate }
 
-  TSearchResultLineTemplate = class(TColumnDefinitionsControlTemplate, IDataTemplate)
+  TSearchResultLineTemplate = class(TControlTemplate<TSearchResultLine>)
   public
-    function GetItemTemplate(const Item: TObject): IDataTemplate; override;
-    function GetTemplateDataClass: TClass; override;
-
-    function GetItemCount(const Item: TObject): Integer; override;
-    function GetItems(const Item: TObject): IObjectList; override;
-    function GetItem(const Item: TObject; const Index: Integer): TObject;
-      override;
-
+    function GetItemCount(const Item: TSearchResultLine): Integer; override;
+    function GetItems(const Item: TSearchResultLine): IObjectList; override;
+    function GetValue(
+      const Item        : TSearchResultLine;
+      const ColumnIndex : Integer
+    ) : TValue; override;
     procedure AfterConstruction; override;
   end;
 
   { TSearchResultTemplate }
 
-  TSearchResultTemplate = class(TColumnDefinitionsControlTemplate, IDataTemplate)
-    function GetItemTemplate(const Item: TObject): IDataTemplate; override;
-    function GetTemplateDataClass: TClass; override;
-
+  TSearchResultTemplate = class(TControlTemplate<TSearchResult>)
+    function GetValue(
+      const Item        : TSearchResult;
+      const ColumnIndex : Integer
+    ) : TValue; override;
   end;
 
 implementation
 
-uses
-  DDuce.Editor.Search.Data;
-
-{$REGION 'TSearchResultTemplate'}
-function TSearchResultTemplate.GetItemTemplate(
-  const Item: TObject): IDataTemplate;
+{$REGION 'TSearchResultGroupTemplate'}
+procedure TSearchResultGroupTemplate.AfterConstruction;
 begin
-  if Item is TSearchResult then
-    Result := Self
-  else
-    Result := inherited GetItemTemplate(Item);
+  inherited AfterConstruction;
+  RegisterDataTemplate(TSearchResultLineTemplate.Create);
 end;
 
-function TSearchResultTemplate.GetTemplateDataClass: TClass;
+function TSearchResultGroupTemplate.GetItemCount(
+  const Item: TSearchResultGroup): Integer;
 begin
-  Result := TSearchResult;
+  Result := 1;
+end;
+
+function TSearchResultGroupTemplate.GetItems(
+  const Item: TSearchResultGroup): IObjectList;
+begin
+  Result := Item.Lines;
+end;
+
+function TSearchResultGroupTemplate.GetValue(const Item: TSearchResultGroup;
+  const ColumnIndex: Integer): TValue;
+begin
+  Result := Item.Text;
 end;
 {$ENDREGION}
 
@@ -92,93 +98,33 @@ end;
 procedure TSearchResultLineTemplate.AfterConstruction;
 begin
   inherited AfterConstruction;
-  RegisterDataTemplate(TSearchResultTemplate.Create(FColumnDefinitions));
+  RegisterDataTemplate(TSearchResultTemplate.Create);
 end;
 
-function TSearchResultLineTemplate.GetItemTemplate(
-  const Item: TObject): IDataTemplate;
+function TSearchResultLineTemplate.GetItemCount(
+  const Item: TSearchResultLine): Integer;
 begin
-  if Item is TSearchResultLine then
-    Result := Self
-  else
-    Result := inherited GetItemTemplate(Item);
+  Result := Item.List.Count;
 end;
 
-function TSearchResultLineTemplate.GetTemplateDataClass: TClass;
+function TSearchResultLineTemplate.GetItems(
+  const Item: TSearchResultLine): IObjectList;
 begin
-  Result := TSearchResultLine;
+  Result := Item.List;
 end;
 
-function TSearchResultLineTemplate.GetItemCount(const Item: TObject): Integer;
+function TSearchResultLineTemplate.GetValue(const Item: TSearchResultLine;
+  const ColumnIndex: Integer): TValue;
 begin
-  if Item is TSearchResultLine then
-    Result := TSearchResultLine(Item).List.Count
-  else
-    Result := inherited GetItemCount(Item);
-end;
-
-function TSearchResultLineTemplate.GetItems(const Item: TObject): IObjectList;
-begin
-  if Item is TSearchResultLine then
-    Result := TSearchResultLine(Item).List
-  else
-    Result := inherited GetItems(Item);
-end;
-
-function TSearchResultLineTemplate.GetItem(const Item: TObject;
-  const Index: Integer): TObject;
-begin
-  if Item is TSearchResultLine then
-    Result := TSearchResultLine(Item).List[Index]
-  else
-    Result := inherited GetItem(Item, Index);
+  Result := Item.Text;
 end;
 {$ENDREGION}
 
-{$REGION 'TSearchResultGroupTemplate'}
-function TSearchResultGroupTemplate.GetItemCount(const Item: TObject): Integer;
+{$REGION 'TSearchResultTemplate'}
+function TSearchResultTemplate.GetValue(const Item: TSearchResult;
+  const ColumnIndex: Integer): TValue;
 begin
-  if Item is TSearchResultGroup then
-    Result := TSearchResultGroup(Item).Lines.Count
-  else
-    Result := inherited GetItemCount(Item);
-end;
-
-function TSearchResultGroupTemplate.GetItems(const Item: TObject): IObjectList;
-begin
-  if Item is TSearchResultGroup then
-    Result := TSearchResultGroup(Item).Lines
-  else
-    Result := inherited GetItems(Item);
-end;
-
-function TSearchResultGroupTemplate.GetItemTemplate(
-  const Item: TObject): IDataTemplate;
-begin
-  if Item is TSearchResultGroup then
-    Result := Self
-  else
-    Result := inherited GetItemTemplate(Item);
-end;
-
-function TSearchResultGroupTemplate.GetItem(const Item: TObject;
-  const Index: Integer): TObject;
-begin
-  if Item is TSearchResultGroup then
-    Result := TSearchResultGroup(Item).Lines[Index]
-  else
-    Result := inherited GetItem(Item, Index);
-end;
-
-function TSearchResultGroupTemplate.GetTemplateDataClass: TClass;
-begin
-  Result := TSearchResultGroup;
-end;
-
-procedure TSearchResultGroupTemplate.AfterConstruction;
-begin
-  RegisterDataTemplate(TSearchResultLineTemplate.Create(FColumnDefinitions));
-  inherited AfterConstruction;
+  Result := Item.Text;
 end;
 {$ENDREGION}
 

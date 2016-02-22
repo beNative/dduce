@@ -37,7 +37,6 @@ type
     function GetEvents: IEditorEvents;
     function GetManager: IEditorManager;
     function GetSearchEngine: IEditorSearchEngine;
-    function GetSelection: IEditorSelection;
     function GetSettings: IEditorSettings;
     function GetView: IEditorView;
 
@@ -119,9 +118,6 @@ type
     procedure FindNext;
     procedure FindPrevious;
 
-    property Selection: IEditorSelection
-      read GetSelection;
-
     property View: IEditorView
       read GetView;
 
@@ -146,9 +142,10 @@ uses
   System.Math, System.StrUtils,
   Vcl.Forms,
 
-  BCEditor.Editor.KeyCommands,
+  BCEditor.Editor.KeyCommands, BCEditor.Types,
 
-  DDuce.Editor.Highlighters, DDuce.Editor.Resources, DDuce.Editor.Utils;
+  DDuce.Editor.Highlighters, DDuce.Editor.Resources, DDuce.Editor.Utils,
+  DDuce.Editor.CommentStripper;
 
 {$REGION'property access mehods'}
 function TEditorCommands.GetEvents: IEditorEvents;
@@ -166,11 +163,6 @@ begin
   Result := Manager.SearchEngine;
 end;
 
-function TEditorCommands.GetSelection: IEditorSelection;
-begin
-  Result := Manager.ActiveView.Selection;
-end;
-
 function TEditorCommands.GetSettings: IEditorSettings;
 begin
   Result := Manager.Settings;
@@ -185,48 +177,48 @@ end;
 
 function TEditorCommands.StripComments(const AString: string;
   const AHighlighter: string): string;
-//var
-//  SSIn  : TStringStream;
-//  SSOut : TStringStream;
-//  CS    : TCustomCommentStripper;
-//  C     : Char;
-//  S     : string;
+var
+  SSIn  : TStringStream;
+  SSOut : TStringStream;
+  CS    : TCustomCommentStripper;
+  C     : Char;
+  S     : string;
 begin
-//  CS := nil;
-//  if AnsiMatchStr(AHighlighter, [HL_PAS]) then
-//    CS := TPasCommentStripper.Create(nil)
-//  else if AnsiMatchStr(AHighlighter, [HL_CPP, HL_JAVA, HL_CS]) then
-//    CS := TCPPCommentStripper.Create(nil);
-//  if Assigned(CS) then
-//  begin
-//    try
-//      SSIn := TStringStream.Create('');
-//      try
-//        SSIn.WriteString(AString);
-//        C := #0;
-//        SSIn.Write(C, 1);
-//        SSIn.Position := 0;
-//        SSOut := TStringStream.Create('');
-//        try
-//          CS.InStream  := SSIn;
-//          CS.OutStream := SSOut;
-//          CS.Parse;
-//          SSOut.Position := 0;
-//          S := SSOut.ReadString(SSOut.Size);
-//          S := MergeBlankLines(S);
-//          Result := S;
-//        finally
-//          SSOut.Free;
-//        end;
-//      finally
-//        SSIn.Free;
-//      end;
-//    finally
-//      CS.Free;
-//    end;
-//  end
-//  else
-//    Result := AString;
+  CS := nil;
+  if AnsiMatchStr(AHighlighter, [HL_PAS]) then
+    CS := TPasCommentStripper.Create(nil)
+  else if AnsiMatchStr(AHighlighter, [HL_CPP, HL_JAVA, HL_CS]) then
+    CS := TCPPCommentStripper.Create(nil);
+  if Assigned(CS) then
+  begin
+    try
+      SSIn := TStringStream.Create('');
+      try
+        SSIn.WriteString(AString);
+        C := #0;
+        SSIn.Write(C, 1);
+        SSIn.Position := 0;
+        SSOut := TStringStream.Create('');
+        try
+          CS.InStream  := SSIn;
+          CS.OutStream := SSOut;
+          CS.Parse;
+          SSOut.Position := 0;
+          S := SSOut.ReadString(SSOut.Size);
+          S := MergeBlankLines(S);
+          Result := S;
+        finally
+          SSOut.Free;
+        end;
+      finally
+        SSIn.Free;
+      end;
+    finally
+      CS.Free;
+    end;
+  end
+  else
+    Result := AString;
 end;
 
 function TEditorCommands.MergeBlankLines(const AString: string): string;
@@ -271,17 +263,16 @@ begin
           if IsPAS(S) then
             Result := HL_PAS
           else if IsLFM(S) then
-            Result := HL_LFM
-        end
-        //if IsLOG(AText) then
-        //  Result := HL_LOG
-
-        //else if IsHTML(AText) then
-        //  Result := HL_HTML
-        //else if IsXML(AText) then
-        //  Result := HL_XML
-        //else if IsSQL(AText) then
-        //  Result := HL_SQL;
+            Result := HL_DFM
+        end;
+        if IsLOG(AText) then
+          Result := HL_LOG
+        else if IsHTML(AText) then
+          Result := HL_HTML
+        else if IsXML(AText) then
+          Result := HL_XML
+        else if IsSQL(AText) then
+          Result := HL_SQL;
       end
     finally
       SL.Free;
@@ -462,13 +453,13 @@ end;
 
 procedure TEditorCommands.XMLFromSelection(ADecode: Boolean);
 begin
-  Selection.Store(True, True);
-  if ADecode then
-    Selection.Text := XMLDecode(Selection.Text)
-  else
-    Selection.Text := XMLEncode(Selection.Text);
-  Selection.Restore;
-  View.Modified := True;
+//  Selection.Store(True, True);
+//  if ADecode then
+//    Selection.Text := XMLDecode(Selection.Text)
+//  else
+//    Selection.Text := XMLEncode(Selection.Text);
+//  Selection.Restore;
+//  View.Modified := True;
 end;
 
 procedure TEditorCommands.ConvertTabsToSpacesInSelection;
@@ -531,18 +522,18 @@ procedure TEditorCommands.AlignSelection(const AToken: string;
   ACompressWS: Boolean; AInsertSpaceBeforeToken: Boolean;
   AInsertSpaceAfterToken: Boolean; AAlignInParagraphs: Boolean);
 begin
-  if View.SelectionAvailable then
-  begin
-    Selection.Store(True, True);
-    AlignLines(
-      Selection.Lines,
-      AToken,
-      ACompressWS,
-      AInsertSpaceBeforeToken,
-      AInsertSpaceAfterToken
-    );
-    Selection.Restore;
-  end;
+//  if View.SelectionAvailable then
+//  begin
+//    Selection.Store(True, True);
+//    AlignLines(
+//      Selection.Lines,
+//      AToken,
+//      ACompressWS,
+//      AInsertSpaceBeforeToken,
+//      AInsertSpaceAfterToken
+//    );
+//    Selection.Restore;
+//  end;
 end;
 
 procedure TEditorCommands.MergeBlankLinesInSelection;
@@ -641,7 +632,7 @@ end;
 procedure TEditorCommands.SortSelectedLines;
 begin
   View.Editor.BeginUndoBlock;
-  View.Editor.Sort;
+  View.Editor.Sort(soToggle);
   View.Editor.EndUndoBlock;
 end;
 

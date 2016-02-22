@@ -57,7 +57,7 @@ uses
   DDuce.Logger;
 
 type
-  TEditorView = class(TForm, IEditorView, IEditorSelection)
+  TEditorView = class(TForm, IEditorView)
     procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
   strict private
     procedure EditorChange(Sender: TObject);
@@ -101,7 +101,6 @@ type
     FFileName        : string;
     FFoldLevel       : Integer;
     FIsFile          : Boolean;
-    FSelection       : IEditorSelection;
     FOnChange        : TNotifyEvent;
 
     {$REGION'property access methods'}
@@ -141,15 +140,11 @@ type
     function GetName: string;
     function GetOnChange: TNotifyEvent;
     function GetOnDropFiles: TBCEditorDropFilesEvent;
-//    function GetOnStatusChange: TStatusChangeEvent;
     function GetParent: TWinControl;
     function GetPopupMenu: TPopupMenu; reintroduce;
-    function GetPreviewText: string;
     function GetReplaceHistory: TStrings;
-//    function GetSearchOptions: TSynSearchOptions;
     function GetSearchText: string;
     function GetSelectionAvailable: Boolean;
-    function GetSelection: IEditorSelection;
     function GetSelectionMode: TBCEditorSelectionMode;
     function GetSelEnd: Integer;
     function GetSelStart: Integer;
@@ -179,9 +174,7 @@ type
     procedure SetName(AValue: string); reintroduce;
     procedure SetOnChange(const AValue: TNotifyEvent);
     procedure SetOnDropFiles(const AValue: TBCEditorDropFilesEvent);
-//    procedure SetOnStatusChange(const AValue: TStatusChangeEvent);
     procedure SetPopupMenu(AValue: TPopupMenu);
-//    procedure SetSearchOptions(AValue: TSynSearchOptions);
     procedure SetSearchText(const Value: string); virtual;
     procedure SetSelectionMode(AValue: TBCEditorSelectionMode);
     procedure SetSelEnd(const AValue: Integer);
@@ -193,7 +186,18 @@ type
     {$ENDREGION}
 
     procedure InitializeEditor(AEditor: TBCEditor);
+
     procedure EditorSettingsChanged(ASender: TObject);
+
+    procedure EditorCustomTokenAttribute(
+      Sender               : TObject;
+      const AText          : string;
+      const ALine          : Integer;
+      const APosition      : Integer;
+      var AForegroundColor : TColor;
+      var ABackgroundColor : TColor;
+      var AStyles          : TFontStyles
+    );
 
   strict protected
     procedure SetParent(Value: TWinControl); reintroduce;
@@ -215,11 +219,6 @@ type
 
     procedure AssignHighlighterForFileType(const AFileExt: string);
 
-    procedure ClearHighlightSearch;
-//    procedure SetHighlightSearch(
-//      const ASearch  : string;
-//            AOptions : TSynSearchOptions
-//    );
     procedure SearchAndSelectLine(
             ALineIndex : Integer;
       const ALine      : string
@@ -250,11 +249,7 @@ type
     // public methods
     function GetWordAtPosition(const APosition: TPoint): string;
     function GetWordFromCaret(const ACaretPos: TPoint): string;
-//    function GetHighlighterAttriAtRowCol(
-//          APosition : TPoint;
-//      out AToken    : string;
-//      out AAttri    : TSynHighlighterAttributes
-//    ): Boolean;
+
     procedure Load(const AStorageName: string = '');
     procedure LoadFromStream(AStream: TStream);
     procedure SaveToStream(AStream: TStream);
@@ -385,8 +380,8 @@ type
     property HighlighterItem: THighlighterItem
       read GetHighlighterItem write SetHighlighterItem;
 
-    property Selection: IEditorSelection
-      read GetSelection implements IEditorSelection;
+//    property Selection: IEditorSelection
+//      read GetSelection implements IEditorSelection;
 
     { Shortcut to the text contained in the editor. }
     property Lines: TStrings
@@ -512,6 +507,13 @@ begin
   Logger.Enter('TEditorView.EditorCommandProcessed');
 
   Logger.Leave('TEditorView.EditorCommandProcessed');
+end;
+
+procedure TEditorView.EditorCustomTokenAttribute(Sender: TObject;
+  const AText: string; const ALine, APosition: Integer; var AForegroundColor,
+  ABackgroundColor: TColor; var AStyles: TFontStyles);
+begin
+//
 end;
 
 procedure TEditorView.EditorDropFiles(Sender: TObject; Pos: TPoint;
@@ -961,8 +963,12 @@ begin
 end;
 
 procedure TEditorView.SetCaretXY(const AValue: TPoint);
+var
+  C : TBCEditorTextPosition;
 begin
-  //Editor.CaretXY := AValue;
+  C.Char := AValue.X;
+  C.Line := AValue.Y;
+  Editor.TextCaretPosition := C;
 end;
 
 function TEditorView.GetFindHistory: TStrings;
@@ -1051,22 +1057,9 @@ begin
   Result := FReplaceHistory;
 end;
 
-function TEditorView.GetPreviewText: string;
-begin
-//  if SelAvail then
-//    Result := SelText
-//  else
-//    Result := LineText;
-end;
-
 function TEditorView.GetSelectionAvailable: Boolean;
 begin
   Result := Editor.SelectionAvailable;
-end;
-
-function TEditorView.GetSelection: IEditorSelection;
-begin
-  Result := FSelection;
 end;
 
 function TEditorView.GetSelectionMode: TBCEditorSelectionMode;
@@ -1186,7 +1179,7 @@ begin
   Editor.RightMargin.Visible  := Settings.EditorOptions.ShowRightEdge;
   Editor.RightMargin.Position := Settings.EditorOptions.RightEdge;
 
-  //EditorFont.Assign(Settings.EditorFont);
+  EditorFont.Assign(Settings.EditorFont);
 
 //  Editor.ExtraLineSpacing      := Settings.EditorOptions.ExtraLineSpacing;
 //  Editor.ExtraCharSpacing      := Settings.EditorOptions.ExtraCharSpacing;
@@ -1299,11 +1292,12 @@ begin
     eoTrimTrailingSpaces
   ];
 
-  AEditor.OnChange           := EditorChange;
-  AEditor.OnReplaceText      := EditorReplaceText;
-  AEditor.OnCaretChanged     := EditorCaretChanged;
-  AEditor.OnCommandProcessed := EditorCommandProcessed;
-  AEditor.OnDropFiles        := EditorDropFiles;
+  AEditor.OnChange               := EditorChange;
+  AEditor.OnReplaceText          := EditorReplaceText;
+  AEditor.OnCaretChanged         := EditorCaretChanged;
+  AEditor.OnCommandProcessed     := EditorCommandProcessed;
+  AEditor.OnDropFiles            := EditorDropFiles;
+  AEditor.OnCustomTokenAttribute := EditorCustomTokenAttribute;
 
   AEditor.Highlighter.Colors.LoadFromFile('tsColors.json');
 
@@ -1484,13 +1478,6 @@ procedure TEditorView.SelectWord;
 begin
   Editor.SelectionBeginPosition := Editor.WordStart;
   Editor.SelectionEndPosition   := Editor.WordEnd;
-end;
-
-{ Clears all highlighted search matches of the last search operation. }
-
-procedure TEditorView.ClearHighlightSearch;
-begin
-  //SetHighlightSearch('', []);
 end;
 
 procedure TEditorView.Clear;

@@ -572,6 +572,15 @@ begin
   Result := FWantTabs;
 end;
 
+procedure TEditorOptionsSettings.SetWantTabs(AValue: Boolean);
+begin
+  if AValue <> WantTabs then
+  begin
+    FWantTabs := AValue;
+    Changed;
+  end;
+end;
+
 function TEditorOptionsSettings.GetWordWrapEnabled: Boolean;
 begin
   Result := FWordWrapEnabled;
@@ -638,15 +647,6 @@ begin
   if AValue <> AutoIndentOnPaste then
   begin
     FAutoIndentOnPaste := AValue;
-    Changed;
-  end;
-end;
-
-procedure TEditorOptionsSettings.SetWantTabs(AValue: Boolean);
-begin
-  if AValue <> WantTabs then
-  begin
-    FWantTabs := AValue;
     Changed;
   end;
 end;

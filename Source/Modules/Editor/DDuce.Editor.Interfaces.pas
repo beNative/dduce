@@ -60,7 +60,6 @@ type
   IEditorToolView               = interface;
   IEditorActions                = interface;
   IEditorSettings               = interface;
-  IEditorSelection              = interface;
   TEditorViewListEnumerator     = class;
   TEditorToolViewListEnumerator = class;
 
@@ -135,13 +134,9 @@ type
     function GetMonitorChanges: Boolean;
     function GetOnChange: TNotifyEvent;
     function GetOnDropFiles: TBCEditorDropFilesEvent;
-//    function GetOnStatusChange: TStatusChangeEvent;
-    function GetPreviewText: string;
     function GetReplaceHistory: TStrings;
-//    function GetSearchOptions: TSynSearchOptions;
     function GetSearchText: string;
     function GetSelectionAvailable: Boolean;
-    function GetSelection: IEditorSelection;
     function GetSelectionMode: TBCEditorSelectionMode;
     function GetSelEnd: Integer;
     function GetSelStart: Integer;
@@ -170,8 +165,6 @@ type
     procedure SetMonitorChanges(const AValue: Boolean);
     procedure SetOnChange(const AValue: TNotifyEvent);
     procedure SetOnDropFiles(const AValue: TBCEditorDropFilesEvent);
-//    procedure SetOnStatusChange(const AValue: TStatusChangeEvent);
-//    procedure SetSearchOptions(AValue: TSynSearchOptions);
     procedure SetSearchText(const AValue: string);
     procedure SetSelectionMode(AValue: TBCEditorSelectionMode);
     procedure SetSelEnd(const AValue: Integer);
@@ -185,11 +178,6 @@ type
     // information retrieval
     function GetWordAtPosition(const APosition: TPoint): string;
     function GetWordFromCaret(const ACaretPos: TPoint): string;
-//    function GetHighlighterAttriAtRowCol(
-//          APosition : TPoint;
-//      out AToken    : string;
-//      out AAttri    : TSynHighlighterAttributes
-//    ): Boolean;
 
     // lock updates
     procedure BeginUpdate;
@@ -200,13 +188,6 @@ type
 
     // make current view the active one if more than one view is managed.
     procedure Activate;
-
-    // state change
-//    procedure SetHighlightSearch(
-//      const ASearch  : string;
-//            AOptions : TSynSearchOptions
-//    );
-
     procedure Clear;
     procedure Close;
 
@@ -214,7 +195,6 @@ type
     procedure SearchAndSelectLine(ALineIndex: Integer; const ALine: string);
     procedure SearchAndSelectText(const AText: string);
     procedure FindNextWordOccurrence(DirectionForward: Boolean);
-    procedure ClearHighlightSearch;
 
     // load and save
     procedure Load(const AStorageName: string = '');
@@ -275,24 +255,18 @@ type
     property InsertMode: Boolean
       read GetInsertMode write SetInsertMode;
 
-    property Selection: IEditorSelection
-      read GetSelection;
-
     property HighlighterItem: THighlighterItem
       read GetHighlighterItem write SetHighlighterItem;
 
-//    { Sets the current (default) selection mode.  }
-//    property SelectionMode: TSynSelectionMode
-//      read GetSelectionMode write SetSelectionMode;
+    { Sets the current (default) selection mode.  }
+    property SelectionMode: TBCEditorSelectionMode
+      read GetSelectionMode write SetSelectionMode;
 
     property SelectionAvailable: Boolean
       read GetSelectionAvailable;
 
     property SearchText: string
       read GetSearchText write SetSearchText;
-
-//    property SearchOptions: TSynSearchOptions
-//      read GetSearchOptions write SetSearchOptions;
 
     // Status information (readonly)
     property CanPaste: Boolean
@@ -365,9 +339,6 @@ type
 
     //---| Properties |--------------------------------------------------------
 
-    property PreviewText: string
-      read GetPreviewText;
-
     property MonitorChanges: Boolean
       read GetMonitorChanges write SetMonitorChanges;
 
@@ -399,59 +370,9 @@ type
     // events
     property OnDropFiles: TBCEditorDropFilesEvent
       read GetOnDropFiles write SetOnDropFiles;
-//
-//    property OnStatusChange: TStatusChangeEvent
-//      read GetOnStatusChange write SetOnStatusChange;
 
     property OnChange: TNotifyEvent
       read GetOnChange write SetOnChange;
-  end;
-
-  { IEditorSelection }
-
-  IEditorSelection = interface
-  ['{DEBBB1D5-A04A-4264-96E9-0693E20C2A0D}']
-    function GetBlockBegin: TPoint;
-    function GetBlockEnd: TPoint;
-    function GetCaretXY: TPoint;
-    function GetLines: TStrings;
-//    function GetSelectionMode: TSynSelectionMode;
-    function GetText: string;
-    function GetTextSize: Integer;
-    procedure SetBlockBegin(AValue: TPoint);
-    procedure SetBlockEnd(AValue: TPoint);
-    procedure SetCaretXY(AValue: TPoint);
-//    procedure SetSelectionMode(AValue: TSynSelectionMode);
-    procedure SetText(AValue: string);
-
-    procedure Clear;
-    procedure Store(
-      ALockUpdates           : Boolean = True;
-      AAutoExcludeEmptyLines : Boolean = False
-    );
-    procedure Restore;
-    procedure Ignore;
-
-    property BlockBegin: TPoint
-      read GetBlockBegin write SetBlockBegin;
-
-    property BlockEnd: TPoint
-      read GetBlockEnd write SetBlockEnd;
-
-    property CaretXY: TPoint
-      read GetCaretXY write SetCaretXY;
-
-//    property SelectionMode: TSynSelectionMode
-//      read GetSelectionMode write SetSelectionMode;
-
-    property Lines: TStrings
-      read GetLines;
-
-    property Text: string
-      read GetText write SetText;
-
-    property TextSize: Integer
-      read GetTextSize;
   end;
 
   { IEditorSearchEngine }
@@ -952,7 +873,6 @@ type
     function GetEvents: IEditorEvents;
     function GetMenus: IEditorMenus;
     function GetSearchEngine: IEditorSearchEngine;
-    function GetSelection: IEditorSelection;
     function GetSettings: IEditorSettings;
     function GetToolViews: IEditorToolViews;
     function GetViews: IEditorViews;
@@ -966,7 +886,6 @@ type
 
     procedure UpdateActions;
     function ActivateView(const AName: string): Boolean;
-    procedure ClearHighlightSearch;
     function OpenFile(const AFileName: string): IEditorView;
     function NewFile(
       const AFileName  : string;
@@ -1006,9 +925,6 @@ type
 
     property KeyCommands: TBCEditorKeyCommands
       read GetKeyCommands;
-
-    property Selection: IEditorSelection
-      read GetSelection;
 
     property Settings: IEditorSettings
       read GetSettings;

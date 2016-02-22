@@ -92,7 +92,7 @@ uses
 
   BCEditor.Editor,
 
-  DDuce.Editor.Selection, DDuce.Reflect;
+  DDuce.Reflect;
 
 {$REGION 'property access mehods'}
 function TfrmSelectionInfo.GetView: IEditorView;

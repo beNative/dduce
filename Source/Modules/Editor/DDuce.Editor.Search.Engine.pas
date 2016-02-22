@@ -54,15 +54,15 @@ uses
 type
   TSearchEngine = class(TComponent, IEditorSearchEngine)
   private
-    FSearchText    : string;
-    FReplaceText   : string;
-    FOptions       : TBCEditorSearchOptions;
-    FItemGroups    : IList<TSearchResultGroup>;
-    FItemList      : IList<TSearchResult>;
-    FCurrentIndex  : Integer;
-    FEditorSearch  : TBCEditorNormalSearch;
-    FOnChange      : Event<TNotifyEvent>;
-    FOnExecute     : Event<TNotifyEvent>;
+    FSearchText   : string;
+    FReplaceText  : string;
+    FOptions      : TBCEditorSearchOptions;
+    FItemGroups   : IList<TSearchResultGroup>;
+    FItemList     : IList<TSearchResult>;
+    FCurrentIndex : Integer;
+    FEditorSearch : TBCEditorNormalSearch;
+    FOnChange     : Event<TNotifyEvent>;
+    FOnExecute    : Event<TNotifyEvent>;
 
     {$REGION 'property access mehods'}
     function GetCurrentIndex: Integer;
@@ -159,7 +159,7 @@ const
 procedure TSearchEngine.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FItemGroups   := TCollections.CreateList<TSearchResultGroup>;
+  FItemGroups   := TCollections.CreateObjectList<TSearchResultGroup>;
   FItemList     := TCollections.CreateList<TSearchResult>(False);
   FEditorSearch := TBCEditorNormalSearch.Create;
   Options       := Settings.Options;
@@ -267,8 +267,9 @@ begin
     Settings.Options := AValue;
     FEditorSearch.WholeWordsOnly := soWholeWordsOnly in Options;
     FEditorSearch.CaseSensitive  := soCaseSensitive in Options;
-//    FSESearch.Sensitive          := ssoMatchCase in Options;
-//    FSESearch.Whole              := ssoWholeWord in Options;
+
+
+
 //    FSESearch.RegularExpressions := ssoRegExpr in Options;
 //    FSESearch.RegExprMultiLine   := ssoRegExprMultiLine in Options;
 //    FSESearch.Backwards          :=
@@ -306,52 +307,41 @@ var
   SRG          : TSearchResultGroup;
   SRL          : TSearchResultLine;
   SR           : TSearchResult;
-  ptStart      : TPoint;
-  ptEnd        : TPoint;
-  ptFoundStart : TPoint;
-  ptFoundEnd   : TPoint;
   Line         : Integer;
   N            : Integer;
   B            : Boolean;
 begin
   N := 0;
-  ptStart := Point(1, 1);
-  ptEnd.Y := AView.Lines.Count;
-  ptEnd.X := Length(AView.Lines[ptEnd.Y - 1]) + 1;
-  B := True;
-  try
+  AView.Editor.Search.Options :=
+    AView.Editor.Search.Options - [soShowStringNotFound,soShowSearchMatchNotFound];
+  Options := Options - [soShowStringNotFound,soShowSearchMatchNotFound];
+  AView.Editor.Search.Options := AView.Editor.Search.Options +
+      [soEntireScope, soHighlightResults];
 
-//    B :=  FSESearch.FindNextOne(
-//      AView.Lines,
-//      ptStart,
-//      ptEnd,
-//      ptFoundStart,
-//      ptFoundEnd,
-//      True           // Support unicode case
-//    );
-  except
-  end;
+  AView.Editor.Search.SearchText := SearchText;
+  B := AView.Editor.FindNext;
   if B then
   begin
     SRG := TSearchResultGroup.Create;
     while B and (N < MAX_RESULTS) do
     begin
       SRL := TSearchResultLine.Create;
-      Line := ptFoundStart.y;
-      while B and (ptFoundStart.Y = Line) do
+      Line :=  AView.Editor.SelectionBeginPosition.Line;
+      while B and (AView.Editor.SelectionBeginPosition.Line = Line) do
       begin
         Inc(N);
         SR := TSearchResult.Create;
         SR.FileName   := ExtractFileName(AView.FileName);
         SR.ViewName   := AView.Name;
-        SR.BlockBegin := ptFoundStart;
-        SR.BlockEnd   := ptFoundEnd;
-        SR.StartPos   := PointToPos(AView.Lines, ptFoundStart);
-        SR.EndPos     := PointToPos(AView.Lines, ptFoundEnd);
-        SR.Column     := ptFoundStart.X;
-        SR.Line       := ptFoundStart.Y;
+        SR.BlockBegin := TPoint(AView.Editor.SelectionBeginPosition);
+        SR.BlockEnd   := TPoint(AView.Editor.SelectionEndPosition);
+        SR.StartPos   := PointToPos(AView.Lines, SR.BlockBegin);
+        SR.EndPos     := PointToPos(AView.Lines, SR.BlockEnd);
+        SR.Column     := SR.BlockBegin.X;
+        SR.Line       := SR.BlockBegin.Y;
         SR.Index      := N;
-////
+        Logger.Send(SR.Text);
+//
 //    soBackwards,
 //    soBeepIfStringNotFound,
 //    soCaseSensitive,
@@ -363,31 +353,22 @@ begin
 //    soShowSearchMatchNotFound,
 //    soWholeWordsOnly,
 //    soWrapAround
-////
-////
-  //      SR.ShowMatch  := ssoRegExpr in Options;
+//
+//
+        //SR.ShowMatch  := ssoRegExpr in Options;
 //        if SR.ShowMatch then
 //          SR.Match := AView.Editor.TextBetweenPoints[ptFoundStart, ptFoundEnd];
         SRL.List.Add(SR);
         FItemList.Add(SR);
-        ptStart := ptFoundEnd;
-        try
-//          B :=  FSESearch.FindNextOne(
-//            AView.Lines,
-//            ptStart,
-//            ptEnd,
-//            ptFoundStart,
-//            ptFoundEnd,
-//            True           // Support unicode case
-//          );
-        except
-        end;
+        B := AView.Editor.FindNext;
       end;
       SRL.Line := Line;
+      Logger.Send(SRL.Text);
       SRG.Lines.Add(SRL);
     end;
     SRG.FileName := ExtractFileName(AView.FileName);
     SRG.ViewName := AView.Name;
+    Logger.Send(SRG.Text);
     ItemGroups.Add(SRG);
   end;
 end;
@@ -433,7 +414,6 @@ var
 begin
   FItemGroups.Clear;
   FItemList.Clear;
-  Manager.ClearHighlightSearch;
   if SearchAllViews then
   begin
     for I := 0 to Views.Count - 1 do
@@ -445,12 +425,6 @@ begin
   else
     AddResultsForView(View);
   DoExecute;
-  View.BeginUpdate;
-//  View.SetHighlightSearch(
-//    SearchText,
-//    Options
-//  );
-  View.EndUpdate;
 end;
 
 procedure TSearchEngine.FindNext;

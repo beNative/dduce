@@ -25,8 +25,8 @@ uses
 type
   TEditorManagerFactory = class(TInterfacedObject, IEditorManagerFactory)
     function CreateInstance(
-            AOwner            : TComponent = nil;
-            APersistSettings  : Boolean = False;
+      AOwner                  : TComponent = nil;
+      APersistSettings        : Boolean = False;
       const ASettingsFileName : string = ''
     ): IEditorManager; overload;
 
@@ -72,4 +72,3 @@ begin
 end;
 
 end.
-

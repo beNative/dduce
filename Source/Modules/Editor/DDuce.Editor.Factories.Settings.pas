@@ -101,24 +101,22 @@ begin
 //  Reg('ASP',
 //  Reg('Assembler - 68HC11',
 //  Reg('AutoIt v3',
-//  Reg('AWK',
-//  Reg('C',
+
   Reg('C#',                 HL_CS,   SCSDescription,   FILE_EXTENSIONS_CS);
   Reg('C++',                HL_CPP,  SCPPDescription,  FILE_EXTENSIONS_CPP);
 //  Reg('CoffeeScript',
-//  Reg('CSS',
+  Reg('CSS',                HL_CSS,  SCSSDescription,  FILE_EXTENSIONS_CSS);
 //  Reg('D',
-  Reg('Delphi Form Module', HL_LFM,  SLFMDescription,  FILE_EXTENSIONS_LFM);
-//  Reg('Free Pascal',        HL_PAS,  SPASDescription,  FILE_EXTENSIONS_PAS);
-//  Reg('Go',
+  Reg('Delphi Form Module', HL_DFM,  SDFMDescription,  FILE_EXTENSIONS_DFM);
+  Reg('Go',                 HL_GO,   SGODescription,   FILE_EXTENSIONS_GO);
 //  Reg('Groovy',
-//  Reg('HTML with Scripts',
+  Reg('HTML with Scripts',  HL_HTML, SHTMLDescription, FILE_EXTENSIONS_HTML);
   Reg('INI',                HL_INI,  SINIDescription,  FILE_EXTENSIONS_INI);
   //Reg('Inno Setup',
   Reg('Java',               HL_JAVA, SJavaDescription, FILE_EXTENSIONS_JAVA);
   Reg('JavaScript',         HL_JS,   SJSDescription,   FILE_EXTENSIONS_JS);
   Reg('JSON',               HL_JSON, SJSONDescription, FILE_EXTENSIONS_JSON);
-//  Reg('LaTex',
+  Reg('LaTex',              HL_TEX,  STEXDescription,  FILE_EXTENSIONS_TEX);
 //  Reg('Lisp',
   Reg('Lua',                HL_LUA,  SLUADescription,  FILE_EXTENSIONS_LUA);
 //  Reg('MATLAB',
@@ -142,9 +140,9 @@ begin
 //  Reg('TclTk',
   Reg('Text',              HL_TXT,   STXTDescription, FILE_EXTENSIONS_TXT);
 //  Reg('UnrealScript',
-//  Reg('Visual Basic',
+  //Reg('Visual Basic',      HL_
   Reg('XML',               HL_XML,   SXMLDescription, FILE_EXTENSIONS_XML);
-//  Reg('XSL',
+  Reg('XSL',               HL_XSL,   SXSLDescription, FILE_EXTENSIONS_XSL);
 end;
 {$ENDREGION}
 

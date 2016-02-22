@@ -339,7 +339,6 @@ var
   TVP: TTreeViewPresenter;
 begin
   Guard.CheckNotNull(AOwner, 'AOwner');
-  Guard.CheckNotNull(AVST, 'AVST');
   TVP := TTreeViewPresenter.Create(AOwner);
   InitializeTVP(TVP, AVST, ASource, ATemplate, AFilter);
   Result := TVP;

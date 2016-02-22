@@ -41,6 +41,8 @@ type
     property SearchAllViews: Boolean
       read FSearchAllViews write FSearchAllViews default False;
 
+
+
   end;
 
 implementation

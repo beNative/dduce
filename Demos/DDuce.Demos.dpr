@@ -96,7 +96,6 @@ uses
   DDuce.Editor.Search.Engine.Settings in '..\Source\Modules\Editor\DDuce.Editor.Search.Engine.Settings.pas',
   DDuce.Editor.Search.Templates in '..\Source\Modules\Editor\DDuce.Editor.Search.Templates.pas',
   DDuce.Editor.Search.Toolview in '..\Source\Modules\Editor\DDuce.Editor.Search.Toolview.pas' {frmSearchForm},
-  DDuce.Editor.Selection in '..\Source\Modules\Editor\DDuce.Editor.Selection.pas',
   DDuce.Editor.Selectioninfo.ToolView in '..\Source\Modules\Editor\DDuce.Editor.Selectioninfo.ToolView.pas',
   DDuce.Editor.Settings in '..\Source\Modules\Editor\DDuce.Editor.Settings.pas',
   DDuce.Editor.Sortstrings.Settings in '..\Source\Modules\Editor\DDuce.Editor.Sortstrings.Settings.pas',
@@ -111,7 +110,8 @@ uses
   DDuce.Editor.Viewlist.Data in '..\Source\Modules\Editor\DDuce.Editor.Viewlist.Data.pas',
   DDuce.Editor.Viewlist.ToolView in '..\Source\Modules\Editor\DDuce.Editor.Viewlist.ToolView.pas' {frmViewList},
   DDuce.FormSettings in '..\Source\Modules\DDuce.FormSettings.pas',
-  DDuce.Factories in '..\Source\Modules\DDuce.Factories.pas';
+  DDuce.Factories in '..\Source\Modules\DDuce.Factories.pas',
+  DDuce.Editor.AlignLines.ToolView in '..\Source\Modules\Editor\DDuce.Editor.AlignLines.ToolView.pas' {frmAlignLines};
 
 {$R *.res}
 

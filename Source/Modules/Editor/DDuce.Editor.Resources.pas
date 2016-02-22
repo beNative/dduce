@@ -25,34 +25,37 @@ uses
   Vcl.Controls, Vcl.ImgList;
 
 const
-  HL_LOG  = 'LOG';
-  HL_TXT  = 'TXT';
-  HL_PAS  = 'PAS';
-  HL_CPP  = 'CPP';
-  HL_JAVA = 'JAVA';
-  HL_SQL  = 'SQL';
-  HL_XML  = 'XML';
-  HL_LFM  = 'LFM';
-  HL_INI  = 'INI';
   HL_BAT  = 'BAT';
-  HL_RTF  = 'RTF';
-  HL_RES  = 'RES';
-  HL_PHP  = 'PHP';
-  HL_PERL = 'PERL';
-  HL_PY   = 'PY';
-  HL_PO   = 'PO';
-  HL_HTML = 'HTML';
+  HL_CPP  = 'CPP';
+  HL_CS   = 'CS';
   HL_CSS  = 'CSS';
+  HL_DIFF = 'DIFF';
+  HL_GO   = 'GO';
+  HL_HTML = 'HTML';
+  HL_INI  = 'INI';
+  HL_JAVA = 'JAVA';
   HL_JS   = 'JS';
   HL_JSON = 'JSON';
-  HL_CS   = 'CS';
-  HL_DIFF = 'DIFF';
-  HL_SH   = 'SH';
-  HL_TEX  = 'TEX';
-  HL_RUBY = 'RUBY';
+  HL_DFM  = 'DFM';
+  HL_LOG  = 'LOG';
   HL_LUA  = 'LUA';
+  HL_PAS  = 'PAS';
+  HL_PERL = 'PERL';
+  HL_PHP  = 'PHP';
+  HL_PO   = 'PO';
+  HL_PY   = 'PY';
+  HL_RES  = 'RES';
+  HL_RTF  = 'RTF';
+  HL_RUBY = 'RUBY';
+  HL_SH   = 'SH';
+  HL_SQL  = 'SQL';
+  HL_TEX  = 'TEX';
+  HL_TXT  = 'TXT';
+  HL_XML  = 'XML';
+  HL_XSL  = 'XSL';
 
   // comma separated lists of supported file extensions (no spaces)
+  FILE_EXTENSIONS_GO   = 'go';
   FILE_EXTENSIONS_TXT  = 'txt,nfo,me';
   FILE_EXTENSIONS_PAS  = 'pas,dpr,pp,lpr,inc,dpk';
   FILE_EXTENSIONS_CPP  = 'cpp,hpp,' +            // C++
@@ -97,7 +100,8 @@ const
                          'vcxproj,' +            // Visual C++ Project file
                          'vcxproj.filters,' +    // Visual C++ Project filters
                          'cpppjoj';              // C++ Project file
-  FILE_EXTENSIONS_LFM  = 'dfm,' +                // Delphi VCL form
+  FILE_EXTENSIONS_XSL  = 'xsl';
+  FILE_EXTENSIONS_DFM  = 'dfm,' +                // Delphi VCL form
                          'lfm,' +                // Lazarus LCL form
                          'fmx';                  // Delphi Firemonkey form
   FILE_EXTENSIONS_INI  = 'ini,' +
@@ -129,32 +133,34 @@ resourcestring
   STextNotFound = 'Text not found';
   SSearching    = 'Searching...';
 
-  SINIDescription  = 'Settings file';
   SBATDescription  = 'Windows batch script';
+  SCPPDescription  = 'C++ source file';
+  SCSDescription   = 'C# source file';
+  SCSSDescription  = 'Cascading Style Sheet';
+  SDFMDescription  = 'Object Pascal form definition';
+  SDIFFDescription = 'Diff';
+  SGODescription   = 'Go source file';
+  SHTMLDescription = 'HTML document';
+  SINIDescription  = 'Settings file';
+  SJavaDescription = 'Java source file';
+  SJSDescription   = 'JavaScript';
+  SJSONDescription = 'JSON document';
+  SLOGDescription  = 'Log';
+  SLUADescription  = 'Lua script';
+  SPASDescription  = 'Object Pascal source file';
+  SPERLDescription = 'Perl script';
+  SPHPDescription  = 'PHP script';
   SPODescription   = 'Gettext translation strings';
+  SPYDescription   = 'Python script';
+  SRESDescription  = 'Windows resources';
   SRTFDescription  = 'Rich Text Format document';
+  SRUBYDescription = 'Ruby script';
+  SSHDescription   = 'Shell script';
+  SSQLDescription  = 'SQL script';
+  STEXDescription  = 'TeX document';
   STXTDescription  = 'Text document';
   SXMLDescription  = 'XML document';
-  SHTMLDescription = 'HTML document';
-  SPASDescription  = 'Object Pascal source file';
-  SSQLDescription  = 'SQL script';
-  SCPPDescription  = 'C++ source file';
-  SJavaDescription = 'Java source file';
-  SLFMDescription  = 'Object Pascal form definition';
-  SLOGDescription  = 'Log';
-  SRESDescription  = 'Windows resources';
-  SPHPDescription  = 'PHP script';
-  SPERLDescription = 'Perl script';
-  SPYDescription   = 'Python script';
-  SCSSDescription  = 'Cascading Style Sheet';
-  SJSDescription   = 'JavaScript';
-  SCSDescription   = 'C# source file';
-  SDIFFDescription = 'Diff';
-  STEXDescription  = 'TeX document';
-  SSHDescription   = 'Shell script';
-  SRUBYDescription = 'Ruby script';
-  SLUADescription  = 'Lua script';
-  SJSONDescription = 'JSON document';
+  SXSLDescription  = 'XML stylesheet document';
 
   SAskSaveChanges = 'File %s is modified. Do you want to save changes?';
 

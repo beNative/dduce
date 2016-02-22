@@ -154,6 +154,8 @@ uses
 
   Spring.Collections,
 
+
+
   DDuce.Components.Factories, DDuce.Factories,
 
   DDuce.Editor.Search.Engine, DDuce.Editor.Search.Data,
@@ -171,16 +173,15 @@ begin
   FVST := TFactories.CreateVirtualStringTree(Self, pnlResultList);
   FVST.TreeOptions.AutoOptions :=
     FVST.TreeOptions.AutoOptions + [toAutoSpanColumns] ;
-  FVST.Header.MainColumn := 1;
+  FVST.Header.MainColumn := 0;
 
   FTVP := TTreeViewPresenter.Create(Self);
-  //FTVP.MultiSelect := False;
   FTVP.ShowHeader  := False;
   FTVP.ListMode    := False;
-  //FTVP.ColumnDefinitions.Add('Text', SFileName, dtString, 70, 60, 400);
+  FTVP.ColumnDefinitions.Add('Text', 150);
   FTVP.View.ItemsSource := SearchEngine.ItemGroups as IObjectList;
   FTVP.TreeView    := FVST;
-  FTVP.View.ItemTemplate := TSearchResultGroupTemplate.Create(FTVP.ColumnDefinitions);
+  FTVP.View.ItemTemplate := TSearchResultGroupTemplate.Create;
   FTVP.OnSelectionChanged := DoOnSelectionChanged;
   cbxSearchText.Text  := '';
   cbxReplaceWith.Text := '';
@@ -316,7 +317,6 @@ begin
   FTVP.Refresh;
   SearchEngine.SearchText := '';
   SearchEngine.ReplaceText := '';
-  Manager.ClearHighlightSearch;
 end;
 
 procedure TfrmSearchForm.FormShow(Sender: TObject);
@@ -455,30 +455,24 @@ begin
   if FTVP.View.CurrentItem is TSearchResult then
   begin
     SR := FTVP.View.CurrentItem as TSearchResult;
-    Manager.ActivateView(SR.ViewName);
-//    View.SelStart := SR.StartPos;
-//    View.SelEnd   := PointToPos(View.Lines, SR.BlockEnd);
-    Modified;
-    SearchEngine.CurrentIndex := SearchEngine.ItemList.IndexOf(SR);
   end
   else if FTVP.View.CurrentItem is TSearchResultLine then
   begin
     SRL := FTVP.View.CurrentItem as TSearchResultLine;
     SR  := SRL.List[0] as TSearchResult;
-    Manager.ActivateView(SR.ViewName);
-    View.SelStart := SR.StartPos;
-    //View.SelEnd   := PointToPos(View.Lines, SR.BlockEnd);
-    Modified;
-    SearchEngine.CurrentIndex := SearchEngine.ItemList.IndexOf(SR);
   end
   else if FTVP.View.CurrentItem is TSearchResultGroup then
   begin
     SRG := (FTVP.View.CurrentItem as TSearchResultGroup);
     SRL := SRG.Lines[0] as TSearchResultLine;
     SR  := SRL.List[0] as TSearchResult;
-    Manager.ActivateView(SRG.ViewName);
-//    View.SelStart := SR.StartPos;
-//    View.SelEnd   := PointToPos(View.Lines, SR.BlockEnd);
+  end;
+  if Assigned(SR) then
+  begin
+    Manager.ActivateView(SR.ViewName);
+    View.Editor.GotoLineAndCenter(SR.BlockBegin.Y);
+    View.Editor.SelectionBeginPosition := TBCEditorTextPosition(SR.BlockBegin);
+    View.Editor.SelectionEndPosition   := TBCEditorTextPosition(SR.BlockEnd);
     Modified;
     SearchEngine.CurrentIndex := SearchEngine.ItemList.IndexOf(SR);
   end;
@@ -508,7 +502,6 @@ begin
       SearchEngine.Options    := Options;
       SearchEngine.SearchText := SearchText;
       pnlStatus.Caption       := '';
-      Manager.ClearHighlightSearch;
       SearchEngine.ItemGroups.Clear;
       SearchEngine.ItemList.Clear;
       FTVP.Refresh;

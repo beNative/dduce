@@ -18,7 +18,7 @@ unit DDuce.Editor.Search.Data;
 
 { Data structures used to display the search results hierarchically. }
 
-{ TSearchResultGroup -> TSearchResultLine -> TSearchResult }
+{ IEditorView -> TSearchResultGroup -> TSearchResultLine -> TSearchResult }
 
 interface
 
@@ -78,10 +78,8 @@ type
     property ShowMatch: Boolean
       read FShowMatch write FShowMatch;
 
-  published
     property Text: string
       read GetText;
-
   end;
 
   { TSearchResultLine }
@@ -90,11 +88,11 @@ type
   private
     FLine : Integer;
     FList : IObjectList;
+
     function GetText: string;
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
 
     property List: IObjectList
       read FList;
@@ -102,10 +100,8 @@ type
     property Line : Integer
       read FLine write FLine;
 
-  published
     property Text: string
       read GetText;
-
   end;
 
   { TSearchResultGroup }
@@ -120,7 +116,6 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
 
     property Lines: IObjectList
       read FLines;
@@ -131,10 +126,8 @@ type
     property FileName : string
       read FFileName write FFileName;
 
-  published
     property Text: string
       read GetText;
-
   end;
 
 implementation
@@ -163,11 +156,6 @@ begin
   FList := TCollections.CreateObjectList<TSearchResult>(True) as IObjectList;
 end;
 
-procedure TSearchResultLine.BeforeDestruction;
-begin
-  inherited BeforeDestruction;
-end;
-
 function TSearchResultLine.GetText: string;
 begin
   Result := Format(SLine, [Line]);
@@ -184,11 +172,6 @@ procedure TSearchResultGroup.AfterConstruction;
 begin
   inherited AfterConstruction;
   FLines := TCollections.CreateObjectList<TSearchResultLine>(True) as IObjectList;
-end;
-
-procedure TSearchResultGroup.BeforeDestruction;
-begin
-  inherited BeforeDestruction;
 end;
 {$ENDREGION}
 

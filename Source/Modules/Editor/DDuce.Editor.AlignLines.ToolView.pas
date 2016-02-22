@@ -29,8 +29,6 @@ uses
 
   DSharp.Windows.TreeViewPresenter,
 
-  //ts.Components.Multipanel, ts.Core.TreeViewPresenter,
-
   DDuce.Editor.ToolView.Base, DDuce.Editor.Interfaces, DDuce.Editor.Types,
   DDuce.Editor.AlignLines.Settings,
 
@@ -70,9 +68,6 @@ const
   );
 
 type
-
-  { TfrmAlignLines }
-
   TfrmAlignLines = class(TCustomEditorToolView, IEditorToolView)
     aclMain          : TActionList;
     actExecute       : TAction;
