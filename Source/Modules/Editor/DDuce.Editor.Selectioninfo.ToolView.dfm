@@ -22,10 +22,6 @@ object frmSelectionInfo: TfrmSelectionInfo
     TabOrder = 0
     object ts1: TTabSheet
       Caption = 'ts1'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnl1: TPanel
         Left = 0
         Top = 0
@@ -214,6 +210,34 @@ object frmSelectionInfo: TfrmSelectionInfo
           Color = clBtnFace
           ParentColor = False
         end
+        object lblSelStart: TLabel
+          Left = 24
+          Top = 336
+          Width = 38
+          Height = 13
+          Caption = 'SelStart'
+        end
+        object lblSelEnd: TLabel
+          Left = 24
+          Top = 376
+          Width = 32
+          Height = 13
+          Caption = 'SelEnd'
+        end
+        object lblSelStartValue: TLabel
+          Left = 144
+          Top = 336
+          Width = 48
+          Height = 13
+          Caption = 'lblSelStart'
+        end
+        object lblSelEndValue: TLabel
+          Left = 144
+          Top = 376
+          Width = 42
+          Height = 13
+          Caption = 'lblSelEnd'
+        end
         object btnStore: TButton
           Left = 8
           Top = 232
@@ -264,10 +288,6 @@ object frmSelectionInfo: TfrmSelectionInfo
     object ts2: TTabSheet
       Caption = 'ts2'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object mmoReflected: TMemo
         AlignWithMargins = True
         Left = 3

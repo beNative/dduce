@@ -160,7 +160,7 @@ object dmEditorManager: TdmEditorManager
       Caption = 'Show special characters'
       Hint = 'Show special characters (like tabs and spaces).'
       ImageIndex = 84
-      ShortCut = 24643
+      ShortCut = 24658
       OnExecute = actShowSpecialCharactersExecute
     end
     object actUpperCaseSelection: TAction
@@ -616,7 +616,7 @@ object dmEditorManager: TdmEditorManager
       OnExecute = actDecodeBase64Execute
     end
     object actShowViews: TAction
-      Category = 'Dialogs'
+      Category = 'ToolViews'
       Caption = 'Show views'
       Hint = 'Show list of all editor views.'
       ImageIndex = 91
@@ -724,6 +724,7 @@ object dmEditorManager: TdmEditorManager
       OnExecute = actShowStructureViewerExecute
     end
     object actSelectionInfo: TAction
+      Category = 'Debug'
       Caption = 'SelectionInfo'
       ShortCut = 24651
       OnExecute = actSelectionInfoExecute
@@ -850,14 +851,14 @@ object dmEditorManager: TdmEditorManager
       Caption = 'Show Hex editor'
       OnExecute = actShowHexEditorExecute
     end
-    object actToggleMiniMap: TAction
-      Category = 'ToolViews'
+    object actShowMinimap: TAction
+      Category = 'Settings'
       AutoCheck = True
-      Caption = 'Toggle minimap'
-      Hint = 'Toggle minimap.'
+      Caption = 'Show minimap'
+      Hint = 'Show minimap.'
       ImageIndex = 120
       ShortCut = 49229
-      OnExecute = actToggleMiniMapExecute
+      OnExecute = actShowMinimapExecute
     end
     object actConvertTabsToSpaces: TAction
       Category = 'Selection'
@@ -879,6 +880,7 @@ object dmEditorManager: TdmEditorManager
       OnExecute = actShowScriptEditorExecute
     end
     object actShowFilterTest: TAction
+      Category = 'Debug'
       Caption = 'Show filter test dialog'
       ShortCut = 57460
       OnExecute = actShowFilterTestExecute
@@ -983,12 +985,26 @@ object dmEditorManager: TdmEditorManager
       OnExecute = actDecodeXMLExecute
     end
     object actToggleWordWrap: TAction
-      Category = 'ToolViews'
+      Category = 'Settings'
       AutoCheck = True
-      Caption = 'Toggle Wordwrap'
-      Hint = 'Toggle Wordwrap mode.'
+      Caption = 'Toggle wordwrap'
+      Hint = 'Toggle wordwrap mode.'
       ImageIndex = 119
+      ShortCut = 49239
       OnExecute = actToggleWordWrapExecute
+    end
+    object actShowIndentGuides: TAction
+      Category = 'Settings'
+      AutoCheck = True
+      Caption = 'Show indent guides'
+      OnExecute = actShowIndentGuidesExecute
+    end
+    object actShowSearchmap: TAction
+      Category = 'Settings'
+      AutoCheck = True
+      Caption = 'Show searchmap'
+      Hint = 'Show searchmap bar.'
+      OnExecute = actShowSearchmapExecute
     end
   end
   object ppmExport: TPopupMenu

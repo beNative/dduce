@@ -339,12 +339,12 @@ begin
   B := (Key in VK_EDIT_KEYS) and (Shift = []);
   { CTRL-keycombinations that need to be handled by the edit control like
     CTRL-C for clipboard copy. }
-//  C := (Key in VK_CTRL_EDIT_KEYS) and (Shift = [ssCtrlOS]);
+  C := (Key in VK_CTRL_EDIT_KEYS) {and (Shift = [ssCtrlOS])};
   { SHIFT-keycombinations that need to be handled by the edit control for
     uppercase characters but also eg. SHIFT-HOME for selections. }
   D := (Key in VK_SHIFT_EDIT_KEYS) and (Shift = [ssShift]);
   { Only CTRL key is pressed. }
-//  E := (Key = VK_CONTROL) and (Shift = [ssCtrlOS]);
+  E := (Key = VK_CONTROL) {and (Shift = [ssCtrlOS])};
   { Only SHIFT key is pressed. }
   F := (Key = VK_SHIFT) and (Shift = [ssShift]);
   { Only (left) ALT key is pressed. }

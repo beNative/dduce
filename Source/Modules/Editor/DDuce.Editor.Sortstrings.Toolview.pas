@@ -92,14 +92,14 @@ begin
 end;
 
 procedure TfrmSortStrings.gbxOptionsItemClick(Sender: TObject; Index: Integer);
-var
-  B : Boolean;
+//var
+//  B : Boolean;
 begin
   //B := (Sender as TCheckGroup).Checked[Index];
-  case Index of
-    0: Settings.CaseSensitive := B;
-    1: Settings.IgnoreSpaces  := B;
-  end;
+//  case Index of
+//    0: Settings.CaseSensitive := B;
+//    1: Settings.IgnoreSpaces  := B;
+//  end;
 end;
 
 procedure TfrmSortStrings.rgpSortScopeClick(Sender: TObject);

@@ -61,6 +61,9 @@ type
     FOverwriteBlock        : Boolean;
     FAutoHideCursor        : Boolean;
     FWordWrapEnabled       : Boolean;
+    FShowIndentGuides      : Boolean;
+    FShowMinimap           : Boolean;
+    FShowSearchmap         : Boolean;
 
     function GetAlwaysVisibleCaret: Boolean;
     function GetAutoHideCursor: Boolean;
@@ -116,6 +119,12 @@ type
     procedure SetWantTabs(AValue: Boolean);
     function GetWordWrapEnabled: Boolean;
     procedure SetWordWrapEnabled(const Value: Boolean);
+    function GetShowIndentGuides: Boolean;
+    procedure SetShowIndentGuides(const Value: Boolean);
+    function GetShowMinimap: Boolean;
+    procedure SetShowMinimap(const Value: Boolean);
+    function GetShowSearchmap: Boolean;
+    procedure SetShowSearchmap(const Value: Boolean);
 
   protected
     procedure Changed;
@@ -181,6 +190,15 @@ type
 
     property DragDropEditing: Boolean
       read GetDragDropEditing write SetDragDropEditing default True;
+
+    property ShowIndentGuides: Boolean
+      read GetShowIndentGuides write SetShowIndentGuides;
+
+    property ShowMinimap: Boolean
+      read GetShowMinimap write SetShowMinimap;
+
+    property ShowSearchmap: Boolean
+      read GetShowSearchmap write SetShowSearchmap;
 
     property ShowSpecialCharacters: Boolean
       read GetShowSpecialCharacters write SetShowSpecialCharacters
@@ -469,6 +487,34 @@ begin
   end;
 end;
 
+function TEditorOptionsSettings.GetShowIndentGuides: Boolean;
+begin
+  Result := FShowIndentGuides;
+end;
+
+function TEditorOptionsSettings.GetShowMinimap: Boolean;
+begin
+  Result := FShowMinimap;
+end;
+
+procedure TEditorOptionsSettings.SetShowMinimap(const Value: Boolean);
+begin
+  if Value <> ShowMinimap then
+  begin
+    FShowMinimap := Value;
+    Changed;
+  end;
+end;
+
+procedure TEditorOptionsSettings.SetShowIndentGuides(const Value: Boolean);
+begin
+  if Value <> ShowIndentGuides then
+  begin
+    FShowIndentGuides := Value;
+    Changed;
+  end;
+end;
+
 function TEditorOptionsSettings.GetShowRightEdge: Boolean;
 begin
   Result := FShowRightEdge;
@@ -483,10 +529,25 @@ begin
   end;
 end;
 
+function TEditorOptionsSettings.GetShowSearchmap: Boolean;
+begin
+  Result := FShowSearchmap;
+end;
+
+procedure TEditorOptionsSettings.SetShowSearchmap(const Value: Boolean);
+begin
+  if Value <> ShowSearchmap then
+  begin
+    FShowSearchmap := Value;
+    Changed;
+  end;
+end;
+
 function TEditorOptionsSettings.GetShowSpecialCharacters: Boolean;
 begin
   Result := FShowSpecialCharacters;
 end;
+
 
 procedure TEditorOptionsSettings.SetShowSpecialCharacters(AValue: Boolean);
 begin

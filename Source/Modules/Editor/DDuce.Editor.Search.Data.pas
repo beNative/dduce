@@ -163,15 +163,15 @@ end;
 {$ENDREGION}
 
 {$REGION 'TSearchResultGroup'}
-function TSearchResultGroup.GetText: string;
-begin
-  Result := Format(SGroup, [FFileName, FLines.Count]);
-end;
-
 procedure TSearchResultGroup.AfterConstruction;
 begin
   inherited AfterConstruction;
   FLines := TCollections.CreateObjectList<TSearchResultLine>(True) as IObjectList;
+end;
+
+function TSearchResultGroup.GetText: string;
+begin
+  Result := Format(SGroup, [FFileName, FLines.Count]);
 end;
 {$ENDREGION}
 

@@ -60,7 +60,6 @@ type
     FItemGroups   : IList<TSearchResultGroup>;
     FItemList     : IList<TSearchResult>;
     FCurrentIndex : Integer;
-    FEditorSearch : TBCEditorNormalSearch;
     FOnChange     : Event<TNotifyEvent>;
     FOnExecute    : Event<TNotifyEvent>;
 
@@ -144,7 +143,6 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
   end;
 
 implementation
@@ -159,16 +157,9 @@ const
 procedure TSearchEngine.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FItemGroups   := TCollections.CreateObjectList<TSearchResultGroup>;
-  FItemList     := TCollections.CreateList<TSearchResult>(False);
-  FEditorSearch := TBCEditorNormalSearch.Create;
-  Options       := Settings.Options;
-end;
-
-procedure TSearchEngine.BeforeDestruction;
-begin
-  FEditorSearch.Free;
-  inherited BeforeDestruction;
+  FItemGroups := TCollections.CreateObjectList<TSearchResultGroup>;
+  FItemList   := TCollections.CreateList<TSearchResult>(False);
+  Options     := Settings.Options;
 end;
 {$ENDREGION}
 
@@ -208,7 +199,6 @@ begin
   if AValue <> ReplaceText then
   begin
     FReplaceText := AValue;
-    FEditorSearch.Replace(AValue, FReplaceText);
     DoChange;
   end;
 end;
@@ -229,7 +219,6 @@ begin
   if AValue <> SearchText then
   begin
     FSearchText := AValue;
-    FEditorSearch.Pattern := AValue;
     DoChange;
   end;
 end;
@@ -263,10 +252,11 @@ procedure TSearchEngine.SetOptions(AValue: TBCEditorSearchOptions);
 begin
   if AValue <> Options then
   begin
-    FOptions := AValue;
+//    FOptions := AValue;
+    View.Editor.Search.Options := AValue;
     Settings.Options := AValue;
-    FEditorSearch.WholeWordsOnly := soWholeWordsOnly in Options;
-    FEditorSearch.CaseSensitive  := soCaseSensitive in Options;
+//    FEditorSearch.WholeWordsOnly := soWholeWordsOnly in Options;
+//    FEditorSearch.CaseSensitive  := soCaseSensitive in Options;
 
 
 
@@ -304,22 +294,23 @@ end;
 {$REGION 'protected methods'}
 procedure TSearchEngine.AddResultsForView(AView: IEditorView);
 var
-  SRG          : TSearchResultGroup;
-  SRL          : TSearchResultLine;
-  SR           : TSearchResult;
-  Line         : Integer;
-  N            : Integer;
-  B            : Boolean;
+  SRG  : TSearchResultGroup;
+  SRL  : TSearchResultLine;
+  SR   : TSearchResult;
+  Line : Integer;
+  N    : Integer;
+  B    : Boolean;
 begin
   N := 0;
-  AView.Editor.Search.Options :=
-    AView.Editor.Search.Options - [soShowStringNotFound,soShowSearchMatchNotFound];
-  Options := Options - [soShowStringNotFound,soShowSearchMatchNotFound];
+  AView.Editor.Search.Options := AView.Editor.Search.Options -
+    [soShowStringNotFound, soShowSearchMatchNotFound];
+  Options := Options - [soShowStringNotFound, soShowSearchMatchNotFound];
+
   AView.Editor.Search.Options := AView.Editor.Search.Options +
-      [soEntireScope, soHighlightResults];
+    [soEntireScope, soHighlightResults];
 
   AView.Editor.Search.SearchText := SearchText;
-  B := AView.Editor.FindNext;
+  B := AView.Editor.Search.Lines.Count > 0;
   if B then
   begin
     SRG := TSearchResultGroup.Create;
@@ -335,12 +326,9 @@ begin
         SR.ViewName   := AView.Name;
         SR.BlockBegin := TPoint(AView.Editor.SelectionBeginPosition);
         SR.BlockEnd   := TPoint(AView.Editor.SelectionEndPosition);
-        SR.StartPos   := PointToPos(AView.Lines, SR.BlockBegin);
-        SR.EndPos     := PointToPos(AView.Lines, SR.BlockEnd);
         SR.Column     := SR.BlockBegin.X;
         SR.Line       := SR.BlockBegin.Y;
         SR.Index      := N;
-        Logger.Send(SR.Text);
 //
 //    soBackwards,
 //    soBeepIfStringNotFound,
@@ -363,7 +351,6 @@ begin
         B := AView.Editor.FindNext;
       end;
       SRL.Line := Line;
-      Logger.Send(SRL.Text);
       SRG.Lines.Add(SRL);
     end;
     SRG.FileName := ExtractFileName(AView.FileName);
@@ -436,8 +423,8 @@ begin
   begin
     SR := ItemList[CurrentIndex] as TSearchResult;
     Manager.ActivateView(SR.ViewName);
-    View.SelStart := SR.StartPos;
-    View.SelEnd   := SR.StartPos + Length(SearchText);
+//    View.SelStart := SR.StartPos;
+//    View.SelEnd   := SR.StartPos + Length(SearchText);
     DoChange;
   end
   else
@@ -454,8 +441,8 @@ begin
   begin
     SR := ItemList[CurrentIndex] as TSearchResult;
     Manager.ActivateView(SR.ViewName);
-    Manager.ActiveView.SelStart := SR.StartPos;
-    Manager.ActiveView.SelEnd   := SR.StartPos + Length(SearchText);
+//    Manager.ActiveView.SelStart := SR.StartPos;
+//    Manager.ActiveView.SelEnd   := SR.StartPos + Length(SearchText);
     DoChange;
   end
   else

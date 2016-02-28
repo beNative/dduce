@@ -306,8 +306,12 @@ begin
   AMenu.Items.Add(MI);
   CreateMenuItem(MI, 'actSettings');
   CreateMenuItem(MI);
-  CreateMenuItem(MI, 'actToggleMiniMap');
+  CreateMenuItem(MI, 'actShowMinimap');
+  CreateMenuItem(MI, 'actShowSearchmap');
   CreateMenuItem(MI, 'actShowSpecialCharacters');
+  CreateMenuItem(MI, 'actShowIndentGuides');
+  CreateMenuItem(MI, 'actToggleWordWrap');
+  CreateMenuItem(MI);
   CreateMenuItem(MI, 'actIncFontSize');
   CreateMenuItem(MI, 'actDecFontSize');
   CreateMenuItem(MI);

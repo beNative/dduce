@@ -90,7 +90,7 @@ type
 
     procedure cbxSearchTextChange(Sender: TObject);
     procedure chkClick(Sender: TObject);
-    procedure DoOnSelectionChanged(Sender: TObject);
+    procedure FTVPSelectionChanged(Sender: TObject);
     procedure FormHide(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure rbBackwardChange(Sender: TObject);
@@ -131,6 +131,7 @@ type
 
   public
     procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
 
     procedure UpdateActions; override;
     procedure UpdateView; override;
@@ -153,8 +154,6 @@ uses
   Vcl.Graphics,
 
   Spring.Collections,
-
-
 
   DDuce.Components.Factories, DDuce.Factories,
 
@@ -182,13 +181,21 @@ begin
   FTVP.View.ItemsSource := SearchEngine.ItemGroups as IObjectList;
   FTVP.TreeView    := FVST;
   FTVP.View.ItemTemplate := TSearchResultGroupTemplate.Create;
-  FTVP.OnSelectionChanged := DoOnSelectionChanged;
+  FTVP.OnSelectionChanged := FTVPSelectionChanged;
   cbxSearchText.Text  := '';
   cbxReplaceWith.Text := '';
 
   SearchEngine.OnExecute.Add(SearchEngineExecute);
   SearchEngine.OnChange.Add(SearchEngineChange);
   Manager.Events.OnActionExecute.Add(ActionExecute);
+end;
+
+procedure TfrmSearchForm.BeforeDestruction;
+begin
+  SearchEngine.OnChange.Remove(SearchEngineChange);
+  SearchEngine.OnExecute.Remove(SearchEngineExecute);
+  Manager.Events.OnActionExecute.Remove(ActionExecute);
+  inherited BeforeDestruction;
 end;
 {$ENDREGION}
 
@@ -236,6 +243,7 @@ begin
     rbBackward.Checked := True
   else
     rbForward.Checked  := True;
+  Modified;
 end;
 
 function TfrmSearchForm.GetSearchText: string;
@@ -446,12 +454,13 @@ end;
 
 { Updates the active editorview and selects SearchText }
 
-procedure TfrmSearchForm.DoOnSelectionChanged(Sender: TObject);
+procedure TfrmSearchForm.FTVPSelectionChanged(Sender: TObject);
 var
   SR  : TSearchResult;
   SRL : TSearchResultLine;
   SRG : TSearchResultGroup;
 begin
+  SR := nil;
   if FTVP.View.CurrentItem is TSearchResult then
   begin
     SR := FTVP.View.CurrentItem as TSearchResult;

@@ -248,7 +248,7 @@ begin
   FSingleInstance := DEFAULT_SINGLE_INSTANCE;
   FEditorFont := TFont.Create;
   FEditorFont.Name := DEFAULT_FONT_NAME;
-  FEditorFont.Size := 10;
+  FEditorFont.Size := 11;
 
   FDimInactiveView := DEFAULT_DIM_ACTIVE_VIEW;
   FLanguageCode    := DEFAULT_LANGUAGE_CODE;

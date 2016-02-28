@@ -41,7 +41,6 @@ type
     property View: IEditorView
       read GetView;
 
-  published
     property FileName: string
       read GetFileName;
 

@@ -26,7 +26,6 @@ uses
 
 const
   DEFAULT_EDGE_BORDERS = [ebLeft, ebTop, ebRight, ebBottom];
-  //DEFAULT_EDGE_BORDERS = [];
   DEFAULT_EDGE_INNER   = esNone;
   DEFAULT_EDGE_OUTER   = esNone;
   DEFAULT_TRANSPARANT  = True;
@@ -205,9 +204,6 @@ begin
   CreateToolButton(TB);
   CreateToolButton(TB, 'actToggleFoldLevel', FMenus.FoldPopupMenu);
   CreateToolButton(TB, 'actToggleHighlighter', FMenus.HighlighterPopupMenu);
-  CreateToolButton(TB, 'actShowSpecialCharacters');
-  CreateToolButton(TB, 'actToggleMiniMap');
-  CreateToolButton(TB, 'actToggleWordWrap');
   CreateToolButton(TB, 'actReload');
   CreateToolButton(TB);
   CreateToolButton(TB, 'actAutoGuessHighlighter');
@@ -221,6 +217,9 @@ begin
   CreateToolButton(TB);
   CreateToolButton(TB, 'actSettings');
   CreateToolButton(TB);
+  CreateToolButton(TB, 'actShowSpecialCharacters');
+  CreateToolButton(TB, 'actShowMinimap');
+  CreateToolButton(TB, 'actToggleWordWrap');
   CreateToolButton(TB);
   CreateToolButton(TB, 'actCreateDesktopLink');
   CreateToolButton(TB);

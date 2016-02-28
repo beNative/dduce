@@ -20,41 +20,45 @@ interface
 
 uses
   System.SysUtils, System.Classes,
-  Vcl.Forms, Vcl.StdCtrls, Vcl.Controls,
+  Vcl.Forms, Vcl.StdCtrls, Vcl.Controls, Vcl.ExtCtrls, Vcl.ComCtrls,
 
-  DDuce.Editor.Interfaces, Vcl.ExtCtrls, Vcl.ComCtrls;
+  DDuce.Editor.Interfaces;
 
 type
   TfrmSelectionInfo = class(TForm, IEditorToolView)
-    pgc1: TPageControl;
-    ts1: TTabSheet;
-    ts2: TTabSheet;
-    pnl1: TPanel;
-    lblStoredBlockBegin: TLabel;
-    lblStoredBlockEnd: TLabel;
-    lblStoredBlockBeginValue: TLabel;
-    lblStoredBlockEndValue: TLabel;
-    lblStoredBlockLines: TLabel;
-    lblStoredBlockSelectionMode: TLabel;
-    lblStoredBlockSelectionModeValue: TLabel;
-    lblBlockBegin: TLabel;
-    lblBlockEnd: TLabel;
-    lblBlockBeginValue: TLabel;
-    lblBlockEndValue: TLabel;
-    lblCaretXY: TLabel;
-    lblCaretXYValue: TLabel;
-    lblLogicalCaretXY: TLabel;
-    lblLogicalCaretXYValue: TLabel;
-    lblStoredCaretXY: TLabel;
-    lblStoredCaretXYValue: TLabel;
-    lblLineCount: TLabel;
-    lblLineCountValue: TLabel;
-    btnStore: TButton;
-    btnRestore: TButton;
-    chkLockUpdates: TCheckBox;
-    chkExcludeEmptyLines: TCheckBox;
-    mmoBlock: TMemo;
-    mmoReflected: TMemo;
+    pgc1                             : TPageControl;
+    ts1                              : TTabSheet;
+    ts2                              : TTabSheet;
+    pnl1                             : TPanel;
+    lblStoredBlockBegin              : TLabel;
+    lblStoredBlockEnd                : TLabel;
+    lblStoredBlockBeginValue         : TLabel;
+    lblStoredBlockEndValue           : TLabel;
+    lblStoredBlockLines              : TLabel;
+    lblStoredBlockSelectionMode      : TLabel;
+    lblStoredBlockSelectionModeValue : TLabel;
+    lblBlockBegin                    : TLabel;
+    lblBlockEnd                      : TLabel;
+    lblBlockBeginValue               : TLabel;
+    lblBlockEndValue                 : TLabel;
+    lblCaretXY                       : TLabel;
+    lblCaretXYValue                  : TLabel;
+    lblLogicalCaretXY                : TLabel;
+    lblLogicalCaretXYValue           : TLabel;
+    lblStoredCaretXY                 : TLabel;
+    lblStoredCaretXYValue            : TLabel;
+    lblLineCount                     : TLabel;
+    lblLineCountValue                : TLabel;
+    btnStore                         : TButton;
+    btnRestore                       : TButton;
+    chkLockUpdates                   : TCheckBox;
+    chkExcludeEmptyLines             : TCheckBox;
+    mmoBlock                         : TMemo;
+    mmoReflected                     : TMemo;
+    lblSelStart                      : TLabel;
+    lblSelEnd                        : TLabel;
+    lblSelStartValue                 : TLabel;
+    lblSelEndValue                   : TLabel;
     {$ENDREGION}
 
     procedure btnRestoreClick(Sender: TObject);
@@ -90,7 +94,7 @@ implementation
 uses
   System.TypInfo,
 
-  BCEditor.Editor,
+  BCEditor.Editor, BCEditor.Types,
 
   DDuce.Reflect;
 
@@ -149,19 +153,9 @@ var
   ES : TBCEditor;
 begin
   ES := View.Editor;
-  lblStoredBlockBeginValue.Caption := Format(
-    '(%d, %d)', [ES.SelectionBeginPosition.Char, ES.SelectionBeginPosition.Line]
-  );
-  lblStoredBlockEndValue.Caption := Format(
-    '(%d, %d)', [ES.SelectionEndPosition.Char, ES.SelectionEndPosition.Line]
-  );
 
-  lblStoredCaretXYValue.Caption := Format(
-    '(%d, %d)', [ES.TextCaretPosition.Char, ES.TextCaretPosition.Line]
-  );
-
-//  lblStoredBlockSelectionModeValue.Caption :=
-//    GetEnumName(TypeInfo(TSynSelectionMode), Ord(ES.SelectionMode));
+  lblStoredBlockSelectionModeValue.Caption :=
+    GetEnumName(TypeInfo(TBCEditorSelectionMode), Ord(View.SelectionMode));
 
   lblBlockBeginValue.Caption := Format(
     '(%d, %d)', [View.BlockBegin.X, View.BlockBegin.Y]
@@ -176,6 +170,10 @@ begin
   lblLogicalCaretXYValue.Caption := Format(
     '(%d, %d)', [View.LogicalCaretXY.X, View.LogicalCaretXY.Y]
   );
+
+  lblSelStartValue.Caption := View.SelStart.ToString;
+  lblSelEndValue.Caption   := View.SelEnd.ToString;
+
 
   lblLineCountValue.Caption := IntToStr(ES.Lines.Count);
   //lblStoredBlockLines.Caption := ES.Text;

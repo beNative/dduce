@@ -24,6 +24,8 @@ uses
   System.Classes, System.SysUtils,
   Vcl.Forms,
 
+  Spring.Collections,
+
   DDuce.Editor.Interfaces, DDuce.Editor.Tools.Settings,
   DDuce.Editor.ToolView.Base;
 
@@ -77,7 +79,7 @@ type
 
   TToolViews = class(TInterfacedObject, IEditorToolViews)
   strict private
-    FItems   : TInterfaceList;
+    FItems   : IList<IEditorToolView>;
     FManager : IEditorManager;
 
   strict protected
@@ -106,7 +108,6 @@ type
 
   public
     constructor Create(AEditorManager: IEditorManager);
-    procedure BeforeDestruction; override;
 
   end;
 
@@ -206,14 +207,7 @@ constructor TToolViews.Create(AEditorManager: IEditorManager);
 begin
   inherited Create;
   FManager := AEditorManager;
-  FItems   := TInterfaceList.Create;
-end;
-
-procedure TToolViews.BeforeDestruction;
-begin
-  FManager := nil;
-  FItems.Free;
-  inherited BeforeDestruction;
+  FItems   := TCollections.CreateInterfaceList<IEditorToolView>;
 end;
 {$ENDREGION}
 

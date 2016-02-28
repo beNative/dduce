@@ -54,24 +54,23 @@ uses
 
   DDuce.Editor.Resources, DDuce.Editor.Highlighters, DDuce.Editor.Interfaces,
 
-  DDuce.Logger;
+  DDuce.Logger, Vcl.AppEvnts;
 
 type
   TEditorView = class(TForm, IEditorView)
-    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
-  strict private
+  private
     procedure EditorChange(Sender: TObject);
     procedure EditorCaretChanged(
       Sender : TObject;
       X, Y   : Integer
     );
 
-    procedure EditorCommandProcessed(
-      Sender       : TObject;
-      var ACommand : TBCEditorCommand;
-      var AChar    : Char;
-      AData        : Pointer
-    );
+//    procedure EditorCommandProcessed(
+//      Sender       : TObject;
+//      var ACommand : TBCEditorCommand;
+//      var AChar    : Char;
+//      AData        : Pointer
+//    );
     procedure EditorReplaceText(
       Sender         : TObject;
       const ASearch  : string;
@@ -149,6 +148,7 @@ type
     function GetSelEnd: Integer;
     function GetSelStart: Integer;
     function GetSelectedText: string;
+    function GetSelectionLength: Integer;
     function GetSettings: IEditorSettings;
     function GetShowSpecialChars: Boolean;
     function GetText: string;
@@ -199,6 +199,7 @@ type
       var AStyles          : TFontStyles
     );
 
+
   strict protected
     procedure SetParent(Value: TWinControl); reintroduce;
 
@@ -218,12 +219,8 @@ type
     function IEditorView.Focused = EditorViewFocused;
 
     procedure AssignHighlighterForFileType(const AFileExt: string);
+    function RowColumnToCharIndex(APosition: TBCEditorTextPosition): Integer;
 
-    procedure SearchAndSelectLine(
-            ALineIndex : Integer;
-      const ALine      : string
-    );
-    procedure SearchAndSelectText(const AText: string);
     procedure SelectWord;
     procedure FindNextWordOccurrence(ADirectionForward: Boolean);
 
@@ -309,6 +306,9 @@ type
     property SelEnd: Integer
       read GetSelEnd write SetSelEnd;
 
+    property SelectionLength: Integer
+      read GetSelectionLength;
+
     property InsertMode: Boolean
       read GetInsertMode write SetInsertMode;
 
@@ -380,9 +380,6 @@ type
     property HighlighterItem: THighlighterItem
       read GetHighlighterItem write SetHighlighterItem;
 
-//    property Selection: IEditorSelection
-//      read GetSelection implements IEditorSelection;
-
     { Shortcut to the text contained in the editor. }
     property Lines: TStrings
       read GetLines;
@@ -438,7 +435,7 @@ implementation
 {$R *.dfm}
 
 uses
-  System.TypInfo, System.UITypes, System.IOUtils,
+  System.TypInfo, System.UITypes, System.IOUtils, System.Math,
   Vcl.GraphUtil,
 
   Spring,
@@ -449,9 +446,7 @@ uses
 procedure TEditorView.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FEditor             := TBCEditor.Create(Self);
-//  FSelection := TEditorSelection.Create(Self);
-
+  FEditor                 := TBCEditor.Create(Self);
   FFindHistory            := TStringList.Create;
   FFindHistory.Sorted     := True;
   FFindHistory.Duplicates := dupIgnore;
@@ -475,11 +470,12 @@ end;
 
 procedure TEditorView.BeforeDestruction;
 begin
-//  FSelection   := nil;
+  FreeAndNil(FEditor);
   if Assigned(Settings) then
     Settings.OnChanged.Remove(EditorSettingsChanged);
   FreeAndNil(FReplaceHistory);
   FreeAndNil(FFindHistory);
+
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
@@ -501,13 +497,16 @@ end;
 //  end;
 //end;
 
-procedure TEditorView.EditorCommandProcessed(Sender: TObject;
-  var ACommand: TBCEditorCommand; var AChar: Char; AData: Pointer);
-begin
-  Logger.Enter('TEditorView.EditorCommandProcessed');
-
-  Logger.Leave('TEditorView.EditorCommandProcessed');
-end;
+//procedure TEditorView.EditorCommandProcessed(Sender: TObject;
+//  var ACommand: TBCEditorCommand; var AChar: Char; AData: Pointer);
+//var
+//  S: string;
+//begin
+//  Logger.Enter('TEditorView.EditorCommandProcessed');
+//  EditorCommandToIdent(ACommand, S);
+//  Logger.Send('ACommand', S);
+//  Logger.Leave('TEditorView.EditorCommandProcessed');
+//end;
 
 procedure TEditorView.EditorCustomTokenAttribute(Sender: TObject;
   const AText: string; const ALine, APosition: Integer; var AForegroundColor,
@@ -519,6 +518,7 @@ end;
 procedure TEditorView.EditorDropFiles(Sender: TObject; Pos: TPoint;
   AFiles: TStrings);
 begin
+// TS: TEMP!
   Editor.LoadFromFile(AFiles[0]);
   Editor.Highlighter.LoadFromFile('Object Pascal.json');
 end;
@@ -527,23 +527,18 @@ procedure TEditorView.EditorReplaceText(Sender: TObject; const ASearch,
   AReplace: string; ALine, AColumn: Integer; ADeleteLine: Boolean;
   var AAction: TBCEditorReplaceAction);
 begin
-  Logger.Enter('TEditorView.EditorReplaceText');
-  Logger.Leave('TEditorView.EditorReplaceText');
+//
 end;
 
 procedure TEditorView.EditorCaretChanged(Sender: TObject; X, Y: Integer);
 begin
-  Logger.Enter('TEditorView.EditorCaretChanged');
-  Logger.Leave('TEditorView.EditorCaretChanged');
+  Events.DoCaretPositionChange;
 end;
 
 procedure TEditorView.EditorChange(Sender: TObject);
 begin
-  Logger.Enter('TEditorView.EditorChange');
-  Logger.Send('EditorChange');
   DoChange;
   Events.DoChange;
-  Logger.Leave('TEditorView.EditorChange');
 end;
 
 //procedure TEditorView.EditorStatusChange(Sender: TObject;
@@ -585,15 +580,6 @@ end;
 //
 //end;
 
-//procedure TEditorView.EditorProcessCommand(Sender: TObject;
-//  var Command: TSynEditorCommand; var AChar: TUTF8Char; Data: Pointer);
-//begin
-//  // TODO: dispatch events to manager (cfr. bookmarks)
-//  Logger.Send(
-//    'EditorProcessCommand(Command = %s; AChar = %s; Data)',
-//    [EditorCommandToCodeString(Command), AChar]
-//  );
-//end;
 {$ENDREGION}
 
 {$REGION'event dispatch methods'}
@@ -914,20 +900,9 @@ begin
   end;
 end;
 
-//function TEditorView.GetSearchOptions: TSynSearchOptions;
-//begin
-//  Result := FSearchOptions;
-//end;
-//
-//procedure TEditorView.SetSearchOptions(AValue: TSynSearchOptions);
-//begin
-//  FSearchOptions := AValue;
-//end;
-
 function TEditorView.GetSelEnd: Integer;
 begin
-  Result := 0;
-  //Result := Editor.SelectionEndPosition SelEnd;
+  Result := RowColumnToCharIndex(Editor.SelectionEndPosition);
 end;
 
 procedure TEditorView.SetSelEnd(const AValue: Integer);
@@ -937,8 +912,10 @@ end;
 
 function TEditorView.GetSelStart: Integer;
 begin
-  Result := 0;
-  //Result := Editor.SelStart;
+  if SelectionAvailable then
+    Result := RowColumnToCharIndex(Editor.SelectionBeginPosition)
+  else
+    Result := RowColumnToCharIndex(Editor.TextCaretPosition);
 end;
 
 procedure TEditorView.SetSelStart(const AValue: Integer);
@@ -958,17 +935,12 @@ end;
 
 function TEditorView.GetCaretXY: TPoint;
 begin
-  Result.X := Editor.TextCaretPosition.Char;
-  Result.Y := Editor.TextCaretPosition.Line;
+  Result := TPoint(Editor.TextCaretPosition);
 end;
 
 procedure TEditorView.SetCaretXY(const AValue: TPoint);
-var
-  C : TBCEditorTextPosition;
 begin
-  C.Char := AValue.X;
-  C.Line := AValue.Y;
-  Editor.TextCaretPosition := C;
+  Editor.TextCaretPosition := TBCEditorTextPosition(AValue);
 end;
 
 function TEditorView.GetFindHistory: TStrings;
@@ -1038,7 +1010,6 @@ end;
 
 function TEditorView.GetTextSize: Integer;
 begin
-  //Result := Length(Text);
   Result := Editor.GetTextLen;
 end;
 
@@ -1060,6 +1031,14 @@ end;
 function TEditorView.GetSelectionAvailable: Boolean;
 begin
   Result := Editor.SelectionAvailable;
+end;
+
+function TEditorView.GetSelectionLength: Integer;
+begin
+  if SelectionAvailable then
+    Result := SelEnd - SelStart
+  else
+    Result := 0;
 end;
 
 function TEditorView.GetSelectionMode: TBCEditorSelectionMode;
@@ -1104,13 +1083,7 @@ end;
 
 function TEditorView.GetCurrentChar: WideChar;
 begin
-  //Result := Editor.TextToDisplayPosition()
-
-//  if SelStart < Length(Text) then
-//    Result := Text[SelStart]
-//  else
-//    Result := #0;
-
+  Result := Editor.CharAtCursor;
 end;
 
 function TEditorView.GetEditor: TBCEditor;
@@ -1150,6 +1123,7 @@ begin
   Editor.Tabs.Width           := Settings.EditorOptions.TabWidth;
   Editor.WordWrap.Enabled     := Settings.EditorOptions.WordWrapEnabled;
   Editor.SpecialChars.Visible := Settings.EditorOptions.ShowSpecialCharacters;
+  Editor.Minimap.Visible      := Settings.EditorOptions.ShowMinimap;
 
   if Settings.EditorOptions.TabsToSpaces then
     Editor.Tabs.Options := Editor.Tabs.Options + [toTabsToSpaces]
@@ -1176,10 +1150,25 @@ begin
   else
     Editor.Options := Editor.Options - [eoTrimTrailingSpaces];
 
+  if Settings.EditorOptions.SmartTabs then
+    Editor.Tabs.Options := Editor.Tabs.Options + [toPreviousLineIndent]
+  else
+    Editor.Tabs.Options := Editor.Tabs.Options - [toPreviousLineIndent];
+
+  if Settings.EditorOptions.ShowIndentGuides then
+    Editor.CodeFolding.Options := Editor.CodeFolding.Options +
+      [cfoShowIndentGuides]
+  else
+    Editor.CodeFolding.Options := Editor.CodeFolding.Options -
+      [cfoShowIndentGuides];
+
   Editor.RightMargin.Visible  := Settings.EditorOptions.ShowRightEdge;
   Editor.RightMargin.Position := Settings.EditorOptions.RightEdge;
 
   EditorFont.Assign(Settings.EditorFont);
+
+  Editor.MatchingPair.Enabled := Settings.EditorOptions.BracketHighlight;
+  Editor.Search.Map.Visible   := Settings.EditorOptions.ShowSearchmap;
 
 //  Editor.ExtraLineSpacing      := Settings.EditorOptions.ExtraLineSpacing;
 //  Editor.ExtraCharSpacing      := Settings.EditorOptions.ExtraCharSpacing;
@@ -1193,27 +1182,16 @@ begin
 //    Editor.Options := Editor.Options + [eoAutoIndentOnPaste]
 //  else
 //    Editor.Options := Editor.Options - [eoAutoIndentOnPaste];
-//
-//  if Settings.EditorOptions.SmartTabs then
-//    Editor.Options := Editor.Options + [eoSmartTabs]
-//  else
-//    Editor.Options := Editor.Options - [eoSmartTabs];
+
+
 //
 //  if Settings.EditorOptions.EnhanceHomeKey then
 //    Editor.Options := Editor.Options + [eoEnhanceHomeKey]
 //  else
 //    Editor.Options := Editor.Options - [eoEnhanceHomeKey];
-//
-//
 
 //
-//  if Settings.EditorOptions.BracketHighlight then
-//    Editor.Options := Editor.Options + [eoBracketHighlight]
-//  else
-//    Editor.Options := Editor.Options - [eoBracketHighlight];
-//
 
-//
 //  if Settings.EditorOptions.EnhanceEndKey then
 //    Editor.Options2 := Editor.Options2 + [eoEnhanceEndKey]
 //  else
@@ -1291,11 +1269,16 @@ begin
     eoDropFiles,
     eoTrimTrailingSpaces
   ];
+  AEditor.Selection.Options := AEditor.Selection.Options + [
+    soALTSetsColumnMode,
+    soHighlightSimilarTerms,
+    soTripleClickRowSelect
+  ];
 
   AEditor.OnChange               := EditorChange;
   AEditor.OnReplaceText          := EditorReplaceText;
   AEditor.OnCaretChanged         := EditorCaretChanged;
-  AEditor.OnCommandProcessed     := EditorCommandProcessed;
+  //AEditor.OnCommandProcessed     := EditorCommandProcessed;
   AEditor.OnDropFiles            := EditorDropFiles;
   AEditor.OnCustomTokenAttribute := EditorCustomTokenAttribute;
 
@@ -1317,7 +1300,6 @@ begin
   ];
 
   AEditor.URIOpener := True;
-  AEditor.Font.Size := 11;
 
 //  AEditor.Options := [
 //    eoAltSetsColumnMode,
@@ -1337,20 +1319,6 @@ begin
 ////    eoPersistentCaret,     // don't use! bug in TSynEdit
 //    eoShowScrollHint
 //  ];
-//
-//  AEditor.Options2 := [
-//    eoEnhanceEndKey,
-//    eoFoldedCopyPaste,
-//    eoOverwriteBlock
-//  ];
-//  AEditor.MouseOptions := [
-//    emAltSetsColumnMode,
-//    emDragDropEditing,
-//    emCtrlWheelZoom,
-//    emShowCtrlMouseLinks
-//  ];
-//  AEditor.ScrollBars := ssAutoBoth;
-//
 //  AEditor.OnChange             := EditorChange;
 //  AEditor.OnMouseLink          := EditorMouseLink;
 //  AEditor.OnClickLink          := EditorClickLink;
@@ -1364,8 +1332,6 @@ begin
 //  AEditor.OnChangeUpdating     := EditorChangeUpdating;
 //  AEditor.OnCommandProcessed   := EditorCommandProcessed;
 //  AEditor.OnReplaceText        := EditorReplaceText;
-//  AEditor.RegisterMouseActionExecHandler(EditorMouseActionExec);
-//  AEditor.RegisterMouseActionSearchHandler(EditorMouseActionSearch);
   ActiveControl := Editor;
 end;
 
@@ -1441,6 +1407,18 @@ begin
   Editor.DoRedo;
 end;
 
+function TEditorView.RowColumnToCharIndex(
+  APosition: TBCEditorTextPosition): Integer;
+var
+  I: Integer;
+begin
+  Result := 0;
+  APosition.Line := Min(Lines.Count, APosition.Line) - 1;
+  for I := 0 to APosition.Line do
+    Result := Result + Length(Lines[I]) + 2;
+  Result := Result + APosition.Char - 1;
+end;
+
 { Make current editor instance the active one in the editor manager. This does
   not automatically make it focused as the current focus can be set to eg. a
   tool window. }
@@ -1454,24 +1432,6 @@ end;
 function TEditorView.EditorViewFocused: Boolean;
 begin
   Result := Focused or Editor.Focused;
-end;
-
-procedure TEditorView.SearchAndSelectLine(ALineIndex: Integer; const ALine: string);
-begin
-  try
-    //Editor.SearchReplaceEx(ALine, '', [ssoWholeWord], Point(0, ALineIndex));
-  except
-    // don't handle exceptions
-  end;
-end;
-
-procedure TEditorView.SearchAndSelectText(const AText: string);
-begin
-  try
-    //Editor.SearchReplaceEx(AText, '', [], Point(0, 0));
-  except
-    // don't handle exceptions
-  end;
 end;
 
 procedure TEditorView.SelectWord;
@@ -1492,46 +1452,27 @@ begin
 end;
 
 procedure TEditorView.FindNextWordOccurrence(ADirectionForward: Boolean);
-//var
-//  StartX, EndX: Integer;
-//  Flags: TSynSearchOptions;
-//  LogCaret: TPoint;
 begin
-//  StartX := 0;
-//  EndX   := Editor.MaxLeftChar;
-//  LogCaret := LogicalCaretXY;
-//  Editor.GetWordBoundsAtRowCol(LogCaret, StartX, EndX);
-//  if EndX <= StartX then
-//    Exit;
-//  Flags := [ssoWholeWord];
-//  if ADirectionForward then
-//  begin
-//    LogCaret.X := EndX;
-//  end
-//  else
-//  begin
-//    LogCaret.X := StartX;
-//    Include(Flags, ssoBackwards);
-//  end;
-//  LogicalCaretXY := LogCaret;
-//  Editor.SearchReplace(Editor.GetWordAtRowCol(LogCaret), '', Flags);
+  Editor.Search.Options := Editor.Search.Options - [soHighlightResults];
+  if ADirectionForward then
+  begin
+    Editor.TextCaretPosition := Editor.WordStart;
+    Editor.Search.Options := Editor.Search.Options - [TBCEditorSearchOption.soBackwards];
+    Editor.Search.SearchText := Editor.WordAtCursor;
+    Editor.FindNext;
+  end
+  else
+  begin
+    Editor.Search.Options := Editor.Search.Options + [TBCEditorSearchOption.soBackwards];
+    Editor.Search.SearchText := Editor.WordAtCursor;
+    //Editor.TextCaretPosition := Editor.WordStart;
+    Editor.SetCaretAndSelection(
+      Editor.SelectionBeginPosition,
+      Editor.SelectionBeginPosition,
+      Editor.SelectionEndPosition
+    );
+  end;
 end;
-
-{ Makes actionlist shortcuts work on the form }
-
-procedure TEditorView.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
-begin
-  Handled := Actions.ActionList.IsShortCut(Msg);
-end;
-
-//procedure TEditorView.SetHighlightSearch(const ASearch: string; AOptions: TSynSearchOptions);
-//begin
-////  try
-////    Editor.SetHighlightSearch(ASearch, AOptions);
-////  except
-////    // TO TEST
-////  end;
-//end;
 
 procedure TEditorView.UpdateActions;
 var

@@ -137,6 +137,7 @@ type
     function GetReplaceHistory: TStrings;
     function GetSearchText: string;
     function GetSelectionAvailable: Boolean;
+    function GetSelectionLength: Integer;
     function GetSelectionMode: TBCEditorSelectionMode;
     function GetSelEnd: Integer;
     function GetSelStart: Integer;
@@ -192,8 +193,8 @@ type
     procedure Close;
 
     // search
-    procedure SearchAndSelectLine(ALineIndex: Integer; const ALine: string);
-    procedure SearchAndSelectText(const AText: string);
+//    procedure SearchAndSelectLine(ALineIndex: Integer; const ALine: string);
+//    procedure SearchAndSelectText(const AText: string);
     procedure FindNextWordOccurrence(DirectionForward: Boolean);
 
     // load and save
@@ -245,6 +246,9 @@ type
 
     property SelectedText: string
       read GetSelectedText write SetSelectedText;
+
+    property SelectionLength: Integer
+      read GetSelectionLength;
 
     property SelStart: Integer
       read GetSelStart write SetSelStart;

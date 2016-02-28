@@ -31,49 +31,63 @@ type
     FSearchAllViews : Boolean;
 
   public
-    procedure AssignTo(Dest: TPersistent); override;
-    procedure Assign(Source: TPersistent); override;
+    procedure AssignTo(ADest: TPersistent); override;
+    procedure Assign(ASource: TPersistent); override;
 
   published
+  {
+    TBCEditorSearchOption = (
+    soBackwards,
+    soBeepIfStringNotFound,
+    soCaseSensitive,
+    soEntireScope,
+    soHighlightResults,
+    soSearchOnTyping,
+    soSelectedOnly,
+    soShowStringNotFound,
+    soShowSearchMatchNotFound,
+    soWholeWordsOnly,
+    soWrapAround
+  );
+  }
+
     property Options : TBCEditorSearchOptions
       read FOptions write FOptions;
 
     property SearchAllViews: Boolean
       read FSearchAllViews write FSearchAllViews default False;
 
-
-
   end;
 
 implementation
 
 {$REGION 'public methods'}
-procedure TSearchEngineSettings.AssignTo(Dest: TPersistent);
+procedure TSearchEngineSettings.AssignTo(ADest: TPersistent);
 var
   SES: TSearchEngineSettings;
 begin
-  if Dest is TSearchEngineSettings then
+  if ADest is TSearchEngineSettings then
   begin
-    SES := TSearchEngineSettings(Dest);
+    SES := TSearchEngineSettings(ADest);
     SES.Options        := Options;
     SES.SearchAllViews := SearchAllViews;
   end
   else
-    inherited AssignTo(Dest);
+    inherited AssignTo(ADest);
 end;
 
-procedure TSearchEngineSettings.Assign(Source: TPersistent);
+procedure TSearchEngineSettings.Assign(ASource: TPersistent);
 var
   SES: TSearchEngineSettings;
 begin
-  if Source is TSearchEngineSettings then
+  if ASource is TSearchEngineSettings then
   begin
-    SES := TSearchEngineSettings(Source);
+    SES := TSearchEngineSettings(ASource);
     Options        := SES.Options;
     SearchAllViews := SES.SearchAllViews;
   end
   else
-    inherited Assign(Source);
+    inherited Assign(ASource);
 end;
 {$ENDREGION}
 
