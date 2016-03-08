@@ -228,10 +228,10 @@ const
   DEFAULT_VST_STRINGOPTIONS = [
     { If set then the caption is automatically saved with the tree node,
       regardless of what is saved in the user data. }
-//    toSaveCaptions,
+    //toSaveCaptions,
     { Show static text in a caption which can be differently formatted than the
       caption but cannot be edited. }
-//    toShowStaticText,
+    //toShowStaticText,
     { Automatically accept changes during edit if the user finishes editing
       other then VK_RETURN or ESC. If not set then changes are cancelled. }
     toAutoAcceptEditChange

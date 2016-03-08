@@ -152,8 +152,10 @@ type
     function GetSettings: IEditorSettings;
     function GetShowSpecialChars: Boolean;
     function GetText: string;
+    function GetTextBetween(AStartPos, AEndPos: TPoint): string;
     function GetTextSize: Integer;
     function GetTopLine: Integer;
+    function GetVisible: Boolean;
     procedure SetBlockBegin(const AValue: TPoint);
     procedure SetBlockEnd(const AValue: TPoint);
     procedure SetCaretX(const Value: Integer); virtual;
@@ -182,7 +184,9 @@ type
     procedure SetSelectedText(const AValue: string);
     procedure SetShowSpecialChars(const AValue: Boolean);
     procedure SetText(const AValue: string);
+    procedure SetTextBetween(AStartPos, AEndPos: TPoint; const Value: string);
     procedure SetTopLine(const AValue: Integer);
+    procedure SetVisible(const AVisible: Boolean);
     {$ENDREGION}
 
     procedure InitializeEditor(AEditor: TBCEditor);
@@ -198,7 +202,6 @@ type
       var ABackgroundColor : TColor;
       var AStyles          : TFontStyles
     );
-
 
   strict protected
     procedure SetParent(Value: TWinControl); reintroduce;
@@ -270,7 +273,7 @@ type
     property LogicalCaretXY: TPoint
       read GetLogicalCaretXY write SetLogicalCaretXY;
 
-  published // for the moment published only for easy debugging
+  public
     { current X-coordinate of the caret on the screen. }
     property CaretX: Integer
       read GetCaretX write SetCaretX;
@@ -317,6 +320,9 @@ type
 
     property ShowSpecialChars: Boolean
       read GetShowSpecialChars write SetShowSpecialChars;
+
+    property TextBetween[AStartPos: TPoint; AEndPos: TPoint]: string
+      read GetTextBetween write SetTextBetween;
 
     property Modified: Boolean
       read GetModified write SetModified;
@@ -438,6 +444,8 @@ uses
   System.TypInfo, System.UITypes, System.IOUtils, System.Math,
   Vcl.GraphUtil,
 
+  BCEditor.Editor.LineSpacing,
+
   Spring,
 
   DDuce.Editor.Utils;
@@ -470,12 +478,13 @@ end;
 
 procedure TEditorView.BeforeDestruction;
 begin
-  FreeAndNil(FEditor);
   if Assigned(Settings) then
     Settings.OnChanged.Remove(EditorSettingsChanged);
+
+
   FreeAndNil(FReplaceHistory);
   FreeAndNil(FFindHistory);
-
+  //FreeAndNil(FEditor);
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
@@ -532,13 +541,15 @@ end;
 
 procedure TEditorView.EditorCaretChanged(Sender: TObject; X, Y: Integer);
 begin
-  Events.DoCaretPositionChange;
+  if Assigned(Events) then
+    Events.DoCaretPositionChange;
 end;
 
 procedure TEditorView.EditorChange(Sender: TObject);
 begin
   DoChange;
-  Events.DoChange;
+  if Assigned(Events) then
+    Events.DoChange;
 end;
 
 //procedure TEditorView.EditorStatusChange(Sender: TObject;
@@ -624,6 +635,22 @@ begin
   end;
 end;
 
+function TEditorView.GetTextBetween(AStartPos,
+  AEndPos: TPoint): string;
+begin
+  Result := Editor.TextBetween[
+    TBCEditorTextPosition(AStartPos), TBCEditorTextPosition(AEndPos)
+  ];
+end;
+
+procedure TEditorView.SetTextBetween(AStartPos, AEndPos: TPoint;
+  const Value: string);
+begin
+  Editor.TextBetween[
+    TBCEditorTextPosition(AStartPos), TBCEditorTextPosition(AEndPos)
+  ] := Value;
+end;
+
 function TEditorView.GetText: string;
 begin
   Result := Lines.Text;
@@ -683,7 +710,10 @@ end;
 
 function TEditorView.GetHighlighterName: string;
 begin
-  Result := Editor.Highlighter.Name;
+  if Assigned(HighlighterItem) then
+    Result := HighlighterItem.Name
+  else
+    Result := '';
 end;
 
 procedure TEditorView.SetHighlighterName(AValue: string);
@@ -1095,6 +1125,16 @@ function TEditorView.GetManager: IEditorManager;
 begin
   Result := Owner as IEditorManager;
 end;
+
+function TEditorView.GetVisible: Boolean;
+begin
+  Result := inherited Visible;
+end;
+
+procedure TEditorView.SetVisible(const AVisible: Boolean);
+begin
+  inherited Visible := AVisible;
+end;
 {$ENDREGION}
 
 {$REGION'private methods'}
@@ -1169,10 +1209,12 @@ begin
 
   Editor.MatchingPair.Enabled := Settings.EditorOptions.BracketHighlight;
   Editor.Search.Map.Visible   := Settings.EditorOptions.ShowSearchmap;
+  Editor.LineSpacing.Rule     := lsSpecified;
+  Editor.LineSpacing.Spacing  := Settings.EditorOptions.ExtraLineSpacing;
 
-//  Editor.ExtraLineSpacing      := Settings.EditorOptions.ExtraLineSpacing;
+
+
 //  Editor.ExtraCharSpacing      := Settings.EditorOptions.ExtraCharSpacing;
-//  Editor.BracketHighlightStyle := Settings.EditorOptions.BracketHighlightStyle;
 //  Editor.BlockTabIndent        := Settings.EditorOptions.BlockTabIndent;
 //  Editor.BlockIndent           := Settings.EditorOptions.BlockIndent;
 

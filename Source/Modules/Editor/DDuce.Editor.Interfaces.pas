@@ -78,9 +78,11 @@ type
     function GetName: string;
     function GetParent: TWinControl;
     function GetPopupMenu: TPopupMenu;
+    function GetVisible: Boolean;
     procedure SetName(AValue: string);
     procedure SetParent(AValue: TWinControl);
     procedure SetPopupMenu(AValue: TPopupMenu);
+    procedure SetVisible(const AValue: Boolean);
 
     function Focused: Boolean;
     procedure SetFocus;
@@ -94,6 +96,9 @@ type
 
     property Name: string
       read GetName write SetName;
+
+    property Visible: Boolean
+      read GetVisible write SetVisible;
   end;
 
   { Handles display view of the editor. }
@@ -145,6 +150,7 @@ type
     function GetSettings: IEditorSettings;
     function GetShowSpecialChars: Boolean;
     function GetText: string;
+    function GetTextBetween(AStartPos, AEndPos: TPoint): string;
     function GetTextSize: Integer;
     function GetTopLine: Integer;
     procedure SetBlockBegin(const AValue: TPoint);
@@ -173,6 +179,7 @@ type
     procedure SetSelectedText(const AValue: string);
     procedure SetShowSpecialChars(const AValue: Boolean);
     procedure SetText(const AValue: string);
+    procedure SetTextBetween(AStartPos, AEndPos: TPoint; const Value: string);
     procedure SetTopLine(const AValue: Integer);
     {$ENDREGION}
 
@@ -348,6 +355,9 @@ type
 
     property ShowSpecialChars: Boolean
       read GetShowSpecialChars write SetShowSpecialChars;
+
+    property TextBetween[AStartPos: TPoint; AEndPos: TPoint]: string
+      read GetTextBetween write SetTextBetween;
 
     property TopLine: Integer
       read GetTopLine write SetTopLine;

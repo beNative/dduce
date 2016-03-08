@@ -58,7 +58,7 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
+
   end;
 
 implementation
@@ -98,15 +98,10 @@ begin
   FItemList := TCollections.CreateObjectList<TEditorViewInfo> as IObjectList;
   Refresh;
   FTVP.View.ItemsSource   := FItemList;
+  //FTVP.View.ItemTemplate :=
   FTVP.PopupMenu          := ppmMain;
   FTVP.TreeView           := FVST;
   FTVP.OnSelectionChanged := FTVPSelectionChanged;
-end;
-
-procedure TfrmViewList.BeforeDestruction;
-begin
-  FreeAndNil(FItemList);
-  inherited BeforeDestruction;
 end;
 {$ENDREGION}
 

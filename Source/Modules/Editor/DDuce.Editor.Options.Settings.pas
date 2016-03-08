@@ -198,7 +198,7 @@ type
       read GetShowMinimap write SetShowMinimap;
 
     property ShowSearchmap: Boolean
-      read GetShowSearchmap write SetShowSearchmap;
+      read GetShowSearchmap write SetShowSearchmap default True;
 
     property ShowSpecialCharacters: Boolean
       read GetShowSpecialCharacters write SetShowSpecialCharacters
@@ -266,6 +266,7 @@ begin
   FEnhanceEndKey      := True;
   FFoldedCopyPaste    := True;
   FShowRightEdge      := True;
+  FShowSearchmap      := True;
   FOverwriteBlock     := True;
 end;
 

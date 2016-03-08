@@ -691,13 +691,11 @@ type
 
 implementation
 
-{%CLASSGROUP 'Vcl.Controls.TControl'}
-
 {$R *.dfm}
 
 uses
   Winapi.Windows,
-  System.StrUtils, System.TypInfo, System.Contnrs,
+  System.StrUtils, System.TypInfo,
   Vcl.Clipbrd,
 
   Spring,
@@ -2389,7 +2387,10 @@ begin
   V.FileName := AFileName;
   if FileExists(V.FileName) then
     V.Load;
-  V.HighlighterName := AHighlighter;
+  if AHighlighter <> '' then
+    V.HighlighterName := AHighlighter
+  else
+    V.HighlighterName := 'TXT';
   V.Form.Caption := '';
   ViewList.Add(V);
   Events.DoAddEditorView(V);

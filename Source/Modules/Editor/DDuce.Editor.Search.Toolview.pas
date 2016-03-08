@@ -104,14 +104,6 @@ type
     FTVP : TTreeViewPresenter;
     FVST : TVirtualStringTree;
 
-    procedure SearchEngineExecute(Sender: TObject);
-    procedure SearchEngineChange(Sender: TObject);
-    procedure ActionExecute(
-          Sender   : TObject;
-          AAction  : TBasicAction;
-      var AHandled : Boolean
-    );
-
     function GetSearchEngine: IEditorSearchEngine;
     function GetOptions: TBCEditorSearchOptions;
     function GetSearchText: string;
@@ -120,7 +112,15 @@ type
     function GetReplaceText: string;
     procedure SetReplaceText(const AValue: string);
 
-  strict protected
+    procedure SearchEngineExecute(Sender: TObject);
+    procedure SearchEngineChange(Sender: TObject);
+    procedure ActionExecute(
+          Sender   : TObject;
+          AAction  : TBasicAction;
+      var AHandled : Boolean
+    );
+
+  protected
     procedure EditorSettingsChanged(Sender: TObject); override;
 
     procedure SettingsChanged; override;
@@ -192,9 +192,13 @@ end;
 
 procedure TfrmSearchForm.BeforeDestruction;
 begin
-  SearchEngine.OnChange.Remove(SearchEngineChange);
-  SearchEngine.OnExecute.Remove(SearchEngineExecute);
-  Manager.Events.OnActionExecute.Remove(ActionExecute);
+  if Assigned(SearchEngine) then
+  begin
+    SearchEngine.OnChange.Remove(SearchEngineChange);
+    SearchEngine.OnExecute.Remove(SearchEngineExecute);
+  end;
+  if Assigned(Manager) then
+    Manager.Events.OnActionExecute.Remove(ActionExecute);
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
@@ -320,11 +324,14 @@ end;
 
 procedure TfrmSearchForm.FormHide(Sender: TObject);
 begin
-  SearchEngine.ItemList.Clear;
-  SearchEngine.ItemGroups.Clear;
-  FTVP.Refresh;
-  SearchEngine.SearchText := '';
-  SearchEngine.ReplaceText := '';
+  if Assigned(SearchEngine) then
+  begin
+    SearchEngine.ItemList.Clear;
+    SearchEngine.ItemGroups.Clear;
+    FTVP.Refresh;
+    SearchEngine.SearchText := '';
+    SearchEngine.ReplaceText := '';
+  end;
 end;
 
 procedure TfrmSearchForm.FormShow(Sender: TObject);
@@ -494,29 +501,29 @@ begin
   inherited UpdateActions;
   { Focus the corresponding search result in the list when we do find next/
     find previous from the editor view. }
-  B := (SearchEngine.ItemList.Count > 0) and (ReplaceText <> '');
-  btnReplace.Visible     := B;
-  btnReplaceAll.Visible  := B;
-  B := not rbAllViews.Checked;
-  grpOrigin.Enabled    := B;
-  grpDirection.Enabled := B;
-  grpOrigin.Visible    := B;
-  grpDirection.Visible := B;
-  if Update then
-  begin
-    SearchEngine.ReplaceText := ReplaceText;
-    if (SearchEngine.SearchText <> SearchText)
-      or (SearchEngine.Options <> Options) then
-    begin
-      SearchEngine.Options    := Options;
-      SearchEngine.SearchText := SearchText;
-      pnlStatus.Caption       := '';
-      SearchEngine.ItemGroups.Clear;
-      SearchEngine.ItemList.Clear;
-      FTVP.Refresh;
-    end;
-    Updated;
-  end;
+//  B := (SearchEngine.ItemList.Count > 0) and (ReplaceText <> '');
+//  btnReplace.Visible     := B;
+//  btnReplaceAll.Visible  := B;
+//  B := not rbAllViews.Checked;
+//  grpOrigin.Enabled    := B;
+//  grpDirection.Enabled := B;
+//  grpOrigin.Visible    := B;
+//  grpDirection.Visible := B;
+//  if Update then
+//  begin
+//    SearchEngine.ReplaceText := ReplaceText;
+//    if (SearchEngine.SearchText <> SearchText)
+//      or (SearchEngine.Options <> Options) then
+//    begin
+//      SearchEngine.Options    := Options;
+//      SearchEngine.SearchText := SearchText;
+//      pnlStatus.Caption       := '';
+//      SearchEngine.ItemGroups.Clear;
+//      SearchEngine.ItemList.Clear;
+//      FTVP.Refresh;
+//    end;
+//    Updated;
+//  end;
 end;
 {$ENDREGION}
 
