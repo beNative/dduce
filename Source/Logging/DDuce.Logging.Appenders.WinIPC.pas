@@ -14,7 +14,7 @@
   limitations under the License.
 }
 
-{ IPC appender for the Spring4D logging system. }
+{ WinIPC appender for the Spring4D logging system. }
 
 unit DDuce.Logging.Appenders.WinIPC;
 
