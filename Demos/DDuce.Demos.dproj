@@ -150,7 +150,6 @@
             <Form>frmGridView</Form>
         </DCCReference>
         <DCCReference Include="..\Source\DDuce.DynamicRecord.pas"/>
-        <DCCReference Include="..\Source\DDuce.Logger.pas"/>
         <DCCReference Include="..\Source\DDuce.RandomData.pas"/>
         <DCCReference Include="..\Source\DDuce.Reflect.pas"/>
         <DCCReference Include="..\Source\DDuce.ScopedReference.pas"/>
@@ -196,12 +195,6 @@
         <DCCReference Include="..\Source\Logging\DDuce.Logging.Appenders.LogTree.pas"/>
         <DCCReference Include="..\Source\Logging\DDuce.Logging.Appenders.WinIPC.pas"/>
         <DCCReference Include="..\Source\Components\DDuce.Components.Factories.pas"/>
-        <DCCReference Include="..\Source\Forms\DDuce.Forms.ComponentInspector.pas">
-            <Form>frmComponentInspector</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Forms\DDuce.Forms.RTTEye.pas">
-            <Form>frmRTTEye</Form>
-        </DCCReference>
         <DCCReference Include="Demo.DDuce.Editor.pas">
             <Form>frmEditor</Form>
         </DCCReference>
@@ -274,6 +267,15 @@
             <Form>frmAlignLines</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.Base.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.LogFile.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinIPC.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Factories.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.pas"/>
+        <DCCReference Include="..\Source\DDuce.WinIPC.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -314,27 +316,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployClass Name="DependencyModule">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                        <Extensions>.dll;.bpl</Extensions>
-                    </Platform>
+                <DeployClass Name="ProjectiOSDeviceResourceRules">
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectOSXResource">
@@ -688,12 +675,27 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="ProjectiOSDeviceResourceRules">
+                <DeployClass Name="DependencyModule">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.dll;.bpl</Extensions>
+                    </Platform>
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>

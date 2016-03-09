@@ -60,6 +60,8 @@ type
     grpWatches              : TGroupBox;
     trbMain                 : TTrackBar;
     lblPosition             : TLabel;
+    actSendTestSequence     : TAction;
+    btnSendObject1          : TButton;
 
     procedure trbMainChange(Sender: TObject);
 
@@ -75,13 +77,17 @@ type
     procedure actIncCounterExecute(Sender: TObject);
     procedure actDecCounterExecute(Sender: TObject);
     procedure actResetCounterExecute(Sender: TObject);
+    procedure actSendTestSequenceExecute(Sender: TObject);
 
   private
     FM1Entered : Boolean;
     FM2Entered : Boolean;
 
-  protected
+    procedure TestProcedure1;
+    procedure TestProcedure2;
 
+  protected
+    procedure ExecuteTestSequence;
     procedure UpdateActions; override;
 
   public
@@ -91,7 +97,8 @@ type
 implementation
 
 uses
-  DDuce.Logger,
+  DDuce.Logger, DDuce.Logger.Channels.WinIPC,
+  DDuce.Logger.Factories,
 
   Demo.Data;
 
@@ -115,6 +122,21 @@ begin
   btnSendWarning.Images   := Data.ImageList;
   btnSendInfo.Images      := Data.ImageList;
 end;
+
+procedure TfrmLogger.TestProcedure1;
+begin
+  Logger.Enter('TfrmLogger.TestProcedure1');
+
+  Logger.Leave('TfrmLogger.TestProcedure1');
+end;
+
+procedure TfrmLogger.TestProcedure2;
+begin
+  Logger.Enter('TfrmLogger.TestProcedure2');
+
+  Logger.Leave('TfrmLogger.TestProcedure2');
+end;
+
 {$ENDREGION}
 
 {$REGION 'action handlers'}
@@ -162,10 +184,23 @@ var
   SL : TStringList;
 begin
   SL := TStringList.Create;
-  SL.Add('Line 1');
-  SL.Add('Line 2');
-  Logger.Send('SL', SL);
-  SL.Free;
+  try
+    SL.Add('Line 1');
+    //SL.Add('Line 2');
+    Logger.Send('SL', SL);
+  finally
+    SL.Free;
+  end;
+end;
+
+procedure TfrmLogger.actSendTestSequenceExecute(Sender: TObject);
+begin
+
+  Logger.Enter('Procedure1');
+    Logger.Enter('Procedure2');
+
+    Logger.Leave('Procedure2');
+  Logger.Leave('Procedure1');
 end;
 
 procedure TfrmLogger.actAddCheckpointExecute(Sender: TObject);
@@ -197,6 +232,12 @@ end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
+procedure TfrmLogger.ExecuteTestSequence;
+begin
+  TestProcedure1;
+  TestProcedure2;
+end;
+
 procedure TfrmLogger.UpdateActions;
 begin
   inherited UpdateActions;

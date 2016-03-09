@@ -16,7 +16,7 @@
 
 unit DDuce.Logger.Interfaces;
 
-{$I DDuce.inc}
+//{$I DDuce.inc}
 
 interface
 
@@ -87,14 +87,14 @@ type
   ['{28E9BADE-6B42-4399-8867-1CA115576E40}']
     function GetChannels: TChannelList;
 
-    procedure Send(const AName: string; AArgs: array of const); overload;
+    procedure Send(const AName: string; const AArgs: array of const); overload;
     procedure Send(const AName: string; const AValue: string = ''); overload;
 
     procedure Send(const AName: string; AValue: TStrings); overload;
 
     { All primary types that are are implicitely ba cast to TValue will be
       handled through this call. }
-    procedure Send(const AName: string; AValue: TValue); overload;
+    procedure Send(const AName: string; const AValue: TValue); overload;
 
     { Send methods for types that do not have an implicit cast to TValue
       These are equivalent to Send(AName, TValue.From(AValue)); }
@@ -124,11 +124,11 @@ type
     procedure Watch(const AName: string; AValue: Boolean); overload;
 
     procedure SendWarning(const AText: string);
-    procedure SendWarningFmt(const AText: string; AArgs: array of const);
+    procedure SendWarningFmt(const AText: string; const AArgs: array of const);
     procedure SendError(const AText: string);
-    procedure SendErrorFmt(const AText: string; AArgs: array of const);
+    procedure SendErrorFmt(const AText: string; const AArgs: array of const);
     procedure SendInfo(const AText: string);
-    procedure SendInfoFmt(const AText: string; AArgs: array of const);
+    procedure SendInfoFmt(const AText: string; const AArgs: array of const);
 
     procedure SendPointer(const AName: string; APointer: Pointer);
     procedure SendException(const AName: string; AException: Exception);

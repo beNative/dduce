@@ -188,9 +188,17 @@ object frmLogger: TfrmLogger
       TabOrder = 2
     end
   end
+  object btnSendObject1: TButton
+    Left = 375
+    Top = 70
+    Width = 120
+    Height = 25
+    Action = actSendTestSequence
+    TabOrder = 6
+  end
   object aclMain: TActionList
-    Left = 416
-    Top = 64
+    Left = 224
+    Top = 80
     object actSendInfo: TAction
       Caption = 'Send Info'
       ImageIndex = 486
@@ -250,6 +258,10 @@ object frmLogger: TfrmLogger
       Caption = 'Reset'
       ImageIndex = 281
       OnExecute = actResetCounterExecute
+    end
+    object actSendTestSequence: TAction
+      Caption = 'Send testsequence'
+      OnExecute = actSendTestSequenceExecute
     end
   end
 end

@@ -1,11 +1,12 @@
 object frmMainMenu: TfrmMainMenu
-  Left = 0
-  Top = 0
+  Left = 515
+  Top = 244
   ActiveControl = edtFilter
   Caption = 'DDuce demos'
   ClientHeight = 333
   ClientWidth = 369
   Color = clBtnFace
+  DefaultMonitor = dmMainForm
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

@@ -23,7 +23,6 @@ uses
   Demo.DDuce.Inspector in 'Demo.DDuce.Inspector.pas' {frmInspector},
   Demo.DDuce.GridView in 'Demo.DDuce.GridView.pas' {frmGridView},
   DDuce.DynamicRecord in '..\Source\DDuce.DynamicRecord.pas',
-  DDuce.Logger in '..\Source\DDuce.Logger.pas',
   DDuce.RandomData in '..\Source\DDuce.RandomData.pas',
   DDuce.Reflect in '..\Source\DDuce.Reflect.pas',
   DDuce.ScopedReference in '..\Source\DDuce.ScopedReference.pas',
@@ -65,8 +64,6 @@ uses
   DDuce.Logging.Appenders.LogTree in '..\Source\Logging\DDuce.Logging.Appenders.LogTree.pas',
   DDuce.Logging.Appenders.WinIPC in '..\Source\Logging\DDuce.Logging.Appenders.WinIPC.pas',
   DDuce.Components.Factories in '..\Source\Components\DDuce.Components.Factories.pas',
-  DDuce.Forms.ComponentInspector in '..\Source\Forms\DDuce.Forms.ComponentInspector.pas' {frmComponentInspector},
-  DDuce.Forms.RTTEye in '..\Source\Forms\DDuce.Forms.RTTEye.pas' {frmRTTEye},
   Demo.DDuce.Editor in 'Demo.DDuce.Editor.pas' {frmEditor},
   DDuce.Editor.ActionList.Templates in '..\Source\Modules\Editor\DDuce.Editor.ActionList.Templates.pas',
   DDuce.Editor.ActionList.ToolView in '..\Source\Modules\Editor\DDuce.Editor.ActionList.ToolView.pas' {frmActionListView},
@@ -111,7 +108,16 @@ uses
   DDuce.Editor.Viewlist.ToolView in '..\Source\Modules\Editor\DDuce.Editor.Viewlist.ToolView.pas' {frmViewList},
   DDuce.FormSettings in '..\Source\Modules\DDuce.FormSettings.pas',
   DDuce.Factories in '..\Source\Modules\DDuce.Factories.pas',
-  DDuce.Editor.AlignLines.ToolView in '..\Source\Modules\Editor\DDuce.Editor.AlignLines.ToolView.pas' {frmAlignLines};
+  DDuce.Editor.AlignLines.ToolView in '..\Source\Modules\Editor\DDuce.Editor.AlignLines.ToolView.pas' {frmAlignLines},
+  DDuce.Logger.Channels.Base in '..\Source\Modules\Logger\DDuce.Logger.Channels.Base.pas',
+  DDuce.Logger.Channels.LogFile in '..\Source\Modules\Logger\DDuce.Logger.Channels.LogFile.pas',
+  DDuce.Logger.Channels in '..\Source\Modules\Logger\DDuce.Logger.Channels.pas',
+  DDuce.Logger.Channels.WinIPC in '..\Source\Modules\Logger\DDuce.Logger.Channels.WinIPC.pas',
+  DDuce.Logger.Channels.ZeroMQ in '..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas',
+  DDuce.Logger.Factories in '..\Source\Modules\Logger\DDuce.Logger.Factories.pas',
+  DDuce.Logger.Interfaces in '..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas',
+  DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas',
+  DDuce.WinIPC in '..\Source\DDuce.WinIPC.pas';
 
 {$R *.res}
 
