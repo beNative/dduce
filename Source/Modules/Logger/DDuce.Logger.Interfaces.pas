@@ -50,7 +50,7 @@ type
 
   ILogger = interface;
 
-  TLogMessage = record
+  TLogMessage = packed record
     MsgType : Integer;
     MsgTime : TDateTime;
     MsgText : AnsiString;

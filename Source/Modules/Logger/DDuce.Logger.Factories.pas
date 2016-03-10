@@ -39,5 +39,6 @@ uses
 initialization
   Logger := TLogger.Create;
   Logger.Channels.Add(TWinIPCChannel.Create);
+  Logger.Channels.Add(TLogFileChannel.Create);
 
 end.

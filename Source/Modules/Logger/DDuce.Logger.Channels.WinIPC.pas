@@ -23,13 +23,13 @@ interface
 uses
   System.Classes, System.SysUtils,
 
-  DDuce.WinIPC,
+  DDuce.WinIPC.Client,
   DDuce.Logger.Interfaces, DDuce.Logger.Channels.Base;
 
 type
   TWinIPCChannel = class(TCustomLogChannel)
   strict private
-    FClient       : TWinIPCClient;
+    FClient       : TWinIPCClient; // sends to the server
     FBuffer       : TMemoryStream;
     FClearMessage : TLogMessage;
 
@@ -52,15 +52,15 @@ begin
   FClearMessage.MsgTime := Now;
   FClearMessage.Data    := nil;
   FBuffer := TMemoryStream.Create;
-  FClient := TWinIPCClient.Create(nil);
-  FClient.ServerID := 'ipc_log_server';
+  FClient := TWinIPCClient.Create;
+  FClient.Connect;
     // todo: Start server only when channel is active
-  if FClient.ServerRunning then
-  begin
-    Active := True;
-  end
-  else
-    Active := False;
+  //if FClient.ServerRunning then
+//  begin
+//    Active := True;
+//  end
+//  else
+//    Active := False;
 end;
 
 procedure TWinIPCChannel.BeforeDestruction;
