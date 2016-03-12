@@ -29,9 +29,6 @@ uses
 
 type
   TestLogger = class(TTestCase)
-  private
-
-
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -83,7 +80,7 @@ begin
 
 end;
 
-{$REGION 'Test Send method'}
+{$REGION 'Test Send methods'}
 procedure TestLogger.Test_Send_method;
 var
   T : TPoint;
@@ -91,7 +88,6 @@ begin
   T.X := 4;
   T.Y := 5;
   Logger.Send(Reflect.TypeName(T), TValue.From(T));
-
 end;
 
 procedure TestLogger.Test_Send_method_for_Boolean_argument;
@@ -164,7 +160,6 @@ var
 begin
   T := Now;
   Logger.Send(Reflect.TypeName(T), TValue.From(T)); // no implicit cast for TDateTime
-
 end;
 
 procedure TestLogger.Test_Send_method_for_TDate_argument;

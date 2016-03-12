@@ -20,8 +20,14 @@ unit DDuce.Logger.Channels.ZeroMQ;
 
 interface
 
+{ Channel holding a ZeroMQ publisher socket where one or more Logviewers can
+  subscribe to. }
+
 uses
   DDuce.Logger.Interfaces, DDuce.Logger.Channels.Base;
+
+const
+  FILTER_NAME = 'debug';
 
 type
   TZeroMQChannel = class(TCustomLogChannel)

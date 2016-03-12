@@ -31,11 +31,18 @@ type
   strict private
     FClient       : TWinIPCClient; // sends to the server
     FBuffer       : TMemoryStream;
-    FClearMessage : TLogMessage;
+    FClearMessage : TLogMessage; // needs to move to logger!
+
+  strict protected
+    function GetConnected: Boolean; override;
+    
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
+    procedure BeforeDestruction; override;    
+
+    function Connect: Boolean; override;
+    function Disconnect: Boolean; override;
 
     procedure Clear; override;
     procedure Write(const AMsg: TLogMessage); override;
@@ -54,13 +61,6 @@ begin
   FBuffer := TMemoryStream.Create;
   FClient := TWinIPCClient.Create;
   FClient.Connect;
-    // todo: Start server only when channel is active
-  //if FClient.ServerRunning then
-//  begin
-//    Active := True;
-//  end
-//  else
-//    Active := False;
 end;
 
 procedure TWinIPCChannel.BeforeDestruction;
@@ -71,10 +71,27 @@ begin
 end;
 {$ENDREGION}
 
+{$REGION 'property access methods'}
+function TWinIPCChannel.GetConnected: Boolean;
+begin
+  Result := FClient.Connected;
+end;
+{$ENDREGION}
+
 {$REGION 'public methods'}
 procedure TWinIPCChannel.Clear;
 begin
   Write(FClearMessage);
+end;
+
+function TWinIPCChannel.Connect: Boolean;
+begin
+  Result := FClient.Connect;
+end;
+
+function TWinIPCChannel.Disconnect: Boolean;
+begin
+  Result := True;
 end;
 
 procedure TWinIPCChannel.Write(const AMsg: TLogMessage);
@@ -84,22 +101,31 @@ var
   TextSize : Integer;
   DataSize : Integer;
 begin
-  TextSize := Length(AMsg.MsgText);
-  FBuffer.Seek(0, soFromBeginning);
-  FBuffer.WriteBuffer(AMsg.MsgType, SizeOf(Integer));
-  FBuffer.WriteBuffer(AMsg.MsgTime, SizeOf(TDateTime));
-  FBuffer.WriteBuffer(TextSize, SizeOf(Integer));
-  FBuffer.WriteBuffer(AMsg.MsgText[1], TextSize);
-  if AMsg.Data <> nil then
+  if not Connected then
+    Connect;
+  if Connected then
   begin
-    DataSize := AMsg.Data.Size;
-    FBuffer.WriteBuffer(DataSize, SizeOf(Integer));
-    AMsg.Data.Position := 0;
-    FBuffer.CopyFrom(AMsg.Data, DataSize);
+    TextSize := Length(AMsg.MsgText);
+    FBuffer.Seek(0, soFromBeginning);
+    FBuffer.WriteBuffer(AMsg.MsgType, SizeOf(Integer));
+    FBuffer.WriteBuffer(AMsg.MsgTime, SizeOf(TDateTime));
+    FBuffer.WriteBuffer(TextSize, SizeOf(Integer));
+    FBuffer.WriteBuffer(AMsg.MsgText[1], TextSize);
+    if AMsg.Data <> nil then
+    begin
+      DataSize := AMsg.Data.Size;
+      FBuffer.WriteBuffer(DataSize, SizeOf(Integer));
+      AMsg.Data.Position := 0;
+      FBuffer.CopyFrom(AMsg.Data, DataSize);
+    end
+    else
+      FBuffer.WriteBuffer(ZeroBuf, SizeOf(Integer)); // necessary?
+    FClient.SendStream(FBuffer);
   end
   else
-    FBuffer.WriteBuffer(ZeroBuf, SizeOf(Integer)); // necessary?
-  FClient.SendStream(FBuffer);
+  begin
+  //  raise Exception.Create('Write failed. Channel is not connected.');
+  end;
 end;
 {$ENDREGION}
 

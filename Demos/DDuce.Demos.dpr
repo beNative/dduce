@@ -116,8 +116,10 @@ uses
   DDuce.Logger.Channels.ZeroMQ in '..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas',
   DDuce.Logger.Factories in '..\Source\Modules\Logger\DDuce.Logger.Factories.pas',
   DDuce.Logger.Interfaces in '..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas',
-  DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas',
-  DDuce.WinIPC in '..\Source\DDuce.WinIPC.pas';
+  DDuce.Logger.Base in '..\Source\Modules\Logger\DDuce.Logger.Base.pas',
+  DDuce.WinIPC.Client in '..\Source\DDuce.WinIPC.Client.pas',
+  DDuce.WinIPC.Server in '..\Source\DDuce.WinIPC.Server.pas',
+  DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas';
 
 {$R *.res}
 

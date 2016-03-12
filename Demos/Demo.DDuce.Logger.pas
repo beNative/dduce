@@ -24,44 +24,52 @@ uses
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, System.Actions,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList,
-  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ImgList;
+  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ImgList,
+
+  DDuce.Logger.Interfaces;
 
 type
   TfrmLogger = class(TForm)
-    aclMain                 : TActionList;
-    actAddCheckpoint        : TAction;
-    actDecCounter           : TAction;
-    actEnterMethod1         : TAction;
-    actEnterMethod2         : TAction;
-    actLeaveMethod1         : TAction;
-    actLeaveMethod2         : TAction;
-    actIncCounter           : TAction;
-    actResetCounter         : TAction;
-    actSendError            : TAction;
-    actSendInfo             : TAction;
-    actSendObject           : TAction;
-    actSendWarning          : TAction;
-    btnAddCheckpoint        : TButton;
-    btnDecCounter           : TButton;
-    btnEnterMethod1         : TButton;
-    btnEnterMethod2         : TButton;
-    btnExitMethod1          : TButton;
-    btnExitMethod2          : TButton;
-    btnIncCounter           : TButton;
-    btnResetCounter         : TButton;
-    btnSendError            : TButton;
-    btnSendInfo             : TButton;
-    btnSendObject           : TButton;
-    btnSendWarning          : TButton;
-    edtLogMessage           : TLabeledEdit;
-    grpCounters             : TGroupBox;
-    grpMethodTracing        : TGroupBox;
-    grpNotificationMessages : TGroupBox;
-    grpWatches              : TGroupBox;
-    trbMain                 : TTrackBar;
-    lblPosition             : TLabel;
-    actSendTestSequence     : TAction;
-    btnSendObject1          : TButton;
+    aclMain                  : TActionList;
+    actAddCheckpoint         : TAction;
+    actDecCounter            : TAction;
+    actEnterMethod1          : TAction;
+    actEnterMethod2          : TAction;
+    actLeaveMethod1          : TAction;
+    actLeaveMethod2          : TAction;
+    actIncCounter            : TAction;
+    actResetCounter          : TAction;
+    actSendError             : TAction;
+    actSendInfo              : TAction;
+    actSendObject            : TAction;
+    actSendWarning           : TAction;
+    btnAddCheckpoint         : TButton;
+    btnDecCounter            : TButton;
+    btnEnterMethod1          : TButton;
+    btnEnterMethod2          : TButton;
+    btnExitMethod1           : TButton;
+    btnExitMethod2           : TButton;
+    btnIncCounter            : TButton;
+    btnResetCounter          : TButton;
+    btnSendError             : TButton;
+    btnSendInfo              : TButton;
+    btnSendObject            : TButton;
+    btnSendWarning           : TButton;
+    edtLogMessage            : TLabeledEdit;
+    grpCounters              : TGroupBox;
+    grpMethodTracing         : TGroupBox;
+    grpNotificationMessages  : TGroupBox;
+    grpWatches               : TGroupBox;
+    trbMain                  : TTrackBar;
+    lblPosition              : TLabel;
+    actSendTestSequence      : TAction;
+    btnSendObject1           : TButton;
+    grpLoggerSettings        : TGroupBox;
+    chkLogFileChannelActive: TCheckBox;
+    chkWinIPCChannelActive: TCheckBox;
+    actResetCheckpoint: TAction;
+    btnResetCheckpoint: TButton;
+    actSendClear: TAction;
 
     procedure trbMainChange(Sender: TObject);
 
@@ -78,10 +86,14 @@ type
     procedure actDecCounterExecute(Sender: TObject);
     procedure actResetCounterExecute(Sender: TObject);
     procedure actSendTestSequenceExecute(Sender: TObject);
+    procedure actResetCheckpointExecute(Sender: TObject);
+    procedure actSendClearExecute(Sender: TObject);
 
   private
-    FM1Entered : Boolean;
-    FM2Entered : Boolean;
+    FM1Entered      : Boolean;
+    FM2Entered      : Boolean;
+    FLogFileChannel : ILogChannel;
+    FWinIPCChannel  : ILogChannel;
 
     procedure TestProcedure1;
     procedure TestProcedure2;
@@ -99,6 +111,7 @@ implementation
 uses
   DDuce.Logger, DDuce.Logger.Channels.WinIPC,
   DDuce.Logger.Factories,
+  DDuce.Logger.Channels.LogFile, DDuce.Logger.Channels.ZeroMQ,
 
   Demo.Data;
 
@@ -121,11 +134,23 @@ begin
   btnSendObject.Images    := Data.ImageList;
   btnSendWarning.Images   := Data.ImageList;
   btnSendInfo.Images      := Data.ImageList;
+
+  FWinIPCChannel := TWinIPCChannel.Create;
+  FWinIPCChannel.Active := False;
+  FLogFileChannel := TLogFileChannel.Create;
+  FLogFileChannel.Active := False;
+
+  Logger.Channels.Add(FLogFileChannel);
+  Logger.Channels.Add(FWinIPCChannel);
 end;
 
 procedure TfrmLogger.TestProcedure1;
 begin
   Logger.Enter('TfrmLogger.TestProcedure1');
+  Logger.SendRect('Form.ClientRect', ClientRect);
+  Logger.SendInfo('Information message.');
+  Logger.SendComponent('Form', Self);
+  //Logger.Send('Font', Font);
 
   Logger.Leave('TfrmLogger.TestProcedure1');
 end;
@@ -133,6 +158,8 @@ end;
 procedure TfrmLogger.TestProcedure2;
 begin
   Logger.Enter('TfrmLogger.TestProcedure2');
+  Logger.SendWarning('Warning message.');
+  Logger.SendTime('Current time over here', Now);
 
   Logger.Leave('TfrmLogger.TestProcedure2');
 end;
@@ -148,6 +175,11 @@ end;
 procedure TfrmLogger.actSendWarningExecute(Sender: TObject);
 begin
   Logger.SendWarning(edtLogMessage.Text);
+end;
+
+procedure TfrmLogger.actSendClearExecute(Sender: TObject);
+begin
+  Logger.Clear;
 end;
 
 procedure TfrmLogger.actSendErrorExecute(Sender: TObject);
@@ -195,17 +227,12 @@ end;
 
 procedure TfrmLogger.actSendTestSequenceExecute(Sender: TObject);
 begin
-
-  Logger.Enter('Procedure1');
-    Logger.Enter('Procedure2');
-
-    Logger.Leave('Procedure2');
-  Logger.Leave('Procedure1');
+  ExecuteTestSequence;
 end;
 
 procedure TfrmLogger.actAddCheckpointExecute(Sender: TObject);
 begin
-  Logger.AddCheckPoint('Checkpont');
+  Logger.AddCheckPoint;
 end;
 
 procedure TfrmLogger.actIncCounterExecute(Sender: TObject);
@@ -216,6 +243,11 @@ end;
 procedure TfrmLogger.actDecCounterExecute(Sender: TObject);
 begin
   Logger.DecCounter('Counter');
+end;
+
+procedure TfrmLogger.actResetCheckpointExecute(Sender: TObject);
+begin
+  Logger.ResetCheckPoint;
 end;
 
 procedure TfrmLogger.actResetCounterExecute(Sender: TObject);
@@ -245,6 +277,9 @@ begin
   actLeaveMethod1.Enabled := FM1Entered;
   actEnterMethod2.Enabled := not FM2Entered;
   actLeaveMethod2.Enabled := FM2Entered;
+
+  FLogFileChannel.Active := chkLogFileChannelActive.Checked;
+  FWinIPCChannel.Active := chkWinIPCChannelActive.Checked;
 end;
 {$ENDREGION}
 

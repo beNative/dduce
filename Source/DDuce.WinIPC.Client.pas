@@ -25,20 +25,21 @@ uses
   { IPC using WM_COPYDATA messages. }
 type
   TWinIPCClient = class
-  strict private
-    FActive         : Boolean;
-    FServerHandle   : THandle;
+  strict protected
+    function GetConnected: Boolean;
+    procedure SetConnected(const Value: Boolean);
+    function GetServerHandle: THandle;
 
-    procedure SetActive(const AValue: Boolean);
+    property ServerHandle: THandle
+      read GetServerHandle;
 
   public
-    procedure Connect;
-    procedure Disconnect;
-    function  ServerRunning: Boolean;
+    function Connect: Boolean;
+
     procedure SendStream(AStream: TStream);
 
-    property Active: Boolean
-      read FActive write SetActive;
+    property Connected: Boolean
+      read GetConnected write SetConnected;
   end;
 
 implementation
@@ -56,33 +57,27 @@ resourcestring
   SServerNotActive = 'Server with ID %s is not active.';
 
 {$REGION 'property access methods'}
-procedure TWinIPCClient.SetActive(const AValue: Boolean);
+function TWinIPCClient.GetConnected: Boolean;
 begin
-  if AValue <> Active then
-  begin
-    FActive := AValue;
-    if FActive then
-      Connect
-    else
-      Disconnect;
-  end;
+  Result := ServerHandle <> 0;
+end;
+
+procedure TWinIPCClient.SetConnected(const Value: Boolean);
+begin
+  if Value then
+    Connect;
+end;
+
+function TWinIPCClient.GetServerHandle: THandle;
+begin
+  Result := FindWindow(MSG_WND_CLASSNAME, SERVER_WINDOWNAME);
 end;
 {$ENDREGION}
 
 {$REGION 'public methods'}
-procedure TWinIPCClient.Connect;
+function TWinIPCClient.Connect: Boolean;
 begin
-  FServerHandle := FindWindow(MSG_WND_CLASSNAME, SERVER_WINDOWNAME);
-end;
-
-procedure TWinIPCClient.Disconnect;
-begin
-  FServerHandle := 0;
-end;
-
-function TWinIPCClient.ServerRunning: Boolean;
-begin
-  Result := FindWindow(MSG_WND_CLASSNAME, SERVER_WINDOWNAME) <> 0;
+  Result := ServerHandle <> 0;
 end;
 
 procedure TWinIPCClient.SendStream(AStream: TStream);
@@ -91,30 +86,37 @@ var
   Data : TMemoryStream;
   MS   : TMemoryStream;
 begin
-  if AStream is TMemoryStream then
+  if Connected then
   begin
-    Data := TMemoryStream(AStream);
-    MS   := nil
+    if AStream is TMemoryStream then
+    begin
+      Data := TMemoryStream(AStream);
+      MS   := nil
+    end
+    else
+    begin
+      MS := TMemoryStream.Create;
+      try
+        Data := MS;
+        MS.CopyFrom(AStream, 0);
+        MS.Seek(0, soFromBeginning);
+      finally
+        FreeAndNil(MS);
+      end;
+    end;
+    CDS.lpData := Data.Memory;
+    CDS.cbData := Data.Size;
+    Winapi.Windows.SendMessage(
+      ServerHandle,
+      WM_COPYDATA,
+      0,
+      Integer(@CDS)
+    );
   end
   else
   begin
-    MS := TMemoryStream.Create;
-    try
-      Data := MS;
-      MS.CopyFrom(AStream, 0);
-      MS.Seek(0, soFromBeginning);
-    finally
-      FreeAndNil(MS);
-    end;
+    raise Exception.Create('IPC client not connected');
   end;
-  CDS.lpData := Data.Memory;
-  CDS.cbData := Data.Size;
-  Winapi.Windows.SendMessage(
-    FServerHandle,
-    WM_COPYDATA,
-    0,
-    Integer(@CDS)
-  );
 end;
 {$ENDREGION}
 

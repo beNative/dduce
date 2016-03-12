@@ -274,8 +274,10 @@
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Factories.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Base.pas"/>
+        <DCCReference Include="..\Source\DDuce.WinIPC.Client.pas"/>
+        <DCCReference Include="..\Source\DDuce.WinIPC.Server.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.pas"/>
-        <DCCReference Include="..\Source\DDuce.WinIPC.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
