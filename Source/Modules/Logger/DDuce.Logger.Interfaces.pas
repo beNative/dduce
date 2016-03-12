@@ -73,12 +73,20 @@ type
   ['{FDE37401-BB4F-4362-863A-CCCCF9228BD9}']
     function GetActive: Boolean;
     procedure SetActive(const Value: Boolean);
+    function GetConnected: Boolean;
+    procedure SetConnected(const Value: Boolean);
 
-    procedure Clear;
-    procedure Write(const AMsg: TLogMessage);
+    function Write(const AMsg: TLogMessage): Boolean;
+    function Connect: Boolean;
+    function Disconnect: Boolean;
 
     property Active: Boolean
       read GetActive write SetActive;
+
+    { True when the channel is connected with the server (or receiving)
+      instance. }
+    property Connected: Boolean
+      read GetConnected write SetConnected;
   end;
 
   TChannelList = IList<ILogChannel>;
@@ -90,8 +98,6 @@ type
     procedure Send(const AName: string; const AArgs: array of const); overload;
     procedure Send(const AName: string; const AValue: string = ''); overload;
 
-    procedure Send(const AName: string; AValue: TStrings); overload;
-
     { All primary types that are are implicitely ba cast to TValue will be
       handled through this call. }
     procedure Send(const AName: string; const AValue: TValue); overload;
@@ -101,8 +107,18 @@ type
     procedure SendDateTime(const AName: string; AValue: TDateTime);
     procedure SendDate(const AName: string; AValue: TDate);
     procedure SendTime(const AName: string; AValue: TTime);
+
     { Send methods for types that need a custom representation. }
     procedure SendRect(const AName: string; const AValue: TRect);
+    procedure SendStrings(const AName: string; AValue: TStrings);
+    procedure SendComponent(const AName: string; AValue: TComponent);
+    procedure SendPointer(const AName: string; APointer: Pointer);
+    procedure SendException(const AName: string; AException: Exception);
+    procedure SendMemory(
+      const AName: string;
+      AAddress   : Pointer;
+      ASize      : LongWord
+    );
 
     procedure IncCounter(const AName: string);
     procedure DecCounter(const AName: string);
@@ -123,22 +139,29 @@ type
     procedure Watch(const AName: string; AValue: Double); overload;
     procedure Watch(const AName: string; AValue: Boolean); overload;
 
-    procedure SendWarning(const AText: string);
-    procedure SendWarningFmt(const AText: string; const AArgs: array of const);
-    procedure SendError(const AText: string);
-    procedure SendErrorFmt(const AText: string; const AArgs: array of const);
-    procedure SendInfo(const AText: string);
-    procedure SendInfoFmt(const AText: string; const AArgs: array of const);
-
-    procedure SendPointer(const AName: string; APointer: Pointer);
-    procedure SendException(const AName: string; AException: Exception);
-    procedure SendMemory(const AName: string; AAddress: Pointer; ASize: LongWord);
+    procedure SendWarning(const AText: string); overload;
+    procedure SendWarning(
+      const AText : string;
+      const AArgs : array of const
+    ); overload;
+    procedure SendError(const AText: string); overload;
+    procedure SendError(
+      const AText : string;
+      const AArgs : array of const
+    ); overload;
+    procedure SendInfo(const AText: string); overload;
+    procedure SendInfo(
+      const AText: string;
+      const AArgs: array of const
+    ); overload;
 
     procedure SendIf(
-      const AText       : string;
-            AExpression : Boolean;
-            AIsTrue     : Boolean = True
+      const AText : string;
+      AExpression : Boolean;
+      AIsTrue     : Boolean = True
     );
+
+    procedure Clear;
 
     property Channels: TChannelList
       read GetChannels;
@@ -151,7 +174,7 @@ const
     'WARNING',
     'VALUE',
     '>>ENTER METHOD',
-    '<<EXIT METHOD',
+    '<<LEAVE METHOD',
     'CONDITIONAL',
     'CHECKPOINT',
     'STRINGS',

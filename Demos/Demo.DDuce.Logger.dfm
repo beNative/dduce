@@ -3,7 +3,7 @@ object frmLogger: TfrmLogger
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Logger'
-  ClientHeight = 275
+  ClientHeight = 465
   ClientWidth = 508
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,8 +15,8 @@ object frmLogger: TfrmLogger
   PixelsPerInch = 96
   TextHeight = 13
   object btnSendObject: TButton
-    Left = 375
-    Top = 8
+    Left = 8
+    Top = 177
     Width = 120
     Height = 25
     Action = actSendObject
@@ -24,7 +24,7 @@ object frmLogger: TfrmLogger
   end
   object grpWatches: TGroupBox
     Left = 8
-    Top = 198
+    Top = 398
     Width = 487
     Height = 59
     Caption = 'Watch variables'
@@ -54,7 +54,7 @@ object frmLogger: TfrmLogger
   end
   object grpMethodTracing: TGroupBox
     Left = 8
-    Top = 103
+    Top = 303
     Width = 280
     Height = 89
     Caption = 'Method tracing'
@@ -98,7 +98,7 @@ object frmLogger: TfrmLogger
   end
   object grpNotificationMessages: TGroupBox
     Left = 8
-    Top = 8
+    Top = 208
     Width = 361
     Height = 89
     Caption = 'Notification messages'
@@ -148,8 +148,8 @@ object frmLogger: TfrmLogger
     end
   end
   object btnAddCheckpoint: TButton
-    Left = 375
-    Top = 39
+    Left = 380
+    Top = 208
     Width = 120
     Height = 25
     Action = actAddCheckpoint
@@ -158,7 +158,7 @@ object frmLogger: TfrmLogger
   end
   object grpCounters: TGroupBox
     Left = 294
-    Top = 103
+    Top = 311
     Width = 204
     Height = 89
     Caption = 'Counters'
@@ -189,12 +189,54 @@ object frmLogger: TfrmLogger
     end
   end
   object btnSendObject1: TButton
-    Left = 375
-    Top = 70
+    Left = 361
+    Top = 147
     Width = 120
     Height = 25
     Action = actSendTestSequence
     TabOrder = 6
+  end
+  object grpLoggerSettings: TGroupBox
+    Left = 8
+    Top = 39
+    Width = 185
+    Height = 132
+    Caption = 'Logger settings'
+    TabOrder = 7
+    object chkLogFileChannelActive: TCheckBox
+      Left = 17
+      Top = 24
+      Width = 144
+      Height = 17
+      Caption = 'Logfile channel active'
+      TabOrder = 0
+    end
+    object chkWinIPCChannelActive: TCheckBox
+      Left = 17
+      Top = 47
+      Width = 144
+      Height = 17
+      Caption = 'WinIPC channel active'
+      Checked = True
+      State = cbChecked
+      TabOrder = 1
+    end
+    object chkZeroMQChannelActive: TCheckBox
+      Left = 17
+      Top = 70
+      Width = 144
+      Height = 17
+      Caption = 'ZeroMQ channel active'
+      TabOrder = 2
+    end
+  end
+  object btnResetCheckpoint: TButton
+    Left = 380
+    Top = 239
+    Width = 120
+    Height = 25
+    Action = actResetCheckpoint
+    TabOrder = 8
   end
   object aclMain: TActionList
     Left = 224
@@ -262,6 +304,14 @@ object frmLogger: TfrmLogger
     object actSendTestSequence: TAction
       Caption = 'Send testsequence'
       OnExecute = actSendTestSequenceExecute
+    end
+    object actResetCheckpoint: TAction
+      Caption = 'Reset checkpoint'
+      OnExecute = actResetCheckpointExecute
+    end
+    object actSendClear: TAction
+      Caption = 'Send clear'
+      OnExecute = actSendClearExecute
     end
   end
 end
