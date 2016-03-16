@@ -247,7 +247,7 @@ const
     { Expand node if it is the drop target for more than a certain time. }
     toAutoDropExpand,
     { Nodes are expanded (collapsed) when getting (losing) the focus. }
-    toAutoExpand,
+//    toAutoExpand,
     { Scroll if mouse is near the border while dragging or selecting. }
     toAutoScroll,
     { Scroll as many child nodes in view as possible after expanding a node. }
@@ -302,9 +302,11 @@ begin
   ATVP.ListMode             := True;
   if Assigned(ASource) then
     ATVP.View.ItemsSource := ASource as IObjectList;
-  if Assigned(ATemplate) then
+  if not Assigned(ATemplate) then
     ATVP.View.ItemTemplate :=
-      TColumnDefinitionsControlTemplate.Create(ATVP.ColumnDefinitions);
+      TColumnDefinitionsControlTemplate.Create(ATVP.ColumnDefinitions)
+  else
+    ATVP.View.ItemTemplate := ATemplate;
   if Assigned(AFilter) then
     ATVP.View.Filter.Add(AFilter);
 end;

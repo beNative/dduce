@@ -3,8 +3,8 @@ object frmLogger: TfrmLogger
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Logger'
-  ClientHeight = 465
-  ClientWidth = 508
+  ClientHeight = 467
+  ClientWidth = 521
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,7 +16,7 @@ object frmLogger: TfrmLogger
   TextHeight = 13
   object btnSendObject: TButton
     Left = 8
-    Top = 177
+    Top = 116
     Width = 120
     Height = 25
     Action = actSendObject
@@ -24,13 +24,13 @@ object frmLogger: TfrmLogger
   end
   object grpWatches: TGroupBox
     Left = 8
-    Top = 398
-    Width = 487
+    Top = 326
+    Width = 273
     Height = 59
     Caption = 'Watch variables'
     TabOrder = 1
     DesignSize = (
-      487
+      273
       59)
     object lblPosition: TLabel
       Left = 12
@@ -42,7 +42,7 @@ object frmLogger: TfrmLogger
     object trbMain: TTrackBar
       Left = 68
       Top = 25
-      Width = 416
+      Width = 202
       Height = 29
       Anchors = [akLeft, akTop, akRight]
       Max = 100
@@ -54,7 +54,7 @@ object frmLogger: TfrmLogger
   end
   object grpMethodTracing: TGroupBox
     Left = 8
-    Top = 303
+    Top = 231
     Width = 280
     Height = 89
     Caption = 'Method tracing'
@@ -98,7 +98,7 @@ object frmLogger: TfrmLogger
   end
   object grpNotificationMessages: TGroupBox
     Left = 8
-    Top = 208
+    Top = 147
     Width = 361
     Height = 89
     Caption = 'Notification messages'
@@ -148,8 +148,8 @@ object frmLogger: TfrmLogger
     end
   end
   object btnAddCheckpoint: TButton
-    Left = 380
-    Top = 208
+    Left = 260
+    Top = 116
     Width = 120
     Height = 25
     Action = actAddCheckpoint
@@ -158,9 +158,9 @@ object frmLogger: TfrmLogger
   end
   object grpCounters: TGroupBox
     Left = 294
-    Top = 311
+    Top = 231
     Width = 204
-    Height = 89
+    Height = 114
     Caption = 'Counters'
     TabOrder = 5
     object btnIncCounter: TButton
@@ -187,10 +187,19 @@ object frmLogger: TfrmLogger
       Action = actDecCounter
       TabOrder = 2
     end
+    object chkEnableCountTimer: TCheckBox
+      Left = 16
+      Top = 84
+      Width = 121
+      Height = 17
+      Caption = 'Enable count timer'
+      TabOrder = 3
+      OnClick = chkEnableCountTimerClick
+    end
   end
   object btnSendObject1: TButton
-    Left = 361
-    Top = 147
+    Left = 199
+    Top = 8
     Width = 120
     Height = 25
     Action = actSendTestSequence
@@ -198,9 +207,9 @@ object frmLogger: TfrmLogger
   end
   object grpLoggerSettings: TGroupBox
     Left = 8
-    Top = 39
+    Top = 8
     Width = 185
-    Height = 132
+    Height = 102
     Caption = 'Logger settings'
     TabOrder = 7
     object chkLogFileChannelActive: TCheckBox
@@ -231,12 +240,20 @@ object frmLogger: TfrmLogger
     end
   end
   object btnResetCheckpoint: TButton
-    Left = 380
-    Top = 239
+    Left = 386
+    Top = 116
     Width = 120
     Height = 25
     Action = actResetCheckpoint
     TabOrder = 8
+  end
+  object btnSendClear: TButton
+    Left = 134
+    Top = 116
+    Width = 120
+    Height = 25
+    Action = actSendClear
+    TabOrder = 9
   end
   object aclMain: TActionList
     Left = 224
@@ -313,5 +330,11 @@ object frmLogger: TfrmLogger
       Caption = 'Send clear'
       OnExecute = actSendClearExecute
     end
+  end
+  object tmrSendCounter: TTimer
+    Enabled = False
+    OnTimer = tmrSendCounterTimer
+    Left = 248
+    Top = 232
   end
 end

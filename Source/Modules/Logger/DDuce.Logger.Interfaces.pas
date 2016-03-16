@@ -160,7 +160,7 @@ type
       AExpression : Boolean;
       AIsTrue     : Boolean = True
     );
-
+    { Sends out a dedicated message to clear the logviewer contents. }
     procedure Clear;
 
     property Channels: TChannelList

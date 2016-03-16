@@ -71,6 +71,9 @@ type
     btnResetCheckpoint       : TButton;
     actSendClear             : TAction;
     chkZeroMQChannelActive   : TCheckBox;
+    btnSendClear             : TButton;
+    tmrSendCounter: TTimer;
+    chkEnableCountTimer: TCheckBox;
 
     procedure trbMainChange(Sender: TObject);
 
@@ -89,6 +92,8 @@ type
     procedure actSendTestSequenceExecute(Sender: TObject);
     procedure actResetCheckpointExecute(Sender: TObject);
     procedure actSendClearExecute(Sender: TObject);
+    procedure tmrSendCounterTimer(Sender: TObject);
+    procedure chkEnableCountTimerClick(Sender: TObject);
 
   private
     FM1Entered      : Boolean;
@@ -146,6 +151,11 @@ begin
   Logger.Channels.Add(FLogFileChannel);
   Logger.Channels.Add(FWinIPCChannel);
   Logger.Channels.Add(FZeroMQChannel);
+end;
+
+procedure TfrmLogger.chkEnableCountTimerClick(Sender: TObject);
+begin
+  tmrSendCounter.Enabled := chkEnableCountTimer.Checked;
 end;
 
 procedure TfrmLogger.TestProcedure1;
@@ -261,6 +271,11 @@ end;
 {$ENDREGION}
 
 {$REGION 'event handlers'}
+procedure TfrmLogger.tmrSendCounterTimer(Sender: TObject);
+begin
+  Logger.IncCounter('Counter');
+end;
+
 procedure TfrmLogger.trbMainChange(Sender: TObject);
 begin
   Logger.Watch('Trackbar', trbMain.Position);
