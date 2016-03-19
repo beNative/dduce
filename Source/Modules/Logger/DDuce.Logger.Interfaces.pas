@@ -21,7 +21,7 @@ unit DDuce.Logger.Interfaces;
 interface
 
 uses
-  System.Classes, System.Rtti, System.SysUtils, System.Types,
+  System.Classes, System.Rtti, System.SysUtils, System.Types, System.UITypes,
 
   Spring.Collections;
 
@@ -96,6 +96,7 @@ type
     function GetChannels: TChannelList;
 
     procedure Send(const AName: string; const AArgs: array of const); overload;
+    { This overload is used for Variant arguments. }
     procedure Send(const AName: string; const AValue: string = ''); overload;
 
     { All primary types that are are implicitely ba cast to TValue will be
@@ -109,6 +110,7 @@ type
     procedure SendTime(const AName: string; AValue: TTime);
 
     { Send methods for types that need a custom representation. }
+    procedure SendColor(const AName: string; AColor: TColor);
     procedure SendObject(const AName: string; AValue: TObject);
     procedure SendRect(const AName: string; const AValue: TRect);
     procedure SendPoint(const AName: string; const APoint: TPoint);
@@ -131,26 +133,34 @@ type
     procedure Enter(ASender: TObject; const AName: string); overload;
     procedure Leave(const AName: string); overload;
     procedure Leave(ASender: TObject; const AName: string); overload;
+
+    { Track uses an interface variable to replace Enter/Leave calls in the
+      scope of the method where it is called. A call to Track will create an
+      instance and trigger the Enter method. When the interface variable goes
+      out of scope (end of the routine or method) a call to the logger's Leave
+      method is triggered. }
     function Track(const AName: string): IInterface; overload;
     function Track(ASender: TObject; const AName: string): IInterface; overload;
 
     procedure AddCheckPoint(const AName: string = '');
     procedure ResetCheckPoint(const AName: string = '');
 
-    procedure Watch(const AName: string; const AValue: TValue);
+    { Monitors a named value in the LogViewer application }
+    procedure Watch(const AName: string; const AValue: TValue); overload;
+    procedure Watch(const AName: string; const AValue: string = ''); overload;
 
-    procedure SendWarning(const AText: string); overload;
-    procedure SendWarning(
+    procedure Warn(const AText: string); overload;
+    procedure Warn(
       const AText : string;
       const AArgs : array of const
     ); overload;
-    procedure SendError(const AText: string); overload;
-    procedure SendError(
+    procedure Error(const AText: string); overload;
+    procedure Error(
       const AText : string;
       const AArgs : array of const
     ); overload;
-    procedure SendInfo(const AText: string); overload;
-    procedure SendInfo(
+    procedure Info(const AText: string); overload;
+    procedure Info(
       const AText: string;
       const AArgs: array of const
     ); overload;

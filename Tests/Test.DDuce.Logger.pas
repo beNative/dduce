@@ -32,9 +32,6 @@ type
   public
     class constructor Create;
 
-    procedure SetUp; override;
-    procedure TearDown; override;
-
   published
     procedure Test_Send_method_for_Boolean_argument;
     procedure Test_Send_method_for_Integer_argument;
@@ -80,9 +77,9 @@ type
     procedure Test_Track_method_for_method;
     procedure Test_Track_method_for_routine;
 
-    procedure Test_SendInfo_method;
-    procedure Test_SendWarning_method;
-    procedure Test_SendError_method;
+    procedure Test_Info_method;
+    procedure Test_Warn_method;
+    procedure Test_Error_method;
 
     procedure Test_Counter_methods;
 
@@ -99,23 +96,9 @@ uses
 
   Test.Utils;
 
-{ TestLogger }
-
 class constructor TestLogger.Create;
 begin
   Logger.Channels.Add(TWinIPCChannel.Create);
-end;
-
-procedure TestLogger.SetUp;
-begin
-  inherited SetUp;
-
-end;
-
-procedure TestLogger.TearDown;
-begin
-  inherited TearDown;
-
 end;
 
 {$REGION 'Test Send methods'}
@@ -414,15 +397,14 @@ var
   T : Variant;
 begin
 // TODO: make overload for variant
-
   T := 'Test';
-  Logger.Watch(Reflect.TypeName(T), TValue.FromVariant(T));
+  Logger.Watch(Reflect.TypeName(T), T);
   T := Pi;
-  Logger.Watch(Reflect.TypeName(T), TValue.FromVariant(T));
+  Logger.Watch(Reflect.TypeName(T), T);
   T := False;
-  Logger.Watch(Reflect.TypeName(T), TValue.FromVariant(T));
+  Logger.Watch(Reflect.TypeName(T), T);
   T := 520;
-  Logger.Watch(Reflect.TypeName(T), TValue.FromVariant(T));
+  Logger.Watch(Reflect.TypeName(T), T);
 end;
 {$ENDREGION}
 
@@ -461,19 +443,19 @@ end;
 {$ENDREGION}
 
 {$REGION 'Send notification test methods'}
-procedure TestLogger.Test_SendError_method;
+procedure TestLogger.Test_Error_method;
 begin
-  Logger.SendError('Error');
+  Logger.Error('Error');
 end;
 
-procedure TestLogger.Test_SendInfo_method;
+procedure TestLogger.Test_Info_method;
 begin
-  Logger.SendInfo('Info');
+  Logger.Info('Info');
 end;
 
-procedure TestLogger.Test_SendWarning_method;
+procedure TestLogger.Test_Warn_method;
 begin
-  Logger.SendWarning('Warning');
+  Logger.Warn('Warning');
 end;
 {$ENDREGION}
 
@@ -499,7 +481,7 @@ begin
   end;
   Logger.Leave('Decreasing counter');
   Logger.ResetCounter(S);
-  Logger.SendInfo('Last known value for %s is %d', [S, Logger.GetCounter(S)]);
+  Logger.Info('Last known value for %s is %d', [S, Logger.GetCounter(S)]);
 end;
 {$ENDREGION}
 

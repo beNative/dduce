@@ -40,8 +40,9 @@ unit DDuce.Logger.Base;
 interface
 
 uses
-  System.Types, System.Classes, System.SysUtils, System.Rtti,
+  System.Types, System.Classes, System.SysUtils, System.Rtti, System.UITypes,
   Winapi.Windows,
+
 
   Spring.Collections,
 
@@ -108,6 +109,7 @@ type
     procedure Send(const AName: string; const AValue: TValue); overload;
 
     procedure SendStrings(const AName: string; AValue: TStrings);
+    procedure SendColor(const AName: string; AColor: TColor);
     { Will send the component as a dfm-stream. }
     procedure SendComponent(const AName: string; AValue: TComponent);
     { Will send object data using RTTI information. }
@@ -121,26 +123,24 @@ type
     procedure SendException(const AName: string; AException: Exception);
     procedure SendMemory(const AName: string; AAddress: Pointer; ASize: LongWord);
 
-    //procedure SendColor(
-
     procedure SendIf(
       const AText : string;
       AExpression : Boolean;
       AIsTrue     : Boolean = True
     );
 
-    procedure SendWarning(const AText: string); overload;
-    procedure SendWarning(
+    procedure Warn(const AText: string); overload;
+    procedure Warn(
       const AText : string;
       const AArgs : array of const
     ); overload;
-    procedure SendError(const AText: string); overload;
-    procedure SendError(
+    procedure Error(const AText: string); overload;
+    procedure Error(
       const AText : string;
       const AArgs : array of const
     ); overload;
-    procedure SendInfo(const AText: string); overload;
-    procedure SendInfo(
+    procedure Info(const AText: string); overload;
+    procedure Info(
       const AText : string;
       const AArgs : array of const
     ); overload;
@@ -181,7 +181,8 @@ type
     function Track(ASender: TObject; const AName: string): IInterface; overload;
 
     { Watches support }
-    procedure Watch(const AName: string; const AValue: TValue);
+    procedure Watch(const AName: string; const AValue: TValue); overload;
+    procedure Watch(const AName: string; const AValue: string = ''); overload;
 
     { List of channels where logmessages will be sent to }
     property Channels: TChannelList
@@ -313,12 +314,12 @@ begin
   InternalSend(lmtClear);
 end;
 
-procedure TLogger.SendInfo(const AText: string);
+procedure TLogger.Info(const AText: string);
 begin
   InternalSend(lmtInfo, AText);
 end;
 
-procedure TLogger.SendInfo(const AText: string; const AArgs: array of const);
+procedure TLogger.Info(const AText: string; const AArgs: array of const);
 begin
   InternalSend(lmtInfo, Format(AText, AArgs));
 end;
@@ -361,6 +362,8 @@ begin
 end;
 
 procedure TLogger.Send(const AName: string; const AValue: TValue);
+var
+  S : string;
 begin
   case AValue.Kind of
     tkClass:
@@ -369,41 +372,42 @@ begin
     begin
       if AValue.TypeInfo = TypeInfo(Boolean) then
       begin
-        InternalSend(lmtValue, AName + ' = ' + BoolToStr(AValue.AsBoolean, True));
+        S := BoolToStr(AValue.AsBoolean, True);
       end;
     end;
     tkFloat:
     begin
       if AValue.TypeInfo = TypeInfo(TDate) then
       begin
-        InternalSend(lmtValue, AName + ' = ' + DateToStr(AValue.AsType<TDate>));
+        S := DateToStr(AValue.AsType<TDate>);
       end
       else
       if AValue.TypeInfo = TypeInfo(TDateTime) then
       begin
-        InternalSend(lmtValue, AName + ' = ' + DateTimeToStr(AValue.AsType<TDateTime>));
+        S := DateTimeToStr(AValue.AsType<TDateTime>);
       end
       else
       if AValue.TypeInfo = TypeInfo(TTime) then
       begin
-        InternalSend(lmtValue, AName + ' = ' + TimeToStr(AValue.AsType<TTime>));
+        S := TimeToStr(AValue.AsType<TTime>);
       end
       else
       begin
-        InternalSend(lmtValue, AName + ' = ' + FloatToStr(AValue.AsExtended));
+        S := FloatToStr(AValue.AsExtended);
       end;
     end;
     tkInteger:
-      InternalSend(lmtValue, AName + ' = ' + IntToStr(AValue.AsInteger));
+      S := AValue.AsInteger.ToString;
     tkInt64:
-      InternalSend(lmtValue, AName + ' = ' + IntToStr(AValue.AsInt64));
+      S := AValue.AsInt64.ToString;
     tkInterface:
-      InternalSend(lmtValue, AName + ' = ' + Reflect.Fields(AValue).ToString);
+      S := sLineBreak + Reflect.Fields(AValue).ToString;
     tkRecord:
-      InternalSend(lmtValue, AName + ' = ' + Reflect.Fields(AValue).ToString);
+      S := sLineBreak + Reflect.Fields(AValue).ToString;
   else
-    InternalSend(lmtValue, AName + ' = ' + AValue.ToString);
+    S := AValue.ToString
   end;
+  InternalSend(lmtValue, AName + ' = ' + S);
 end;
 
 procedure TLogger.Send(const AName: string; const AArgs: array of const);
@@ -442,22 +446,22 @@ begin
     InternalSend(lmtConditional, AText);
 end;
 
-procedure TLogger.SendWarning(const AText: string);
+procedure TLogger.Warn(const AText: string);
 begin
   InternalSend(lmtWarning, AText);
 end;
 
-procedure TLogger.SendWarning(const AText: string; const AArgs: array of const);
+procedure TLogger.Warn(const AText: string; const AArgs: array of const);
 begin
   InternalSend(lmtWarning, Format(AText, AArgs));
 end;
 
-procedure TLogger.SendError(const AText: string);
+procedure TLogger.Error(const AText: string);
 begin
   InternalSend(lmtError, AText);
 end;
 
-procedure TLogger.SendError(const AText: string; const AArgs: array of const);
+procedure TLogger.Error(const AText: string; const AArgs: array of const);
 begin
   InternalSend(lmtError, Format(AText, AArgs));
 end;
@@ -479,6 +483,11 @@ begin
   S := AFunc(Self, AData, B);
   if B then
     InternalSendBuffer(lmtCustomData, AName, S[1], Length(S));
+end;
+
+procedure TLogger.SendColor(const AName: string; AColor: TColor);
+begin
+//
 end;
 
 procedure TLogger.SendComponent(const AName: string; AValue: TComponent);
@@ -668,6 +677,11 @@ begin
   end
   else
     InternalSend(lmtLeaveMethod, AName);
+end;
+
+procedure TLogger.Watch(const AName, AValue: string);
+begin
+ InternalSend(lmtWatch, AName + ' = ' + AValue);
 end;
 
 procedure TLogger.Watch(const AName: string; const AValue: TValue);

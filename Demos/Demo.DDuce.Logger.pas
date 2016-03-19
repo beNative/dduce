@@ -30,18 +30,22 @@ uses
 
 type
   TfrmLogger = class(TForm)
+    {$REGION 'designer controls'}
     aclMain                  : TActionList;
     actAddCheckpoint         : TAction;
     actDecCounter            : TAction;
     actEnterMethod1          : TAction;
     actEnterMethod2          : TAction;
+    actIncCounter            : TAction;
     actLeaveMethod1          : TAction;
     actLeaveMethod2          : TAction;
-    actIncCounter            : TAction;
+    actResetCheckpoint       : TAction;
     actResetCounter          : TAction;
+    actSendClear             : TAction;
     actSendError             : TAction;
     actSendInfo              : TAction;
     actSendObject            : TAction;
+    actSendTestSequence      : TAction;
     actSendWarning           : TAction;
     btnAddCheckpoint         : TButton;
     btnDecCounter            : TButton;
@@ -50,32 +54,32 @@ type
     btnExitMethod1           : TButton;
     btnExitMethod2           : TButton;
     btnIncCounter            : TButton;
+    btnResetCheckpoint       : TButton;
     btnResetCounter          : TButton;
+    btnSendClear             : TButton;
     btnSendError             : TButton;
     btnSendInfo              : TButton;
     btnSendObject            : TButton;
+    btnSendObject1           : TButton;
     btnSendWarning           : TButton;
+    chkEnableCountTimer      : TCheckBox;
+    chkLogFileChannelActive  : TCheckBox;
+    chkWinIPCChannelActive   : TCheckBox;
+    chkZeroMQChannelActive   : TCheckBox;
     edtLogMessage            : TLabeledEdit;
     grpCounters              : TGroupBox;
+    grpLoggerSettings        : TGroupBox;
     grpMethodTracing         : TGroupBox;
     grpNotificationMessages  : TGroupBox;
     grpWatches               : TGroupBox;
-    trbMain                  : TTrackBar;
     lblPosition              : TLabel;
-    actSendTestSequence      : TAction;
-    btnSendObject1           : TButton;
-    grpLoggerSettings        : TGroupBox;
-    chkLogFileChannelActive  : TCheckBox;
-    chkWinIPCChannelActive   : TCheckBox;
-    actResetCheckpoint       : TAction;
-    btnResetCheckpoint       : TButton;
-    actSendClear             : TAction;
-    chkZeroMQChannelActive   : TCheckBox;
-    btnSendClear             : TButton;
-    tmrSendCounter: TTimer;
-    chkEnableCountTimer: TCheckBox;
+    tmrSendCounter           : TTimer;
+    trbMain                  : TTrackBar;
+    {$ENDREGION}
 
     procedure trbMainChange(Sender: TObject);
+    procedure tmrSendCounterTimer(Sender: TObject);
+    procedure chkEnableCountTimerClick(Sender: TObject);
 
     procedure actSendInfoExecute(Sender: TObject);
     procedure actSendObjectExecute(Sender: TObject);
@@ -92,8 +96,7 @@ type
     procedure actSendTestSequenceExecute(Sender: TObject);
     procedure actResetCheckpointExecute(Sender: TObject);
     procedure actSendClearExecute(Sender: TObject);
-    procedure tmrSendCounterTimer(Sender: TObject);
-    procedure chkEnableCountTimerClick(Sender: TObject);
+
 
   private
     FM1Entered      : Boolean;
@@ -142,11 +145,9 @@ begin
   btnSendWarning.Images   := Data.ImageList;
   btnSendInfo.Images      := Data.ImageList;
 
-  FWinIPCChannel := TWinIPCChannel.Create;
-  FWinIPCChannel.Active := False;
+  FWinIPCChannel  := TWinIPCChannel.Create(False);
   FLogFileChannel := TLogFileChannel.Create;
-  FLogFileChannel.Active := False;
-  FZeroMQChannel := TZeroMQChannel.Create;
+  FZeroMQChannel  := TZeroMQChannel.Create(False);
 
   Logger.Channels.Add(FLogFileChannel);
   Logger.Channels.Add(FWinIPCChannel);
@@ -160,22 +161,18 @@ end;
 
 procedure TfrmLogger.TestProcedure1;
 begin
-  Logger.Enter('TfrmLogger.TestProcedure1');
+  Logger.Track(Self, 'TestProcedure1');
   Logger.SendRect('Form.ClientRect', ClientRect);
-  Logger.SendInfo('Information message.');
+  Logger.Info('Information message.');
   Logger.SendComponent('Form', Self);
   Logger.Send('Font', Font);
-
-  Logger.Leave('TfrmLogger.TestProcedure1');
 end;
 
 procedure TfrmLogger.TestProcedure2;
 begin
-  Logger.Enter('TfrmLogger.TestProcedure2');
-  Logger.SendWarning('Warning message.');
+  Logger.Track(Self,'TestProcedure2');
+  Logger.Warn('Warning message.');
   Logger.SendTime('Current time over here', Now);
-
-  Logger.Leave('TfrmLogger.TestProcedure2');
 end;
 
 {$ENDREGION}
@@ -183,12 +180,12 @@ end;
 {$REGION 'action handlers'}
 procedure TfrmLogger.actSendInfoExecute(Sender: TObject);
 begin
-  Logger.SendInfo(edtLogMessage.Text);
+  Logger.Info(edtLogMessage.Text);
 end;
 
 procedure TfrmLogger.actSendWarningExecute(Sender: TObject);
 begin
-  Logger.SendWarning(edtLogMessage.Text);
+  Logger.Warn(edtLogMessage.Text);
 end;
 
 procedure TfrmLogger.actSendClearExecute(Sender: TObject);
@@ -198,7 +195,7 @@ end;
 
 procedure TfrmLogger.actSendErrorExecute(Sender: TObject);
 begin
-  Logger.SendError(edtLogMessage.Text);
+  Logger.Error(edtLogMessage.Text);
 end;
 
 procedure TfrmLogger.actEnterMethod1Execute(Sender: TObject);
