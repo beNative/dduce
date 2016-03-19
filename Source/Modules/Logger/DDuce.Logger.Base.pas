@@ -27,7 +27,14 @@ unit DDuce.Logger.Base;
 //{$I DDuce.inc}
 
 {
-TODO Track method (like Spring4D)
+  TODO Track method (like Spring4D)
+  StopWatch support
+
+    StartStopWatch
+    StopStopWatch
+
+    //SendScreenshot
+
 }
 
 interface
@@ -46,6 +53,22 @@ const
 type
   TLogger = class(TInterfacedObject, ILogger)
   strict private
+  type
+    TTrack = class(TInterfacedObject)
+    private
+      FLogger : ILogger;
+      FName   : string;
+      FSender : TObject;
+    public
+      constructor Create(
+        const ALogger: ILogger;
+        ASender      : TObject;
+        const AName  : string
+        );
+      destructor Destroy; override;
+    end;
+
+  var
     FMaxStackCount : Integer;
     FChannels      : IList<ILogChannel>;
     FLogStack      : TStrings;
@@ -75,6 +98,7 @@ type
 
     function CalledBy(const AName: string): Boolean;
 
+    { Sends a dedicated message to clear content in the receiver (LogViewer). }
     procedure Clear;
 
     // Send functions
@@ -137,6 +161,8 @@ type
       AFunc       : TCustomDataCallbackFunction
     ); overload;
 
+    { Checkpoints are used to count how many times the application enters a
+      certain position in the code. }
     procedure AddCheckPoint(const AName: string = '');
     procedure ResetCheckPoint(const AName: string = '');
 
@@ -151,13 +177,11 @@ type
     procedure Enter(ASender: TObject; const AName: string); overload;
     procedure Leave(const AName: string); overload;
     procedure Leave(ASender: TObject; const AName: string); overload;
+    function Track(const AName: string): IInterface; overload;
+    function Track(ASender: TObject; const AName: string): IInterface; overload;
 
     { Watches support }
-    procedure Watch(const AName: string; const AValue: string); overload;
-    procedure Watch(const AName: string; AValue: Integer); overload;
-    procedure Watch(const AName: string; AValue: Cardinal); overload;
-    procedure Watch(const AName: string; AValue: Double); overload;
-    procedure Watch(const AName: string; AValue: Boolean); overload;
+    procedure Watch(const AName: string; const AValue: TValue);
 
     { List of channels where logmessages will be sent to }
     property Channels: TChannelList
@@ -226,6 +250,15 @@ begin
     FMaxStackCount := AValue
   else
     FMaxStackCount := STACKCOUNTLIMIT;
+end;
+function TLogger.Track(const AName: string): IInterface;
+begin
+  Result := TTrack.Create(Self, nil, AName);
+end;
+
+function TLogger.Track(ASender: TObject; const AName: string): IInterface;
+begin
+  Result := TTrack.Create(Self, ASender, AName);
 end;
 {$ENDREGION}
 
@@ -301,8 +334,6 @@ begin
 end;
 
 procedure TLogger.SendStrings(const AName: string; AValue: TStrings);
-var
-  S       : string;
 begin
   Guard.CheckNotNull(AValue, AName);
   Send(AName, AValue.Text);
@@ -332,8 +363,8 @@ end;
 procedure TLogger.Send(const AName: string; const AValue: TValue);
 begin
   case AValue.Kind of
-    tkInteger:
-      InternalSend(lmtValue, AName + ' = ' + IntToStr(AValue.AsInteger));
+    tkClass:
+      SendObject(AName, AValue.AsObject);
     tkEnumeration:
     begin
       if AValue.TypeInfo = TypeInfo(Boolean) then
@@ -362,13 +393,13 @@ begin
         InternalSend(lmtValue, AName + ' = ' + FloatToStr(AValue.AsExtended));
       end;
     end;
-    tkClass:
-      SendObject(AName, AValue.AsObject);
+    tkInteger:
+      InternalSend(lmtValue, AName + ' = ' + IntToStr(AValue.AsInteger));
     tkInt64:
       InternalSend(lmtValue, AName + ' = ' + IntToStr(AValue.AsInt64));
-    tkRecord:
-      InternalSend(lmtValue, AName + ' = ' + Reflect.Fields(AValue).ToString);
     tkInterface:
+      InternalSend(lmtValue, AName + ' = ' + Reflect.Fields(AValue).ToString);
+    tkRecord:
       InternalSend(lmtValue, AName + ' = ' + Reflect.Fields(AValue).ToString);
   else
     InternalSend(lmtValue, AName + ' = ' + AValue.ToString);
@@ -382,7 +413,7 @@ end;
 
 procedure TLogger.SendPoint(const AName: string; const APoint: TPoint);
 begin
-
+  Send(AName, TValue.From(APoint));
 end;
 
 procedure TLogger.SendPointer(const AName: string; APointer: Pointer);
@@ -639,31 +670,79 @@ begin
     InternalSend(lmtLeaveMethod, AName);
 end;
 
-procedure TLogger.Watch(const AName, AValue: string);
+procedure TLogger.Watch(const AName: string; const AValue: TValue);
+var
+  S : string;
 begin
-  InternalSend(lmtWatch, AName + '=' + AValue);
-end;
-
-procedure TLogger.Watch(const AName: string; AValue: Integer);
-begin
-  InternalSend(lmtWatch, AName + '=' + IntToStr(AValue));
-end;
-
-procedure TLogger.Watch(const AName: string; AValue: Cardinal);
-begin
-  InternalSend(lmtWatch, AName + '=' + IntToStr(AValue));
-end;
-
-procedure TLogger.Watch(const AName: string; AValue: Double);
-begin
-  InternalSend(lmtWatch, AName + '=' + FloatToStr(AValue));
-end;
-
-procedure TLogger.Watch(const AName: string; AValue: Boolean);
-begin
-  InternalSend(lmtWatch, AName + '=' + BoolToStr(AValue));
+  case AValue.Kind of
+    tkEnumeration:
+    begin
+      if AValue.TypeInfo = TypeInfo(Boolean) then
+      begin
+        S := BoolToStr(AValue.AsBoolean, True);
+      end
+      else
+      begin
+        S := AValue.ToString;
+      end;
+    end;
+    tkString, tkLString, tkWString, tkUString:
+      S := AValue.AsString;
+    tkFloat:
+    begin
+      if AValue.TypeInfo = TypeInfo(TDate) then
+      begin
+        S := DateToStr(AValue.AsType<TDate>);
+      end
+      else
+      if AValue.TypeInfo = TypeInfo(TDateTime) then
+      begin
+        S := DateTimeToStr(AValue.AsType<TDateTime>);
+      end
+      else
+      if AValue.TypeInfo = TypeInfo(TTime) then
+      begin
+        S := TimeToStr(AValue.AsType<TTime>);
+      end
+      else
+      begin
+        S := FloatToStr(AValue.AsExtended);
+      end;
+    end;
+    tkInteger:
+      S := AValue.AsInteger.ToString;
+    tkInt64:
+      S := AValue.AsInt64.ToString
+    else
+      S := AValue.ToString;
+  end;
+  InternalSend(lmtWatch, AName + ' = ' + S);
 end;
 {$ENDREGION}
+{$ENDREGION}
+
+{$REGION 'TLogger.TTrack'}
+constructor TLogger.TTrack.Create(const ALogger: ILogger;
+  ASender: TObject; const AName: string);
+begin
+  inherited Create;
+  FLogger     := ALogger;
+  FSender     := ASender;
+  FName := AName;
+  if not Assigned(FSender) then
+    FLogger.Enter(FName)
+  else
+    FLogger.Enter(FSender, FName);
+end;
+
+destructor TLogger.TTrack.Destroy;
+begin
+  if not Assigned(FSender) then
+    FLogger.Leave(FName)
+  else
+    FLogger.Leave(FSender, FName);
+  inherited Destroy;
+end;
 {$ENDREGION}
 
 end.

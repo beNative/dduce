@@ -109,7 +109,9 @@ type
     procedure SendTime(const AName: string; AValue: TTime);
 
     { Send methods for types that need a custom representation. }
+    procedure SendObject(const AName: string; AValue: TObject);
     procedure SendRect(const AName: string; const AValue: TRect);
+    procedure SendPoint(const AName: string; const APoint: TPoint);
     procedure SendStrings(const AName: string; AValue: TStrings);
     procedure SendComponent(const AName: string; AValue: TComponent);
     procedure SendPointer(const AName: string; APointer: Pointer);
@@ -129,15 +131,13 @@ type
     procedure Enter(ASender: TObject; const AName: string); overload;
     procedure Leave(const AName: string); overload;
     procedure Leave(ASender: TObject; const AName: string); overload;
+    function Track(const AName: string): IInterface; overload;
+    function Track(ASender: TObject; const AName: string): IInterface; overload;
 
     procedure AddCheckPoint(const AName: string = '');
     procedure ResetCheckPoint(const AName: string = '');
 
-    procedure Watch(const AName: string; const AValue: string); overload;
-    procedure Watch(const AName: string; AValue: Integer); overload;
-    procedure Watch(const AName: string; AValue: Cardinal); overload;
-    procedure Watch(const AName: string; AValue: Double); overload;
-    procedure Watch(const AName: string; AValue: Boolean); overload;
+    procedure Watch(const AName: string; const AValue: TValue);
 
     procedure SendWarning(const AText: string); overload;
     procedure SendWarning(

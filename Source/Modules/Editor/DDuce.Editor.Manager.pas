@@ -760,12 +760,6 @@ begin
   if PersistSettings then
     FSettings.Save;
   FSettings.OnChanged.Remove(EditorSettingsChanged);
-//  FActiveView := nil;
-//  FSearchEngine := nil;
-//  FSettings := nil;
-//  FEvents   := nil;
-//  FCommands := nil;
-//  FViewList := nil;
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
