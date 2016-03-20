@@ -22,6 +22,8 @@ interface
 
 uses
   System.Classes, System.Rtti, System.SysUtils, System.Types, System.UITypes,
+  System.UIConsts,
+  Vcl.Menus,
 
   Spring.Collections;
 
@@ -47,6 +49,8 @@ type
     lmtCounter     = 21,
     lmtClear       = 100
   );
+
+  // lmtColor? lmtAlphaColor?
 
   ILogger = interface;
 
@@ -111,6 +115,7 @@ type
 
     { Send methods for types that need a custom representation. }
     procedure SendColor(const AName: string; AColor: TColor);
+    procedure SendAlphaColor(const AName: string; AAlphaColor: TAlphaColor);
     procedure SendObject(const AName: string; AValue: TObject);
     procedure SendRect(const AName: string; const AValue: TRect);
     procedure SendPoint(const AName: string; const APoint: TPoint);
@@ -123,6 +128,7 @@ type
       AAddress   : Pointer;
       ASize      : LongWord
     );
+    procedure SendShortCut(const AName: string; AShortCut: TShortCut);
 
     procedure IncCounter(const AName: string);
     procedure DecCounter(const AName: string);

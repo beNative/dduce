@@ -40,9 +40,8 @@ unit DDuce.Logger.Base;
 interface
 
 uses
-  System.Types, System.Classes, System.SysUtils, System.Rtti, System.UITypes,
   Winapi.Windows,
-
+  System.Types, System.Classes, System.SysUtils, System.Rtti, System.UITypes,
 
   Spring.Collections,
 
@@ -109,6 +108,7 @@ type
     procedure Send(const AName: string; const AValue: TValue); overload;
 
     procedure SendStrings(const AName: string; AValue: TStrings);
+    procedure SendAlphaColor(const AName: string; AAlphaColor: TAlphaColor);
     procedure SendColor(const AName: string; AColor: TColor);
     { Will send the component as a dfm-stream. }
     procedure SendComponent(const AName: string; AValue: TComponent);
@@ -122,6 +122,7 @@ type
     procedure SendPointer(const AName: string; APointer: Pointer);
     procedure SendException(const AName: string; AException: Exception);
     procedure SendMemory(const AName: string; AAddress: Pointer; ASize: LongWord);
+    procedure SendShortCut(const AName: string; AShortCut: TShortCut);
 
     procedure SendIf(
       const AText : string;
@@ -208,8 +209,8 @@ var
 implementation
 
 uses
-  System.TypInfo, System.StrUtils,
-  Vcl.Forms,
+  System.TypInfo, System.StrUtils, System.UIConsts,
+  Vcl.Forms, Vcl.Menus,
 
   Spring,
 
@@ -334,6 +335,11 @@ begin
   Send(AName, TValue.From(AValue));
 end;
 
+procedure TLogger.SendShortCut(const AName: string; AShortCut: TShortCut);
+begin
+  Send(AName, ShortCutToText(AShortCut));
+end;
+
 procedure TLogger.SendStrings(const AName: string; AValue: TStrings);
 begin
   Guard.CheckNotNull(AValue, AName);
@@ -343,7 +349,7 @@ end;
 procedure TLogger.SendObject(const AName: string; AValue: TObject);
 begin
   Guard.CheckNotNull(AValue, AName);
-  Send(AName, Reflect.Fields(AValue).ToString);
+  Send(AName, sLineBreak + Reflect.Fields(AValue).ToString);
 end;
 
 procedure TLogger.SendDateTime(const AName: string; AValue: TDateTime);
@@ -408,6 +414,11 @@ begin
     S := AValue.ToString
   end;
   InternalSend(lmtValue, AName + ' = ' + S);
+end;
+
+procedure TLogger.SendAlphaColor(const AName: string; AAlphaColor: TAlphaColor);
+begin
+  Send(AName, AlphaColorToString(AAlphaColor));
 end;
 
 procedure TLogger.Send(const AName: string; const AArgs: array of const);
@@ -487,7 +498,7 @@ end;
 
 procedure TLogger.SendColor(const AName: string; AColor: TColor);
 begin
-//
+  Send(AName, ColorToString(AColor));
 end;
 
 procedure TLogger.SendComponent(const AName: string; AValue: TComponent);
@@ -496,20 +507,17 @@ var
   LStream : TStream;
 begin
   Guard.CheckNotNull(AValue, AName);
-  if AValue <> nil then
-  begin
-    S := AName + ' (';
-    S := S + ('"' + TComponent(AValue).Name + '"/');
-    LStream := TMemoryStream.Create;
-    try
-      LStream.WriteComponent(TComponent(AValue));
-      S := S + (AValue.ClassName + '/');
-      S := S + ('$' + IntToHex(Integer(AValue),
-      SizeOf(Integer) * 2) + ')');
-      InternalSendStream(lmtObject, S, LStream);
-    finally
-      LStream.Free;
-    end;
+  S := AName + ' (';
+  S := S + ('"' + TComponent(AValue).Name + '"/');
+  LStream := TMemoryStream.Create;
+  try
+    LStream.WriteComponent(TComponent(AValue));
+    S := S + (AValue.ClassName + '/');
+    S := S + ('$' + IntToHex(Integer(AValue),
+    SizeOf(Integer) * 2) + ')');
+    InternalSendStream(lmtObject, S, LStream);
+  finally
+    LStream.Free;
   end;
 end;
 

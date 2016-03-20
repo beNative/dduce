@@ -282,6 +282,7 @@ end;
 {$REGION 'protected methods'}
 procedure TfrmLogger.ExecuteTestSequence;
 begin
+  Logger.Track(Self, 'ExecuteTestSequence');
   TestProcedure1;
   TestProcedure2;
 end;

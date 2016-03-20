@@ -714,7 +714,7 @@ uses
   DDuce.Editor.Test.ToolView,
   DDuce.Editor.SelectionInfo.ToolView,
 
-  //DDuce.Editor.Filter.Settings,
+  DDuce.Editor.Filter.Settings,
   DDuce.Editor.Search.Engine.Settings,
   DDuce.Editor.SortStrings.Settings,
   DDuce.Editor.Search.Engine,
@@ -2273,7 +2273,7 @@ end;
 procedure TdmEditorManager.RegisterToolViews;
 begin
   //ToolViews.Register(TfrmAlignLines, TAlignLinesSettings, 'AlignLines');
-  //ToolViews.Register(TfrmCodeFilterDialog, TCodeFilterSettings, 'CodeFilter');
+  ToolViews.Register(TfrmFilter, TFilterSettings, 'CodeFilter');
 //ToolViews.Register(TfrmHTMLView, THTMLViewSettings, 'HTMLView');
   //ToolViews.Register(TfrmCodeShaper, TCodeShaperSettings, 'CodeShaper');
 //  ToolViews.Register(TfrmStructure, nil, 'Structure');

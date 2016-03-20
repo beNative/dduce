@@ -71,6 +71,8 @@ type
     procedure Test_Watch_method_for_TDate_argument;
     procedure Test_Watch_method_for_TTime_argument;
     procedure Test_Watch_method_for_string_argument;
+    procedure Test_Watch_method_for_Enumeration_argument;
+    procedure Test_Watch_method_for_Set_argument;
 
     procedure Test_Enter_and_Leave_methods_for_routine;
     procedure Test_Enter_and_Leave_methods_for_method;
@@ -216,8 +218,11 @@ end;
 
 {$REGION 'Test custom Send methods'}
 procedure TestLogger.Test_SendComponent_method;
+var
+  T : TComponent;
 begin
-  Logger.SendComponent(Reflect.TypeName(Application), Application);
+  T := Application.MainForm;
+  Logger.SendComponent(Reflect.TypeName(T), T);
 end;
 
 procedure TestLogger.Test_SendDateTime_method;
@@ -328,6 +333,14 @@ begin
   Logger.Watch(Reflect.TypeName(T), T);
 end;
 
+procedure TestLogger.Test_Watch_method_for_Enumeration_argument;
+var
+  T : TFormStyle;
+begin
+  T := fsStayOnTop;
+  Logger.Watch(Reflect.TypeName(T), TValue.From(T));
+end;
+
 procedure TestLogger.Test_Watch_method_for_Extended_argument;
 var
   T : Extended;
@@ -350,6 +363,14 @@ var
 begin
   T := MaxInt;
   Logger.Watch(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Watch_method_for_Set_argument;
+var
+  T : TBorderIcons;
+begin
+  T := [biSystemMenu, biMinimize, biMaximize, biHelp];
+  Logger.Watch(Reflect.TypeName(T), TValue.From(T));
 end;
 
 procedure TestLogger.Test_Watch_method_for_Single_argument;
