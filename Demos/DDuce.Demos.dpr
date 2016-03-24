@@ -82,7 +82,6 @@ uses
   DDuce.Editor.Factories.Settings in '..\Source\Modules\Editor\DDuce.Editor.Factories.Settings.pas',
   DDuce.Editor.Factories.Toolbars in '..\Source\Modules\Editor\DDuce.Editor.Factories.Toolbars.pas',
   DDuce.Editor.Factories.Views in '..\Source\Modules\Editor\DDuce.Editor.Factories.Views.pas',
-  DDuce.Editor.Filter.Toolview in '..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas' {frmFilter},
   DDuce.Editor.Highlighters in '..\Source\Modules\Editor\DDuce.Editor.Highlighters.pas',
   DDuce.Editor.Interfaces in '..\Source\Modules\Editor\DDuce.Editor.Interfaces.pas',
   DDuce.Editor.Manager in '..\Source\Modules\Editor\DDuce.Editor.Manager.pas' {dmEditorManager: TDataModule},
@@ -122,7 +121,10 @@ uses
   DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas',
   ZeroMQ.API in '..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas',
   ZeroMQ in '..\Source\Dependencies\ZeroMQ\ZeroMQ.pas',
-  DDuce.Logger.Channels.WinODS in '..\Source\Modules\Logger\DDuce.Logger.Channels.WinODS.pas';
+  DDuce.Logger.Channels.WinODS in '..\Source\Modules\Logger\DDuce.Logger.Channels.WinODS.pas',
+  DDuce.Editor.Filter.Data in '..\Source\Modules\Editor\DDuce.Editor.Filter.Data.pas',
+  DDuce.Editor.Filter.Settings in '..\Source\Modules\Editor\DDuce.Editor.Filter.Settings.pas',
+  DDuce.Editor.Filter.Toolview in '..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas' {frmFilter};
 
 {$R *.res}
 
@@ -130,7 +132,7 @@ begin
   {$WARNINGS OFF}
   ReportMemoryLeaksOnShutdown := DebugHook > 0;
   {$WARNINGS ON}
-  //StyleManager.TrySetStyle('Windows10');
+  //TStyleManager.TrySetStyle('Windows10');
   Application.Initialize;
 
   Application.MainFormOnTaskbar := True;

@@ -43,6 +43,8 @@ uses
   Winapi.Windows,
   System.Types, System.Classes, System.SysUtils, System.Rtti, System.UITypes,
 
+  Vcl.Graphics,
+
   Spring.Collections,
 
   DDuce.Logger.Interfaces;

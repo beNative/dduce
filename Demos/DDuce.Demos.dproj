@@ -228,9 +228,6 @@
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Settings.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Toolbars.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Views.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas">
-            <Form>frmFilter</Form>
-        </DCCReference>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Highlighters.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Interfaces.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Manager.pas">
@@ -290,6 +287,12 @@
         <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas"/>
         <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinODS.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Data.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas">
+            <Form>frmFilter</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

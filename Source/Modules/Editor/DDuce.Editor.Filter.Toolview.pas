@@ -82,15 +82,17 @@ type
     procedure FTVPFilter(Item: TObject; var Accepted: Boolean);
     procedure FVSTKeyPress(Sender: TObject; var Key: char);
     procedure FVSTKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FTVPSelectionChanged(Sender: TObject);
 
   strict private
     FVST : TVirtualStringTree;
     FTVP : TTreeViewPresenter;
 
-    FVKPressed : Boolean;
-    FUpdate    : Boolean;
-    FLines     : IList<TLine>;
-    FTextStyle : TTextFormat;
+    FVKPressed        : Boolean;
+    FUpdate           : Boolean;
+    FUpdateEditorView : Boolean;
+    FLines            : IList<TLine>;
+    FTextStyle        : TTextFormat;
 
     function GetFilter: string;
     procedure SetFilter(AValue: string);
@@ -290,7 +292,6 @@ var
   F : Boolean;
   G : Boolean;
 begin
-  //Logger.Send('Keys : %s', [KeyAndShiftStateToKeyString(Key, Shift)]);
   // SHIFTED and ALTED keycombinations
   A := (ssAlt in Shift) or (ssShift in Shift);
   { Single keys that need to be handled by the edit control like all displayable
@@ -372,6 +373,11 @@ begin
     B := B or IsMatch(S);
   end;
   Accepted := B;
+end;
+
+procedure TfrmFilter.FTVPSelectionChanged(Sender: TObject);
+begin
+  FUpdateEditorView := True;
 end;
 
 procedure TfrmFilter.FVSTKeyPress(Sender: TObject; var Key: char);
@@ -473,6 +479,7 @@ begin
   end;
 
   FTVP.View.Filter.Add(FTVPFilter);
+  FTVP.OnSelectionChanged := FTVPSelectionChanged;
   FTVP.TreeView := FVST;
 end;
 
@@ -483,7 +490,7 @@ var
   Margin: Integer;
 begin
   // calculate the rectangle to draw around the matching text
-  //Margin := AColumnDefinition.Margin + AColumnDefinition.Spacing;
+  Margin := 8;
   ARect.Left := ARect.Left + Margin +
     ACanvas.TextWidth(System.Copy(ASource, 1, AOffset - 1));
   ARect.Right := ARect.Left + ACanvas.TextWidth(AMatch);
@@ -561,6 +568,8 @@ begin
 end;
 
 procedure TfrmFilter.UpdateActions;
+var
+  L: TLine;
 begin
   inherited UpdateActions;
   if FUpdate then
@@ -568,6 +577,14 @@ begin
     UpdateView;
     ApplyFilter;
     FUpdate := False;
+  end;
+  if FUpdateEditorView then // update position in the editorview
+  begin
+    L := TLine(FTVP.SelectedItem);
+    if Assigned(L) then
+      //View.SearchAndSelectLine(L.Index, L.Text);
+      View.Editor.GotoLineAndCenter(L.Index);
+    FUpdateEditorView := False;
   end;
 end;
 
