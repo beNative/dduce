@@ -14,23 +14,21 @@
   limitations under the License.
 }
 
-unit DDuce.Components.PropertyInspector.CollectionEditor;
-
-{$I ..\DDuce.inc}
+unit zCollectionEditor;
 
 interface
 
 uses
   System.SysUtils, System.Classes, System.TypInfo, System.ImageList,
-  System.Actions,
+  System.Actions, System.Rtti,
   Winapi.Windows,
   Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ActnList, Vcl.ImgList, Vcl.ToolWin,
   Vcl.Controls, Vcl.Forms, Vcl.Menus,
 
-  DDuce.Components.PropertyInspector;
+  zObjInspector;
 
 type
-  TfrmCollectionEditor = class(TForm)
+  TzCollectionEditorDialog = class(TzInspDialog)
     aclMain           : TActionList;
     actAdd            : TAction;
     actDelete         : TAction;
@@ -81,11 +79,17 @@ type
       Item     : TListItem;
       Selected : Boolean
     );
-    procedure FInspectorModified(Sender: TObject);
+
+    function FInspectorItemSetValue(
+      Sender       : TControl;
+      PItem        : PPropItem;
+      var NewValue : TValue
+    ) : Boolean;
 
   private
     FCollection : TCollection;
-    FInspector  : TPropertyInspector;
+    FInspector  : TzObjectInspector;
+    FContext    : TRttiContext;
 
     function GetActiveItem: TCollectionItem;
 
@@ -93,59 +97,22 @@ type
     procedure UpdateItems;
     procedure UpdateInspector;
     procedure UpdateActions; override;
+    procedure InitDialog; override;
 
   public
-    constructor Create(
-      AOwner      : TComponent;
-      ACollection : TCollection
-    ); reintroduce;
-
     property ActiveItem : TCollectionItem
       read GetActiveItem;
   end;
 
-procedure ExecuteCollectionEditor(ACollection : TCollection);
-
 implementation
-
-uses
-  System.Rtti,
-
-  DDuce.Reflect;
 
 {$R *.dfm}
 
-{$REGION 'interfaced routines'}
-procedure ExecuteCollectionEditor(ACollection : TCollection);
-var
-  Form : TfrmCollectionEditor;
-begin
-  Form := TfrmCollectionEditor.Create(Application, ACollection);
-  try
-    Form.ShowModal;
-  finally
-    Form.Free;
-  end;
-end;
-{$ENDREGION}
-
-{$REGION 'construction and destruction'}
-constructor TfrmCollectionEditor.Create(AOwner: TComponent;
-  ACollection: TCollection);
-begin
-  inherited Create(AOwner);
-  FCollection := ACollection;
-  FInspector  := TPropertyInspector.Create(Self);
-  FInspector.Parent := pnlRight;
-  FInspector.Align  := alClient;
-  FInspector.Splitter := FInspector.ClientWidth div 2;
-  FInspector.OnModified := FInspectorModified;
-  UpdateItems;
-end;
-{$ENDREGION}
+uses
+  DDuce.Reflect, DDuce.Logger;
 
 {$REGION 'property access methods'}
-function TfrmCollectionEditor.GetActiveItem: TCollectionItem;
+function TzCollectionEditorDialog.GetActiveItem: TCollectionItem;
 var
   I : Integer;
 begin
@@ -156,16 +123,27 @@ begin
 
   Result := TCollectionItem(lvCollectionItems.Items[I].Data);
 end;
+procedure TzCollectionEditorDialog.InitDialog;
+begin
+  inherited InitDialog;
+  FCollection := TCollection(PropItem.Value.AsObject);
+  FInspector  := TzObjectInspector.Create(Self);
+  FInspector.Parent := pnlRight;
+  FInspector.Align  := alClient;
+  FInspector.SplitterPos := FInspector.ClientWidth div 2;
+  FInspector.OnItemSetValue := FInspectorItemSetValue;
+  UpdateItems;
+end;
 {$ENDREGION}
 
 {$REGION 'action handlers'}
-procedure TfrmCollectionEditor.actAddExecute(Sender: TObject);
+procedure TzCollectionEditorDialog.actAddExecute(Sender: TObject);
 begin
   FCollection.Add;
   UpdateItems;
 end;
 
-procedure TfrmCollectionEditor.actDeleteExecute(Sender: TObject);
+procedure TzCollectionEditorDialog.actDeleteExecute(Sender: TObject);
 begin
   if FCollection.Count > 0 then
   begin
@@ -174,12 +152,12 @@ begin
   end;
 end;
 
-procedure TfrmCollectionEditor.actSelectAllExecute(Sender: TObject);
+procedure TzCollectionEditorDialog.actSelectAllExecute(Sender: TObject);
 begin
   lvCollectionItems.SelectAll;
 end;
 
-procedure TfrmCollectionEditor.actUpExecute(Sender: TObject);
+procedure TzCollectionEditorDialog.actUpExecute(Sender: TObject);
 var
   I : Integer;
 begin
@@ -192,7 +170,7 @@ begin
   end;
 end;
 
-procedure TfrmCollectionEditor.actDownExecute(Sender: TObject);
+procedure TzCollectionEditorDialog.actDownExecute(Sender: TObject);
 var
   I : Integer;
 begin
@@ -207,7 +185,7 @@ end;
 {$ENDREGION}
 
 {$REGION 'event handlers'}
-procedure TfrmCollectionEditor.lvCollectionItemsDragDrop(Sender,
+procedure TzCollectionEditorDialog.lvCollectionItemsDragDrop(Sender,
   Source: TObject; X, Y: Integer);
 begin
   if not Assigned(Sender) or not Assigned(Source) or
@@ -222,61 +200,46 @@ begin
   UpdateItems;
 end;
 
-procedure TfrmCollectionEditor.lvCollectionItemsDragOver(Sender,
+procedure TzCollectionEditorDialog.lvCollectionItemsDragOver(Sender,
   Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
 begin
   Accept := True;
 end;
 
-procedure TfrmCollectionEditor.lvCollectionItemsSelectItem(Sender: TObject;
+procedure TzCollectionEditorDialog.lvCollectionItemsSelectItem(Sender: TObject;
   Item: TListItem; Selected: Boolean);
 begin
   if Selected then
     UpdateInspector;
 end;
 
-procedure TfrmCollectionEditor.FInspectorModified(Sender: TObject);
+function TzCollectionEditorDialog.FInspectorItemSetValue(Sender: TControl;
+  PItem: PPropItem; var NewValue: TValue): Boolean;
 var
   I  : Integer;
-  J  : Integer;
   S  : string;
   V  : TValue;
-  AI : TPropsPageItem;
-  PI : TPropsPageItem;
-  SL : TStringList;
   O  : TObject;
 begin
-  SL := TStringList.Create;
-  try
-    AI := FInspector.ActiveItem;
-    O  := FInspector.Objects[0];
-    S  := AI.Caption;
-    V  := Reflect.Properties(O).Values[S];
-    PI := AI;
-    while Assigned(PI) do
+  for I := 0 to lvCollectionItems.Items.Count - 1 do
+  begin
+    if lvCollectionItems.Items[I].Selected then
     begin
-      SL.Add(PI.Caption);
-      PI := PI.Parent;
+      O := FCollection.Items[I];
+
+
+      // TODO : does not work anymore!
+      //Reflect.Properties<TCollectionItem>(FCollection.Items[I]).Values[PItem.Name] := NewValue;
+      //.Values[PItem.Name] := NewValue;
+
     end;
-    // todo TS fix this!
-//    for I := 0 to lvCollectionItems.Items.Count - 1 do
-//    begin
-//      if lvCollectionItems.Items[I].Selected then
-//      begin
-//        O := FCollection.Items[I];
-//        for J := SL.Count -1 downto 1 do
-//          O := GetObjectProp(O, SL[J]);
-//        Reflect.Properties(O).Values[S] := V;
-//      end;
-//    end;
-  finally
-    SL.Free;
   end;
+  Result := True;
 end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-procedure TfrmCollectionEditor.UpdateActions;
+procedure TzCollectionEditorDialog.UpdateActions;
 var
   B: Boolean;
 begin
@@ -287,23 +250,24 @@ begin
   actDown.Enabled := B and (lvCollectionItems.ItemIndex < FCollection.Count - 1);
 end;
 
-procedure TfrmCollectionEditor.UpdateInspector;
+procedure TzCollectionEditorDialog.UpdateInspector;
 var
   I : Integer;
 begin
   FInspector.BeginUpdate;
   try
-    FInspector.Clear;
     if Assigned(lvCollectionItems.Items[lvCollectionItems.ItemIndex].Data) then
     begin
-      FInspector.Add(
-        TPersistent(lvCollectionItems.Items[lvCollectionItems.ItemIndex].Data)
-      );
+      FInspector.Component :=
+        TPersistent(lvCollectionItems.Items[lvCollectionItems.ItemIndex].Data);
+//      FInspector.Add(
+//        TPersistent(lvCollectionItems.Items[lvCollectionItems.ItemIndex].Data)
+//      );
 
       for I := 0 to FInspector.Items.Count - 1 do
       begin
-        if FInspector.Items[I].Expandable = mieYes then
-          FInspector.Items[I].Expand;
+//        if FInspector.Items[I].Expandable = mieYes then
+//          FInspector.Items[I].Expand;
       end;
     end;
   finally
@@ -312,7 +276,7 @@ begin
   end;
 end;
 
-procedure TfrmCollectionEditor.UpdateItems;
+procedure TzCollectionEditorDialog.UpdateItems;
 var
   S  : string;
   I  : Integer;
@@ -331,3 +295,4 @@ end;
 {$ENDREGION}
 
 end.
+

@@ -5,8 +5,6 @@ object frmComponentInspector: TfrmComponentInspector
   ClientHeight = 647
   ClientWidth = 392
   Color = clBtnFace
-  DoubleBuffered = True
-  DragKind = dkDock
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
