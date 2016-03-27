@@ -47,6 +47,9 @@ type
     lmtCustomData  = 15,
     lmtWatch       = 20,
     lmtCounter     = 21,
+    lmtColor       = 22,
+    lmtAlphaColor  = 23,
+    lmtScreenShot  = 24,
     lmtClear       = 100
   );
 

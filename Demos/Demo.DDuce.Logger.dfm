@@ -320,6 +320,7 @@ object frmLogger: TfrmLogger
     end
     object actSendTestSequence: TAction
       Caption = 'Send testsequence'
+      ShortCut = 116
       OnExecute = actSendTestSequenceExecute
     end
     object actResetCheckpoint: TAction

@@ -163,7 +163,11 @@ procedure TfrmLogger.TestProcedure1;
 begin
   Logger.Track(Self, 'TestProcedure1');
   Logger.SendRect('Form.ClientRect', ClientRect);
+  Logger.Watch('Caption', Caption);
+  Logger.Send('Now', Now);
   Logger.Info('Information message.');
+  Logger.Error('OMG, something went wrong over here!');
+  Logger.Warn('This message warns you about nothing.');
   Logger.SendComponent('Form', Self);
   Logger.Send('Font', Font);
 end;
@@ -172,6 +176,9 @@ procedure TfrmLogger.TestProcedure2;
 begin
   Logger.Track(Self,'TestProcedure2');
   Logger.Warn('Warning message.');
+  Logger.SendDateTime('Now', Now);
+  Logger.SendShortCut('ShortCut', actSendTestSequence.ShortCut);
+  Logger.SendColor('Color', clBlack);
   Logger.SendTime('Current time over here', Now);
 end;
 
