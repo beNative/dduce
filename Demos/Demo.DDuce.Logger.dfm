@@ -3,7 +3,7 @@ object frmLogger: TfrmLogger
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Logger'
-  ClientHeight = 467
+  ClientHeight = 394
   ClientWidth = 521
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12,6 +12,7 @@ object frmLogger: TfrmLogger
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
   object btnSendObject: TButton

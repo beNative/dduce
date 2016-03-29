@@ -27,14 +27,11 @@ unit DDuce.Logger.Base;
 //{$I DDuce.inc}
 
 {
-  TODO Track method (like Spring4D)
   StopWatch support
-
     StartStopWatch
     StopStopWatch
 
-    //SendScreenshot
-
+  SendScreenshot
 }
 
 interface
@@ -116,14 +113,21 @@ type
     procedure SendComponent(const AName: string; AValue: TComponent);
     { Will send object data using RTTI information. }
     procedure SendObject(const AName: string; AValue: TObject);
+
     procedure SendDateTime(const AName: string; AValue: TDateTime);
     procedure SendDate(const AName: string; AValue: TDate);
     procedure SendTime(const AName: string; AValue: TTime);
+
     procedure SendRect(const AName: string; const AValue: TRect);
     procedure SendPoint(const AName: string; const APoint: TPoint);
+
     procedure SendPointer(const AName: string; APointer: Pointer);
     procedure SendException(const AName: string; AException: Exception);
-    procedure SendMemory(const AName: string; AAddress: Pointer; ASize: LongWord);
+    procedure SendMemory(
+      const AName: string;
+      AAddress   : Pointer;
+      ASize      : LongWord
+    );
     procedure SendShortCut(const AName: string; AShortCut: TShortCut);
 
     procedure SendIf(
@@ -187,13 +191,14 @@ type
     procedure Watch(const AName: string; const AValue: TValue); overload;
     procedure Watch(const AName: string; const AValue: string = ''); overload;
 
-    { List of channels where logmessages will be sent to }
+    { List of channels where logmessages will be posted to }
     property Channels: TChannelList
       read GetChannels;
 
     property LogStack: TStrings
       read FLogStack;
 
+    { not used yet }
     property MaxStackCount: Integer
       read FMaxStackCount write SetMaxStackCount default DEFAULT_MAXSTACKCOUNT;
 
@@ -254,15 +259,6 @@ begin
     FMaxStackCount := AValue
   else
     FMaxStackCount := STACKCOUNTLIMIT;
-end;
-function TLogger.Track(const AName: string): IInterface;
-begin
-  Result := TTrack.Create(Self, nil, AName);
-end;
-
-function TLogger.Track(ASender: TObject; const AName: string): IInterface;
-begin
-  Result := TTrack.Create(Self, ASender, AName);
 end;
 {$ENDREGION}
 
@@ -351,7 +347,11 @@ end;
 procedure TLogger.SendObject(const AName: string; AValue: TObject);
 begin
   Guard.CheckNotNull(AValue, AName);
-  Send(AName, sLineBreak + Reflect.Fields(AValue).ToString);
+  InternalSend(
+    lmtObject,
+    Format('%s: %s' + sLineBreak + '%s',
+    [AName, AValue.ClassName, Reflect.Fields(AValue).ToString])
+  );
 end;
 
 procedure TLogger.SendDateTime(const AName: string; AValue: TDateTime);
@@ -497,6 +497,8 @@ begin
   if B then
     InternalSendBuffer(lmtCustomData, AName, S[1], Length(S));
 end;
+
+{ {TODO -oTS -cGeneral : Use dedicated message type }
 
 procedure TLogger.SendColor(const AName: string; AColor: TColor);
 begin
@@ -669,11 +671,9 @@ var
   I: Integer;
 begin
   // ensure that Leave will be called allways if there's a unpaired Enter
-  // even if Classes is not Active
   if FLogStack.Count = 0 then
     Exit;
-  // todo: see if is necessary to do Uppercase (set case sensitive to false?)
-  I := FLogStack.IndexOf(UpperCase(AName));
+  I := FLogStack.IndexOf(AName);
   if I <> -1 then
     FLogStack.Delete(I)
   else
@@ -687,6 +687,16 @@ begin
   end
   else
     InternalSend(lmtLeaveMethod, AName);
+end;
+
+function TLogger.Track(const AName: string): IInterface;
+begin
+  Result := TTrack.Create(Self, nil, AName);
+end;
+
+function TLogger.Track(ASender: TObject; const AName: string): IInterface;
+begin
+  Result := TTrack.Create(Self, ASender, AName);
 end;
 
 procedure TLogger.Watch(const AName, AValue: string);

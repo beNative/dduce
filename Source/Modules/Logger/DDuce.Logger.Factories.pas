@@ -25,18 +25,21 @@ uses
 
 type
   TLoggerFactories = class sealed
-  private
+    class function CreateLogger: ILogger;
+
   end;
 
 implementation
 
 uses
-  DDuce.Logger, DDuce.Logger.Channels.LogFile, DDuce.Logger.Channels.WinIPC,
+  DDuce.Logger.Base, DDuce.Logger.Channels.LogFile, DDuce.Logger.Channels.WinIPC,
   DDuce.Logger.Channels.ZeroMQ;
 
-initialization
-  //Logger := TLogger.Create;
-//  Logger.Channels.Add(TWinIPCChannel.Create);
-//  Logger.Channels.Add(TLogFileChannel.Create);
+{ TLoggerFactories }
+
+class function TLoggerFactories.CreateLogger: ILogger;
+begin
+  Result := TLogger.Create;
+end;
 
 end.

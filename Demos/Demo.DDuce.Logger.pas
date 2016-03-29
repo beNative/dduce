@@ -96,7 +96,7 @@ type
     procedure actSendTestSequenceExecute(Sender: TObject);
     procedure actResetCheckpointExecute(Sender: TObject);
     procedure actSendClearExecute(Sender: TObject);
-
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
 
   private
     FM1Entered      : Boolean;
@@ -104,6 +104,7 @@ type
     FLogFileChannel : ILogChannel;
     FWinIPCChannel  : ILogChannel;
     FZeroMQChannel  : ILogChannel;
+    FLogger         : ILogger;
 
     procedure TestProcedure1;
     procedure TestProcedure2;
@@ -112,6 +113,9 @@ type
     procedure ExecuteTestSequence;
     procedure UpdateActions; override;
 
+    property Logger: ILogger
+      read FLogger;
+
   public
     procedure AfterConstruction; override;
   end;
@@ -119,7 +123,7 @@ type
 implementation
 
 uses
-  DDuce.Logger, DDuce.Logger.Channels.WinIPC,
+  DDuce.Logger.Channels.WinIPC,
   DDuce.Logger.Factories,
   DDuce.Logger.Channels.LogFile, DDuce.Logger.Channels.ZeroMQ,
 
@@ -145,6 +149,7 @@ begin
   btnSendWarning.Images   := Data.ImageList;
   btnSendInfo.Images      := Data.ImageList;
 
+  FLogger := TLoggerFactories.CreateLogger;
   FWinIPCChannel  := TWinIPCChannel.Create(False);
   FLogFileChannel := TLogFileChannel.Create;
   FZeroMQChannel  := TZeroMQChannel.Create(False);
@@ -181,7 +186,6 @@ begin
   Logger.SendColor('Color', clBlack);
   Logger.SendTime('Current time over here', Now);
 end;
-
 {$ENDREGION}
 
 {$REGION 'action handlers'}
@@ -284,6 +288,11 @@ procedure TfrmLogger.trbMainChange(Sender: TObject);
 begin
   Logger.Watch('Trackbar', trbMain.Position);
 end;
+
+procedure TfrmLogger.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
@@ -303,8 +312,8 @@ begin
   actLeaveMethod2.Enabled := FM2Entered;
 
   FLogFileChannel.Active := chkLogFileChannelActive.Checked;
-  FWinIPCChannel.Active := chkWinIPCChannelActive.Checked;
-  FZeroMQChannel.Active := chkZeroMQChannelActive.Checked;
+  FWinIPCChannel.Active  := chkWinIPCChannelActive.Checked;
+  FZeroMQChannel.Active  := chkZeroMQChannelActive.Checked;
 end;
 {$ENDREGION}
 
