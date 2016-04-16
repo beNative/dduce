@@ -18,6 +18,9 @@
 
 unit Demo.DDuce.Logger;
 
+{ This form demonstrates the methods of the ILogger interface and its support
+  for various channels. }
+
 interface
 
 uses
@@ -26,7 +29,7 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ImgList,
 
-  DDuce.Logger.Interfaces;
+  DDuce.Logger.Interfaces, System.ImageList;
 
 type
   TfrmLogger = class(TForm)
@@ -47,14 +50,12 @@ type
     actSendObject            : TAction;
     actSendTestSequence      : TAction;
     actSendWarning           : TAction;
-    btnAddCheckpoint         : TButton;
     btnDecCounter            : TButton;
     btnEnterMethod1          : TButton;
     btnEnterMethod2          : TButton;
     btnExitMethod1           : TButton;
     btnExitMethod2           : TButton;
     btnIncCounter            : TButton;
-    btnResetCheckpoint       : TButton;
     btnResetCounter          : TButton;
     btnSendClear             : TButton;
     btnSendError             : TButton;
@@ -75,11 +76,18 @@ type
     lblPosition              : TLabel;
     tmrSendCounter           : TTimer;
     trbMain                  : TTrackBar;
+    actSendODS: TAction;
+    btnSendODS: TButton;
+    grpCheckpoints: TGroupBox;
+    btnResetCheckpoint: TButton;
+    btnAddCheckpoint: TButton;
+    imlLogger: TImageList;
     {$ENDREGION}
 
     procedure trbMainChange(Sender: TObject);
     procedure tmrSendCounterTimer(Sender: TObject);
     procedure chkEnableCountTimerClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
 
     procedure actSendInfoExecute(Sender: TObject);
     procedure actSendObjectExecute(Sender: TObject);
@@ -96,7 +104,7 @@ type
     procedure actSendTestSequenceExecute(Sender: TObject);
     procedure actResetCheckpointExecute(Sender: TObject);
     procedure actSendClearExecute(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure actSendODSExecute(Sender: TObject);
 
   private
     FM1Entered      : Boolean;
@@ -123,9 +131,9 @@ type
 implementation
 
 uses
-  DDuce.Logger.Channels.WinIPC,
   DDuce.Logger.Factories,
-  DDuce.Logger.Channels.LogFile, DDuce.Logger.Channels.ZeroMQ,
+  DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.LogFile,
+  DDuce.Logger.Channels.ZeroMQ,
 
   Demo.Data;
 
@@ -135,19 +143,19 @@ uses
 procedure TfrmLogger.AfterConstruction;
 begin
   inherited AfterConstruction;
-  aclMain.Images          := Data.ImageList;
-  btnAddCheckpoint.Images := Data.ImageList;
-  btnIncCounter.Images    := Data.ImageList;
-  btnDecCounter.Images    := Data.ImageList;
-  btnEnterMethod1.Images  := Data.ImageList;
-  btnEnterMethod2.Images  := Data.ImageList;
-  btnExitMethod1.Images   := Data.ImageList;
-  btnExitMethod2.Images   := Data.ImageList;
-  btnResetCounter.Images  := Data.ImageList;
-  btnSendError.Images     := Data.ImageList;
-  btnSendObject.Images    := Data.ImageList;
-  btnSendWarning.Images   := Data.ImageList;
-  btnSendInfo.Images      := Data.ImageList;
+  aclMain.Images          := imlLogger;
+  btnAddCheckpoint.Images := imlLogger;
+  btnIncCounter.Images    := imlLogger;
+  btnDecCounter.Images    := imlLogger;
+  btnEnterMethod1.Images  := imlLogger;
+  btnEnterMethod2.Images  := imlLogger;
+  btnExitMethod1.Images   := imlLogger;
+  btnExitMethod2.Images   := imlLogger;
+  btnResetCounter.Images  := imlLogger;
+  btnSendError.Images     := imlLogger;
+  btnSendObject.Images    := imlLogger;
+  btnSendWarning.Images   := imlLogger;
+  btnSendInfo.Images      := imlLogger;
 
   FLogger := TLoggerFactories.CreateLogger;
   FWinIPCChannel  := TWinIPCChannel.Create(False);
@@ -245,6 +253,13 @@ begin
   finally
     SL.Free;
   end;
+end;
+
+procedure TfrmLogger.actSendODSExecute(Sender: TObject);
+begin
+  //OutputDebugStringA('heyA');
+  OutputDebugString('hey');
+  //OutputDebugStringW('heyW');
 end;
 
 procedure TfrmLogger.actSendTestSequenceExecute(Sender: TObject);
