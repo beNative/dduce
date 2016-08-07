@@ -53,15 +53,14 @@ type
     lmtClear       = 100
   );
 
-  // lmtColor? lmtAlphaColor?
-
   ILogger = interface;
 
   TLogMessage = packed record
-    MsgType : Integer;
-    MsgTime : TDateTime;
-    MsgText : AnsiString;
-    Data    : TStream;
+    MsgType     : Integer;
+    TimeStamp   : TDateTime;
+    Text        : AnsiString;
+    Data        : TStream;
+    ProcessName : AnsiString;
   end;
 
   TCustomDataCallbackMethod = function(

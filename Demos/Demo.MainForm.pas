@@ -29,7 +29,7 @@ uses
 
   DSharp.Windows.ColumnDefinitions, DSharp.Windows.TreeViewPresenter,
 
-  Spring.Collections;
+  Spring.Collections, System.Win.TaskbarCore, Vcl.Taskbar;
 
 type
   TfrmMainMenu = class(TForm)
@@ -43,6 +43,8 @@ type
     sbrMain        : TStatusBar;
     imlMain        : TImageList;
     btnExecute     : TButton;
+    actCenterMainForm: TAction;
+    tbrMain: TTaskbar;
 
     procedure actExecuteExecute(Sender: TObject);
     procedure actFocusFilterExecute(Sender: TObject);
@@ -79,6 +81,8 @@ type
       var Key    : Word;
           Shift  : TShiftState
     );
+    procedure actCenterMainFormExecute(Sender: TObject);
+    procedure tbrMainThumbButtonClick(Sender: TObject; AButtonID: Integer);
 
   private
     FVKPressed : Boolean;
@@ -183,6 +187,11 @@ end;
 {$ENDREGION}
 
 {$REGION 'action handlers'}
+procedure TfrmMainMenu.actCenterMainFormExecute(Sender: TObject);
+begin
+  Position := poScreenCenter;
+end;
+
 procedure TfrmMainMenu.actExecuteExecute(Sender: TObject);
 begin
   DemoManager.Execute(FTVP.SelectedItem);
@@ -243,6 +252,12 @@ begin
   FVST.BackgroundOffsetX := FVST.ClientWidth - 128;
   FVST.BackgroundOffsetY := (FVST.ClientHeight) - 128;
   Handled := False;
+end;
+
+procedure TfrmMainMenu.tbrMainThumbButtonClick(Sender: TObject;
+  AButtonID: Integer);
+begin
+//
 end;
 
 procedure TfrmMainMenu.edtFilterChange(Sender: TObject);

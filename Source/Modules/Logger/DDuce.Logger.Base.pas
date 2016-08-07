@@ -270,8 +270,8 @@ var
   LC : ILogChannel;
 begin
   LM.MsgType := Integer(AMsgType);
-  LM.MsgTime := Now;
-  LM.MsgText := AnsiString(AText);
+  LM.TimeStamp := Now;
+  LM.Text := AnsiString(AText);
   LM.Data    := AStream;
   for LC in Channels do
     if LC.Active then

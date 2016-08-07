@@ -23,7 +23,6 @@ object frmPropertyInspector: TfrmPropertyInspector
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 682
     object splSplitter: TSplitter
       Left = 313
       Top = 0
@@ -64,7 +63,6 @@ object frmPropertyInspector: TfrmPropertyInspector
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 361
       DesignSize = (
         509
         567)
@@ -92,7 +90,7 @@ object frmPropertyInspector: TfrmPropertyInspector
       end
       object btnButton: TButton
         Left = 225
-        Top = 68
+        Top = 66
         Width = 109
         Height = 25
         Caption = 'TButton'
@@ -112,11 +110,10 @@ object frmPropertyInspector: TfrmPropertyInspector
         Caption = 'TCheckBox'
         State = cbGrayed
         TabOrder = 2
-        ExplicitWidth = 101
       end
       object edtEdit: TEdit
-        Left = 6
-        Top = 73
+        Left = 8
+        Top = 68
         Width = 107
         Height = 21
         TabOrder = 0
@@ -134,7 +131,6 @@ object frmPropertyInspector: TfrmPropertyInspector
         ButtonOptions = [gboAllowReorder, gboShowCaptions]
         Items = <>
         TabOrder = 3
-        ExplicitWidth = 350
       end
       object trbTrackBar: TTrackBar
         Left = 6
@@ -145,11 +141,10 @@ object frmPropertyInspector: TfrmPropertyInspector
         PositionToolTip = ptTop
         ShowSelRange = False
         TabOrder = 4
-        ExplicitWidth = 350
       end
       object edtButtonedEdit: TButtonedEdit
         Left = 121
-        Top = 73
+        Top = 68
         Width = 98
         Height = 21
         RightButton.Hint = 'Hint'
@@ -169,7 +164,6 @@ object frmPropertyInspector: TfrmPropertyInspector
       Panels = <>
       ParentShowHint = False
       ShowHint = True
-      ExplicitWidth = 682
     end
   end
 end
