@@ -241,6 +241,7 @@ type
     actToggleHighlighter              : TAction;
     actToggleMaximized                : TAction;
     actShowMinimap                    : TAction;
+    actShowSearchmap                  : TAction;
     actToggleWordWrap                 : TAction;
     actUndo                           : TAction;
     actUnindent                       : TAction;
@@ -276,7 +277,6 @@ type
     ppmSelectionEncode                : TPopupMenu;
     ppmSelectionMode                  : TPopupMenu;
     ppmSettings                       : TPopupMenu;
-    actShowSearchmap: TAction;
     {$ENDREGION}
 
     {$REGION'action handlers'}

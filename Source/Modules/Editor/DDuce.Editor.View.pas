@@ -444,7 +444,7 @@ uses
   System.TypInfo, System.UITypes, System.IOUtils, System.Math,
   Vcl.GraphUtil,
 
-  BCEditor.Editor.LineSpacing,
+  //BCEditor.Editor.LineSpacing,
 
   Spring,
 
@@ -1209,8 +1209,7 @@ begin
 
   Editor.MatchingPair.Enabled := Settings.EditorOptions.BracketHighlight;
   Editor.Search.Map.Visible   := Settings.EditorOptions.ShowSearchmap;
-  Editor.LineSpacing.Rule     := lsSpecified;
-  Editor.LineSpacing.Spacing  := Settings.EditorOptions.ExtraLineSpacing;
+  Editor.LineSpacing          := Settings.EditorOptions.ExtraLineSpacing;
 
 
 
