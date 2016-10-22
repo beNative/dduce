@@ -18,7 +18,7 @@ unit DDuce.Editor.Interfaces;
 
 { This unit hosts all interfaces of the editor module.
   To make an editor instance you need to use this unit in the interface section
-  and ts.Editor.Factories in the implementation part to let you create
+  and DDuce.Editor.Factories in the implementation part to let you create
   instances supporting one or more of these interfaces. }
 
 interface
@@ -63,7 +63,7 @@ type
   TEditorViewListEnumerator     = class;
   TEditorToolViewListEnumerator = class;
 
-  TAddEditorViewEvent = procedure(
+  TEditorViewEvent = procedure(
     Sender      : TObject;
     AEditorView : IEditorView
   ) of object;
@@ -449,7 +449,7 @@ type
   IEditorEvents = interface
   ['{D078C92D-16DF-4727-A18F-4C76E07D37A2}']
     {$REGION 'property access methods'}
-    function GetOnAddEditorView: IEvent<TAddEditorViewEvent>;
+    function GetOnAddEditorView: IEvent<TEditorViewEvent>;
     function GetOnActiveViewChange: IEvent<TNotifyEvent>;
     function GetOnChange: IEvent<TNotifyEvent>;
     function GetOnModified: IEvent<TNotifyEvent>;
@@ -491,7 +491,7 @@ type
     );
 
     // events
-    property OnAddEditorView: IEvent<TAddEditorViewEvent>
+    property OnAddEditorView: IEvent<TEditorViewEvent>
       read GetOnAddEditorView;
 
     property OnShowEditorToolView: IEvent<TEditorToolViewEvent>

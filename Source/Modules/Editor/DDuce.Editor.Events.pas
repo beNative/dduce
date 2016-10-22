@@ -47,7 +47,7 @@ type
     FOnBeforeSave          : Event<TStorageEvent>;
     FOnAfterSave           : Event<TStorageEvent>;
     FOnSave                : Event<TStorageEvent>;
-    FOnAddEditorView       : Event<TAddEditorViewEvent>;
+    FOnAddEditorView       : Event<TEditorViewEvent>;
     FOnShowEditorToolView  : Event<TEditorToolViewEvent>;
     FOnHideEditorToolView  : Event<TEditorToolViewEvent>;
     FOnOpenOtherInstance   : Event<TOpenOtherInstanceEvent>;
@@ -57,7 +57,7 @@ type
     function GetOnAfterSave: IEvent<TStorageEvent>;
     function GetOnBeforeSave: IEvent<TStorageEvent>;
     function GetView: IEditorView;
-    function GetOnAddEditorView: IEvent<TAddEditorViewEvent>;
+    function GetOnAddEditorView: IEvent<TEditorViewEvent>;
     function GetOnHideEditorToolView: IEvent<TEditorToolViewEvent>;
     function GetOnNew: IEvent<TNewEvent>;
     function GetOnLoad: IEvent<TStorageEvent>;
@@ -91,7 +91,7 @@ type
       const AText : string = ''
     );
 
-    property OnAddEditorView: IEvent<TAddEditorViewEvent>
+    property OnAddEditorView: IEvent<TEditorViewEvent>
       read GetOnAddEditorView;
 
     property OnShowEditorToolView: IEvent<TEditorToolViewEvent>
@@ -205,7 +205,7 @@ begin
   Result := FOnActiveViewChange;
 end;
 
-function TEditorEvents.GetOnAddEditorView: IEvent<TAddEditorViewEvent>;
+function TEditorEvents.GetOnAddEditorView: IEvent<TEditorViewEvent>;
 begin
   Result := FOnAddEditorView;
 end;

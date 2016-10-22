@@ -222,8 +222,8 @@ begin
 //    Include(Result, soRegExprMultiLine);
   if rbEntireScope.Checked then
     Include(Result, soEntireScope);
-  if rbSelection.Checked then
-    Include(Result, soSelectedOnly);
+//  if rbSelection.Checked then
+//    Include(Result, soSelectedOnly);
   if rbBackward.Checked then
     Include(Result, soBackwards);
 end;
@@ -239,10 +239,10 @@ begin
     rbEntireScope.Checked := True
   else
     rbFromCursor.Checked  := True;
-  if soSelectedOnly in AValue then
-    rbSelection.Checked := True
-  else
-    rbActiveView.Checked   := True;
+//  if soSelectedOnly in AValue then
+//    rbSelection.Checked := True
+//  else
+//    rbActiveView.Checked   := True;
   if soBackwards in AValue then
     rbBackward.Checked := True
   else

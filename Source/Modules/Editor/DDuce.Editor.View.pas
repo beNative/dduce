@@ -630,7 +630,7 @@ begin
   if AValue <> FoldLevel then
   begin
     FFoldLevel := AValue;
-    Editor.CodeFoldingCollapseLevel(AValue);
+    Editor.FoldAllByLevel(1, AValue);
     Events.DoModified;
   end;
 end;
@@ -1333,7 +1333,8 @@ begin
     cfoHighlightFoldingLine,
     //cfoHighlightIndentGuides,
     cfoHighlightMatchingPair,
-    cfoShowCollapsedCodeHint,
+    cfoShowCollapsedLine,
+    //cfoShowTreeLine
     //cfoShowCollapsedLine,
     //cfoShowIndentGuides,
     cfoUncollapseByHintClick
