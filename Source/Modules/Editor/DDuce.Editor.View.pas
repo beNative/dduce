@@ -1165,6 +1165,8 @@ begin
   Editor.SpecialChars.Visible := Settings.EditorOptions.ShowSpecialCharacters;
   Editor.Minimap.Visible      := Settings.EditorOptions.ShowMinimap;
 
+
+
   if Settings.EditorOptions.TabsToSpaces then
     Editor.Tabs.Options := Editor.Tabs.Options + [toTabsToSpaces]
   else
@@ -1195,12 +1197,12 @@ begin
   else
     Editor.Tabs.Options := Editor.Tabs.Options - [toPreviousLineIndent];
 
-  if Settings.EditorOptions.ShowIndentGuides then
-    Editor.CodeFolding.Options := Editor.CodeFolding.Options +
-      [cfoShowIndentGuides]
-  else
-    Editor.CodeFolding.Options := Editor.CodeFolding.Options -
-      [cfoShowIndentGuides];
+//  if Settings.EditorOptions.ShowIndentGuides then
+//    Editor.CodeFolding.Options := Editor.CodeFolding.Options +
+//      [cfoShowIndentGuides]
+//  else
+//    Editor.CodeFolding.Options := Editor.CodeFolding.Options -
+//      [cfoShowIndentGuides];
 
   Editor.RightMargin.Visible  := Settings.EditorOptions.ShowRightEdge;
   Editor.RightMargin.Position := Settings.EditorOptions.RightEdge;
@@ -1221,7 +1223,7 @@ begin
 //
 //  if Settings.EditorOptions.AutoIndentOnPaste then
 //    Editor.Options := Editor.Options + [eoAutoIndentOnPaste]
-//  else
+//  else                                              ;
 //    Editor.Options := Editor.Options - [eoAutoIndentOnPaste];
 
 
@@ -1323,9 +1325,8 @@ begin
   AEditor.OnDropFiles            := EditorDropFiles;
   AEditor.OnCustomTokenAttribute := EditorCustomTokenAttribute;
 
+  // TEMP
   AEditor.Highlighter.Colors.LoadFromFile('tsColors.json');
-
-  //AEditor.CodeFolding.Options := AEditor.CodeFolding.Options + [cfoFoldMultilineComments];
 
   AEditor.CodeFolding.Visible := True;
   AEditor.CodeFolding.Options :=  [
@@ -1338,9 +1339,7 @@ begin
     //cfoShowCollapsedLine,
     //cfoShowIndentGuides,
     cfoUncollapseByHintClick
-
   ];
-
   AEditor.URIOpener := True;
 
 //  AEditor.Options := [
@@ -1374,6 +1373,13 @@ begin
 //  AEditor.OnChangeUpdating     := EditorChangeUpdating;
 //  AEditor.OnCommandProcessed   := EditorCommandProcessed;
 //  AEditor.OnReplaceText        := EditorReplaceText;
+
+  Editor.LeftMargin.Autosize := True;
+  Editor.LeftMargin.Colors.Background := clWhite;
+  Editor.LeftMargin.LineNumbers.AutosizeDigitCount := 3;
+  Editor.LeftMargin.Visible := False;
+  Editor.LeftMargin.Visible := True;
+
   ActiveControl := Editor;
 end;
 

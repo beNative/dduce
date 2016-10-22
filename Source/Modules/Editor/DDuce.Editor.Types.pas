@@ -43,8 +43,8 @@ type
   ) of object;
 
   TActionExecuteEvent = procedure(
-        Sender   : TObject;
-        AAction  : TBasicAction;
+    Sender       : TObject;
+    AAction      : TBasicAction;
     var AHandled : Boolean
   ) of object;
 
@@ -54,22 +54,21 @@ type
   ) of object;
 
   TStorageEvent = procedure(
-        Sender : TObject;
-    var AName  : string
+    Sender    : TObject;
+    var AName : string
   ) of object;
 
   TNewEvent = procedure(
-          Sender : TObject;
-    var   AName  : string;
-    const AText  : string
+    Sender      : TObject;
+    var AName   : string;
+    const AText : string
   ) of object;
 
   TOpenOtherInstanceEvent = procedure(
-          Sender  : TObject;
+    Sender        : TObject;
     const AParams : array of string
   ) of object;
 
 implementation
 
 end.
-
