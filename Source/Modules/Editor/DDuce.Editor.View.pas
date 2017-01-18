@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2016 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2017 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -1505,13 +1505,13 @@ begin
   if ADirectionForward then
   begin
     Editor.TextCaretPosition := Editor.WordStart;
-    Editor.Search.Options := Editor.Search.Options - [TBCEditorSearchOption.soBackwards];
+    //Editor.Search.Options := Editor.Search.Options - [TBCEditorSearchOption.soBackwards];
     Editor.Search.SearchText := Editor.WordAtCursor;
     Editor.FindNext;
   end
   else
   begin
-    Editor.Search.Options := Editor.Search.Options + [TBCEditorSearchOption.soBackwards];
+    //Editor.Search.Options := Editor.Search.Options + [TBCEditorSearchOption.soBackwards];
     Editor.Search.SearchText := Editor.WordAtCursor;
     //Editor.TextCaretPosition := Editor.WordStart;
     Editor.SetCaretAndSelection(
