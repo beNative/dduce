@@ -200,7 +200,9 @@ type
       const APosition      : Integer;
       var AForegroundColor : TColor;
       var ABackgroundColor : TColor;
-      var AStyles          : TFontStyles
+      var AStyles          : TFontStyles;
+      var ATokenAddon      : TBCEditorTokenAddon;
+      var ATokenAddonColor : TColor
     );
 
   strict protected
@@ -481,10 +483,8 @@ begin
   if Assigned(Settings) then
     Settings.OnChanged.Remove(EditorSettingsChanged);
 
-
   FreeAndNil(FReplaceHistory);
   FreeAndNil(FFindHistory);
-  //FreeAndNil(FEditor);
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
@@ -517,12 +517,6 @@ end;
 //  Logger.Leave('TEditorView.EditorCommandProcessed');
 //end;
 
-procedure TEditorView.EditorCustomTokenAttribute(Sender: TObject;
-  const AText: string; const ALine, APosition: Integer; var AForegroundColor,
-  ABackgroundColor: TColor; var AStyles: TFontStyles);
-begin
-//
-end;
 
 procedure TEditorView.EditorDropFiles(Sender: TObject; Pos: TPoint;
   AFiles: TStrings);
@@ -550,6 +544,14 @@ begin
   DoChange;
   if Assigned(Events) then
     Events.DoChange;
+end;
+
+procedure TEditorView.EditorCustomTokenAttribute(Sender: TObject;
+  const AText: string; const ALine, APosition: Integer; var AForegroundColor,
+  ABackgroundColor: TColor; var AStyles: TFontStyles;
+  var ATokenAddon: TBCEditorTokenAddon; var ATokenAddonColor: TColor);
+begin
+//
 end;
 
 //procedure TEditorView.EditorStatusChange(Sender: TObject;
@@ -728,12 +730,12 @@ end;
 
 function TEditorView.GetInsertMode: Boolean;
 begin
-  Result := Editor.InsertMode;
+  Result := Editor.TextEntryMode = temInsert;
 end;
 
 procedure TEditorView.SetInsertMode(AValue: Boolean);
 begin
-  Editor.InsertMode := AValue;
+  Editor.TextEntryMode := temInsert;
 end;
 
 function TEditorView.GetIsFile: Boolean;

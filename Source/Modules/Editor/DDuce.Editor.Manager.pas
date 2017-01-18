@@ -2330,11 +2330,12 @@ end;
 { TODO -oTS : Check out if this is appropriate. }
 procedure TdmEditorManager.Notification(AComponent: TComponent; Operation: TOperation);
 begin
-  if Supports(AComponent, IEditorView) and (Operation = opRemove) then
-  begin
-    DeleteView(AComponent as IEditorView);
-    Logger.Watch('ViewCount', ViewCount);
-  end;
+// causes crash in LogViewer
+//  if Supports(AComponent, IEditorView) and (Operation = opRemove) then
+//  begin
+//    DeleteView(AComponent as IEditorView);
+//    Logger.Watch('ViewCount', ViewCount);
+//  end;
   inherited Notification(AComponent, Operation);
 end;
 

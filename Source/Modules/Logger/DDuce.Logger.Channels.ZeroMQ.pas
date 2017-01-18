@@ -24,7 +24,6 @@ interface
   subscribe to.
 
   The channel creates a PUB socket and binds it to its local IP address.
-
 }
 
 uses

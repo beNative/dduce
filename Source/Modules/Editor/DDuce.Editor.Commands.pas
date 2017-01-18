@@ -632,7 +632,7 @@ end;
 procedure TEditorCommands.SortSelectedLines;
 begin
   View.Editor.BeginUndoBlock;
-  View.Editor.Sort(soToggle);
+  View.Editor.Sort(soRandom);
   View.Editor.EndUndoBlock;
 end;
 

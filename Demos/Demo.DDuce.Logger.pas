@@ -76,12 +76,12 @@ type
     lblPosition              : TLabel;
     tmrSendCounter           : TTimer;
     trbMain                  : TTrackBar;
-    actSendODS: TAction;
-    btnSendODS: TButton;
-    grpCheckpoints: TGroupBox;
-    btnResetCheckpoint: TButton;
-    btnAddCheckpoint: TButton;
-    imlLogger: TImageList;
+    actSendODS               : TAction;
+    btnSendODS               : TButton;
+    grpCheckpoints           : TGroupBox;
+    btnResetCheckpoint       : TButton;
+    btnAddCheckpoint         : TButton;
+    imlLogger                : TImageList;
     {$ENDREGION}
 
     procedure trbMainChange(Sender: TObject);
@@ -165,34 +165,6 @@ begin
   Logger.Channels.Add(FLogFileChannel);
   Logger.Channels.Add(FWinIPCChannel);
   Logger.Channels.Add(FZeroMQChannel);
-end;
-
-procedure TfrmLogger.chkEnableCountTimerClick(Sender: TObject);
-begin
-  tmrSendCounter.Enabled := chkEnableCountTimer.Checked;
-end;
-
-procedure TfrmLogger.TestProcedure1;
-begin
-  Logger.Track(Self, 'TestProcedure1');
-  Logger.SendRect('Form.ClientRect', ClientRect);
-  Logger.Watch('Caption', Caption);
-  Logger.Send('Now', Now);
-  Logger.Info('Information message.');
-  Logger.Error('OMG, something went wrong over here!');
-  Logger.Warn('This message warns you about nothing.');
-  Logger.SendComponent('Form', Self);
-  Logger.Send('Font', Font);
-end;
-
-procedure TfrmLogger.TestProcedure2;
-begin
-  Logger.Track(Self,'TestProcedure2');
-  Logger.Warn('Warning message.');
-  Logger.SendDateTime('Now', Now);
-  Logger.SendShortCut('ShortCut', actSendTestSequence.ShortCut);
-  Logger.SendColor('Color', clBlack);
-  Logger.SendTime('Current time over here', Now);
 end;
 {$ENDREGION}
 
@@ -294,6 +266,11 @@ end;
 {$ENDREGION}
 
 {$REGION 'event handlers'}
+procedure TfrmLogger.chkEnableCountTimerClick(Sender: TObject);
+begin
+  tmrSendCounter.Enabled := chkEnableCountTimer.Checked;
+end;
+
 procedure TfrmLogger.tmrSendCounterTimer(Sender: TObject);
 begin
   Logger.IncCounter('Counter');
@@ -307,6 +284,31 @@ end;
 procedure TfrmLogger.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
+end;
+{$ENDREGION}
+
+{$REGION 'private methods'}
+procedure TfrmLogger.TestProcedure1;
+begin
+  Logger.Track(Self, 'TestProcedure1');
+  Logger.SendRect('Form.ClientRect', ClientRect);
+  Logger.Watch('Caption', Caption);
+  Logger.Send('Now', Now);
+  Logger.Info('Information message.');
+  Logger.Error('OMG, something went wrong over here!');
+  Logger.Warn('This message warns you about nothing.');
+  Logger.SendComponent('Form', Self);
+  Logger.Send('Font', Font);
+end;
+
+procedure TfrmLogger.TestProcedure2;
+begin
+  Logger.Track(Self,'TestProcedure2');
+  Logger.Warn('Warning message.');
+  Logger.SendDateTime('Now', Now);
+  Logger.SendShortCut('ShortCut', actSendTestSequence.ShortCut);
+  Logger.SendColor('Color', clBlack);
+  Logger.SendTime('Current time over here', Now);
 end;
 {$ENDREGION}
 
