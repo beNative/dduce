@@ -36,7 +36,6 @@ requires
 
 contains
   DDuce.DynamicRecord in '..\Source\DDuce.DynamicRecord.pas',
-  DDuce.Logger in '..\Source\DDuce.Logger.pas',
   DDuce.RandomData in '..\Source\DDuce.RandomData.pas',
   DDuce.Reflect in '..\Source\DDuce.Reflect.pas',
   DDuce.ScopedReference in '..\Source\DDuce.ScopedReference.pas';
