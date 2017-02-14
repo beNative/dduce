@@ -18,3 +18,7 @@ __history
 /FastMM_FullDebugMode.dll
 /Packages/jedi.inc
 /Tests/DDuce.Tests.exe
+/Library
+Win32
+Win64
+/Demos/Resources/Thumbs.db
