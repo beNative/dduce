@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2016 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2017 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -57,11 +57,8 @@ type
     btnExitMethod2           : TButton;
     btnIncCounter            : TButton;
     btnResetCounter          : TButton;
-    btnSendClear             : TButton;
     btnSendError             : TButton;
     btnSendInfo              : TButton;
-    btnSendObject            : TButton;
-    btnSendObject1           : TButton;
     btnSendWarning           : TButton;
     chkEnableCountTimer      : TCheckBox;
     chkLogFileChannelActive  : TCheckBox;
@@ -76,12 +73,28 @@ type
     lblPosition              : TLabel;
     tmrSendCounter           : TTimer;
     trbMain                  : TTrackBar;
-    actSendODS: TAction;
+    actSendODS               : TAction;
+    grpCheckpoints           : TGroupBox;
+    btnResetCheckpoint       : TButton;
+    btnAddCheckpoint         : TButton;
+    imlLogger                : TImageList;
+    grpValues: TGroupBox;
+    btnSendObject: TButton;
+    grpCustom: TGroupBox;
+    btnSendObject1: TButton;
     btnSendODS: TButton;
-    grpCheckpoints: TGroupBox;
-    btnResetCheckpoint: TButton;
-    btnAddCheckpoint: TButton;
-    imlLogger: TImageList;
+    btnSendClear: TButton;
+    lblCheckpointDescription: TLabel;
+    edtMethod1: TLabeledEdit;
+    edtMethod2: TLabeledEdit;
+    actSendComponent: TAction;
+    actSendRecord: TAction;
+    btnSendRecord: TButton;
+    btnSendComponent: TButton;
+    actSendStrings: TAction;
+    actSendDataSet: TAction;
+    btnSendStrings: TButton;
+    btnSendDataSet: TButton;
     {$ENDREGION}
 
     procedure trbMainChange(Sender: TObject);
@@ -105,6 +118,10 @@ type
     procedure actResetCheckpointExecute(Sender: TObject);
     procedure actSendClearExecute(Sender: TObject);
     procedure actSendODSExecute(Sender: TObject);
+    procedure actSendComponentExecute(Sender: TObject);
+    procedure actSendRecordExecute(Sender: TObject);
+    procedure btnSendStringsClick(Sender: TObject);
+    procedure actSendStringsExecute(Sender: TObject);
 
   private
     FM1Entered      : Boolean;
@@ -131,6 +148,8 @@ type
 implementation
 
 uses
+  System.Rtti,
+
   DDuce.Logger.Factories,
   DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.LogFile,
   DDuce.Logger.Channels.ZeroMQ,
@@ -138,6 +157,10 @@ uses
   Demo.Data;
 
 {$R *.dfm}
+
+resourcestring
+  SEnter = 'Enter %s';
+  SLeave = 'Leave %s';
 
 {$REGION 'construction and destruction'}
 procedure TfrmLogger.AfterConstruction;
@@ -167,33 +190,10 @@ begin
   Logger.Channels.Add(FZeroMQChannel);
 end;
 
-procedure TfrmLogger.chkEnableCountTimerClick(Sender: TObject);
+procedure TfrmLogger.btnSendStringsClick(Sender: TObject);
 begin
-  tmrSendCounter.Enabled := chkEnableCountTimer.Checked;
 end;
 
-procedure TfrmLogger.TestProcedure1;
-begin
-  Logger.Track(Self, 'TestProcedure1');
-  Logger.SendRect('Form.ClientRect', ClientRect);
-  Logger.Watch('Caption', Caption);
-  Logger.Send('Now', Now);
-  Logger.Info('Information message.');
-  Logger.Error('OMG, something went wrong over here!');
-  Logger.Warn('This message warns you about nothing.');
-  Logger.SendComponent('Form', Self);
-  Logger.Send('Font', Font);
-end;
-
-procedure TfrmLogger.TestProcedure2;
-begin
-  Logger.Track(Self,'TestProcedure2');
-  Logger.Warn('Warning message.');
-  Logger.SendDateTime('Now', Now);
-  Logger.SendShortCut('ShortCut', actSendTestSequence.ShortCut);
-  Logger.SendColor('Color', clBlack);
-  Logger.SendTime('Current time over here', Now);
-end;
 {$ENDREGION}
 
 {$REGION 'action handlers'}
@@ -210,6 +210,11 @@ end;
 procedure TfrmLogger.actSendClearExecute(Sender: TObject);
 begin
   Logger.Clear;
+end;
+
+procedure TfrmLogger.actSendComponentExecute(Sender: TObject);
+begin
+  Logger.SendComponent(Self.Name, Self);
 end;
 
 procedure TfrmLogger.actSendErrorExecute(Sender: TObject);
@@ -248,8 +253,7 @@ begin
   SL := TStringList.Create;
   try
     SL.Add('Line 1');
-    //SL.Add('Line 2');
-    Logger.Send('SL', SL);
+    Logger.SendObject('SL', SL);
   finally
     SL.Free;
   end;
@@ -260,6 +264,27 @@ begin
   //OutputDebugStringA('heyA');
   OutputDebugString('hey');
   //OutputDebugStringW('heyW');
+end;
+
+procedure TfrmLogger.actSendRecordExecute(Sender: TObject);
+begin
+  Logger.Send('ClientRect', TValue.From(ClientRect));
+end;
+
+procedure TfrmLogger.actSendStringsExecute(Sender: TObject);
+var
+  SL : TStringList;
+begin
+  SL := TStringList.Create;
+  try
+    SL.Add('This');
+    SL.Add('is');
+    SL.Add('a');
+    SL.Add('test');
+    Logger.SendStrings('SL', SL);
+  finally
+    SL.Free;
+  end;
 end;
 
 procedure TfrmLogger.actSendTestSequenceExecute(Sender: TObject);
@@ -294,6 +319,11 @@ end;
 {$ENDREGION}
 
 {$REGION 'event handlers'}
+procedure TfrmLogger.chkEnableCountTimerClick(Sender: TObject);
+begin
+  tmrSendCounter.Enabled := chkEnableCountTimer.Checked;
+end;
+
 procedure TfrmLogger.tmrSendCounterTimer(Sender: TObject);
 begin
   Logger.IncCounter('Counter');
@@ -310,6 +340,31 @@ begin
 end;
 {$ENDREGION}
 
+{$REGION 'private methods'}
+procedure TfrmLogger.TestProcedure1;
+begin
+  Logger.Track(Self, 'TestProcedure1');
+  Logger.SendRect('Form.ClientRect', ClientRect);
+  Logger.Watch('Caption', Caption);
+  Logger.SendTime('Now', Now);
+  Logger.Info('Information message.');
+  Logger.Error('Fatal error occured! Something went wrong over here!');
+  Logger.Warn('This message warns you about nothing.');
+  Logger.SendComponent('Form', Self); // will show DFM with published properties
+  Logger.SendObject('Font', Font);
+end;
+
+procedure TfrmLogger.TestProcedure2;
+begin
+  Logger.Track(Self,'TestProcedure2');
+  Logger.Warn('Warning message.');
+  Logger.SendDateTime('Now', Now);
+  Logger.SendShortCut('ShortCut', actSendTestSequence.ShortCut);
+  Logger.SendColor('Color', clBlack);
+  Logger.SendTime('Current time over here', Now);
+end;
+{$ENDREGION}
+
 {$REGION 'protected methods'}
 procedure TfrmLogger.ExecuteTestSequence;
 begin
@@ -321,6 +376,10 @@ end;
 procedure TfrmLogger.UpdateActions;
 begin
   inherited UpdateActions;
+  actEnterMethod1.Caption := Format(SEnter, [edtMethod1.Text]);
+  actEnterMethod2.Caption := Format(SEnter, [edtMethod2.Text]);
+  actLeaveMethod1.Caption := Format(SLeave, [edtMethod1.Text]);
+  actLeaveMethod2.Caption := Format(SLeave, [edtMethod2.Text]);
   actEnterMethod1.Enabled := not FM1Entered;
   actLeaveMethod1.Enabled := FM1Entered;
   actEnterMethod2.Enabled := not FM2Entered;

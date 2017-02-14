@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2016 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2017 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -200,7 +200,9 @@ type
       const APosition      : Integer;
       var AForegroundColor : TColor;
       var ABackgroundColor : TColor;
-      var AStyles          : TFontStyles
+      var AStyles          : TFontStyles;
+      var ATokenAddon      : TBCEditorTokenAddon;
+      var ATokenAddonColor : TColor
     );
 
   strict protected
@@ -481,10 +483,8 @@ begin
   if Assigned(Settings) then
     Settings.OnChanged.Remove(EditorSettingsChanged);
 
-
   FreeAndNil(FReplaceHistory);
   FreeAndNil(FFindHistory);
-  //FreeAndNil(FEditor);
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
@@ -517,12 +517,6 @@ end;
 //  Logger.Leave('TEditorView.EditorCommandProcessed');
 //end;
 
-procedure TEditorView.EditorCustomTokenAttribute(Sender: TObject;
-  const AText: string; const ALine, APosition: Integer; var AForegroundColor,
-  ABackgroundColor: TColor; var AStyles: TFontStyles);
-begin
-//
-end;
 
 procedure TEditorView.EditorDropFiles(Sender: TObject; Pos: TPoint;
   AFiles: TStrings);
@@ -550,6 +544,14 @@ begin
   DoChange;
   if Assigned(Events) then
     Events.DoChange;
+end;
+
+procedure TEditorView.EditorCustomTokenAttribute(Sender: TObject;
+  const AText: string; const ALine, APosition: Integer; var AForegroundColor,
+  ABackgroundColor: TColor; var AStyles: TFontStyles;
+  var ATokenAddon: TBCEditorTokenAddon; var ATokenAddonColor: TColor);
+begin
+//
 end;
 
 //procedure TEditorView.EditorStatusChange(Sender: TObject;
@@ -728,12 +730,12 @@ end;
 
 function TEditorView.GetInsertMode: Boolean;
 begin
-  Result := Editor.InsertMode;
+  Result := Editor.TextEntryMode = temInsert;
 end;
 
 procedure TEditorView.SetInsertMode(AValue: Boolean);
 begin
-  Editor.InsertMode := AValue;
+  Editor.TextEntryMode := temInsert;
 end;
 
 function TEditorView.GetIsFile: Boolean;
@@ -1165,6 +1167,8 @@ begin
   Editor.SpecialChars.Visible := Settings.EditorOptions.ShowSpecialCharacters;
   Editor.Minimap.Visible      := Settings.EditorOptions.ShowMinimap;
 
+
+
   if Settings.EditorOptions.TabsToSpaces then
     Editor.Tabs.Options := Editor.Tabs.Options + [toTabsToSpaces]
   else
@@ -1195,12 +1199,12 @@ begin
   else
     Editor.Tabs.Options := Editor.Tabs.Options - [toPreviousLineIndent];
 
-  if Settings.EditorOptions.ShowIndentGuides then
-    Editor.CodeFolding.Options := Editor.CodeFolding.Options +
-      [cfoShowIndentGuides]
-  else
-    Editor.CodeFolding.Options := Editor.CodeFolding.Options -
-      [cfoShowIndentGuides];
+//  if Settings.EditorOptions.ShowIndentGuides then
+//    Editor.CodeFolding.Options := Editor.CodeFolding.Options +
+//      [cfoShowIndentGuides]
+//  else
+//    Editor.CodeFolding.Options := Editor.CodeFolding.Options -
+//      [cfoShowIndentGuides];
 
   Editor.RightMargin.Visible  := Settings.EditorOptions.ShowRightEdge;
   Editor.RightMargin.Position := Settings.EditorOptions.RightEdge;
@@ -1221,7 +1225,7 @@ begin
 //
 //  if Settings.EditorOptions.AutoIndentOnPaste then
 //    Editor.Options := Editor.Options + [eoAutoIndentOnPaste]
-//  else
+//  else                                              ;
 //    Editor.Options := Editor.Options - [eoAutoIndentOnPaste];
 
 
@@ -1323,9 +1327,8 @@ begin
   AEditor.OnDropFiles            := EditorDropFiles;
   AEditor.OnCustomTokenAttribute := EditorCustomTokenAttribute;
 
+  // TEMP
   AEditor.Highlighter.Colors.LoadFromFile('tsColors.json');
-
-  //AEditor.CodeFolding.Options := AEditor.CodeFolding.Options + [cfoFoldMultilineComments];
 
   AEditor.CodeFolding.Visible := True;
   AEditor.CodeFolding.Options :=  [
@@ -1338,9 +1341,7 @@ begin
     //cfoShowCollapsedLine,
     //cfoShowIndentGuides,
     cfoUncollapseByHintClick
-
   ];
-
   AEditor.URIOpener := True;
 
 //  AEditor.Options := [
@@ -1374,6 +1375,13 @@ begin
 //  AEditor.OnChangeUpdating     := EditorChangeUpdating;
 //  AEditor.OnCommandProcessed   := EditorCommandProcessed;
 //  AEditor.OnReplaceText        := EditorReplaceText;
+
+  Editor.LeftMargin.Autosize := True;
+  Editor.LeftMargin.Colors.Background := clWhite;
+  Editor.LeftMargin.LineNumbers.AutosizeDigitCount := 3;
+  Editor.LeftMargin.Visible := False;
+  Editor.LeftMargin.Visible := True;
+
   ActiveControl := Editor;
 end;
 
@@ -1499,13 +1507,13 @@ begin
   if ADirectionForward then
   begin
     Editor.TextCaretPosition := Editor.WordStart;
-    Editor.Search.Options := Editor.Search.Options - [TBCEditorSearchOption.soBackwards];
+    //Editor.Search.Options := Editor.Search.Options - [TBCEditorSearchOption.soBackwards];
     Editor.Search.SearchText := Editor.WordAtCursor;
     Editor.FindNext;
   end
   else
   begin
-    Editor.Search.Options := Editor.Search.Options + [TBCEditorSearchOption.soBackwards];
+    //Editor.Search.Options := Editor.Search.Options + [TBCEditorSearchOption.soBackwards];
     Editor.Search.SearchText := Editor.WordAtCursor;
     //Editor.TextCaretPosition := Editor.WordStart;
     Editor.SetCaretAndSelection(

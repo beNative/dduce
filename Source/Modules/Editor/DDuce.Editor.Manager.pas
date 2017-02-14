@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2016 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2017 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -2330,11 +2330,12 @@ end;
 { TODO -oTS : Check out if this is appropriate. }
 procedure TdmEditorManager.Notification(AComponent: TComponent; Operation: TOperation);
 begin
-  if Supports(AComponent, IEditorView) and (Operation = opRemove) then
-  begin
-    DeleteView(AComponent as IEditorView);
-    Logger.Watch('ViewCount', ViewCount);
-  end;
+// causes crash in LogViewer
+//  if Supports(AComponent, IEditorView) and (Operation = opRemove) then
+//  begin
+//    DeleteView(AComponent as IEditorView);
+//    Logger.Watch('ViewCount', ViewCount);
+//  end;
   inherited Notification(AComponent, Operation);
 end;
 
