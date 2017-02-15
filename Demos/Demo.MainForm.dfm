@@ -25,8 +25,6 @@ object frmMainMenu: TfrmMainMenu
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 24
-    ExplicitTop = 8
   end
   object pnlTop: TPanel
     Left = 0
@@ -252,7 +250,6 @@ object frmMainMenu: TfrmMainMenu
     TaskBarButtons = <
       item
         Action = actCenterMainForm
-        Hint = 'Center form on screen'
         Icon.Data = {
           0000010001001010200000000000680400001600000028000000100000002000
           0000010020000000000000040000000000000000000000000000000000000000

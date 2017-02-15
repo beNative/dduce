@@ -125,6 +125,7 @@ implementation
 uses
   Winapi.Windows, Winapi.Messages,
   System.TypInfo, System.StrUtils, System.Variants, System.Actions, System.Rtti,
+  System.UITypes,
   Vcl.GraphUtil, Vcl.Menus,
 
   DSharp.Windows.ControlTemplates,

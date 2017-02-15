@@ -108,7 +108,6 @@ const
 var
   TextSize : Integer;
   DataSize : Integer;
-  N        : Integer;
 begin
   if Active then
   begin

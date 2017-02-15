@@ -114,8 +114,8 @@ end;
 
 {$REGION 'construction and destruction'}
 procedure TfrmCharacterMap.AfterConstruction;
-var
-  I : Integer;
+//var
+//  I : Integer;
 begin
   inherited AfterConstruction;
   Caption := SCharacterMap;

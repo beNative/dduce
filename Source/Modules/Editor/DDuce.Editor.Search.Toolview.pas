@@ -495,8 +495,8 @@ begin
 end;
 
 procedure TfrmSearchForm.UpdateActions;
-var
-  B: Boolean;
+//var
+//  B: Boolean;
 begin
   inherited UpdateActions;
   { Focus the corresponding search result in the list when we do find next/

@@ -2433,7 +2433,6 @@ function TdmEditorManager.DeleteView(AView: IEditorView): Boolean;
 var
   I : Integer;
 begin
-  Result := False;
   Logger.Enter(Self, 'DeleteView(AView)');
   if Assigned(AView) and Assigned(ViewList) then
   begin

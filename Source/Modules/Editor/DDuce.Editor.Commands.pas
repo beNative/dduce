@@ -295,7 +295,6 @@ var
   S  : string;
   B  : Boolean;
 begin
-  Result := False;
   S := StripComments(AString, HL_PAS);
   SL := TStringList.Create;
   try

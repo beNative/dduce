@@ -237,8 +237,6 @@ end;
 
 procedure TfrmCollectionEditor.FInspectorModified(Sender: TObject);
 var
-  I  : Integer;
-  J  : Integer;
   S  : string;
   V  : TValue;
   AI : TPropsPageItem;

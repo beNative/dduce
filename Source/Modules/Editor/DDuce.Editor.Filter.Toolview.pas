@@ -92,7 +92,7 @@ type
     FUpdate           : Boolean;
     FUpdateEditorView : Boolean;
     FLines            : IList<TLine>;
-    FTextStyle        : TTextFormat;
+//    FTextStyle        : TTextFormat;
 
     function GetFilter: string;
     procedure SetFilter(AValue: string);
@@ -123,8 +123,8 @@ type
     procedure SetVisible(Value: Boolean); override;
 
     procedure ApplyFilter;
-    procedure Modified;
-    procedure UpdateView;
+    procedure Modified; override;
+    procedure UpdateView; override;
     procedure FillList(AStrings: TStrings);
     procedure UpdateActions; override;
     procedure UpdateStatusDisplay;
@@ -143,7 +143,7 @@ implementation
 
 uses
   Winapi.Windows, Winapi.Messages,
-  System.Variants,
+  System.Variants, System.UITypes,
 
   DSharp.Windows.ColumnDefinitions.ControlTemplate,
 
@@ -245,23 +245,11 @@ function TfrmFilter.CCustomDraw(Sender: TObject;
   ColumnDefinition: TColumnDefinition; Item: TObject; TargetCanvas: TCanvas;
   CellRect: TRect; ImageList: TCustomImageList; DrawMode: TDrawMode;
   Selected: Boolean): Boolean;
-//var
-//  Match  : string;
-//  Offset : Integer;
-//  R      : TRect;
-//  S      : string;
 var
-  L      : TLine;
   S      : string;
-  Line   : string;
-  P      : TPoint;
-  //A      : TSynHighlighterAttributes;
   R      : TRect;
-  I      : Integer;
   Offset : Integer;
   Match  : string;
-  C      : TColor;
-  TS     : string;
 begin
   if DrawMode = dmBeforeCellPaint then
   begin
@@ -273,6 +261,7 @@ begin
       DrawMatchRect(TargetCanvas, R);
     end;
   end;
+  Result := True;
 end;
 
 procedure TfrmFilter.actFocusFilterTextExecute(Sender: TObject);

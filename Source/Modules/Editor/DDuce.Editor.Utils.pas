@@ -1228,11 +1228,11 @@ var
   NewLength     : Integer;
   P             : Integer;
   StartPos      : Integer;
-  Src           : PAnsiChar;
-  Dest          : PAnsiChar;
+  Src           : PChar;
+  Dest          : PChar;
   EndLen        : Integer;
-  EndPos        : PAnsiChar;
-  NewLineEnding : AnsiString;
+  EndPos        : PChar;
+  NewLineEnding : string;
 begin
   case ALineBreakStyle of
     tlbsLF   : NewLineEnding := #10;
@@ -1250,11 +1250,11 @@ begin
   P := 1;
   while P < Length(AString) do
   begin
-    if AString[P] in [#10, #13] then
+    if CharInSet(AString[P], [#10, #13]) then
     begin
       StartPos := P;
       Inc(P);
-      if (AString[P] in [#10, #13]) and (AString[P] <> AString[P - 1]) then
+      if CharInSet(AString[P], [#10, #13]) and (AString[P] <> AString[P - 1]) then
         Inc(P);
       Inc(NewLength, EndLen - (P - StartPos));
     end
@@ -1262,8 +1262,8 @@ begin
       Inc(P);
   end;
   SetLength(Result, NewLength);
-  Src := PAnsiChar(AString);
-  Dest := PAnsiChar(Result);
+  Src := PChar(AString);
+  Dest := PChar(Result);
   EndPos := Dest + NewLength;
   while Dest < EndPos do
   begin

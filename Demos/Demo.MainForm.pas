@@ -23,13 +23,13 @@ interface
 uses
   System.Actions, System.UITypes, System.Classes, System.ImageList,
   Vcl.ActnList, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Controls, Vcl.ExtCtrls,
-  Vcl.Buttons, Vcl.Forms, Vcl.ImgList,
+  Vcl.Buttons, Vcl.Forms, Vcl.ImgList, Vcl.Taskbar,
 
   VirtualTrees,
 
   DSharp.Windows.ColumnDefinitions, DSharp.Windows.TreeViewPresenter,
 
-  Spring.Collections, System.Win.TaskbarCore, Vcl.Taskbar;
+  Spring.Collections, System.Win.TaskbarCore;
 
 type
   TfrmMainMenu = class(TForm)

@@ -90,8 +90,8 @@ type
     procedure rgpSortDirectionClick(Sender: TObject);
 
   strict private
-    FTVP    : TTreeViewPresenter;
-    FVST    : TVirtualStringTree;
+    //FTVP    : TTreeViewPresenter;
+    //FVST    : TVirtualStringTree;
     FTokens : TObjectList; // list of alignment tokens found in selection
 
   strict protected
@@ -209,8 +209,8 @@ begin
 end;
 
 procedure TfrmAlignLines.gbxInsertSpaceItemClick(Sender: TObject; Index: integer);
-var
-  B : Boolean;
+//var
+//  B : Boolean;
 begin
 //  B := (Sender as TCheckGroup).Checked[Index];
 //  case Index of
@@ -220,8 +220,8 @@ begin
 end;
 
 procedure TfrmAlignLines.gbxOptionsItemClick(Sender: TObject; Index: integer);
-var
-  B : Boolean;
+//var
+//  B : Boolean;
 begin
 //  B := (Sender as TCheckGroup).Checked[Index];
 //  case Index of
@@ -263,16 +263,16 @@ end;
 
 {$REGION 'protected methods'}
 procedure TfrmAlignLines.UpdateTokenList;
-var
-  S  : string;
-  O  : string;
-  T  : TToken;
-  ST : TToken; // selected token
+//var
+//  S  : string;
+//  O  : string;
+//  T  : TToken;
+//  ST : TToken; // selected token
 begin
-  FTVP.BeginUpdate;
-  ST := nil;
-  O  := '';
-  T  := nil;
+//  FTVP.BeginUpdate;
+//  ST := nil;
+//  O  := '';
+//  T  := nil;
 //  if Assigned(FTVP.CurrentItem) then
 //  begin
 //    O := TToken(FTVP.CurrentItem).Token;
@@ -319,8 +319,8 @@ begin
 end;
 
 procedure TfrmAlignLines.Execute;
-var
-  T : string;
+//var
+//  T : string;
 begin
 //  if Assigned(FTVP.CurrentItem) then
 //  begin
