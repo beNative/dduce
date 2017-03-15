@@ -43,10 +43,11 @@ type
     procedure SetWindowState(AValue: TWindowState);
 
   protected
-    procedure Changed;
+    procedure DoChanged;
 
   public
     procedure AfterConstruction; override;
+
     procedure AssignTo(Dest: TPersistent); override;
     procedure Assign(Source: TPersistent); override;
 
@@ -75,77 +76,75 @@ type
 
 implementation
 
-{$region 'construction and destruction' /fold}
-
+{$REGION 'construction and destruction'}
 procedure TFormSettings.AfterConstruction;
 begin
   inherited AfterConstruction;
   FWidth  := 800;
   FHeight := 600;
 end;
+{$ENDREGION}
 
-{$endregion}
-
-{$region 'property access mehods' /fold}
-
+{$REGION 'property access mehods'}
 procedure TFormSettings.SetWindowState(AValue: TWindowState);
 begin
   if (AValue <> WindowState) and (AValue <> wsMinimized) then
   begin
     FWindowState := AValue;
-    Changed;
+    DoChanged;
   end;
 end;
 
 procedure TFormSettings.SetFormStyle(AValue: TFormStyle);
 begin
-  if FFormStyle = AValue then Exit;
+  if FFormStyle = AValue then
+    Exit;
   FFormStyle := AValue;
-  Changed;
+  DoChanged;
 end;
 
 procedure TFormSettings.SetHeight(AValue: Integer);
 begin
-  if FHeight = AValue then Exit;
+  if FHeight = AValue then
+    Exit;
   FHeight := AValue;
-  Changed;
+  DoChanged;
 end;
 
 procedure TFormSettings.SetLeft(AValue: Integer);
 begin
-  if FLeft = AValue then Exit;
+  if FLeft = AValue then
+    Exit;
   FLeft := AValue;
-  Changed;
+  DoChanged;
 end;
 
 procedure TFormSettings.SetTop(AValue: Integer);
 begin
-  if FTop = AValue then Exit;
+  if FTop = AValue then
+    Exit;
   FTop := AValue;
-  Changed;
+  DoChanged;
 end;
 
 procedure TFormSettings.SetWidth(AValue: Integer);
 begin
-  if FWidth = AValue then Exit;
+  if FWidth = AValue then
+    Exit;
   FWidth := AValue;
-  Changed;
+  DoChanged;
 end;
+{$ENDREGION}
 
-{$endregion}
-
-{$region 'protected methods' /fold}
-
-procedure TFormSettings.Changed;
+{$REGION 'event dispatch methods'}
+procedure TFormSettings.DoChanged;
 begin
   if Assigned(FOnChanged) then
     FOnChanged(Self);
 end;
+{$ENDREGION}
 
-{$endregion}
-
-{$region 'public methods' /fold}
-
+{$REGION 'public methods'}
 procedure TFormSettings.Assign(Source: TPersistent);
 var
   F : TForm;
@@ -161,7 +160,7 @@ begin
     WindowState := F.WindowState;
   end
   else
-    inherited;
+    inherited Assign(Source);
 end;
 
 procedure TFormSettings.AssignTo(Dest: TPersistent);
@@ -179,9 +178,8 @@ begin
     F.WindowState := WindowState;
   end
   else
-    inherited;
+    inherited AssignTo(Dest);
 end;
-
-{$endregion}
+{$ENDREGION}
 
 end.

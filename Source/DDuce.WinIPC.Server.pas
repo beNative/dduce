@@ -195,7 +195,6 @@ var
   CDS : PCopyDataStruct;
 begin
   CDS := PCopyDataStruct(Msg.LParam);
-  //FMsgType      := CDS^.dwData;
   FMsgData.Size := 0;
   FMsgData.Seek(0, soFrombeginning);
   FMsgData.WriteBuffer(CDS^.lpData^, CDS^.cbData);

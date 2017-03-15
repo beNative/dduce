@@ -18,26 +18,26 @@ unit DDuce.Editor.View;
 
 {$REGION'documentation'}
 {
-Form holding a complete customizable text editor based on the open source
-TBCEditor component.
-Features:
-  - accepts dropped files
-  - auto detect file encoding
-  - dynamic editor creation
-  - synchronized edit
-  - highlight selected text
-  - code folding
-  - file monitor function to watch for external file changes.
+  Form holding a complete customizable text editor based on the open source
+  TBCEditor component.
+  Features:
+    - accepts dropped files
+    - auto detect file encoding
+    - dynamic editor creation
+    - synchronized edit
+    - highlight selected text
+    - code folding
+    - file monitor function to watch for external file changes.
 
-TODO:
-  - configurable page setup and printing with preview
-  - customizable keystroke-function mappings
-  - configurable code completion proposal
-  - convert to another encoding (partially implemented)
-  - find a way to fold particular sections (now only levels are supported)
+  TODO:
+    - configurable page setup and printing with preview
+    - customizable keystroke-function mappings
+    - configurable code completion proposal
+    - convert to another encoding (partially implemented)
+    - find a way to fold particular sections (now only levels are supported)
 
-  DEPENDENCIES:
-  - BCEditor-
+    DEPENDENCIES:
+    - BCEditor-
 }
 {$ENDREGION}
 
@@ -405,10 +405,6 @@ type
     property SearchText: string
       read GetSearchText write SetSearchText;
 
-    { These options are used for highlighting the active word. }
-//    property SearchOptions: TSynSearchOptions
-//      read GetSearchOptions write SetSearchOptions;
-
     { Currently selected text in the editor. }
     property SelectedText: string
       read GetSelectedText write SetSelectedText;
@@ -640,17 +636,17 @@ end;
 function TEditorView.GetTextBetween(AStartPos,
   AEndPos: TPoint): string;
 begin
-  Result := Editor.TextBetween[
-    TBCEditorTextPosition(AStartPos), TBCEditorTextPosition(AEndPos)
-  ];
+//  Result := Editor.Lines.TextBetween[
+//    TBCEditorTextPosition(AStartPos), TBCEditorTextPosition(AEndPos)
+//  ];
 end;
 
 procedure TEditorView.SetTextBetween(AStartPos, AEndPos: TPoint;
   const Value: string);
 begin
-  Editor.TextBetween[
-    TBCEditorTextPosition(AStartPos), TBCEditorTextPosition(AEndPos)
-  ] := Value;
+//  Editor.TextBetween[
+//    TBCEditorTextPosition(AStartPos), TBCEditorTextPosition(AEndPos)
+//  ] := Value;
 end;
 
 function TEditorView.GetText: string;
@@ -763,14 +759,14 @@ end;
 
 function TEditorView.GetSearchText: string;
 begin
-  Result := Editor.SearchString;
+  //Result := Editor.SearchString;
 end;
 
 procedure TEditorView.SetSearchText(const Value: string);
 begin
   if Value <> SearchText then
   begin
-    Editor.SearchString := Value;
+//    Editor.SearchString := Value;
   end;
 end;
 
@@ -803,7 +799,7 @@ end;
 
 function TEditorView.GetEncoding: TEncoding;
 begin
-  Result := Editor.Encoding;
+  Result := Editor.Lines.Encoding;
 end;
 
 function TEditorView.GetLineBreakStyle: string;
@@ -952,7 +948,7 @@ end;
 
 procedure TEditorView.SetSelStart(const AValue: Integer);
 begin
-  //Editor.SelStart := AValue;
+  Editor.SelectionStart := AValue;
 end;
 
 function TEditorView.GetSettings: IEditorSettings;
@@ -1316,7 +1312,7 @@ begin
   ];
   AEditor.Selection.Options := AEditor.Selection.Options + [
     soALTSetsColumnMode,
-    soHighlightSimilarTerms,
+//    soHighlightSimilarTerms,
     soTripleClickRowSelect
   ];
 
@@ -1475,7 +1471,7 @@ end;
 
 procedure TEditorView.Activate;
 begin
-  inherited;
+  inherited Activate;
   Manager.ActiveView := Self as IEditorView;
 end;
 
@@ -1515,7 +1511,7 @@ begin
   begin
     //Editor.Search.Options := Editor.Search.Options + [TBCEditorSearchOption.soBackwards];
     Editor.Search.SearchText := Editor.WordAtCursor;
-    //Editor.TextCaretPosition := Editor.WordStart;
+    Editor.TextCaretPosition := Editor.WordStart;
     Editor.SetCaretAndSelection(
       Editor.SelectionBeginPosition,
       Editor.SelectionBeginPosition,

@@ -84,9 +84,20 @@ begin
   Result := True;
 end;
 
+
+{
+  Data is streamed in following order:
+    - Message type:  4 bytes (Integer)
+    - TimeStamp:     8 bytes (Double)
+    - TextSize:      4 bytes (Integer)
+    - Text:          TextSize bytes (AnsiString, 1 byte/character)
+    - DataSize:      4 bytes (Integer)
+    - Data:          DataSize bytes
+}
+
 function TWinIPCChannel.Write(const AMsg: TLogMessage): Boolean;
 const
-  ZeroBuf: Integer = 0;
+  ZeroBuf : Integer = 0;
 var
   TextSize : Integer;
   DataSize : Integer;
@@ -111,7 +122,7 @@ begin
         FBuffer.CopyFrom(AMsg.Data, DataSize);
       end
       else
-        FBuffer.WriteBuffer(ZeroBuf, SizeOf(Integer)); // necessary?
+        FBuffer.WriteBuffer(ZeroBuf, SizeOf(Integer)); // indicates empty stream
       FClient.SendStream(FBuffer);
       Result := True;
     end

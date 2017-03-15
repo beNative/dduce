@@ -38,7 +38,7 @@ uses
   DSharp.Core.DataTemplates, DSharp.Windows.TreeViewPresenter,
   DSharp.Windows.ColumnDefinitions.ControlTemplate,
 
-  BCEditor.Types,
+  BCEditor.Types, BCEditor.Search,
 
   DDuce.Editor.ToolView.Base, DDuce.Editor.Interfaces, DDuce.Editor.Types,
 
