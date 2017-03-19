@@ -18,6 +18,23 @@ unit DDuce.Factories;
 
 interface
 
+{
+Missing properties in
+  TTreeViewPresenter:
+    - AutoScroll ?
+    - Last: set focus to last item
+    - First: set focus to first item
+
+  IColumnDefinitions
+    - Delete(index)
+    - Clear
+
+  TColumnDefinition
+    -
+
+
+}
+
 uses
   System.Classes,
   Vcl.Controls,
@@ -25,7 +42,7 @@ uses
   Spring, Spring.Collections,
 
   DSharp.Windows.TreeViewPresenter, DSharp.Core.DataTemplates,
-  DSharp.Bindings.Collections,
+  DSharp.Bindings.Collections, DSharp.Windows.ColumnDefinitions,
 
   VirtualTrees,
 
@@ -33,29 +50,35 @@ uses
 
 type
   TFactories = class sealed
-  private
-    class procedure InitializeTVP(
-      ATVP      : TTreeViewPresenter;
-      AVST      : TVirtualStringTree = nil;
-      ASource   : IObjectList = nil;
-      ATemplate : IDataTemplate = nil;
-      AFilter   : TFilterEvent = nil
-    ); static;
   public
+    class procedure InitializeTVP(
+      ATVP              : TTreeViewPresenter;
+      AVST              : TVirtualStringTree = nil;
+      ASource           : IObjectList = nil;
+      AColumDefinitions : IColumnDefinitions = nil;
+      ATemplate         : IDataTemplate = nil;
+      AFilter           : TFilterEvent = nil
+    ); static;
+
     class function CreateVirtualStringTree(
       AOwner      : TComponent;
       AParent     : TWinControl;
       const AName : string = ''
     ) : TVirtualStringTree;
 
+    class function CreateColumnDefinitions(
+      ATVP: TTreeViewPresenter = nil
+    ): IColumnDefinitions;
+
     class function CreateTreeViewPresenter(
-      AOwner      : TComponent;
-      AVST        : TVirtualStringTree = nil;
-      ASource     : IObjectList = nil;
-      ATemplate   : IDataTemplate = nil;
-      AFilter     : TFilterEvent = nil;
-      const AName : string = ''
-    ): TTreeViewPresenter; static;
+      AOwner            : TComponent;
+      AVST              : TVirtualStringTree = nil;
+      ASource           : IObjectList = nil;
+      AColumDefinitions : IColumnDefinitions = nil;
+      ATemplate         : IDataTemplate = nil;
+      AFilter           : TFilterEvent = nil;
+      const AName       : string = ''
+    ): TTreeViewPresenter; overload; static;
 
     class function CreatezObjectInspector(
       AOwner      : TComponent;
@@ -291,18 +314,27 @@ const
 {$ENDREGION}
 
 class procedure TFactories.InitializeTVP(ATVP: TTreeViewPresenter;
-  AVST: TVirtualStringTree; ASource: IObjectList; ATemplate: IDataTemplate;
-  AFilter: TFilterEvent);
+  AVST: TVirtualStringTree; ASource: IObjectList; AColumDefinitions
+  : IColumnDefinitions; ATemplate: IDataTemplate; AFilter: TFilterEvent);
 var
   P : TRttiProperty;
   C : TRttiContext;
 begin
-  if Assigned(ASource) then // auto create column definitions
+  if Assigned(ASource) then
   begin
-    for P in C.GetType(ASource.ElementType).GetProperties do
+    if Assigned(AColumDefinitions) then
     begin
-      with ATVP.ColumnDefinitions.Add(P.Name) do
-        ValuePropertyName := P.Name;
+      if ATVP.ColumnDefinitions <> AColumDefinitions then
+        ATVP.ColumnDefinitions := AColumDefinitions
+    end
+    else // auto create column definitions
+    begin
+      ATVP.ColumnDefinitions.Clear;
+      for P in C.GetType(ASource.ElementType).GetProperties do
+      begin
+        with ATVP.ColumnDefinitions.Add(P.Name) do
+          ValuePropertyName := P.Name;
+      end;
     end;
   end;
   ATVP.TreeView := AVST;
@@ -318,6 +350,25 @@ begin
     ATVP.View.ItemTemplate := ATemplate;
   if Assigned(AFilter) then
     ATVP.View.Filter.Add(AFilter);
+end;
+
+class function TFactories.CreateColumnDefinitions(ATVP: TTreeViewPresenter):
+  IColumnDefinitions;
+begin
+  Result := TColumnDefinitions.Create(ATVP);
+end;
+
+class function TFactories.CreateTreeViewPresenter(AOwner: TComponent;
+  AVST: TVirtualStringTree; ASource: IObjectList;
+  AColumDefinitions: IColumnDefinitions; ATemplate: IDataTemplate;
+  AFilter: TFilterEvent; const AName: string): TTreeViewPresenter;
+var
+  TVP: TTreeViewPresenter;
+begin
+  Guard.CheckNotNull(AOwner, 'AOwner');
+  TVP := TTreeViewPresenter.Create(AOwner);
+  InitializeTVP(TVP, AVST, ASource, AColumDefinitions, ATemplate, AFilter);
+  Result := TVP;
 end;
 
 class function TFactories.CreateVirtualStringTree(AOwner: TComponent;
@@ -346,18 +397,6 @@ begin
   VST.TreeOptions.AnimationOptions := DEFAULT_VST_ANIMATIONOPTIONS;
   VST.TreeOptions.AutoOptions      := DEFAULT_VST_AUTOOPTIONS;
   Result := VST;
-end;
-
-class function TFactories.CreateTreeViewPresenter(AOwner: TComponent;
-  AVST: TVirtualStringTree; ASource: IObjectList; ATemplate: IDataTemplate;
-  AFilter: TFilterEvent; const AName: string): TTreeViewPresenter;
-var
-  TVP: TTreeViewPresenter;
-begin
-  Guard.CheckNotNull(AOwner, 'AOwner');
-  TVP := TTreeViewPresenter.Create(AOwner);
-  InitializeTVP(TVP, AVST, ASource, ATemplate, AFilter);
-  Result := TVP;
 end;
 
 class function TFactories.CreatezObjectInspector(AOwner: TComponent;
