@@ -154,6 +154,8 @@ type
     function GetAutoSizeIndex: Integer;
     function GetCount: Integer;
     function GetItem(Index: Integer): TColumnDefinition;
+    procedure Clear;                       // TS
+    procedure Delete(Index: Integer); //TS
     function GetMainColumnIndex: Integer;
     function GetOnNotify: IEvent<TCollectionNotifyEvent<TColumnDefinition>>;
     function GetOwner: TPersistent;
