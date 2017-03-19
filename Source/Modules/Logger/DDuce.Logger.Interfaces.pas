@@ -38,18 +38,18 @@ type
     lmtConditional = 6,
     lmtCheckpoint  = 7,
     lmtStrings     = 8,
-    lmtCallStack   = 9,
+    lmtCallStack   = 9,   // not supported yet
     lmtObject      = 10,
     lmtException   = 11,
     lmtBitmap      = 12,
-    lmtHeapInfo    = 13,
+    lmtHeapInfo    = 13,  // not supported yet
     lmtMemory      = 14,
-    lmtCustomData  = 15,
+    lmtCustomData  = 15,  // not supported yet
     lmtWatch       = 20,
     lmtCounter     = 21,
     lmtColor       = 22,
     lmtAlphaColor  = 23,
-    lmtScreenShot  = 24,
+    lmtScreenShot  = 24,  // not supported yet
     lmtClear       = 100
   );
 
@@ -105,7 +105,7 @@ type
     { This overload is used for Variant arguments. }
     procedure Send(const AName: string; const AValue: string = ''); overload;
 
-    { All primary types that are are implicitely ba cast to TValue will be
+    { All primary types that can implicitely be casted to TValue will be
       handled through this call. }
     procedure Send(const AName: string; const AValue: TValue); overload;
 
@@ -132,6 +132,16 @@ type
     );
     procedure SendShortCut(const AName: string; AShortCut: TShortCut);
 
+    // SendBitmap
+
+
+    { Send methods for text that can be displayed with a dedicated
+      highlighter. }
+    //procedure SendSQL(AValue: string);
+    //procedure SendXML(AValue: string);
+    //procedure SendJSON(AValue: string);
+
+
     procedure IncCounter(const AName: string);
     procedure DecCounter(const AName: string);
     procedure ResetCounter(const AName: string);
@@ -141,7 +151,6 @@ type
     procedure Enter(ASender: TObject; const AName: string); overload;
     procedure Leave(const AName: string); overload;
     procedure Leave(ASender: TObject; const AName: string); overload;
-
     { Track uses an interface variable to replace Enter/Leave calls in the
       scope of the method where it is called. A call to Track will create an
       instance and trigger the Enter method. When the interface variable goes

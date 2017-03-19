@@ -115,19 +115,19 @@ begin
       begin
         Alignment := taCenter;
       end;
-
     end;
   end;
 
-  FGridView.Rows.Count := FList.Count;
-  FGridView.OnDrawCell := FGridViewDrawCell;
-  FGridView.OnGetCellText := FGridViewGetCellText;
+  FGridView.Rows.Count      := FList.Count;
+  FGridView.OnDrawCell      := FGridViewDrawCell;
+  FGridView.OnGetCellText   := FGridViewGetCellText;
   FGridView.OnGetCheckState := FGridViewGetCheckState;
   FGridView.OnGetCellColors := FGridViewGetCellColors;
   FGridView.AutoSizeCols;
 end;
 {$ENDREGION}
 
+{$REGION 'event handlers'}
 procedure TfrmGridView.FGridViewGetCellColors(Sender: TObject; Cell: TGridCell;
   Canvas: TCanvas);
 var
@@ -183,5 +183,6 @@ begin
   else
     CheckState := cbUnchecked;
 end;
+{$ENDREGION}
 
 end.

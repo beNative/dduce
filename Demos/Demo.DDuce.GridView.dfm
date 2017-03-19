@@ -2,7 +2,7 @@ object frmGridView: TfrmGridView
   Left = 0
   Top = 0
   Caption = 'GridView demo'
-  ClientHeight = 562
+  ClientHeight = 665
   ClientWidth = 1008
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,7 +17,7 @@ object frmGridView: TfrmGridView
     Left = 289
     Top = 0
     Width = 6
-    Height = 562
+    Height = 665
     ExplicitLeft = 233
     ExplicitTop = -113
     ExplicitHeight = 450
@@ -26,19 +26,21 @@ object frmGridView: TfrmGridView
     Left = 0
     Top = 0
     Width = 289
-    Height = 562
+    Height = 665
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitHeight = 562
   end
   object pnlRight: TPanel
     Left = 295
     Top = 0
     Width = 713
-    Height = 562
+    Height = 665
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 1024
   end
   object imlMain: TImageList
     Left = 368

@@ -25,8 +25,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Watches'
     TabOrder = 0
-    ExplicitTop = 502
-    ExplicitWidth = 455
     DesignSize = (
       615
       67)
@@ -59,7 +57,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Method tracing'
     TabOrder = 1
-    ExplicitWidth = 538
     object btnEnterMethod1: TButton
       Left = 297
       Top = 20
@@ -134,9 +131,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Notification messages'
     TabOrder = 2
-    ExplicitLeft = 8
-    ExplicitTop = 131
-    ExplicitWidth = 445
     DesignSize = (
       615
       89)
@@ -193,8 +187,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Counters'
     TabOrder = 3
-    ExplicitTop = 223
-    ExplicitWidth = 676
     object btnIncCounter: TButton
       Left = 141
       Top = 22
@@ -242,9 +234,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Logger channels'
     TabOrder = 4
-    ExplicitLeft = 8
-    ExplicitTop = 8
-    ExplicitWidth = 446
     object chkLogFileChannelActive: TCheckBox
       Left = 17
       Top = 24
@@ -293,14 +282,11 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Checkpoints'
     TabOrder = 5
-    ExplicitLeft = 75
-    ExplicitTop = 575
-    ExplicitWidth = 455
     object lblCheckpointDescription: TLabel
       Left = 12
       Top = 19
-      Width = 286
-      Height = 43
+      Width = 282
+      Height = 26
       Caption = 
         'Checkpoints are used to mark points in code of which a pass coun' +
         't can be monitored by the LogViewer application.'
@@ -391,9 +377,6 @@ object frmLogger: TfrmLogger
     Align = alClient
     Caption = 'Custom'
     TabOrder = 7
-    ExplicitTop = 482
-    ExplicitWidth = 676
-    ExplicitHeight = 71
     object btnSendObject1: TButton
       Left = 11
       Top = 24

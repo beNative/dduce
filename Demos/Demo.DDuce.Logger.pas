@@ -97,11 +97,14 @@ type
     btnSendDataSet: TButton;
     {$ENDREGION}
 
+    {$REGION 'event handlers'}
     procedure trbMainChange(Sender: TObject);
     procedure tmrSendCounterTimer(Sender: TObject);
     procedure chkEnableCountTimerClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    {$ENDREGION}
 
+    {$REGION 'action handlers'}
     procedure actSendInfoExecute(Sender: TObject);
     procedure actSendObjectExecute(Sender: TObject);
     procedure actSendWarningExecute(Sender: TObject);
@@ -120,8 +123,8 @@ type
     procedure actSendODSExecute(Sender: TObject);
     procedure actSendComponentExecute(Sender: TObject);
     procedure actSendRecordExecute(Sender: TObject);
-    procedure btnSendStringsClick(Sender: TObject);
     procedure actSendStringsExecute(Sender: TObject);
+    {$ENDREGION}
 
   private
     FM1Entered      : Boolean;
@@ -189,11 +192,6 @@ begin
   Logger.Channels.Add(FWinIPCChannel);
   Logger.Channels.Add(FZeroMQChannel);
 end;
-
-procedure TfrmLogger.btnSendStringsClick(Sender: TObject);
-begin
-end;
-
 {$ENDREGION}
 
 {$REGION 'action handlers'}
