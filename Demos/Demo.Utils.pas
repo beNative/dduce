@@ -44,11 +44,11 @@ procedure LockPaint(AControl: TWinControl);
 procedure UnlockPaint(AControl: TWinControl);
 
 function SetToString(
-        ATypeInfo    : PTypeInfo;
+  ATypeInfo : PTypeInfo;
   const AValue;
-        AQuoteValues : Boolean = True;
-        ABrackets    : Boolean = True;
-        ATrimChars   : Integer = -1
+  AQuoteValues : Boolean = True;
+  ABrackets    : Boolean = True;
+  ATrimChars   : Integer = -1
 ): string;
 
 implementation
@@ -350,9 +350,8 @@ end;
   => Following string is shown: '(Left, Top)'
 }
 
-function SetToString(ATypeInfo: PTypeInfo; const AValue;
-  AQuoteValues: Boolean = True; ABrackets: Boolean = True;
-  ATrimChars: Integer = -1): string;
+function SetToString(ATypeInfo: PTypeInfo; const AValue; AQuoteValues: Boolean;
+  ABrackets: Boolean; ATrimChars: Integer): string;
 var
   S    : TIntegerSet;
   I    : Integer;
@@ -375,8 +374,8 @@ var
 
   function GetPrefixLength(const AString: string): Integer;
   var
-    C: Char;
-    N: Integer;
+    C : Char;
+    N : Integer;
   begin
     N := 0;
     if Length(AString) > 0 then

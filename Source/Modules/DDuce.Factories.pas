@@ -31,8 +31,6 @@ Missing properties in
 
   TColumnDefinition
     -
-
-
 }
 
 uses
@@ -64,11 +62,11 @@ type
       AOwner      : TComponent;
       AParent     : TWinControl;
       const AName : string = ''
-    ) : TVirtualStringTree;
+    ): TVirtualStringTree; static;
 
     class function CreateColumnDefinitions(
       ATVP: TTreeViewPresenter = nil
-    ): IColumnDefinitions;
+    ): IColumnDefinitions; static;
 
     class function CreateTreeViewPresenter(
       AOwner            : TComponent;
@@ -85,7 +83,7 @@ type
       AParent     : TWinControl;
       AObject     : TObject = nil;
       const AName : string = ''
-      ): TzObjectInspector; static;
+    ): TzObjectInspector; static;
   end;
 
 implementation
@@ -378,16 +376,15 @@ var
 begin
   Guard.CheckNotNull(AOwner, 'AOwner');
   Guard.CheckNotNull(AParent, 'AParent');
-  VST          := TVirtualStringTree.Create(AOwner);
-  VST.AlignWithMargins := True;
-  VST.Parent   := AParent;
-  VST.HintMode := hmTooltip;
-  VST.Align    := alClient;
+  VST := TVirtualStringTree.Create(AOwner);
+  VST.AlignWithMargins  := True;
+  VST.Parent            := AParent;
+  VST.HintMode          := hmTooltip;
+  VST.Align             := alClient;
   VST.DrawSelectionMode := smBlendedRectangle;
   VST.Colors.SelectionRectangleBlendColor := clGray;
   VST.Colors.SelectionTextColor := clBlack;
   VST.Colors.GridLineColor      := clGray;
-
   VST.Header.Height := 18;
   VST.Header.Options               := DEFAULT_VST_HEADEROPTIONS;
   VST.TreeOptions.SelectionOptions := DEFAULT_VST_SELECTIONOPTIONS;

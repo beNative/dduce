@@ -16,12 +16,7 @@
 
 unit DDuce.Editor.Events;
 
-{ Events dispatched by the IEditorManager and active IEditorView instance.
-
-  TMethodList is used to emulate multicast events hence these events can be
-  dispatched to multiple event handlers. This is an implementation of the
-  observer pattern where multiple observers can respond to changes in a subject.
-}
+{ Events dispatched by the IEditorManager and active IEditorView instance. }
 
 interface
 

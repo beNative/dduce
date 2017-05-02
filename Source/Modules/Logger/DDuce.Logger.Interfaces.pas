@@ -37,7 +37,7 @@ type
     lmtLeaveMethod = 5,
     lmtConditional = 6,
     lmtCheckpoint  = 7,
-    lmtStrings     = 8,
+    lmtStrings     = 8,   // TStrings and descendants
     lmtCallStack   = 9,   // not supported yet
     lmtObject      = 10,
     lmtException   = 11,

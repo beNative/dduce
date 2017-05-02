@@ -1163,8 +1163,6 @@ begin
   Editor.SpecialChars.Visible := Settings.EditorOptions.ShowSpecialCharacters;
   Editor.Minimap.Visible      := Settings.EditorOptions.ShowMinimap;
 
-
-
   if Settings.EditorOptions.TabsToSpaces then
     Editor.Tabs.Options := Editor.Tabs.Options + [toTabsToSpaces]
   else
@@ -1211,9 +1209,7 @@ begin
   Editor.Search.Map.Visible   := Settings.EditorOptions.ShowSearchmap;
   Editor.LineSpacing          := Settings.EditorOptions.ExtraLineSpacing;
 
-
-
-//  Editor.ExtraCharSpacing      := Settings.EditorOptions.ExtraCharSpacing;
+  //  Editor.ExtraCharSpacing      := Settings.EditorOptions.ExtraCharSpacing;
 //  Editor.BlockTabIndent        := Settings.EditorOptions.BlockTabIndent;
 //  Editor.BlockIndent           := Settings.EditorOptions.BlockIndent;
 

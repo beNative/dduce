@@ -41,7 +41,7 @@ uses
 
 type
   TDemoFactories = record
-    public
+  public
     class procedure FillListWithContacts(
       AList  : IList<TContact>;
       ACount : Integer
@@ -71,7 +71,6 @@ type
     class function CreateContactList(
       const ACount: Integer = 0
     ): IList<TContact>; static;
-
   end;
 
 implementation
@@ -85,13 +84,11 @@ uses
 
   DDuce.RandomData;
 
-
-
 {$REGION 'TDemoFactories'}
 class function TDemoFactories.CreateContactDataSet(AOwner: TComponent;
   ACount: Integer; const AName: string): TDataSet;
 var
-  CDS: TClientDataSet;
+  CDS : TClientDataSet;
 begin
   CDS := TClientDataSet.Create(AOwner);
   if AName <> '' then
@@ -131,8 +128,8 @@ begin
   Result := CDS;
 end;
 
-class function TDemoFactories.CreateContactList(
-  const ACount: Integer): IList<TContact>;
+class function TDemoFactories.CreateContactList(const ACount: Integer):
+  IList<TContact>;
 begin
   Result := TObjectList<TContact>.Create;
   FillListWithContacts(Result, ACount);
@@ -141,7 +138,7 @@ end;
 class function TDemoFactories.CreateDBGrid(AOwner: TComponent;
   AParent: TWinControl; ADataSource: TDataSource; const AName: string): TDBGrid;
 var
-  DBG: TDBGrid;
+  DBG : TDBGrid;
 begin
   DBG                  := TDBGrid.Create(AOwner);
   DBG.AlignWithMargins := True;
@@ -153,7 +150,7 @@ end;
 
 class function TDemoFactories.CreateRandomContact: TContact;
 var
-  C: TContact;
+  C : TContact;
 begin
   C := TContact.Create;
   with C do
@@ -174,8 +171,8 @@ end;
 class procedure TDemoFactories.FillDataSetWithContacts(ADataSet: TDataSet;
   ACount: Integer);
 var
-  I  : Integer;
-  S  : string;
+  I : Integer;
+  S : string;
 begin
   ADataSet.Active := True;
   for I := 0 to Pred(ACount) do

@@ -35,8 +35,6 @@ uses
   DDuce.Logger.Base, DDuce.Logger.Channels.LogFile, DDuce.Logger.Channels.WinIPC,
   DDuce.Logger.Channels.ZeroMQ;
 
-{ TLoggerFactories }
-
 class function TLoggerFactories.CreateLogger: ILogger;
 begin
   Result := TLogger.Create;
