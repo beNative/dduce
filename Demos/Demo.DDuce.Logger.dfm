@@ -394,6 +394,15 @@ object frmLogger: TfrmLogger
       Action = actSendODS
       TabOrder = 1
     end
+    object chkSendRandomValueTimer: TCheckBox
+      Left = 336
+      Top = 28
+      Width = 161
+      Height = 17
+      Caption = 'Send random value timer'
+      TabOrder = 2
+      OnClick = chkSendRandomValueTimerClick
+    end
   end
   object aclMain: TActionList
     Images = imlLogger
@@ -1318,5 +1327,12 @@ object frmLogger: TfrmLogger
       00008000000000008001800180010000C003C001C0038001C003C003C0038001
       F00FE00FF00FC003F81FF83FF81FF00F00000000000000000000000000000000
       000000000000}
+  end
+  object tmrSendValue: TTimer
+    Enabled = False
+    Interval = 400
+    OnTimer = tmrSendValueTimer
+    Left = 552
+    Top = 408
   end
 end

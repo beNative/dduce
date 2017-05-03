@@ -45,56 +45,58 @@ type
     actResetCheckpoint       : TAction;
     actResetCounter          : TAction;
     actSendClear             : TAction;
+    actSendComponent         : TAction;
+    actSendDataSet           : TAction;
     actSendError             : TAction;
     actSendInfo              : TAction;
     actSendObject            : TAction;
+    actSendODS               : TAction;
+    actSendRecord            : TAction;
+    actSendStrings           : TAction;
     actSendTestSequence      : TAction;
     actSendWarning           : TAction;
+    btnAddCheckpoint         : TButton;
     btnDecCounter            : TButton;
     btnEnterMethod1          : TButton;
     btnEnterMethod2          : TButton;
     btnExitMethod1           : TButton;
     btnExitMethod2           : TButton;
     btnIncCounter            : TButton;
+    btnResetCheckpoint       : TButton;
     btnResetCounter          : TButton;
+    btnSendClear             : TButton;
+    btnSendComponent         : TButton;
+    btnSendDataSet           : TButton;
     btnSendError             : TButton;
     btnSendInfo              : TButton;
+    btnSendObject            : TButton;
+    btnSendObject1           : TButton;
+    btnSendODS               : TButton;
+    btnSendRecord            : TButton;
+    btnSendStrings           : TButton;
     btnSendWarning           : TButton;
     chkEnableCountTimer      : TCheckBox;
     chkLogFileChannelActive  : TCheckBox;
+    chkSendRandomValueTimer  : TCheckBox;
     chkWinIPCChannelActive   : TCheckBox;
     chkZeroMQChannelActive   : TCheckBox;
     edtLogMessage            : TLabeledEdit;
+    edtMethod1               : TLabeledEdit;
+    edtMethod2               : TLabeledEdit;
+    grpCheckpoints           : TGroupBox;
     grpCounters              : TGroupBox;
+    grpCustom                : TGroupBox;
     grpLoggerSettings        : TGroupBox;
     grpMethodTracing         : TGroupBox;
     grpNotificationMessages  : TGroupBox;
+    grpValues                : TGroupBox;
     grpWatches               : TGroupBox;
+    imlLogger                : TImageList;
+    lblCheckpointDescription : TLabel;
     lblPosition              : TLabel;
     tmrSendCounter           : TTimer;
+    tmrSendValue             : TTimer;
     trbMain                  : TTrackBar;
-    actSendODS               : TAction;
-    grpCheckpoints           : TGroupBox;
-    btnResetCheckpoint       : TButton;
-    btnAddCheckpoint         : TButton;
-    imlLogger                : TImageList;
-    grpValues: TGroupBox;
-    btnSendObject: TButton;
-    grpCustom: TGroupBox;
-    btnSendObject1: TButton;
-    btnSendODS: TButton;
-    btnSendClear: TButton;
-    lblCheckpointDescription: TLabel;
-    edtMethod1: TLabeledEdit;
-    edtMethod2: TLabeledEdit;
-    actSendComponent: TAction;
-    actSendRecord: TAction;
-    btnSendRecord: TButton;
-    btnSendComponent: TButton;
-    actSendStrings: TAction;
-    actSendDataSet: TAction;
-    btnSendStrings: TButton;
-    btnSendDataSet: TButton;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -124,6 +126,8 @@ type
     procedure actSendComponentExecute(Sender: TObject);
     procedure actSendRecordExecute(Sender: TObject);
     procedure actSendStringsExecute(Sender: TObject);
+    procedure chkSendRandomValueTimerClick(Sender: TObject);
+    procedure tmrSendValueTimer(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -191,6 +195,7 @@ begin
   Logger.Channels.Add(FLogFileChannel);
   Logger.Channels.Add(FWinIPCChannel);
   Logger.Channels.Add(FZeroMQChannel);
+  Randomize;
 end;
 {$ENDREGION}
 
@@ -322,9 +327,19 @@ begin
   tmrSendCounter.Enabled := chkEnableCountTimer.Checked;
 end;
 
+procedure TfrmLogger.chkSendRandomValueTimerClick(Sender: TObject);
+begin
+  tmrSendValue.Enabled := chkSendRandomValueTimer.Checked;
+end;
+
 procedure TfrmLogger.tmrSendCounterTimer(Sender: TObject);
 begin
   Logger.IncCounter('Counter');
+end;
+
+procedure TfrmLogger.tmrSendValueTimer(Sender: TObject);
+begin
+  Logger.Send('RandomValue', Random(1000));
 end;
 
 procedure TfrmLogger.trbMainChange(Sender: TObject);
