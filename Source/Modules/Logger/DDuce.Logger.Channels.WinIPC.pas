@@ -90,7 +90,7 @@ end;
     - Message type:  4 bytes (Integer)
     - TimeStamp:     8 bytes (Double)
     - TextSize:      4 bytes (Integer)
-    - Text:          TextSize bytes (AnsiString, 1 byte/character)
+    - Text:          TextSize bytes (UTF8 encoded, backwards compatible with Ansi)
     - DataSize:      4 bytes (Integer)
     - Data:          DataSize bytes
 }

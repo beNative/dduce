@@ -50,7 +50,8 @@ type
     lmtColor       = 22,
     lmtAlphaColor  = 23,
     lmtScreenShot  = 24,  // not supported yet
-    lmtClear       = 100
+    lmtText        = 25,  // arbitrary text with optional highlighter info
+    lmtClear       = 99
   );
 
   ILogger = interface;
@@ -58,9 +59,8 @@ type
   TLogMessage = packed record
     MsgType     : Integer;
     TimeStamp   : TDateTime;
-    Text        : AnsiString;
+    Text        : UTF8String;
     Data        : TStream;
-    ProcessName : AnsiString;
   end;
 
   TCustomDataCallbackMethod = function(
@@ -134,13 +134,13 @@ type
 
     // SendBitmap
 
-
     { Send methods for text that can be displayed with a dedicated
       highlighter. }
-    //procedure SendSQL(AValue: string);
-    //procedure SendXML(AValue: string);
-    //procedure SendJSON(AValue: string);
-
+    procedure SendText(
+      const AName        : string;
+      const AText        : string;
+      const AHighlighter : string = ''
+    );
 
     procedure IncCounter(const AName: string);
     procedure DecCounter(const AName: string);

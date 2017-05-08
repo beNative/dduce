@@ -130,6 +130,14 @@ type
     );
     procedure SendShortCut(const AName: string; AShortCut: TShortCut);
 
+    { Send methods for text that can be displayed with a dedicated
+      highlighter. }
+    procedure SendText(
+      const AName        : string;
+      const AText        : string;
+      const AHighlighter : string = ''
+    );
+
     procedure SendIf(
       const AText : string;
       AExpression : Boolean;
@@ -269,10 +277,10 @@ var
   LM : TLogMessage;
   LC : ILogChannel;
 begin
-  LM.MsgType := Integer(AMsgType);
+  LM.MsgType   := Integer(AMsgType);
   LM.TimeStamp := Now;
-  LM.Text := AnsiString(AText);
-  LM.Data    := AStream;
+  LM.Text      := UTF8String(AText);
+  LM.Data      := AStream;
   for LC in Channels do
     if LC.Active then
       LC.Write(LM);
@@ -362,6 +370,11 @@ end;
 procedure TLogger.SendDate(const AName: string; AValue: TDate);
 begin
   Send(AName, TValue.From(AValue));
+end;
+
+procedure TLogger.SendText(const AName, AText, AHighlighter: string);
+begin
+//  InternalSend(lmtText, AName + ' = ' + S);
 end;
 
 procedure TLogger.SendTime(const AName: string; AValue: TTime);
