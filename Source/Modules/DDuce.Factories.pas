@@ -331,7 +331,10 @@ begin
       for P in C.GetType(ASource.ElementType).GetProperties do
       begin
         with ATVP.ColumnDefinitions.Add(P.Name) do
+        begin
           ValuePropertyName := P.Name;
+          HintPropertyName  := P.Name;
+        end;
       end;
     end;
   end;
