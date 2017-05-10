@@ -1674,8 +1674,6 @@ end;
 //end;
 {$ENDREGION}
 
-end.
-
 {$REGION'Keyboard shortcuts'}
 (*//F1                      Topic Search
 //Ctrl+F1                Topic Search
@@ -1861,3 +1859,7 @@ end.
   end;
 *)
 {$ENDREGION}
+
+end.
+
+

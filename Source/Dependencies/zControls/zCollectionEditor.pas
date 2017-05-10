@@ -89,7 +89,7 @@ type
   private
     FCollection : TCollection;
     FInspector  : TzObjectInspector;
-    FContext    : TRttiContext;
+  //  FContext    : TRttiContext;
 
     function GetActiveItem: TCollectionItem;
 
@@ -217,15 +217,15 @@ function TzCollectionEditorDialog.FInspectorItemSetValue(Sender: TControl;
   PItem: PPropItem; var NewValue: TValue): Boolean;
 var
   I  : Integer;
-  S  : string;
-  V  : TValue;
-  O  : TObject;
+  //S  : string;
+  //V  : TValue;
+  //O  : TObject;
 begin
   for I := 0 to lvCollectionItems.Items.Count - 1 do
   begin
     if lvCollectionItems.Items[I].Selected then
     begin
-      O := FCollection.Items[I];
+      //O := FCollection.Items[I];
 
 
       // TODO : does not work anymore!
