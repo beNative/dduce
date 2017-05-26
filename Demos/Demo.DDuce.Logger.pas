@@ -264,9 +264,9 @@ end;
 
 procedure TfrmLogger.actSendODSExecute(Sender: TObject);
 begin
-  //OutputDebugStringA('heyA');
-  OutputDebugString('hey');
-  //OutputDebugStringW('heyW');
+//  OutputDebugStringA('heyA');
+//  OutputDebugString('hey');
+  OutputDebugStringW('heyW');
 end;
 
 procedure TfrmLogger.actSendRecordExecute(Sender: TObject);

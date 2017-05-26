@@ -22,12 +22,14 @@ interface
 
 uses
   System.Classes,
-  Vcl.Forms, Vcl.Controls;
+  Vcl.Forms, Vcl.Controls,
+
+  Spring;
 
 type
   TFormSettings = class(TPersistent)
   private
-    FOnChanged   : TNotifyEvent;
+    FOnChanged   : Event<TNotifyEvent>;
     FWidth       : Integer;
     FHeight      : Integer;
     FLeft        : Integer;
@@ -35,14 +37,15 @@ type
     FFormStyle   : TFormStyle;
     FWindowState : TWindowState;
 
+  protected
     procedure SetFormStyle(AValue: TFormStyle);
     procedure SetHeight(AValue: Integer);
     procedure SetLeft(AValue: Integer);
     procedure SetTop(AValue: Integer);
     procedure SetWidth(AValue: Integer);
     procedure SetWindowState(AValue: TWindowState);
+    function GetOnChanged: IEvent<TNotifyEvent>;
 
-  protected
     procedure DoChanged;
 
   public
@@ -51,8 +54,8 @@ type
     procedure AssignTo(Dest: TPersistent); override;
     procedure Assign(Source: TPersistent); override;
 
-    property OnChanged: TNotifyEvent
-      read FOnChanged write FOnChanged;
+    property OnChanged: IEvent<TNotifyEvent>
+      read GetOnChanged;
 
   published
     property Left: Integer
@@ -97,50 +100,59 @@ end;
 
 procedure TFormSettings.SetFormStyle(AValue: TFormStyle);
 begin
-  if FFormStyle = AValue then
-    Exit;
-  FFormStyle := AValue;
-  DoChanged;
+  if FFormStyle <> AValue then
+  begin
+    FFormStyle := AValue;
+    DoChanged;
+  end;
 end;
 
 procedure TFormSettings.SetHeight(AValue: Integer);
 begin
-  if FHeight = AValue then
-    Exit;
-  FHeight := AValue;
-  DoChanged;
+  if Height <> AValue then
+  begin
+    FHeight := AValue;
+    DoChanged;
+  end;
 end;
 
 procedure TFormSettings.SetLeft(AValue: Integer);
 begin
-  if FLeft = AValue then
-    Exit;
-  FLeft := AValue;
-  DoChanged;
+  if Left <> AValue then
+  begin
+    FLeft := AValue;
+    DoChanged;
+  end;
 end;
 
 procedure TFormSettings.SetTop(AValue: Integer);
 begin
-  if FTop = AValue then
-    Exit;
-  FTop := AValue;
-  DoChanged;
+  if Top <> AValue then
+  begin
+    FTop := AValue;
+    DoChanged;
+  end;
 end;
 
 procedure TFormSettings.SetWidth(AValue: Integer);
 begin
-  if FWidth = AValue then
-    Exit;
-  FWidth := AValue;
-  DoChanged;
+  if Width <> AValue then
+  begin
+    FWidth := AValue;
+    DoChanged;
+  end;
+end;
+
+function TFormSettings.GetOnChanged: IEvent<TNotifyEvent>;
+begin
+  Result := FOnChanged;
 end;
 {$ENDREGION}
 
 {$REGION 'event dispatch methods'}
 procedure TFormSettings.DoChanged;
 begin
-  if Assigned(FOnChanged) then
-    FOnChanged(Self);
+  FOnChanged.Invoke(Self);
 end;
 {$ENDREGION}
 

@@ -229,7 +229,7 @@ procedure TEditorSettings.AfterConstruction;
 begin
   inherited AfterConstruction;
   FFormSettings := TFormSettings.Create;
-  FFormSettings.OnChanged := FFormSettingsChanged;
+  FFormSettings.OnChanged.Add(FFormSettingsChanged);
   FColors := TEditorColorSettings.Create;
   FColors.OnChanged := FColorsChanged;
   FEditorOptions := TEditorOptionsSettings.Create;
@@ -258,6 +258,7 @@ end;
 
 procedure TEditorSettings.BeforeDestruction;
 begin
+  FFormSettings.OnChanged.Remove(FFormSettingsChanged);
   FToolSettings.Free;
   FColors.Free;
   FEditorOptions.Free;

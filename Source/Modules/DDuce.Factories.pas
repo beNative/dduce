@@ -205,7 +205,7 @@ const
     { Enable alpha blending for node selections. }
     toUseBlendedSelection,
     { Show simple static background instead of a tiled one. }
-    toStaticBackground,
+    toStaticBackground//,
     { Display child nodes above their parent. }
 //    toChildrenAbove,
     { Draw the tree with a fixed indent. }
@@ -213,7 +213,7 @@ const
     { Use the explorer theme if run under Windows Vista (or above). }
 //    toUseExplorerTheme
     { Do not show tree lines if theming is used. }
-    toHideTreeLinesIfThemed
+//    toHideTreeLinesIfThemed
     { Draw nodes even if they are filtered out. }
 //    toShowFilteredNodes
   ];
