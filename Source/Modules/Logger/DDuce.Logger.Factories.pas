@@ -26,6 +26,8 @@ uses
 type
   TLoggerFactories = class sealed
     class function CreateLogger: ILogger;
+    class function CreateWinIPCChannel: ILogChannel;
+    class function CreateZeroMQChannel: ILogChannel;
 
   end;
 
@@ -38,6 +40,16 @@ uses
 class function TLoggerFactories.CreateLogger: ILogger;
 begin
   Result := TLogger.Create;
+end;
+
+class function TLoggerFactories.CreateWinIPCChannel: ILogChannel;
+begin
+  Result := TWinIPCChannel.Create;
+end;
+
+class function TLoggerFactories.CreateZeroMQChannel: ILogChannel;
+begin
+  Result := TZeroMQChannel.Create;
 end;
 
 end.

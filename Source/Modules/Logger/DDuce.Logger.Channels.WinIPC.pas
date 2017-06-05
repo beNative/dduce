@@ -113,7 +113,8 @@ begin
       FBuffer.WriteBuffer(AMsg.MsgType, SizeOf(Integer));
       FBuffer.WriteBuffer(AMsg.TimeStamp, SizeOf(TDateTime));
       FBuffer.WriteBuffer(TextSize, SizeOf(Integer));
-      FBuffer.WriteBuffer(AMsg.Text[1], TextSize);
+      if TextSize > 0 then
+        FBuffer.WriteBuffer(AMsg.Text[1], TextSize);
       if AMsg.Data <> nil then
       begin
         DataSize := AMsg.Data.Size;
