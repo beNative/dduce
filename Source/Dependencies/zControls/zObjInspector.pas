@@ -3636,15 +3636,23 @@ begin
     Exit;
   if FList.ItemIndex < 0 then
     Exit;
-  ObjValue := (FList.Items.Objects[FList.ItemIndex]);
-  if FPropItem.Prop.PropertyType.TypeKind = tkMethod then
+  if FPropItem.Prop.PropertyType.TypeKind in
+    [tkUString, tkUnicodeString, tkString, tkShortString] then
   begin
-    Method.Code := ObjValue;
-    Method.Data := FPropItem.ComponentRoot;
-    NewValue := DefaultValueManager.GetValue(FPropItem, Method);
+    NewValue := FList.Items[FList.ItemIndex];
   end
   else
-    NewValue := DefaultValueManager.GetValue(FPropItem, ObjValue);
+  begin
+    ObjValue := (FList.Items.Objects[FList.ItemIndex]);
+    if FPropItem.Prop.PropertyType.TypeKind = tkMethod then
+    begin
+      Method.Code := ObjValue;
+      Method.Data := FPropItem.ComponentRoot;
+      NewValue := DefaultValueManager.GetValue(FPropItem, Method);
+    end
+    else
+      NewValue := DefaultValueManager.GetValue(FPropItem, ObjValue);
+  end;
   FInspector.DoSetValue(FPropItem, NewValue);
 end;
 
