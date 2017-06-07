@@ -126,17 +126,6 @@ uses
   DDuce.Editor.Filter.Settings in '..\Source\Modules\Editor\DDuce.Editor.Filter.Settings.pas',
   DDuce.Editor.Filter.Toolview in '..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas' {frmFilter},
   DDuce.RTTEye in '..\Source\Modules\RTTEye\DDuce.RTTEye.pas' {frmRTTEye},
-  zBase in '..\Source\Dependencies\zControls\zBase.pas',
-  zCanvasStack in '..\Source\Dependencies\zControls\zCanvasStack.pas',
-  zControlsReg in '..\Source\Dependencies\zControls\zControlsReg.pas',
-  zGraphicDialog in '..\Source\Dependencies\zControls\zGraphicDialog.pas' {GraphicDialog},
-  zObjInspDialogs in '..\Source\Dependencies\zControls\zObjInspDialogs.pas',
-  zObjInspector in '..\Source\Dependencies\zControls\zObjInspector.pas',
-  zObjInspList in '..\Source\Dependencies\zControls\zObjInspList.pas',
-  zRecList in '..\Source\Dependencies\zControls\zRecList.pas',
-  zStringsDialog in '..\Source\Dependencies\zControls\zStringsDialog.pas' {StringsDialog},
-  zUtils in '..\Source\Dependencies\zControls\zUtils.pas',
-  zCollectionEditor in '..\Source\Dependencies\zControls\zCollectionEditor.pas' {zCollectionEditorDialog},
   DDuce.ObjectInspector in '..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas' {frmComponentInspector};
 
 {$R *.res}

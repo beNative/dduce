@@ -297,26 +297,6 @@
             <Form>frmRTTEye</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Source\Dependencies\zControls\zBase.pas"/>
-        <DCCReference Include="..\Source\Dependencies\zControls\zCanvasStack.pas"/>
-        <DCCReference Include="..\Source\Dependencies\zControls\zControlsReg.pas"/>
-        <DCCReference Include="..\Source\Dependencies\zControls\zGraphicDialog.pas">
-            <Form>GraphicDialog</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="..\Source\Dependencies\zControls\zObjInspDialogs.pas"/>
-        <DCCReference Include="..\Source\Dependencies\zControls\zObjInspector.pas"/>
-        <DCCReference Include="..\Source\Dependencies\zControls\zObjInspList.pas"/>
-        <DCCReference Include="..\Source\Dependencies\zControls\zRecList.pas"/>
-        <DCCReference Include="..\Source\Dependencies\zControls\zStringsDialog.pas">
-            <Form>StringsDialog</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="..\Source\Dependencies\zControls\zUtils.pas"/>
-        <DCCReference Include="..\Source\Dependencies\zControls\zCollectionEditor.pas">
-            <Form>zCollectionEditorDialog</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas">
             <Form>frmComponentInspector</Form>
             <FormType>dfm</FormType>
