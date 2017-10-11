@@ -477,7 +477,6 @@ type
 
     procedure DeleteNode(Node: PVirtualNode; Reindex: Boolean = True);
 
-
     property XMLDocument: TNativeXml
       read GetXMLDocument;
 

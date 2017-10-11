@@ -23,8 +23,6 @@ uses
   System.Classes, System.SysUtils,
   Vcl.Graphics;
 
-  //DSharp.Core.Collections;
-
 type
   TNodeType = (
     ntUnknown,   // Error
