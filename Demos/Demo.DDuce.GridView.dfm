@@ -30,7 +30,6 @@ object frmGridView: TfrmGridView
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 562
   end
   object pnlRight: TPanel
     Left = 295
@@ -40,7 +39,6 @@ object frmGridView: TfrmGridView
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 1024
   end
   object imlMain: TImageList
     Left = 368

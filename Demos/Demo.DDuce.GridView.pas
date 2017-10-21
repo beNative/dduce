@@ -78,6 +78,8 @@ implementation
 {$R *.dfm}
 
 uses
+  System.StrUtils,
+
   Spring.Helpers,
 
   DDuce.RandomData, DDuce.DynamicRecord, DDuce.Components.Factories,
@@ -115,15 +117,20 @@ begin
       begin
         Alignment := taCenter;
       end;
+      if MatchText(F.Name, ['Address', 'Company', 'Email']) then
+        Visible := False;
+
     end;
   end;
 
+  FGridView.ShowCellTips    := True;
   FGridView.Rows.Count      := FList.Count;
   FGridView.OnDrawCell      := FGridViewDrawCell;
   FGridView.OnGetCellText   := FGridViewGetCellText;
   FGridView.OnGetCheckState := FGridViewGetCheckState;
   FGridView.OnGetCellColors := FGridViewGetCellColors;
   FGridView.AutoSizeCols;
+  FGridView.FitColsToClient := True;
 end;
 {$ENDREGION}
 

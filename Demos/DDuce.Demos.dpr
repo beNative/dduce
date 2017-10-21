@@ -126,7 +126,7 @@ uses
   DDuce.Editor.Filter.Settings in '..\Source\Modules\Editor\DDuce.Editor.Filter.Settings.pas',
   DDuce.Editor.Filter.Toolview in '..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas' {frmFilter},
   DDuce.RTTEye in '..\Source\Modules\RTTEye\DDuce.RTTEye.pas' {frmRTTEye},
-  DDuce.ObjectInspector in '..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas' {frmComponentInspector};
+  DDuce.ObjectInspector.zObjectInspector in '..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.zObjectInspector.pas' {frmComponentInspectorzObjectInspector};
 
 {$R *.res}
 

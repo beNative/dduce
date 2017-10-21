@@ -95,12 +95,12 @@ begin
 //  );
   //FSelectionToolbar.Align := alRight;
 end;
-{$ENDREGION}
 
 procedure TfrmEditor.BeforeDestruction;
 begin
   FPI.Free;
-  inherited;
+  inherited BeforeDestruction;
 end;
+{$ENDREGION}
 
 end.
