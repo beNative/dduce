@@ -710,7 +710,7 @@ implementation
 uses
   TypInfo,
 
-  DDuce.Reflect,
+
 
   DDuce.Components.XMLTree.Editors;
 

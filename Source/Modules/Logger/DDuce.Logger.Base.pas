@@ -224,7 +224,7 @@ var
 implementation
 
 uses
-  System.TypInfo, System.StrUtils, System.UIConsts,
+  System.TypInfo, System.UIConsts,
   Vcl.Forms, Vcl.Menus,
 
   Spring,

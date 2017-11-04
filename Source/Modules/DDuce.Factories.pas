@@ -184,7 +184,7 @@ const
       node). }
     toShowRoot,
     { Display tree lines to show hierarchy of nodes. }
-    toShowTreeLines,
+//    toShowTreeLines,
     { Display vertical lines (depending on columns) to simulate a grid. }
 //    toShowVertGridLines,
     { Draw UI elements (header, tree buttons etc.) according to the current
@@ -201,7 +201,7 @@ const
       is enabled too. }
 //    toFullVertGridLines,
     { Do not draw node selection, regardless of focused state. }
-//    toAlwaysHideSelection,
+    toAlwaysHideSelection,
     { Enable alpha blending for node selections. }
     toUseBlendedSelection,
     { Show simple static background instead of a tiled one. }

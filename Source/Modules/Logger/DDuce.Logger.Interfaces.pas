@@ -22,7 +22,7 @@ interface
 
 uses
   System.Classes, System.Rtti, System.SysUtils, System.Types, System.UITypes,
-  System.UIConsts,
+
   Vcl.Menus,
 
   Spring.Collections;

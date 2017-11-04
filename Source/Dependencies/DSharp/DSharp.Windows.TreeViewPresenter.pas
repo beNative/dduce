@@ -37,7 +37,7 @@ uses
   ComCtrls,
   Controls,
   DSharp.Bindings.Collections,
-  DSharp.Bindings.Notifications,
+
   DSharp.Core.DataTemplates,
   DSharp.Windows.ColumnDefinitions,
   DSharp.Windows.CustomPresenter,

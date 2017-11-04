@@ -34,7 +34,7 @@ type
 implementation
 
 uses
-  DDuce.Logger.Base, DDuce.Logger.Channels.LogFile, DDuce.Logger.Channels.WinIPC,
+  DDuce.Logger.Base, DDuce.Logger.Channels.WinIPC,
   DDuce.Logger.Channels.ZeroMQ;
 
 class function TLoggerFactories.CreateLogger: ILogger;

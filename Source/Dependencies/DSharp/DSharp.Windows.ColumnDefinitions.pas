@@ -39,7 +39,7 @@ uses
   Graphics,
   ImgList,
   Spring,
-  Spring.Collections,
+
   SysUtils,
   Types;
 
@@ -197,7 +197,7 @@ implementation
 
 uses
   DSharp.Bindings.Collections,
-  DSharp.Bindings.Notifications,
+
   StrUtils;
 
 { TColumnDefinition }
