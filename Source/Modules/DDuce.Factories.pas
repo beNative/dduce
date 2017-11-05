@@ -44,7 +44,7 @@ uses
 
   VirtualTrees,
 
-  zObjInspector;
+  zObjInspector, zValueManager;
 
 type
   TFactories = class sealed
@@ -79,10 +79,11 @@ type
     ): TTreeViewPresenter; overload; static;
 
     class function CreatezObjectInspector(
-      AOwner      : TComponent;
-      AParent     : TWinControl;
-      AObject     : TObject = nil;
-      const AName : string = ''
+      AOwner        : TComponent;
+      AParent       : TWinControl;
+      AObject       : TObject = nil;
+      AValueManager : TzCustomValueManager = nil;
+      const AName   : string = ''
     ): TzObjectInspector; static;
   end;
 
@@ -400,11 +401,12 @@ begin
 end;
 
 class function TFactories.CreatezObjectInspector(AOwner: TComponent;
-  AParent: TWinControl; AObject: TObject; const AName: string): TzObjectInspector;
+  AParent: TWinControl; AObject: TObject; AValueManager: TzCustomValueManager;
+  const AName: string): TzObjectInspector;
 var
   OI: TzObjectInspector;
 begin
-  OI                  := TzObjectInspector.Create(AOwner);
+  OI                  := TzObjectInspector.Create(AOwner, AValueManager);
   OI.Parent           := AParent;
   OI.Align            := alClient;
   OI.AlignWithMargins := True;

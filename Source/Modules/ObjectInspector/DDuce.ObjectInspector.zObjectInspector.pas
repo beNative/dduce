@@ -27,7 +27,7 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
   Vcl.ExtCtrls,
 
-  zObjInspector;
+  zObjInspector, zObjInspTypes;
 
 type
   TfrmComponentInspectorzObjectInspector = class(TForm)
