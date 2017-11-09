@@ -134,7 +134,7 @@ const
       (CS_HREDRAW/CS_VREDRAW). }
 //    toFullRepaintOnResize,
     { Use some special enhancements to simulate and support grid behavior. }
-//    toGridExtensions,
+    toGridExtensions,
     { Initialize nodes when saving a tree to a stream. }
     toInitOnSave,
     { Tree behaves like TListView in report mode. }
@@ -187,7 +187,7 @@ const
     { Display tree lines to show hierarchy of nodes. }
 //    toShowTreeLines,
     { Display vertical lines (depending on columns) to simulate a grid. }
-//    toShowVertGridLines,
+    toShowVertGridLines,
     { Draw UI elements (header, tree buttons etc.) according to the current
       theme if enabled (Windows XP+ only, application must be themed). }
     toThemeAware,
@@ -202,7 +202,7 @@ const
       is enabled too. }
 //    toFullVertGridLines,
     { Do not draw node selection, regardless of focused state. }
-    toAlwaysHideSelection,
+//    toAlwaysHideSelection,
     { Enable alpha blending for node selections. }
     toUseBlendedSelection,
     { Show simple static background instead of a tiled one. }

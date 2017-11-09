@@ -121,7 +121,7 @@ type
     procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
     procedure DoFreeNode(Node: PVirtualNode); override;
     function DoGetImageIndex(Node: PVirtualNode; Kind: TVTImageKind;
-      Column: TColumnIndex; var Ghosted: Boolean; var Index: Integer):
+      Column: TColumnIndex; var Ghosted: Boolean; var Index: TImageIndex):
       TCustomImageList; override;
     procedure DoPaintText(Node: PVirtualNode; const Canvas: TCanvas;
       Column: TColumnIndex; TextType: TVSTTextType); override;
@@ -244,7 +244,7 @@ end;
 
 function TLogTree.DoGetImageIndex(Node: PVirtualNode; Kind: TVTImageKind;
   Column: TColumnIndex; var Ghosted: Boolean;
-  var Index: Integer): TCustomImageList;
+  var Index: TImageIndex): TCustomImageList;
 var
   NodeData: PLogNodeData;
 begin

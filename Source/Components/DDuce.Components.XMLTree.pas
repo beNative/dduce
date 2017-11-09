@@ -367,7 +367,7 @@ type
       Kind        : TVTImageKind;
       Column      : TColumnIndex;
       var Ghosted : Boolean;
-      var Index   : Integer
+      var Index   : TImageIndex
     ): TCustomImageList; override;
     procedure DoPaintText(
       ANode        : PVirtualNode;
@@ -1189,7 +1189,7 @@ begin
 end;
 
 function TXMLTree.DoGetImageIndex(ANode: PVirtualNode; Kind: TVTImageKind;
-  Column: TColumnIndex; var Ghosted: Boolean; var Index: Integer)
+  Column: TColumnIndex; var Ghosted: Boolean; var Index: TImageIndex)
   : TCustomImageList;
 begin
   if (Column = Header.MainColumn) and (Kind in [ikNormal, ikSelected]) then
