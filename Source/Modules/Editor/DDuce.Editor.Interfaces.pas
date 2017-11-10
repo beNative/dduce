@@ -770,10 +770,10 @@ type
     procedure Save;
     procedure SaveAll;
     function SelectBlockAroundCursor(
-      const AStartTag        : string;
-      const AEndTag          : string;
-            AIncludeStartTag : Boolean;
-            AIncludeEndTag   : Boolean
+      const AStartTag  : string;
+      const AEndTag    : string;
+      AIncludeStartTag : Boolean;
+      AIncludeEndTag   : Boolean
     ): Boolean;
     procedure SmartSelect;
     procedure StripCommentsFromSelection;
@@ -874,7 +874,6 @@ type
       read GetActionList;
 
     { TODO -oTS : Declare all actions as properties? }
-
   end;
 
   { IEditorManager }
@@ -906,8 +905,8 @@ type
       const AText      : string = ''
     ): IEditorView;
     function SaveFile(
-      const AFileName   : string = '';
-            AShowDialog : Boolean = False
+      const AFileName : string = '';
+      AShowDialog     : Boolean = False
     ): Boolean;
 
     property PersistSettings: Boolean
@@ -946,8 +945,6 @@ type
     property SearchEngine: IEditorSearchEngine
       read GetSearchEngine;
   end;
-
-//-----------------------------------------------------------------------------
 
   TEditorViewListEnumerator = class
   strict private
@@ -997,18 +994,18 @@ type
   IEditorViewFactory = interface
   ['{CAEF28D5-0E70-4D4E-AEC7-07BD6E743945}']
     function CreateInstance(
-             AParent       : TWinControl;
-             AManager      : IEditorManager;
-       const AName         : string = '';
-       const AFileName     : string = '';
-       const AHighlighter  : string = 'TXT'
+      AParent            : TWinControl;
+      AManager           : IEditorManager;
+      const AName        : string = '';
+      const AFileName    : string = '';
+      const AHighlighter : string = 'TXT'
     ): IEditorView;
   end;
 
   IEditorSettingsFactory = interface
   ['{6479785C-A7C0-40D9-9036-D39BEE780CA2}']
     function CreateInstance(
-            AOwner    : TComponent = nil;
+      AOwner          : TComponent = nil;
       const AFileName : string = ''
     ): IEditorSettings;
   end;
@@ -1023,18 +1020,18 @@ type
   IEditorToolbarsFactory = interface
   ['{0E1F34F3-E5AF-4A59-8B13-0F9B4D11D69D}']
     function CreateMainToolbar(
-        AOwner  : TComponent;
-        AParent : TWinControl
+      AOwner  : TComponent;
+      AParent : TWinControl
     ): TToolbar;
 
     function CreateSelectionToolbar(
-        AOwner  : TComponent;
-        AParent : TWinControl
+      AOwner  : TComponent;
+      AParent : TWinControl
     ): TToolbar;
 
     function CreateRightToolbar(
-        AOwner  : TComponent;
-        AParent : TWinControl
+      AOwner  : TComponent;
+      AParent : TWinControl
     ): TToolbar;
   end;
 
@@ -1088,4 +1085,3 @@ end;
 {$ENDREGION}
 
 end.
-
