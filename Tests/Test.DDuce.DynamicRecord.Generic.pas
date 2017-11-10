@@ -21,11 +21,11 @@ unit Test.DDuce.DynamicRecord.Generic;
 interface
 
 {
-  Current limitations of TRecord<T>:
+  Current limitations of DynamicRecord<T>:
 
     - FromStrings should cast to the field type
 
-   In a standard TRecord the data is stored in a collection of named TValue
+   In a standard DynamicRecord the data is stored in a collection of named TValue
    variables.
 
    In the generic version the data is stored in (a copy of the instance of)
@@ -47,10 +47,10 @@ uses
   Test.Data;
 
 type
-  TestGenericTRecord = class(TTestCase)
+  TestGenericDynamicRecord = class(TTestCase)
   private
     FObject        : TTestClass;
-    FRecord        : TRecord<TTestClass>;
+    FRecord        : DynamicRecord<TTestClass>;
     FDynamicRecord : IDynamicRecord<TTestClass>;
 
   public
@@ -72,16 +72,16 @@ type
 
     procedure Test_ToStrings_method;
 
-    procedure Test_assignment_operator_for_generic_TRecord_to_TRecord;
-    procedure Test_assignment_operator_for_TRecord_to_generic_TRecord;
-    procedure Test_assignment_operator_for_generic_TRecord_to_generic_TRecord;
+    procedure Test_assignment_operator_for_generic_DynamicRecord_to_DynamicRecord;
+    procedure Test_assignment_operator_for_DynamicRecord_to_generic_DynamicRecord;
+    procedure Test_assignment_operator_for_generic_DynamicRecord_to_generic_DynamicRecord;
     procedure Test_assignment_operator_for_generic_IDynamicRecord_to_generic_IDynamicRecord;
     procedure Test_assignment_operator_for_IDynamicRecord_to_generic_IDynamicRecord;
 
     procedure Test_Assign_method_for_IDynamicRecord_argument;
-    procedure Test_Assign_method_for_TRecord_argument;
+    procedure Test_Assign_method_for_DynamicRecord_argument;
     procedure Test_Assign_method_for_generic_IDynamicRecord_argument;
-    procedure Test_Assign_method_for_generic_TRecord_argument;
+    procedure Test_Assign_method_for_generic_DynamicRecord_argument;
     procedure Test_Assign_method_for_generic_argument;
 
     procedure Test_Count_Property;
@@ -106,7 +106,7 @@ const
 
 {$REGION 'public methods'}
 {$REGION 'SetUp and TearDown methods'}
-procedure TestGenericTRecord.SetUp;
+procedure TestGenericDynamicRecord.SetUp;
 begin
   inherited SetUp;
   FObject := TTestClass.Create;
@@ -122,7 +122,7 @@ begin
   FRecord.Data.TestDateTime := Now;
   FRecord.Data.TestChar     := 'C';
 
-  FDynamicRecord := TRecord<TTestClass>.CreateDynamicRecord;
+  FDynamicRecord := DynamicRecord<TTestClass>.CreateDynamicRecord;
   FDynamicRecord.Data.TestBoolean := True;
   FDynamicRecord.Data.TestString  := 'Test';
   FDynamicRecord.Data.TestInteger := 5;
@@ -131,7 +131,7 @@ begin
   FDynamicRecord.Data.TestChar     := 'C';
 end;
 
-procedure TestGenericTRecord.TearDown;
+procedure TestGenericDynamicRecord.TearDown;
 begin
   FreeAndNil(FObject);
   FDynamicRecord := nil;
@@ -141,17 +141,17 @@ end;
 {$ENDREGION}
 
 {$REGION 'Test methods'}
-procedure TestGenericTRecord.Test_ContainsField_method;
+procedure TestGenericDynamicRecord.Test_ContainsField_method;
 begin
   CheckTrue(FRecord.ContainsField('TestChar'));
 end;
 
-procedure TestGenericTRecord.Test_Count_Property;
+procedure TestGenericDynamicRecord.Test_Count_Property;
 begin
   CheckEquals(6, FRecord.Count);
 end;
 
-procedure TestGenericTRecord.Test_FromStrings_method;
+procedure TestGenericDynamicRecord.Test_FromStrings_method;
 var
   SL : TStrings;
 begin
@@ -167,7 +167,7 @@ begin
   end;
 end;
 
-procedure TestGenericTRecord.Test_IsBlank_method;
+procedure TestGenericDynamicRecord.Test_IsBlank_method;
 begin
   FRecord.Data.TestString := '';
   CheckTrue(FRecord.IsBlank(TEST_STRING));
@@ -175,12 +175,12 @@ end;
 
 { TODO: IsEmpty has little meaning in the generic version. }
 
-procedure TestGenericTRecord.Test_IsEmpty_method;
+procedure TestGenericDynamicRecord.Test_IsEmpty_method;
 begin
   CheckFalse(FRecord.IsEmpty);
 end;
 
-procedure TestGenericTRecord.Test_ToBoolean_method;
+procedure TestGenericDynamicRecord.Test_ToBoolean_method;
 begin
   CheckTrue(FRecord.ToBoolean(TEST_STRING, True), TEST_STRING);
   CheckTrue(FRecord.ToBoolean(TEST_DOUBLE, True), TEST_DOUBLE);
@@ -188,7 +188,7 @@ begin
   CheckTrue(FRecord.ToBoolean(TEST_INTEGER, True), TEST_INTEGER);
 end;
 
-procedure TestGenericTRecord.Test_ToFloat_Method;
+procedure TestGenericDynamicRecord.Test_ToFloat_Method;
 begin
   CheckEquals(5, FRecord.ToFloat(TEST_INTEGER), TEST_INTEGER);
   CheckTrue(IsZero(FRecord.ToFloat(TEST_STRING)), TEST_STRING);
@@ -196,7 +196,7 @@ begin
   CheckEquals(3.14, FRecord.ToFloat(TEST_DOUBLE), 0.001);
 end;
 
-procedure TestGenericTRecord.Test_ToInteger_method;
+procedure TestGenericDynamicRecord.Test_ToInteger_method;
 begin
   CheckEquals(1, FRecord.ToInteger(TEST_BOOLEAN), TEST_BOOLEAN);
   CheckEquals(5, FRecord.ToInteger(TEST_INTEGER), TEST_INTEGER);
@@ -205,7 +205,7 @@ begin
   CheckEquals(0, FRecord.ToInteger(TEST_DOUBLE), TEST_DOUBLE);
 end;
 
-procedure TestGenericTRecord.Test_ToString_method;
+procedure TestGenericDynamicRecord.Test_ToString_method;
 begin
   CheckEquals('True', FRecord.ToString(TEST_BOOLEAN), TEST_BOOLEAN);
   CheckEquals('5', FRecord.ToString(TEST_INTEGER), TEST_INTEGER);
@@ -213,7 +213,7 @@ begin
   CheckEquals('3,14', FRecord.ToString(TEST_DOUBLE), TEST_DOUBLE);
 end;
 
-procedure TestGenericTRecord.Test_ToStrings_method;
+procedure TestGenericDynamicRecord.Test_ToStrings_method;
 var
   SL : TStrings;
 begin
@@ -231,9 +231,9 @@ end;
 {$ENDREGION}
 
 {$REGION 'Test assignment operator'}
-procedure TestGenericTRecord.Test_assignment_operator_for_generic_TRecord_to_TRecord;
+procedure TestGenericDynamicRecord.Test_assignment_operator_for_generic_DynamicRecord_to_DynamicRecord;
 var
-  R : TRecord;
+  R : DynamicRecord;
   F : IDynamicField;
 begin
   R := FRecord;
@@ -243,9 +243,9 @@ begin
   end;
 end;
 
-procedure TestGenericTRecord.Test_assignment_operator_for_TRecord_to_generic_TRecord;
+procedure TestGenericDynamicRecord.Test_assignment_operator_for_DynamicRecord_to_generic_DynamicRecord;
 var
-  R : TRecord;
+  R : DynamicRecord;
   F : IDynamicField;
 begin
   R.Data.TestBoolean  := True;
@@ -263,9 +263,9 @@ begin
   CheckFalse(R.Data.TestInteger = FRecord.Data.TestInteger);
 end;
 
-procedure TestGenericTRecord.Test_assignment_operator_for_generic_TRecord_to_generic_TRecord;
+procedure TestGenericDynamicRecord.Test_assignment_operator_for_generic_DynamicRecord_to_generic_DynamicRecord;
 var
-  R : TRecord<TTestClass>;
+  R : DynamicRecord<TTestClass>;
   F : IDynamicField;
 begin
   R := FRecord;
@@ -277,12 +277,12 @@ begin
   CheckNotEquals(R.Data.TestInteger, FRecord.Data.TestInteger);
 end;
 
-procedure TestGenericTRecord.Test_assignment_operator_for_generic_IDynamicRecord_to_generic_IDynamicRecord;
+procedure TestGenericDynamicRecord.Test_assignment_operator_for_generic_IDynamicRecord_to_generic_IDynamicRecord;
 var
   DR : IDynamicRecord<TTestClass>;
   F  : IDynamicField;
 begin
-  DR := TRecord<TTestClass>.CreateDynamicRecord;
+  DR := DynamicRecord<TTestClass>.CreateDynamicRecord;
   DR := FDynamicRecord; // reference is copied
   for F in FDynamicRecord do
   begin
@@ -292,12 +292,12 @@ begin
   CheckEquals(DR.Data.TestInteger, FDynamicRecord.Data.TestInteger);
 end;
 
-procedure TestGenericTRecord.Test_assignment_operator_for_IDynamicRecord_to_generic_IDynamicRecord;
+procedure TestGenericDynamicRecord.Test_assignment_operator_for_IDynamicRecord_to_generic_IDynamicRecord;
 var
   DR : IDynamicRecord;
   F  : IDynamicField;
 begin
-  DR := TRecord.CreateDynamicRecord; // is not needed, but added for clarity
+  DR := DynamicRecord.CreateDynamicRecord; // is not needed, but added for clarity
 
   DR := FDynamicRecord; // reference is copied
   for F in FDynamicRecord do
@@ -310,11 +310,11 @@ end;
 {$ENDREGION}
 
 {$REGION 'Test Assign method'}
-procedure TestGenericTRecord.Test_Assign_method_for_IDynamicRecord_argument;
+procedure TestGenericDynamicRecord.Test_Assign_method_for_IDynamicRecord_argument;
 var
   DR : IDynamicRecord;
 begin
-  DR := TRecord.CreateDynamicRecord;
+  DR := DynamicRecord.CreateDynamicRecord;
   DR.Data.TestInteger := 5;
   DR.Data.TestString  := 'Test';
   FRecord.Assign(DR);
@@ -324,9 +324,9 @@ begin
   CheckNotEquals(DR.ToInteger(TEST_INTEGER), FRecord.Data.TestInteger);
 end;
 
-procedure TestGenericTRecord.Test_Assign_method_for_TRecord_argument;
+procedure TestGenericDynamicRecord.Test_Assign_method_for_DynamicRecord_argument;
 var
-  R : TRecord;
+  R : DynamicRecord;
 begin
   R.Data.TestInteger := 8;
   R.Data.TestString  := 'Foo';
@@ -337,11 +337,11 @@ begin
   CheckNotEquals(R.ToString(TEST_STRING), FRecord.Data.TestString);
 end;
 
-procedure TestGenericTRecord.Test_Assign_method_for_generic_IDynamicRecord_argument;
+procedure TestGenericDynamicRecord.Test_Assign_method_for_generic_IDynamicRecord_argument;
 var
   DR : IDynamicRecord<TTestClass>;
 begin
-  DR := TRecord<TTestClass>.CreateDynamicRecord;
+  DR := DynamicRecord<TTestClass>.CreateDynamicRecord;
   DR.Data.TestInteger := 7;
   DR.Data.TestString  := 'Some test';
   FRecord.Assign(DR);
@@ -349,9 +349,9 @@ begin
   CheckEquals(DR.Data.TestString, FRecord.Data.TestString);
 end;
 
-procedure TestGenericTRecord.Test_Assign_method_for_generic_TRecord_argument;
+procedure TestGenericDynamicRecord.Test_Assign_method_for_generic_DynamicRecord_argument;
 var
-  R : TRecord<TTestClass>;
+  R : DynamicRecord<TTestClass>;
 begin
   R.Data.TestInteger := 1;
   R.Data.TestString  := 'Another test';
@@ -362,7 +362,7 @@ begin
   CheckNotEquals(R.Data.TestInteger, FRecord.Data.TestInteger);
 end;
 
-procedure TestGenericTRecord.Test_Assign_method_for_generic_argument;
+procedure TestGenericDynamicRecord.Test_Assign_method_for_generic_argument;
 begin
   FRecord.Assign(FObject);
   CheckEquals(FObject.TestInteger, FRecord.Data.TestInteger);

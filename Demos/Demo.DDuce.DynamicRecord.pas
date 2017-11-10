@@ -149,7 +149,7 @@ type
       read FTestNullableChar write FTestNullableChar;
   end;
 
-  TManagedClass = TRecord<TTestClass>;
+  TManagedClass = DynamicRecord<TTestClass>;
 
 type
   TfrmDynamicRecords = class(TForm)
@@ -537,8 +537,8 @@ end;
 
 procedure TfrmDynamicRecords.actCustomTestExecute(Sender: TObject);
 var
-  R  : TRecord;
-  Rg : TRecord<TContact>;
+  R  : DynamicRecord;
+  Rg : DynamicRecord<TContact>;
   //Rn : TRecord;
   //F : IDynamicField;
   //O : TContact;

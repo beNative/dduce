@@ -32,8 +32,8 @@ uses
 
 procedure RegisterTests;
 begin
-  RegisterTest('TRecord', TestTRecord.Suite);
-  RegisterTest('TRecord<T>', TestGenericTRecord.Suite);
+  RegisterTest('DynamicRecord', TestDynamicRecord.Suite);
+  RegisterTest('DynamicRecord<T>', TestGenericDynamicRecord.Suite);
   RegisterTest('Reflect', TestReflect.Suite);
   RegisterTest('Logger', TestLogger.Suite);
 end;

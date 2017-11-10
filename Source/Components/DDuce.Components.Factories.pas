@@ -83,6 +83,7 @@ begin
   GV.Align                    := alClient;
   GV.Header.Flat              := True;
   GV.Header.Font.Style        := [fsBold];
+  GV.Header.GridColor         := True;
   GV.Header.FullSynchronizing := True;
   GV.AlignWithMargins         := True;
   GV.Parent                   := AParent;
