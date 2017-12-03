@@ -22,6 +22,7 @@ interface
 uses
   System.Classes, System.SysUtils,
   Vcl.Graphics;
+  DSharp.Core.Collections;
 
 type
   TNodeType = (
@@ -67,7 +68,7 @@ type
   end;
 
 type
-  TNodeAttributes = class(TOwnedCollection)
+  TNodeAttributes = class(TOwnedCollection<TNodeAttributesItem>)
   private
     function GetItemByType(Index: TNodeType): TNodeAttributesItem;
 
@@ -138,9 +139,9 @@ begin
   Result := nil;
   while (I < Count) and not B do
   begin
-    if (Items[I] as TNodeAttributesItem).NodeType = Index then
+    if Items[I].NodeType = Index then
     begin
-      Result := Items[I] as TNodeAttributesItem;
+      Result := Items[I];
       B := True;
     end;
     Inc(I);
