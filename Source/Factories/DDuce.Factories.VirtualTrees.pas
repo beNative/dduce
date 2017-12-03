@@ -314,8 +314,6 @@ const
   ];
 {$ENDREGION}
 
-
-
 class function TVirtualStringTreeFactory.Create(AOwner: TComponent;
   AParent: TWinControl; const AName: string): TVirtualStringTree;
 var
@@ -345,14 +343,52 @@ end;
 
 class function TVirtualStringTreeFactory.CreateGrid(AOwner: TComponent;
   AParent: TWinControl; const AName: string): TVirtualStringTree;
+var
+  VST : TVirtualStringTree;
 begin
-//
+  Guard.CheckNotNull(AOwner, 'AOwner');
+  Guard.CheckNotNull(AParent, 'AParent');
+  VST := TVirtualStringTree.Create(AOwner);
+  VST.AlignWithMargins  := True;
+  VST.Parent            := AParent;
+  VST.HintMode          := hmTooltip;
+  VST.Align             := alClient;
+  VST.DrawSelectionMode := smBlendedRectangle;
+  VST.Header.Height := 18;
+  VST.Header.Options               := DEFAULT_VST_HEADEROPTIONS;
+  VST.TreeOptions.SelectionOptions := DEFAULT_VST_SELECTIONOPTIONS;
+  VST.TreeOptions.MiscOptions      := DEFAULT_VST_MISCOPTIONS;
+  VST.TreeOptions.PaintOptions     := DEFAULT_VST_PAINTOPTIONS;
+  VST.TreeOptions.StringOptions    := DEFAULT_VST_STRINGOPTIONS;
+  VST.TreeOptions.AnimationOptions := DEFAULT_VST_ANIMATIONOPTIONS;
+  VST.TreeOptions.AutoOptions      := DEFAULT_VST_AUTOOPTIONS;
+  VST.Indent := 2; // show first column as a normal grid column
+
+  Result := VST;
 end;
 
 class function TVirtualStringTreeFactory.CreateTree(AOwner: TComponent;
   AParent: TWinControl; const AName: string): TVirtualStringTree;
+var
+  VST : TVirtualStringTree;
 begin
-//
+  Guard.CheckNotNull(AOwner, 'AOwner');
+  Guard.CheckNotNull(AParent, 'AParent');
+  VST := TVirtualStringTree.Create(AOwner);
+  VST.AlignWithMargins  := True;
+  VST.Parent            := AParent;
+  VST.HintMode          := hmTooltip;
+  VST.Align             := alClient;
+  VST.DrawSelectionMode := smBlendedRectangle;
+  VST.Header.Height := 18;
+  VST.Header.Options               := DEFAULT_VST_HEADEROPTIONS;
+  VST.TreeOptions.SelectionOptions := DEFAULT_VST_SELECTIONOPTIONS;
+  VST.TreeOptions.MiscOptions      := DEFAULT_VST_MISCOPTIONS;
+  VST.TreeOptions.PaintOptions     := DEFAULT_VST_PAINTOPTIONS;
+  VST.TreeOptions.StringOptions    := DEFAULT_VST_STRINGOPTIONS;
+  VST.TreeOptions.AnimationOptions := DEFAULT_VST_ANIMATIONOPTIONS;
+  VST.TreeOptions.AutoOptions      := DEFAULT_VST_AUTOOPTIONS;
+  Result := VST;
 end;
 
 end.

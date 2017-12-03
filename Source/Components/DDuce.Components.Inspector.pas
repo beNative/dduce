@@ -459,8 +459,6 @@ begin
 end;
 
 procedure TCustomInspector.PaintCell(ACell: TGridCell; ARect: TRect);
-var
-  R: TRect;
 begin
   if IsCategoryRow(ACell.Row) then
   begin

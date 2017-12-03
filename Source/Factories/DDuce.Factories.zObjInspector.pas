@@ -39,8 +39,6 @@ type
 
 implementation
 
-{ TzObjectInspectorFactory }
-
 class function TzObjectInspectorFactory.Create(AOwner: TComponent;
   AParent: TWinControl; AObject: TObject; AValueManager: TzCustomValueManager;
   const AName: string): TzObjectInspector;

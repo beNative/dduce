@@ -194,7 +194,7 @@ end;
 
 class function Reflect.Properties<T>(const AArg: T): IDynamicRecord;
 begin
-  Result := TRecord.CreateDynamicRecord;
+  Result := DynamicRecord.Create;
   Result.From(TValue.From(AArg), True, False, True, []);
 end;
 
