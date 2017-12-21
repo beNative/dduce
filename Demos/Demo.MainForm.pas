@@ -107,7 +107,7 @@ uses
   System.StrUtils, System.SysUtils,
   Vcl.Graphics,
 
-  DDuce.Factories, Demo.Factories, Demo.Manager;
+  DDuce.Factories, DDuce.Factories.VirtualTrees, Demo.Factories, Demo.Manager;
 
 type
   TVKSet = set of Byte;
@@ -157,7 +157,7 @@ resourcestring
 procedure TfrmMainMenu.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FVST := TFactories.CreateVirtualStringTree(
+  FVST := TVirtualStringTreeFactory.CreateGrid(
     Self,
     pnlVST
   );

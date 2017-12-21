@@ -81,7 +81,7 @@ implementation
 uses
   System.Rtti,
 
-  DDuce.Factories;
+  DDuce.Factories.zObjInspector;
 
 {$R *.dfm}
 
@@ -219,7 +219,7 @@ end;
 {$REGION 'private methods'}
 procedure TfrmComponentInspectorzObjectInspector.CreatePropertyInspector;
 begin
-  FObjectInspector := TFactories.CreatezObjectInspector(Self, pnlMain);
+  FObjectInspector := TzObjectInspectorFactory.Create(Self, pnlMain);
   FObjectHost      := TzObjectHost.Create;
   FObjectInspector.Component       := FObjectHost;
   FObjectInspector.SplitterPos     := FObjectInspector.Width div 2;

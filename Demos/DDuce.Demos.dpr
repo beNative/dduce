@@ -1,7 +1,6 @@
 program DDuce.Demos;
 
 uses
-//  FastMM4,
   Vcl.Forms,
   Vcl.Themes,
   Vcl.Styles,
@@ -108,27 +107,26 @@ uses
   DDuce.FormSettings in '..\Source\Modules\DDuce.FormSettings.pas',
   DDuce.Factories in '..\Source\Modules\DDuce.Factories.pas',
   DDuce.Editor.AlignLines.ToolView in '..\Source\Modules\Editor\DDuce.Editor.AlignLines.ToolView.pas' {frmAlignLines},
-  DDuce.Logger.Channels.Base in '..\Source\Modules\Logger\DDuce.Logger.Channels.Base.pas',
-  DDuce.Logger.Channels.LogFile in '..\Source\Modules\Logger\DDuce.Logger.Channels.LogFile.pas',
-  DDuce.Logger.Channels in '..\Source\Modules\Logger\DDuce.Logger.Channels.pas',
-  DDuce.Logger.Channels.WinIPC in '..\Source\Modules\Logger\DDuce.Logger.Channels.WinIPC.pas',
-  DDuce.Logger.Channels.ZeroMQ in '..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas',
-  DDuce.Logger.Factories in '..\Source\Modules\Logger\DDuce.Logger.Factories.pas',
-  DDuce.Logger.Interfaces in '..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas',
-  DDuce.Logger.Base in '..\Source\Modules\Logger\DDuce.Logger.Base.pas',
   DDuce.WinIPC.Client in '..\Source\DDuce.WinIPC.Client.pas',
   DDuce.WinIPC.Server in '..\Source\DDuce.WinIPC.Server.pas',
-  DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas',
   ZeroMQ.API in '..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas',
   ZeroMQ in '..\Source\Dependencies\ZeroMQ\ZeroMQ.pas',
-  DDuce.Logger.Channels.WinODS in '..\Source\Modules\Logger\DDuce.Logger.Channels.WinODS.pas',
   DDuce.Editor.Filter.Data in '..\Source\Modules\Editor\DDuce.Editor.Filter.Data.pas',
   DDuce.Editor.Filter.Settings in '..\Source\Modules\Editor\DDuce.Editor.Filter.Settings.pas',
   DDuce.Editor.Filter.Toolview in '..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas' {frmFilter},
   DDuce.RTTEye in '..\Source\Modules\RTTEye\DDuce.RTTEye.pas' {frmRTTEye},
   DDuce.ObjectInspector.zObjectInspector in '..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.zObjectInspector.pas' {frmComponentInspectorzObjectInspector},
   DDuce.Factories.VirtualTrees in '..\Source\Factories\DDuce.Factories.VirtualTrees.pas',
-  DDuce.Factories.zObjInspector in '..\Source\Factories\DDuce.Factories.zObjInspector.pas';
+  DDuce.Factories.zObjInspector in '..\Source\Factories\DDuce.Factories.zObjInspector.pas',
+  DDuce.Logger.Base in '..\Source\Modules\Logger\DDuce.Logger.Base.pas',
+  DDuce.Logger.Channels.Base in '..\Source\Modules\Logger\DDuce.Logger.Channels.Base.pas',
+  DDuce.Logger.Channels.LogFile in '..\Source\Modules\Logger\DDuce.Logger.Channels.LogFile.pas',
+  DDuce.Logger.Channels.WinIPC in '..\Source\Modules\Logger\DDuce.Logger.Channels.WinIPC.pas',
+  DDuce.Logger.Channels.WinODS in '..\Source\Modules\Logger\DDuce.Logger.Channels.WinODS.pas',
+  DDuce.Logger.Channels.ZeroMQ in '..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas',
+  DDuce.Logger.Factories in '..\Source\Modules\Logger\DDuce.Logger.Factories.pas',
+  DDuce.Logger.Interfaces in '..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas',
+  DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas';
 
 {$R *.res}
 

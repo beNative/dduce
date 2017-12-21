@@ -283,20 +283,10 @@
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.AlignLines.ToolView.pas">
             <Form>frmAlignLines</Form>
         </DCCReference>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.Base.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.LogFile.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinIPC.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Factories.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Base.pas"/>
         <DCCReference Include="..\Source\DDuce.WinIPC.Client.pas"/>
         <DCCReference Include="..\Source\DDuce.WinIPC.Server.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.pas"/>
         <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas"/>
         <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinODS.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Data.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Settings.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas">
@@ -310,6 +300,15 @@
         </DCCReference>
         <DCCReference Include="..\Source\Factories\DDuce.Factories.VirtualTrees.pas"/>
         <DCCReference Include="..\Source\Factories\DDuce.Factories.zObjInspector.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Base.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.Base.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.LogFile.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinIPC.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinODS.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Factories.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

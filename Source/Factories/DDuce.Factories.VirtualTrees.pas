@@ -94,6 +94,7 @@ implementation
 
 uses
   System.UITypes,
+  Vcl.Graphics,
 
   Spring;
 
@@ -607,7 +608,7 @@ const
     { Register tree as OLE accepting drop target }
 //    toAcceptOLEDrop,
     { Show checkboxes/radio buttons. }
-//    toCheckSupport,
+    toCheckSupport,
     { Node captions can be edited. }
 //    toEditable,
     { Fully invalidate the tree when its window is resized
@@ -686,7 +687,7 @@ const
     { Enable alpha blending for node selections. }
     toUseBlendedSelection,
     { Show simple static background instead of a tiled one. }
-    toStaticBackground//,
+    toStaticBackground
     { Display child nodes above their parent. }
 //    toChildrenAbove,
     { Draw the tree with a fixed indent. }
@@ -707,7 +708,7 @@ const
     { Allows a column to resize itself to its largest entry. }
     hoDblClickResize,
     { Dragging columns is allowed. }
-//    hoDrag,
+    hoDrag,
     { Header captions are highlighted when mouse is over a particular column. }
 //    hoHotTrack,
     { Header items with the owner draw style can be drawn by the application
@@ -1012,36 +1013,36 @@ const
 {$REGION 'construction and destruction'}
 class constructor TVirtualStringTreeFactory.Create;
 begin
-  FDefaultTreeOptions     := TStringTreeOptions.Create(nil);
-  FDefaultGridOptions     := TStringTreeOptions.Create(nil);
-  FDefaultTreeGridOptions := TStringTreeOptions.Create(nil);
-  FDefaultTreeOptions.SelectionOptions := DEFAULT_TREE_SELECTIONOPTIONS;
-  FDefaultTreeOptions.MiscOptions      := DEFAULT_TREE_MISCOPTIONS;
-  FDefaultTreeOptions.PaintOptions     := DEFAULT_TREE_PAINTOPTIONS;
-  FDefaultTreeOptions.StringOptions    := DEFAULT_TREE_STRINGOPTIONS;
-  FDefaultTreeOptions.AnimationOptions := DEFAULT_TREE_ANIMATIONOPTIONS;
-  FDefaultTreeOptions.AutoOptions      := DEFAULT_TREE_AUTOOPTIONS;
-
-  FDefaultGridOptions.SelectionOptions := DEFAULT_GRID_SELECTIONOPTIONS;
-  FDefaultGridOptions.MiscOptions      := DEFAULT_GRID_MISCOPTIONS;
-  FDefaultGridOptions.PaintOptions     := DEFAULT_GRID_PAINTOPTIONS;
-  FDefaultGridOptions.StringOptions    := DEFAULT_GRID_STRINGOPTIONS;
-  FDefaultGridOptions.AnimationOptions := DEFAULT_GRID_ANIMATIONOPTIONS;
-  FDefaultGridOptions.AutoOptions      := DEFAULT_GRID_AUTOOPTIONS;
-
-  FDefaultTreeGridOptions.SelectionOptions := DEFAULT_TREEGRID_SELECTIONOPTIONS;
-  FDefaultTreeGridOptions.MiscOptions      := DEFAULT_TREEGRID_MISCOPTIONS;
-  FDefaultTreeGridOptions.PaintOptions     := DEFAULT_TREEGRID_PAINTOPTIONS;
-  FDefaultTreeGridOptions.StringOptions    := DEFAULT_TREEGRID_STRINGOPTIONS;
-  FDefaultTreeGridOptions.AnimationOptions := DEFAULT_TREEGRID_ANIMATIONOPTIONS;
-  FDefaultTreeGridOptions.AutoOptions      := DEFAULT_TREEGRID_AUTOOPTIONS;
+//  FDefaultTreeOptions     := TStringTreeOptions.Create(nil);
+//  FDefaultGridOptions     := TStringTreeOptions.Create(nil);
+//  FDefaultTreeGridOptions := TStringTreeOptions.Create(nil);
+//  FDefaultTreeOptions.SelectionOptions := DEFAULT_TREE_SELECTIONOPTIONS;
+//  FDefaultTreeOptions.MiscOptions      := DEFAULT_TREE_MISCOPTIONS;
+//  FDefaultTreeOptions.PaintOptions     := DEFAULT_TREE_PAINTOPTIONS;
+//  FDefaultTreeOptions.StringOptions    := DEFAULT_TREE_STRINGOPTIONS;
+//  FDefaultTreeOptions.AnimationOptions := DEFAULT_TREE_ANIMATIONOPTIONS;
+//  FDefaultTreeOptions.AutoOptions      := DEFAULT_TREE_AUTOOPTIONS;
+//
+//  FDefaultGridOptions.SelectionOptions := DEFAULT_GRID_SELECTIONOPTIONS;
+//  FDefaultGridOptions.MiscOptions      := DEFAULT_GRID_MISCOPTIONS;
+//  FDefaultGridOptions.PaintOptions     := DEFAULT_GRID_PAINTOPTIONS;
+//  FDefaultGridOptions.StringOptions    := DEFAULT_GRID_STRINGOPTIONS;
+//  FDefaultGridOptions.AnimationOptions := DEFAULT_GRID_ANIMATIONOPTIONS;
+//  FDefaultGridOptions.AutoOptions      := DEFAULT_GRID_AUTOOPTIONS;
+//
+//  FDefaultTreeGridOptions.SelectionOptions := DEFAULT_TREEGRID_SELECTIONOPTIONS;
+//  FDefaultTreeGridOptions.MiscOptions      := DEFAULT_TREEGRID_MISCOPTIONS;
+//  FDefaultTreeGridOptions.PaintOptions     := DEFAULT_TREEGRID_PAINTOPTIONS;
+//  FDefaultTreeGridOptions.StringOptions    := DEFAULT_TREEGRID_STRINGOPTIONS;
+//  FDefaultTreeGridOptions.AnimationOptions := DEFAULT_TREEGRID_ANIMATIONOPTIONS;
+//  FDefaultTreeGridOptions.AutoOptions      := DEFAULT_TREEGRID_AUTOOPTIONS;
 end;
 
 class destructor TVirtualStringTreeFactory.Destroy;
 begin
-  FDefaultTreeOptions.Free;
-  FDefaultGridOptions.Free;
-  FDefaultTreeGridOptions.Free;
+//  FDefaultTreeOptions.Free;
+//  FDefaultGridOptions.Free;
+//  FDefaultTreeGridOptions.Free;
 end;
 {$ENDREGION}
 
@@ -1080,6 +1081,12 @@ begin
   VST.HintMode          := hmTooltip;
   VST.Align             := alClient;
   VST.DrawSelectionMode := smBlendedRectangle;
+
+  VST.Colors.SelectionRectangleBlendColor := clGray;
+  VST.Colors.SelectionTextColor := clBlack;
+  VST.Colors.GridLineColor      := clGray;
+
+
   if Assigned(ATreeOptions) then
     VST.TreeOptions.Assign(ATreeOptions)
   else
@@ -1108,15 +1115,30 @@ var
 begin
   Guard.CheckNotNull(AOwner, 'AOwner');
   Guard.CheckNotNull(AParent, 'AParent');
+
   VST := TVirtualStringTree.Create(AOwner);
   VST.AlignWithMargins  := True;
   VST.Parent            := AParent;
   VST.HintMode          := hmTooltip;
   VST.Align             := alClient;
   VST.DrawSelectionMode := smBlendedRectangle;
-  VST.Header.Height := 18;
-  VST.Header.Options               := DefaultGridHeaderOptions;
-  VST.TreeOptions.Assign(DefaultGridOptions);
+
+  VST.Colors.SelectionRectangleBlendColor := clGray;
+  VST.Colors.SelectionTextColor := clBlack;
+  VST.Colors.GridLineColor      := clGray;
+
+  VST.Header.AutoSizeIndex := -1;
+  VST.Header.Height        := 18;
+  VST.Header.Options       := DefaultGridHeaderOptions;
+  //VST.TreeOptions.Assign(DefaultGridOptions);
+  //VST.F
+
+  VST.TreeOptions.SelectionOptions := DEFAULT_GRID_SELECTIONOPTIONS;
+  VST.TreeOptions.MiscOptions      := DEFAULT_GRID_MISCOPTIONS;
+  VST.TreeOptions.PaintOptions     := DEFAULT_GRID_PAINTOPTIONS;
+  VST.TreeOptions.StringOptions    := DEFAULT_GRID_STRINGOPTIONS;
+  VST.TreeOptions.AnimationOptions := DEFAULT_GRID_ANIMATIONOPTIONS;
+  VST.TreeOptions.AutoOptions      := DEFAULT_GRID_AUTOOPTIONS;
   VST.Indent := 2; // show first column as a normal grid column
   Result := VST;
 end;
@@ -1137,8 +1159,20 @@ begin
   VST.Align             := alClient;
   VST.DrawSelectionMode := smBlendedRectangle;
   VST.Header.Height := 18;
-  VST.Header.Options               := DefaultTreeHeaderOptions;
-  VST.TreeOptions.Assign(DefaultTreeOptions);
+  //VST.Header.Options               := DefaultTreeHeaderOptions;
+  //VST.TreeOptions.Assign(DefaultTreeOptions);
+
+   VST.TreeOptions.SelectionOptions := DEFAULT_TREE_SELECTIONOPTIONS;
+   VST.TreeOptions.MiscOptions      := DEFAULT_TREE_MISCOPTIONS;
+   VST.TreeOptions.PaintOptions     := DEFAULT_TREE_PAINTOPTIONS;
+   VST.TreeOptions.StringOptions    := DEFAULT_TREE_STRINGOPTIONS;
+   VST.TreeOptions.AnimationOptions := DEFAULT_TREE_ANIMATIONOPTIONS;
+   VST.TreeOptions.AutoOptions      := DEFAULT_TREE_AUTOOPTIONS;
+
+
+
+
+
 
   Result := VST;
 end;
@@ -1158,7 +1192,14 @@ begin
   VST.DrawSelectionMode := smBlendedRectangle;
   VST.Header.Height     := 18;
   VST.Header.Options    := DefaultTreeGridHeaderOptions;
-  VST.TreeOptions.Assign(DefaultTreeGridOptions);
+  //VST.TreeOptions.Assign(DefaultTreeGridOptions);
+   VST.TreeOptions.SelectionOptions := DEFAULT_TREEGRID_SELECTIONOPTIONS;
+   VST.TreeOptions.MiscOptions      := DEFAULT_TREEGRID_MISCOPTIONS;
+   VST.TreeOptions.PaintOptions     := DEFAULT_TREEGRID_PAINTOPTIONS;
+   VST.TreeOptions.StringOptions    := DEFAULT_TREEGRID_STRINGOPTIONS;
+   VST.TreeOptions.AnimationOptions := DEFAULT_TREEGRID_ANIMATIONOPTIONS;
+   VST.TreeOptions.AutoOptions      := DEFAULT_TREEGRID_AUTOOPTIONS;
+
 
   Result := VST;
 end;

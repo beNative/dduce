@@ -217,19 +217,19 @@ type
   protected
     procedure AddToLog(
       const AString : string;
-            AColor  : TColor = clBlack;
-            AObject : TObject = nil
-    ); overload;
+      AColor        : TColor = clBlack;
+      AObject       : TObject = nil
+      ); overload;
     procedure AddToLog(
       const AString : string;
       const AInfo   : string;
-            AColor  : TColor = clBlack;
-                    AObject : TObject = nil
-    ); overload;
+      AColor        : TColor = clBlack;
+      AObject       : TObject = nil
+      ); overload;
     function IsChecked(
-      const AName    : string;
-            AListBox : TCheckListBox
-    ) : Boolean;
+      const AName : string;
+      AListBox    : TCheckListBox
+      ) : Boolean;
     procedure CreateDBGridView;
 
   public
@@ -1139,5 +1139,3 @@ end;
 {$ENDREGION}
 
 end.
-
-
