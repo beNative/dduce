@@ -402,7 +402,8 @@ end;
 procedure TTreeViewPresenter.BeginUpdate;
 begin
   inherited;
-  FTreeView.BeginUpdate();
+  if Assigned(FTreeView) then
+    FTreeView.BeginUpdate();
 end;
 
 function TTreeViewPresenter.CalcCheckBoxRect(const Rect: TRect): TRect;
@@ -1663,7 +1664,8 @@ end;
 procedure TTreeViewPresenter.EndUpdate;
 begin
   inherited;
-  FTreeView.EndUpdate();
+  if Assigned(FTreeView) then
+    FTreeView.EndUpdate();
 end;
 
 procedure TTreeViewPresenter.ExpandNode(Node: PVirtualNode);

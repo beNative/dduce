@@ -95,7 +95,8 @@ begin
     end
     else // auto create column definitions
     begin
-//      ATVP.ColumnDefinitions.Clear;
+      ATVP.BeginUpdate;
+      ATVP.ColumnDefinitions.Clear;
       for P in C.GetType(ASource.ElementType).GetProperties do
       begin
         with ATVP.ColumnDefinitions.Add(P.Name) do
@@ -104,6 +105,7 @@ begin
           HintPropertyName  := P.Name;
         end;
       end;
+      ATVP.EndUpdate;
     end;
   end;
   ATVP.TreeView := AVST;
