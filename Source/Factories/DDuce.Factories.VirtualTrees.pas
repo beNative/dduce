@@ -22,24 +22,60 @@ uses
   System.Classes,
   Vcl.Controls,
 
+  Spring,
+
   VirtualTrees;
+
+type
+  TVSTOptions = class
+  strict private
+    FHeaderOptions    : TVTHeaderOptions;
+    FPaintOptions     : TVTPaintOptions;
+    FAnimationOptions : TVTAnimationOptions;
+    FAutoOptions      : TVTAutoOptions;
+    FStringOptions    : TVTStringOptions;
+    FSelectionOptions : TVTSelectionOptions;
+    FMiscOptions      : TVTMiscOptions;
+    FColumnOptions    : TVTColumnOptions;
+
+  public
+    property HeaderOptions: TVTHeaderOptions
+      read FHeaderOptions write FHeaderOptions;
+
+    property PaintOptions: TVTPaintOptions
+      read FPaintOptions write FPaintOptions;
+
+    property AnimationOptions: TVTAnimationOptions
+      read FAnimationOptions write FAnimationOptions;
+
+    property AutoOptions: TVTAutoOptions
+      read FAutoOptions write FAutoOptions;
+
+    property StringOptions: TVTStringOptions
+      read FStringOptions write FStringOptions;
+
+    property SelectionOptions: TVTSelectionOptions
+      read FSelectionOptions write FSelectionOptions;
+
+    property MiscOptions: TVTMiscOptions
+      read FMiscOptions write FMiscOptions;
+
+    property ColumnOptions: TVTColumnOptions
+      read FColumnOptions write FColumnOptions;
+
+  end;
 
 type
   TVirtualStringTreeFactory = class sealed
   private class var
-    FDefaultTreeOptions           : TStringTreeOptions;
-    FDefaultGridOptions           : TStringTreeOptions;
-    FDefaultTreeGridOptions       : TStringTreeOptions;
-    FDefaultTreeHeaderOptions     : TVTHeaderOptions;
-    FDefaultGridHeaderOptions     : TVTHeaderOptions;
-    FDefaultTreeGridHeaderOptions : TVTHeaderOptions;
+    FDefaultTreeOptions     : TVSTOptions;
+    FDefaultGridOptions     : TVSTOptions;
+    FDefaultTreeGridOptions : TVSTOptions;
 
-    class procedure SetDefaultGridOptions(
-      const Value: TStringTreeOptions); static;
-    class procedure SetDefaultTreeGridOptions(
-      const Value: TStringTreeOptions); static;
-    class procedure SetDefaultTreeOptions(
-      const Value: TStringTreeOptions); static;
+    class procedure AssignOptions(
+      AVSTOptions  : TVSTOptions;
+      ATree        : TVirtualStringTree
+    );
 
   public
     class constructor Create;
@@ -48,9 +84,7 @@ type
     class function Create(
       AOwner               : TComponent;
       AParent              : TWinControl;
-      const AName          : string = '';
-      const AHeaderOptions : TVTHeaderOptions = [];
-      ATreeOptions         : TStringTreeOptions = nil
+      const AName          : string = ''
     ): TVirtualStringTree;
 
     class function CreateTree(
@@ -71,32 +105,21 @@ type
       const AName : string = ''
     ): TVirtualStringTree;
 
-    class property DefaultTreeOptions: TStringTreeOptions
-      read FDefaultTreeOptions write SetDefaultTreeOptions;
+    class property DefaultTreeOptions: TVSTOptions
+      read FDefaultTreeOptions;
 
-    class property DefaultGridOptions: TStringTreeOptions
-      read FDefaultGridOptions write SetDefaultGridOptions;
+    class property DefaultGridOptions: TVSTOptions
+      read FDefaultGridOptions;
 
-    class property DefaultTreeGridOptions: TStringTreeOptions
-      read FDefaultTreeGridOptions write SetDefaultTreeGridOptions;
-
-    class property DefaultTreeHeaderOptions: TVTHeaderOptions
-      read FDefaultTreeHeaderOptions write FDefaultTreeHeaderOptions;
-
-    class property DefaultGridHeaderOptions: TVTHeaderOptions
-      read FDefaultGridHeaderOptions write FDefaultGridHeaderOptions;
-
-    class property DefaultTreeGridHeaderOptions: TVTHeaderOptions
-      read FDefaultTreeGridHeaderOptions write FDefaultTreeGridHeaderOptions;
+    class property DefaultTreeGridOptions: TVSTOptions
+      read FDefaultTreeGridOptions;
   end;
 
 implementation
 
 uses
   System.UITypes,
-  Vcl.Graphics,
-
-  Spring;
+  Vcl.Graphics;
 
 {
   DefaultPaintOptions = [
@@ -141,18 +164,17 @@ uses
   ];
  }
 
-
-{$REGION 'Default TVirtualStringTree settings'}
+{$REGION 'TVirtualStringTree settings'}
 const
   DEFAULT_VST_SELECTIONOPTIONS = [
     { Prevent user from selecting with the selection rectangle in multiselect
       mode. }
 //    toDisableDrawSelection,
     {  Entries other than in the main column can be selected, edited etc. }
-    toExtendedFocus,
+//    toExtendedFocus,
     { Hit test as well as selection highlight are not constrained to the text
       of a node. }
-    toFullRowSelect
+//    toFullRowSelect
     { Constrain selection to the same level as the selection anchor. }
 //    toLevelSelectConstraint,
     { Allow selection, dragging etc. with the middle mouse button. This and
@@ -181,22 +203,22 @@ const
       (CS_HREDRAW/CS_VREDRAW). }
 //    toFullRepaintOnResize,
     { Use some special enhancements to simulate and support grid behavior. }
-    toGridExtensions,
+//    toGridExtensions,
     { Initialize nodes when saving a tree to a stream. }
-    toInitOnSave,
+//  toInitOnSave,
     { Tree behaves like TListView in report mode. }
 //    toReportMode,
     { Toggle node expansion state when it is double clicked. }
-    toToggleOnDblClick,
+//  toToggleOnDblClick,
     { Support for mouse panning (wheel mice only). This option and
       toMiddleClickSelect are mutal exclusive, where panning has precedence. }
-    toWheelPanning,
+//  toWheelPanning,
     { The tree does not allow to be modified in any way. No action is executed
       and node editing is not possible. }
 //    toReadOnly,
     { When set then GetNodeHeight will trigger OnMeasureItem to allow variable
       node heights. }
-    toVariableNodeHeight
+//  toVariableNodeHeight
     { Start node dragging by clicking anywhere in it instead only on the
       caption or image. Must be used together with toDisableDrawSelection. }
 //    toFullRowDrag,
@@ -211,36 +233,36 @@ const
   ];
   DEFAULT_VST_PAINTOPTIONS = [
     { Avoid drawing the dotted rectangle around the currently focused node. }
-    toHideFocusRect,
+//  toHideFocusRect,
     { Selected nodes are drawn as unselected nodes if the tree is unfocused. }
-    toHideSelection,
+//  toHideSelection,
     { Track which node is under the mouse cursor. }
 //    toHotTrack,
     { Paint tree as would it always have the focus }
-    toPopupMode,
+//  toPopupMode,
     { Use the background image if there's one. }
-    toShowBackground,
+//  toShowBackground,
     { Display collapse/expand buttons left to a node. }
-    toShowButtons,
+//  toShowButtons,
     { Show the dropmark during drag'n drop operations. }
-    toShowDropmark,
+//  toShowDropmark,
     { Display horizontal lines to simulate a grid. }
 //    toShowHorzGridLines,
     { Show static background instead of a tiled one. }
-    toStaticBackground,
+//  toStaticBackground,
     { Show lines also at top level (does not show the hidden/internal root
       node). }
-    toShowRoot,
+//  toShowRoot,
     { Display tree lines to show hierarchy of nodes. }
 //    toShowTreeLines,
     { Display vertical lines (depending on columns) to simulate a grid. }
-    toShowVertGridLines,
+//  toShowVertGridLines,
     { Draw UI elements (header, tree buttons etc.) according to the current
       theme if enabled (Windows XP+ only, application must be themed). }
-    toThemeAware,
+//  toThemeAware,
     { Enable alpha blending for ghosted nodes or those which are being
       cut/copied. }
-    toUseBlendedImages,
+//  toUseBlendedImages,
     { Ghosted images are still shown as ghosted if unfocused (otherwise they
       become non-ghosted images). }
 //    toGhostedIfUnfocused,
@@ -251,9 +273,9 @@ const
     { Do not draw node selection, regardless of focused state. }
 //    toAlwaysHideSelection,
     { Enable alpha blending for node selections. }
-    toUseBlendedSelection,
+//  toUseBlendedSelection,
     { Show simple static background instead of a tiled one. }
-    toStaticBackground//,
+//  toStaticBackground//,
     { Display child nodes above their parent. }
 //    toChildrenAbove,
     { Draw the tree with a fixed indent. }
@@ -268,11 +290,11 @@ const
   DEFAULT_VST_HEADEROPTIONS = [
     { Adjust a column so that the header never exceeds the client width of the
       owner control. }
-    hoAutoResize,
+//  hoAutoResize,
     { Resizing columns with the mouse is allowed. }
-    hoColumnResize,
+//  hoColumnResize,
     { Allows a column to resize itself to its largest entry. }
-    hoDblClickResize,
+//  hoDblClickResize,
     { Dragging columns is allowed. }
 //    hoDrag,
     { Header captions are highlighted when mouse is over a particular column. }
@@ -281,28 +303,28 @@ const
       via event. }
 //    hoOwnerDraw,
     { Header can only be dragged horizontally. }
-    hoRestrictDrag,
+//  hoRestrictDrag,
     { Show application defined header hint. }
-    hoShowHint,
+//  hoShowHint,
     { Show header images. }
-    hoShowImages,
+//  hoShowImages,
     { Allow visible sort glyphs. }
-    hoShowSortGlyphs,
+//  hoShowSortGlyphs,
     { Distribute size changes of the header to all columns, which are sizable
       and have the coAutoSpring option enabled. hoAutoResize must be enabled
       too. }
-    hoAutoSpring,
+//  hoAutoSpring,
     { Fully invalidate the header (instead of subsequent columns only) when a
       column is resized. }
 //    hoFullRepaintOnResize,
     { Disable animated resize for all columns. }
-    hoDisableAnimatedResize,
+//  hoDisableAnimatedResize,
     { Allow resizing header height via mouse. }
 //    hoHeightResize,
     { Allow the header to resize itself to its default height. }
 //    hoHeightDblClickResize
     { Header is visible. }
-    hoVisible
+//  hoVisible
   ];
   DEFAULT_VST_STRINGOPTIONS = [
     { If set then the caption is automatically saved with the tree node,
@@ -323,687 +345,36 @@ const
   ];
   DEFAULT_VST_AUTOOPTIONS = [
     { Expand node if it is the drop target for more than a certain time. }
-    toAutoDropExpand,
+//  toAutoDropExpand,
     { Nodes are expanded (collapsed) when getting (losing) the focus. }
 //    toAutoExpand,
     { Scroll if mouse is near the border while dragging or selecting. }
-    toAutoScroll,
+//  toAutoScroll,
     { Scroll as many child nodes in view as possible after expanding a node. }
-    toAutoScrollOnExpand,
+//  toAutoScrollOnExpand,
     { Sort tree when Header.SortColumn or Header.SortDirection change or sort
       node if child nodes are added. }
-    toAutoSort,
+//  toAutoSort,
     { Large entries continue into next column(s) if there's no text in them
       (no clipping). }
 //    toAutoSpanColumns,
     { Checkstates are automatically propagated for tri state check boxes. }
-    toAutoTristateTracking,
+//  toAutoTristateTracking,
     { Node buttons are hidden when there are child nodes, but all are invisible.}
 //    toAutoHideButtons,
     { Delete nodes which where moved in a drag operation (if not directed
       otherwise). }
-    toAutoDeleteMovedNodes,
+//  toAutoDeleteMovedNodes,
     { Disable scrolling a node or column into view if it gets focused. }
 //    toDisableAutoscrollOnFocus,
     { Change default node height automatically if the system's font scale is
       set to big fonts. }
-    toAutoChangeScale,
+//  toAutoChangeScale,
     { Frees any child node after a node has been collapsed (HasChildren flag
       stays there). }
 //    toAutoFreeOnCollapse,
     { Do not center a node horizontally when it is edited. }
-    toDisableAutoscrollOnEdit,
-    { When set then columns (if any exist) will be reordered from lowest index
-      to highest index and vice versa when the tree's bidi mode is changed. }
-    toAutoBidiColumnOrdering
-  ];
-{$ENDREGION}
-
-{$REGION 'TVirtualStringTree as Tree settings'}
-const
-  DEFAULT_TREE_SELECTIONOPTIONS = [
-    { Prevent user from selecting with the selection rectangle in multiselect
-      mode. }
-//    toDisableDrawSelection,
-    {  Entries other than in the main column can be selected, edited etc. }
-    toExtendedFocus
-    { Hit test as well as selection highlight are not constrained to the text
-      of a node. }
-//    toFullRowSelect
-    { Constrain selection to the same level as the selection anchor. }
-//    toLevelSelectConstraint,
-    { Allow selection, dragging etc. with the middle mouse button. This and
-      toWheelPanning are mutual exclusive. }
-//    toMiddleClickSelect,
-    { Allow more than one node to be selected. }
-//    toMultiSelect,
-    {  Allow selection, dragging etc. with the right mouse button. }
-//    toRightClickSelect,
-    { Constrain selection to nodes with same parent. }
-//    toSiblingSelectConstraint,
-    { Center nodes vertically in the client area when scrolling into view. }
-//    toCenterScrollIntoView
-    { Simplifies draw selection, so a node's caption does not need to intersect
-      with the selection rectangle. }
-//    toSimpleDrawSelection
-  ];
-  DEFAULT_TREE_MISCOPTIONS = [
-    { Register tree as OLE accepting drop target }
-//    toAcceptOLEDrop,
-    { Show checkboxes/radio buttons. }
-//    toCheckSupport,
-    { Node captions can be edited. }
-//    toEditable,
-    { Fully invalidate the tree when its window is resized
-      (CS_HREDRAW/CS_VREDRAW). }
-//    toFullRepaintOnResize,
-    { Use some special enhancements to simulate and support grid behavior. }
-//    toGridExtensions,
-    { Initialize nodes when saving a tree to a stream. }
-    toInitOnSave,
-    { Tree behaves like TListView in report mode. }
-//    toReportMode,
-    { Toggle node expansion state when it is double clicked. }
-    toToggleOnDblClick,
-    { Support for mouse panning (wheel mice only). This option and
-      toMiddleClickSelect are mutal exclusive, where panning has precedence. }
-    toWheelPanning,
-    { The tree does not allow to be modified in any way. No action is executed
-      and node editing is not possible. }
-//    toReadOnly,
-    { When set then GetNodeHeight will trigger OnMeasureItem to allow variable
-      node heights. }
-    toVariableNodeHeight
-    { Start node dragging by clicking anywhere in it instead only on the
-      caption or image. Must be used together with toDisableDrawSelection. }
-//    toFullRowDrag,
-    { Allows changing a node's height via mouse. }
-//    toNodeHeightResize,
-    { Allows to reset a node's height to FDefaultNodeHeight via a double click. }
-//    toNodeHeightDblClickResize,
-    { Editing mode can be entered with a single click }
-//    toEditOnClick,
-    { Editing mode can be entered with a double click }
-//    toEditOnDblClick
-  ];
-  DEFAULT_TREE_PAINTOPTIONS = [
-    { Avoid drawing the dotted rectangle around the currently focused node. }
-    toHideFocusRect,
-    { Selected nodes are drawn as unselected nodes if the tree is unfocused. }
-    toHideSelection,
-    { Track which node is under the mouse cursor. }
-    toHotTrack,
-    { Paint tree as would it always have the focus }
-    toPopupMode,
-    { Use the background image if there's one. }
-    toShowBackground,
-    { Display collapse/expand buttons left to a node. }
-    toShowButtons,
-    { Show the dropmark during drag'n drop operations. }
-    toShowDropmark,
-    { Display horizontal lines to simulate a grid. }
-//    toShowHorzGridLines,
-    { Show static background instead of a tiled one. }
-    toStaticBackground,
-    { Show lines also at top level (does not show the hidden/internal root
-      node). }
-    toShowRoot,
-    { Display tree lines to show hierarchy of nodes. }
-//    toShowTreeLines,
-    { Display vertical lines (depending on columns) to simulate a grid. }
-//  toShowVertGridLines,
-    { Draw UI elements (header, tree buttons etc.) according to the current
-      theme if enabled (Windows XP+ only, application must be themed). }
-    toThemeAware,
-    { Enable alpha blending for ghosted nodes or those which are being
-      cut/copied. }
-    toUseBlendedImages,
-    { Ghosted images are still shown as ghosted if unfocused (otherwise they
-      become non-ghosted images). }
-//    toGhostedIfUnfocused,
-    { Display vertical lines over the full client area, not only the space
-      occupied by nodes. This option only has an effect if toShowVertGridLines
-      is enabled too. }
-//    toFullVertGridLines,
-    { Do not draw node selection, regardless of focused state. }
-//    toAlwaysHideSelection,
-    { Enable alpha blending for node selections. }
-    toUseBlendedSelection,
-    { Show simple static background instead of a tiled one. }
-    toStaticBackground//,
-    { Display child nodes above their parent. }
-//    toChildrenAbove,
-    { Draw the tree with a fixed indent. }
-//    toFixedIndent,
-    { Use the explorer theme if run under Windows Vista (or above). }
-//    toUseExplorerTheme
-    { Do not show tree lines if theming is used. }
-//    toHideTreeLinesIfThemed
-    { Draw nodes even if they are filtered out. }
-//    toShowFilteredNodes
-  ];
-  DEFAULT_TREE_HEADEROPTIONS = [
-    { Adjust a column so that the header never exceeds the client width of the
-      owner control. }
-    hoAutoResize,
-    { Resizing columns with the mouse is allowed. }
-//    hoColumnResize,
-    { Allows a column to resize itself to its largest entry. }
-//    hoDblClickResize,
-    { Dragging columns is allowed. }
-//    hoDrag,
-    { Header captions are highlighted when mouse is over a particular column. }
-//    hoHotTrack,
-    { Header items with the owner draw style can be drawn by the application
-      via event. }
-//    hoOwnerDraw,
-    { Header can only be dragged horizontally. }
-    hoRestrictDrag,
-    { Show application defined header hint. }
-    hoShowHint,
-    { Show header images. }
-    hoShowImages,
-    { Allow visible sort glyphs. }
-    hoShowSortGlyphs,
-    { Distribute size changes of the header to all columns, which are sizable
-      and have the coAutoSpring option enabled. hoAutoResize must be enabled
-      too. }
-//    hoAutoSpring,
-    { Fully invalidate the header (instead of subsequent columns only) when a
-      column is resized. }
-//    hoFullRepaintOnResize,
-    { Disable animated resize for all columns. }
-//    hoDisableAnimatedResize,
-    { Allow resizing header height via mouse. }
-    hoHeightResize,
-    { Allow the header to resize itself to its default height. }
-    hoHeightDblClickResize,
-    { Header is visible. }
-    hoVisible
-  ];
-  DEFAULT_TREE_STRINGOPTIONS = [
-    { If set then the caption is automatically saved with the tree node,
-      regardless of what is saved in the user data. }
-    //toSaveCaptions,
-    { Show static text in a caption which can be differently formatted than the
-      caption but cannot be edited. }
-    //toShowStaticText,
-    { Automatically accept changes during edit if the user finishes editing
-      other then VK_RETURN or ESC. If not set then changes are cancelled. }
-    toAutoAcceptEditChange
-  ];
-  DEFAULT_TREE_ANIMATIONOPTIONS = [
-    { Expanding and collapsing a node is animated (quick window scroll). }
-    toAnimatedToggle,
-    { Do some advanced animation effects when toggling a node. }
-    toAdvancedAnimatedToggle
-  ];
-  DEFAULT_TREE_AUTOOPTIONS = [
-    { Expand node if it is the drop target for more than a certain time. }
-//    toAutoDropExpand,
-    { Nodes are expanded (collapsed) when getting (losing) the focus. }
-//    toAutoExpand,
-    { Scroll if mouse is near the border while dragging or selecting. }
-    toAutoScroll,
-    { Scroll as many child nodes in view as possible after expanding a node. }
-//    toAutoScrollOnExpand,
-    { Sort tree when Header.SortColumn or Header.SortDirection change or sort
-      node if child nodes are added. }
-    toAutoSort,
-    { Large entries continue into next column(s) if there's no text in them
-      (no clipping). }
-//    toAutoSpanColumns,
-    { Checkstates are automatically propagated for tri state check boxes. }
-//    toAutoTristateTracking,
-    { Node buttons are hidden when there are child nodes, but all are invisible.}
-//    toAutoHideButtons,
-    { Delete nodes which where moved in a drag operation (if not directed
-      otherwise). }
-    toAutoDeleteMovedNodes,
-    { Disable scrolling a node or column into view if it gets focused. }
-//    toDisableAutoscrollOnFocus,
-    { Change default node height automatically if the system's font scale is
-      set to big fonts. }
-    toAutoChangeScale,
-    { Frees any child node after a node has been collapsed (HasChildren flag
-      stays there). }
-//    toAutoFreeOnCollapse,
-    { Do not center a node horizontally when it is edited. }
-    toDisableAutoscrollOnEdit,
-    { When set then columns (if any exist) will be reordered from lowest index
-      to highest index and vice versa when the tree's bidi mode is changed. }
-    toAutoBidiColumnOrdering
-  ];
-{$ENDREGION}
-
-{$REGION 'TVirtualStringTree as Grid settings'}
-const
-  DEFAULT_GRID_SELECTIONOPTIONS = [
-    { Prevent user from selecting with the selection rectangle in multiselect
-      mode. }
-//    toDisableDrawSelection,
-    {  Entries other than in the main column can be selected, edited etc. }
-    toExtendedFocus,
-    { Hit test as well as selection highlight are not constrained to the text
-      of a node. }
-    toFullRowSelect
-    { Constrain selection to the same level as the selection anchor. }
-//    toLevelSelectConstraint,
-    { Allow selection, dragging etc. with the middle mouse button. This and
-      toWheelPanning are mutual exclusive. }
-//    toMiddleClickSelect,
-    { Allow more than one node to be selected. }
-//    toMultiSelect,
-    {  Allow selection, dragging etc. with the right mouse button. }
-//    toRightClickSelect,
-    { Constrain selection to nodes with same parent. }
-//    toSiblingSelectConstraint,
-    { Center nodes vertically in the client area when scrolling into view. }
-//    toCenterScrollIntoView
-    { Simplifies draw selection, so a node's caption does not need to intersect
-      with the selection rectangle. }
-//    toSimpleDrawSelection
-  ];
-  DEFAULT_GRID_MISCOPTIONS = [
-    { Register tree as OLE accepting drop target }
-//    toAcceptOLEDrop,
-    { Show checkboxes/radio buttons. }
-    toCheckSupport,
-    { Node captions can be edited. }
-//    toEditable,
-    { Fully invalidate the tree when its window is resized
-      (CS_HREDRAW/CS_VREDRAW). }
-//    toFullRepaintOnResize,
-    { Use some special enhancements to simulate and support grid behavior. }
-    toGridExtensions,
-    { Initialize nodes when saving a tree to a stream. }
-    toInitOnSave,
-    { Tree behaves like TListView in report mode. }
-//    toReportMode,
-    { Toggle node expansion state when it is double clicked. }
-    toToggleOnDblClick,
-    { Support for mouse panning (wheel mice only). This option and
-      toMiddleClickSelect are mutal exclusive, where panning has precedence. }
-    toWheelPanning,
-    { The tree does not allow to be modified in any way. No action is executed
-      and node editing is not possible. }
-//    toReadOnly,
-    { When set then GetNodeHeight will trigger OnMeasureItem to allow variable
-      node heights. }
-    toVariableNodeHeight
-    { Start node dragging by clicking anywhere in it instead only on the
-      caption or image. Must be used together with toDisableDrawSelection. }
-//    toFullRowDrag,
-    { Allows changing a node's height via mouse. }
-//    toNodeHeightResize,
-    { Allows to reset a node's height to FDefaultNodeHeight via a double click. }
-//    toNodeHeightDblClickResize,
-    { Editing mode can be entered with a single click }
-//    toEditOnClick,
-    { Editing mode can be entered with a double click }
-//    toEditOnDblClick
-  ];
-  DEFAULT_GRID_PAINTOPTIONS = [
-    { Avoid drawing the dotted rectangle around the currently focused node. }
-    toHideFocusRect,
-    { Selected nodes are drawn as unselected nodes if the tree is unfocused. }
-    toHideSelection,
-    { Track which node is under the mouse cursor. }
-//    toHotTrack,
-    { Paint tree as would it always have the focus }
-    toPopupMode,
-    { Use the background image if there's one. }
-    toShowBackground,
-    { Display collapse/expand buttons left to a node. }
-    toShowButtons,
-    { Show the dropmark during drag'n drop operations. }
-    toShowDropmark,
-    { Display horizontal lines to simulate a grid. }
-//    toShowHorzGridLines,
-    { Show static background instead of a tiled one. }
-    toStaticBackground,
-    { Show lines also at top level (does not show the hidden/internal root
-      node). }
-    toShowRoot,
-    { Display tree lines to show hierarchy of nodes. }
-//    toShowTreeLines,
-    { Display vertical lines (depending on columns) to simulate a grid. }
-    toShowVertGridLines,
-    { Draw UI elements (header, tree buttons etc.) according to the current
-      theme if enabled (Windows XP+ only, application must be themed). }
-    toThemeAware,
-    { Enable alpha blending for ghosted nodes or those which are being
-      cut/copied. }
-    toUseBlendedImages,
-    { Ghosted images are still shown as ghosted if unfocused (otherwise they
-      become non-ghosted images). }
-//    toGhostedIfUnfocused,
-    { Display vertical lines over the full client area, not only the space
-      occupied by nodes. This option only has an effect if toShowVertGridLines
-      is enabled too. }
-//    toFullVertGridLines,
-    { Do not draw node selection, regardless of focused state. }
-//    toAlwaysHideSelection,
-    { Enable alpha blending for node selections. }
-    toUseBlendedSelection,
-    { Show simple static background instead of a tiled one. }
-    toStaticBackground
-    { Display child nodes above their parent. }
-//    toChildrenAbove,
-    { Draw the tree with a fixed indent. }
-//    toFixedIndent,
-    { Use the explorer theme if run under Windows Vista (or above). }
-//    toUseExplorerTheme
-    { Do not show tree lines if theming is used. }
-//    toHideTreeLinesIfThemed
-    { Draw nodes even if they are filtered out. }
-//    toShowFilteredNodes
-  ];
-  DEFAULT_GRID_HEADEROPTIONS = [
-    { Adjust a column so that the header never exceeds the client width of the
-      owner control. }
-    hoAutoResize,
-    { Resizing columns with the mouse is allowed. }
-    hoColumnResize,
-    { Allows a column to resize itself to its largest entry. }
-    hoDblClickResize,
-    { Dragging columns is allowed. }
-    hoDrag,
-    { Header captions are highlighted when mouse is over a particular column. }
-//    hoHotTrack,
-    { Header items with the owner draw style can be drawn by the application
-      via event. }
-//    hoOwnerDraw,
-    { Header can only be dragged horizontally. }
-    hoRestrictDrag,
-    { Show application defined header hint. }
-    hoShowHint,
-    { Show header images. }
-    hoShowImages,
-    { Allow visible sort glyphs. }
-    hoShowSortGlyphs,
-    { Distribute size changes of the header to all columns, which are sizable
-      and have the coAutoSpring option enabled. hoAutoResize must be enabled
-      too. }
-    hoAutoSpring,
-    { Fully invalidate the header (instead of subsequent columns only) when a
-      column is resized. }
-//    hoFullRepaintOnResize,
-    { Disable animated resize for all columns. }
-    hoDisableAnimatedResize,
-    { Allow resizing header height via mouse. }
-//    hoHeightResize,
-    { Allow the header to resize itself to its default height. }
-//    hoHeightDblClickResize
-    { Header is visible. }
-    hoVisible
-  ];
-  DEFAULT_GRID_STRINGOPTIONS = [
-    { If set then the caption is automatically saved with the tree node,
-      regardless of what is saved in the user data. }
-    //toSaveCaptions,
-    { Show static text in a caption which can be differently formatted than the
-      caption but cannot be edited. }
-    //toShowStaticText,
-    { Automatically accept changes during edit if the user finishes editing
-      other then VK_RETURN or ESC. If not set then changes are cancelled. }
-    toAutoAcceptEditChange
-  ];
-  DEFAULT_GRID_ANIMATIONOPTIONS = [
-    { Expanding and collapsing a node is animated (quick window scroll). }
-//    toAnimatedToggle,
-    { Do some advanced animation effects when toggling a node. }
-//    toAdvancedAnimatedToggle
-  ];
-  DEFAULT_GRID_AUTOOPTIONS = [
-    { Expand node if it is the drop target for more than a certain time. }
-    toAutoDropExpand,
-    { Nodes are expanded (collapsed) when getting (losing) the focus. }
-//    toAutoExpand,
-    { Scroll if mouse is near the border while dragging or selecting. }
-    toAutoScroll,
-    { Scroll as many child nodes in view as possible after expanding a node. }
-    toAutoScrollOnExpand,
-    { Sort tree when Header.SortColumn or Header.SortDirection change or sort
-      node if child nodes are added. }
-    toAutoSort,
-    { Large entries continue into next column(s) if there's no text in them
-      (no clipping). }
-//    toAutoSpanColumns,
-    { Checkstates are automatically propagated for tri state check boxes. }
-    toAutoTristateTracking,
-    { Node buttons are hidden when there are child nodes, but all are invisible.}
-//    toAutoHideButtons,
-    { Delete nodes which where moved in a drag operation (if not directed
-      otherwise). }
-    toAutoDeleteMovedNodes,
-    { Disable scrolling a node or column into view if it gets focused. }
-//    toDisableAutoscrollOnFocus,
-    { Change default node height automatically if the system's font scale is
-      set to big fonts. }
-    toAutoChangeScale,
-    { Frees any child node after a node has been collapsed (HasChildren flag
-      stays there). }
-//    toAutoFreeOnCollapse,
-    { Do not center a node horizontally when it is edited. }
-    toDisableAutoscrollOnEdit,
-    { When set then columns (if any exist) will be reordered from lowest index
-      to highest index and vice versa when the tree's bidi mode is changed. }
-    toAutoBidiColumnOrdering
-  ];
-{$ENDREGION}
-
-{$REGION 'TVirtualStringTree as TreeGrid settings'}
-const
-  DEFAULT_TREEGRID_SELECTIONOPTIONS = [
-    { Prevent user from selecting with the selection rectangle in multiselect
-      mode. }
-//    toDisableDrawSelection,
-    {  Entries other than in the main column can be selected, edited etc. }
-    toExtendedFocus,
-    { Hit test as well as selection highlight are not constrained to the text
-      of a node. }
-    toFullRowSelect
-    { Constrain selection to the same level as the selection anchor. }
-//    toLevelSelectConstraint,
-    { Allow selection, dragging etc. with the middle mouse button. This and
-      toWheelPanning are mutual exclusive. }
-//    toMiddleClickSelect,
-    { Allow more than one node to be selected. }
-//    toMultiSelect,
-    {  Allow selection, dragging etc. with the right mouse button. }
-//    toRightClickSelect,
-    { Constrain selection to nodes with same parent. }
-//    toSiblingSelectConstraint,
-    { Center nodes vertically in the client area when scrolling into view. }
-//    toCenterScrollIntoView
-    { Simplifies draw selection, so a node's caption does not need to intersect
-      with the selection rectangle. }
-//    toSimpleDrawSelection
-  ];
-  DEFAULT_TREEGRID_MISCOPTIONS = [
-    { Register tree as OLE accepting drop target }
-//    toAcceptOLEDrop,
-    { Show checkboxes/radio buttons. }
-//    toCheckSupport,
-    { Node captions can be edited. }
-//    toEditable,
-    { Fully invalidate the tree when its window is resized
-      (CS_HREDRAW/CS_VREDRAW). }
-//    toFullRepaintOnResize,
-    { Use some special enhancements to simulate and support grid behavior. }
-    toGridExtensions,
-    { Initialize nodes when saving a tree to a stream. }
-    toInitOnSave,
-    { Tree behaves like TListView in report mode. }
-//    toReportMode,
-    { Toggle node expansion state when it is double clicked. }
-    toToggleOnDblClick,
-    { Support for mouse panning (wheel mice only). This option and
-      toMiddleClickSelect are mutal exclusive, where panning has precedence. }
-    toWheelPanning,
-    { The tree does not allow to be modified in any way. No action is executed
-      and node editing is not possible. }
-//    toReadOnly,
-    { When set then GetNodeHeight will trigger OnMeasureItem to allow variable
-      node heights. }
-    toVariableNodeHeight
-    { Start node dragging by clicking anywhere in it instead only on the
-      caption or image. Must be used together with toDisableDrawSelection. }
-//    toFullRowDrag,
-    { Allows changing a node's height via mouse. }
-//    toNodeHeightResize,
-    { Allows to reset a node's height to FDefaultNodeHeight via a double click. }
-//    toNodeHeightDblClickResize,
-    { Editing mode can be entered with a single click }
-//    toEditOnClick,
-    { Editing mode can be entered with a double click }
-//    toEditOnDblClick
-  ];
-  DEFAULT_TREEGRID_PAINTOPTIONS = [
-    { Avoid drawing the dotted rectangle around the currently focused node. }
-    toHideFocusRect,
-    { Selected nodes are drawn as unselected nodes if the tree is unfocused. }
-    toHideSelection,
-    { Track which node is under the mouse cursor. }
-//    toHotTrack,
-    { Paint tree as would it always have the focus }
-    toPopupMode,
-    { Use the background image if there's one. }
-    toShowBackground,
-    { Display collapse/expand buttons left to a node. }
-    toShowButtons,
-    { Show the dropmark during drag'n drop operations. }
-    toShowDropmark,
-    { Display horizontal lines to simulate a grid. }
-//    toShowHorzGridLines,
-    { Show static background instead of a tiled one. }
-    toStaticBackground,
-    { Show lines also at top level (does not show the hidden/internal root
-      node). }
-    toShowRoot,
-    { Display tree lines to show hierarchy of nodes. }
-//    toShowTreeLines,
-    { Display vertical lines (depending on columns) to simulate a grid. }
-    toShowVertGridLines,
-    { Draw UI elements (header, tree buttons etc.) according to the current
-      theme if enabled (Windows XP+ only, application must be themed). }
-    toThemeAware,
-    { Enable alpha blending for ghosted nodes or those which are being
-      cut/copied. }
-    toUseBlendedImages,
-    { Ghosted images are still shown as ghosted if unfocused (otherwise they
-      become non-ghosted images). }
-//    toGhostedIfUnfocused,
-    { Display vertical lines over the full client area, not only the space
-      occupied by nodes. This option only has an effect if toShowVertGridLines
-      is enabled too. }
-//    toFullVertGridLines,
-    { Do not draw node selection, regardless of focused state. }
-//    toAlwaysHideSelection,
-    { Enable alpha blending for node selections. }
-    toUseBlendedSelection,
-    { Show simple static background instead of a tiled one. }
-    toStaticBackground//,
-    { Display child nodes above their parent. }
-//    toChildrenAbove,
-    { Draw the tree with a fixed indent. }
-//    toFixedIndent,
-    { Use the explorer theme if run under Windows Vista (or above). }
-//    toUseExplorerTheme
-    { Do not show tree lines if theming is used. }
-//    toHideTreeLinesIfThemed
-    { Draw nodes even if they are filtered out. }
-//    toShowFilteredNodes
-  ];
-  DEFAULT_TREEGRID_HEADEROPTIONS = [
-    { Adjust a column so that the header never exceeds the client width of the
-      owner control. }
-    hoAutoResize,
-    { Resizing columns with the mouse is allowed. }
-    hoColumnResize,
-    { Allows a column to resize itself to its largest entry. }
-    hoDblClickResize,
-    { Dragging columns is allowed. }
-//    hoDrag,
-    { Header captions are highlighted when mouse is over a particular column. }
-//    hoHotTrack,
-    { Header items with the owner draw style can be drawn by the application
-      via event. }
-//    hoOwnerDraw,
-    { Header can only be dragged horizontally. }
-    hoRestrictDrag,
-    { Show application defined header hint. }
-    hoShowHint,
-    { Show header images. }
-    hoShowImages,
-    { Allow visible sort glyphs. }
-    hoShowSortGlyphs,
-    { Distribute size changes of the header to all columns, which are sizable
-      and have the coAutoSpring option enabled. hoAutoResize must be enabled
-      too. }
-    hoAutoSpring,
-    { Fully invalidate the header (instead of subsequent columns only) when a
-      column is resized. }
-//    hoFullRepaintOnResize,
-    { Disable animated resize for all columns. }
-    hoDisableAnimatedResize,
-    { Allow resizing header height via mouse. }
-//    hoHeightResize,
-    { Allow the header to resize itself to its default height. }
-//    hoHeightDblClickResize
-    { Header is visible. }
-    hoVisible
-  ];
-  DEFAULT_TREEGRID_STRINGOPTIONS = [
-    { If set then the caption is automatically saved with the tree node,
-      regardless of what is saved in the user data. }
-    //toSaveCaptions,
-    { Show static text in a caption which can be differently formatted than the
-      caption but cannot be edited. }
-    //toShowStaticText,
-    { Automatically accept changes during edit if the user finishes editing
-      other then VK_RETURN or ESC. If not set then changes are cancelled. }
-    toAutoAcceptEditChange
-  ];
-  DEFAULT_TREEGRID_ANIMATIONOPTIONS = [
-    { Expanding and collapsing a node is animated (quick window scroll). }
-//    toAnimatedToggle,
-    { Do some advanced animation effects when toggling a node. }
-//    toAdvancedAnimatedToggle
-  ];
-  DEFAULT_TREEGRID_AUTOOPTIONS = [
-    { Expand node if it is the drop target for more than a certain time. }
-    toAutoDropExpand,
-    { Nodes are expanded (collapsed) when getting (losing) the focus. }
-//    toAutoExpand,
-    { Scroll if mouse is near the border while dragging or selecting. }
-    toAutoScroll,
-    { Scroll as many child nodes in view as possible after expanding a node. }
-    toAutoScrollOnExpand,
-    { Sort tree when Header.SortColumn or Header.SortDirection change or sort
-      node if child nodes are added. }
-    toAutoSort,
-    { Large entries continue into next column(s) if there's no text in them
-      (no clipping). }
-//    toAutoSpanColumns,
-    { Checkstates are automatically propagated for tri state check boxes. }
-    toAutoTristateTracking,
-    { Node buttons are hidden when there are child nodes, but all are invisible.}
-//    toAutoHideButtons,
-    { Delete nodes which where moved in a drag operation (if not directed
-      otherwise). }
-    toAutoDeleteMovedNodes,
-    { Disable scrolling a node or column into view if it gets focused. }
-//    toDisableAutoscrollOnFocus,
-    { Change default node height automatically if the system's font scale is
-      set to big fonts. }
-    toAutoChangeScale,
-    { Frees any child node after a node has been collapsed (HasChildren flag
-      stays there). }
-//    toAutoFreeOnCollapse,
-    { Do not center a node horizontally when it is edited. }
-    toDisableAutoscrollOnEdit,
+//  toDisableAutoscrollOnEdit,
     { When set then columns (if any exist) will be reordered from lowest index
       to highest index and vice versa when the tree's bidi mode is changed. }
     toAutoBidiColumnOrdering
@@ -1013,63 +384,118 @@ const
 {$REGION 'construction and destruction'}
 class constructor TVirtualStringTreeFactory.Create;
 begin
-//  FDefaultTreeOptions     := TStringTreeOptions.Create(nil);
-//  FDefaultGridOptions     := TStringTreeOptions.Create(nil);
-//  FDefaultTreeGridOptions := TStringTreeOptions.Create(nil);
-//  FDefaultTreeOptions.SelectionOptions := DEFAULT_TREE_SELECTIONOPTIONS;
-//  FDefaultTreeOptions.MiscOptions      := DEFAULT_TREE_MISCOPTIONS;
-//  FDefaultTreeOptions.PaintOptions     := DEFAULT_TREE_PAINTOPTIONS;
-//  FDefaultTreeOptions.StringOptions    := DEFAULT_TREE_STRINGOPTIONS;
-//  FDefaultTreeOptions.AnimationOptions := DEFAULT_TREE_ANIMATIONOPTIONS;
-//  FDefaultTreeOptions.AutoOptions      := DEFAULT_TREE_AUTOOPTIONS;
-//
-//  FDefaultGridOptions.SelectionOptions := DEFAULT_GRID_SELECTIONOPTIONS;
-//  FDefaultGridOptions.MiscOptions      := DEFAULT_GRID_MISCOPTIONS;
-//  FDefaultGridOptions.PaintOptions     := DEFAULT_GRID_PAINTOPTIONS;
-//  FDefaultGridOptions.StringOptions    := DEFAULT_GRID_STRINGOPTIONS;
-//  FDefaultGridOptions.AnimationOptions := DEFAULT_GRID_ANIMATIONOPTIONS;
-//  FDefaultGridOptions.AutoOptions      := DEFAULT_GRID_AUTOOPTIONS;
-//
-//  FDefaultTreeGridOptions.SelectionOptions := DEFAULT_TREEGRID_SELECTIONOPTIONS;
-//  FDefaultTreeGridOptions.MiscOptions      := DEFAULT_TREEGRID_MISCOPTIONS;
-//  FDefaultTreeGridOptions.PaintOptions     := DEFAULT_TREEGRID_PAINTOPTIONS;
-//  FDefaultTreeGridOptions.StringOptions    := DEFAULT_TREEGRID_STRINGOPTIONS;
-//  FDefaultTreeGridOptions.AnimationOptions := DEFAULT_TREEGRID_ANIMATIONOPTIONS;
-//  FDefaultTreeGridOptions.AutoOptions      := DEFAULT_TREEGRID_AUTOOPTIONS;
+  FDefaultTreeOptions     := TVSTOptions.Create;
+  FDefaultGridOptions     := TVSTOptions.Create;
+  FDefaultTreeGridOptions := TVSTOptions.Create;
+
+  with FDefaultTreeOptions do
+  begin
+    HeaderOptions := [
+      hoAutoResize, hoRestrictDrag, hoShowHint, hoShowImages, hoShowSortGlyphs,
+      hoHeightResize, hoHeightDblClickResize, hoVisible
+    ];
+    PaintOptions := [
+      toHideFocusRect, toHideSelection, toHotTrack, toPopupMode,
+      toShowBackground, toShowButtons, toShowDropmark, toStaticBackground,
+      toShowRoot, toThemeAware, toUseBlendedImages, toUseBlendedSelection,
+      toStaticBackground
+    ];
+    AnimationOptions := [];
+    AutoOptions := [
+      toAutoScroll, toAutoSort, toAutoDeleteMovedNodes, toAutoChangeScale,
+      toDisableAutoscrollOnEdit, toAutoBidiColumnOrdering
+    ];
+    StringOptions := [toAutoAcceptEditChange];
+    SelectionOptions := [toExtendedFocus];
+    MiscOptions := [
+      toInitOnSave, toToggleOnDblClick, toWheelPanning, toVariableNodeHeight
+    ];
+    ColumnOptions := [];
+  end;
+
+  with FDefaultGridOptions do
+  begin
+    HeaderOptions := [
+      hoAutoResize, hoColumnResize, hoDblClickResize, hoDrag, hoRestrictDrag,
+      hoShowHint, hoShowImages, hoShowSortGlyphs, hoAutoSpring,
+      hoDisableAnimatedResize, hoVisible
+    ];
+    PaintOptions := [
+      toHideFocusRect, toHideSelection, toPopupMode, toShowBackground,
+      toShowButtons, toShowDropmark, toStaticBackground, toShowRoot,
+      toShowVertGridLines, toThemeAware, toUseBlendedImages,
+      toUseBlendedSelection, toStaticBackground
+    ];
+    AnimationOptions := [];
+    AutoOptions := [
+      toAutoDropExpand, toAutoScroll, toAutoScrollOnExpand, toAutoSort,
+      toAutoTristateTracking, toAutoDeleteMovedNodes, toAutoChangeScale,
+      toDisableAutoscrollOnEdit, toAutoBidiColumnOrdering
+    ];
+    StringOptions := [toAutoAcceptEditChange];
+    SelectionOptions := [toExtendedFocus, toFullRowSelect];
+    MiscOptions := [
+      toCheckSupport, toGridExtensions, toInitOnSave, toToggleOnDblClick,
+      toWheelPanning, toVariableNodeHeight
+    ];
+    ColumnOptions := [];
+  end;
+
+  with FDefaultTreeGridOptions do
+  begin
+    HeaderOptions := [
+      hoAutoResize, hoColumnResize, hoDblClickResize, hoRestrictDrag,
+      hoShowHint, hoShowImages, hoShowSortGlyphs,hoAutoSpring,
+      hoDisableAnimatedResize, hoVisible
+    ];
+    PaintOptions := [
+      toHideFocusRect, toHideSelection, toPopupMode, toShowBackground,
+      toShowButtons, toShowDropmark, toStaticBackground, toShowRoot,
+      toShowVertGridLines, toThemeAware, toUseBlendedImages,
+      toUseBlendedSelection, toStaticBackground
+    ];
+    AnimationOptions := [];
+    AutoOptions := [
+      toAutoDropExpand, toAutoScroll, toAutoScrollOnExpand, toAutoSort,
+      toAutoTristateTracking, toAutoDeleteMovedNodes, toAutoChangeScale,
+      toDisableAutoscrollOnEdit, toAutoBidiColumnOrdering
+    ];
+    StringOptions := [toAutoAcceptEditChange];
+    SelectionOptions := [toExtendedFocus, toFullRowSelect];
+    MiscOptions := [
+      toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning,
+      toVariableNodeHeight
+    ];
+    FDefaultTreeGridOptions.ColumnOptions := [];
+  end;
 end;
 
 class destructor TVirtualStringTreeFactory.Destroy;
 begin
-//  FDefaultTreeOptions.Free;
-//  FDefaultGridOptions.Free;
-//  FDefaultTreeGridOptions.Free;
-end;
-{$ENDREGION}
-
-{$REGION 'property access methods'}
-class procedure TVirtualStringTreeFactory.SetDefaultGridOptions(
-  const Value: TStringTreeOptions);
-begin
-  FDefaultGridOptions.Assign(Value);
-end;
-
-class procedure TVirtualStringTreeFactory.SetDefaultTreeGridOptions(
-  const Value: TStringTreeOptions);
-begin
-  FDefaultTreeGridOptions.Assign(Value);
-end;
-
-class procedure TVirtualStringTreeFactory.SetDefaultTreeOptions(
-  const Value: TStringTreeOptions);
-begin
-  FDefaultTreeOptions.Assign(Value);
+  FDefaultTreeOptions.Free;
+  FDefaultGridOptions.Free;
+  FDefaultTreeGridOptions.Free;
 end;
 {$ENDREGION}
 
 {$REGION 'public methods'}
+
+
+class procedure TVirtualStringTreeFactory.AssignOptions(
+  AVSTOptions: TVSTOptions; ATree: TVirtualStringTree);
+begin
+  ATree.TreeOptions.AnimationOptions := AVSTOptions.AnimationOptions;
+  ATree.TreeOptions.AutoOptions      := AVSTOptions.AutoOptions;
+  ATree.TreeOptions.MiscOptions      := AVSTOptions.MiscOptions;
+  ATree.TreeOptions.PaintOptions     := AVSTOptions.PaintOptions;
+  ATree.TreeOptions.SelectionOptions := AVSTOptions.SelectionOptions;
+  ATree.TreeOptions.StringOptions    := AVSTOptions.StringOptions;
+
+  ATree.Header.Options := AVSTOptions.HeaderOptions;
+end;
+
 class function TVirtualStringTreeFactory.Create(AOwner: TComponent;
-  AParent: TWinControl; const AName: string; const AHeaderOptions
-  : TVTHeaderOptions; ATreeOptions: TStringTreeOptions): TVirtualStringTree;
+  AParent: TWinControl; const AName: string): TVirtualStringTree;
 var
   VST : TVirtualStringTree;
 begin
@@ -1081,27 +507,9 @@ begin
   VST.HintMode          := hmTooltip;
   VST.Align             := alClient;
   VST.DrawSelectionMode := smBlendedRectangle;
-
   VST.Colors.SelectionRectangleBlendColor := clGray;
   VST.Colors.SelectionTextColor := clBlack;
   VST.Colors.GridLineColor      := clGray;
-
-
-  if Assigned(ATreeOptions) then
-    VST.TreeOptions.Assign(ATreeOptions)
-  else
-  begin
-    VST.TreeOptions.SelectionOptions := DEFAULT_VST_SELECTIONOPTIONS;
-    VST.TreeOptions.MiscOptions      := DEFAULT_VST_MISCOPTIONS;
-    VST.TreeOptions.PaintOptions     := DEFAULT_VST_PAINTOPTIONS;
-    VST.TreeOptions.StringOptions    := DEFAULT_VST_STRINGOPTIONS;
-    VST.TreeOptions.AnimationOptions := DEFAULT_VST_ANIMATIONOPTIONS;
-    VST.TreeOptions.AutoOptions      := DEFAULT_VST_AUTOOPTIONS;
-  end;
-  if AHeaderOptions <> [] then
-    VST.Header.Options := AHeaderOptions
-  else
-    VST.Header.Options := DEFAULT_VST_HEADEROPTIONS;
   VST.Header.Height := 18;
   Result := VST;
 end;
@@ -1115,30 +523,18 @@ var
 begin
   Guard.CheckNotNull(AOwner, 'AOwner');
   Guard.CheckNotNull(AParent, 'AParent');
-
   VST := TVirtualStringTree.Create(AOwner);
   VST.AlignWithMargins  := True;
   VST.Parent            := AParent;
   VST.HintMode          := hmTooltip;
   VST.Align             := alClient;
   VST.DrawSelectionMode := smBlendedRectangle;
-
   VST.Colors.SelectionRectangleBlendColor := clGray;
   VST.Colors.SelectionTextColor := clBlack;
   VST.Colors.GridLineColor      := clGray;
-
   VST.Header.AutoSizeIndex := -1;
   VST.Header.Height        := 18;
-  VST.Header.Options       := DefaultGridHeaderOptions;
-  //VST.TreeOptions.Assign(DefaultGridOptions);
-  //VST.F
-
-  VST.TreeOptions.SelectionOptions := DEFAULT_GRID_SELECTIONOPTIONS;
-  VST.TreeOptions.MiscOptions      := DEFAULT_GRID_MISCOPTIONS;
-  VST.TreeOptions.PaintOptions     := DEFAULT_GRID_PAINTOPTIONS;
-  VST.TreeOptions.StringOptions    := DEFAULT_GRID_STRINGOPTIONS;
-  VST.TreeOptions.AnimationOptions := DEFAULT_GRID_ANIMATIONOPTIONS;
-  VST.TreeOptions.AutoOptions      := DEFAULT_GRID_AUTOOPTIONS;
+  AssignOptions(DefaultGridOptions, VST);
   VST.Indent := 2; // show first column as a normal grid column
   Result := VST;
 end;
@@ -1159,21 +555,7 @@ begin
   VST.Align             := alClient;
   VST.DrawSelectionMode := smBlendedRectangle;
   VST.Header.Height := 18;
-  //VST.Header.Options               := DefaultTreeHeaderOptions;
-  //VST.TreeOptions.Assign(DefaultTreeOptions);
-
-   VST.TreeOptions.SelectionOptions := DEFAULT_TREE_SELECTIONOPTIONS;
-   VST.TreeOptions.MiscOptions      := DEFAULT_TREE_MISCOPTIONS;
-   VST.TreeOptions.PaintOptions     := DEFAULT_TREE_PAINTOPTIONS;
-   VST.TreeOptions.StringOptions    := DEFAULT_TREE_STRINGOPTIONS;
-   VST.TreeOptions.AnimationOptions := DEFAULT_TREE_ANIMATIONOPTIONS;
-   VST.TreeOptions.AutoOptions      := DEFAULT_TREE_AUTOOPTIONS;
-
-
-
-
-
-
+  AssignOptions(DefaultTreeOptions, VST);
   Result := VST;
 end;
 
@@ -1191,16 +573,7 @@ begin
   VST.Align             := alClient;
   VST.DrawSelectionMode := smBlendedRectangle;
   VST.Header.Height     := 18;
-  VST.Header.Options    := DefaultTreeGridHeaderOptions;
-  //VST.TreeOptions.Assign(DefaultTreeGridOptions);
-   VST.TreeOptions.SelectionOptions := DEFAULT_TREEGRID_SELECTIONOPTIONS;
-   VST.TreeOptions.MiscOptions      := DEFAULT_TREEGRID_MISCOPTIONS;
-   VST.TreeOptions.PaintOptions     := DEFAULT_TREEGRID_PAINTOPTIONS;
-   VST.TreeOptions.StringOptions    := DEFAULT_TREEGRID_STRINGOPTIONS;
-   VST.TreeOptions.AnimationOptions := DEFAULT_TREEGRID_ANIMATIONOPTIONS;
-   VST.TreeOptions.AutoOptions      := DEFAULT_TREEGRID_AUTOOPTIONS;
-
-
+  AssignOptions(DefaultGridOptions, VST);
   Result := VST;
 end;
 {$ENDREGION}

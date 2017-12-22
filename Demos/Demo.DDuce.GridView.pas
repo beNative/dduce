@@ -89,7 +89,7 @@ uses
 {$REGION 'construction and destruction'}
 procedure TfrmGridView.AfterConstruction;
 var
-  R : TRecord;
+  R : DynamicRecord;
   F : IDynamicField;
 begin
   inherited AfterConstruction;
@@ -138,7 +138,7 @@ end;
 procedure TfrmGridView.FGridViewGetCellColors(Sender: TObject; Cell: TGridCell;
   Canvas: TCanvas);
 var
-  R  : TRecord;
+  R  : DynamicRecord;
   GV : TGridView;
   V  : TValue;
 begin
@@ -171,7 +171,7 @@ end;
 procedure TfrmGridView.FGridViewGetCellText(Sender: TObject; Cell: TGridCell;
   var Value: string);
 var
-  R: TRecord;
+  R: DynamicRecord;
 begin
   R.From(FList[Cell.Row]);
 
@@ -182,7 +182,7 @@ end;
 procedure TfrmGridView.FGridViewGetCheckState(Sender: TObject; Cell: TGridCell;
   var CheckState: TCheckBoxState);
 var
-  R  : TRecord;
+  R  : DynamicRecord;
 begin
   R.From(FList[Cell.Row]);
   if R.Items[Cell.Col].Value.AsBoolean then

@@ -9,6 +9,9 @@
         <Projects Include="DDuce.Components.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="DDuce.Modules.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="DDuce_Components:Make">
         <MSBuild Projects="DDuce.Components.dproj" Targets="Make"/>
     </Target>
+    <Target Name="DDuce_Modules">
+        <MSBuild Projects="DDuce.Modules.dproj"/>
+    </Target>
+    <Target Name="DDuce_Modules:Clean">
+        <MSBuild Projects="DDuce.Modules.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DDuce_Modules:Make">
+        <MSBuild Projects="DDuce.Modules.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="DDuce_Core;DDuce_Components"/>
+        <CallTarget Targets="DDuce_Core;DDuce_Components;DDuce_Modules"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="DDuce_Core:Clean;DDuce_Components:Clean"/>
+        <CallTarget Targets="DDuce_Core:Clean;DDuce_Components:Clean;DDuce_Modules:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="DDuce_Core:Make;DDuce_Components:Make"/>
+        <CallTarget Targets="DDuce_Core:Make;DDuce_Components:Make;DDuce_Modules:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

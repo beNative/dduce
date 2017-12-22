@@ -1,25 +1,40 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{4476808E-FE90-458A-8F43-C58050ED9914}</ProjectGuid>
-        <MainSource>DDuce.Core.dpk</MainSource>
+        <ProjectGuid>{D7CAE294-F3ED-4D62-B93F-3A92A4623EB6}</ProjectGuid>
+        <MainSource>DDuce.Modules.dpk</MainSource>
         <ProjectVersion>18.2</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
-        <TargetedPlatforms>3</TargetedPlatforms>
+        <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Package</AppType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
     </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
-        <Base_Win32>true</Base_Win32>
+    <PropertyGroup Condition="('$(Platform)'=='Android' and '$(Base)'=='true') or '$(Base_Android)'!=''">
+        <Base_Android>true</Base_Android>
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
-        <Base_Win64>true</Base_Win64>
+    <PropertyGroup Condition="('$(Platform)'=='iOSDevice32' and '$(Base)'=='true') or '$(Base_iOSDevice32)'!=''">
+        <Base_iOSDevice32>true</Base_iOSDevice32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='iOSDevice64' and '$(Base)'=='true') or '$(Base_iOSDevice64)'!=''">
+        <Base_iOSDevice64>true</Base_iOSDevice64>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='iOSSimulator' and '$(Base)'=='true') or '$(Base_iOSSimulator)'!=''">
+        <Base_iOSSimulator>true</Base_iOSSimulator>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+        <Base_Win32>true</Base_Win32>
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
@@ -34,59 +49,43 @@
         <Cfg_1>true</Cfg_1>
         <Base>true</Base>
     </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win64)'!=''">
-        <Cfg_1_Win64>true</Cfg_1_Win64>
-        <CfgParent>Cfg_1</CfgParent>
-        <Cfg_1>true</Cfg_1>
-        <Base>true</Base>
-    </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
         <Cfg_2>true</Cfg_2>
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
-        <Cfg_2_Win32>true</Cfg_2_Win32>
-        <CfgParent>Cfg_2</CfgParent>
-        <Cfg_2>true</Cfg_2>
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win64)'!=''">
-        <Cfg_2_Win64>true</Cfg_2_Win64>
-        <CfgParent>Cfg_2</CfgParent>
-        <Cfg_2>true</Cfg_2>
-        <Base>true</Base>
-    </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <VerInfo_Build>1</VerInfo_Build>
-        <DCC_DcpOutput>.\$(Platform)\$(Config)</DCC_DcpOutput>
-        <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <DCC_BplOutput>.\$(Platform)\$(Config)</DCC_BplOutput>
-        <VerInfo_Keys>FileVersion=1.0.0.1;ProductVersion=1.0.0.0</VerInfo_Keys>
-        <VerInfo_Locale>2067</VerInfo_Locale>
-        <DCC_UnitSearchPath>..\Source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
-        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
-        <GenDll>true</GenDll>
-        <GenPackage>true</GenPackage>
-        <SanitizedProjectName>DDuce_Core</SanitizedProjectName>
-        <DCC_DcuOutput>..\Library\$(Platform)\$(Config)</DCC_DcuOutput>
+        <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
         <DCC_S>false</DCC_S>
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
+        <GenDll>true</GenDll>
+        <GenPackage>true</GenPackage>
+        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
+        <SanitizedProjectName>DDuce_Modules</SanitizedProjectName>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Android)'!=''">
+        <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
+        <EnabledSysJars>android-support-v4.dex.jar;cloud-messaging.dex.jar;fmx.dex.jar;google-analytics-v2.dex.jar;google-play-billing.dex.jar;google-play-licensing.dex.jar;google-play-services.dex.jar</EnabledSysJars>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_iOSDevice32)'!=''">
+        <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_iOSDevice64)'!=''">
+        <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_iOSSimulator)'!=''">
+        <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+        <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Locale>1033</VerInfo_Locale>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_Win64)'!=''">
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
@@ -98,42 +97,125 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
-        <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-    </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
-        <VerInfo_Keys>FileVersion=1.0.0.1;ProductVersion=1.0.0.0</VerInfo_Keys>
-        <VerInfo_Build>1</VerInfo_Build>
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
         <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
         <DCC_DebugInformation>0</DCC_DebugInformation>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
-        <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
+        <DCCReference Include="vclactnband.dcp"/>
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="dbrtl.dcp"/>
-        <DCCReference Include="Spring.Core.dcp"/>
-        <DCCReference Include="..\Source\DDuce.DynamicRecord.pas"/>
-        <DCCReference Include="..\Source\DDuce.RandomData.pas"/>
-        <DCCReference Include="..\Source\DDuce.Reflect.pas"/>
-        <DCCReference Include="..\Source\DDuce.ScopedReference.pas"/>
+        <DCCReference Include="vcldb.dcp"/>
+        <DCCReference Include="DDuce.Components.dcp"/>
+        <DCCReference Include="..\Source\Modules\DDuce.Factories.pas"/>
+        <DCCReference Include="..\Source\Modules\DDuce.FormSettings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ActionList.Templates.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ActionList.ToolView.pas">
+            <Form>frmActionListView</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.AlignLines.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.AlignLines.ToolView.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.CharacterMap.ToolView.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Codeformatters.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Codeformatters.Sql.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Codetags.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Colors.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Commands.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Commentstripper.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Events.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Manager.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Menus.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Toolbars.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Views.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Data.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Highlighters.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Interfaces.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Manager.pas">
+            <Form>dmEditorManager</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Options.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Resources.pas">
+            <Form>ResourcesDataModule</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Data.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Engine.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Engine.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Templates.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Toolview.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Selectioninfo.ToolView.pas">
+            <Form>frmSelectionInfo</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Sortstrings.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Sortstrings.Toolview.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Test.ToolView.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Tools.Settings.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ToolView.Base.pas">
+            <Form>CustomEditorToolView</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ToolView.Manager.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Types.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Utils.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.View.pas">
+            <Form>EditorView</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Viewlist.Data.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Viewlist.ToolView.pas">
+            <Form>frmViewList</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Base.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.Base.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.LogFile.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinIPC.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinODS.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Factories.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas"/>
+        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.pas"/>
+        <DCCReference Include="..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas">
+            <Form>frmComponentInspector</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.zObjectInspector.pas">
+            <Form>frmComponentInspectorzObjectInspector</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\RTTEye\DDuce.RTTEye.pas">
+            <Form>frmRTTEye</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Bindings.Collections.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Bindings.CollectionView.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Bindings.Notifications.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Collections.ObservableCollection.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Collections.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.DataTemplates.Default.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.DataTemplates.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.DependencyProperty.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Expressions.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Framework.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.PropertyChangedBase.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Reflection.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Utils.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.ColumnDefinitions.ControlTemplate.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.ColumnDefinitions.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.ControlTemplates.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.CustomPresenter.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.CustomPresenter.Types.pas"/>
+        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.TreeViewPresenter.pas"/>
+        <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas"/>
+        <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -152,27 +234,36 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">DDuce.Core.dpk</Source>
+                    <Source Name="MainSource">DDuce.Modules.dpk</Source>
                 </Source>
-                <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\Castalia220.bpl">(untitled)</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Bpl\dclDataBindings220.bpl">DSharp data binding designtime package</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Bpl\dclTreeViewPresenter220.bpl">DSharp treeview presenter designtime package</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Bpl\dclDataBindingsVCL220.bpl">DSharp data binding designtime package for VCL</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Bpl\DebugVisualizers.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\16.0\Bpl\DebugVisualizers.bpl not found</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k220.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp220.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k220.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp220.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Bpl\VirtualTreesDD220.bpl">TurboPack VirtualTree Delphi designtime package</Excluded_Packages>
-                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule"/>
-                <DeployFile LocalName="$(BDS)\Redist\iossim32\libcgunwind.1.0.dylib" Class="DependencyModule"/>
-                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule"/>
-                <DeployFile LocalName="Win32\Debug\DDuce.Core.bpl" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libPCRE.dylib" Class="DependencyModule"/>
+                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
+                    <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">
+                    <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libPCRE.dylib" Class="DependencyModule">
+                    <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule">
+                    <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\DDuce.Modules.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>DDuce_Modules.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="OSX32">
                         <Operation>1</Operation>
@@ -525,15 +616,21 @@
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Linux64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>
+                <Platform value="Android">False</Platform>
+                <Platform value="iOSDevice32">False</Platform>
+                <Platform value="iOSDevice64">False</Platform>
+                <Platform value="iOSSimulator">False</Platform>
+                <Platform value="Linux64">False</Platform>
+                <Platform value="OSX32">False</Platform>
                 <Platform value="Win32">True</Platform>
-                <Platform value="Win64">True</Platform>
+                <Platform value="Win64">False</Platform>
             </Platforms>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>

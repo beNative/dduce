@@ -14,7 +14,6 @@
   limitations under the License.
 }
 
-
 unit DDuce.Factories.zObjInspector;
 
 interface

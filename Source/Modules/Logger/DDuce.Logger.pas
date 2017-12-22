@@ -16,8 +16,6 @@
 
 unit DDuce.Logger;
 
-//{$I DDuce.inc}
-
 interface
 
 { A global logger singleton for shared usage }
