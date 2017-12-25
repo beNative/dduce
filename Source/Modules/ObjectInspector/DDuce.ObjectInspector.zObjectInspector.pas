@@ -16,8 +16,6 @@
 
 unit DDuce.ObjectInspector.zObjectInspector;
 
-//{$I ..\DDuce.inc}
-
 interface
 
 uses
@@ -79,7 +77,7 @@ procedure InspectComponents(AComponents : TComponentList); overload;
 implementation
 
 uses
-  System.Rtti,
+  System.Rtti, System.TypInfo,
 
   DDuce.Factories.zObjInspector;
 
@@ -224,6 +222,7 @@ begin
   FObjectInspector.Component       := FObjectHost;
   FObjectInspector.SplitterPos     := FObjectInspector.Width div 2;
   FObjectInspector.SortByCategory  := False;
+  FObjectInspector.ObjectVisibility := mvPublic;
   FObjectInspector.OnBeforeAddItem := FObjectInspectorBeforeAddItem;
 end;
 {$ENDREGION}

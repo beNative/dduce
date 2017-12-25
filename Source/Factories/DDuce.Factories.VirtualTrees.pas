@@ -73,8 +73,8 @@ type
     FDefaultTreeGridOptions : TVSTOptions;
 
     class procedure AssignOptions(
-      AVSTOptions  : TVSTOptions;
-      ATree        : TVirtualStringTree
+      AVSTOptions : TVSTOptions;
+      ATree       : TVirtualStringTree
     );
 
   public
@@ -82,9 +82,9 @@ type
     class destructor Destroy;
 
     class function Create(
-      AOwner               : TComponent;
-      AParent              : TWinControl;
-      const AName          : string = ''
+      AOwner      : TComponent;
+      AParent     : TWinControl;
+      const AName : string = ''
     ): TVirtualStringTree;
 
     class function CreateTree(
@@ -121,6 +121,7 @@ uses
   System.UITypes,
   Vcl.Graphics;
 
+{$REGION 'TVirtualStringTree settings'}
 {
   DefaultPaintOptions = [
     toShowButtons,
@@ -164,9 +165,8 @@ uses
   ];
  }
 
-{$REGION 'TVirtualStringTree settings'}
-const
-  DEFAULT_VST_SELECTIONOPTIONS = [
+//const
+//  DEFAULT_VST_SELECTIONOPTIONS = [
     { Prevent user from selecting with the selection rectangle in multiselect
       mode. }
 //    toDisableDrawSelection,
@@ -191,8 +191,8 @@ const
     { Simplifies draw selection, so a node's caption does not need to intersect
       with the selection rectangle. }
 //    toSimpleDrawSelection
-  ];
-  DEFAULT_VST_MISCOPTIONS = [
+//  ];
+//  DEFAULT_VST_MISCOPTIONS = [
     { Register tree as OLE accepting drop target }
 //    toAcceptOLEDrop,
     { Show checkboxes/radio buttons. }
@@ -230,13 +230,14 @@ const
 //    toEditOnClick,
     { Editing mode can be entered with a double click }
 //    toEditOnDblClick
-  ];
-  DEFAULT_VST_PAINTOPTIONS = [
+//  ];
+//  DEFAULT_VST_PAINTOPTIONS = [
     { Avoid drawing the dotted rectangle around the currently focused node. }
 //  toHideFocusRect,
     { Selected nodes are drawn as unselected nodes if the tree is unfocused. }
 //  toHideSelection,
-    { Track which node is under the mouse cursor. }
+    { Track which node is under the mouse cursor. Assigns a background color
+      if used in combination with toUseExplorerTheme. }
 //    toHotTrack,
     { Paint tree as would it always have the focus }
 //  toPopupMode,
@@ -275,7 +276,7 @@ const
     { Enable alpha blending for node selections. }
 //  toUseBlendedSelection,
     { Show simple static background instead of a tiled one. }
-//  toStaticBackground//,
+//  toStaticBackground,
     { Display child nodes above their parent. }
 //    toChildrenAbove,
     { Draw the tree with a fixed indent. }
@@ -286,8 +287,8 @@ const
 //    toHideTreeLinesIfThemed
     { Draw nodes even if they are filtered out. }
 //    toShowFilteredNodes
-  ];
-  DEFAULT_VST_HEADEROPTIONS = [
+//  ];
+//  DEFAULT_VST_HEADEROPTIONS = [
     { Adjust a column so that the header never exceeds the client width of the
       owner control. }
 //  hoAutoResize,
@@ -325,8 +326,8 @@ const
 //    hoHeightDblClickResize
     { Header is visible. }
 //  hoVisible
-  ];
-  DEFAULT_VST_STRINGOPTIONS = [
+//  ];
+//  DEFAULT_VST_STRINGOPTIONS = [
     { If set then the caption is automatically saved with the tree node,
       regardless of what is saved in the user data. }
     //toSaveCaptions,
@@ -335,15 +336,15 @@ const
     //toShowStaticText,
     { Automatically accept changes during edit if the user finishes editing
       other then VK_RETURN or ESC. If not set then changes are cancelled. }
-    toAutoAcceptEditChange
-  ];
-  DEFAULT_VST_ANIMATIONOPTIONS = [
+//    toAutoAcceptEditChange
+//  ];
+//  DEFAULT_VST_ANIMATIONOPTIONS = [
     { Expanding and collapsing a node is animated (quick window scroll). }
 //    toAnimatedToggle,
     { Do some advanced animation effects when toggling a node. }
 //    toAdvancedAnimatedToggle
-  ];
-  DEFAULT_VST_AUTOOPTIONS = [
+//  ];
+//  DEFAULT_VST_AUTOOPTIONS = [
     { Expand node if it is the drop target for more than a certain time. }
 //  toAutoDropExpand,
     { Nodes are expanded (collapsed) when getting (losing) the focus. }
@@ -377,8 +378,8 @@ const
 //  toDisableAutoscrollOnEdit,
     { When set then columns (if any exist) will be reordered from lowest index
       to highest index and vice versa when the tree's bidi mode is changed. }
-    toAutoBidiColumnOrdering
-  ];
+//    toAutoBidiColumnOrdering
+//  ];
 {$ENDREGION}
 
 {$REGION 'construction and destruction'}
@@ -396,9 +397,8 @@ begin
     ];
     PaintOptions := [
       toHideFocusRect, toHideSelection, toHotTrack, toPopupMode,
-      toShowBackground, toShowButtons, toShowDropmark, toStaticBackground,
-      toShowRoot, toThemeAware, toUseBlendedImages, toUseBlendedSelection,
-      toStaticBackground
+      toShowBackground, toShowButtons, toShowDropmark, toShowRoot, toThemeAware,
+      toUseBlendedImages, toUseBlendedSelection, toStaticBackground
     ];
     AnimationOptions := [];
     AutoOptions := [
@@ -421,10 +421,10 @@ begin
       hoDisableAnimatedResize, hoVisible
     ];
     PaintOptions := [
-      toHideFocusRect, toHideSelection, toPopupMode, toShowBackground,
-      toShowButtons, toShowDropmark, toStaticBackground, toShowRoot,
+      toHideFocusRect, toHideSelection, toHotTrack, toPopupMode,
+      toShowBackground, toShowButtons, toShowDropmark, toShowRoot,
       toShowVertGridLines, toThemeAware, toUseBlendedImages,
-      toUseBlendedSelection, toStaticBackground
+      toUseBlendedSelection, toStaticBackground, toUseExplorerTheme
     ];
     AnimationOptions := [];
     AutoOptions := [
@@ -449,10 +449,10 @@ begin
       hoDisableAnimatedResize, hoVisible
     ];
     PaintOptions := [
-      toHideFocusRect, toHideSelection, toPopupMode, toShowBackground,
-      toShowButtons, toShowDropmark, toStaticBackground, toShowRoot,
-      toShowVertGridLines, toThemeAware, toUseBlendedImages,
-      toUseBlendedSelection, toStaticBackground
+      toHideFocusRect, toHideSelection, toHotTrack, toPopupMode,
+      toShowBackground, toShowButtons, toShowDropmark, toStaticBackground,
+      toShowRoot, toShowVertGridLines, toThemeAware, toUseBlendedImages,
+      toUseBlendedSelection, toStaticBackground, toUseExplorerTheme
     ];
     AnimationOptions := [];
     AutoOptions := [
@@ -466,7 +466,7 @@ begin
       toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning,
       toVariableNodeHeight
     ];
-    FDefaultTreeGridOptions.ColumnOptions := [];
+    ColumnOptions := [];
   end;
 end;
 
@@ -478,9 +478,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION 'public methods'}
-
-
+{$REGION 'private methods'}
 class procedure TVirtualStringTreeFactory.AssignOptions(
   AVSTOptions: TVSTOptions; ATree: TVirtualStringTree);
 begin
@@ -490,10 +488,11 @@ begin
   ATree.TreeOptions.PaintOptions     := AVSTOptions.PaintOptions;
   ATree.TreeOptions.SelectionOptions := AVSTOptions.SelectionOptions;
   ATree.TreeOptions.StringOptions    := AVSTOptions.StringOptions;
-
-  ATree.Header.Options := AVSTOptions.HeaderOptions;
+  ATree.Header.Options               := AVSTOptions.HeaderOptions;
 end;
+{$ENDREGION}
 
+{$REGION 'public methods'}
 class function TVirtualStringTreeFactory.Create(AOwner: TComponent;
   AParent: TWinControl; const AName: string): TVirtualStringTree;
 var
@@ -530,8 +529,8 @@ begin
   VST.Align             := alClient;
   VST.DrawSelectionMode := smBlendedRectangle;
   VST.Colors.SelectionRectangleBlendColor := clGray;
-  VST.Colors.SelectionTextColor := clBlack;
-  VST.Colors.GridLineColor      := clGray;
+  VST.Colors.SelectionTextColor           := clBlack;
+  VST.Colors.GridLineColor                := clGray;
   VST.Header.AutoSizeIndex := -1;
   VST.Header.Height        := 18;
   AssignOptions(DefaultGridOptions, VST);
@@ -573,7 +572,7 @@ begin
   VST.Align             := alClient;
   VST.DrawSelectionMode := smBlendedRectangle;
   VST.Header.Height     := 18;
-  AssignOptions(DefaultGridOptions, VST);
+  AssignOptions(DefaultTreeGridOptions, VST);
   Result := VST;
 end;
 {$ENDREGION}

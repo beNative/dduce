@@ -311,6 +311,7 @@
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Factories.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.pas"/>
+        <DCCReference Include="..\Source\Factories\DDuce.Factories.LiveBindings.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -341,6 +342,12 @@
             <Deployment Version="3">
                 <DeployFile LocalName="Win32\Debug\DDuce.Demos.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="Win64\Debug\DDuce.Demos.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="Win32\Debug\DDuce.Demos.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>DDuce_Demos.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>

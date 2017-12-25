@@ -247,7 +247,8 @@ implementation
 uses
   System.TypInfo,
 
-  DDuce.Components.Factories,
+  DDuce.Factories.GridView,
+
   Demo.Data, Demo.Factories;
 
 var
@@ -1061,7 +1062,7 @@ end;
 
 procedure TfrmDBGridView.CreateDBGridView;
 begin
-  FDBGV := TDDuceComponents.CreateDBGridView(
+  FDBGV := TGridViewFactory.CreateDBGridView(
     Self,
     tsDBGridView,
     dscMain,

@@ -14,8 +14,6 @@
   limitations under the License.
 }
 
-{$I ..\Source\DDuce.inc}
-
 unit Demo.DDuce.Inspector;
 
 interface
@@ -35,17 +33,19 @@ uses
 
 type
   TfrmInspector = class(TForm)
-    pnlLeft            : TPanel;
-    pnlRight           : TPanel;
-    splVertical        : TSplitter;
-    dscMain            : TDataSource;
-    pmMain             : TPopupMenu;
-    mniHideEmptyFields : TMenuItem;
+    {$REGION 'designer controls'}
     aclMain            : TActionList;
     actHideEmptyFields : TAction;
-    pnlInspector       : TPanel;
+    dscMain            : TDataSource;
     grdMain            : TDBGrid;
+    mniHideEmptyFields : TMenuItem;
+    pmMain             : TPopupMenu;
+    pnlInspector       : TPanel;
+    pnlLeft            : TPanel;
+    pnlRight           : TPanel;
     splHorizontal      : TSplitter;
+    splVertical        : TSplitter;
+    {$ENDREGION}
 
     procedure dscMainDataChange(Sender: TObject; Field: TField);
 
@@ -122,7 +122,7 @@ implementation
 {$R *.dfm}
 
 uses
-  DDuce.Components.Factories,
+  DDuce.Factories.GridView, DDuce.Components.Factories,
 
   Demo.Factories, Demo.Data;
 
@@ -131,7 +131,7 @@ procedure TfrmInspector.AfterConstruction;
 begin
   inherited AfterConstruction;
   FDataSet := TDemoFactories.CreateContactDataSet(Self, 10000);
-  FInspector := TDDuceComponents.CreateInspector(Self, pnlInspector);
+  FInspector := TGridViewFactory.CreateInspector(Self, pnlInspector);
   FInspector.OnGetCellText       := FInspectorGetCellText;
   FInspector.OnSetEditText       := FInspectorSetEditText;
   FInspector.OnGetCellReadOnly   := FInspectorGetCellReadOnly;

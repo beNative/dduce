@@ -19,7 +19,7 @@ unit DDuce.Factories.zObjInspector;
 interface
 
 uses
-  System.Classes,
+  System.Classes, System.TypInfo,
   Vcl.Controls,
 
   zObjInspector, zValueManager;
@@ -50,6 +50,7 @@ begin
   OI.AlignWithMargins := True;
   OI.Name             := AName;
   OI.Component        := AObject;
+  OI.ObjectVisibility := mvPublic;
   OI.SplitterPos      := OI.ClientWidth div 2;
   Result := OI;
 end;

@@ -126,7 +126,8 @@ uses
   DDuce.Logger.Channels.ZeroMQ in '..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas',
   DDuce.Logger.Factories in '..\Source\Modules\Logger\DDuce.Logger.Factories.pas',
   DDuce.Logger.Interfaces in '..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas',
-  DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas';
+  DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas',
+  DDuce.Factories.LiveBindings in '..\Source\Factories\DDuce.Factories.LiveBindings.pas';
 
 {$R *.res}
 

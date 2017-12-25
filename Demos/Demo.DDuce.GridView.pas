@@ -83,6 +83,7 @@ uses
   Spring.Helpers,
 
   DDuce.RandomData, DDuce.DynamicRecord, DDuce.Components.Factories,
+  DDuce.Factories.GridView,
 
   Demo.Factories;
 
@@ -93,7 +94,7 @@ var
   F : IDynamicField;
 begin
   inherited AfterConstruction;
-  FGridView := TDDuceComponents.CreateGridView(Self, pnlRight);
+  FGridView := TGridViewFactory.CreateGridView(Self, pnlRight);
   FPropertyInspector :=
     TDDuceComponents.CreatePropertyInspector(Self, pnlLeft, FGridView);
   FList := TDemoFactories.CreateContactList(1000);
