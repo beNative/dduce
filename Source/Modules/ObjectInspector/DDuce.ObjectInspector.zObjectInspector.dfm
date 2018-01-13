@@ -37,6 +37,20 @@ object frmComponentInspectorzObjectInspector: TfrmComponentInspectorzObjectInspe
       Align = alTop
       TabOrder = 0
       OnChange = cbxInspectorChange
+      ExplicitLeft = 6
+      ExplicitTop = 35
+    end
+  end
+  object aclMain: TActionList
+    Left = 192
+    Top = 328
+    object actExpandAll: TAction
+      Caption = 'Expand all'
+      OnExecute = actExpandAllExecute
+    end
+    object actCollapseAll: TAction
+      Caption = 'Collapse all'
+      OnExecute = actCollapseAllExecute
     end
   end
 end

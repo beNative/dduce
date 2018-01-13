@@ -33,7 +33,6 @@ uses
   DDuce.Logger.Base in '..\Source\Modules\Logger\DDuce.Logger.Base.pas',
   DDuce.Logger.Channels.Base in '..\Source\Modules\Logger\DDuce.Logger.Channels.Base.pas',
   DDuce.Logger.Channels.LogFile in '..\Source\Modules\Logger\DDuce.Logger.Channels.LogFile.pas',
-  DDuce.Logger.Channels in '..\Source\Modules\Logger\DDuce.Logger.Channels.pas',
   DDuce.Logger.Channels.WinIPC in '..\Source\Modules\Logger\DDuce.Logger.Channels.WinIPC.pas',
   DDuce.Logger.Channels.WinODS in '..\Source\Modules\Logger\DDuce.Logger.Channels.WinODS.pas',
   DDuce.Logger.Interfaces in '..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas',

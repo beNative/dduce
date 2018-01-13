@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2017 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2018 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -37,6 +37,8 @@ type
     FSelectionOptions : TVTSelectionOptions;
     FMiscOptions      : TVTMiscOptions;
     FColumnOptions    : TVTColumnOptions;
+    FLineStyle        : TVTLineStyle;     // style of the tree lines
+    FLineMode         : TVTLineMode;      // tree lines or bands etc.
 
   public
     property HeaderOptions: TVTHeaderOptions
@@ -62,6 +64,12 @@ type
 
     property ColumnOptions: TVTColumnOptions
       read FColumnOptions write FColumnOptions;
+
+    property LineStyle: TVTLineStyle
+      read FLineStyle write FLineStyle;
+
+    property LineMode: TVTLineMode
+      read FLineMode write FLineMode;
 
   end;
 
@@ -411,6 +419,8 @@ begin
       toInitOnSave, toToggleOnDblClick, toWheelPanning, toVariableNodeHeight
     ];
     ColumnOptions := [];
+    LineStyle := lsDotted;
+    LineMode  := lmNormal;
   end;
 
   with FDefaultGridOptions do
@@ -439,6 +449,8 @@ begin
       toWheelPanning, toVariableNodeHeight
     ];
     ColumnOptions := [];
+    LineStyle := lsSolid;
+    LineMode  := lmBands;
   end;
 
   with FDefaultTreeGridOptions do
@@ -467,6 +479,8 @@ begin
       toVariableNodeHeight
     ];
     ColumnOptions := [];
+    LineStyle := lsSolid;
+    LineMode  := lmNormal;
   end;
 end;
 
@@ -489,6 +503,8 @@ begin
   ATree.TreeOptions.SelectionOptions := AVSTOptions.SelectionOptions;
   ATree.TreeOptions.StringOptions    := AVSTOptions.StringOptions;
   ATree.Header.Options               := AVSTOptions.HeaderOptions;
+  ATree.LineStyle                    := AVSTOptions.LineStyle;
+  ATree.LineMode                     := AVSTOptions.LineMode;
 end;
 {$ENDREGION}
 
