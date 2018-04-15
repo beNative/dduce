@@ -21,11 +21,12 @@ interface
 uses
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, System.Contnrs,
+  System.Actions,
 
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
-  Vcl.ExtCtrls,
+  Vcl.ExtCtrls, Vcl.ActnList,
 
-  zObjInspector, zObjInspTypes, System.Actions, Vcl.ActnList;
+  zObjInspector, zObjInspTypes;
 
 type
   TfrmComponentInspectorzObjectInspector = class(TForm)

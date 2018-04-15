@@ -37,8 +37,6 @@ object frmComponentInspectorzObjectInspector: TfrmComponentInspectorzObjectInspe
       Align = alTop
       TabOrder = 0
       OnChange = cbxInspectorChange
-      ExplicitLeft = 6
-      ExplicitTop = 35
     end
   end
   object aclMain: TActionList

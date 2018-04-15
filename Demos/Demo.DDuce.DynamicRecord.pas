@@ -16,7 +16,7 @@
 
 unit Demo.DDuce.DynamicRecord;
 
-{ This form demonstrates the basics of the TRecord data structure.
+{ This form demonstrates the basics of the DynamicRecord data structure.
   It also features the following components:
     - TInspector (DDuce.Components.Inspector)
 }
@@ -293,16 +293,16 @@ type
     FContact          : TContact;
     FTestRecord       : TTestRecord;
     FTestClass        : TTestClass;
-    FTestTRecord      : TRecord;
+    FTestTRecord      : DynamicRecord;
     FTestManagedClass : TManagedClass;
     FInspector        : TInspector;
-    FRecord           : TRecord;
+    FRecord           : DynamicRecord;
     FUpdate           : Boolean;
     FStrings          : TStrings;
 
     // the test dummies to play with.
-    FRecord1          : TRecord;
-    FRecord2          : TRecord;
+    FRecord1          : DynamicRecord;
+    FRecord2          : DynamicRecord;
     FDynamicRecord1   : IDynamicRecord;
     FDynamicRecord2   : IDynamicRecord;
 
@@ -398,8 +398,8 @@ begin
   CreateTestTRecord;
   CreateTestManagedClass;
   FRecord1.Clear;
-  FDynamicRecord1 := TRecord.CreateDynamicRecord;
-  FDynamicRecord2 := TRecord.CreateDynamicRecord;
+  FDynamicRecord1 := DynamicRecord.CreateDynamicRecord;
+  FDynamicRecord2 := DynamicRecord.CreateDynamicRecord;
   Changed;
 end;
 
@@ -704,13 +704,13 @@ end;
 
 procedure TfrmDynamicRecords.CreateTestTRecord;
 var
-  R: TRecord;
+  R: DynamicRecord;
 begin
   FTestTRecord.Data.SomeString   := 'FTestTRecord.Data.SomeString';
   FTestTRecord.Data.SomeDateTime := Now;
   FTestTRecord.Data.Number       := 5;
   FTestTRecord.Data.Bool         := True;
-  R := TRecord.Create;
+  R := DynamicRecord.Create;
   R.Assign(FTestTRecord);
   R.Data.Number := 6;
 end;

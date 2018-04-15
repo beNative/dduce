@@ -88,7 +88,7 @@ type
 
 type
   TTestRecord = record
-  private
+  public
     FTestBoolean          : Boolean;
     FTestChar             : Char;
     FTestDateTime         : TDateTime;
