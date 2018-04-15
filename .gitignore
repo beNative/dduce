@@ -22,3 +22,5 @@ __history
 Win32
 Win64
 /Demos/Resources/Thumbs.db
+/Demos/*.skincfg
+/Tests/*.skincfg
