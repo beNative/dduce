@@ -33,18 +33,18 @@ uses
 
 type
   TfrmMainMenu = class(TForm)
-    aclMain        : TActionList;
-    actClose       : TAction;
-    actExecute     : TAction;
-    actFocusFilter : TAction;
-    edtFilter      : TEdit;
-    pnlTop         : TPanel;
-    pnlVST         : TPanel;
-    sbrMain        : TStatusBar;
-    imlMain        : TImageList;
-    btnExecute     : TButton;
-    actCenterMainForm: TAction;
-    tbrMain: TTaskbar;
+    aclMain           : TActionList;
+    actClose          : TAction;
+    actExecute        : TAction;
+    actFocusFilter    : TAction;
+    edtFilter         : TEdit;
+    pnlTop            : TPanel;
+    pnlVST            : TPanel;
+    sbrMain           : TStatusBar;
+    imlMain           : TImageList;
+    btnExecute        : TButton;
+    actCenterMainForm : TAction;
+    tbrMain           : TTaskbar;
 
     procedure actExecuteExecute(Sender: TObject);
     procedure actFocusFilterExecute(Sender: TObject);
@@ -157,7 +157,7 @@ resourcestring
 procedure TfrmMainMenu.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FVST := TVirtualStringTreeFactory.CreateGrid(
+  FVST := TVirtualStringTreeFactory.CreateList(
     Self,
     pnlVST
   );

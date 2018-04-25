@@ -84,7 +84,6 @@ begin
   Result := True;
 end;
 
-
 {
   Data is streamed in following order:
     - Message type:  4 bytes (Integer)

@@ -54,17 +54,20 @@ type
 implementation
 
 uses
+  Spring,
+
   ZeroMQ.API;
 
 {$REGION 'construction and destruction'}
 procedure TZeroMQChannel.AfterConstruction;
 begin
   inherited AfterConstruction;
-  if FileExists(LIBZEROMQ) then // is libzmq.dll present?
-  begin
-    FBuffer := TStringStream.Create;
-    FZMQ := TZeroMQ.Create;
-  end;
+  Guard.CheckTrue(
+    FileExists(LIBZEROMQ),
+    Format('ZeroMQ library (%s) is missing!', [LIBZEROMQ])
+  );
+  FBuffer := TStringStream.Create;
+  FZMQ    := TZeroMQ.Create;
 end;
 
 procedure TZeroMQChannel.BeforeDestruction;

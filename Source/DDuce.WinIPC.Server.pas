@@ -30,6 +30,9 @@ type
     FMsgData        : TStream;
     FActive         : Boolean;
     FServerHandle   : THandle;
+    FClientHandle   : THandle;
+    FClientProcessId : Integer;
+    FClientThreadId  : Integer;
 
     procedure SetActive(const AValue : Boolean);
 
@@ -177,7 +180,7 @@ end;
 
 procedure TWinIPCServer.ReadMsgData(var Msg: TMsg);
 var
-  CDS : PCopyDataStruct;
+  CDS  : PCopyDataStruct;
 begin
   CDS := PCopyDataStruct(Msg.LParam);
   FMsgData.Size := 0;

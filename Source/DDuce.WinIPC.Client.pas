@@ -25,18 +25,31 @@ uses
   { IPC using WM_COPYDATA messages. }
 type
   TWinIPCClient = class
-  strict protected
+  private
+    FServerProcessId : Integer;
+    FServerThreadId  : Integer;
+
+  protected
+    function GetServerProcessId: Integer;
+    function GetServerThreadId: Integer;
     function GetConnected: Boolean;
     procedure SetConnected(const Value: Boolean);
     function GetServerHandle: THandle;
 
-    property ServerHandle: THandle
-      read GetServerHandle;
 
   public
     function Connect: Boolean;
 
     procedure SendStream(AStream: TStream);
+
+    property ServerHandle: THandle
+      read GetServerHandle;
+
+    property ServerProcessId: Integer
+      read GetServerProcessId;
+
+    property ServerThreadId: Integer
+      read GetServerThreadId;
 
     property Connected: Boolean
       read GetConnected write SetConnected;
@@ -72,12 +85,35 @@ function TWinIPCClient.GetServerHandle: THandle;
 begin
   Result := FindWindow(MSG_WND_CLASSNAME, SERVER_WINDOWNAME);
 end;
+
+function TWinIPCClient.GetServerProcessId: Integer;
+begin
+  Result := FServerProcessId;
+end;
+
+function TWinIPCClient.GetServerThreadId: Integer;
+begin
+  Result := FServerThreadId;
+end;
+
 {$ENDREGION}
 
 {$REGION 'public methods'}
 function TWinIPCClient.Connect: Boolean;
 begin
   Result := ServerHandle <> 0;
+  if Result then
+  begin
+    FServerThreadId := GetWindowThreadProcessId(
+      HWND(ServerHandle),
+      Cardinal(FServerProcessId)
+    );
+  end
+  else
+  begin
+    FServerThreadId := 0;
+    FServerProcessId := 0;
+  end;
 end;
 
 procedure TWinIPCClient.SendStream(AStream: TStream);
