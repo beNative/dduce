@@ -57,6 +57,31 @@ type
     procedure Test_SendStrings_method;
     procedure Test_SendMemory_method;
 
+    procedure Test_SendColor_method;
+    procedure Test_SendAlphaColor_method;
+    procedure Test_SendInterface_method;
+    procedure Test_SendException_method;
+    procedure Test_SendShortCut_method;
+
+
+//    procedure SendColor(const AName: string; AColor: TColor);
+//    procedure SendAlphaColor(const AName: string; AAlphaColor: TAlphaColor);
+//    procedure SendObject(const AName: string; AValue: TObject);
+//    procedure SendInterface(const AName: string; AValue: IInterface);
+//    procedure SendRect(const AName: string; const AValue: TRect);
+//    procedure SendPoint(const AName: string; const APoint: TPoint);
+//    procedure SendStrings(const AName: string; AValue: TStrings);
+//    //TODO procedure SendPersistent(const AName: string; AValue: TPersistent); -> log published properties
+//    procedure SendComponent(const AName: string; AValue: TComponent);
+//    procedure SendPointer(const AName: string; APointer: Pointer);
+//    procedure SendException(const AName: string; AException: Exception);
+//    procedure SendMemory(
+//      const AName: string;
+//      AAddress   : Pointer;
+//      ASize      : LongWord
+//    );
+//    procedure SendShortCut(const AName: string; AShortCut: TShortCut);
+
     procedure Test_Send_method;
 
     procedure Test_Watch_method_for_Boolean_argument;
@@ -91,8 +116,10 @@ type
 implementation
 
 uses
-  System.TypInfo, System.Rtti, System.Types,
-  Vcl.Forms,
+  System.TypInfo, System.Rtti, System.Types, System.UITypes, System.UIConsts,
+  Vcl.Forms, Vcl.Graphics,
+
+
 
   DDuce.Reflect, DDuce.Logger.Channels.WinIPC,
 
@@ -217,6 +244,22 @@ end;
 {$ENDREGION}
 
 {$REGION 'Test custom Send methods'}
+procedure TestLogger.Test_SendAlphaColor_method;
+var
+  T : TAlphaColor;
+begin
+  T := claAqua;
+  Logger.SendColor(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_SendColor_method;
+var
+  T : TColor;
+begin
+  T := clBlack;
+  Logger.SendColor(Reflect.TypeName(T), T);
+end;
+
 procedure TestLogger.Test_SendComponent_method;
 var
   T : TComponent;
@@ -239,6 +282,23 @@ var
 begin
   T := Now;
   Logger.SendDate(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_SendException_method;
+var
+  T : Exception;
+begin
+  T := Exception.Create('Test exception');
+  try
+    Logger.SendException(Reflect.TypeName(T), T);
+  finally
+    T.Free;
+  end;
+end;
+
+procedure TestLogger.Test_SendInterface_method;
+begin
+
 end;
 
 procedure TestLogger.Test_SendMemory_method;
@@ -281,6 +341,11 @@ begin
   T.Left := 4;
   T.Right := 5;
   Logger.SendRect(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_SendShortCut_method;
+begin
+
 end;
 
 procedure TestLogger.Test_SendStrings_method;

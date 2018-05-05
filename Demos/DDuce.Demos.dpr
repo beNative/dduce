@@ -128,7 +128,9 @@ uses
   DDuce.Logger.Factories in '..\Source\Modules\Logger\DDuce.Logger.Factories.pas',
   DDuce.Logger.Interfaces in '..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas',
   DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas',
-  DDuce.Factories.LiveBindings in '..\Source\Factories\DDuce.Factories.LiveBindings.pas';
+  DDuce.Factories.LiveBindings in '..\Source\Factories\DDuce.Factories.LiveBindings.pas',
+  DDuce.Utils in '..\Source\DDuce.Utils.pas',
+  DDuce.Utils.WinApi in '..\Source\DDuce.Utils.WinApi.pas';
 
 {$R *.res}
 

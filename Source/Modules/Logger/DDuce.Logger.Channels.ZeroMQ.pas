@@ -36,7 +36,7 @@ const
 
 type
   TZeroMQChannel = class(TCustomLogChannel)
-  strict private
+  private
     FBuffer    : TStringStream;
     FZMQ       : IZeroMQ;
     FPublisher : IZMQPair;

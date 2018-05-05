@@ -126,7 +126,7 @@ type
     procedure SendMemory(
       const AName: string;
       AAddress   : Pointer;
-      ASize      : LongWord
+      ASize      : UInt32
     );
     procedure SendShortCut(const AName: string; AShortCut: TShortCut);
 
@@ -227,7 +227,7 @@ uses
   System.TypInfo, System.UIConsts,
   Vcl.Forms, Vcl.Menus,
 
-  Spring,
+  Spring, Spring.Reflection, Spring.Helpers,
 
   DDuce.Reflect;
 
@@ -456,7 +456,7 @@ end;
 
 procedure TLogger.SendException(const AName: string; AException: Exception);
 var
-  S: string;
+  S : string;
 begin
   if AException <> nil then
     S := AException.ClassName + ' - ' + AException.Message + sLineBreak;
@@ -464,7 +464,7 @@ begin
 end;
 
 procedure TLogger.SendMemory(const AName: string; AAddress: Pointer;
-  ASize: LongWord);
+  ASize: Uint32);
 begin
   InternalSendBuffer(lmtMemory, AName, AAddress^, ASize);
 end;
@@ -518,8 +518,6 @@ begin
   if B then
     InternalSendBuffer(lmtCustomData, AName, S[1], Length(S));
 end;
-
-{ {TODO -oTS -cGeneral : Use dedicated message type }
 
 procedure TLogger.SendColor(const AName: string; AColor: TColor);
 begin
@@ -781,9 +779,9 @@ constructor TLogger.TTrack.Create(const ALogger: ILogger;
   ASender: TObject; const AName: string);
 begin
   inherited Create;
-  FLogger     := ALogger;
-  FSender     := ASender;
-  FName := AName;
+  FLogger := ALogger;
+  FSender := ASender;
+  FName   := AName;
   if not Assigned(FSender) then
     FLogger.Enter(FName)
   else

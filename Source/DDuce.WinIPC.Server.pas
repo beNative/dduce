@@ -25,12 +25,12 @@ uses
 type
   TWinIPCServer = class
   private
-    FMsgWindowClass : TWndClass;
-    FOnMessage      : TNotifyEvent;
-    FMsgData        : TStream;
-    FActive         : Boolean;
-    FServerHandle   : THandle;
-    FClientHandle   : THandle;
+    FMsgWindowClass  : TWndClass;
+    FOnMessage       : TNotifyEvent;
+    FMsgData         : TStream;
+    FActive          : Boolean;
+    FServerHandle    : THandle;
+    FClientHandle    : THandle;
     FClientProcessId : Integer;
     FClientThreadId  : Integer;
 
@@ -140,11 +140,13 @@ var
   WC : TWndClass;
 begin
   Pointer(FMsgWindowClass.lpfnWndProc) := @MsgWndProc;
-  FMsgWindowClass.hInstance            := HInstance;
+  FMsgWindowClass.hInstance            := HInstance; // Handle of this instance
   FMsgWindowClass.lpszClassName        := MSG_WND_CLASSNAME;
-  if not GetClassInfo(hInstance, MSG_WND_CLASSNAME, WC)
+
+  if not GetClassInfo(HInstance, MSG_WND_CLASSNAME, WC)
     and (Winapi.Windows.RegisterClass(FMsgWindowClass) = 0) then
       raise Exception.Create(SFailedToRegisterWindowClass);
+
   Result := CreateWindowEx(
     WS_EX_TOOLWINDOW,
     MSG_WND_CLASSNAME,

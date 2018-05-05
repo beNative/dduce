@@ -55,10 +55,10 @@ type
   ILogger = interface;
 
   TLogMessage = packed record
-    MsgType     : Integer;
-    TimeStamp   : TDateTime;
-    Text        : UTF8String;
-    Data        : TStream;
+    MsgType   : Integer;
+    TimeStamp : TDateTime;
+    Text      : UTF8String;
+    Data      : TStream;
   end;
 
   TCustomDataCallbackMethod = function(
@@ -96,7 +96,8 @@ type
   TChannelList = IList<ILogChannel>;
 
   // TODO send TTimeSpan
-
+  //      send stream?
+  //      send file
 
   ILogger = interface(IInterface)
   ['{28E9BADE-6B42-4399-8867-1CA115576E40}']
