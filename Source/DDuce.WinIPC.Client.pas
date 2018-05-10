@@ -22,7 +22,9 @@ uses
   Winapi.Windows,
   System.Classes, System.SysUtils;
 
-  { IPC using WM_COPYDATA messages. }
+  { IPC using WM_COPYDATA messages. A TWinIPCClient is used to send WM_COPYDATA
+    messages to the corresponding TWinIPCServer. }
+
 type
   TWinIPCClient = class
   private
@@ -35,7 +37,6 @@ type
     function GetConnected: Boolean;
     procedure SetConnected(const Value: Boolean);
     function GetServerHandle: THandle;
-
 
   public
     function Connect: Boolean;
@@ -95,7 +96,6 @@ function TWinIPCClient.GetServerThreadId: Integer;
 begin
   Result := FServerThreadId;
 end;
-
 {$ENDREGION}
 
 {$REGION 'public methods'}
@@ -111,10 +111,18 @@ begin
   end
   else
   begin
-    FServerThreadId := 0;
+    FServerThreadId  := 0;
     FServerProcessId := 0;
   end;
 end;
+
+{ Sends a stream of data as a WM_COPY message through a TCopyDataStruct
+  instance by assigning the data as follows:
+
+    dwData: gets the current process ID.
+    cbData: length in bytes of the datbuffer.
+    lpData: pointer to buffer to send (cbData bytes in size).
+}
 
 procedure TWinIPCClient.SendStream(AStream: TStream);
 var
@@ -140,6 +148,7 @@ begin
         FreeAndNil(MS);
       end;
     end;
+    CDS.dwData := GetCurrentProcessId;
     CDS.lpData := Data.Memory;
     CDS.cbData := Data.Size;
     Winapi.Windows.SendMessage(

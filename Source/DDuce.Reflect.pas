@@ -152,7 +152,10 @@ end;
 
 class function Reflect.EnumName<T>(const AArg: T): string;
 begin
-  Result := GetEnumName(TypeInfo(T), OrdValue(AArg));
+  if Assigned(TypeInfo(T)) then
+    Result := GetEnumName(TypeInfo(T), OrdValue(AArg))
+  else
+    Result := '';
 end;
 
 { Returns a copy of the fields of the given instance (record or object). }
@@ -209,17 +212,26 @@ var
   TI : PTypeInfo;
 begin
   TI := TypeInfo(T);
-  Result := TI.Kind;
+  if Assigned(TI) then
+    Result := TI.Kind
+  else
+    Result := tkUnknown;
 end;
 
-{ Returns the type name of the given value. }
+{ Returns the type name of the given value.
+
+  REMARK: no RTTI is generated for static arrays without a type declaration
+}
 
 class function Reflect.TypeName<T>(const AArg: T): string;
 var
   TI : PTypeInfo;
 begin
   TI := TypeInfo(T);
-  Result := string(TI.Name);
+  if Assigned(TI) then
+    Result := string(TI.Name)
+  else
+    Result := ''; // no type info available
 end;
 
 class function Reflect.EnumNamesFromSet<T>(const AArg: T): string;

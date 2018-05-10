@@ -54,7 +54,7 @@ type
 implementation
 
 uses
-  Spring,
+  Spring, Spring.Helpers,
 
   ZeroMQ.API;
 
@@ -118,19 +118,19 @@ begin
     begin
       TextSize := Length(AMsg.Text);
       FBuffer.Seek(0, soFromBeginning);
-      FBuffer.WriteBuffer(AMsg.MsgType, SizeOf(Integer));
-      FBuffer.WriteBuffer(AMsg.TimeStamp, SizeOf(TDateTime));
-      FBuffer.WriteBuffer(TextSize, SizeOf(Integer));
+      FBuffer.WriteBuffer(AMsg.MsgType);
+      FBuffer.WriteBuffer(AMsg.TimeStamp);
+      FBuffer.WriteBuffer(TextSize);
       FBuffer.WriteBuffer(AMsg.Text[1], TextSize);
       if AMsg.Data <> nil then
       begin
         DataSize := AMsg.Data.Size;
-        FBuffer.WriteBuffer(DataSize, SizeOf(Integer));
+        FBuffer.WriteBuffer(DataSize);
         AMsg.Data.Position := 0;
         FBuffer.CopyFrom(AMsg.Data, DataSize);
       end
       else
-        FBuffer.WriteBuffer(ZeroBuf, SizeOf(Integer));
+        FBuffer.WriteBuffer(ZeroBuf);
       Result := FPublisher.SendString(FBuffer.DataString) > 0;
     end
     else

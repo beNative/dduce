@@ -58,6 +58,8 @@ type
     procedure SetUp; override;
     procedure TearDown; override;
 
+    procedure Test_From_method_for_record;
+
   published
     procedure Test_passing_DynamicRecord_argument_as_const_parameter;
     procedure Test_passing_DynamicRecord_argument_as_var_parameter;
@@ -93,7 +95,6 @@ type
     procedure Test_FromDataSet_method;
     procedure Test_FromStrings_method;
     procedure Test_From_method_for_object;
-    procedure Test_From_method_for_record;
 
     procedure Test_ToDelimitedText_method;
     procedure Test_ToVarArray_method;
@@ -716,7 +717,9 @@ var
   R2 : TTestRecord;
 begin
   R1 := TTestUtils.CreateTestRecord;
-  R.From(R1, False, True); // REMARK: only fieldvalues can be copied from records. There is no RTTI for record properties
+  // REMARK: only fieldvalues can be copied from records. There is no RTTI for
+  // record properties
+  R.From(R1, False, True);
   R.AssignTo(R2);
   CheckEquals(R1.TestInteger, R2.TestInteger);
 end;

@@ -44,24 +44,34 @@ type
     procedure SetUp; override;
     procedure TearDown; override;
 
+    { For the Real48 legacy type no RTTI is generated. }
+    procedure Test_TypeName_method_for_Real48_argument;
+
   published
     procedure Test_TypeName_method_for_Boolean_argument;
-    procedure Test_TypeName_method_for_Integer_argument;
+    procedure Test_TypeName_method_for_Byte_argument;
     procedure Test_TypeName_method_for_Cardinal_argument;
-    procedure Test_TypeName_method_for_Int64_argument;
-    procedure Test_TypeName_method_for_Single_argument;
+    procedure Test_TypeName_method_for_Currency_argument;
     procedure Test_TypeName_method_for_Double_argument;
-    procedure Test_TypeName_method_for_Variant_argument;
     procedure Test_TypeName_method_for_Extended_argument;
+    procedure Test_TypeName_method_for_Int64_argument;
+    procedure Test_TypeName_method_for_Integer_argument;
+    procedure Test_TypeName_method_for_LongInt_argument;
+    procedure Test_TypeName_method_for_LongWord_argument;
+    procedure Test_TypeName_method_for_NativeInt_argument;
+    procedure Test_TypeName_method_for_NativeUInt_argument;
+    procedure Test_TypeName_method_for_Real_argument;
+    procedure Test_TypeName_method_for_ShortInt_argument;
+    procedure Test_TypeName_method_for_Single_argument;
     procedure Test_TypeName_method_for_string_argument;
+    procedure Test_TypeName_method_for_Variant_argument;
+    procedure Test_TypeName_method_for_Word_argument;
 
     procedure Test_Fields_method_for_class_argument;
     procedure Test_Fields_method_for_record_argument;
     procedure Test_Fields_method_for_TValue_argument;
 
     procedure Test_Properties_method_for_class_argument;
-
-    //property Test_Property_Assignment
 
   end;
 
@@ -163,12 +173,28 @@ begin
   CheckEqualsString('Boolean', Reflect.TypeName(T));
 end;
 
+procedure TestReflect.Test_TypeName_method_for_Byte_argument;
+var
+  T : Byte;
+begin
+  T := 128;
+  CheckEqualsString('Byte', Reflect.TypeName(T));
+end;
+
 procedure TestReflect.Test_TypeName_method_for_Cardinal_argument;
 var
   T : Cardinal;
 begin
-  T := 0;
+  T := 525;
   CheckEqualsString('Cardinal', Reflect.TypeName(T));
+end;
+
+procedure TestReflect.Test_TypeName_method_for_Currency_argument;
+var
+  T : Currency;
+begin
+  T := 0;
+  CheckEqualsString('Currency', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_Double_argument;
@@ -203,6 +229,67 @@ begin
   CheckEqualsString('Integer', Reflect.TypeName(T));
 end;
 
+procedure TestReflect.Test_TypeName_method_for_LongInt_argument;
+var
+  T : LongInt;
+begin
+  T := 0;
+  // will return Integer on all 32 bit and Win 64 bit and Int64 on 64bit iOS
+  CheckEqualsString('Integer', Reflect.TypeName(T));
+end;
+
+procedure TestReflect.Test_TypeName_method_for_LongWord_argument;
+var
+  T : LongWord;
+begin
+  T := 0;
+  // will return Cardinal on all 32 bit and Win 64 bit and UInt64 on 64bit iOS
+  CheckEqualsString('Cardinal', Reflect.TypeName(T));
+end;
+
+procedure TestReflect.Test_TypeName_method_for_NativeInt_argument;
+var
+  T : NativeInt;
+begin
+  T := 0;
+  CheckEqualsString('NativeInt', Reflect.TypeName(T));
+end;
+
+procedure TestReflect.Test_TypeName_method_for_NativeUInt_argument;
+var
+  T : NativeUInt;
+begin
+  T := 0;
+  CheckEqualsString('NativeUInt', Reflect.TypeName(T));
+end;
+
+{ For the Real48 legacy type no RTTI is generated. }
+
+procedure TestReflect.Test_TypeName_method_for_Real48_argument;
+var
+  T : Real48;
+begin
+  T := 0;
+  // no type info for Real48
+  CheckEqualsString('Real48', Reflect.TypeName(T));
+end;
+
+procedure TestReflect.Test_TypeName_method_for_Real_argument;
+var
+  T : Real;
+begin
+  T := 0;
+  CheckEqualsString('Real', Reflect.TypeName(T));
+end;
+
+procedure TestReflect.Test_TypeName_method_for_ShortInt_argument;
+var
+  T : ShortInt;
+begin
+  T := 0;
+  CheckEqualsString('ShortInt', Reflect.TypeName(T));
+end;
+
 procedure TestReflect.Test_TypeName_method_for_Single_argument;
 var
   T : Single;
@@ -225,6 +312,14 @@ var
 begin
   T := '';
   CheckEqualsString('Variant', Reflect.TypeName(T));
+end;
+
+procedure TestReflect.Test_TypeName_method_for_Word_argument;
+var
+  T : Word;
+begin
+  T := 0;
+  CheckEqualsString('Word', Reflect.TypeName(T));
 end;
 {$ENDREGION}
 

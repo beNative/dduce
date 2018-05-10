@@ -14,5 +14,5 @@
   limitations under the License.
 }
 
-{.$DEFINE TESTINSIGHT} // comment this for standard DUnit GUI
+{$DEFINE TESTINSIGHT} // comment this for standard DUnit GUI
 {.$DEFINE NULLABLE} // enables tests on nullable members

@@ -29,22 +29,54 @@ uses
 
 type
   TestLogger = class(TTestCase)
+  protected
+    procedure SetUp; override;
+
   public
     class constructor Create;
 
+    procedure Test_Send_method_for_Real48_argument;
+
   published
+    procedure Test_Send_method_for_AnsiString_argument;
     procedure Test_Send_method_for_Boolean_argument;
-    procedure Test_Send_method_for_Integer_argument;
+    procedure Test_Send_method_for_Byte_argument;
     procedure Test_Send_method_for_Cardinal_argument;
-    procedure Test_Send_method_for_Int64_argument;
-    procedure Test_Send_method_for_Single_argument;
+    procedure Test_Send_method_for_Currency_argument;
     procedure Test_Send_method_for_Double_argument;
+    procedure Test_Send_method_for_Enumeration_argument;
     procedure Test_Send_method_for_Extended_argument;
-    procedure Test_Send_method_for_Variant_argument;
+    procedure Test_Send_method_for_FixedInt_argument;
+    procedure Test_Send_method_for_FixedUInt_argument;
+    procedure Test_Send_method_for_Int16_argument;
+    procedure Test_Send_method_for_Int32_argument;
+    procedure Test_Send_method_for_Int64_argument;
+    procedure Test_Send_method_for_Int8_argument;
+    procedure Test_Send_method_for_Integer_argument;
+    procedure Test_Send_method_for_LongInt_argument;
+    procedure Test_Send_method_for_LongWord_argument;
+    procedure Test_Send_method_for_NativeInt_argument;
+    procedure Test_Send_method_for_NativeUInt_argument;
+    procedure Test_Send_method_for_Set_argument;
+    procedure Test_Send_method_for_ShortInt_argument;
+    procedure Test_Send_method_for_ShortString_argument;
+    procedure Test_Send_method_for_Single_argument;
+    procedure Test_Send_method_for_SmallInt_argument;
+    procedure Test_Send_method_for_string_argument;
+    procedure Test_Send_method_for_TDateTime_argument;
     procedure Test_Send_method_for_TDate_argument;
     procedure Test_Send_method_for_TTime_argument;
-    procedure Test_Send_method_for_TDateTime_argument;
-    procedure Test_Send_method_for_string_argument;
+    procedure Test_Send_method_for_UInt16_argument;
+    procedure Test_Send_method_for_UInt32_argument;
+    procedure Test_Send_method_for_UInt64_argument;
+    procedure Test_Send_method_for_UInt8_argument;
+    procedure Test_Send_method_for_Variant_argument;
+    procedure Test_Send_method_for_WideString_argument;
+    procedure Test_Send_method_for_Word_argument;
+
+    procedure Test_Send_method_for_static_array_of_string_argument;
+    procedure Test_Send_method_for_static_array_of_Integer_argument;
+    procedure Test_Send_method_for_dynamic_array_of_Integer_argument;
 
     procedure Test_SendDateTime_method;
     procedure Test_SendDate_method;
@@ -55,13 +87,21 @@ type
     procedure Test_SendComponent_method;
     procedure Test_SendObject_method;
     procedure Test_SendStrings_method;
-    procedure Test_SendMemory_method;
-
     procedure Test_SendColor_method;
     procedure Test_SendAlphaColor_method;
     procedure Test_SendInterface_method;
     procedure Test_SendException_method;
     procedure Test_SendShortCut_method;
+    procedure Test_SendBitmap_method;
+
+    procedure Test_SendVariant_method_for_TDateTime_argument;
+    procedure Test_SendVariant_method_for_string_argument;
+    procedure Test_SendVariant_method_for_Integer_argument;
+    procedure Test_SendVariant_method_for_Double_argument;
+    procedure Test_SendVariant_method_for_Null_argument;
+    procedure Test_SendVariant_method_for_Unassigned_argument;
+    procedure Test_SendVariant_method_for_EmptyParam_argument;
+    procedure Test_SendMemory_method;
 
 
 //    procedure SendColor(const AName: string; AColor: TColor);
@@ -74,13 +114,11 @@ type
 //    //TODO procedure SendPersistent(const AName: string; AValue: TPersistent); -> log published properties
 //    procedure SendComponent(const AName: string; AValue: TComponent);
 //    procedure SendPointer(const AName: string; APointer: Pointer);
-//    procedure SendException(const AName: string; AException: Exception);
 //    procedure SendMemory(
 //      const AName: string;
 //      AAddress   : Pointer;
 //      ASize      : LongWord
 //    );
-//    procedure SendShortCut(const AName: string; AShortCut: TShortCut);
 
     procedure Test_Send_method;
 
@@ -96,6 +134,8 @@ type
     procedure Test_Watch_method_for_TDate_argument;
     procedure Test_Watch_method_for_TTime_argument;
     procedure Test_Watch_method_for_string_argument;
+    procedure Test_Watch_method_for_AnsiString_argument;
+    procedure Test_Watch_method_for_WideString_argument;
     procedure Test_Watch_method_for_Enumeration_argument;
     procedure Test_Watch_method_for_Set_argument;
 
@@ -117,18 +157,30 @@ implementation
 
 uses
   System.TypInfo, System.Rtti, System.Types, System.UITypes, System.UIConsts,
-  Vcl.Forms, Vcl.Graphics,
+  System.Variants,
+  Vcl.Forms, Vcl.Graphics, Vcl.Menus, Vcl.Dialogs,
 
-
+  Spring,
 
   DDuce.Reflect, DDuce.Logger.Channels.WinIPC,
 
   Test.Utils;
 
+{$REGION 'construction and destruction'}
 class constructor TestLogger.Create;
 begin
   Logger.Channels.Add(TWinIPCChannel.Create);
 end;
+{$ENDREGION}
+
+{$REGION 'public methods'}
+procedure TestLogger.SetUp;
+begin
+  inherited SetUp;
+  // Test results need to be evaluated by the LogViewer application
+  FailsOnNoChecksExecuted := False;
+end;
+{$ENDREGION}
 
 {$REGION 'Test Send methods'}
 procedure TestLogger.Test_Send_method;
@@ -140,6 +192,14 @@ begin
   Logger.Send(Reflect.TypeName(T), TValue.From(T));
 end;
 
+procedure TestLogger.Test_Send_method_for_AnsiString_argument;
+var
+  T : AnsiString;
+begin
+  T := 'Test';
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
 procedure TestLogger.Test_Send_method_for_Boolean_argument;
 var
   T : Boolean;
@@ -148,11 +208,27 @@ begin
   Logger.Send(Reflect.TypeName(T), T);
 end;
 
+procedure TestLogger.Test_Send_method_for_Byte_argument;
+var
+  T : Byte;
+begin
+  T := 128;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
 procedure TestLogger.Test_Send_method_for_Cardinal_argument;
 var
   T : Cardinal;
 begin
-  T := 525;
+  T := 8888888;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_Currency_argument;
+var
+  T : Currency;
+begin
+  T := Pi;
   Logger.Send(Reflect.TypeName(T), T);
 end;
 
@@ -164,11 +240,59 @@ begin
   Logger.Send(Reflect.TypeName(T), T);
 end;
 
+procedure TestLogger.Test_Send_method_for_dynamic_array_of_Integer_argument;
+var
+  T : TArray<Integer>;
+begin
+  T := [1, 2 , 3, 4, 5];
+  Logger.Send(Reflect.TypeName(T), TValue.From(T));
+end;
+
+procedure TestLogger.Test_Send_method_for_Enumeration_argument;
+var
+  T : TAlignment;
+begin
+  T := taCenter;
+  Logger.Send(Reflect.TypeName(T), TValue.From(T));
+end;
+
 procedure TestLogger.Test_Send_method_for_Extended_argument;
 var
   T : Extended;
 begin
   T := Pi;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_FixedInt_argument;
+var
+  T : FixedInt;
+begin
+  T := 12345;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_FixedUInt_argument;
+var
+  T : FixedUInt;
+begin
+  T := 12345;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_Int16_argument;
+var
+  T : Int16;
+begin
+  T := 12345;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_Int32_argument;
+var
+  T : Int32;
+begin
+  T := 12345;
   Logger.Send(Reflect.TypeName(T), T);
 end;
 
@@ -180,11 +304,89 @@ begin
   Logger.Send(Reflect.TypeName(T), T);
 end;
 
+procedure TestLogger.Test_Send_method_for_Int8_argument;
+var
+  T : Int8;
+begin
+  T := 123;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
 procedure TestLogger.Test_Send_method_for_Integer_argument;
 var
   T : Integer;
 begin
   T := MaxInt;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_LongInt_argument;
+var
+  T : LongInt;
+begin
+  T := -489;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_LongWord_argument;
+var
+  T : LongWord;
+begin
+  T := 56;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_NativeInt_argument;
+var
+  T : NativeInt;
+begin
+  T := 312;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_NativeUInt_argument;
+var
+  T : NativeUInt;
+begin
+  T := 428;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+{ This test fails because no RTTI is generated for the legacy Real48 type. }
+
+procedure TestLogger.Test_Send_method_for_Real48_argument;
+var
+  T : Real48;
+  V : TValue;
+begin
+  T := Pi;
+  V := TValue.From(T);
+  Logger.Send(Reflect.TypeName(T), V);
+end;
+
+procedure TestLogger.Test_Send_method_for_Set_argument;
+var
+  T : TBorderIcons;
+begin
+  T := [biSystemMenu, biMinimize, biMaximize, biHelp];
+  Logger.Send(Reflect.TypeName(T), TValue.From(T));
+end;
+
+{ ShortStrings use single byte chars. }
+
+procedure TestLogger.Test_Send_method_for_ShortInt_argument;
+var
+  T : ShortInt;
+begin
+  T := -123;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_ShortString_argument;
+var
+  T : ShortString;
+begin
+  T := 'Test ShortString';
   Logger.Send(Reflect.TypeName(T), T);
 end;
 
@@ -194,6 +396,44 @@ var
 begin
   T := Pi;
   Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_SmallInt_argument;
+var
+  T : SmallInt;
+begin
+  T := -10256;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+{ REMARK: no RTTI is generated by the compiler if no type declaration is
+  present for static arrays }
+
+procedure TestLogger.Test_Send_method_for_static_array_of_Integer_argument;
+type
+  TMyStaticArrayOfInteger = array[0..2] of Integer;
+var
+  T : TMyStaticArrayOfInteger;
+begin
+  T[0] := 1;
+  T[1] := 2;
+  T[2] := 3;
+  Logger.Send(Reflect.TypeName(T), TValue.From(T));
+end;
+
+{ REMARK: no RTTI is generated by the compiler if no type declaration is
+  present for static arrays }
+
+procedure TestLogger.Test_Send_method_for_static_array_of_string_argument;
+type
+  TMyStaticArrayOfString = array[0..2] of string;
+var
+  T : TMyStaticArrayOfString;
+begin
+  T[0] := 'one';
+  T[1] := 'two';
+  T[2] := 'three';
+  Logger.Send(Reflect.TypeName(T), TValue.From(T));
 end;
 
 procedure TestLogger.Test_Send_method_for_string_argument;
@@ -228,19 +468,68 @@ begin
   Logger.Send(Reflect.TypeName(T), TValue.From(T)); // no implicit cast for TTime
 end;
 
+procedure TestLogger.Test_Send_method_for_UInt16_argument;
+var
+  T : UInt16;
+begin
+  T := 12345;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_UInt32_argument;
+var
+  T : UInt32;
+begin
+  T := 12345;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_UInt64_argument;
+var
+  T : UInt64;
+begin
+  T := 12345;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_UInt8_argument;
+var
+  T : UInt8;
+begin
+  T := 123;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
 procedure TestLogger.Test_Send_method_for_Variant_argument;
 var
   T : Variant;
 begin
   T := 'Test';
-  Logger.Send(Reflect.TypeName(T), T);
-  T := Pi;
-  Logger.Send(Reflect.TypeName(T), T);
-  T := False;
-  Logger.Send(Reflect.TypeName(T), T);
-  T := 520;
+//  Logger.Send(Reflect.TypeName(T), T);
+//  T := Pi;
+//  Logger.Send(Reflect.TypeName(T), T);
+//  T := False;
+//  Logger.Send(Reflect.TypeName(T), T);
+//  T := 520;
+//  Logger.Send(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_Send_method_for_WideString_argument;
+var
+  T : WideString;
+begin
+  T := 'Test';
   Logger.Send(Reflect.TypeName(T), T);
 end;
+
+procedure TestLogger.Test_Send_method_for_Word_argument;
+var
+  T : Word;
+begin
+  T := 32000;
+  Logger.Send(Reflect.TypeName(T), T);
+end;
+
 {$ENDREGION}
 
 {$REGION 'Test custom Send methods'}
@@ -250,6 +539,25 @@ var
 begin
   T := claAqua;
   Logger.SendColor(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_SendBitmap_method;
+var
+  T : TBitmap;
+begin
+  T := TBitmap.Create;
+  try
+    T.SetSize(100,100);
+    T.Canvas.Pen.Color := clRed;
+    T.Canvas.Pen.Width := 2;
+    T.Canvas.MoveTo(0, 0);
+    T.Canvas.LineTo(100, 100);
+    T.Canvas.MoveTo(100, 0);
+    T.Canvas.LineTo(0, 100);
+    Logger.SendBitmap(Reflect.TypeName(T), T);
+  finally
+    T.Free;
+  end;
 end;
 
 procedure TestLogger.Test_SendColor_method;
@@ -264,7 +572,7 @@ procedure TestLogger.Test_SendComponent_method;
 var
   T : TComponent;
 begin
-  T := Application.MainForm;
+  T := Application;
   Logger.SendComponent(Reflect.TypeName(T), T);
 end;
 
@@ -298,7 +606,7 @@ end;
 
 procedure TestLogger.Test_SendInterface_method;
 begin
-
+// TODO
 end;
 
 procedure TestLogger.Test_SendMemory_method;
@@ -344,8 +652,11 @@ begin
 end;
 
 procedure TestLogger.Test_SendShortCut_method;
+var
+  T : TShortCut;
 begin
-
+  T := TextToShortCut('CTRL+S');
+  Logger.SendShortCut(Reflect.TypeName(T), T);
 end;
 
 procedure TestLogger.Test_SendStrings_method;
@@ -371,9 +682,73 @@ begin
   T := Now;
   Logger.SendTime(Reflect.TypeName(T), T);
 end;
+
+procedure TestLogger.Test_SendVariant_method_for_Double_argument;
+var
+  T : Variant;
+begin
+  T := Pi;
+  Logger.SendVariant(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_SendVariant_method_for_EmptyParam_argument;
+var
+  T : Variant;
+begin
+  T := EmptyParam;
+  Logger.SendVariant(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_SendVariant_method_for_Integer_argument;
+var
+  T : Variant;
+begin
+  T := 25;
+  Logger.SendVariant(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_SendVariant_method_for_Null_argument;
+var
+  T : Variant;
+begin
+  T := Null;
+  Logger.SendVariant(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_SendVariant_method_for_string_argument;
+var
+  T : Variant;
+begin
+  T := 'Test';
+  Logger.SendVariant(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_SendVariant_method_for_TDateTime_argument;
+var
+  T : Variant;
+begin
+  T := Now;
+  Logger.SendVariant(Reflect.TypeName(T), T);
+end;
+
+procedure TestLogger.Test_SendVariant_method_for_Unassigned_argument;
+var
+  T : Variant;
+begin
+  T := Unassigned;
+  Logger.SendVariant(Reflect.TypeName(T), T);
+end;
 {$ENDREGION}
 
 {$REGION 'Watch'}
+procedure TestLogger.Test_Watch_method_for_AnsiString_argument;
+var
+  T : AnsiString;
+begin
+  T := 'Test';
+  Logger.Watch(Reflect.TypeName(T), T);
+end;
+
 procedure TestLogger.Test_Watch_method_for_Boolean_argument;
 var
   T : Boolean;
@@ -492,20 +867,29 @@ begin
   T := 520;
   Logger.Watch(Reflect.TypeName(T), T);
 end;
+
+procedure TestLogger.Test_Watch_method_for_WideString_argument;
+var
+  T : WideString;
+begin
+  T := 'Test';
+  Logger.Watch(Reflect.TypeName(T), T);
+end;
+
 {$ENDREGION}
 
 {$REGION 'Test methods for Enter and Leave'}
 procedure TestLogger.Test_Enter_and_Leave_methods_for_method;
 begin
   Logger.Enter(Self, 'Test_Enter_and_Leave_methods_for_method');
-  Sleep(1100);
+  Sleep(100);
   Logger.Leave(Self, 'Test_Enter_and_Leave_methods_for_method');
 end;
 
 procedure TestLogger.Test_Enter_and_Leave_methods_for_routine;
 begin
   Logger.Enter('Test_Enter_and_Leave_methods_for_routine');
-  Sleep(1100);
+  Sleep(100);
   Logger.Leave('Test_Enter_and_Leave_methods_for_routine');
 end;
 
@@ -515,7 +899,7 @@ begin
   Logger.Track(Self, 'Level 1');
   Logger.Track(Self, 'Level 2');
   Logger.Track(Self, 'Level 3');
-  Sleep(1100);
+  Sleep(100);
 end;
 
 procedure TestLogger.Test_Track_method_for_routine;
@@ -524,7 +908,7 @@ begin
   Logger.Track('Level 1');
   Logger.Track('Level 2');
   Logger.Track('Level 3');
-  Sleep(1100);
+  Sleep(53);
 end;
 {$ENDREGION}
 
@@ -575,17 +959,18 @@ end;
 procedure TestLogger.Test_Checkpoint_methods;
 begin
   Logger.AddCheckPoint('TestCheckPoint 1');
-  Sleep(200);
+  Sleep(42);
   Logger.AddCheckPoint('TestCheckPoint 2');
-  Sleep(100);
+  Sleep(80);
   Logger.AddCheckPoint('TestCheckPoint 1');
-  Sleep(800);
+  Sleep(45);
   Logger.AddCheckPoint('TestCheckPoint 1');
-  Sleep(500);
+  Sleep(36);
   Logger.ResetCheckPoint('TestCheckPoint 1');
-  Sleep(200);
+  Sleep(22);
   Logger.ResetCheckPoint('TestCheckPoint 2');
 end;
 {$ENDREGION}
 
 end.
+

@@ -97,6 +97,8 @@ type
     tmrSendCounter           : TTimer;
     tmrSendValue             : TTimer;
     trbMain                  : TTrackBar;
+    btnSendBitmap: TButton;
+    actSendBitmap: TAction;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -128,6 +130,7 @@ type
     procedure actSendStringsExecute(Sender: TObject);
     procedure chkSendRandomValueTimerClick(Sender: TObject);
     procedure tmrSendValueTimer(Sender: TObject);
+    procedure actSendBitmapExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -208,6 +211,11 @@ end;
 procedure TfrmLogger.actSendWarningExecute(Sender: TObject);
 begin
   Logger.Warn(edtLogMessage.Text);
+end;
+
+procedure TfrmLogger.actSendBitmapExecute(Sender: TObject);
+begin
+  Logger.SendBitmap('Bitmap', GetFormImage);
 end;
 
 procedure TfrmLogger.actSendClearExecute(Sender: TObject);

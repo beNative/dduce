@@ -367,6 +367,15 @@ object frmLogger: TfrmLogger
       Images = imlLogger
       TabOrder = 4
     end
+    object btnSendBitmap: TButton
+      Left = 328
+      Top = 54
+      Width = 150
+      Height = 25
+      Action = actSendBitmap
+      Images = imlLogger
+      TabOrder = 5
+    end
   end
   object grpCustom: TGroupBox
     AlignWithMargins = True
@@ -517,6 +526,10 @@ object frmLogger: TfrmLogger
       Hint = 'Logs content of a TDataSet instance.'
       ImageIndex = 19
     end
+    object actSendBitmap: TAction
+      Caption = 'Send TBitmap'
+      OnExecute = actSendBitmapExecute
+    end
   end
   object tmrSendCounter: TTimer
     Enabled = False
@@ -529,7 +542,7 @@ object frmLogger: TfrmLogger
     Left = 448
     Top = 536
     Bitmap = {
-      494C010115001900040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C0101150019000C0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000006000000001002000000000000060
       0000000000000000000000000000000000000000000000000000000000000000
       000001370099045701D1045701D1012500660000000001250066045701D10457
