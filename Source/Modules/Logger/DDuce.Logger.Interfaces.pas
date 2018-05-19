@@ -22,7 +22,7 @@ uses
   System.Classes, System.Rtti, System.SysUtils, System.Types, System.UITypes,
   Vcl.Menus, Vcl.Graphics,
 
-  Spring.Collections;
+  Spring, Spring.Collections;
 
 type
   { Remark: Enumerated types with explicitly assigned ordinality don't have RTTI
@@ -123,19 +123,36 @@ type
     procedure Send(const AName: string; const AValue: WideString); overload;
     procedure Send(const AName: string; const AValue: ShortString); overload;
 
-    //procedure Send(const AName: string; const AValue: Cardinal); overload;
+    { UInt8 = Byte }
+    procedure Send(const AName: string; const AValue: Byte); overload;
+    { UInt16 = Word }
+    procedure Send(const AName: string; const AValue: Word); overload;
+    { UInt32 = Cardinal = FixedUInt }
+    procedure Send(const AName: string; const AValue: Cardinal); overload;
+    { UInt64 }
+    procedure Send(const AName: string; const AValue: UInt64); overload;
+    { Int8 = ShortInt }
+    procedure Send(const AName: string; const AValue: ShortInt); overload;
+    { Int16 = SmallInt }
+    procedure Send(const AName: string; const AValue: SmallInt); overload;
+    { Int32 = Integer = FixedInt }
+    procedure Send(const AName: string; const AValue: FixedInt); overload;
 
-    { All primary types that can implicitely be casted to TValue will be
-      handled through this call. }
+    { All types that can implicitely be casted to TValue will be handled
+      through this call. }
 
     { These are (tested):
-       Boolean
        Integer
-       Int64
        Single
        Double
        Extended
-       string
+       Currency
+       Int64
+       UInt64
+       Boolean
+
+       TObject ?
+       TClass ?
     }
     procedure Send(const AName: string; const AValue: TValue); overload;
 
@@ -169,13 +186,14 @@ type
 
     // SendBitmap
 
-    { Send methods for text that can be displayed with a dedicated
-      highlighter. }
+    { Send methods for (optionally named) text that optionally can be displayed
+      with a dedicated highlighter. }
     procedure SendText(
       const AName        : string;
       const AText        : string;
       const AHighlighter : string = ''
-    );
+    ); overload;
+    procedure SendText(const AText: string); overload;
 
     procedure IncCounter(const AName: string);
     procedure DecCounter(const AName: string);
@@ -200,7 +218,9 @@ type
     { Monitors a named value in the LogViewer application }
     procedure Watch(const AName: string; const AValue: TValue); overload;
     procedure Watch(const AName: string; const AValue: string = ''); overload;
+    procedure Watch(const AName: string; const AValue: ShortString); overload;
     procedure Watch(const AName: string; const AValue: AnsiString); overload;
+    procedure Watch(const AName: string; const AValue: WideString); overload;
 
     procedure Warn(const AText: string); overload;
     procedure Warn(
