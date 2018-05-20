@@ -152,6 +152,8 @@ type
     procedure Test_Counter_methods;
 
     procedure Test_Checkpoint_methods;
+
+    procedure Test_OutputDebugString_method;
   end;
 
 implementation
@@ -163,7 +165,8 @@ uses
 
   Spring,
 
-  DDuce.Reflect, DDuce.Logger.Channels.WinIPC,
+  DDuce.Reflect, DDuce.Utils,
+  DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.ZeroMQ,
 
   Test.Utils;
 
@@ -171,6 +174,7 @@ uses
 class constructor TestLogger.Create;
 begin
   Logger.Channels.Add(TWinIPCChannel.Create);
+  Logger.Channels.Add(TZeroMQChannel.Create);
   Logger.Clear;
 end;
 {$ENDREGION}
@@ -957,6 +961,11 @@ end;
 procedure TestLogger.Test_Info_method;
 begin
   Logger.Info('Info');
+end;
+
+procedure TestLogger.Test_OutputDebugString_method;
+begin
+  OutputDebugString('Short OutputDebugString');
 end;
 
 procedure TestLogger.Test_Warn_method;

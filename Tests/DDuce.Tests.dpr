@@ -42,7 +42,9 @@ uses
   DDuce.Reflect in '..\Source\DDuce.Reflect.pas',
   DDuce.ScopedReference in '..\Source\DDuce.ScopedReference.pas',
   DDuce.WinIPC.Client in '..\Source\DDuce.WinIPC.Client.pas',
-  DDuce.WinIPC.Server in '..\Source\DDuce.WinIPC.Server.pas';
+  DDuce.WinIPC.Server in '..\Source\DDuce.WinIPC.Server.pas',
+  ZeroMQ.API in '..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas',
+  ZeroMQ in '..\Source\Dependencies\ZeroMQ\ZeroMQ.pas';
 
 {$R *.RES}
 
