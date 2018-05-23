@@ -28,11 +28,11 @@ uses
 
 type
   TWinIPCChannel = class(TCustomLogChannel)
-  strict private
+  private
     FClient : TWinIPCClient; // sends to the server
     FBuffer : TMemoryStream;
 
-  strict protected
+  protected
     function GetConnected: Boolean; override;
 
   public

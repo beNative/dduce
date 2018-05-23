@@ -554,7 +554,7 @@ end;
 
 procedure TLogger.SendPointer(const AName: string; APointer: Pointer);
 begin
-  InternalSend(lmtValue, AName + ' = ' + IntToHex(NativeInt(APointer), 8));
+  InternalSend(lmtValue, AName + ' = $' + IntToHex(NativeInt(APointer), 8));
 end;
 
 procedure TLogger.SendException(const AName: string; AException: Exception);

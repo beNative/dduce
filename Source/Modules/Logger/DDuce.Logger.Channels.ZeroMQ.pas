@@ -68,6 +68,7 @@ begin
   );
   FBuffer := TStringStream.Create;
   FZMQ    := TZeroMQ.Create;
+  Connect;
 end;
 
 procedure TZeroMQChannel.BeforeDestruction;

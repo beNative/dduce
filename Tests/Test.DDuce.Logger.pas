@@ -35,6 +35,7 @@ type
   public
     class constructor Create;
 
+    // fails because no type information is generated for the legacy type Real48
     procedure Test_Send_method_for_Real48_argument;
 
   published
@@ -93,6 +94,8 @@ type
     procedure Test_SendException_method;
     procedure Test_SendShortCut_method;
     procedure Test_SendBitmap_method;
+
+    procedure Test_SendIf_method;
 
     procedure Test_SendVariant_method_for_TDateTime_argument;
     procedure Test_SendVariant_method_for_string_argument;
@@ -630,6 +633,13 @@ begin
   finally
     T.Free;
   end;
+end;
+
+procedure TestLogger.Test_SendIf_method;
+begin
+  Logger.SendIf('Following condition was True (1 = 1)', 1 = 1);
+  Logger.SendIf('Following condition was False (1 = 0)', 1 = 0, False);
+  Logger.SendIf('Following condition was True (1 = 0)', 1 = 0);
 end;
 
 procedure TestLogger.Test_SendInterface_method;

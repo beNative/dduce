@@ -22,15 +22,15 @@ uses
   Winapi.Windows,
   System.SysUtils;
 
-function GetExenameForProcess(AProcessID: DWORD): string;
+function GetExenameForProcess(AProcessId: DWORD): string;
 
 function GetExenameForWindow(AWndHandle: HWND): string;
 
-function GetExenameForProcessUsingPsAPI(AProcessID: DWORD): string;
+function GetExenameForProcessUsingPsAPI(AProcessId: DWORD): string;
 
-function GetExenameForProcessUsingToolhelp32(AProcessID: DWORD): string;
+function GetExenameForProcessUsingToolhelp32(AProcessId: DWORD): string;
 
-function GetExePathForProcess(AProcessID: DWORD): string;
+function GetExePathForProcess(AProcessId: DWORD): string;
 
 implementation
 
@@ -38,7 +38,7 @@ uses
   Winapi.PsAPI, Winapi.TlHelp32;
 
 {$REGION 'interfaced routines'}
-function GetExenameForProcessUsingPsAPI(AProcessID: DWORD): string;
+function GetExenameForProcessUsingPsAPI(AProcessId: DWORD): string;
 var
   I           : DWORD;
   LCBNeeded   : DWORD;
@@ -51,7 +51,7 @@ begin
   LProcHandle := OpenProcess(
     PROCESS_QUERY_INFORMATION or PROCESS_VM_READ,
     False,
-    AProcessID
+    AProcessId
   );
   if LProcHandle <> 0 then
   begin
@@ -76,7 +76,7 @@ begin
   end;
 end;
 
-function GetExenameForProcessUsingToolhelp32(AProcessID: DWORD): string;
+function GetExenameForProcessUsingToolhelp32(AProcessId: DWORD): string;
 var
   LSnapshot  : THandle;
   LProcEntry : TProcessEntry32;
@@ -91,7 +91,7 @@ begin
       LRet              := Process32First(LSnapshot, LProcEntry);
       while LRet do
       begin
-        if LProcEntry.th32ProcessID = AProcessID then
+        if LProcEntry.th32ProcessID = AProcessId then
         begin
           Result := LProcEntry.szExeFile;
           Break;
@@ -104,12 +104,12 @@ begin
     end;
 end;
 
-function GetExenameForProcess(AProcessID: DWORD): string;
+function GetExenameForProcess(AProcessId: DWORD): string;
 begin
   if (Win32Platform = VER_PLATFORM_WIN32_NT) and (Win32MajorVersion <= 4) then
-    Result := GetExenameForProcessUsingPSAPI(AProcessID)
+    Result := GetExenameForProcessUsingPSAPI(AProcessId)
   else
-    Result := GetExenameForProcessUsingToolhelp32(AProcessID);
+    Result := GetExenameForProcessUsingToolhelp32(AProcessId);
   Result := ExtractFileName(Result)
 end;
 
@@ -126,19 +126,19 @@ begin
   end;
 end;
 
-function GetExePathForProcess(AProcessID: DWORD): string;
+function GetExePathForProcess(AProcessId: DWORD): string;
 var
-  hProcess: THandle;
-  path: array[0..MAX_PATH - 1] of char;
+  LHProcess: THandle;
+  LPath: array[0..MAX_PATH - 1] of char;
 begin
-  hProcess := OpenProcess(PROCESS_QUERY_INFORMATION or PROCESS_VM_READ, false, AProcessID);
-  if hProcess <> 0 then
+  LHProcess := OpenProcess(PROCESS_QUERY_INFORMATION or PROCESS_VM_READ, false, AProcessId);
+  if LHProcess <> 0 then
     try
-      if GetModuleFileNameEx(hProcess, 0, path, MAX_PATH) = 0 then
+      if GetModuleFileNameEx(LHProcess, 0, LPath, MAX_PATH) = 0 then
         RaiseLastOSError;
-      result := path;
+      result := LPath;
     finally
-      CloseHandle(hProcess)
+      CloseHandle(LHProcess)
     end
   else
     RaiseLastOSError;
