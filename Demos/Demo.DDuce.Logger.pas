@@ -44,6 +44,7 @@ type
     actLeaveMethod2          : TAction;
     actResetCheckpoint       : TAction;
     actResetCounter          : TAction;
+    actSendBitmap            : TAction;
     actSendClear             : TAction;
     actSendComponent         : TAction;
     actSendDataSet           : TAction;
@@ -64,6 +65,7 @@ type
     btnIncCounter            : TButton;
     btnResetCheckpoint       : TButton;
     btnResetCounter          : TButton;
+    btnSendBitmap            : TButton;
     btnSendClear             : TButton;
     btnSendComponent         : TButton;
     btnSendDataSet           : TButton;
@@ -97,8 +99,6 @@ type
     tmrSendCounter           : TTimer;
     tmrSendValue             : TTimer;
     trbMain                  : TTrackBar;
-    btnSendBitmap: TButton;
-    actSendBitmap: TAction;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -109,28 +109,28 @@ type
     {$ENDREGION}
 
     {$REGION 'action handlers'}
-    procedure actSendInfoExecute(Sender: TObject);
-    procedure actSendObjectExecute(Sender: TObject);
-    procedure actSendWarningExecute(Sender: TObject);
+    procedure actAddCheckpointExecute(Sender: TObject);
+    procedure actDecCounterExecute(Sender: TObject);
     procedure actEnterMethod1Execute(Sender: TObject);
     procedure actEnterMethod2Execute(Sender: TObject);
+    procedure actIncCounterExecute(Sender: TObject);
     procedure actLeaveMethod1Execute(Sender: TObject);
     procedure actLeaveMethod2Execute(Sender: TObject);
-    procedure actSendErrorExecute(Sender: TObject);
-    procedure actAddCheckpointExecute(Sender: TObject);
-    procedure actIncCounterExecute(Sender: TObject);
-    procedure actDecCounterExecute(Sender: TObject);
-    procedure actResetCounterExecute(Sender: TObject);
-    procedure actSendTestSequenceExecute(Sender: TObject);
     procedure actResetCheckpointExecute(Sender: TObject);
+    procedure actResetCounterExecute(Sender: TObject);
+    procedure actSendBitmapExecute(Sender: TObject);
     procedure actSendClearExecute(Sender: TObject);
-    procedure actSendODSExecute(Sender: TObject);
     procedure actSendComponentExecute(Sender: TObject);
+    procedure actSendErrorExecute(Sender: TObject);
+    procedure actSendInfoExecute(Sender: TObject);
+    procedure actSendObjectExecute(Sender: TObject);
+    procedure actSendODSExecute(Sender: TObject);
     procedure actSendRecordExecute(Sender: TObject);
     procedure actSendStringsExecute(Sender: TObject);
+    procedure actSendTestSequenceExecute(Sender: TObject);
+    procedure actSendWarningExecute(Sender: TObject);
     procedure chkSendRandomValueTimerClick(Sender: TObject);
     procedure tmrSendValueTimer(Sender: TObject);
-    procedure actSendBitmapExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -273,8 +273,6 @@ end;
 procedure TfrmLogger.actSendODSExecute(Sender: TObject);
 begin
   OutputDebugString('OutputDebugString message');
-  OutputDebugStringA('OutputDebugStringA message');
-  //OutputDebugStringW('OutputDebugStringW message');
 end;
 
 procedure TfrmLogger.actSendRecordExecute(Sender: TObject);
