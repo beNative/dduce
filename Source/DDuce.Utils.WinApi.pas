@@ -47,7 +47,7 @@ var
   LFileName   : array [0 .. 512] of Char;
 begin
   SetLastError(0);
-  Result     := '';
+  Result      := '';
   LProcHandle := OpenProcess(
     PROCESS_QUERY_INFORMATION or PROCESS_VM_READ,
     False,
@@ -56,8 +56,13 @@ begin
   if LProcHandle <> 0 then
   begin
     try
-      if EnumProcessModules(LProcHandle, @LModules[1], SizeOf(LModules), LCBNeeded)
-      then
+      if EnumProcessModules(
+        LProcHandle,
+        @LModules[1],
+        SizeOf(LModules),
+        LCBNeeded
+      ) then
+      begin
         for I := 1 to LCBNeeded div SizeOf(HINST) do
         begin
           if GetModuleFilenameEx(LProcHandle, LModules[I], LFileName,
@@ -70,6 +75,7 @@ begin
             end;
           end;
         end;
+      end;
     finally
       CloseHandle(LProcHandle);
     end;
@@ -146,9 +152,3 @@ end;
 {$ENDREGION}
 
 end.
-
-{
-function GetPathFromPID(const PID: cardinal): string;
-
-end;
-}

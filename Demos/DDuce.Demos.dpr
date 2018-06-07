@@ -105,7 +105,6 @@ uses
   DDuce.Editor.View in '..\Source\Modules\Editor\DDuce.Editor.View.pas' {EditorView},
   DDuce.Editor.Viewlist.Data in '..\Source\Modules\Editor\DDuce.Editor.Viewlist.Data.pas',
   DDuce.Editor.Viewlist.ToolView in '..\Source\Modules\Editor\DDuce.Editor.Viewlist.ToolView.pas' {frmViewList},
-  DDuce.FormSettings in '..\Source\Modules\DDuce.FormSettings.pas',
   DDuce.Factories in '..\Source\Modules\DDuce.Factories.pas',
   DDuce.Editor.AlignLines.ToolView in '..\Source\Modules\Editor\DDuce.Editor.AlignLines.ToolView.pas' {frmAlignLines},
   DDuce.WinIPC.Client in '..\Source\DDuce.WinIPC.Client.pas',
@@ -130,7 +129,10 @@ uses
   DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas',
   DDuce.Factories.LiveBindings in '..\Source\Factories\DDuce.Factories.LiveBindings.pas',
   DDuce.Utils in '..\Source\DDuce.Utils.pas',
-  DDuce.Utils.WinApi in '..\Source\DDuce.Utils.WinApi.pas';
+  DDuce.Utils.WinApi in '..\Source\DDuce.Utils.WinApi.pas',
+  Demo.Resources in 'Demo.Resources.pas',
+  DDuce.Settings.Form in '..\Source\Settings\DDuce.Settings.Form.pas',
+  DDuce.Settings.TextFormat in '..\Source\Settings\DDuce.Settings.TextFormat.pas';
 
 {$R *.res}
 

@@ -65,6 +65,7 @@
         <DCC_DcpOutput>.\Library\$(Platform)\$(Config)\</DCC_DcpOutput>
         <DCC_ExeOutput>.\Library\$(Platform)\$(Config)\</DCC_ExeOutput>
         <DCC_DcuOutput>.\Library\$(Platform)\$(Config)\</DCC_DcuOutput>
+        <DCC_Define>TESTINSIGHT;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -133,6 +134,7 @@
         <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas"/>
         <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas"/>
+        <DCCReference Include="Test.Resources.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

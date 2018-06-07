@@ -45,7 +45,8 @@ uses
   DDuce.WinIPC.Server in '..\Source\DDuce.WinIPC.Server.pas',
   ZeroMQ.API in '..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas',
   ZeroMQ in '..\Source\Dependencies\ZeroMQ\ZeroMQ.pas',
-  DDuce.Logger.Channels.ZeroMQ in '..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas';
+  DDuce.Logger.Channels.ZeroMQ in '..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas',
+  Test.Resources in 'Test.Resources.pas';
 
 {$R *.RES}
 

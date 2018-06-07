@@ -28,7 +28,7 @@ unit DDuce.Reflect;
 interface
 
 uses
-  System.Rtti, System.TypInfo,
+  System.Rtti, System.TypInfo, System.Classes,
 
   DDuce.DynamicRecord;
 
@@ -54,6 +54,8 @@ type
     class function Properties(const AArg: TValue): IDynamicRecord; overload; static;
     class function Properties<T{: class, constructor}>(const AArg: T)
       : IDynamicRecord; overload; static;
+
+    class function PublishedProperties(const AArg: TPersistent): IDynamicRecord; static;
   end;
 
 implementation
@@ -199,6 +201,13 @@ class function Reflect.Properties<T>(const AArg: T): IDynamicRecord;
 begin
   Result := DynamicRecord.Create;
   Result.From(TValue.From(AArg), True, False, True, []);
+end;
+
+class function Reflect.PublishedProperties(
+  const AArg: TPersistent): IDynamicRecord;
+begin
+  Result := DynamicRecord.CreateDynamicRecord;
+  Result.FromPersistent(AArg);
 end;
 
 { Returns the type kind of the given value.

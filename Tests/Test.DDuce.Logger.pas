@@ -78,6 +78,7 @@ type
     procedure Test_Send_method_for_static_array_of_string_argument;
     procedure Test_Send_method_for_static_array_of_Integer_argument;
     procedure Test_Send_method_for_dynamic_array_of_Integer_argument;
+    procedure Test_Send_method_for_array_of_const_argument;
 
     procedure Test_SendDateTime_method;
     procedure Test_SendDate_method;
@@ -94,8 +95,10 @@ type
     procedure Test_SendException_method;
     procedure Test_SendShortCut_method;
     procedure Test_SendBitmap_method;
+    procedure Test_SendPersistent_method;
 
     procedure Test_SendIf_method;
+    procedure Test_SendText_method;
 
     procedure Test_SendVariant_method_for_TDateTime_argument;
     procedure Test_SendVariant_method_for_string_argument;
@@ -171,7 +174,7 @@ uses
   DDuce.Reflect, DDuce.Utils,
   DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.ZeroMQ,
 
-  Test.Utils;
+  Test.Utils, Test.Resources;
 
 {$REGION 'construction and destruction'}
 class constructor TestLogger.Create;
@@ -207,6 +210,23 @@ var
 begin
   T := 'Test';
   Logger.Send('TestAnsiString', T);
+end;
+
+procedure TestLogger.Test_Send_method_for_array_of_const_argument;
+var
+  T : array[0..3] of TVarRec;
+  S : string;
+begin
+  S := 'MyString';
+  T[0].VType := vtUnicodeString;
+  T[0].VUnicodeString := Pointer(S);
+  T[1].VType := vtBoolean;
+  T[1].VBoolean := False;
+  T[2].VType := vtInteger;
+  T[2].VInteger := 4;
+
+  Logger.Send('TestArrayOfConst', T);
+
 end;
 
 procedure TestLogger.Test_Send_method_for_Boolean_argument;
@@ -666,6 +686,18 @@ begin
   Logger.SendObject('TestTObject', Self);
 end;
 
+procedure TestLogger.Test_SendPersistent_method;
+var
+  F : TFont;
+begin
+  F := TFont.Create;
+  try
+    Logger.SendPersistent('Font', F);
+  finally
+    F.Free;
+  end;
+end;
+
 procedure TestLogger.Test_SendPointer_method;
 var
   T : Pointer;
@@ -716,6 +748,11 @@ begin
   finally
     SL.Free;
   end;
+end;
+
+procedure TestLogger.Test_SendText_method;
+begin
+  Logger.SendText(LOREM_IPSUM);
 end;
 
 procedure TestLogger.Test_SendTime_method;
@@ -988,7 +1025,7 @@ end;
 procedure TestLogger.Test_Counter_methods;
 var
   S : string;
-  I: Integer;
+  I : Integer;
 begin
   S := 'TestCounter';
   Logger.IncCounter(S);

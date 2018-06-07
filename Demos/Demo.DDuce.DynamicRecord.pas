@@ -405,7 +405,6 @@ end;
 
 procedure TfrmDynamicRecords.BeforeDestruction;
 begin
-//  FreeAndNil(FInspector);
   FreeAndNil(FStrings);
   FreeAndNil(FContact);
   FreeAndNil(FTestClass);

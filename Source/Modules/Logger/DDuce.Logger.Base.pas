@@ -132,6 +132,8 @@ type
     procedure SendObject(const AName: string; AValue: TObject);
     { Same as above but for an interface variable. }
     procedure SendInterface(const AName: string; AValue: IInterface);
+    { Sends values of published properties. }
+    procedure SendPersistent(const AName: string; AValue: TPersistent);
     procedure SendVariant(const AName: string; const AValue: Variant);
 
     procedure SendDateTime(const AName: string; AValue: TDateTime);
@@ -259,6 +261,35 @@ uses
 const
   STACKCOUNTLIMIT        = 256;
   DEFAULT_CHECKPOINTNAME = 'CheckPoint';
+
+
+function GetInterfaceTypeName(AIntf: IInterface): Tuple<string,string>;
+var
+  O        : TObject;
+  LType    : TRttiInterfaceType;
+  LContext : TRttiContext;
+  LIntf    : IInterface;
+begin
+  // get the implementing object...
+  O := AIntf as TObject;
+
+  // enumerate the object's interfaces, looking for the
+  // one that matches the input parameter...
+  for LType in (LContext.GetType(O.ClassType) as TRttiInstanceType).GetImplementedInterfaces do
+  begin
+    if O.GetInterface(LType.GUID, LIntf) then
+    begin
+      if AIntf = LIntf then
+      begin
+        Result := [LType.Name, LType.GUID.ToString];
+        Exit;
+      end;
+      LIntf := nil;
+    end;
+  end;
+end;
+
+
 
 {$REGION 'TLogger'}
 {$REGION 'construction and destruction'}
@@ -414,22 +445,21 @@ begin
   Send(AName, ShortCutToText(AShortCut));
 end;
 
-{ TODO: Should be a dedicated message type (lmtStrings)! }
-
 procedure TLogger.SendStrings(const AName: string; AValue: TStrings);
 begin
   Guard.CheckNotNull(AValue, AName);
-  Send(AName, AValue.Text);
+  InternalSend(
+    lmtStrings,
+    Format('%s (%s) = ' + sLineBreak + '%s', [AName, AValue.ClassName, AValue.Text])
+  );
 end;
-
-{ TODO! }
 
 procedure TLogger.SendObject(const AName: string; AValue: TObject);
 begin
   Guard.CheckNotNull(AValue, AName);
   InternalSend(
-    lmtText,
-    Format('%s: %s' + sLineBreak + '%s',
+    lmtObject,
+    Format('%s (%s) = ' + sLineBreak + '%s',
     [AName, AValue.ClassName, Reflect.Fields(AValue).ToString
     + #13#10 + #13#10 + Reflect.Properties(AValue).ToString]
     )
@@ -543,8 +573,30 @@ begin
 end;
 
 procedure TLogger.Send(const AName: string; const AArgs: array of const);
+//type
+//  TVarArray = array of TVarRec;
+//var
+//  VA : array of TValue;
+//  VR : TVarRec;
+//  I  : Integer;
 begin
-  //Send(Format(AName, AArgs));
+//  SetLength(VA, Length(AArgs));
+//  for I := 0 to High(AArgs) do
+//  begin
+//    VA[I] := TValue.FromVarRec(AArgs[I]);
+//  end;
+//  Send(AName, TValue.FromArray(TypeInfo(TVarRec), VA));
+end;
+
+procedure TLogger.SendPersistent(const AName: string; AValue: TPersistent);
+begin
+  Guard.CheckNotNull(AValue, AName);
+  InternalSend(
+    lmtPersistent,
+    Format('%s (%s) = ' + sLineBreak + '%s',
+      [AName, AValue.ClassName, Reflect.PublishedProperties(AValue).ToString]
+    )
+  );
 end;
 
 procedure TLogger.SendPoint(const AName: string; const APoint: TPoint);
@@ -584,8 +636,21 @@ begin
 end;
 
 procedure TLogger.SendInterface(const AName: string; AValue: IInterface);
+var
+  O  : TObject;
+  S1 : string;
+  S2 : string;
 begin
-  SendObject(AName, TObject(AValue));
+  Guard.CheckNotNull(AValue, AName);
+  GetInterfaceTypeName(AValue).Unpack(S1, S2);
+  O := AValue as TObject;
+  InternalSend(
+    lmtInterface,
+    Format('%s (%s, %s) = ' + sLineBreak + '%s',
+    [AName, S1, S2, Reflect.Fields(O).ToString
+    + #13#10 + #13#10 + Reflect.Properties(O).ToString]
+    )
+  );
 end;
 
 procedure TLogger.Warn(const AText: string);

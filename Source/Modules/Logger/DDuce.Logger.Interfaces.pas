@@ -45,6 +45,9 @@ type
     lmtHeapInfo    = 13,  // not supported yet
     lmtMemory      = 14,
     lmtCustomData  = 15,  // not supported yet
+    lmtObject      = 16,
+    lmtInterface   = 17,
+    lmtPersistent  = 18,
     lmtWatch       = 20,
     lmtCounter     = 21,
     lmtColor       = 22,
@@ -85,10 +88,12 @@ type
 
   ILogChannel = interface
   ['{FDE37401-BB4F-4362-863A-CCCCF9228BD9}']
+    {$REGION 'property access methods'}
     function GetActive: Boolean;
     procedure SetActive(const Value: Boolean);
     function GetConnected: Boolean;
     procedure SetConnected(const Value: Boolean);
+    {$ENDREGION}
 
     function Write(const AMsg: TLogMessage): Boolean;
     function Connect: Boolean;
@@ -167,6 +172,7 @@ type
     procedure SendAlphaColor(const AName: string; AAlphaColor: TAlphaColor);
     procedure SendObject(const AName: string; AValue: TObject);
     procedure SendInterface(const AName: string; AValue: IInterface);
+    procedure SendPersistent(const AName: string; AValue: TPersistent);
     procedure SendRect(const AName: string; const AValue: TRect);
     procedure SendPoint(const AName: string; const APoint: TPoint);
     procedure SendStrings(const AName: string; AValue: TStrings);
@@ -302,6 +308,9 @@ begin
     lmtHeapInfo    : S := 'lmtHeapInfo';
     lmtMemory      : S := 'lmtMemory';
     lmtCustomData  : S := 'lmtCustomData';
+    lmtObject      : S := 'lmtObject';
+    lmtInterface   : S := 'lmtInterface';
+    lmtPersistent  : S := 'lmtPersistent';
     lmtWatch       : S := 'lmtWatch';
     lmtCounter     : S := 'lmtCounter';
     lmtColor       : S := 'lmtColor';

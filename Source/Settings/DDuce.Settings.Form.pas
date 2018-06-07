@@ -14,11 +14,11 @@
   limitations under the License.
 }
 
-unit DDuce.FormSettings;
+unit DDuce.Settings.Form;
 
 interface
 
-{ TFormSettings is a data storage for form settings. }
+{ TFormSettings is a general purpose data storage for form settings. }
 
 uses
   System.Classes,
@@ -38,6 +38,7 @@ type
     FWindowState : TWindowState;
 
   protected
+    {$REGION 'property access methods'}
     procedure SetFormStyle(AValue: TFormStyle);
     procedure SetHeight(AValue: Integer);
     procedure SetLeft(AValue: Integer);
@@ -45,6 +46,7 @@ type
     procedure SetWidth(AValue: Integer);
     procedure SetWindowState(AValue: TWindowState);
     function GetOnChanged: IEvent<TNotifyEvent>;
+    {$ENDREGION}
 
     procedure DoChanged;
 
@@ -159,7 +161,8 @@ end;
 {$REGION 'public methods'}
 procedure TFormSettings.Assign(Source: TPersistent);
 var
-  F : TForm;
+  F  : TForm;
+  FS : TFormSettings;
 begin
   if Source is TForm then
   begin
@@ -171,13 +174,24 @@ begin
     FormStyle   := F.FormStyle;
     WindowState := F.WindowState;
   end
+  else if Source is TFormSettings then
+  begin
+    FS          := TFormSettings(Source);
+    Left        := FS.Left;
+    Top         := FS.Top;
+    Width       := FS.Width;
+    Height      := FS.Height;
+    FormStyle   := FS.FormStyle;
+    WindowState := FS.WindowState;
+  end
   else
     inherited Assign(Source);
 end;
 
 procedure TFormSettings.AssignTo(Dest: TPersistent);
 var
-  F : TForm;
+  F  : TForm;
+  FS : TFormSettings;
 begin
   if Dest is TForm then
   begin
@@ -188,6 +202,16 @@ begin
     F.Height      := Height;
     F.FormStyle   := FormStyle;
     F.WindowState := WindowState;
+  end
+  else if Dest is TFormSettings then
+  begin
+    FS             := TFormSettings(Dest);
+    FS.Left        := Left;
+    FS.Top         := Top;
+    FS.Width       := Width;
+    FS.Height      := Height;
+    FS.FormStyle   := FormStyle;
+    FS.WindowState := WindowState;
   end
   else
     inherited AssignTo(Dest);
