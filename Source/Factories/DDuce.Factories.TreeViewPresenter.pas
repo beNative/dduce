@@ -14,7 +14,7 @@
   limitations under the License.
 }
 
-unit DDuce.Factories;
+unit DDuce.Factories.TreeViewPresenter;
 
 interface
 

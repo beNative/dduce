@@ -575,7 +575,6 @@ type
     property BevelKind;
     property BevelWidth;
     property Ctl3D;
-    property HintAnimation;
     property ParentCtl3D;
 
     property OnAdvancedHeaderDraw;

@@ -115,6 +115,7 @@ type
     class function GetDefaultTreeGridOptions: TVSTOptions; static;
     class function GetDefaultTreeListOptions: TVSTOptions; static;
     class function GetDefaultTreeOptions: TVSTOptions; static;
+    class procedure SetDefaultTreeOptions(const Value: TVSTOptions); static;
 
   public
     class constructor Create;
@@ -465,7 +466,8 @@ begin
         StringOptions := [toAutoAcceptEditChange];
         SelectionOptions := [toExtendedFocus];
         MiscOptions := [
-          toInitOnSave, toToggleOnDblClick, toWheelPanning, toVariableNodeHeight
+          toInitOnSave, toToggleOnDblClick, toWheelPanning, toVariableNodeHeight,
+          toCheckSupport
         ];
         ColumnOptions := [];
 
@@ -507,8 +509,8 @@ begin
         StringOptions := [toAutoAcceptEditChange];
         SelectionOptions := [toExtendedFocus, toFullRowSelect];
         MiscOptions := [
-          toCheckSupport, toGridExtensions, toInitOnSave, toToggleOnDblClick,
-          toWheelPanning, toVariableNodeHeight
+          toCheckSupport, toInitOnSave, toToggleOnDblClick, toWheelPanning,
+          toVariableNodeHeight{, toGridExtensions}
         ];
         ColumnOptions := [];
 
@@ -592,8 +594,8 @@ begin
         StringOptions := [toAutoAcceptEditChange];
         SelectionOptions := [toExtendedFocus, toFullRowSelect];
         MiscOptions := [
-          toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning,
-          toVariableNodeHeight
+          toCheckSupport, toInitOnSave, toToggleOnDblClick, toWheelPanning,
+          toVariableNodeHeight{, toGridExtensions}
         ];
         ColumnOptions := [];
 
@@ -635,7 +637,8 @@ begin
         StringOptions := [toAutoAcceptEditChange];
         SelectionOptions := [toExtendedFocus, toFullRowSelect];
         MiscOptions := [
-          toInitOnSave, toToggleOnDblClick, toWheelPanning, toVariableNodeHeight
+          toCheckSupport, toInitOnSave, toToggleOnDblClick, toWheelPanning,
+          toVariableNodeHeight
         ];
         ColumnOptions := [];
 
@@ -678,6 +681,12 @@ class function TVirtualStringTreeFactory.GetDefaultTreeOptions: TVSTOptions;
 begin
   Result := FDefaultTreeOptions;
 end;
+class procedure TVirtualStringTreeFactory.SetDefaultTreeOptions(
+  const Value: TVSTOptions);
+begin
+
+end;
+
 {$ENDREGION}
 
 {$REGION 'private methods'}

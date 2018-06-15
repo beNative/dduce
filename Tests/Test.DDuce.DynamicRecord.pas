@@ -94,6 +94,7 @@ type
 
     procedure Test_FromDataSet_method;
     procedure Test_FromStrings_method;
+    procedure Test_FromStrings_method_with_spaces;
     procedure Test_From_method_for_object;
 
     procedure Test_ToDelimitedText_method;
@@ -323,6 +324,23 @@ begin
     SL.Values['S'] := 'test';
     SL.Values['I'] := '5';
     R.FromStrings(SL);
+    CheckTrue(R.ToInteger('I') = 5, 'I');
+    CheckTrue(R.ToString('S') = 'test', 'S');
+  finally
+    SL.Free;
+  end;
+end;
+
+procedure TestDynamicRecord.Test_FromStrings_method_with_spaces;
+var
+  SL : TStrings;
+  R  : DynamicRecord;
+begin
+  SL := TStringList.Create;
+  try
+    SL.Add('S               = test');
+    SL.Add('I               = 5');
+    R.FromStrings(SL, True);
     CheckTrue(R.ToInteger('I') = 5, 'I');
     CheckTrue(R.ToString('S') = 'test', 'S');
   finally

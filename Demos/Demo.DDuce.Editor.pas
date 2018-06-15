@@ -24,15 +24,16 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Menus,
   Vcl.ComCtrls,
 
-  DDuce.Components.PropertyInspector, DDuce.Components.Factories,
-  DDuce.Editor.Interfaces;
+  zObjInspector,
+
+  DDuce.Components.Factories, DDuce.Editor.Interfaces;
 
 type
   TfrmEditor = class(TForm)
     sbrMain     : TStatusBar;
     pnlLeft     : TPanel;
     pnlRight    : TPanel;
-    splVertical: TSplitter;
+    splVertical : TSplitter;
 
   private
     FSettings         : IEditorSettings;
@@ -42,18 +43,17 @@ type
     //FSelectionToolbar : TToolbar;
     //FRightToolbar     : TToolbar;
     FMainMenu         : TMainMenu;
-    FPI               : TPropertyInspector;
+    FOI               : TzObjectInspector;
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
 
   end;
 
 implementation
 
 uses
-  DDuce.Editor.Factories;
+  DDuce.Factories.zObjInspector, DDuce.Editor.Factories;
 
 {$R *.dfm}
 
@@ -75,10 +75,10 @@ begin
     FManager.Actions,
     FManager.Menus
   );
-  FPI := TDDuceComponents.CreatePropertyInspector(
+  FOI := TzObjectInspectorFactory.Create(
     Self,
-    pnlLeft, (
-    FSettings as IInterfaceComponentReference).GetComponent
+    pnlLeft,
+    (FSettings as IInterfaceComponentReference).GetComponent
   );
 
 //  FRightToolbar := TEditorFactories.CreateTopRightToolbar(
@@ -94,12 +94,6 @@ begin
 //    FManager.Menus
 //  );
   //FSelectionToolbar.Align := alRight;
-end;
-
-procedure TfrmEditor.BeforeDestruction;
-begin
-  FPI.Free;
-  inherited BeforeDestruction;
 end;
 {$ENDREGION}
 

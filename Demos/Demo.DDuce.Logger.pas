@@ -173,6 +173,8 @@ implementation
 uses
   System.Rtti, System.Types,
 
+  Spring,
+
   DDuce.Logger.Factories,
   DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.LogFile,
   DDuce.Logger.Channels.ZeroMQ,
@@ -288,6 +290,7 @@ var
 begin
   F := TFont.Create;
   try
+    ShowMessage(FormatValue(TValue.From(Self)));
     Logger.SendObject('Object', F);
   finally
     F.Free;

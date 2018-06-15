@@ -81,15 +81,16 @@ object frmDynamicRecords: TfrmDynamicRecords
         BevelKind = bkFlat
         BevelOuter = bvNone
         Caption = 'TRecord content'
-        Color = clAppWorkSpace
+        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlue
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentBackground = False
         ParentFont = False
         TabOrder = 0
+        ExplicitTop = -3
       end
     end
     object pnlBottomRight: TPanel
@@ -110,9 +111,9 @@ object frmDynamicRecords: TfrmDynamicRecords
         BevelKind = bkFlat
         BevelOuter = bvNone
         Caption = 'Conversion methods'
-        Color = clAppWorkSpace
+        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlue
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -400,7 +401,7 @@ object frmDynamicRecords: TfrmDynamicRecords
           Left = 3
           Top = 3
           Width = 855
-          Height = 235
+          Height = 232
           Align = alClient
           AutoSize = False
           Color = clInfoBk
@@ -448,7 +449,7 @@ object frmDynamicRecords: TfrmDynamicRecords
           Left = 3
           Top = 3
           Width = 855
-          Height = 235
+          Height = 232
           Align = alClient
           AutoSize = False
           Color = clInfoBk
@@ -476,7 +477,7 @@ object frmDynamicRecords: TfrmDynamicRecords
           Left = 3
           Top = 3
           Width = 855
-          Height = 235
+          Height = 232
           Align = alClient
           AutoSize = False
           Color = clInfoBk
@@ -504,7 +505,7 @@ object frmDynamicRecords: TfrmDynamicRecords
           Left = 3
           Top = 3
           Width = 855
-          Height = 235
+          Height = 232
           Align = alClient
           AutoSize = False
           Color = clInfoBk
@@ -762,7 +763,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 148
             Top = 3
             Width = 137
-            Height = 28
+            Height = 25
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -785,7 +786,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 291
             Top = 3
             Width = 137
-            Height = 28
+            Height = 25
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -808,7 +809,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 434
             Top = 3
             Width = 136
-            Height = 28
+            Height = 25
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -831,7 +832,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 576
             Top = 3
             Width = 136
-            Height = 28
+            Height = 25
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -1149,7 +1150,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 148
             Top = 153
             Width = 137
-            Height = 85
+            Height = 82
             Align = alClient
             AutoSize = False
             Color = clCream
@@ -1171,7 +1172,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 291
             Top = 153
             Width = 137
-            Height = 85
+            Height = 82
             Align = alClient
             AutoSize = False
             Color = clCream
@@ -1193,7 +1194,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 434
             Top = 153
             Width = 136
-            Height = 85
+            Height = 82
             Align = alClient
             AutoSize = False
             Color = clCream
@@ -1215,7 +1216,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 576
             Top = 153
             Width = 136
-            Height = 85
+            Height = 82
             Align = alClient
             AutoSize = False
             Color = clCream

@@ -298,6 +298,7 @@ end;
 procedure TTextFormatSettings.AssignTo(Dest: TPersistent);
 var
   TFS : TTextFormatSettings;
+  C   : TCanvas;
 begin
   if Dest is TTextFormatSettings then
   begin
@@ -313,6 +314,12 @@ begin
   else if Dest is TFont then
   begin
     Dest.Assign(FFont);
+  end
+  else if Dest is TCanvas then
+  begin
+    C := TCanvas(Dest);
+    C.Font.Assign(FFont);
+    C.Brush.Color := BackgroundColor;
   end
   else
     inherited AssignTo(Dest);

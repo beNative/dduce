@@ -105,7 +105,7 @@ uses
   DDuce.Editor.View in '..\Source\Modules\Editor\DDuce.Editor.View.pas' {EditorView},
   DDuce.Editor.Viewlist.Data in '..\Source\Modules\Editor\DDuce.Editor.Viewlist.Data.pas',
   DDuce.Editor.Viewlist.ToolView in '..\Source\Modules\Editor\DDuce.Editor.Viewlist.ToolView.pas' {frmViewList},
-  DDuce.Factories in '..\Source\Modules\DDuce.Factories.pas',
+  DDuce.Factories.TreeViewPresenter in '..\Source\Factories\DDuce.Factories.TreeViewPresenter.pas',
   DDuce.Editor.AlignLines.ToolView in '..\Source\Modules\Editor\DDuce.Editor.AlignLines.ToolView.pas' {frmAlignLines},
   DDuce.WinIPC.Client in '..\Source\DDuce.WinIPC.Client.pas',
   DDuce.WinIPC.Server in '..\Source\DDuce.WinIPC.Server.pas',
@@ -132,7 +132,11 @@ uses
   DDuce.Utils.WinApi in '..\Source\DDuce.Utils.WinApi.pas',
   Demo.Resources in 'Demo.Resources.pas',
   DDuce.Settings.Form in '..\Source\Settings\DDuce.Settings.Form.pas',
-  DDuce.Settings.TextFormat in '..\Source\Settings\DDuce.Settings.TextFormat.pas';
+  DDuce.Settings.TextFormat in '..\Source\Settings\DDuce.Settings.TextFormat.pas',
+  Demo.DDuce.VirtualTrees in 'Demo.DDuce.VirtualTrees.pas' {frmVirtualTrees},
+  DDuce.ValueList in '..\Source\Modules\ValueList\DDuce.ValueList.pas' {frmValueList},
+  DDuce.ValueList.Node in '..\Source\Modules\ValueList\DDuce.ValueList.Node.pas',
+  Demo.DDuce.ValueList in 'Demo.DDuce.ValueList.pas' {frmValueListDemo};
 
 {$R *.res}
 

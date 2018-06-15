@@ -269,7 +269,7 @@ type
       const AAssignNulls : Boolean = False
     );
     procedure FromPersistent(APersistent: TPersistent);
-    procedure FromStrings(AStrings: TStrings);
+    procedure FromStrings(AStrings: TStrings; ATrimSpaces: Boolean = False);
 
     procedure ToStrings(AStrings: TStrings);
 
@@ -433,7 +433,7 @@ type
       const AAssignNulls : Boolean = False
     );
 
-    procedure FromStrings(AStrings: TStrings);
+    procedure FromStrings(AStrings: TStrings; ATrimSpaces: Boolean = False);
     procedure ToStrings(AStrings: TStrings);
 
     function ContainsField(const AName: string): Boolean;
@@ -580,10 +580,10 @@ type
     function ToVarArray(const AFieldNames : string = '') : Variant;
 
     procedure FromDataSet(
-            ADataSet     : TDataSet;
+      ADataSet           : TDataSet;
       const AAssignNulls : Boolean = False
     );
-    procedure FromStrings(AStrings: TStrings);
+    procedure FromStrings(AStrings: TStrings; ATrimSpaces: Boolean = False);
     procedure FromPersistent(APersistent: TPersistent);
 
     procedure ToStrings(AStrings: TStrings);
@@ -769,7 +769,7 @@ type
       const AAssignNulls : Boolean = False
     );
     procedure FromPersistent(APersistent: TPersistent);
-    procedure FromStrings(AStrings: TStrings);
+    procedure FromStrings(AStrings: TStrings; ATrimSpaces: Boolean = False);
     procedure ToStrings(AStrings: TStrings);
 
     procedure AssignProperty(
@@ -1824,13 +1824,23 @@ end;
 
 { Assigns from a TStrings instance holding name/value pairs. }
 
-procedure TDynamicRecord.FromStrings(AStrings: TStrings);
+procedure TDynamicRecord.FromStrings(AStrings: TStrings; ATrimSpaces: Boolean);
 var
   I: Integer;
 begin
-  for I := 0 to AStrings.Count - 1 do
+  if ATrimSpaces then
   begin
-    Values[AStrings.Names[I]] := AStrings.ValueFromIndex[I];
+    for I := 0 to AStrings.Count - 1 do
+    begin
+      Values[AStrings.Names[I].Trim] := AStrings.ValueFromIndex[I].Trim;
+    end;
+  end
+  else
+  begin
+    for I := 0 to AStrings.Count - 1 do
+    begin
+      Values[AStrings.Names[I]] := AStrings.ValueFromIndex[I];
+    end;
   end;
 end;
 
@@ -2397,9 +2407,9 @@ begin
   DynamicRecord.FromPersistent(APersistent);
 end;
 
-procedure DynamicRecord.FromStrings(AStrings: TStrings);
+procedure DynamicRecord.FromStrings(AStrings: TStrings; ATrimSpaces: Boolean);
 begin
-  DynamicRecord.FromStrings(AStrings);
+  DynamicRecord.FromStrings(AStrings, ATrimSpaces);
 end;
 
 function DynamicRecord.IsBlank(const AName: string): Boolean;
@@ -2980,9 +2990,9 @@ begin
   FDynamicRecord.FromDataSet(ADataSet, AAssignNulls);
 end;
 
-procedure DynamicRecord<T>.FromStrings(AStrings: TStrings);
+procedure DynamicRecord<T>.FromStrings(AStrings: TStrings; ATrimSpaces: Boolean);
 begin
-  FDynamicRecord.FromStrings(AStrings);
+  FDynamicRecord.FromStrings(AStrings, ATrimSpaces);
 end;
 
 function DynamicRecord<T>.IsBlank(const AName: string): Boolean;

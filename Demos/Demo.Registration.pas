@@ -33,6 +33,8 @@ uses
   Demo.DDuce.Inspector,
   Demo.DDuce.GridView,
   Demo.DDuce.Editor,
+  Demo.DDuce.VirtualTrees,
+  Demo.DDuce.ValueList,
 
   Demo.Manager;
 
@@ -51,6 +53,8 @@ begin
   DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
   DemoManager.Register(TfrmInspector, 'Inspector');
   DemoManager.Register(TfrmGridView, 'GridView');
+  DemoManager.Register(TfrmVirtualTrees, 'VirtualTrees');
+  DemoManager.Register(TfrmValueListDemo, 'ValueList');
 end;
 {$ENDREGION}
 

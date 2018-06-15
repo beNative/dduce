@@ -29,7 +29,9 @@ uses
 
   Spring, Spring.Collections,
 
-  DDuce.Components.GridView, DDuce.Components.PropertyInspector,
+  zObjInspector,
+
+  DDuce.Components.GridView,
 
   Demo.Contact;
 
@@ -42,9 +44,9 @@ type
     pnlRight    : TPanel;
 
   private
-    FGridView          : TGridView;
-    FPropertyInspector : TPropertyInspector;
-    FList              : IList<TContact>;
+    FGridView        : TGridView;
+    FObjectInspector : TzObjectInspector;
+    FList            : IList<TContact>;
 
     procedure FGridViewDrawCell(
       Sender             : TObject;
@@ -83,7 +85,7 @@ uses
   Spring.Helpers,
 
   DDuce.RandomData, DDuce.DynamicRecord, DDuce.Components.Factories,
-  DDuce.Factories.GridView,
+  DDuce.Factories.GridView, DDuce.Factories.zObjInspector,
 
   Demo.Factories;
 
@@ -95,8 +97,12 @@ var
 begin
   inherited AfterConstruction;
   FGridView := TGridViewFactory.CreateGridView(Self, pnlRight);
-  FPropertyInspector :=
-    TDDuceComponents.CreatePropertyInspector(Self, pnlLeft, FGridView);
+  FObjectInspector := TzObjectInspectorFactory.Create(
+    Self,
+    pnlLeft,
+    FGridView
+  );
+
   FList := TDemoFactories.CreateContactList(1000);
   R.From(FList[0]);
 
@@ -120,7 +126,6 @@ begin
       end;
       if MatchText(F.Name, ['Address', 'Company', 'Email']) then
         Visible := False;
-
     end;
   end;
 
@@ -172,7 +177,7 @@ end;
 procedure TfrmGridView.FGridViewGetCellText(Sender: TObject; Cell: TGridCell;
   var Value: string);
 var
-  R: DynamicRecord;
+  R : DynamicRecord;
 begin
   R.From(FList[Cell.Row]);
 
@@ -183,7 +188,7 @@ end;
 procedure TfrmGridView.FGridViewGetCheckState(Sender: TObject; Cell: TGridCell;
   var CheckState: TCheckBoxState);
 var
-  R  : DynamicRecord;
+  R : DynamicRecord;
 begin
   R.From(FList[Cell.Row]);
   if R.Items[Cell.Col].Value.AsBoolean then

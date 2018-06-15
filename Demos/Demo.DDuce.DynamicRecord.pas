@@ -721,7 +721,7 @@ begin
   FTestClass := TTestClass.Create;
   FTestClass.TestString := 'string';
   FTestClass.TestNullableString := 'NullableString';
-  FTestClass.TestNullableDateTime := Nullable.Null;
+  FTestClass.TestNullableDateTime := Null;
 end;
 
 procedure TfrmDynamicRecords.CreateTestManagedClass;

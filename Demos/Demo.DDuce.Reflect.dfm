@@ -45,9 +45,9 @@ object frmReflect: TfrmReflect
     BevelKind = bkFlat
     BevelOuter = bvNone
     Caption = 'Reflected properties of this form:'
-    Color = clSilver
+    Color = clWhite
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
+    Font.Color = clBlue
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]

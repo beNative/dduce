@@ -107,7 +107,8 @@ uses
   System.StrUtils, System.SysUtils,
   Vcl.Graphics,
 
-  DDuce.Factories, DDuce.Factories.VirtualTrees, Demo.Factories, Demo.Manager;
+  DDuce.Factories.TreeViewPresenter, DDuce.Factories.VirtualTrees,
+  Demo.Factories, Demo.Manager;
 
 type
   TVKSet = set of Byte;
