@@ -47,14 +47,14 @@ begin
   DemoManager.Register(TfrmReflect, 'Reflect');
   DemoManager.Register(TfrmEditor, 'Editor');
 
-  // not working yet
-  //DemoManager.Register(TfrmXMLTree, 'XMLTree');
   DemoManager.Register(TfrmLogger, 'Logger');
   DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
   DemoManager.Register(TfrmInspector, 'Inspector');
   DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmVirtualTrees, 'VirtualTrees');
   DemoManager.Register(TfrmValueListDemo, 'ValueList');
+  // not working yet
+  //DemoManager.Register(TfrmXMLTree, 'XMLTree');
 end;
 {$ENDREGION}
 

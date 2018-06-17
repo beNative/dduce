@@ -20,16 +20,25 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages,
-  System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
-              DDuce.DynamicRecord,
-  DDuce.ValueList;
+  System.SysUtils, System.Variants, System.Classes, System.TypInfo,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
+
+  zObjInspector,
+
+  DDuce.DynamicRecord, DDuce.ValueList;
 
 type
   TfrmValueListDemo = class(TForm)
+    {$REGION 'designer controls'}
+    pnlLeft     : TPanel;
+    pnlRight    : TPanel;
+    splVertical : TSplitter;
+    {$ENDREGION}
+
   private
-    FValueList : TfrmValueList;
-    dr: dynamicrecord;
+    FValueList       : TValueList;
+    FObjectInspector : TzObjectInspector;
+
   public
     procedure AfterConstruction; override;
 
@@ -40,38 +49,22 @@ implementation
 {$R *.dfm}
 
 uses
-  Spring,
-
-   DDuce.Logger;
+  DDuce.Logger, DDuce.Factories.zObjInspector;
 
 {$REGION 'construction and destruction'}
 procedure TfrmValueListDemo.AfterConstruction;
-var
-  SL : Shared<TStringList>;
-  s:string;
 begin
   inherited AfterConstruction;
-  SL := TStringList.Create;
-  FValueList := TfrmValueList.Create(Self);
-  FValueList.Parent := Self;
-  FValueList.Align := alClient;
-  FValueList.BorderStyle := bsNone;
-  FValueList.Visible := True;
-  //dr.from(Self);
-  //DynamicRecord.Create(Self).ToString(SL.Value.Text);
-
-  //FValueList.Data := DynamicRecord.Create(Self);
-  //FValueList.Data := DynamicRecord.Create;
-  dr['one'] := 1;
-  dr['two'] := 2;
-  dr['three'] := 'drie';
-
-  //s := SL.Value.Text;
-  //dr.FromStrings(SL.Value, False);
-  //FValueList.Data := dr;
-  FValueList.Data := dr;
-  //ShowMessage(FValueList.Data.tostring);
-//  Logger.SendText(FValueList.Data.ToString);
+  FValueList := TValueList.Create(Self);
+  FValueList.Parent      := pnlRight;
+  FValueList.Align       := alClient;
+  FValueList.Data        := DynamicRecord.Create(Screen);
+  FObjectInspector := TzObjectInspectorFactory.Create(
+    Self,
+    pnlLeft,
+    FValueList
+  );
+  FObjectInspector.ObjectVisibility := mvPublished;
 end;
 {$ENDREGION}
 

@@ -95,6 +95,7 @@ type
     procedure Test_FromDataSet_method;
     procedure Test_FromStrings_method;
     procedure Test_FromStrings_method_with_spaces;
+    procedure Test_FromString_method;
     procedure Test_From_method_for_object;
 
     procedure Test_ToDelimitedText_method;
@@ -346,6 +347,20 @@ begin
   finally
     SL.Free;
   end;
+end;
+
+procedure TestDynamicRecord.Test_FromString_method;
+const
+  MY_STRING = 'One = 1' + #13#10 +
+              'Two = 2' + #13#10 +
+              '3 = Three';
+var
+  R  : DynamicRecord;
+begin
+  R.FromString(MY_STRING, True);
+  CheckTrue(R.ToInteger('One') = 1, 'One');
+  CheckTrue(R.ToInteger('Two') = 2, 'Two');
+  CheckTrue(R.ToString('3') = 'Three', '3');
 end;
 {$ENDREGION}
 

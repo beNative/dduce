@@ -37,6 +37,7 @@ type
     FValue  : TValue;
 
   protected
+    {$REGION 'property access methods'}
     function GetCount: Integer;
     function GetName: string;
     function GetValue: TValue;
@@ -47,6 +48,7 @@ type
     function GetField: IDynamicField;
     procedure SetField(const Value: IDynamicField);
     function GetNodes: IList<TValueListNode>;
+    {$ENDREGION}
 
     procedure UpdateNodes;
 
@@ -93,9 +95,15 @@ end;
 
 procedure TValueListNode.SetField(const Value: IDynamicField);
 begin
-  FField := Value;
-  FValue := TValue.Empty;
-  UpdateNodes;
+  if Value <> FField then
+  begin
+    FField := Value;
+    if Assigned(FField) then
+    begin
+      FValue := TValue.Empty;
+    end;
+    UpdateNodes;
+  end;
 end;
 
 function TValueListNode.GetName: string;

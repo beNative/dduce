@@ -16,62 +16,59 @@
 
 unit DDuce.ValueList;
 
-{ A valuelist based on a virtual treeview. }
-
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages,
-  System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
-
-  Spring.Collections,
+  System.Classes, System.Types,
+  Vcl.Graphics,
 
   VirtualTrees,
 
-  DDuce.DynamicRecord, DDuce.ValueList.Node;
+  Spring, Spring.Collections,
+
+  DDuce.Factories.VirtualTrees, DDuce.DynamicRecord, DDuce.ValueList.Node;
 
 type
-  TfrmValueList = class(TForm)
+  TValueList = class(TCustomVirtualStringTree)
   private
-    FValueList : TVirtualStringTree;
-    FData      : DynamicRecord;
-    FNodes     : IList<TValueListNode>;
+    FData  : IDynamicRecord;
+    FNodes : IList<TValueListNode>;
+    function GetEditable: Boolean;
+    procedure SetEditable(const Value: Boolean);
 
-    procedure FValueListInitNode(
-      Sender            : TBaseVirtualTree;
-      ParentNode,
-      Node              : PVirtualNode;
-      var InitialStates : TVirtualNodeInitStates
-    );
-    procedure FValueListInitChildren(
-      Sender         : TBaseVirtualTree;
+  protected
+    {$REGION 'property access methods'}
+    function GetShowHeader: Boolean;
+    procedure SetShowHeader(const Value: Boolean);
+    function GetData: IDynamicRecord;
+    procedure SetData(const Value: IDynamicRecord);
+    {$ENDREGION}
+
+    procedure Initialize;
+
+    procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
+    procedure DoInitNode(
+      Parent         : PVirtualNode;
+      Node           : PVirtualNode;
+      var InitStates : TVirtualNodeInitStates
+    ); override;
+
+
+
+    function DoInitChildren(
       Node           : PVirtualNode;
       var ChildCount : Cardinal
-    );
-    procedure FValueListGetText(
-      Sender       : TBaseVirtualTree;
-      Node         : PVirtualNode;
-      Column       : TColumnIndex;
-      TextType     : TVSTTextType;
-      var CellText : string
-    );
-
-    procedure FValueListBeforeCellPaint(
-      Sender          : TBaseVirtualTree;
-      TargetCanvas    : TCanvas;
+    ) : Boolean; override;
+    procedure DoBeforeCellPaint(
+      Canvas          : TCanvas;
       Node            : PVirtualNode;
       Column          : TColumnIndex;
       CellPaintMode   : TVTCellPaintMode;
       CellRect        : TRect;
       var ContentRect : TRect
-    );
-
-  protected
-    function GetData: IDynamicRecord;
-    procedure SetData(const Value: IDynamicRecord);
-
-    procedure InitializeTreeViewer;
+    ); override;
+    procedure DoNewText(Node: PVirtualNode; Column: TColumnIndex;
+      const Text: string); override;
 
   public
     procedure AfterConstruction; override;
@@ -79,164 +76,229 @@ type
     property Data: IDynamicRecord
       read GetData write SetData;
 
+  published
+    property ShowHeader: Boolean
+      read GetShowHeader write SetShowHeader;
+
+    property Editable: Boolean
+      read GetEditable write SetEditable;
   end;
 
 implementation
 
-{$R *.dfm}
-
-uses
-  Spring,
-
-  DDuce.Factories.VirtualTrees,
-
-  DDuce.Logger, DDuce.Logger.Channels.WinIPC,
-  DDuce.ObjectInspector.zObjectInspector;
-
 {$REGION 'construction and destruction'}
-procedure TfrmValueList.AfterConstruction;
+procedure TValueList.AfterConstruction;
 begin
   inherited AfterConstruction;
   FNodes := TCollections.CreateObjectList<TValueListNode>;
-  InitializeTreeViewer;
+  Initialize;
 end;
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-function TfrmValueList.GetData: IDynamicRecord;
+function TValueList.GetData: IDynamicRecord;
 begin
   Result := FData;
 end;
 
-procedure TfrmValueList.SetData(const Value: IDynamicRecord);
+function TValueList.GetEditable: Boolean;
 begin
-  FData.Assign(Value);
-  FValueList.NodeDataSize := SizeOf(TValueListNode);
-  FValueList.RootNodeCount := FData.Count;
+  Result := toEditable in TreeOptions.MiscOptions;
+end;
+
+procedure TValueList.SetEditable(const Value: Boolean);
+begin
+  if Value <> Editable then
+  begin
+    if Value then
+      TreeOptions.MiscOptions := TreeOptions.MiscOptions + [toEditable]
+    else
+      TreeOptions.MiscOptions := TreeOptions.MiscOptions - [toEditable];
+  end;
+end;
+
+function TValueList.GetShowHeader: Boolean;
+begin
+  Result := hoVisible in Header.Options;
+end;
+
+procedure TValueList.SetShowHeader(const Value: Boolean);
+begin
+  if Value <> ShowHeader then
+  begin
+    if Value then
+      Header.Options := Header.Options + [hoVisible]
+    else
+      Header.Options := Header.Options - [hoVisible];
+  end;
+end;
+
+procedure TValueList.SetData(const Value: IDynamicRecord);
+begin
+  if Value <> Data then
+  begin
+    FData := Value;
+    if Assigned(FData) then
+    begin
+      NodeDataSize  := SizeOf(TValueListNode);
+      RootNodeCount := FData.Count;
+      Header.AutoFitColumns;
+    end;
+  end;
 end;
 {$ENDREGION}
 
-{$REGION 'event handlers'}
-procedure TfrmValueList.FValueListBeforeCellPaint(Sender: TBaseVirtualTree;
-  TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
-  CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+{$REGION 'event dispatch methods'}
+procedure TValueList.DoBeforeCellPaint(Canvas: TCanvas; Node: PVirtualNode;
+  Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect;
+  var ContentRect: TRect);
 var
   N : TValueListNode;
 begin
-  N := Sender.GetNodeData<TValueListNode>(Node);
+  N := GetNodeData<TValueListNode>(Node);
   ContentRect.Offset(2, 0);
   if Column = 0 then
   begin
-    TargetCanvas.Brush.Color := clCream;
+    Canvas.Brush.Color := clCream;
     if Assigned(N.Field) then
     begin
-      TargetCanvas.FillRect(Rect(0, 0, 16, CellRect.Height));
+      Canvas.FillRect(Rect(0, 0, 16, CellRect.Height));
     end
     else
     begin
-      TargetCanvas.FillRect(Rect(0, 0, 24, CellRect.Height));
+      Canvas.FillRect(Rect(0, 0, 24, CellRect.Height));
     end;
- end;
+  end;
+  inherited DoBeforeCellPaint(
+    Canvas, Node, Column, CellPaintMode, CellRect, ContentRect
+  );
 end;
 
-procedure TfrmValueList.FValueListGetText(Sender: TBaseVirtualTree;
-  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
-  var CellText: string);
+procedure TValueList.DoGetText(var pEventArgs: TVSTGetCellTextEventArgs);
 var
   N : TValueListNode;
 begin
-  N := Sender.GetNodeData<TValueListNode>(Node);
-  Guard.CheckNotNull(N, 'N');
-  if Column = 0 then
+  inherited DoGetText(pEventArgs);
+  N := GetNodeData<TValueListNode>(pEventArgs.Node);
+  if pEventArgs.Column = 0 then
   begin
-    CellText := N.Name
+    pEventArgs.CellText := N.Name
   end
-  else if Column = 1 then
-    CellText := N.Value.ToString;
+  else if pEventArgs.Column = 1 then
+  begin
+    pEventArgs.CellText := N.Value.ToString;
+  end;
 end;
 
-procedure TfrmValueList.FValueListInitChildren(Sender: TBaseVirtualTree;
-  Node: PVirtualNode; var ChildCount: Cardinal);
+function TValueList.DoInitChildren(Node: PVirtualNode;
+  var ChildCount: Cardinal): Boolean;
 var
   N : TValueListNode;
   SN : TValueListNode;
 begin
-  N := Sender.GetNodeData<TValueListNode>(Node);
+  N := GetNodeData<TValueListNode>(Node);
   ChildCount := N.Count;
   if N.Count > 0 then
   begin
     for SN in N.Nodes do
     begin
-      SN.VTNode := Sender.AddChild(Node, SN);
+      SN.VTNode := AddChild(Node, SN);
     end;
   end;
+  inherited DoInitChildren(Node, ChildCount);
 end;
 
-procedure TfrmValueList.FValueListInitNode(Sender: TBaseVirtualTree; ParentNode,
-  Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+procedure TValueList.DoInitNode(Parent, Node: PVirtualNode;
+  var InitStates: TVirtualNodeInitStates);
 var
   N  : TValueListNode;
-  SN : TValueListNode;
-  I  : Integer;
 begin
-  if ParentNode = nil then
-    InitialStates := InitialStates + [ivsHasChildren, ivsExpanded];
   N := TValueListNode.Create;
   FNodes.Add(N);
   N.VTNode := Node;
   N.Field := FData.Items[Node.Index];
-
+  if (Parent = nil) and (N.Count > 0) then
+    InitStates := InitStates + [ivsHasChildren];
   Node.SetData(N);
+  inherited DoInitNode(Parent, Node, InitStates);
 end;
+
+procedure TValueList.DoNewText(Node: PVirtualNode; Column: TColumnIndex;
+  const Text: string);
+var
+  N : TValueListNode;
+  SN : TValueListNode;
+begin
+  N := GetNodeData<TValueListNode>(Node);
+  N.Value := Text;
+  inherited;
+
+end;
+
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-procedure TfrmValueList.InitializeTreeViewer;
+procedure TValueList.Initialize;
 begin
-  FValueList := TVirtualStringTreeFactory.CreateTreeList(Self, Self);
-  FValueList.OnInitNode        := FValueListInitNode;
-  FValueList.OnInitChildren    := FValueListInitChildren;
-  FValueList.OnGetText         := FValueListGetText;
-  FValueList.OnBeforeCellPaint := FValueListBeforeCellPaint;
+  Header.Options := [
+    hoAutoResize, hoColumnResize, hoDblClickResize, hoRestrictDrag,
+    hoShowHint, hoShowImages, hoShowSortGlyphs, hoAutoSpring,
+    hoDisableAnimatedResize, hoVisible
+  ];
+  TreeOptions.PaintOptions := [
+    toHideFocusRect, toHideSelection, toHotTrack, toPopupMode,
+    toShowBackground, toShowButtons, toShowDropmark, toStaticBackground,
+    toShowRoot, toShowVertGridLines, toThemeAware, toUseBlendedImages,
+    toUseBlendedSelection, toStaticBackground, toUseExplorerTheme
+  ];
+  TreeOptions.AnimationOptions := [];
+  TreeOptions.AutoOptions := [
+    toAutoDropExpand, toAutoScroll, toAutoScrollOnExpand, toAutoSort,
+    toAutoTristateTracking, toAutoDeleteMovedNodes, toAutoChangeScale,
+    toDisableAutoscrollOnEdit, toAutoBidiColumnOrdering
+  ];
+  TreeOptions.SelectionOptions := [toExtendedFocus, toFullRowSelect];
+  TreeOptions.MiscOptions := [
+    toCheckSupport, toInitOnSave, toWheelPanning, toVariableNodeHeight,
+    toGridExtensions, toEditable, toEditOnDblClick
+  ];
+  TreeOptions.EditOptions := toVerticalEdit;
 
-  FValueList.Header.AutoSizeIndex := 0;
-  FValueList.LineMode := lmBands;
+  LineStyle                    := lsSolid;
+  LineMode                     := lmNormal;
+  DrawSelectionMode            := smBlendedRectangle;
+  HintMode                     := hmTooltip;
+  Colors.SelectionRectangleBlendColor := clGray;
+  Colors.SelectionTextColor           := clBlack;
+  Colors.GridLineColor                := clSilver;
 
-  with FValueList do
+  with Header.Columns.Add do
   begin
-    with Header.Columns.Add do
-    begin
-      Color    := clWhite;
-      MaxWidth := 200;
-      MinWidth := 100;
-      Options  := [coAllowClick, coDraggable, coEnabled, coParentBidiMode,
-        coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus,
-        coEditable];
-      Position := 1;
-      Indent   := 4;
-      Width    := 200;
-      Text := 'Name';
-    end;
-    with Header.Columns.Add do
-    begin
-      MaxWidth := 800;
-      MinWidth := 100;
-      Options  := [coAllowClick, coDraggable, coEnabled, coParentBidiMode,
-        coParentColor, coResizable, coShowDropMark, coVisible, coAutoSpring,
-        coSmartResize, coAllowFocus, coEditable];
-      Position := 2;
-      Width    := 100;
-      Text := 'Value';
-    end;
-    Header.MainColumn := 0;
+    Color    := clWhite;
+    MaxWidth := 400;
+    MinWidth := 50;
+    Options  := [coFixed, coAllowClick, coEnabled, coParentBidiMode, coResizable,
+      coVisible, coSmartResize];
+    Position := 0;
+    Width    := 200;
+    Text := 'Name';
   end;
-  FValueList.Indent := 8;
-  FValueList.Header.Options := FValueList.Header.Options - [hoVisible];
-//  InspectComponent(FValueList);
+  with Header.Columns.Add do
+  begin
+    MaxWidth := 800;
+    MinWidth := 50;
+    Options  := [coAllowClick, coEnabled, coParentBidiMode, coResizable,
+      coVisible, coAutoSpring, coSmartResize, coAllowFocus, coEditable];
+    Position := 1;
+    Width    := 100;
+    Text := 'Value';
+    EditOptions := toHorizontalEdit;
+  end;
+  Indent               := 8;
+  Header.AutoSizeIndex := 1;
+  Header.MainColumn    := 0;
+  LineMode             := lmBands;
 end;
 {$ENDREGION}
-
-initialization
-  Logger.Channels.Add(TWinIPCChannel.Create);
 
 end.
