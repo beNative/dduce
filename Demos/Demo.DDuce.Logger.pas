@@ -108,6 +108,7 @@ type
     tmrSendCounter           : TTimer;
     tmrSendValue             : TTimer;
     trbMain                  : TTrackBar;
+    lblLogViewer: TLabel;
     {$ENDREGION}
 
     {$REGION 'event handlers'}

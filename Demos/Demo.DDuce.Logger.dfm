@@ -234,6 +234,20 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Logger channels'
     TabOrder = 4
+    object lblLogViewer: TLabel
+      Left = 220
+      Top = 26
+      Width = 232
+      Height = 13
+      Margins.Bottom = 3
+      Caption = 'Run this together with the LogViewer application'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsUnderline]
+      ParentFont = False
+    end
     object chkLogFileChannelActive: TCheckBox
       Left = 17
       Top = 24
@@ -244,7 +258,7 @@ object frmLogger: TfrmLogger
       TabOrder = 0
     end
     object chkWinIPCChannelActive: TCheckBox
-      Left = 93
+      Left = 78
       Top = 24
       Width = 144
       Height = 17
@@ -255,7 +269,7 @@ object frmLogger: TfrmLogger
       TabOrder = 1
     end
     object chkZeroMQChannelActive: TCheckBox
-      Left = 167
+      Left = 145
       Top = 24
       Width = 70
       Height = 17
@@ -599,7 +613,7 @@ object frmLogger: TfrmLogger
     Left = 448
     Top = 536
     Bitmap = {
-      494C0101160019002C0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010116001900380010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000006000000001002000000000000060
       0000000000000000000000000000000000000000000000000000000000000000
       000001370099045701D1045701D1012500660000000001250066045701D10457

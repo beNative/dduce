@@ -14,26 +14,6 @@ object frmReflect: TfrmReflect
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
-  object mmoMain: TMemo
-    AlignWithMargins = True
-    Left = 3
-    Top = 26
-    Width = 489
-    Height = 733
-    Align = alClient
-    BevelInner = bvNone
-    BevelOuter = bvNone
-    BorderStyle = bsNone
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Consolas'
-    Font.Style = []
-    ParentFont = False
-    ReadOnly = True
-    ScrollBars = ssVertical
-    TabOrder = 0
-  end
   object pnlReflected: TPanel
     AlignWithMargins = True
     Left = 3
@@ -53,6 +33,6 @@ object frmReflect: TfrmReflect
     Font.Style = [fsBold]
     ParentBackground = False
     ParentFont = False
-    TabOrder = 1
+    TabOrder = 0
   end
 end

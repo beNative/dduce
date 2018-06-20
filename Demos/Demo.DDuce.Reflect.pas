@@ -16,20 +16,23 @@
 
 unit Demo.DDuce.Reflect;
 
-{$I ..\Source\DDuce.inc}
-
 { Form demonstrating the Reflect type. }
 
 interface
 
 uses
   System.Classes,
-  Vcl.Controls, Vcl.StdCtrls, Vcl.Forms, Vcl.ExtCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls,
+
+  DDuce.Components.ValueList, DDuce.DynamicRecord;
 
 type
   TfrmReflect = class(TForm)
-    mmoMain      : TMemo;
     pnlReflected : TPanel;
+
+  private
+    FValueList : TValueList;
+    FData      : DynamicRecord;
 
   public
     procedure AfterConstruction; override;
@@ -48,8 +51,11 @@ uses
 procedure TfrmReflect.AfterConstruction;
 begin
   inherited AfterConstruction;
-  mmoMain.Text := Reflect.Properties(Self).ToString;
-  //Reflect.Properties(Self).Fields['Caption'].Value := 'Test';
+  FValueList        := TValueList.Create(Self);
+  FValueList.Parent := Self;
+  FValueList.Align  := alClient;
+  FData.FromString(Reflect.Properties(Self).ToString);
+  FValueList.Data   := FData;
 end;
 {$ENDREGION}
 

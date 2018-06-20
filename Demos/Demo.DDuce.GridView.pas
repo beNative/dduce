@@ -14,8 +14,6 @@
   limitations under the License.
 }
 
-{$I ..\Source\DDuce.inc}
-
 unit Demo.DDuce.GridView;
 
 interface
@@ -82,9 +80,7 @@ implementation
 uses
   System.StrUtils,
 
-  Spring.Helpers,
-
-  DDuce.RandomData, DDuce.DynamicRecord, DDuce.Components.Factories,
+  DDuce.DynamicRecord,
   DDuce.Factories.GridView, DDuce.Factories.zObjInspector,
 
   Demo.Factories;

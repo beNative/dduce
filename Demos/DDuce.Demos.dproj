@@ -360,13 +360,12 @@
             <Form>frmVirtualTrees</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Source\Modules\ValueList\DDuce.ValueList.Node.pas"/>
+        <DCCReference Include="..\Source\Components\DDuce.Components.ValueList.Node.pas"/>
         <DCCReference Include="Demo.DDuce.ValueList.pas">
             <Form>frmValueListDemo</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Source\Factories\DDuce.Factories.ValueList.pas"/>
-        <DCCReference Include="..\Source\Modules\ValueList\DDuce.ValueList.pas"/>
+        <DCCReference Include="..\Source\Components\DDuce.Components.ValueList.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

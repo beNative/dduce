@@ -25,7 +25,7 @@ uses
 
   zObjInspector,
 
-  DDuce.DynamicRecord, DDuce.ValueList;
+  DDuce.DynamicRecord, DDuce.Components.ValueList;
 
 type
   TfrmValueListDemo = class(TForm)

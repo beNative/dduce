@@ -14,7 +14,7 @@
   limitations under the License.
 }
 
-unit DDuce.ValueList.Node;
+unit DDuce.Components.ValueList.Node;
 
 interface
 

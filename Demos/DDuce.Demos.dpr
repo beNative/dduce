@@ -134,10 +134,9 @@ uses
   DDuce.Settings.Form in '..\Source\Settings\DDuce.Settings.Form.pas',
   DDuce.Settings.TextFormat in '..\Source\Settings\DDuce.Settings.TextFormat.pas',
   Demo.DDuce.VirtualTrees in 'Demo.DDuce.VirtualTrees.pas' {frmVirtualTrees},
-  DDuce.ValueList.Node in '..\Source\Modules\ValueList\DDuce.ValueList.Node.pas',
+  DDuce.Components.ValueList.Node in '..\Source\Components\DDuce.Components.ValueList.Node.pas',
   Demo.DDuce.ValueList in 'Demo.DDuce.ValueList.pas' {frmValueListDemo},
-  DDuce.Factories.ValueList in '..\Source\Factories\DDuce.Factories.ValueList.pas',
-  DDuce.ValueList in '..\Source\Modules\ValueList\DDuce.ValueList.pas';
+  DDuce.Components.ValueList in '..\Source\Components\DDuce.Components.ValueList.pas';
 
 {$R *.res}
 
@@ -145,7 +144,7 @@ begin
   {$WARNINGS OFF}
   ReportMemoryLeaksOnShutdown := DebugHook > 0;
   {$WARNINGS ON}
-  //TStyleManager.TrySetStyle('Windows10');
+  TStyleManager.TrySetStyle('Windows10');
   Application.Initialize;
 
   Application.MainFormOnTaskbar := True;

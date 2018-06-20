@@ -258,12 +258,15 @@ type
     tsTRecord                                 : TTabSheet;
     {$ENDREGION}
 
+    {$REGION 'event handlers'}
     procedure dscTestDataChange(Sender: TObject; Field: TField);
     procedure chkQuoteValuesClick(Sender: TObject);
     procedure edtQuoteCharChange(Sender: TObject);
     procedure edtDelimiterChange(Sender: TObject);
     procedure chkAlignValuesClick(Sender: TObject);
+    {$ENDREGION}
 
+    {$REGION 'action handlers'}
     procedure actTestAssignExecute(Sender: TObject);
     procedure actToStringsExecute(Sender: TObject);
     procedure actTestDataExecute(Sender: TObject);
@@ -288,6 +291,7 @@ type
     procedure actAssignFDynamicRecord2ToFDynamicRecord1Execute(Sender: TObject);
     procedure actAssignFDynamicRecord2ToFRecord1Execute(Sender: TObject);
     procedure actAssignFRecord2ToFRecord1Execute(Sender: TObject);
+    {$ENDREGION}
 
   private
     FContact          : TContact;

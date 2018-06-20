@@ -14,7 +14,7 @@
   limitations under the License.
 }
 
-unit DDuce.ValueList;
+unit DDuce.Components.ValueList;
 
 interface
 
@@ -26,18 +26,23 @@ uses
 
   Spring, Spring.Collections,
 
-  DDuce.Factories.VirtualTrees, DDuce.DynamicRecord, DDuce.ValueList.Node;
+  DDuce.Factories.VirtualTrees, DDuce.DynamicRecord,
+  DDuce.Components.ValueList.Node;
 
 type
   TValueList = class(TCustomVirtualStringTree)
   private
     FData  : IDynamicRecord;
     FNodes : IList<TValueListNode>;
-    function GetEditable: Boolean;
-    procedure SetEditable(const Value: Boolean);
+    procedure SetNameColumn(const Value: TVirtualTreeColumn);
+    procedure SetValueColumn(const Value: TVirtualTreeColumn);
 
   protected
     {$REGION 'property access methods'}
+    function GetEditable: Boolean;
+    procedure SetEditable(const Value: Boolean);
+    function GetNameColumn: TVirtualTreeColumn;
+    function GetValueColumn: TVirtualTreeColumn;
     function GetShowHeader: Boolean;
     procedure SetShowHeader(const Value: Boolean);
     function GetData: IDynamicRecord;
@@ -52,9 +57,6 @@ type
       Node           : PVirtualNode;
       var InitStates : TVirtualNodeInitStates
     ); override;
-
-
-
     function DoInitChildren(
       Node           : PVirtualNode;
       var ChildCount : Cardinal
@@ -67,8 +69,11 @@ type
       CellRect        : TRect;
       var ContentRect : TRect
     ); override;
-    procedure DoNewText(Node: PVirtualNode; Column: TColumnIndex;
-      const Text: string); override;
+    procedure DoNewText(
+      Node       : PVirtualNode;
+      Column     : TColumnIndex;
+      const Text : string
+    ); override;
 
   public
     procedure AfterConstruction; override;
@@ -77,11 +82,19 @@ type
       read GetData write SetData;
 
   published
+    property Font;
+
     property ShowHeader: Boolean
       read GetShowHeader write SetShowHeader;
 
     property Editable: Boolean
       read GetEditable write SetEditable;
+
+    property NameColumn: TVirtualTreeColumn
+      read GetNameColumn write SetNameColumn;
+
+    property ValueColumn: TVirtualTreeColumn
+      read GetValueColumn write SetValueColumn;
   end;
 
 implementation
@@ -101,6 +114,20 @@ begin
   Result := FData;
 end;
 
+procedure TValueList.SetData(const Value: IDynamicRecord);
+begin
+  if Value <> Data then
+  begin
+    FData := Value;
+    if Assigned(FData) then
+    begin
+      NodeDataSize  := SizeOf(TValueListNode);
+      RootNodeCount := FData.Count;
+      Header.AutoFitColumns;
+    end;
+  end;
+end;
+
 function TValueList.GetEditable: Boolean;
 begin
   Result := toEditable in TreeOptions.MiscOptions;
@@ -117,6 +144,26 @@ begin
   end;
 end;
 
+function TValueList.GetNameColumn: TVirtualTreeColumn;
+begin
+  Result := Header.Columns.Items[0];
+end;
+
+procedure TValueList.SetNameColumn(const Value: TVirtualTreeColumn);
+begin
+  Header.Columns.Items[0].Assign(Value);
+end;
+
+function TValueList.GetValueColumn: TVirtualTreeColumn;
+begin
+  Result := Header.Columns.Items[1];
+end;
+
+procedure TValueList.SetValueColumn(const Value: TVirtualTreeColumn);
+begin
+  Header.Columns.Items[1].Assign(Value);
+end;
+
 function TValueList.GetShowHeader: Boolean;
 begin
   Result := hoVisible in Header.Options;
@@ -130,20 +177,6 @@ begin
       Header.Options := Header.Options + [hoVisible]
     else
       Header.Options := Header.Options - [hoVisible];
-  end;
-end;
-
-procedure TValueList.SetData(const Value: IDynamicRecord);
-begin
-  if Value <> Data then
-  begin
-    FData := Value;
-    if Assigned(FData) then
-    begin
-      NodeDataSize  := SizeOf(TValueListNode);
-      RootNodeCount := FData.Count;
-      Header.AutoFitColumns;
-    end;
   end;
 end;
 {$ENDREGION}
@@ -223,6 +256,8 @@ begin
   inherited DoInitNode(Parent, Node, InitStates);
 end;
 
+{ Gets called after text has been edited. }
+
 procedure TValueList.DoNewText(Node: PVirtualNode; Column: TColumnIndex;
   const Text: string);
 var
@@ -231,10 +266,8 @@ var
 begin
   N := GetNodeData<TValueListNode>(Node);
   N.Value := Text;
-  inherited;
-
+  inherited DoNewText(Node, Column, Text);
 end;
-
 {$ENDREGION}
 
 {$REGION 'protected methods'}
@@ -276,23 +309,23 @@ begin
   begin
     Color    := clWhite;
     MaxWidth := 400;
-    MinWidth := 50;
+    MinWidth := 80;
     Options  := [coFixed, coAllowClick, coEnabled, coParentBidiMode, coResizable,
       coVisible, coSmartResize];
     Position := 0;
     Width    := 200;
-    Text := 'Name';
+    Text     := 'Name';
   end;
   with Header.Columns.Add do
   begin
-    MaxWidth := 800;
-    MinWidth := 50;
-    Options  := [coAllowClick, coEnabled, coParentBidiMode, coResizable,
+    MaxWidth    := 800;
+    MinWidth    := 50;
+    Options     := [coAllowClick, coEnabled, coParentBidiMode, coResizable,
       coVisible, coAutoSpring, coSmartResize, coAllowFocus, coEditable];
-    Position := 1;
-    Width    := 100;
-    Text := 'Value';
-    EditOptions := toHorizontalEdit;
+    Position    := 1;
+    Width       := 100;
+    Text        := 'Value';
+    EditOptions := toVerticalEdit;
   end;
   Indent               := 8;
   Header.AutoSizeIndex := 1;

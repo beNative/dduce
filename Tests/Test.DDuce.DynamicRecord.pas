@@ -96,6 +96,7 @@ type
     procedure Test_FromStrings_method;
     procedure Test_FromStrings_method_with_spaces;
     procedure Test_FromString_method;
+    procedure Test_FromArray_method;
     procedure Test_From_method_for_object;
 
     procedure Test_ToDelimitedText_method;
@@ -291,6 +292,30 @@ end;
 {$ENDREGION}
 
 {$REGION 'Test methods that load all content from another format'}
+procedure TestDynamicRecord.Test_FromArray_method;
+var
+  R  : DynamicRecord;
+  SA : TArray<string>;
+  IA : TArray<Integer>;
+  DA : TArray<Double>;
+  S  : string;
+begin
+  SA := ['zero', 'one', 'two', 'three'];
+  S := '0 = zero'#13#10'1 = one'#13#10'2 = two'#13#10'3 = three';
+  R.FromArray<string>(SA);
+  CheckEqualsString(S, R.ToString(False));
+
+  IA := [0, 1, 2, 3];
+  S := '0 = 0'#13#10'1 = 1'#13#10'2 = 2'#13#10'3 = 3';
+  R.FromArray<Integer>(IA);
+  CheckEqualsString(S, R.ToString(False));
+
+  DA := [0, 1, 2, 3];
+  S := '0 = 0'#13#10'1 = 1'#13#10'2 = 2'#13#10'3 = 3';
+  R.FromArray<Double>(DA);
+  CheckEqualsString(S, R.ToString(False));
+end;
+
 procedure TestDynamicRecord.Test_FromDataSet_method;
 var
   DS : TDataSet;

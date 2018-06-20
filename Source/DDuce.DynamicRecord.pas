@@ -165,6 +165,7 @@ type
     FDynamicRecord : IDynamicRecord;
     FRecRefCount   : Integer;
 
+    {$REGION 'property access methods'}
     function GetItemValue(const AName: string): TValue;
     procedure SetItemValue(const AName: string; const AValue: TValue);
     function GetItem(Index: Integer): IDynamicField;
@@ -172,6 +173,7 @@ type
     function GetDynamicRecord: IDynamicRecord;
     function GetCount: Integer;
     function GetField(const AName: string): IDynamicField;
+    {$ENDREGION}
 
     function MutableClone: IDynamicRecord;
     function GetInternalRefCount: Integer;
@@ -266,6 +268,7 @@ type
       const AAssignNulls      : Boolean;
       const ANames            : array of string
     ); overload;
+    procedure FromArray<T>(const AArray: TArray<T>);
     procedure FromDataSet(
       ADataSet           : TDataSet;
       const AAssignNulls : Boolean = False
@@ -2456,6 +2459,18 @@ begin
     AAssignNulls,
     ANames
   );
+end;
+
+procedure DynamicRecord.FromArray<T>(const AArray: TArray<T>);
+var
+  N : T;
+  I : Integer;
+begin
+  DynamicRecord.Clear;
+  for I := Low(AArray) to High(AArray) do
+  begin
+    DynamicRecord.Values[I.ToString] := TValue.From<T>(AArray[I]);
+  end;
 end;
 
 { Makes a copy of the current record of a given dataset by assigning each field
