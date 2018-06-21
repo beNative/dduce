@@ -150,6 +150,15 @@ begin
   Result := FFont.Color;
 end;
 
+procedure TTextFormatSettings.SetFontColor(const Value: TColor);
+begin
+  if Value <> FontColor then
+  begin
+    FFont.Color := Value;
+    DoChanged;
+  end;
+end;
+
 function TTextFormatSettings.GetFontName: TFontName;
 begin
   Result := FFont.Name;
@@ -164,14 +173,6 @@ begin
   end;
 end;
 
-procedure TTextFormatSettings.SetFontColor(const Value: TColor);
-begin
-  if Value <> FontColor then
-  begin
-    FFont.Color := Value;
-    DoChanged;
-  end;
-end;
 
 function TTextFormatSettings.GetFontSize: Integer;
 begin
@@ -192,9 +193,27 @@ begin
   Result := FFont.Style;
 end;
 
+procedure TTextFormatSettings.SetFontStyle(const Value: TFontStyles);
+begin
+  if Value <> FontStyle then
+  begin
+    FFont.Style := Value;
+    DoChanged;
+  end;
+end;
+
 function TTextFormatSettings.GetHorizontalAlignment: TAlignment;
 begin
   Result := FHorizontalAlignment;
+end;
+
+procedure TTextFormatSettings.SetHorizontalAlignment(const Value: TAlignment);
+begin
+  if Value <> HorizontalAlignment then
+  begin
+    FHorizontalAlignment := Value;
+    DoChanged;
+  end;
 end;
 
 function TTextFormatSettings.GetName: string;
@@ -207,24 +226,6 @@ begin
   if Value <> Name then
   begin
     FName := Value;
-    DoChanged;
-  end;
-end;
-
-procedure TTextFormatSettings.SetFontStyle(const Value: TFontStyles);
-begin
-  if Value <> FontStyle then
-  begin
-    FFont.Style := Value;
-    DoChanged;
-  end;
-end;
-
-procedure TTextFormatSettings.SetHorizontalAlignment(const Value: TAlignment);
-begin
-  if Value <> HorizontalAlignment then
-  begin
-    FHorizontalAlignment := Value;
     DoChanged;
   end;
 end;

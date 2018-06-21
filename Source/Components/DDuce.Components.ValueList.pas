@@ -238,7 +238,7 @@ begin
       SN.VTNode := AddChild(Node, SN);
     end;
   end;
-  inherited DoInitChildren(Node, ChildCount);
+  Result := inherited DoInitChildren(Node, ChildCount);
 end;
 
 procedure TValueList.DoInitNode(Parent, Node: PVirtualNode;
@@ -262,7 +262,6 @@ procedure TValueList.DoNewText(Node: PVirtualNode; Column: TColumnIndex;
   const Text: string);
 var
   N : TValueListNode;
-  SN : TValueListNode;
 begin
   N := GetNodeData<TValueListNode>(Node);
   N.Value := Text;

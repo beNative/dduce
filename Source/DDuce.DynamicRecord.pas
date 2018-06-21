@@ -561,6 +561,7 @@ type
       const ANames    : array of string
     ); overload;
 
+// not declarable:
 //    procedure From<T>(
 //      const AInstance         : T;
 //      const AAssignProperties : Boolean;
