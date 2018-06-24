@@ -203,15 +203,15 @@ type
     function ToCommaText(const AFieldNames : string) : string; overload;
     function ToCommaText : string; overload;
     function ToDelimitedText(
-      const AFieldNames  : string;
-      const ADelimiter   : string;
-            AQuoteValues : Boolean = False;
-            AQuoteChar   : Char = '"'
+      const AFieldNames : string;
+      const ADelimiter  : string;
+      AQuoteValues      : Boolean = False;
+      AQuoteChar        : Char = '"'
     ): string; overload;
     function ToDelimitedText(
-      const ADelimiter   : string;
-            AQuoteValues : Boolean = False;
-            AQuoteChar   : Char = '"'
+      const ADelimiter : string;
+      AQuoteValues     : Boolean = False;
+      AQuoteChar       : Char = '"'
     ): string; overload;
 
     procedure Assign(ADynamicRecord: IDynamicRecord); overload;
@@ -268,7 +268,10 @@ type
       const AAssignNulls      : Boolean;
       const ANames            : array of string
     ); overload;
-    procedure FromArray<T>(const AArray: TArray<T>);
+    procedure FromArray<T>(
+      const AArray               : TArray<T>;
+      const ABracketedIndexNames : Boolean = False
+    );
     procedure FromDataSet(
       ADataSet           : TDataSet;
       const AAssignNulls : Boolean = False
@@ -1891,7 +1894,7 @@ end;
 
 procedure TDynamicRecord.FromStrings(AStrings: TStrings; ATrimSpaces: Boolean);
 var
-  I: Integer;
+  I : Integer;
 begin
   if ATrimSpaces then
   begin
@@ -1915,8 +1918,8 @@ end;
 
 procedure TDynamicRecord.ToStrings(AStrings: TStrings);
 var
-  I: Integer;
-  S: string;
+  I : Integer;
+  S : string;
 begin
   AStrings.Clear;
   for I := 0 to Count - 1 do
@@ -2462,15 +2465,38 @@ begin
   );
 end;
 
-procedure DynamicRecord.FromArray<T>(const AArray: TArray<T>);
+{ Assignes a typed array as a list of IDynamicField instances with the Name
+  property used as the index converted to string. If the optional parameter
+   the index value is stored between square []
+  brackets in the Name property.
+  Example: An array with values [4, 3, 2, 5] will be represented by default as
+              ('0', 4), ('1', 3), ('2', 2), ('3', 5)
+  or if ABracketedIndexNames = True as
+              ('[0]', 4), ('[1]', 3), ('[2]', 2), ('[3]', 5)
+  }
+
+procedure DynamicRecord.FromArray<T>(const AArray: TArray<T>;
+  const ABracketedIndexNames : Boolean = False);
 var
   N : T;
   I : Integer;
+  S : string;
 begin
   DynamicRecord.Clear;
-  for I := Low(AArray) to High(AArray) do
+  if ABracketedIndexNames then
   begin
-    DynamicRecord.Values[I.ToString] := TValue.From<T>(AArray[I]);
+    for I := Low(AArray) to High(AArray) do
+    begin
+      S := Format('[%d]', [I]);
+      DynamicRecord.Values[S] := TValue.From<T>(AArray[I]);
+    end;
+  end
+  else
+  begin
+    for I := Low(AArray) to High(AArray) do
+    begin
+      DynamicRecord.Values[I.ToString] := TValue.From<T>(AArray[I]);
+    end;
   end;
 end;
 
