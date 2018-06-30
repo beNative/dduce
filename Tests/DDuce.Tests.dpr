@@ -46,7 +46,9 @@ uses
   ZeroMQ.API in '..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas',
   ZeroMQ in '..\Source\Dependencies\ZeroMQ\ZeroMQ.pas',
   DDuce.Logger.Channels.ZeroMQ in '..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas',
-  Test.Resources in 'Test.Resources.pas';
+  Test.Resources in 'Test.Resources.pas',
+  DDuce.Utils in '..\Source\DDuce.Utils.pas',
+  DDuce.Utils.WinApi in '..\Source\DDuce.Utils.WinApi.pas';
 
 {$R *.RES}
 

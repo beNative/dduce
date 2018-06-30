@@ -41,13 +41,15 @@ uses
 {$REGION 'interfaced routines'}
 procedure RegisterDemos;
 begin
+  DemoManager.Register(TfrmLogger, 'Logger');
+  Exit;
   DemoManager.Register(TfrmScopedReferences, 'Scoped references');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
   DemoManager.Register(TfrmReflect, 'Reflect');
   DemoManager.Register(TfrmEditor, 'Editor');
 
-  DemoManager.Register(TfrmLogger, 'Logger');
+
   DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
   DemoManager.Register(TfrmInspector, 'Inspector');
   DemoManager.Register(TfrmGridView, 'GridView');

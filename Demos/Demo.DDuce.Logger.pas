@@ -26,10 +26,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, System.Actions,
+  System.ImageList,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ImgList,
 
-  DDuce.Logger.Interfaces, System.ImageList;
+  DDuce.Logger.Interfaces;
 
 type
   TfrmLogger = class(TForm)
@@ -108,7 +109,9 @@ type
     tmrSendCounter           : TTimer;
     tmrSendValue             : TTimer;
     trbMain                  : TTrackBar;
-    lblLogViewer: TLabel;
+    lblLogViewer             : TLabel;
+    actSendPersistent: TAction;
+    btnSendPersistent: TButton;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -145,6 +148,7 @@ type
     procedure actSendPointExecute(Sender: TObject);
     procedure actSendInterfaceExecute(Sender: TObject);
     procedure actSendTextExecute(Sender: TObject);
+    procedure actSendPersistentExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -291,7 +295,6 @@ var
 begin
   F := TFont.Create;
   try
-    ShowMessage(FormatValue(TValue.From(Self)));
     Logger.SendObject('Object', F);
   finally
     F.Free;
@@ -301,6 +304,11 @@ end;
 procedure TfrmLogger.actSendODSExecute(Sender: TObject);
 begin
   OutputDebugString(LOREM_IPSUM);
+end;
+
+procedure TfrmLogger.actSendPersistentExecute(Sender: TObject);
+begin
+  Logger.SendPersistent('Persistent', Self);
 end;
 
 procedure TfrmLogger.actSendPointExecute(Sender: TObject);
@@ -338,8 +346,13 @@ begin
 end;
 
 procedure TfrmLogger.actSendTestSequenceExecute(Sender: TObject);
+var
+  I: Integer;
 begin
-  ExecuteTestSequence;
+  for I := 0 to 10 do
+  begin
+    Logger.Send('I', I);
+  end;
 end;
 
 procedure TfrmLogger.actSendTextExecute(Sender: TObject);
@@ -427,7 +440,7 @@ begin
   Logger.SendDateTime('Now', Now);
   Logger.SendShortCut('ShortCut', actSendTestSequence.ShortCut);
   Logger.SendColor('Color', clBlack);
-  Logger.SendTime('Current time over here', Now);
+  Logger.SendTime('CurrentTime', Now);
 end;
 {$ENDREGION}
 

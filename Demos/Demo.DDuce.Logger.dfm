@@ -3,8 +3,8 @@ object frmLogger: TfrmLogger
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Logger'
-  ClientHeight = 734
-  ClientWidth = 649
+  ClientHeight = 634
+  ClientWidth = 644
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,14 +19,14 @@ object frmLogger: TfrmLogger
   object grpWatches: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 470
-    Width = 643
+    Top = 439
+    Width = 638
     Height = 67
     Align = alTop
     Caption = 'Watches'
     TabOrder = 0
     DesignSize = (
-      643
+      638
       67)
     object lblPosition: TLabel
       Left = 65
@@ -38,7 +38,7 @@ object frmLogger: TfrmLogger
     object trbMain: TTrackBar
       Left = 112
       Top = 25
-      Width = 519
+      Width = 514
       Height = 29
       Anchors = [akLeft, akTop, akRight]
       Max = 100
@@ -52,14 +52,14 @@ object frmLogger: TfrmLogger
     AlignWithMargins = True
     Left = 3
     Top = 160
-    Width = 643
+    Width = 638
     Height = 85
     Align = alTop
     Caption = 'Method tracing'
     TabOrder = 1
     object btnEnterMethod1: TButton
-      Left = 324
-      Top = 20
+      Left = 12
+      Top = 22
       Width = 150
       Height = 25
       Action = actEnterMethod1
@@ -68,7 +68,7 @@ object frmLogger: TfrmLogger
       TabOrder = 0
     end
     object btnEnterMethod2: TButton
-      Left = 324
+      Left = 12
       Top = 51
       Width = 150
       Height = 25
@@ -98,26 +98,38 @@ object frmLogger: TfrmLogger
       TabOrder = 3
     end
     object edtMethod1: TLabeledEdit
-      Left = 112
-      Top = 22
-      Width = 206
+      Left = 246
+      Top = 24
+      Width = 228
       Height = 21
       EditLabel.Width = 75
       EditLabel.Height = 13
       EditLabel.Caption = 'Method1 name:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
       LabelPosition = lpLeft
+      ParentFont = False
       TabOrder = 4
       Text = 'MyObject.Execute'
     end
     object edtMethod2: TLabeledEdit
-      Left = 112
+      Left = 246
       Top = 53
-      Width = 206
+      Width = 228
       Height = 21
       EditLabel.Width = 75
       EditLabel.Height = 13
       EditLabel.Caption = 'Method2 name:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
       LabelPosition = lpLeft
+      ParentFont = False
       TabOrder = 5
       Text = 'MyObject.Update'
     end
@@ -126,26 +138,33 @@ object frmLogger: TfrmLogger
     AlignWithMargins = True
     Left = 3
     Top = 65
-    Width = 643
+    Width = 638
     Height = 89
     Align = alTop
     Caption = 'Notification messages'
     TabOrder = 2
     DesignSize = (
-      643
+      638
       89)
     object edtLogMessage: TLabeledEdit
       Left = 64
       Top = 26
-      Width = 567
+      Width = 566
       Height = 21
+      Alignment = taCenter
       Anchors = [akLeft, akTop, akRight]
       EditLabel.Width = 46
       EditLabel.Height = 13
       EditLabel.Caption = 'Message:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
       LabelPosition = lpLeft
+      ParentFont = False
       TabOrder = 0
-      Text = 'This message will be sent to the Logger'
+      Text = 'This message will be logged.'
     end
     object btnSendInfo: TButton
       Left = 168
@@ -153,8 +172,14 @@ object frmLogger: TfrmLogger
       Width = 150
       Height = 25
       Action = actSendInfo
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
       ImageMargins.Left = 2
       Images = imlLogger
+      ParentFont = False
       TabOrder = 1
     end
     object btnSendWarning: TButton
@@ -182,7 +207,7 @@ object frmLogger: TfrmLogger
     AlignWithMargins = True
     Left = 3
     Top = 251
-    Width = 643
+    Width = 638
     Height = 58
     Align = alTop
     Caption = 'Counters'
@@ -229,7 +254,7 @@ object frmLogger: TfrmLogger
     AlignWithMargins = True
     Left = 3
     Top = 3
-    Width = 643
+    Width = 638
     Height = 56
     Align = alTop
     Caption = 'Logger channels'
@@ -239,7 +264,6 @@ object frmLogger: TfrmLogger
       Top = 26
       Width = 232
       Height = 13
-      Margins.Bottom = 3
       Caption = 'Run this together with the LogViewer application'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlue
@@ -283,6 +307,7 @@ object frmLogger: TfrmLogger
       Width = 150
       Height = 25
       Action = actSendClear
+      Caption = 'Send Clear'
       Images = imlLogger
       TabOrder = 3
     end
@@ -290,8 +315,8 @@ object frmLogger: TfrmLogger
   object grpCheckpoints: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 543
-    Width = 643
+    Top = 512
+    Width = 638
     Height = 59
     Align = alTop
     Caption = 'Checkpoints'
@@ -307,7 +332,7 @@ object frmLogger: TfrmLogger
       WordWrap = True
     end
     object btnResetCheckpoint: TButton
-      Left = 453
+      Left = 480
       Top = 19
       Width = 150
       Height = 25
@@ -316,7 +341,7 @@ object frmLogger: TfrmLogger
       TabOrder = 0
     end
     object btnAddCheckpoint: TButton
-      Left = 297
+      Left = 324
       Top = 19
       Width = 150
       Height = 25
@@ -330,13 +355,13 @@ object frmLogger: TfrmLogger
     AlignWithMargins = True
     Left = 3
     Top = 315
-    Width = 643
-    Height = 149
+    Width = 638
+    Height = 118
     Align = alTop
     Caption = 'Log values'
     TabOrder = 6
     object btnSendObject: TButton
-      Left = 12
+      Left = 324
       Top = 23
       Width = 150
       Height = 25
@@ -355,8 +380,8 @@ object frmLogger: TfrmLogger
       TabOrder = 1
     end
     object btnSendComponent: TButton
-      Left = 324
-      Top = 23
+      Left = 168
+      Top = 54
       Width = 150
       Height = 25
       Action = actSendComponent
@@ -364,7 +389,7 @@ object frmLogger: TfrmLogger
       TabOrder = 2
     end
     object btnSendStrings: TButton
-      Left = 12
+      Left = 324
       Top = 54
       Width = 150
       Height = 25
@@ -373,8 +398,8 @@ object frmLogger: TfrmLogger
       TabOrder = 3
     end
     object btnSendDataSet: TButton
-      Left = 168
-      Top = 54
+      Left = 480
+      Top = 85
       Width = 150
       Height = 25
       Action = actSendDataSet
@@ -382,7 +407,7 @@ object frmLogger: TfrmLogger
       TabOrder = 4
     end
     object btnSendBitmap: TButton
-      Left = 324
+      Left = 480
       Top = 54
       Width = 150
       Height = 25
@@ -391,7 +416,7 @@ object frmLogger: TfrmLogger
       TabOrder = 5
     end
     object btnSendRect: TButton
-      Left = 12
+      Left = 168
       Top = 85
       Width = 150
       Height = 25
@@ -400,7 +425,7 @@ object frmLogger: TfrmLogger
       TabOrder = 6
     end
     object btnSendPoint: TButton
-      Left = 168
+      Left = 12
       Top = 85
       Width = 150
       Height = 25
@@ -409,8 +434,8 @@ object frmLogger: TfrmLogger
       TabOrder = 7
     end
     object btnSendInterface: TButton
-      Left = 324
-      Top = 85
+      Left = 480
+      Top = 23
       Width = 150
       Height = 25
       Action = actSendInterface
@@ -418,7 +443,7 @@ object frmLogger: TfrmLogger
       TabOrder = 8
     end
     object btnSendText: TButton
-      Left = 481
+      Left = 12
       Top = 23
       Width = 150
       Height = 25
@@ -426,13 +451,21 @@ object frmLogger: TfrmLogger
       Images = imlLogger
       TabOrder = 9
     end
+    object btnSendPersistent: TButton
+      Left = 12
+      Top = 54
+      Width = 150
+      Height = 25
+      Action = actSendPersistent
+      TabOrder = 10
+    end
   end
   object grpCustom: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 608
-    Width = 643
-    Height = 123
+    Top = 577
+    Width = 638
+    Height = 54
     Align = alClient
     Caption = 'Custom'
     TabOrder = 7
@@ -560,7 +593,7 @@ object frmLogger: TfrmLogger
       OnExecute = actSendComponentExecute
     end
     object actSendRecord: TAction
-      Caption = 'Send record'
+      Caption = 'Send Record'
       Hint = 'Sends a Pascal record.'
       ImageIndex = 10
       OnExecute = actSendRecordExecute
@@ -590,30 +623,34 @@ object frmLogger: TfrmLogger
       OnExecute = actSendPointExecute
     end
     object actSendScreenshot: TAction
-      Caption = 'Send screenshot'
+      Caption = 'Send Screenshot'
     end
     object actSendInterface: TAction
       Caption = 'Send IInterface'
       OnExecute = actSendInterfaceExecute
     end
     object actSendText: TAction
-      Caption = 'Send text'
+      Caption = 'Send Text'
       Hint = 'Send text (lorem ipsum)'
       OnExecute = actSendTextExecute
+    end
+    object actSendPersistent: TAction
+      Caption = 'Send TPersistent'
+      OnExecute = actSendPersistentExecute
     end
   end
   object tmrSendCounter: TTimer
     Enabled = False
     OnTimer = tmrSendCounterTimer
-    Left = 328
-    Top = 480
+    Left = 336
+    Top = 488
   end
   object imlLogger: TImageList
     ColorDepth = cd32Bit
     Left = 448
     Top = 536
     Bitmap = {
-      494C010116001900380010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010116001900080010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000006000000001002000000000000060
       0000000000000000000000000000000000000000000000000000000000000000
       000001370099045701D1045701D1012500660000000001250066045701D10457
