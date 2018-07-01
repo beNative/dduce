@@ -5,7 +5,7 @@
         <FrameworkType>VCL</FrameworkType>
         <MainSource>DDuce.Demos.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>3</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -72,8 +72,7 @@
         <DCC_S>false</DCC_S>
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
-        <DCC_BplOutput>.\Bin\$(Platform)</DCC_BplOutput>
-        <DCC_DcpOutput>.\Lib\$(Platform)\$(Config)</DCC_DcpOutput>
+        <DCC_UnitSearchPath>..\Source;..\Source\Modules\Logger;..\Source\Modules\Editor;..\Source\Modules\ObjectInspector;..\Source\Modules\RTTEye;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <VerInfo_Build>44</VerInfo_Build>
@@ -211,297 +210,18 @@
         <DCCReference Include="Demo.DDuce.GridView.pas">
             <Form>frmGridView</Form>
         </DCCReference>
-        <DCCReference Include="..\Source\DDuce.DynamicRecord.pas"/>
-        <DCCReference Include="..\Source\DDuce.RandomData.pas"/>
-        <DCCReference Include="..\Source\DDuce.Reflect.pas"/>
-        <DCCReference Include="..\Source\DDuce.ScopedReference.pas"/>
-        <DCCReference Include="..\Source\Components\DDuce.Components.DBGridView.pas"/>
-        <DCCReference Include="..\Source\Components\DDuce.Components.GridView.pas"/>
-        <DCCReference Include="..\Source\Components\DDuce.Components.Inspector.pas"/>
-        <DCCReference Include="..\Source\Components\DDuce.Components.LogTree.pas"/>
-        <DCCReference Include="..\Source\Components\DDuce.Components.PropertyInspector.CollectionEditor.pas">
-            <Form>frmCollectionEditor</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Components\DDuce.Components.PropertyInspector.pas"/>
-        <DCCReference Include="..\Source\Components\DDuce.Components.PropertyInspector.StringsEditor.pas">
-            <Form>StringsEditorDialog</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Components\DDuce.Components.XMLTree.Editors.pas"/>
-        <DCCReference Include="..\Source\Components\DDuce.Components.XMLTree.NodeAttributes.pas"/>
-        <DCCReference Include="..\Source\Components\DDuce.Components.XMLTree.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Bindings.Collections.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Bindings.CollectionView.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Bindings.Notifications.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Collections.ObservableCollection.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Collections.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.DataTemplates.Default.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.DataTemplates.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.DependencyProperty.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Expressions.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Framework.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.PropertyChangedBase.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Reflection.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Utils.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.ColumnDefinitions.ControlTemplate.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.ColumnDefinitions.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.ControlTemplates.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.CustomPresenter.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.CustomPresenter.Types.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.TreeViewPresenter.pas"/>
-        <DCCReference Include="..\Source\Dependencies\NativeXml\NativeXml.pas"/>
-        <DCCReference Include="..\Source\Dependencies\NativeXml\NativeXmlCodepages.pas"/>
-        <DCCReference Include="..\Source\Dependencies\NativeXml\NativeXmlNodes.pas"/>
-        <DCCReference Include="..\Source\Dependencies\NativeXml\sdDebug.pas"/>
-        <DCCReference Include="..\Source\Dependencies\NativeXml\sdStreams.pas"/>
-        <DCCReference Include="..\Source\Dependencies\NativeXml\sdStringTable.pas"/>
-        <DCCReference Include="..\Source\Logging\DDuce.Logging.Appenders.LogTree.pas"/>
-        <DCCReference Include="..\Source\Logging\DDuce.Logging.Appenders.WinIPC.pas"/>
-        <DCCReference Include="..\Source\Components\DDuce.Components.Factories.pas"/>
         <DCCReference Include="Demo.DDuce.Editor.pas">
             <Form>frmEditor</Form>
         </DCCReference>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ActionList.Templates.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ActionList.ToolView.pas">
-            <Form>frmActionListView</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.AlignLines.Settings.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.CharacterMap.ToolView.pas">
-            <Form>frmCharacterMap</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Codeformatters.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Codeformatters.Sql.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Codetags.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Colors.Settings.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Commands.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Commentstripper.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Events.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Manager.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Menus.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Settings.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Toolbars.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Views.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Highlighters.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Interfaces.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Manager.pas">
-            <Form>dmEditorManager</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Options.Settings.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Resources.pas">
-            <Form>ResourcesDataModule</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Data.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Engine.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Engine.Settings.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Templates.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Toolview.pas">
-            <Form>frmSearchForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Selectioninfo.ToolView.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Settings.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Sortstrings.Settings.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Sortstrings.Toolview.pas">
-            <Form>frmSortStrings</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Test.ToolView.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Tools.Settings.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ToolView.Base.pas">
-            <Form>CustomEditorToolView</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ToolView.Manager.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Types.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Utils.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.View.pas">
-            <Form>EditorView</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Viewlist.Data.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Viewlist.ToolView.pas">
-            <Form>frmViewList</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.AlignLines.ToolView.pas">
-            <Form>frmAlignLines</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\DDuce.WinIPC.Client.pas"/>
-        <DCCReference Include="..\Source\DDuce.WinIPC.Server.pas"/>
-        <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas"/>
-        <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Data.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Settings.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas">
-            <Form>frmFilter</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\RTTEye\DDuce.RTTEye.pas">
-            <Form>frmRTTEye</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.zObjectInspector.pas">
-            <Form>frmComponentInspectorzObjectInspector</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Base.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.Base.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.LogFile.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinIPC.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinODS.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Factories.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.pas"/>
-        <DCCReference Include="..\Source\DDuce.Utils.pas"/>
-        <DCCReference Include="..\Source\DDuce.Utils.WinApi.pas"/>
         <DCCReference Include="Demo.Resources.pas"/>
-        <DCCReference Include="..\Source\Settings\DDuce.Settings.Form.pas"/>
-        <DCCReference Include="..\Source\Settings\DDuce.Settings.TextFormat.pas"/>
         <DCCReference Include="Demo.DDuce.VirtualTrees.pas">
             <Form>frmVirtualTrees</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Source\Components\DDuce.Components.ValueList.Node.pas"/>
         <DCCReference Include="Demo.DDuce.ValueList.pas">
             <Form>frmValueListDemo</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Source\Components\DDuce.Components.ValueList.pas"/>
-        <DCCReference Include="..\Source\Factories\DDuce.Factories.GridView.pas"/>
-        <DCCReference Include="..\Source\Factories\DDuce.Factories.LiveBindings.pas"/>
-        <DCCReference Include="..\Source\Factories\DDuce.Factories.Toolbar.pas"/>
-        <DCCReference Include="..\Source\Factories\DDuce.Factories.TreeViewPresenter.pas"/>
-        <DCCReference Include="..\Source\Factories\DDuce.Factories.VirtualTrees.pas"/>
-        <DCCReference Include="..\Source\Factories\DDuce.Factories.zObjInspector.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\zBase.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\zCanvasStack.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\zCollectionEditor.pas">
-            <Form>zCollectionEditorDialog</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\zControlsReg.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\zGraphicDialog.pas">
-            <Form>GraphicDialog</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\zObjInspDialogs.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\zObjInspector.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\zObjInspList.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\zObjInspTypes.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\zRecList.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\zStringsDialog.pas">
-            <Form>StringsDialog</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\zUtils.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\zValueManager.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\FloatConv\FloatConv.Double.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\FloatConv\FloatConv.Extended.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\FloatConv\FloatConv.pas"/>
-        <DCCReference Include="..\..\..\components\zcontrols\Source\FloatConv\FloatConv.Single.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Consts.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.ActiveLine.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Base.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Caret.MultiEdit.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Caret.MultiEdit.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Caret.NonBlinking.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Caret.NonBlinking.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Caret.Offsets.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Caret.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Caret.Styles.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CodeFolding.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CodeFolding.Hint.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CodeFolding.Hint.Form.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CodeFolding.Hint.Indicator.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CodeFolding.Hint.Indicator.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CodeFolding.Hint.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CodeFolding.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CodeFolding.Ranges.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CodeFolding.Regions.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CompletionProposal.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CompletionProposal.Columns.Items.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CompletionProposal.Columns.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CompletionProposal.Columns.Title.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CompletionProposal.Columns.Title.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CompletionProposal.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CompletionProposal.PopupWindow.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.CompletionProposal.Trigger.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.DB.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Directories.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Glyph.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.InternalImage.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.KeyCommands.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.LeftMargin.Bookmarks.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.LeftMargin.Border.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.LeftMargin.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.LeftMargin.LineNumbers.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.LeftMargin.LineState.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.LeftMargin.Marks.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.LeftMargin.MarksPanel.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.LeftMargin.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Marks.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.MatchingPair.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.MatchingPair.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Minimap.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Minimap.Indicator.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Minimap.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Minimap.Shadow.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.PopupWindow.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Replace.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.RightMargin.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.RightMargin.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Scroll.Hint.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Scroll.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Scroll.Shadow.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Search.Highlighter.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Search.Highlighter.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Search.InSelection.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Search.Map.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Search.Map.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Search.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Selection.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Selection.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.SkipRegions.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.SpecialChars.EndOfLine.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.SpecialChars.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.SpecialChars.Selection.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.SyncEdit.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.SyncEdit.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Tabs.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.TokenInfo.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.TokenInfo.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.TokenInfo.PopupWindow.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.TokenInfo.Title.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.TokenInfo.Title.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Undo.Item.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Undo.List.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Undo.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.UnknownChars.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.Utils.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.WordWrap.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Editor.WordWrap.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Encoding.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Export.HTML.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Highlighter.Attributes.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Highlighter.Colors.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Highlighter.Comments.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Highlighter.Import.JSON.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Highlighter.Info.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Highlighter.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Highlighter.Rules.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Highlighter.Token.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.JsonDataObjects.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.KeyboardHandler.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Language.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Lines.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.MacroRecorder.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.PaintHelper.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Print.HeaderFooter.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Print.Margins.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Print.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Print.Preview.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Print.PrinterInfo.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Print.Types.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Search.Normal.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Search.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Search.RegularExpressions.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Search.Wildcard.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.StyleHooks.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Types.pas"/>
-        <DCCReference Include="..\..\..\components\TBCEditor\Source\BCEditor.Utils.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -537,13 +257,13 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win64\Debug\DDuce.Demos.exe" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="Win32\Debug\DDuce.Demos.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="Bin\Win32\DDuce.Demos.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>DDuce_Demos.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="Win64\Debug\DDuce.Demos.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>

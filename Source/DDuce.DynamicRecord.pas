@@ -14,9 +14,9 @@
   limitations under the License.
 }
 
-unit DDuce.DynamicRecord;
-
 {$I DDuce.inc}
+
+unit DDuce.DynamicRecord;
 
 interface
 

@@ -5,7 +5,7 @@
         <ProjectVersion>18.2</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Package</AppType>
@@ -54,8 +54,14 @@
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
+        <DCC_DcuOutput>..\Lib\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
@@ -65,8 +71,11 @@
         <GenDll>true</GenDll>
         <GenPackage>true</GenPackage>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
-        <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
         <SanitizedProjectName>DDuce_Modules</SanitizedProjectName>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <DCC_UnitSearchPath>..\Source;..\Source\Modules\Editor;..\Source\Modules\ObjectInspector;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <BRCC_OutputDir>..\Lib\$(Platform)\$(Config)</BRCC_OutputDir>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
@@ -98,12 +107,16 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
         <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
         <DCC_DebugInformation>0</DCC_DebugInformation>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -114,16 +127,29 @@
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="dbrtl.dcp"/>
         <DCCReference Include="vcldb.dcp"/>
+        <DCCReference Include="DDuce.Core.dcp"/>
         <DCCReference Include="DDuce.Components.dcp"/>
-        <DCCReference Include="..\Source\Modules\DDuce.Factories.pas"/>
-        <DCCReference Include="..\Source\Modules\DDuce.FormSettings.pas"/>
+        <DCCReference Include="BCEditor.Delphi.Runtime.dcp"/>
+        <DCCReference Include="..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas">
+            <Form>frmComponentInspector</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.zObjectInspector.pas">
+            <Form>frmComponentInspectorzObjectInspector</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\RTTEye\DDuce.RTTEye.pas">
+            <Form>frmRTTEye</Form>
+        </DCCReference>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ActionList.Templates.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ActionList.ToolView.pas">
             <Form>frmActionListView</Form>
         </DCCReference>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.AlignLines.Settings.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.AlignLines.ToolView.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.CharacterMap.ToolView.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.AlignLines.ToolView.pas">
+            <Form>frmAlignLines</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.CharacterMap.ToolView.pas">
+            <Form>frmCharacterMap</Form>
+        </DCCReference>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Codeformatters.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Codeformatters.Sql.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Codetags.pas"/>
@@ -139,7 +165,9 @@
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Factories.Views.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Data.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Settings.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Filter.Toolview.pas">
+            <Form>frmFilter</Form>
+        </DCCReference>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Highlighters.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Interfaces.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Manager.pas">
@@ -155,14 +183,20 @@
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Engine.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Engine.Settings.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Templates.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Toolview.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Search.Toolview.pas">
+            <Form>frmSearchForm</Form>
+        </DCCReference>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Selectioninfo.ToolView.pas">
             <Form>frmSelectionInfo</Form>
         </DCCReference>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Settings.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Sortstrings.Settings.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Sortstrings.Toolview.pas"/>
-        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Test.ToolView.pas"/>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Sortstrings.Toolview.pas">
+            <Form>frmSortStrings</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Test.ToolView.pas">
+            <Form>frmTest</Form>
+        </DCCReference>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Tools.Settings.pas"/>
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.ToolView.Base.pas">
             <Form>CustomEditorToolView</Form>
@@ -186,36 +220,6 @@
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Factories.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.pas"/>
-        <DCCReference Include="..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas">
-            <Form>frmComponentInspector</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.zObjectInspector.pas">
-            <Form>frmComponentInspectorzObjectInspector</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Modules\RTTEye\DDuce.RTTEye.pas">
-            <Form>frmRTTEye</Form>
-        </DCCReference>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Bindings.Collections.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Bindings.CollectionView.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Bindings.Notifications.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Collections.ObservableCollection.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Collections.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.DataTemplates.Default.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.DataTemplates.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.DependencyProperty.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Expressions.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Framework.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.PropertyChangedBase.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Reflection.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Core.Utils.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.ColumnDefinitions.ControlTemplate.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.ColumnDefinitions.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.ControlTemplates.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.CustomPresenter.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.CustomPresenter.Types.pas"/>
-        <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.TreeViewPresenter.pas"/>
-        <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas"/>
-        <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -236,6 +240,12 @@
                 <Source>
                     <Source Name="MainSource">DDuce.Modules.dpk</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k250.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp250.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">

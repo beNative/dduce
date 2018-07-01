@@ -14,11 +14,11 @@
   limitations under the License.
 }
 
+{$I DDuce.inc}
+
 unit DDuce.RandomData;
 
 { Utility type for generating random test data. }
-
-{$I DDuce.inc}
 
 interface
 

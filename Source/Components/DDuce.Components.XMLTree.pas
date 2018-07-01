@@ -31,9 +31,9 @@
   - many bugfixes
 }
 
-unit DDuce.Components.XMLTree;
+{$I DDuce.inc}
 
-{$I ..\DDuce.inc}
+unit DDuce.Components.XMLTree;
 
 interface
 

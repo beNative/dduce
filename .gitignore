@@ -26,3 +26,4 @@ Win64
 /Tests/*.skincfg
 /*.db
 /Wiki/Thumbs.db
+*.skincfg

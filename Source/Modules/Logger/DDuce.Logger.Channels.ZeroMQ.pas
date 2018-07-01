@@ -14,6 +14,8 @@
   limitations under the License.
 }
 
+{$I DDuce.inc}
+
 unit DDuce.Logger.Channels.ZeroMQ;
 
 interface
@@ -122,7 +124,10 @@ begin
       FBuffer.WriteBuffer(AMsg.MsgType);
       FBuffer.WriteBuffer(AMsg.TimeStamp);
       FBuffer.WriteBuffer(TextSize);
-      FBuffer.WriteBuffer(AMsg.Text[1], TextSize);
+      if TextSize > 0 then
+      begin
+        FBuffer.WriteBuffer(AMsg.Text[1], TextSize);
+      end;
       if AMsg.Data <> nil then
       begin
         DataSize := AMsg.Data.Size;

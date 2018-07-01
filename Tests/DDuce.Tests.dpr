@@ -30,25 +30,7 @@ uses
   Test.DDuce.Reflect in 'Test.DDuce.Reflect.pas',
   Test.Utils in 'Test.Utils.pas',
   Test.DDuce.Logger in 'Test.DDuce.Logger.pas',
-  DDuce.Logger.Base in '..\Source\Modules\Logger\DDuce.Logger.Base.pas',
-  DDuce.Logger.Channels.Base in '..\Source\Modules\Logger\DDuce.Logger.Channels.Base.pas',
-  DDuce.Logger.Channels.LogFile in '..\Source\Modules\Logger\DDuce.Logger.Channels.LogFile.pas',
-  DDuce.Logger.Channels.WinIPC in '..\Source\Modules\Logger\DDuce.Logger.Channels.WinIPC.pas',
-  DDuce.Logger.Channels.WinODS in '..\Source\Modules\Logger\DDuce.Logger.Channels.WinODS.pas',
-  DDuce.Logger.Interfaces in '..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas',
-  DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas',
-  DDuce.DynamicRecord in '..\Source\DDuce.DynamicRecord.pas',
-  DDuce.RandomData in '..\Source\DDuce.RandomData.pas',
-  DDuce.Reflect in '..\Source\DDuce.Reflect.pas',
-  DDuce.ScopedReference in '..\Source\DDuce.ScopedReference.pas',
-  DDuce.WinIPC.Client in '..\Source\DDuce.WinIPC.Client.pas',
-  DDuce.WinIPC.Server in '..\Source\DDuce.WinIPC.Server.pas',
-  ZeroMQ.API in '..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas',
-  ZeroMQ in '..\Source\Dependencies\ZeroMQ\ZeroMQ.pas',
-  DDuce.Logger.Channels.ZeroMQ in '..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas',
-  Test.Resources in 'Test.Resources.pas',
-  DDuce.Utils in '..\Source\DDuce.Utils.pas',
-  DDuce.Utils.WinApi in '..\Source\DDuce.Utils.WinApi.pas';
+  Test.Resources in 'Test.Resources.pas';
 
 {$R *.RES}
 

@@ -20,9 +20,9 @@
   Copyright (C), All Rights Reserved.
 }
 
-unit DDuce.Components.LogTree;
+{$I DDuce.inc}
 
-{$I ..\DDuce.inc}
+unit DDuce.Components.LogTree;
 
 interface
 

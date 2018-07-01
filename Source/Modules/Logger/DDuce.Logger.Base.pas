@@ -25,6 +25,8 @@
   of the original code at http://code.google.com/p/luipack/
 }
 
+{$I DDuce.inc}
+
 unit DDuce.Logger.Base;
 
 {

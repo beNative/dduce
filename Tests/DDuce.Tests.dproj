@@ -3,7 +3,7 @@
         <ProjectGuid>{6066E0EB-B105-4706-82F3-E0C93907EA52}</ProjectGuid>
         <MainSource>DDuce.Tests.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <TargetedPlatforms>1153</TargetedPlatforms>
         <AppType>Application</AppType>
         <FrameworkType>VCL</FrameworkType>
@@ -62,10 +62,10 @@
         <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;DUnitX;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=;CFBundleName=</VerInfo_Keys>
-        <DCC_DcpOutput>.\Library\$(Platform)\$(Config)\</DCC_DcpOutput>
-        <DCC_ExeOutput>.\Library\$(Platform)\$(Config)\</DCC_ExeOutput>
-        <DCC_DcuOutput>.\Library\$(Platform)\$(Config)\</DCC_DcuOutput>
+        <DCC_ExeOutput>.\Bin\$(Platform)</DCC_ExeOutput>
+        <DCC_DcuOutput>.\Lib\$(Platform)\$(Config)\</DCC_DcuOutput>
         <DCC_Define>TESTINSIGHT;$(DCC_Define)</DCC_Define>
+        <DCC_UnitSearchPath>..\Source;..\Source\Modules\Logger;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -117,25 +117,7 @@
         <DCCReference Include="Test.DDuce.Reflect.pas"/>
         <DCCReference Include="Test.Utils.pas"/>
         <DCCReference Include="Test.DDuce.Logger.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Base.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.Base.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.LogFile.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinIPC.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinODS.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.pas"/>
-        <DCCReference Include="..\Source\DDuce.DynamicRecord.pas"/>
-        <DCCReference Include="..\Source\DDuce.RandomData.pas"/>
-        <DCCReference Include="..\Source\DDuce.Reflect.pas"/>
-        <DCCReference Include="..\Source\DDuce.ScopedReference.pas"/>
-        <DCCReference Include="..\Source\DDuce.WinIPC.Client.pas"/>
-        <DCCReference Include="..\Source\DDuce.WinIPC.Server.pas"/>
-        <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas"/>
-        <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas"/>
         <DCCReference Include="Test.Resources.pas"/>
-        <DCCReference Include="..\Source\DDuce.Utils.pas"/>
-        <DCCReference Include="..\Source\DDuce.Utils.WinApi.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

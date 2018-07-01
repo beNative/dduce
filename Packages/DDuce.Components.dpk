@@ -32,16 +32,31 @@ requires
   vcl,
   dbrtl,
   vcldb,
-  DDuce.Core,
-  VirtualTreesD;
+  bindengine,
+  bindcomp,
+  zControls_R,
+  DDuce.Core;
 
 contains
   DDuce.Components.DBGridView in '..\Source\Components\DDuce.Components.DBGridView.pas',
+  DDuce.Components.Factories in '..\Source\Components\DDuce.Components.Factories.pas',
   DDuce.Components.GridView in '..\Source\Components\DDuce.Components.GridView.pas',
   DDuce.Components.Inspector in '..\Source\Components\DDuce.Components.Inspector.pas',
   DDuce.Components.LogTree in '..\Source\Components\DDuce.Components.LogTree.pas',
   DDuce.Components.PropertyInspector.CollectionEditor in '..\Source\Components\DDuce.Components.PropertyInspector.CollectionEditor.pas' {frmCollectionEditor},
   DDuce.Components.PropertyInspector in '..\Source\Components\DDuce.Components.PropertyInspector.pas',
-  DDuce.Components.PropertyInspector.StringsEditor in '..\Source\Components\DDuce.Components.PropertyInspector.StringsEditor.pas' {StringsEditorDialog};
+  DDuce.Components.PropertyInspector.StringsEditor in '..\Source\Components\DDuce.Components.PropertyInspector.StringsEditor.pas' {StringsEditorDialog},
+  DDuce.Components.ValueList.Node in '..\Source\Components\DDuce.Components.ValueList.Node.pas',
+  DDuce.Components.ValueList in '..\Source\Components\DDuce.Components.ValueList.pas',
+  DDuce.Components.XMLTree.Editors in '..\Source\Components\DDuce.Components.XMLTree.Editors.pas',
+  DDuce.Components.XMLTree.NodeAttributes in '..\Source\Components\DDuce.Components.XMLTree.NodeAttributes.pas',
+  DDuce.Components.XMLTree in '..\Source\Components\DDuce.Components.XMLTree.pas',
+  DDuce.Factories.GridView in '..\Source\Factories\DDuce.Factories.GridView.pas',
+  DDuce.Factories.LiveBindings in '..\Source\Factories\DDuce.Factories.LiveBindings.pas',
+  DDuce.Factories.Toolbar in '..\Source\Factories\DDuce.Factories.Toolbar.pas',
+  DDuce.Factories.TreeViewPresenter in '..\Source\Factories\DDuce.Factories.TreeViewPresenter.pas',
+  DDuce.Factories.ValueList in '..\Source\Factories\DDuce.Factories.ValueList.pas',
+  DDuce.Factories.VirtualTrees in '..\Source\Factories\DDuce.Factories.VirtualTrees.pas',
+  DDuce.Factories.zObjInspector in '..\Source\Factories\DDuce.Factories.zObjInspector.pas';
 
 end.

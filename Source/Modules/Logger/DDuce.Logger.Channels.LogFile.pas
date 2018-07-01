@@ -14,9 +14,9 @@
   limitations under the License.
 }
 
-unit DDuce.Logger.Channels.LogFile;
+{$I DDuce.inc}
 
-//{$I DDuce.inc}
+unit DDuce.Logger.Channels.LogFile;
 
 interface
 

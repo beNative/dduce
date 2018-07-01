@@ -14,6 +14,8 @@
   limitations under the License.
 }
 
+{$I DDuce.inc}
+
 unit DDuce.Factories.ToolBar;
 
 interface
@@ -41,9 +43,7 @@ type
 implementation
 
 uses
-  Spring,
-
-  DDuce.Logger;
+  Spring;
 
 class procedure TToolBarFactory.CleanupToolBar(AToolBar: TToolBar);
 var
@@ -55,7 +55,6 @@ var
 begin
   Guard.CheckNotNull(AToolBar, 'AToolBar');
   I := 0;
-  J := 0;
   while I < AToolBar.ButtonCount do
   begin
     TB := AToolBar.Buttons[I];
@@ -74,10 +73,7 @@ begin
     end;
     if B then // first visible
     begin
-      Logger.Send('I', I);
-      Logger.Send('J', J);
       TB := AToolBar.Buttons[I];
-      Logger.Send(TB.Caption, TB.Visible);
       D := (TB.Visible and (TB.Style in [tbsSeparator, tbsDivider])) or (not TB.Visible);
       J := 0;
       while B and D do

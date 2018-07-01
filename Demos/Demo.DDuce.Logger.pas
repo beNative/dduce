@@ -351,7 +351,7 @@ var
 begin
   for I := 0 to 10 do
   begin
-    Logger.Send('I', I);
+    //Logger.Send('I', I);
   end;
 end;
 
