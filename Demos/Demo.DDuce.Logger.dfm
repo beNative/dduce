@@ -275,31 +275,32 @@ object frmLogger: TfrmLogger
     object chkLogFileChannelActive: TCheckBox
       Left = 17
       Top = 24
-      Width = 144
+      Width = 48
       Height = 17
       Hint = 'Enables or disables logfile channel.'
       Caption = 'Logfile'
       TabOrder = 0
+      OnClick = chkLogFileChannelActiveClick
     end
     object chkWinIPCChannelActive: TCheckBox
       Left = 78
       Top = 24
-      Width = 144
+      Width = 61
       Height = 17
       Hint = 'Enables or disables WinIPC channel.'
       Caption = 'WinIPC'
-      Checked = True
-      State = cbChecked
       TabOrder = 1
+      OnClick = chkWinIPCChannelActiveClick
     end
     object chkZeroMQChannelActive: TCheckBox
       Left = 145
       Top = 24
-      Width = 70
+      Width = 69
       Height = 17
       Hint = 'Enables or disables ZeroMQ channel.'
       Caption = 'ZeroMQ'
       TabOrder = 2
+      OnClick = chkZeroMQChannelActiveClick
     end
     object btnSendClear: TButton
       Left = 480
@@ -650,7 +651,7 @@ object frmLogger: TfrmLogger
     Left = 448
     Top = 536
     Bitmap = {
-      494C010116001900080010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010116001900180010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000006000000001002000000000000060
       0000000000000000000000000000000000000000000000000000000000000000
       000001370099045701D1045701D1012500660000000001250066045701D10457

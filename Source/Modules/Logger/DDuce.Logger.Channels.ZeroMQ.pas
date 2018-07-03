@@ -101,7 +101,7 @@ begin
   begin
     FPublisher := FZMQ.Start(ZMQSocket.Publisher);
     Connected :=
-      FPublisher.Bind(Format('tcp://%s:%d', ['*', DEFAULT_PORT])) <> -1;
+      FPublisher.Bind(Format('tcp://%s:%d', ['192.168.0.226', DEFAULT_PORT])) <> -1;
   end;
   Result := Connected;
 end;

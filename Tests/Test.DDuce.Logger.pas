@@ -179,9 +179,13 @@ uses
 {$REGION 'construction and destruction'}
 class constructor TestLogger.Create;
 begin
-  //Logger.Channels.Add(TWinIPCChannel.Create);
+  Logger.Channels.Add(TWinIPCChannel.Create);
   Logger.Channels.Add(TZeroMQChannel.Create);
+  Sleep(1000);
   Logger.Clear;
+  Sleep(1000);
+  Logger.Clear;
+  Sleep(4000);
 end;
 {$ENDREGION}
 

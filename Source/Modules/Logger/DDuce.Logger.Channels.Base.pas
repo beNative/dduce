@@ -25,23 +25,17 @@ uses
 
 type
   TCustomLogChannel = class(TInterfacedObject, ILogChannel)
-  strict private
+  private
     FActive    : Boolean;
     FConnected : Boolean;
 
-  strict protected
+  protected
+    {$REGION 'property access methods'}
     function GetActive: Boolean; virtual;
     procedure SetActive(const Value: Boolean); virtual;
     function GetConnected: Boolean; virtual;
     procedure SetConnected(const Value: Boolean); virtual;
-
-  public
-    constructor Create(AActive : Boolean = True); virtual;
-
-    function Write(const AMsg: TLogMessage): Boolean; virtual; abstract;
-
-    function Connect: Boolean; virtual;
-    function Disconnect: Boolean; virtual;
+    {$ENDREGION}
 
     { Indicates that messages from the Logger object will be sent through this
       channel. }
@@ -52,6 +46,15 @@ type
       can only connect when it is set Active first.  }
     property Connected: Boolean
       read GetConnected write SetConnected;
+
+  public
+    constructor Create(AActive : Boolean = True); virtual;
+
+    function Write(const AMsg: TLogMessage): Boolean; virtual; abstract;
+
+    function Connect: Boolean; virtual;
+    function Disconnect: Boolean; virtual;
+
   end;
 
 implementation

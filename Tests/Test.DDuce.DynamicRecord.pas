@@ -108,8 +108,8 @@ type
 
     procedure Test_AssignTo_method_for_Object;
 
-    procedure TestRetrieveRecord;
-    procedure TestRetrieveRecordFunction;
+    procedure Test_RetrieveRecord;
+    procedure Test_RetrieveRecordFunction;
 
   end;
 
@@ -703,7 +703,7 @@ begin
   end;
 end;
 
-procedure TestDynamicRecord.TestRetrieveRecord;
+procedure TestDynamicRecord.Test_RetrieveRecord;
 var
   R : DynamicRecord;
   I : Integer;
@@ -716,7 +716,7 @@ begin
   CheckTrue(True, 'OK');
 end;
 
-procedure TestDynamicRecord.TestRetrieveRecordFunction;
+procedure TestDynamicRecord.Test_RetrieveRecordFunction;
 var
   R : DynamicRecord;
 begin

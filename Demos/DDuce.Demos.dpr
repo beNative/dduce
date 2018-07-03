@@ -25,7 +25,8 @@ uses
   Demo.DDuce.Editor in 'Demo.DDuce.Editor.pas' {frmEditor},
   Demo.Resources in 'Demo.Resources.pas',
   Demo.DDuce.VirtualTrees in 'Demo.DDuce.VirtualTrees.pas' {frmVirtualTrees},
-  Demo.DDuce.ValueList in 'Demo.DDuce.ValueList.pas' {frmValueListDemo};
+  Demo.DDuce.ValueList in 'Demo.DDuce.ValueList.pas' {frmValueListDemo},
+  Demo.Settings in 'Demo.Settings.pas';
 
 {$R *.res}
 

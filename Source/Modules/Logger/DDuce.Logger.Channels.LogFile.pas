@@ -27,7 +27,7 @@ uses
 
 type
   TLogFileChannel = class(TCustomLogChannel)
-  strict private
+  private
     FRelativeIndent : Integer;
     FBaseIndent     : Integer;
     FShowHeader     : Boolean;

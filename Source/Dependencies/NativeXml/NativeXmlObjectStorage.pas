@@ -771,7 +771,7 @@ var
   var
     Value: UnicodeString;
   begin
-    Value := GetUnicodeStrProp(AObject, PropInfo);
+    Value := GetStrProp(AObject, PropInfo);
     if not (length(Value) = 0) then
       ANode.WriteString(PPropInfo(PropInfo)^.Name, Value);
   end;
@@ -1123,7 +1123,6 @@ var
       Include(TIntegerSet(ASet), V);
     end;
   begin
-    Result := True;
     ASet := 0;
     {$ifdef FPC}
     EnumType := GetTypeData(PropType)^.CompType;
@@ -1337,7 +1336,7 @@ begin
       tkWString:     SetWideStrProp(AObject, PropInfo, UTF8Decode(AChildNode.Value));
       {$endif UNICODE}
       {$ifdef UNICODE}
-      tkUString:     SetUnicodeStrProp(AObject, PropInfo, AChildNode.Value);
+      tkUString:     SetStrProp(AObject, PropInfo, AChildNode.Value);
       {$endif UNICODE}
       tkClass:       SetObjectProp(AChildNode.Value);
       tkMethod:      SetMethodProp(AChildNode.Value);
