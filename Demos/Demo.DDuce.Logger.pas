@@ -30,7 +30,8 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ImgList,
 
-  DDuce.Logger.Interfaces;
+  DDuce.Logger.Interfaces, Data.Bind.EngExt, Vcl.Bind.DBEngExt, System.Rtti,
+  System.Bindings.Outputs, Vcl.Bind.Editors, Data.Bind.Components;
 
 type
   TfrmLogger = class(TForm)
@@ -91,7 +92,6 @@ type
     btnSendWarning           : TButton;
     chkEnableCountTimer      : TCheckBox;
     chkLogFileChannelActive  : TCheckBox;
-    chkSendRandomValueTimer  : TCheckBox;
     chkWinIPCChannelActive   : TCheckBox;
     chkZeroMQChannelActive   : TCheckBox;
     edtLogMessage            : TLabeledEdit;
@@ -112,6 +112,13 @@ type
     tmrSendCounter           : TTimer;
     tmrSendValue             : TTimer;
     trbMain                  : TTrackBar;
+    lblCounterValue: TLabel;
+    sbr1: TStatusBar;
+    lblPositionValue: TLabel;
+    chkSendRandomValueTimer: TCheckBox;
+    edtMessageCount: TLabeledEdit;
+    actSendMessages: TAction;
+    btnSendMessages: TButton;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -152,6 +159,7 @@ type
     procedure chkLogFileChannelActiveClick(Sender: TObject);
     procedure chkWinIPCChannelActiveClick(Sender: TObject);
     procedure chkZeroMQChannelActiveClick(Sender: TObject);
+    procedure actSendMessagesExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -184,7 +192,7 @@ type
 implementation
 
 uses
-  System.Rtti, System.Types,
+  System.Types,
 
   Spring,
 
@@ -246,6 +254,18 @@ end;
 procedure TfrmLogger.actSendInterfaceExecute(Sender: TObject);
 begin
   Logger.SendInterface('TestInterface', Logger);
+end;
+
+procedure TfrmLogger.actSendMessagesExecute(Sender: TObject);
+var
+  N : Integer;
+  I : Integer;
+begin
+  N := StrToIntDef(edtMessageCount.Text, 0);
+  for I := 1 to N do
+  begin
+    Logger.Send('I', I);
+  end;
 end;
 
 procedure TfrmLogger.actSendWarningExecute(Sender: TObject);
@@ -457,6 +477,13 @@ begin
   FLogFileChannel.Active := Settings.ReadBool(UnitName, 'LogFileChannel.Active');
   FWinIPCChannel.Active  := Settings.ReadBool(UnitName, 'WinIPCChannel.Active');
   FZeroMQChannel.Active  := Settings.ReadBool(UnitName, 'ZeroMQChannel.Active');
+  edtMethod1.Text := Settings.ReadString(
+    UnitName, 'edtMethod1.Text', 'MyObject.Execute'
+  );
+  edtMethod2.Text := Settings.ReadString(
+    UnitName, 'edtMethod2.Text', 'MyObject.Update'
+  );
+  edtMessageCount.Text := IntToStr(Settings.ReadInteger(UnitName, 'MessageCount'));
 end;
 
 procedure TfrmLogger.SaveSettings;
@@ -464,6 +491,9 @@ begin
   Settings.WriteBool(UnitName, 'LogFileChannel.Active', FLogFileChannel.Active);
   Settings.WriteBool(UnitName, 'WinIPCChannel.Active', FWinIPCChannel.Active);
   Settings.WriteBool(UnitName, 'ZeroMQChannel.Active', FZeroMQChannel.Active);
+  Settings.WriteString(UnitName, 'edtMethod1.Text', edtMethod1.Text);
+  Settings.WriteString(UnitName, 'edtMethod2.Text', edtMethod2.Text);
+  Settings.WriteInteger(UnitName, 'MessageCount', StrToIntDef(edtMessageCount.Text, 0));
 end;
 
 procedure TfrmLogger.TestProcedure1;
@@ -513,6 +543,9 @@ begin
   chkLogFileChannelActive.Checked := FLogFileChannel.Active;
   chkWinIPCChannelActive.Checked  := FWinIPCChannel.Active;
   chkZeroMQChannelActive.Checked  := FZeroMQChannel.Active;
+  lblCounterValue.Caption := Logger.GetCounter('Counter').ToString;
+  lblPositionValue.Caption := trbMain.Position.ToString;
+  actSendMessages.Caption := Format('Send %s messages', [edtMessageCount.Text]);
 end;
 {$ENDREGION}
 

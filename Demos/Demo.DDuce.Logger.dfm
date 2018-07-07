@@ -3,7 +3,7 @@ object frmLogger: TfrmLogger
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Logger'
-  ClientHeight = 634
+  ClientHeight = 657
   ClientWidth = 644
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,31 +21,59 @@ object frmLogger: TfrmLogger
     Left = 3
     Top = 439
     Width = 638
-    Height = 67
+    Height = 58
     Align = alTop
     Caption = 'Watches'
     TabOrder = 0
     DesignSize = (
       638
-      67)
+      58)
     object lblPosition: TLabel
-      Left = 65
+      Left = 12
       Top = 30
       Width = 41
       Height = 13
       Caption = 'Position:'
     end
+    object lblPositionValue: TLabel
+      Left = 86
+      Top = 11
+      Width = 77
+      Height = 40
+      Alignment = taCenter
+      AutoSize = False
+      Caption = '60'
+      Color = clWhite
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -27
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentColor = False
+      ParentFont = False
+      Transparent = False
+    end
     object trbMain: TTrackBar
-      Left = 112
-      Top = 25
-      Width = 514
+      Left = 168
+      Top = 22
+      Width = 273
       Height = 29
       Anchors = [akLeft, akTop, akRight]
       Max = 100
       PageSize = 10
+      Position = 50
       PositionToolTip = ptTop
       TabOrder = 0
       OnChange = trbMainChange
+    end
+    object chkSendRandomValueTimer: TCheckBox
+      Left = 474
+      Top = 20
+      Width = 161
+      Height = 17
+      Caption = 'Send random value timer'
+      TabOrder = 1
+      OnClick = chkSendRandomValueTimerClick
     end
   end
   object grpMethodTracing: TGroupBox
@@ -102,6 +130,7 @@ object frmLogger: TfrmLogger
       Top = 24
       Width = 228
       Height = 21
+      Alignment = taCenter
       EditLabel.Width = 75
       EditLabel.Height = 13
       EditLabel.Caption = 'Method1 name:'
@@ -120,6 +149,7 @@ object frmLogger: TfrmLogger
       Top = 53
       Width = 228
       Height = 21
+      Alignment = taCenter
       EditLabel.Width = 75
       EditLabel.Height = 13
       EditLabel.Caption = 'Method2 name:'
@@ -212,6 +242,24 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Counters'
     TabOrder = 3
+    object lblCounterValue: TLabel
+      Left = 85
+      Top = 12
+      Width = 77
+      Height = 40
+      Alignment = taCenter
+      AutoSize = False
+      Caption = '0'
+      Color = clWhite
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -27
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentColor = False
+      ParentFont = False
+      Transparent = False
+    end
     object btnIncCounter: TButton
       Left = 168
       Top = 22
@@ -240,13 +288,14 @@ object frmLogger: TfrmLogger
       TabOrder = 2
     end
     object chkEnableCountTimer: TCheckBox
-      Left = 17
-      Top = 25
-      Width = 107
-      Height = 17
+      Left = 12
+      Top = 16
+      Width = 72
+      Height = 39
       Hint = 'Increases the counter automatically each second.'
       Caption = 'Enable count timer'
       TabOrder = 3
+      WordWrap = True
       OnClick = chkEnableCountTimerClick
     end
   end
@@ -316,12 +365,13 @@ object frmLogger: TfrmLogger
   object grpCheckpoints: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 512
+    Top = 503
     Width = 638
     Height = 59
     Align = alTop
     Caption = 'Checkpoints'
     TabOrder = 5
+    ExplicitTop = 512
     object lblCheckpointDescription: TLabel
       Left = 12
       Top = 19
@@ -464,14 +514,16 @@ object frmLogger: TfrmLogger
   object grpCustom: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 577
+    Top = 568
     Width = 638
-    Height = 54
+    Height = 67
     Align = alClient
     Caption = 'Custom'
     TabOrder = 7
+    ExplicitTop = 577
+    ExplicitHeight = 54
     object btnSendObject1: TButton
-      Left = 11
+      Left = 325
       Top = 24
       Width = 150
       Height = 25
@@ -480,22 +532,66 @@ object frmLogger: TfrmLogger
       TabOrder = 0
     end
     object btnSendODS: TButton
-      Left = 167
+      Left = 481
       Top = 24
       Width = 150
       Height = 25
       Action = actSendODS
       TabOrder = 1
     end
-    object chkSendRandomValueTimer: TCheckBox
-      Left = 336
-      Top = 28
-      Width = 161
-      Height = 17
-      Caption = 'Send random value timer'
+    object edtMessageCount: TLabeledEdit
+      Left = 89
+      Top = 26
+      Width = 73
+      Height = 21
+      Alignment = taRightJustify
+      EditLabel.Width = 76
+      EditLabel.Height = 13
+      EditLabel.Caption = 'Message count:'
+      EditLabel.Font.Charset = DEFAULT_CHARSET
+      EditLabel.Font.Color = clWindowText
+      EditLabel.Font.Height = -11
+      EditLabel.Font.Name = 'Tahoma'
+      EditLabel.Font.Style = []
+      EditLabel.ParentFont = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      LabelPosition = lpLeft
+      NumbersOnly = True
+      ParentFont = False
       TabOrder = 2
-      OnClick = chkSendRandomValueTimerClick
+      Text = '0'
     end
+    object btnSendMessages: TButton
+      Left = 168
+      Top = 24
+      Width = 150
+      Height = 25
+      Action = actSendMessages
+      TabOrder = 3
+    end
+  end
+  object sbr1: TStatusBar
+    Left = 0
+    Top = 638
+    Width = 644
+    Height = 19
+    Panels = <
+      item
+        Width = 100
+      end
+      item
+        Width = 100
+      end
+      item
+        Width = 100
+      end>
+    ExplicitLeft = 328
+    ExplicitTop = 352
+    ExplicitWidth = 0
   end
   object aclMain: TActionList
     Images = imlLogger
@@ -639,19 +735,23 @@ object frmLogger: TfrmLogger
       Caption = 'Send TPersistent'
       OnExecute = actSendPersistentExecute
     end
+    object actSendMessages: TAction
+      Caption = 'Send messages'
+      OnExecute = actSendMessagesExecute
+    end
   end
   object tmrSendCounter: TTimer
     Enabled = False
     OnTimer = tmrSendCounterTimer
-    Left = 336
-    Top = 488
+    Left = 96
+    Top = 512
   end
   object imlLogger: TImageList
     ColorDepth = cd32Bit
     Left = 448
     Top = 536
     Bitmap = {
-      494C010116001900180010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C0101160019001C0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000006000000001002000000000000060
       0000000000000000000000000000000000000000000000000000000000000000
       000001370099045701D1045701D1012500660000000001250066045701D10457
@@ -1454,7 +1554,7 @@ object frmLogger: TfrmLogger
     Enabled = False
     Interval = 400
     OnTimer = tmrSendValueTimer
-    Left = 480
-    Top = 480
+    Left = 176
+    Top = 520
   end
 end

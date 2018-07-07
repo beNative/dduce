@@ -49,8 +49,8 @@ const
 const
 (*  Version macros for compile-time API version detection                     *)
   ZMQ_VERSION_MAJOR = 4;
-  ZMQ_VERSION_MINOR = 0;
-  ZMQ_VERSION_PATCH = 1;
+  ZMQ_VERSION_MINOR = 1;
+  ZMQ_VERSION_PATCH = 6;
 
   ZMQ_VERSION_ =
     ZMQ_VERSION_MAJOR * 10000 +
@@ -133,7 +133,8 @@ function zmq_ctx_destroy(context: Pointer): Integer; cdecl; external LIBZEROMQ d
 (******************************************************************************)
 
 const
-  ZMQ_MAX_VSM_SIZE = 30;
+  //ZMQ_MAX_VSM_SIZE = 30;
+  ZMQ_MAX_VSM_SIZE = 57;
 
 type
   PZmqMsg = ^TZmqMsg;
