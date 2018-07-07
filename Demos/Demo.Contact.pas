@@ -16,8 +16,6 @@
 
 unit Demo.Contact;
 
-{$I ..\Source\DDuce.inc}
-
 { Sample model object that is typically a database entity object }
 
 interface

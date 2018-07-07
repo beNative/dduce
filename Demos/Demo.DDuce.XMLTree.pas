@@ -16,8 +16,6 @@
 
 unit Demo.DDuce.XMLTree;
 
-{$I ..\Source\DDuce.inc}
-
 { Form demonstrating the TXMLTree component which is a TVirtualStringTree
   descendant. }
 

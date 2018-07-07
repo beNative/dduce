@@ -16,8 +16,6 @@
 
 unit Demo.Factories;
 
-{$I ..\Source\DDuce.inc}
-
 interface
 
 uses

@@ -23,8 +23,6 @@ unit Demo.DDuce.DynamicRecord;
 
 interface
 
-{$I ..\Source\DDuce.inc}
-
 uses
   Winapi.Windows,
   System.SysUtils, System.Variants, System.Classes, System.Actions, System.Rtti,

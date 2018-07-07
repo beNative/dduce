@@ -16,8 +16,6 @@
 
 unit Demo.MainForm;
 
-{$I ..\Source\DDuce.inc}
-
 interface
 
 uses
@@ -51,10 +49,10 @@ type
 
     procedure FVSTKeyPress(Sender: TObject; var Key: Char);
     procedure FVSTPaintBackground(
-          Sender       : TBaseVirtualTree;
-          TargetCanvas : TCanvas;
-          R            : TRect;
-      var Handled      : Boolean
+      Sender       : TBaseVirtualTree;
+      TargetCanvas : TCanvas;
+      R            : TRect;
+      var Handled  : Boolean
     );
 
     procedure FTVPFilter(Item: TObject; var Accepted: Boolean);
@@ -72,14 +70,14 @@ type
 
     procedure edtFilterChange(Sender: TObject);
     procedure edtFilterKeyDown(
-          Sender : TObject;
-      var Key    : Word;
-          Shift  : TShiftState
+      Sender  : TObject;
+      var Key : Word;
+      Shift   : TShiftState
     );
     procedure edtFilterKeyUp(
-          Sender : TObject;
-      var Key    : Word;
-          Shift  : TShiftState
+      Sender  : TObject;
+      var Key : Word;
+      Shift   : TShiftState
     );
     procedure actCenterMainFormExecute(Sender: TObject);
     procedure tbrMainThumbButtonClick(Sender: TObject; AButtonID: Integer);

@@ -14,8 +14,6 @@
   limitations under the License.
 }
 
-{$I ..\Source\DDuce.inc}
-
 unit Demo.DDuce.Logger;
 
 { This form demonstrates the methods of the ILogger interface and its support
