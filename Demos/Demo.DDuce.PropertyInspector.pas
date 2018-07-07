@@ -16,8 +16,6 @@
 
 unit Demo.DDuce.PropertyInspector;
 
-{$I ..\Source\DDuce.inc}
-
 interface
 
 uses

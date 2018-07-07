@@ -14,6 +14,8 @@
   limitations under the License.
 }
 
+{$I Test.DDuce.inc}
+
 unit Test.Resources;
 
 interface

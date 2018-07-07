@@ -14,11 +14,11 @@
   limitations under the License.
 }
 
+{$I Test.DDuce.inc}
+
 unit Test.Utils;
 
 { Common routines used in our set of unit tests. }
-
-{$I Test.DDuce.inc}
 
 interface
 

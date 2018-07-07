@@ -14,9 +14,9 @@
   limitations under the License.
 }
 
-unit Test.Registration;
-
 {$I Test.DDuce.inc}
+
+unit Test.Registration;
 
 interface
 

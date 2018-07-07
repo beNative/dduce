@@ -21,8 +21,6 @@ unit Demo.DDuce.ScopedReference;
 
 interface
 
-{$I ..\Source\DDuce.inc}
-
 uses
   System.Actions, System.SysUtils, System.Classes,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList, Vcl.StdCtrls,

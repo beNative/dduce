@@ -14,11 +14,11 @@
   limitations under the License.
 }
 
+{$I Test.DDuce.inc}
+
 unit Test.Data;
 
 { Data types used for unit tests. }
-
-{$I Test.DDuce.inc}
 
 interface
 

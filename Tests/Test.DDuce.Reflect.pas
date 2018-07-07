@@ -14,14 +14,12 @@
   limitations under the License.
 }
 
-unit Test.DDuce.Reflect;
-
 {$I Test.DDuce.inc}
 
-{
-  TODO : test value assignments to reflected members. Assigned values are
-  not assigned to the wrapped instance => bug
-}
+unit Test.DDuce.Reflect;
+
+{ TODO : test value assignments to reflected members. Assigned values are
+  not assigned to the wrapped instance => bug }
 
 interface
 

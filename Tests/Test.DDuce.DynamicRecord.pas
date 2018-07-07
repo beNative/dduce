@@ -14,9 +14,9 @@
   limitations under the License.
 }
 
-unit Test.DDuce.DynamicRecord;
-
 {$I Test.DDuce.inc}
+
+unit Test.DDuce.DynamicRecord;
 
 { Tests all members of the non-generic version of DynamicRecord. }
 

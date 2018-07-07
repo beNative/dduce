@@ -14,9 +14,9 @@
   limitations under the License.
 }
 
-unit Test.DDuce.DynamicRecord.Generic;
-
 {$I Test.DDuce.inc}
+
+unit Test.DDuce.DynamicRecord.Generic;
 
 interface
 

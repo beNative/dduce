@@ -14,9 +14,9 @@
   limitations under the License.
 }
 
-unit Test.DDuce.Logger;
-
 {$I Test.DDuce.inc}
+
+unit Test.DDuce.Logger;
 
 interface
 

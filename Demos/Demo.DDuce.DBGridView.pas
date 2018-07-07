@@ -16,8 +16,6 @@
 
 unit Demo.DDuce.DBGridView;
 
-{$I ..\Source\DDuce.inc}
-
 { Unit demonstrating the TDBGridView component. }
 
 interface
