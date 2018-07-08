@@ -6,7 +6,7 @@
         <MainSource>DDuce.Demos.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>3</TargetedPlatforms>
         <AppType>Application</AppType>
     </PropertyGroup>
@@ -106,7 +106,6 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <Custom_Styles>Carbon|VCLSTYLE|$(BDSCOMMONDIR)\Styles\Carbon.vsf;Glossy|VCLSTYLE|$(BDSCOMMONDIR)\Styles\Glossy.vsf;Glow|VCLSTYLE|$(BDSCOMMONDIR)\Styles\Glow.vsf;Light|VCLSTYLE|$(BDSCOMMONDIR)\Styles\Light.vsf;Windows10|VCLSTYLE|$(BDSCOMMONDIR)\Styles\Windows10.vsf</Custom_Styles>
-        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <SanitizedProjectName>DDuce_Demos</SanitizedProjectName>
         <DCC_DcuOutput>.\Lib\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\Bin\$(Platform)</DCC_ExeOutput>
@@ -117,7 +116,7 @@
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <DCC_K>false</DCC_K>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_UnitSearchPath>..\Source;..\Source\Modules\Logger;..\Source\Modules\Editor;..\Source\Modules\ObjectInspector;..\Source\Modules\RTTEye;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <BT_BuildType>Debug</BT_BuildType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <BT_BuildType>Debug</BT_BuildType>
