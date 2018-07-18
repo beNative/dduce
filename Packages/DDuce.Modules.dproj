@@ -6,7 +6,7 @@
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>3</TargetedPlatforms>
         <AppType>Package</AppType>
     </PropertyGroup>
@@ -230,6 +230,10 @@
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Factories.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.pas"/>
+        <DCCReference Include="..\Source\Modules\DDuce.AboutDialog.pas">
+            <Form>frmAboutDialog</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -280,6 +284,12 @@
                 </DeployFile>
                 <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\DDuce.Modules.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
+                        <RemoteName>DDuce_Modules.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\Win64\DDuce.Modules.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
                         <RemoteName>DDuce_Modules.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>

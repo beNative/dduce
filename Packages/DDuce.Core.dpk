@@ -33,7 +33,9 @@ requires
   vcl,
   dbrtl,
   VirtualTreesR,
-  Spring.Core;
+  Spring.Core,
+  Spring.Base,
+  Spring.Extensions;
 
 contains
   DDuce.Settings.Form in '..\Source\Settings\DDuce.Settings.Form.pas',

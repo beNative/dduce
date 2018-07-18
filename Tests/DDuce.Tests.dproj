@@ -83,7 +83,7 @@
         <DCC_ExeOutput>.\Bin\$(Platform)</DCC_ExeOutput>
         <DCC_DcuOutput>.\Lib\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_Define>TESTINSIGHT;$(DCC_Define)</DCC_Define>
-        <DCC_UnitSearchPath>..\Source;..\Source\Modules\Logger;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\Source;..\Source\Modules\Logger;D:\development\delphi\libraries\delphi-leakcheck\External\DUnit;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -156,9 +156,7 @@
         <DCCReference Include="Test.DDuce.DynamicRecord.pas"/>
         <DCCReference Include="Test.DDuce.DynamicRecord.Generic.pas"/>
         <DCCReference Include="Test.DDuce.Reflect.pas"/>
-        <DCCReference Include="Test.DDuce.Logger.pas">
-            <Form>$R *.RES</Form>
-        </DCCReference>
+        <DCCReference Include="Test.DDuce.Logger.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

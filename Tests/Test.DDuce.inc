@@ -15,4 +15,6 @@
 }
 
 {$DEFINE TESTINSIGHT} // comment this for standard DUnit GUI
+{$DEFINE LEAKCHECK}   // enables LeakCheck support
+
 {.$DEFINE NULLABLE} // enables tests on nullable members

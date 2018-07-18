@@ -289,6 +289,7 @@ begin
     end;
   end;
 end;
+
 {$REGION 'TLogger'}
 {$REGION 'construction and destruction'}
 procedure TLogger.AfterConstruction;

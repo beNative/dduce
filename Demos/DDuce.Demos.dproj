@@ -192,11 +192,9 @@
         <DCCReference Include="Demo.Resources.pas"/>
         <DCCReference Include="Demo.DDuce.VirtualTrees.pas">
             <Form>frmVirtualTrees</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Demo.DDuce.ValueList.pas">
             <Form>frmValueListDemo</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Demo.Settings.pas"/>
         <BuildConfiguration Include="Release">

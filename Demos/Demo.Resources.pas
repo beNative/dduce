@@ -28,6 +28,27 @@ const
     'occaecat cupidatat non proident, sunt in culpa qui officia deserunt '     +
     'mollit anim id est laborum.';
 
+  EXAMPLE_SQL =
+    '/* Chinook database example query */'    + sLineBreak +
+    'select'                                  + sLineBreak +
+    '  *'                                     + sLineBreak +
+    'from '                                   + sLineBreak +
+    '  InvoiceLine il'                        + sLineBreak +
+    '  inner join Invoice i'                  + sLineBreak +
+    '    on (i.InvoiceId = il.InvoiceId)'     + sLineBreak +
+    '  inner join Customer c'                 + sLineBreak +
+    '    on (c.CustomerId = i.CustomerId)'    + sLineBreak +
+    '  inner join Employee e'                 + sLineBreak +
+    '    on (e.EmployeeId = c.SupportRepId)'  + sLineBreak +
+    '  inner join Track t'                    + sLineBreak +
+    '    on (il.TrackId = t.TrackId)'         + sLineBreak +
+    '  inner join Album al'                   + sLineBreak +
+    '    on (al.AlbumId = t.AlbumId)'         + sLineBreak +
+    '  inner join MediaType mt'               + sLineBreak +
+    '    on (mt.MediaTypeId = t.MediaTypeId)' + sLineBreak +
+    '  inner join Genre g'                    + sLineBreak +
+    '    on (g.GenreId = t.GenreId)';
+
 implementation
 
 end.

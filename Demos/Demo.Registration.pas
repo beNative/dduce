@@ -42,7 +42,7 @@ uses
 procedure RegisterDemos;
 begin
   DemoManager.Register(TfrmLogger, 'Logger');
-  Exit;
+  //Exit;
   DemoManager.Register(TfrmScopedReferences, 'Scoped references');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');

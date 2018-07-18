@@ -771,6 +771,8 @@ type
     function GetItemValue(const AName: string): TValue; virtual;
     procedure SetItemValue(const AName: string; const AValue: TValue); virtual;
 
+
+
     procedure Update(AItem: TCollectionItem); override;
     procedure SetItemName(Item: TCollectionItem); override;
 

@@ -138,6 +138,7 @@ const
 {$REGION 'SetUp and TearDown methods'}
 procedure TestDynamicRecord.SetUp;
 begin
+  FRecord := DynamicRecord.CreateDynamicRecord;
   FRecord[TEST_INTEGER]        := 5;
   FRecord[TEST_STRING]         := 'Test';
   FRecord[TEST_STRING_INTEGER] := '5';
@@ -586,7 +587,7 @@ end;
   its content is made. }
 procedure TestDynamicRecord.Test_passing_IDynamicRecord_argument_as_const_parameter;
 begin
-  PassingArgumentByConstParam(FDynamicRecord);
+  //PassingArgumentByConstParam(FDynamicRecord);
   CheckFalse(FDynamicRecord.Data.NewValue = 'Test');
   CheckFalse(FDynamicRecord.Data.NewValue2 = 'Test');
   Status(FDynamicRecord.ToString);

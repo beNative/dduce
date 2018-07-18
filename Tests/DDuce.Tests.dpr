@@ -17,6 +17,9 @@ program DDuce.Tests;
 {$ENDIF}
 
 uses
+  {$IFDEF LEAKCHECK}
+  LeakCheck,
+  {$ENDIF }
   Forms,
   {$IFDEF TESTINSIGHT}
   TestInsight.DUnit,
@@ -35,7 +38,9 @@ uses
 {$R *.RES}
 
 begin
+  {$WARNINGS OFF}
   ReportMemoryLeaksOnShutdown := True;
+  {$WARNINGS ON}
   Application.Initialize;
   RegisterTests;
   RunRegisteredTests;

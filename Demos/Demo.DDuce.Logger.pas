@@ -117,6 +117,8 @@ type
     edtMessageCount: TLabeledEdit;
     actSendMessages: TAction;
     btnSendMessages: TButton;
+    actSendSQL: TAction;
+    btnSendSQL: TButton;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -158,6 +160,7 @@ type
     procedure chkWinIPCChannelActiveClick(Sender: TObject);
     procedure chkZeroMQChannelActiveClick(Sender: TObject);
     procedure actSendMessagesExecute(Sender: TObject);
+    procedure actSendSQLExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -360,6 +363,11 @@ var
 begin
   R := BoundsRect;
   Logger.SendRect('BoundsRect', R);
+end;
+
+procedure TfrmLogger.actSendSQLExecute(Sender: TObject);
+begin
+  Logger.SendText('SQL', EXAMPLE_SQL, 'SQL');
 end;
 
 procedure TfrmLogger.actSendStringsExecute(Sender: TObject);

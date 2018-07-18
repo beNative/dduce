@@ -9,21 +9,21 @@ package DDuce.Modules;
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
-{$LOCALSYMBOLS OFF}
+{$LOCALSYMBOLS ON}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
-{$OPTIMIZATION ON}
+{$OPTIMIZATION OFF}
 {$OVERFLOWCHECKS OFF}
 {$RANGECHECKS OFF}
-{$REFERENCEINFO OFF}
+{$REFERENCEINFO ON}
 {$SAFEDIVIDE OFF}
-{$STACKFRAMES OFF}
+{$STACKFRAMES ON}
 {$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DEFINE RELEASE}
+{$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
 {$IMPLICITBUILD ON}
 
@@ -93,6 +93,8 @@ contains
   DDuce.Logger.Channels.ZeroMQ in '..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas',
   DDuce.Logger.Factories in '..\Source\Modules\Logger\DDuce.Logger.Factories.pas',
   DDuce.Logger.Interfaces in '..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas',
-  DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas';
+  DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas',
+  DDuce.AboutDialog in '..\Source\Modules\DDuce.AboutDialog.pas' {frmAboutDialog};
 
 end.
+

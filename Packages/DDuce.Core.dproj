@@ -6,7 +6,7 @@
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>3</TargetedPlatforms>
         <AppType>Package</AppType>
     </PropertyGroup>
@@ -122,6 +122,8 @@
         <DCCReference Include="dbrtl.dcp"/>
         <DCCReference Include="VirtualTreesR.dcp"/>
         <DCCReference Include="Spring.Core.dcp"/>
+        <DCCReference Include="Spring.Base.dcp"/>
+        <DCCReference Include="Spring.Extensions.dcp"/>
         <DCCReference Include="..\Source\Settings\DDuce.Settings.Form.pas"/>
         <DCCReference Include="..\Source\Settings\DDuce.Settings.TextFormat.pas"/>
         <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Bindings.Collections.pas"/>
@@ -189,10 +191,16 @@
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule"/>
+                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule"/>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\Win64\DDuce.Core.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>DDuce_Core.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\iossim32\libcgunwind.1.0.dylib" Class="DependencyModule"/>
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libPCRE.dylib" Class="DependencyModule"/>
-                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule"/>
-                <DeployFile LocalName="..\Bin\Win32\DDuce.Core.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\DDuce.Core.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>DDuce_Core.bpl</RemoteName>
                         <Overwrite>true</Overwrite>

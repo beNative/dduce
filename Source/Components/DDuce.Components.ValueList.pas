@@ -36,11 +36,11 @@ type
   private
     FData  : IDynamicRecord;
     FNodes : IList<TValueListNode>;
-    procedure SetNameColumn(const Value: TVirtualTreeColumn);
-    procedure SetValueColumn(const Value: TVirtualTreeColumn);
 
   protected
     {$REGION 'property access methods'}
+    procedure SetNameColumn(const Value: TVirtualTreeColumn);
+    procedure SetValueColumn(const Value: TVirtualTreeColumn);
     function GetEditable: Boolean;
     procedure SetEditable(const Value: Boolean);
     function GetNameColumn: TVirtualTreeColumn;
