@@ -51,6 +51,7 @@ type
     actSendError             : TAction;
     actSendInfo              : TAction;
     actSendInterface         : TAction;
+    actSendMessages          : TAction;
     actSendObject            : TAction;
     actSendODS               : TAction;
     actSendPersistent        : TAction;
@@ -58,6 +59,7 @@ type
     actSendRecord            : TAction;
     actSendRect              : TAction;
     actSendScreenshot        : TAction;
+    actSendSQL               : TAction;
     actSendStrings           : TAction;
     actSendTestSequence      : TAction;
     actSendText              : TAction;
@@ -72,12 +74,12 @@ type
     btnResetCheckpoint       : TButton;
     btnResetCounter          : TButton;
     btnSendBitmap            : TButton;
-    btnSendClear             : TButton;
     btnSendComponent         : TButton;
     btnSendDataSet           : TButton;
     btnSendError             : TButton;
     btnSendInfo              : TButton;
     btnSendInterface         : TButton;
+    btnSendMessages          : TButton;
     btnSendObject            : TButton;
     btnSendObject1           : TButton;
     btnSendODS               : TButton;
@@ -85,14 +87,17 @@ type
     btnSendPoint             : TButton;
     btnSendRecord            : TButton;
     btnSendRect              : TButton;
+    btnSendSQL               : TButton;
     btnSendStrings           : TButton;
     btnSendText              : TButton;
     btnSendWarning           : TButton;
     chkEnableCountTimer      : TCheckBox;
     chkLogFileChannelActive  : TCheckBox;
+    chkSendRandomValueTimer  : TCheckBox;
     chkWinIPCChannelActive   : TCheckBox;
     chkZeroMQChannelActive   : TCheckBox;
     edtLogMessage            : TLabeledEdit;
+    edtMessageCount          : TLabeledEdit;
     edtMethod1               : TLabeledEdit;
     edtMethod2               : TLabeledEdit;
     grpCheckpoints           : TGroupBox;
@@ -105,20 +110,21 @@ type
     grpWatches               : TGroupBox;
     imlLogger                : TImageList;
     lblCheckpointDescription : TLabel;
+    lblCounterValue          : TLabel;
     lblLogViewer             : TLabel;
     lblPosition              : TLabel;
+    lblPositionValue         : TLabel;
+    sbr1                     : TStatusBar;
     tmrSendCounter           : TTimer;
     tmrSendValue             : TTimer;
     trbMain                  : TTrackBar;
-    lblCounterValue: TLabel;
-    sbr1: TStatusBar;
-    lblPositionValue: TLabel;
-    chkSendRandomValueTimer: TCheckBox;
-    edtMessageCount: TLabeledEdit;
-    actSendMessages: TAction;
-    btnSendMessages: TButton;
-    actSendSQL: TAction;
-    btnSendSQL: TButton;
+    edtLogFile: TButtonedEdit;
+    grpCommands: TGroupBox;
+    btnSendClear: TButton;
+    chkAutoAssignPort: TCheckBox;
+    chkAutoAssignIPAddress: TCheckBox;
+    edtPort: TLabeledEdit;
+    edtIPAddress: TLabeledEdit;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -166,9 +172,9 @@ type
   private
     FM1Entered      : Boolean;
     FM2Entered      : Boolean;
-    FLogFileChannel : ILogChannel;
-    FWinIPCChannel  : ILogChannel;
-    FZeroMQChannel  : ILogChannel;
+    FLogFileChannel : ILogFileChannel;
+    FWinIPCChannel  : IWinIPCChannel;
+    FZeroMQChannel  : IZeroMQChannel;
     FLogger         : ILogger;
 
     procedure TestProcedure1;
@@ -206,8 +212,9 @@ uses
 {$R *.dfm}
 
 resourcestring
-  SEnter = 'Enter %s';
-  SLeave = 'Leave %s';
+  SEnter   = 'Enter %s';
+  SLeave   = 'Leave %s';
+  SVersion = 'ZeroMQ version %s';
 
 {$REGION 'construction and destruction'}
 procedure TfrmLogger.AfterConstruction;
@@ -230,7 +237,8 @@ begin
   FLogger := TLoggerFactories.CreateLogger;
   FWinIPCChannel  := TWinIPCChannel.Create(False);
   FLogFileChannel := TLogFileChannel.Create;
-  FZeroMQChannel  := TZeroMQChannel.Create(False);
+  FZeroMQChannel  := TZeroMQChannel.Create;
+  chkZeroMQChannelActive.Hint := Format(SVersion, [FZeroMQChannel.ZMQVersion]);
 
   Logger.Channels.Add(FLogFileChannel);
   Logger.Channels.Add(FWinIPCChannel);
@@ -390,12 +398,12 @@ procedure TfrmLogger.actSendTestSequenceExecute(Sender: TObject);
 var
   I: Integer;
 begin
-  for I := 0 to 5000 do
+  for I := 0 to 10 do
   begin
-    //Logger.Send('I', I);
+    Logger.Send('I', I);
     Logger.Watch('I', I);
-    //TestProcedure1;
-    //TestProcedure2;
+    TestProcedure1;
+    TestProcedure2;
   end;
 end;
 
@@ -490,6 +498,10 @@ begin
     UnitName, 'edtMethod2.Text', 'MyObject.Update'
   );
   edtMessageCount.Text := IntToStr(Settings.ReadInteger(UnitName, 'MessageCount'));
+  chkAutoAssignIPAddress.Checked := Settings.ReadBool(UnitName, 'AutoAssignIPAddress');
+  chkAutoAssignPort.Checked := Settings.ReadBool(UnitName, 'AutoAssignPort');
+  edtIPAddress.Text := Settings.ReadString(UnitName, 'IPAddress');
+  edtPort.Text := Settings.ReadString(UnitName, 'Port');
 end;
 
 procedure TfrmLogger.SaveSettings;
@@ -500,6 +512,10 @@ begin
   Settings.WriteString(UnitName, 'edtMethod1.Text', edtMethod1.Text);
   Settings.WriteString(UnitName, 'edtMethod2.Text', edtMethod2.Text);
   Settings.WriteInteger(UnitName, 'MessageCount', StrToIntDef(edtMessageCount.Text, 0));
+  Settings.WriteBool(UnitName, 'AutoAssignPort', chkAutoAssignPort.Checked);
+  Settings.WriteBool(UnitName, 'AutoAssignIPAddress', chkAutoAssignIPAddress.Checked);
+  Settings.WriteString(UnitName, 'IPAddress', edtIPAddress.Text);
+  Settings.WriteString(UnitName, 'Port', edtPort.Text);
 end;
 
 procedure TfrmLogger.TestProcedure1;
@@ -552,6 +568,8 @@ begin
   lblCounterValue.Caption := Logger.GetCounter('Counter').ToString;
   lblPositionValue.Caption := trbMain.Position.ToString;
   actSendMessages.Caption := Format('Send %s messages', [edtMessageCount.Text]);
+  edtPort.ReadOnly               := not chkAutoAssignPort.Checked;
+  edtIPAddress.ReadOnly          := not chkAutoAssignIPAddress.Checked;
 end;
 {$ENDREGION}
 

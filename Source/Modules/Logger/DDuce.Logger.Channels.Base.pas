@@ -31,6 +31,7 @@ type
 
   protected
     {$REGION 'property access methods'}
+    function GetPort: Integer; virtual;
     function GetActive: Boolean; virtual;
     procedure SetActive(const Value: Boolean); virtual;
     function GetConnected: Boolean; virtual;
@@ -47,8 +48,11 @@ type
     property Connected: Boolean
       read GetConnected write SetConnected;
 
+    property Port: Integer
+      read GetPort;
+
   public
-    constructor Create(AActive : Boolean = True); virtual;
+    constructor Create(AActive: Boolean = True); virtual;
 
     function Write(const AMsg: TLogMessage): Boolean; virtual; abstract;
 
@@ -81,6 +85,11 @@ end;
 function TCustomLogChannel.GetConnected: Boolean;
 begin
   Result := Active and FConnected;
+end;
+
+function TCustomLogChannel.GetPort: Integer;
+begin
+  Result := 0;
 end;
 
 procedure TCustomLogChannel.SetConnected(const Value: Boolean);
