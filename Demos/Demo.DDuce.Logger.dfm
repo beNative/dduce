@@ -3,7 +3,7 @@ object frmLogger: TfrmLogger
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Logger'
-  ClientHeight = 755
+  ClientHeight = 674
   ClientWidth = 644
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,13 +19,13 @@ object frmLogger: TfrmLogger
   object grpWatches: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 552
+    Top = 485
     Width = 638
     Height = 58
     Align = alTop
     Caption = 'Watches'
     TabOrder = 0
-    ExplicitTop = 439
+    ExplicitTop = 552
     DesignSize = (
       638
       58)
@@ -80,13 +80,13 @@ object frmLogger: TfrmLogger
   object grpMethodTracing: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 273
+    Top = 206
     Width = 638
     Height = 85
     Align = alTop
     Caption = 'Method tracing'
     TabOrder = 1
-    ExplicitTop = 160
+    ExplicitTop = 273
     object btnEnterMethod1: TButton
       Left = 12
       Top = 22
@@ -105,7 +105,7 @@ object frmLogger: TfrmLogger
       Action = actEnterMethod2
       ImageMargins.Left = 2
       Images = imlLogger
-      TabOrder = 1
+      TabOrder = 3
     end
     object btnExitMethod1: TButton
       Left = 480
@@ -125,7 +125,7 @@ object frmLogger: TfrmLogger
       Action = actLeaveMethod2
       ImageMargins.Left = 2
       Images = imlLogger
-      TabOrder = 3
+      TabOrder = 5
     end
     object edtMethod1: TLabeledEdit
       Left = 246
@@ -143,7 +143,7 @@ object frmLogger: TfrmLogger
       Font.Style = [fsBold]
       LabelPosition = lpLeft
       ParentFont = False
-      TabOrder = 4
+      TabOrder = 1
       Text = 'MyObject.Execute'
     end
     object edtMethod2: TLabeledEdit
@@ -162,20 +162,20 @@ object frmLogger: TfrmLogger
       Font.Style = [fsBold]
       LabelPosition = lpLeft
       ParentFont = False
-      TabOrder = 5
+      TabOrder = 4
       Text = 'MyObject.Update'
     end
   end
   object grpNotificationMessages: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 178
+    Top = 111
     Width = 638
     Height = 89
     Align = alTop
     Caption = 'Notification messages'
     TabOrder = 2
-    ExplicitTop = 65
+    ExplicitTop = 178
     DesignSize = (
       638
       89)
@@ -239,13 +239,13 @@ object frmLogger: TfrmLogger
   object grpCounters: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 364
+    Top = 297
     Width = 638
     Height = 58
     Align = alTop
     Caption = 'Counters'
     TabOrder = 3
-    ExplicitTop = 251
+    ExplicitTop = 364
     object lblCounterValue: TLabel
       Left = 85
       Top = 12
@@ -271,7 +271,7 @@ object frmLogger: TfrmLogger
       Height = 25
       Action = actIncCounter
       Images = imlLogger
-      TabOrder = 0
+      TabOrder = 1
     end
     object btnResetCounter: TButton
       Left = 480
@@ -280,7 +280,7 @@ object frmLogger: TfrmLogger
       Height = 25
       Action = actResetCounter
       Images = imlLogger
-      TabOrder = 1
+      TabOrder = 3
     end
     object btnDecCounter: TButton
       Left = 324
@@ -298,7 +298,7 @@ object frmLogger: TfrmLogger
       Height = 39
       Hint = 'Increases the counter automatically each second.'
       Caption = 'Enable count timer'
-      TabOrder = 3
+      TabOrder = 0
       WordWrap = True
       OnClick = chkEnableCountTimerClick
     end
@@ -312,6 +312,7 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Logger channels'
     TabOrder = 4
+    ExplicitLeft = 8
     DesignSize = (
       638
       102)
@@ -329,9 +330,52 @@ object frmLogger: TfrmLogger
       ParentFont = False
       Transparent = False
     end
+    object lblPort: TLabel
+      Left = 354
+      Top = 47
+      Width = 47
+      Height = 13
+      AutoSize = False
+      Caption = '000000'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Layout = tlCenter
+    end
+    object lblPortCaption: TLabel
+      Left = 324
+      Top = 47
+      Width = 24
+      Height = 13
+      Caption = 'Port:'
+    end
+    object lblIPCaption: TLabel
+      Left = 403
+      Top = 47
+      Width = 14
+      Height = 13
+      Caption = 'IP:'
+    end
+    object lblIPAddress: TLabel
+      Left = 425
+      Top = 47
+      Width = 89
+      Height = 13
+      AutoSize = False
+      Caption = 'localhost'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
     object chkLogFileChannelActive: TCheckBox
       Left = 17
-      Top = 24
+      Top = 22
       Width = 48
       Height = 17
       Hint = 'Enables or disables logfile channel.'
@@ -341,18 +385,18 @@ object frmLogger: TfrmLogger
     end
     object chkWinIPCChannelActive: TCheckBox
       Left = 17
-      Top = 76
+      Top = 69
       Width = 61
       Height = 17
       Hint = 'Enables or disables WinIPC channel.'
       Caption = 'WinIPC'
-      TabOrder = 1
+      TabOrder = 5
       OnClick = chkWinIPCChannelActiveClick
     end
     object chkZeroMQChannelActive: TCheckBox
       Left = 17
-      Top = 51
-      Width = 69
+      Top = 46
+      Width = 61
       Height = 17
       Hint = 'Enables or disables ZeroMQ channel.'
       Caption = 'ZeroMQ'
@@ -360,61 +404,27 @@ object frmLogger: TfrmLogger
       OnClick = chkZeroMQChannelActiveClick
     end
     object edtLogFile: TButtonedEdit
-      Left = 89
-      Top = 22
-      Width = 541
+      Left = 85
+      Top = 20
+      Width = 428
       Height = 21
       Hint = 'Database (server or path).'
       Anchors = [akLeft, akTop, akRight]
       Images = imlLogger
       RightButton.ImageIndex = 23
       RightButton.Visible = True
-      TabOrder = 3
+      TabOrder = 1
     end
-    object chkAutoAssignPort: TCheckBox
-      Left = 89
-      Top = 51
-      Width = 97
-      Height = 17
-      Caption = 'Auto assign port'
-      TabOrder = 4
-    end
-    object chkAutoAssignIPAddress: TCheckBox
-      Left = 195
-      Top = 51
-      Width = 132
-      Height = 17
-      Caption = 'Auto assign IP address'
-      TabOrder = 5
-    end
-    object edtPort: TLabeledEdit
-      Left = 365
-      Top = 50
-      Width = 73
-      Height = 21
-      Alignment = taCenter
-      EditLabel.Width = 24
-      EditLabel.Height = 13
-      EditLabel.Caption = 'Port:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      LabelPosition = lpLeft
-      ParentFont = False
-      TabOrder = 6
-    end
-    object edtIPAddress: TLabeledEdit
-      Left = 505
-      Top = 49
-      Width = 124
+    object edtEndPoint: TLabeledEdit
+      Left = 136
+      Top = 44
+      Width = 129
       Height = 21
       Alignment = taCenter
       Anchors = [akLeft, akTop, akRight]
-      EditLabel.Width = 55
+      EditLabel.Width = 46
       EditLabel.Height = 13
-      EditLabel.Caption = 'IP address:'
+      EditLabel.Caption = 'Endpoint:'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -422,19 +432,37 @@ object frmLogger: TfrmLogger
       Font.Style = [fsBold]
       LabelPosition = lpLeft
       ParentFont = False
-      TabOrder = 7
+      TabOrder = 3
+      Text = 'tcp://*:*'
+    end
+    object btnZMQBind: TButton
+      Left = 271
+      Top = 43
+      Width = 47
+      Height = 24
+      Action = actZMQBind
+      TabOrder = 4
+    end
+    object btnSendClear: TButton
+      Left = 519
+      Top = 19
+      Width = 111
+      Height = 76
+      Action = actSendClear
+      Images = imlLogger
+      TabOrder = 6
     end
   end
   object grpCheckpoints: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 616
+    Top = 549
     Width = 638
     Height = 59
     Align = alTop
     Caption = 'Checkpoints'
     TabOrder = 5
-    ExplicitTop = 503
+    ExplicitTop = 616
     object lblCheckpointDescription: TLabel
       Left = 12
       Top = 19
@@ -452,7 +480,7 @@ object frmLogger: TfrmLogger
       Height = 25
       Action = actResetCheckpoint
       Images = imlLogger
-      TabOrder = 0
+      TabOrder = 1
     end
     object btnAddCheckpoint: TButton
       Left = 324
@@ -462,19 +490,19 @@ object frmLogger: TfrmLogger
       Action = actAddCheckpoint
       ImageMargins.Left = 3
       Images = imlLogger
-      TabOrder = 1
+      TabOrder = 0
     end
   end
   object grpValues: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 428
+    Top = 361
     Width = 638
     Height = 118
     Align = alTop
     Caption = 'Log values'
     TabOrder = 6
-    ExplicitTop = 315
+    ExplicitTop = 428
     object btnSendObject: TButton
       Left = 324
       Top = 23
@@ -483,7 +511,7 @@ object frmLogger: TfrmLogger
       Action = actSendObject
       Caption = 'Send TObject'
       Images = imlLogger
-      TabOrder = 0
+      TabOrder = 2
     end
     object btnSendRecord: TButton
       Left = 168
@@ -501,7 +529,7 @@ object frmLogger: TfrmLogger
       Height = 25
       Action = actSendComponent
       Images = imlLogger
-      TabOrder = 2
+      TabOrder = 5
     end
     object btnSendStrings: TButton
       Left = 324
@@ -510,7 +538,7 @@ object frmLogger: TfrmLogger
       Height = 25
       Action = actSendStrings
       Images = imlLogger
-      TabOrder = 3
+      TabOrder = 6
     end
     object btnSendDataSet: TButton
       Left = 480
@@ -519,7 +547,7 @@ object frmLogger: TfrmLogger
       Height = 25
       Action = actSendDataSet
       Images = imlLogger
-      TabOrder = 4
+      TabOrder = 11
     end
     object btnSendBitmap: TButton
       Left = 480
@@ -528,7 +556,7 @@ object frmLogger: TfrmLogger
       Height = 25
       Action = actSendBitmap
       Images = imlLogger
-      TabOrder = 5
+      TabOrder = 7
     end
     object btnSendRect: TButton
       Left = 168
@@ -537,7 +565,7 @@ object frmLogger: TfrmLogger
       Height = 25
       Action = actSendRect
       Images = imlLogger
-      TabOrder = 6
+      TabOrder = 9
     end
     object btnSendPoint: TButton
       Left = 12
@@ -546,7 +574,7 @@ object frmLogger: TfrmLogger
       Height = 25
       Action = actSendPoint
       Images = imlLogger
-      TabOrder = 7
+      TabOrder = 8
     end
     object btnSendInterface: TButton
       Left = 480
@@ -555,7 +583,7 @@ object frmLogger: TfrmLogger
       Height = 25
       Action = actSendInterface
       Images = imlLogger
-      TabOrder = 8
+      TabOrder = 3
     end
     object btnSendText: TButton
       Left = 12
@@ -564,7 +592,7 @@ object frmLogger: TfrmLogger
       Height = 25
       Action = actSendText
       Images = imlLogger
-      TabOrder = 9
+      TabOrder = 0
     end
     object btnSendPersistent: TButton
       Left = 12
@@ -572,7 +600,7 @@ object frmLogger: TfrmLogger
       Width = 150
       Height = 25
       Action = actSendPersistent
-      TabOrder = 10
+      TabOrder = 4
     end
     object btnSendSQL: TButton
       Left = 324
@@ -581,20 +609,21 @@ object frmLogger: TfrmLogger
       Height = 25
       Action = actSendSQL
       Images = imlLogger
-      TabOrder = 11
+      TabOrder = 10
     end
   end
   object grpCustom: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 681
+    Top = 614
     Width = 638
-    Height = 52
+    Height = 57
     Align = alClient
     Caption = 'Custom'
     TabOrder = 7
-    ExplicitTop = 606
-    ExplicitHeight = 75
+    ExplicitLeft = 20
+    ExplicitTop = 77
+    ExplicitHeight = 58
     object btnSendObject1: TButton
       Left = 325
       Top = 24
@@ -602,15 +631,7 @@ object frmLogger: TfrmLogger
       Height = 25
       Action = actSendTestSequence
       Images = imlLogger
-      TabOrder = 0
-    end
-    object btnSendODS: TButton
-      Left = 481
-      Top = 24
-      Width = 150
-      Height = 25
-      Action = actSendODS
-      TabOrder = 1
+      TabOrder = 2
     end
     object edtMessageCount: TLabeledEdit
       Left = 89
@@ -635,7 +656,7 @@ object frmLogger: TfrmLogger
       LabelPosition = lpLeft
       NumbersOnly = True
       ParentFont = False
-      TabOrder = 2
+      TabOrder = 0
       Text = '0'
     end
     object btnSendMessages: TButton
@@ -644,52 +665,21 @@ object frmLogger: TfrmLogger
       Width = 150
       Height = 25
       Action = actSendMessages
-      TabOrder = 3
+      TabOrder = 1
     end
-  end
-  object sbr1: TStatusBar
-    Left = 0
-    Top = 736
-    Width = 644
-    Height = 19
-    Panels = <
-      item
-        Width = 100
-      end
-      item
-        Width = 100
-      end
-      item
-        Width = 100
-      end>
-    ExplicitTop = 638
-  end
-  object grpCommands: TGroupBox
-    AlignWithMargins = True
-    Left = 3
-    Top = 111
-    Width = 638
-    Height = 61
-    Align = alTop
-    Caption = 'Commands'
-    TabOrder = 9
-    ExplicitLeft = 0
-    ExplicitTop = 100
-    ExplicitWidth = 644
-    object btnSendClear: TButton
-      Left = 17
-      Top = 25
+    object btnSendODS: TButton
+      Left = 481
+      Top = 24
       Width = 150
       Height = 25
-      Action = actSendClear
-      Images = imlLogger
-      TabOrder = 0
+      Action = actSendODS
+      TabOrder = 3
     end
   end
   object aclMain: TActionList
     Images = imlLogger
-    Left = 552
-    Top = 536
+    Left = 128
+    Top = 160
     object actSendInfo: TAction
       Caption = 'Send Info'
       ImageIndex = 3
@@ -838,19 +828,23 @@ object frmLogger: TfrmLogger
       ImageIndex = 22
       OnExecute = actSendSQLExecute
     end
+    object actZMQBind: TAction
+      Caption = 'Bind'
+      OnExecute = actZMQBindExecute
+    end
   end
   object tmrSendCounter: TTimer
     Enabled = False
     OnTimer = tmrSendCounterTimer
-    Left = 96
-    Top = 512
+    Left = 16
+    Top = 160
   end
   object imlLogger: TImageList
     ColorDepth = cd32Bit
-    Left = 448
-    Top = 536
+    Left = 80
+    Top = 160
     Bitmap = {
-      494C010118001900480010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010118001900540010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000007000000001002000000000000070
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

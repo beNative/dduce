@@ -34,7 +34,7 @@ uses
   DDuce.Logger.Interfaces, DDuce.Logger.Channels.Base;
 
 const
-  DEFAULT_PORT = 5555;
+  DEFAULT_ENDPOINT = 'tcp://*:5555';
 
 type
   TZeroMQChannel = class(TCustomLogChannel, ILogChannel, IZeroMQChannel)
@@ -100,7 +100,8 @@ begin
   FZMQ    := TZeroMQ.Create;
   if FEndPoint = '' then
   begin
-    FEndPoint := Format('tcp://%s:%s', ['*', '*']);
+  //  FEndPoint := Format('tcp://%s:%s', ['*', '*']);
+    FEndPoint := DEFAULT_ENDPOINT;
   end;
   if Active then
     Connect;
@@ -133,7 +134,12 @@ end;
 
 procedure TZeroMQChannel.SetEndPoint(const Value: string);
 begin
-  FEndPoint := Value;
+  if Value <> EndPoint then
+  begin
+    FEndPoint := Value;
+    if Active then
+      Connect;
+  end;
 end;
 
 function TZeroMQChannel.GetPort: Integer;
@@ -150,7 +156,6 @@ begin
   zmq_version(@LMajor, @LMinor, @LPatch);
   Result := Format('%d.%d.%d', [LMajor, LMinor, LPatch]);
 end;
-
 {$ENDREGION}
 
 {$REGION 'public methods'}
@@ -167,9 +172,7 @@ begin
   if Connected then
   begin
     S := FPublisher.LastEndPoint;
-
     A := SplitString(S, [':']);
-
     FPort := StrToIntDef(A[High(A)], 0);
   end;
   Result := Connected;

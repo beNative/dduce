@@ -64,6 +64,7 @@ type
     actSendTestSequence      : TAction;
     actSendText              : TAction;
     actSendWarning           : TAction;
+    actZMQBind               : TAction;
     btnAddCheckpoint         : TButton;
     btnDecCounter            : TButton;
     btnEnterMethod1          : TButton;
@@ -74,6 +75,7 @@ type
     btnResetCheckpoint       : TButton;
     btnResetCounter          : TButton;
     btnSendBitmap            : TButton;
+    btnSendClear             : TButton;
     btnSendComponent         : TButton;
     btnSendDataSet           : TButton;
     btnSendError             : TButton;
@@ -91,11 +93,14 @@ type
     btnSendStrings           : TButton;
     btnSendText              : TButton;
     btnSendWarning           : TButton;
+    btnZMQBind               : TButton;
     chkEnableCountTimer      : TCheckBox;
     chkLogFileChannelActive  : TCheckBox;
     chkSendRandomValueTimer  : TCheckBox;
     chkWinIPCChannelActive   : TCheckBox;
     chkZeroMQChannelActive   : TCheckBox;
+    edtEndPoint              : TLabeledEdit;
+    edtLogFile               : TButtonedEdit;
     edtLogMessage            : TLabeledEdit;
     edtMessageCount          : TLabeledEdit;
     edtMethod1               : TLabeledEdit;
@@ -111,20 +116,16 @@ type
     imlLogger                : TImageList;
     lblCheckpointDescription : TLabel;
     lblCounterValue          : TLabel;
+    lblIPAddress             : TLabel;
+    lblIPCaption             : TLabel;
     lblLogViewer             : TLabel;
+    lblPort                  : TLabel;
+    lblPortCaption           : TLabel;
     lblPosition              : TLabel;
     lblPositionValue         : TLabel;
-    sbr1                     : TStatusBar;
     tmrSendCounter           : TTimer;
     tmrSendValue             : TTimer;
     trbMain                  : TTrackBar;
-    edtLogFile: TButtonedEdit;
-    grpCommands: TGroupBox;
-    btnSendClear: TButton;
-    chkAutoAssignPort: TCheckBox;
-    chkAutoAssignIPAddress: TCheckBox;
-    edtPort: TLabeledEdit;
-    edtIPAddress: TLabeledEdit;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -167,6 +168,7 @@ type
     procedure chkZeroMQChannelActiveClick(Sender: TObject);
     procedure actSendMessagesExecute(Sender: TObject);
     procedure actSendSQLExecute(Sender: TObject);
+    procedure actZMQBindExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -203,6 +205,7 @@ uses
 
   Spring,
 
+  DDuce.Utils.Winapi,
   DDuce.Logger.Factories,
   DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.LogFile,
   DDuce.Logger.Channels.ZeroMQ,
@@ -218,6 +221,8 @@ resourcestring
 
 {$REGION 'construction and destruction'}
 procedure TfrmLogger.AfterConstruction;
+var
+  SL : TStringList;
 begin
   inherited AfterConstruction;
   aclMain.Images          := imlLogger;
@@ -237,14 +242,27 @@ begin
   FLogger := TLoggerFactories.CreateLogger;
   FWinIPCChannel  := TWinIPCChannel.Create(False);
   FLogFileChannel := TLogFileChannel.Create;
-  FZeroMQChannel  := TZeroMQChannel.Create;
+  if edtEndPoint.Text <> '' then
+    FZeroMQChannel  := TZeroMQChannel.Create(edtEndPoint.Text)
+  else
+    FZeroMQChannel  := TZeroMQChannel.Create;
+
   chkZeroMQChannelActive.Hint := Format(SVersion, [FZeroMQChannel.ZMQVersion]);
 
   Logger.Channels.Add(FLogFileChannel);
   Logger.Channels.Add(FWinIPCChannel);
   Logger.Channels.Add(FZeroMQChannel);
-  LoadSettings;
   Randomize;
+  LoadSettings;
+
+  SL := TStringList.Create;
+  try
+    GetIPAddresses(SL);
+    if SL.Count > 0 then
+      lblIPAddress.Caption := SL[0];
+  finally
+    SL.Free;
+  end;
 end;
 
 procedure TfrmLogger.BeforeDestruction;
@@ -280,6 +298,12 @@ end;
 procedure TfrmLogger.actSendWarningExecute(Sender: TObject);
 begin
   Logger.Warn(edtLogMessage.Text);
+end;
+
+procedure TfrmLogger.actZMQBindExecute(Sender: TObject);
+begin
+  FZeroMQChannel.EndPoint := edtEndPoint.Text;
+
 end;
 
 procedure TfrmLogger.actSendBitmapExecute(Sender: TObject);
@@ -498,10 +522,7 @@ begin
     UnitName, 'edtMethod2.Text', 'MyObject.Update'
   );
   edtMessageCount.Text := IntToStr(Settings.ReadInteger(UnitName, 'MessageCount'));
-  chkAutoAssignIPAddress.Checked := Settings.ReadBool(UnitName, 'AutoAssignIPAddress');
-  chkAutoAssignPort.Checked := Settings.ReadBool(UnitName, 'AutoAssignPort');
-  edtIPAddress.Text := Settings.ReadString(UnitName, 'IPAddress');
-  edtPort.Text := Settings.ReadString(UnitName, 'Port');
+  edtEndPoint.Text := Settings.ReadString(UnitName, 'EndPoint');
 end;
 
 procedure TfrmLogger.SaveSettings;
@@ -512,10 +533,7 @@ begin
   Settings.WriteString(UnitName, 'edtMethod1.Text', edtMethod1.Text);
   Settings.WriteString(UnitName, 'edtMethod2.Text', edtMethod2.Text);
   Settings.WriteInteger(UnitName, 'MessageCount', StrToIntDef(edtMessageCount.Text, 0));
-  Settings.WriteBool(UnitName, 'AutoAssignPort', chkAutoAssignPort.Checked);
-  Settings.WriteBool(UnitName, 'AutoAssignIPAddress', chkAutoAssignIPAddress.Checked);
-  Settings.WriteString(UnitName, 'IPAddress', edtIPAddress.Text);
-  Settings.WriteString(UnitName, 'Port', edtPort.Text);
+  Settings.WriteString(UnitName, 'EndPoint', edtEndPoint.Text);
 end;
 
 procedure TfrmLogger.TestProcedure1;
@@ -568,8 +586,7 @@ begin
   lblCounterValue.Caption := Logger.GetCounter('Counter').ToString;
   lblPositionValue.Caption := trbMain.Position.ToString;
   actSendMessages.Caption := Format('Send %s messages', [edtMessageCount.Text]);
-  edtPort.ReadOnly               := not chkAutoAssignPort.Checked;
-  edtIPAddress.ReadOnly          := not chkAutoAssignIPAddress.Checked;
+  lblPort.Caption := FZeroMQChannel.Port.ToString;
 end;
 {$ENDREGION}
 

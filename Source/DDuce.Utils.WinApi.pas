@@ -22,7 +22,7 @@ interface
 
 uses
   Winapi.Windows,
-  System.SysUtils;
+  System.Classes, System.SysUtils;
 
 function GetExenameForProcess(AProcessId: DWORD): string;
 
@@ -32,10 +32,12 @@ function GetExenameForProcessUsingPsAPI(AProcessId: DWORD): string;
 
 function GetExenameForProcessUsingToolhelp32(AProcessId: DWORD): string;
 
+procedure GetIPAddresses(AStrings: TStrings); overload;
+
 implementation
 
 uses
-  Winapi.PsAPI, Winapi.TlHelp32;
+  Winapi.PsAPI, Winapi.TlHelp32, Winapi.WinSock;
 
 {$REGION 'interfaced routines'}
 function GetExenameForProcessUsingPsAPI(AProcessId: DWORD): string;
@@ -130,6 +132,33 @@ begin
     if LProcessID <> 0 then
       Result := GetExenameForProcess(LProcessID);
   end;
+end;
+
+procedure GetIPAddresses(AStrings: TStrings);
+type
+  TaPInAddr = array [0 .. 10] of PInAddr;
+  PaPInAddr = ^TaPInAddr;
+var
+  PHE       : PHostEnt;
+  PPtr      : PaPInAddr;
+  Buffer    : array [0 .. 63] of AnsiChar;
+  I         : Integer;
+  GInitData : TWSAData;
+begin
+  WSAStartup($101, GInitData);
+  AStrings.Clear;
+  GetHostName(Buffer, SizeOf(Buffer));
+  PHE := GetHostByName(Buffer);
+  if PHE = nil then
+    Exit;
+  PPtr := PaPInAddr(PHE^.h_addr_list);
+  I    := 0;
+  while PPtr^[I] <> nil do
+  begin
+    AStrings.Add(string(inet_ntoa(PPtr^[I]^)));
+    Inc(I);
+  end;
+  WSACleanup;
 end;
 {$ENDREGION}
 
