@@ -400,8 +400,16 @@ begin
 end;
 
 procedure TLogger.Clear;
+var
+  I : Integer;
 begin
-  InternalSend(lmtClear);
+  // repeated to compensate for initial message loss in combination with
+  // some channels (ZeroMQ)
+  for I := 0 to 3 do
+  begin
+    InternalSend(lmtClear);
+    Sleep(100);
+  end;
 end;
 
 procedure TLogger.Info(const AText: string);
@@ -576,7 +584,6 @@ procedure TLogger.Send(const AName: string; const AArgs: array of const);
 //  TVarArray = array of TVarRec;
 //var
 //  VA : array of TValue;
-//  VR : TVarRec;
 //  I  : Integer;
 begin
 //  SetLength(VA, Length(AArgs));

@@ -464,7 +464,7 @@ begin
   LLength := 255;
   zmq_getsockopt(FSocket, ZMQ_LAST_ENDPOINT, @S[1], @LLength);
   SetLength(S, LLength - 1);
-  Result := S;
+  Result := string(S);
 end;
 
 { TZMQPoll }

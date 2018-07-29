@@ -55,8 +55,8 @@ var
 begin
   Guard.CheckNotNull(AToolBar, 'AToolBar');
   I := 0;
-  D := False;
-  J := 0;
+//  D := False;
+//  J := 0;
   while I < AToolBar.ButtonCount do
   begin
     TB := AToolBar.Buttons[I];
@@ -65,7 +65,7 @@ begin
     begin
       if I < AToolBar.ButtonCount then
       begin
-        D := (TB.Visible and (TB.Style in [tbsSeparator, tbsDivider])) or (not TB.Visible);
+       // D := (TB.Visible and (TB.Style in [tbsSeparator, tbsDivider])) or (not TB.Visible);
         TB := AToolBar.Buttons[I];
       end
       else
@@ -102,7 +102,6 @@ begin
       begin
         Inc(I);
       end;
-      D := False;
     end;
   end;
 end;
