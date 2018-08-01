@@ -544,8 +544,11 @@ begin
 end;
 
 procedure TLogger.SendText(const AText: string);
+var
+  S : string;
 begin
-  InternalSend(lmtText, AText);
+  S := #13#10 + AText;
+  InternalSend(lmtText, S);
 end;
 
 procedure TLogger.SendVariant(const AName: string; const AValue: Variant);

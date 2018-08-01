@@ -180,7 +180,7 @@ begin
   for I := 0 to Pred(ACount) do
   begin
     ADataSet.Append;
-    S := RandomData.PersonName;
+    S := RandomData.FullName;
     ADataSet.FieldByName('Name').AsString := S;
     ADataSet.FieldByName('Email').AsString := RandomData.Email(S, RandomData.Name);
     ADataSet.FieldByName('BirthDate').AsDateTime := RandomData.BirthDate(1920, 1998);

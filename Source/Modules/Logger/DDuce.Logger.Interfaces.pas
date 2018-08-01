@@ -381,6 +381,7 @@ begin
     lmtScreenShot  : S := 'lmtScreenShot';
     lmtText        : S := 'lmtText';
     lmtClear       : S := 'lmtClear';
+    lmtDataSet     : S := 'lmtDataSet';
   else
     S := '';
   end;
