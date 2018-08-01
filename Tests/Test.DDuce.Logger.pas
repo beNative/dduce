@@ -109,23 +109,6 @@ type
     procedure Test_SendVariant_method_for_EmptyParam_argument;
     procedure Test_SendMemory_method;
 
-
-//    procedure SendColor(const AName: string; AColor: TColor);
-//    procedure SendAlphaColor(const AName: string; AAlphaColor: TAlphaColor);
-//    procedure SendObject(const AName: string; AValue: TObject);
-//    procedure SendInterface(const AName: string; AValue: IInterface);
-//    procedure SendRect(const AName: string; const AValue: TRect);
-//    procedure SendPoint(const AName: string; const APoint: TPoint);
-//    procedure SendStrings(const AName: string; AValue: TStrings);
-//    //TODO procedure SendPersistent(const AName: string; AValue: TPersistent); -> log published properties
-//    procedure SendComponent(const AName: string; AValue: TComponent);
-//    procedure SendPointer(const AName: string; APointer: Pointer);
-//    procedure SendMemory(
-//      const AName: string;
-//      AAddress   : Pointer;
-//      ASize      : LongWord
-//    );
-
     procedure Test_Send_method;
 
     procedure Test_Watch_method_for_AnsiString_argument;
@@ -176,16 +159,40 @@ uses
 
   Test.Utils, Test.Resources;
 
+{$REGION 'non-interfaced routines'}
+procedure EnsureZMQLibExists;
+const
+  LIBZMQ = 'libzmq';
+var
+  LResStream  : TResourceStream;
+  LFileStream : TFileStream;
+  LPath       : string;
+begin
+  LPath := Format('%s\%s.dll', [ExtractFileDir(ParamStr(0)), LIBZMQ]);
+  if not FileExists(LPath) then
+  begin
+    LResStream := TResourceStream.Create(HInstance, LIBZMQ, RT_RCDATA);
+    try
+      LFileStream := TFileStream.Create(LPath, fmCreate);
+      try
+        LFileStream.CopyFrom(LResStream, 0);
+      finally
+        LFileStream.Free;
+      end;
+    finally
+      LResStream.Free;
+    end;
+  end;
+end;
+{$ENDREGION}
+
 {$REGION 'construction and destruction'}
 class constructor TestLogger.Create;
 begin
+  EnsureZMQLibExists;
   Logger.Channels.Add(TWinIPCChannel.Create);
   Logger.Channels.Add(TZeroMQChannel.Create);
-  Sleep(1000);
   Logger.Clear;
-  Sleep(1000);
-  Logger.Clear;
-  Sleep(4000);
 end;
 {$ENDREGION}
 

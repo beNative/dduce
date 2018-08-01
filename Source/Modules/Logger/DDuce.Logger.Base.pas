@@ -42,8 +42,8 @@ interface
 uses
   Winapi.Windows,
   System.Types, System.Classes, System.SysUtils, System.Rtti, System.UITypes,
-
-  Vcl.Graphics,
+  Vcl.Graphics, Vcl.Forms,
+  Data.DB,
 
   Spring, Spring.Collections,
 
@@ -154,6 +154,9 @@ type
     );
     procedure SendShortCut(const AName: string; AShortCut: TShortCut);
     procedure SendBitmap(const AName: string; ABitmap: TBitmap);
+    procedure SendScreenShot(const AName: string; AForm: TCustomForm);
+
+    procedure SendDataSet(const AName: string; ADataSet: TDataSet);
 
     { Send methods for text that can be displayed with a dedicated
       highlighter. }
@@ -254,7 +257,9 @@ implementation
 
 uses
   System.TypInfo, System.UIConsts,
-  Vcl.Forms, Vcl.Menus,
+  Vcl.Menus,
+  FireDAC.Comp.Client, FireDAC.Stan.Intf, FireDAC.Comp.DataSet,
+  FireDAC.Stan.StorageBin,
 
   Spring.Reflection, Spring.Helpers,
 
@@ -447,6 +452,25 @@ begin
   Send(AName, TValue.From(AValue));
 end;
 
+procedure TLogger.SendScreenShot(const AName: string; AForm: TCustomForm);
+var
+  LBitmap : TBitmap;
+  LStream : TMemoryStream;
+begin
+  LStream := TMemoryStream.Create;
+  try
+   LBitmap := AForm.GetFormImage;
+   try
+     LBitmap.SaveToStream(LStream);
+     InternalSendStream(lmtScreenShot, AName, LStream); 
+   finally
+     LBitmap.Free;
+   end;
+ finally
+    LStream.Free;
+  end;
+end;
+
 procedure TLogger.SendShortCut(const AName: string; AShortCut: TShortCut);
 begin
   Send(AName, ShortCutToText(AShortCut));
@@ -476,6 +500,26 @@ end;
 procedure TLogger.SendDateTime(const AName: string; AValue: TDateTime);
 begin
   Send(AName, TValue.From(AValue));
+end;
+
+procedure TLogger.SendDataSet(const AName: string; ADataSet: TDataSet);
+var
+  LFDMemTable : TFDMemTable;
+  LStream     : TStream;
+begin
+  LFDMemTable := TFDMemTable.Create(nil);
+  try
+    LFDMemTable.CopyDataSet(ADataSet, [coStructure, coRestart, coAppend]);
+    LStream := TMemoryStream.Create;
+    try
+      LFDMemTable.SaveToStream(LStream, sfBinary);
+      InternalSendStream(lmtDataSet, AName, LStream);
+    finally
+      LStream.Free;
+    end;
+  finally
+    LFDMemTable.Free;
+  end;
 end;
 
 procedure TLogger.SendDate(const AName: string; AValue: TDate);

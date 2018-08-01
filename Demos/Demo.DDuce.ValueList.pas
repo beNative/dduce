@@ -55,11 +55,11 @@ uses
 procedure TfrmValueListDemo.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FValueList := TValueList.Create(Self);
-  FValueList.Parent      := pnlRight;
-  FValueList.Align       := alClient;
-  FValueList.Data        := DynamicRecord.Create(Screen);
-  FObjectInspector := TzObjectInspectorFactory.Create(
+  FValueList        := TValueList.Create(Self);
+  FValueList.Parent := pnlRight;
+  FValueList.Align  := alClient;
+  FValueList.Data   := DynamicRecord.Create(Screen);
+  FObjectInspector  := TzObjectInspectorFactory.Create(
     Self,
     pnlLeft,
     FValueList

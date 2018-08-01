@@ -49,8 +49,8 @@ type
       FList: IList<TDemo>;
 
     class function Register(
-            AFormClass : TComponentClass;
-      const AName      : string = ''
+      AFormClass  : TComponentClass;
+      const AName : string = ''
     ): Boolean; static;
 
     class procedure Execute(AConcept: TObject); static;

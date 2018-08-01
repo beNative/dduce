@@ -30,6 +30,7 @@ uses
 
 type
   TfrmScopedReferences = class(TForm)
+    {$REGION 'designer controls'}
     aclMain               : TActionList;
     actShowClassNames     : TAction;
     btnShowClassNames     : TButton;
@@ -37,9 +38,12 @@ type
     pnlScopedButton       : TPanel;
     btnCreateScopedButton : TButton;
     actCreateScopedButton : TAction;
+    {$ENDREGION}
 
+    {$REGION 'action handlers'}
     procedure actShowClassNamesExecute(Sender: TObject);
     procedure actCreateScopedButtonExecute(Sender: TObject);
+    {$ENDREGION}
 
   private
     procedure ShowClassNames;

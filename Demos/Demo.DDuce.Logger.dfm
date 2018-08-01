@@ -1,17 +1,21 @@
 object frmLogger: TfrmLogger
   Left = 0
   Top = 0
-  BorderStyle = bsDialog
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = 'Logger'
   ClientHeight = 674
   ClientWidth = 644
   Color = clBtnFace
+  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  PopupMode = pmAuto
+  Position = poMainFormCenter
   ShowHint = True
   OnClose = FormClose
   PixelsPerInch = 96
@@ -25,7 +29,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Watches'
     TabOrder = 0
-    ExplicitTop = 552
     DesignSize = (
       638
       58)
@@ -86,7 +89,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Method tracing'
     TabOrder = 1
-    ExplicitTop = 273
     object btnEnterMethod1: TButton
       Left = 12
       Top = 22
@@ -175,7 +177,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Notification messages'
     TabOrder = 2
-    ExplicitTop = 178
     DesignSize = (
       638
       89)
@@ -245,7 +246,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Counters'
     TabOrder = 3
-    ExplicitTop = 364
     object lblCounterValue: TLabel
       Left = 85
       Top = 12
@@ -312,7 +312,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Logger channels'
     TabOrder = 4
-    ExplicitLeft = 8
     DesignSize = (
       638
       102)
@@ -462,12 +461,11 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Checkpoints'
     TabOrder = 5
-    ExplicitTop = 616
     object lblCheckpointDescription: TLabel
       Left = 12
       Top = 19
-      Width = 282
-      Height = 26
+      Width = 301
+      Height = 36
       Caption = 
         'Checkpoints are used to mark points in code of which a pass coun' +
         't can be monitored by the LogViewer application.'
@@ -502,7 +500,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Log values'
     TabOrder = 6
-    ExplicitTop = 428
     object btnSendObject: TButton
       Left = 324
       Top = 23
@@ -621,9 +618,6 @@ object frmLogger: TfrmLogger
     Align = alClient
     Caption = 'Custom'
     TabOrder = 7
-    ExplicitLeft = 20
-    ExplicitTop = 77
-    ExplicitHeight = 58
     object btnSendObject1: TButton
       Left = 325
       Top = 24
@@ -788,6 +782,7 @@ object frmLogger: TfrmLogger
       Caption = 'Send TDataSet'
       Hint = 'Logs content of a TDataSet instance.'
       ImageIndex = 19
+      OnExecute = actSendDataSetExecute
     end
     object actSendBitmap: TAction
       Caption = 'Send TBitmap'
@@ -844,7 +839,7 @@ object frmLogger: TfrmLogger
     Left = 80
     Top = 160
     Bitmap = {
-      494C010118001900540010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010118001D00080010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000007000000001002000000000000070
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

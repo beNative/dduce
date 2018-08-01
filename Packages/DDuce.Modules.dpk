@@ -35,7 +35,10 @@ requires
   vcldb,
   DDuce.Core,
   DDuce.Components,
-  BCEditor.Delphi.Runtime;
+  BCEditor.Delphi.Runtime,
+  FireDAC,
+  FireDACCommonDriver,
+  FireDACCommon;
 
 contains
   DDuce.ObjectInspector in '..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas' {frmComponentInspector},

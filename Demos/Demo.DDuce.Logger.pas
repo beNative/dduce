@@ -23,13 +23,14 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages,
-  System.SysUtils, System.Variants, System.Classes, System.Actions,
-  System.ImageList,
+  System.SysUtils, System.Variants, System.Classes, System.Actions, System.Rtti,
+  System.ImageList, System.Bindings.Outputs,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList,
-  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ImgList,
+  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ImgList, Vcl.Bind.DBEngExt,
+  Vcl.Bind.Editors,
+  Data.Bind.EngExt, Data.Bind.Components,
 
-  DDuce.Logger.Interfaces, Data.Bind.EngExt, Vcl.Bind.DBEngExt, System.Rtti,
-  System.Bindings.Outputs, Vcl.Bind.Editors, Data.Bind.Components;
+  DDuce.Logger.Interfaces;
 
 type
   TfrmLogger = class(TForm)
@@ -169,6 +170,7 @@ type
     procedure actSendMessagesExecute(Sender: TObject);
     procedure actSendSQLExecute(Sender: TObject);
     procedure actZMQBindExecute(Sender: TObject);
+    procedure actSendDataSetExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -202,6 +204,7 @@ implementation
 
 uses
   System.Types,
+  Data.DB,
 
   Spring,
 
@@ -210,7 +213,7 @@ uses
   DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.LogFile,
   DDuce.Logger.Channels.ZeroMQ,
 
-  Demo.Data, Demo.Resources, Demo.Settings;
+  Demo.Data, Demo.Resources, Demo.Settings, Demo.Factories;
 
 {$R *.dfm}
 
@@ -218,6 +221,33 @@ resourcestring
   SEnter   = 'Enter %s';
   SLeave   = 'Leave %s';
   SVersion = 'ZeroMQ version %s';
+
+{$REGION 'non-interfaced routines'}
+procedure EnsureZMQLibExists;
+const
+  LIBZMQ = 'libzmq';
+var
+  LResStream  : TResourceStream;
+  LFileStream : TFileStream;
+  LPath       : string;
+begin
+  LPath := Format('%s\%s.dll', [ExtractFileDir(ParamStr(0)), LIBZMQ]);
+  if not FileExists(LPath) then
+  begin
+    LResStream := TResourceStream.Create(HInstance, LIBZMQ, RT_RCDATA);
+    try
+      LFileStream := TFileStream.Create(LPath, fmCreate);
+      try
+        LFileStream.CopyFrom(LResStream, 0);
+      finally
+        LFileStream.Free;
+      end;
+    finally
+      LResStream.Free;
+    end;
+  end;
+end;
+{$ENDREGION}
 
 {$REGION 'construction and destruction'}
 procedure TfrmLogger.AfterConstruction;
@@ -303,7 +333,6 @@ end;
 procedure TfrmLogger.actZMQBindExecute(Sender: TObject);
 begin
   FZeroMQChannel.EndPoint := edtEndPoint.Text;
-
 end;
 
 procedure TfrmLogger.actSendBitmapExecute(Sender: TObject);
@@ -326,6 +355,18 @@ end;
 procedure TfrmLogger.actSendComponentExecute(Sender: TObject);
 begin
   Logger.SendComponent(Self.Name, Self);
+end;
+
+procedure TfrmLogger.actSendDataSetExecute(Sender: TObject);
+var
+  LDataSet : TDataSet;
+begin
+  LDataSet := TDemoFactories.CreateContactDataSet(nil, 100);
+  try
+   Logger.SendDataSet('DataSet', LDataSet);
+  finally
+    LDataSet.Free;
+  end;
 end;
 
 procedure TfrmLogger.actSendErrorExecute(Sender: TObject);
@@ -545,9 +586,9 @@ begin
   Logger.Info('Information message.');
   Logger.Error('Fatal error occured! Something went wrong over here!');
   Logger.Warn('This message warns you about nothing.');
-//  Logger.SendComponent('Form', Self); // will show DFM with published properties
-//  Logger.SendPersistent('Font', Font);
-//  Logger.SendObject('Font', Font);
+  Logger.SendComponent('Form', Self); // will show DFM with published properties
+  Logger.SendPersistent('Font', Font);
+  Logger.SendObject('Font', Font);
 end;
 
 procedure TfrmLogger.TestProcedure2;
@@ -583,11 +624,14 @@ begin
   chkLogFileChannelActive.Checked := FLogFileChannel.Active;
   chkWinIPCChannelActive.Checked  := FWinIPCChannel.Active;
   chkZeroMQChannelActive.Checked  := FZeroMQChannel.Active;
-  lblCounterValue.Caption := Logger.GetCounter('Counter').ToString;
+  lblCounterValue.Caption  := Logger.GetCounter('Counter').ToString;
   lblPositionValue.Caption := trbMain.Position.ToString;
-  actSendMessages.Caption := Format('Send %s messages', [edtMessageCount.Text]);
-  lblPort.Caption := FZeroMQChannel.Port.ToString;
+  actSendMessages.Caption  := Format('Send %s messages', [edtMessageCount.Text]);
+  lblPort.Caption          := FZeroMQChannel.Port.ToString;
 end;
 {$ENDREGION}
+
+initialization
+  EnsureZMQLibExists;
 
 end.

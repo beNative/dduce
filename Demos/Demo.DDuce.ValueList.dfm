@@ -39,7 +39,5 @@ object frmValueListDemo: TfrmValueListDemo
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 312
-    ExplicitWidth = 564
   end
 end

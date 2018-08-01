@@ -176,7 +176,6 @@
         </DCCReference>
         <DCCReference Include="Demo.Manager.pas"/>
         <DCCReference Include="Demo.Registration.pas"/>
-        <DCCReference Include="Demo.Utils.pas"/>
         <DCCReference Include="Demo.DDuce.Logger.pas">
             <Form>frmLogger</Form>
         </DCCReference>

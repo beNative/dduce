@@ -386,7 +386,7 @@ uses
   System.TypInfo,
   Vcl.Dialogs,
 
-  Demo.Utils;
+  DDuce.Utils;
 
 {$REGION 'construction and destruction'}
 procedure TfrmDynamicRecords.AfterConstruction;

@@ -246,7 +246,7 @@ begin
   if Assigned(R) then
   begin
     A := PInAddr(r^.h_Addr_List^)^;
-    Result := Winapi.WinSock.inet_ntoa(A);
+    Result := string(Winapi.WinSock.inet_ntoa(A));
   end;
 end;
 {$ENDREGION}

@@ -140,6 +140,9 @@
         <DCCReference Include="DDuce.Core.dcp"/>
         <DCCReference Include="DDuce.Components.dcp"/>
         <DCCReference Include="BCEditor.Delphi.Runtime.dcp"/>
+        <DCCReference Include="FireDAC.dcp"/>
+        <DCCReference Include="FireDACCommonDriver.dcp"/>
+        <DCCReference Include="FireDACCommon.dcp"/>
         <DCCReference Include="..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas">
             <Form>frmComponentInspector</Form>
         </DCCReference>

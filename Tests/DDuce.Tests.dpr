@@ -16,6 +16,8 @@ program DDuce.Tests;
 {$APPTYPE CONSOLE}
 {$ENDIF}
 
+{$R *.dres}
+
 uses
   {$IFDEF LEAKCHECK}
   LeakCheck,

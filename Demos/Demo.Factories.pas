@@ -94,6 +94,7 @@ begin
   with CDS.FieldDefs.AddFieldDef do
   begin
     DataType := ftString;
+    Size     := 20;
     Name     := 'Name';
   end;
   with CDS.FieldDefs.AddFieldDef do
@@ -104,16 +105,19 @@ begin
   with CDS.FieldDefs.AddFieldDef do
   begin
     DataType := ftString;
+    Size     := 20;
     Name     := 'Email';
   end;
   with CDS.FieldDefs.AddFieldDef do
   begin
     DataType := ftString;
+    Size     := 80;
     Name     := 'Address';
   end;
   with CDS.FieldDefs.AddFieldDef do
   begin
     DataType := ftString;
+    Size     := 50;
     Name     := 'Company';
   end;
   with CDS.FieldDefs.AddFieldDef do

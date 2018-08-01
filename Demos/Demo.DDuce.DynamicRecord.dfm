@@ -395,6 +395,10 @@ object frmDynamicRecords: TfrmDynamicRecords
       TabOrder = 0
       object tsContactObject: TTabSheet
         Caption = 'TContact object'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object lblContact: TLabel
           AlignWithMargins = True
           Left = 3

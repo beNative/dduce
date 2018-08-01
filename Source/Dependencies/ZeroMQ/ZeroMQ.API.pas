@@ -393,4 +393,10 @@ procedure zmq_threadclose(thread: Pointer); cdecl; external LIBZEROMQ delayed;
 
 implementation
 
+(* TS:
+int zmq_has (const char *capability);
+int zmq_proxy_steerable (const void *frontend, const void *backend, const void *capture, const void *control);
+
+*)
+
 end.
