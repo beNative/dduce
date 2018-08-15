@@ -322,6 +322,7 @@ begin
   for I := 1 to N do
   begin
     Logger.Send('I', I);
+    Sleep(1);
   end;
 end;
 

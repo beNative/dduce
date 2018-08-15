@@ -78,7 +78,7 @@ end;
 function TWinIPCChannel.Connect: Boolean;
 begin
   Result := FClient.Connect;
-  Connected := True;
+  Connected := Result;
 end;
 
 function TWinIPCChannel.Disconnect: Boolean;

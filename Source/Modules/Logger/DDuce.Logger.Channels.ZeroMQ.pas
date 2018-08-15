@@ -172,7 +172,10 @@ begin
     Connected  := FPublisher.Bind(FEndPoint) <> -1;
     // Physical connection is always a bit after Connected reports True.
     // https://stackoverflow.com/questions/11634830/zeromq-always-loses-the-first-message
-    Sleep(100);
+    if Connected then
+    begin
+      Sleep(100);
+    end;
   end;
   if Connected then
   begin

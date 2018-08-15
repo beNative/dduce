@@ -133,8 +133,7 @@ function zmq_ctx_destroy(context: Pointer): Integer; cdecl; external LIBZEROMQ d
 (******************************************************************************)
 
 const
-  //ZMQ_MAX_VSM_SIZE = 30;
-  ZMQ_MAX_VSM_SIZE = 57;
+  ZMQ_MAX_VSM_SIZE = 58;
 
 type
   PZmqMsg = ^TZmqMsg;
@@ -335,8 +334,8 @@ type
     revents: SmallInt;
   end;
 
-const
-  ZMQ_POLLITEMS_DFLT = 16;
+//const
+//  ZMQ_POLLITEMS_DFLT = 16;
 
 function zmq_poll(items: PZmqPollItem; nitems: Integer; timeout: LongInt): Integer; cdecl; external LIBZEROMQ delayed;
 
