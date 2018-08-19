@@ -58,6 +58,7 @@ type
     lmtScreenShot  = 24,
     lmtText        = 25,  // arbitrary text with optional highlighter info
     lmtDataSet     = 26,
+    lmtAction      = 27,  // TAction execution
     lmtClear       = 99
   );
 
@@ -250,10 +251,7 @@ type
       ASize      : LongWord
     );
     procedure SendShortCut(const AName: string; AShortCut: TShortCut);
-
     procedure SendVariant(const AName: string; const AValue: Variant);
-
-    // SendBitmap
 
     { Send methods for (optionally named) text that optionally can be displayed
       with a dedicated highlighter. }
@@ -280,6 +278,8 @@ type
       method is triggered. }
     function Track(const AName: string): IInterface; overload;
     function Track(ASender: TObject; const AName: string): IInterface; overload;
+
+    procedure Action(AAction: TBasicAction);
 
     procedure AddCheckPoint(const AName: string = '');
     procedure ResetCheckPoint(const AName: string = '');
@@ -382,6 +382,7 @@ begin
     lmtText        : S := 'lmtText';
     lmtClear       : S := 'lmtClear';
     lmtDataSet     : S := 'lmtDataSet';
+    lmtAction      : S := 'lmtAction';
   else
     S := '';
   end;

@@ -224,6 +224,8 @@ type
     function Track(const AName: string): IInterface; overload;
     function Track(ASender: TObject; const AName: string): IInterface; overload;
 
+    procedure Action(AAction: TBasicAction);
+
     { Watches support }
     procedure Watch(const AName: string; const AValue: TValue); overload;
     procedure Watch(const AName: string; const AValue: string = ''); overload;
@@ -807,6 +809,11 @@ begin
   S := AFunc(Self, AData, B);
   if B then
     InternalSendBuffer(lmtCustomData, AName, S[1], Length(S));
+end;
+
+procedure TLogger.Action(AAction: TBasicAction);
+begin
+  InternalSend(lmtAction, AAction.Name);
 end;
 
 procedure TLogger.AddCheckPoint(const AName: string);
