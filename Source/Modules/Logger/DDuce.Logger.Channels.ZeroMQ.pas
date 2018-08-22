@@ -202,6 +202,9 @@ begin
       TextSize := Length(AMsg.Text);
       FBuffer.Seek(0, soFromBeginning);
       FBuffer.WriteBuffer(AMsg.MsgType);
+      FBuffer.WriteBuffer(AMsg.LogLevel);
+      FBuffer.WriteBuffer(AMsg.Reserved1);
+      FBuffer.WriteBuffer(AMsg.Reserved2);
       FBuffer.WriteBuffer(AMsg.TimeStamp);
       FBuffer.WriteBuffer(TextSize);
       if TextSize > 0 then

@@ -65,8 +65,7 @@ type
   ILogger = interface;
 
   TLogMessage = packed record
-    //MsgType   : Integer;     // TLogMessageType
-    MsgType   : Byte;
+    MsgType   : Byte; // TLogMessageType
     LogLevel  : Byte;
     Reserved1 : Byte;
     Reserved2 : Byte;

@@ -29,7 +29,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Watches'
     TabOrder = 0
-    ExplicitTop = 485
     DesignSize = (
       638
       58)
@@ -462,7 +461,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Checkpoints'
     TabOrder = 5
-    ExplicitTop = 549
     object lblCheckpointDescription: TLabel
       Left = 12
       Top = 19
@@ -621,8 +619,6 @@ object frmLogger: TfrmLogger
     Align = alClient
     Caption = 'Custom'
     TabOrder = 7
-    ExplicitTop = 614
-    ExplicitHeight = 57
     object btnSendObject1: TButton
       Left = 325
       Top = 24
@@ -868,7 +864,7 @@ object frmLogger: TfrmLogger
     Left = 408
     Top = 72
     Bitmap = {
-      494C010118001D00200010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010118001D00240010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000007000000001002000000000000070
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
