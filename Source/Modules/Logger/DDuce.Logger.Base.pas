@@ -388,6 +388,8 @@ var
 begin
   LM.MsgType   := Byte(AMsgType);
   LM.LogLevel  := LogLevel;
+  LM.Reserved1 := 0;
+  LM.Reserved2 := 0;
   LM.TimeStamp := Now;
   LM.Text      := UTF8String(AText);
   LM.Data      := AStream;
