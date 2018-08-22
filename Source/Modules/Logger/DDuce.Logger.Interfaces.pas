@@ -62,11 +62,14 @@ type
     lmtClear       = 99
   );
 
-
   ILogger = interface;
 
   TLogMessage = packed record
-    MsgType   : Integer;     // TLogMessageType
+    //MsgType   : Integer;     // TLogMessageType
+    MsgType   : Byte;
+    LogLevel  : Byte;
+    Reserved1 : Byte;
+    Reserved2 : Byte;
     TimeStamp : TDateTime;
     Text      : UTF8String;
     Data      : TStream;
@@ -176,8 +179,8 @@ type
   ILogger = interface
   ['{28E9BADE-6B42-4399-8867-1CA115576E40}']
     function GetChannels: TChannelList;
-    function GetLogLevel: Integer;
-    procedure SetLogLevel(const Value: Integer);
+    function GetLogLevel: Byte;
+    procedure SetLogLevel(const Value: Byte);
 
     procedure Send(const AName: string; const AArgs: array of const); overload;
     procedure Send(const AName: string; const AValue: string = ''); overload;
@@ -317,7 +320,7 @@ type
     { Sends out a dedicated message to clear the logviewer contents. }
     procedure Clear;
 
-    property LogLevel: Integer
+    property LogLevel: Byte
       read GetLogLevel write SetLogLevel;
 
     property Channels: TChannelList

@@ -76,12 +76,14 @@ type
     FCheckList     : TStringList;
     FCounterList   : TStringList;
     FOnCustomData  : TCustomDataCallbackMethod;
-    FLogLevel      : Integer;
+    FLogLevel      : Byte;
 
+    {$REGION 'property access methods'}
     procedure SetMaxStackCount(const AValue: Integer);
     function GetChannels: TChannelList;
-    function GetLogLevel: Integer;
-    procedure SetLogLevel(const Value: Integer);
+    function GetLogLevel: Byte;
+    procedure SetLogLevel(const Value: Byte);
+    {$ENDREGION}
 
   protected
     function StringValueOf(const AValue: TValue): string;
@@ -239,7 +241,7 @@ type
     property Channels: TChannelList
       read GetChannels;
 
-    property LogLevel: Integer
+    property LogLevel: Byte
       read GetLogLevel write SetLogLevel;
 
     property LogStack: TStrings
@@ -335,12 +337,12 @@ begin
   Result := FChannels;
 end;
 
-function TLogger.GetLogLevel: Integer;
+function TLogger.GetLogLevel: Byte;
 begin
   Result := FLogLevel;
 end;
 
-procedure TLogger.SetLogLevel(const Value: Integer);
+procedure TLogger.SetLogLevel(const Value: Byte);
 begin
   FLogLevel := Value;
 end;
@@ -384,7 +386,8 @@ var
   LM : TLogMessage;
   LC : ILogChannel;
 begin
-  LM.MsgType   := Integer(AMsgType);
+  LM.MsgType   := Byte(AMsgType);
+  LM.LogLevel  := LogLevel;
   LM.TimeStamp := Now;
   LM.Text      := UTF8String(AText);
   LM.Data      := AStream;

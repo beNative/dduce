@@ -25,7 +25,7 @@ interface
 uses
   DDuce.Logger.Interfaces;
 
-function Logger(const ALogLevel: Integer = 0): ILogger;
+function Logger(const ALogLevel: Byte = 0): ILogger;
 
 implementation
 
@@ -35,7 +35,7 @@ uses
 var
   FLogger: ILogger;
 
-function Logger(const ALogLevel: Integer): ILogger;
+function Logger(const ALogLevel: Byte): ILogger;
 begin
   FLogger.LogLevel := ALogLevel;
   Result := FLogger;
