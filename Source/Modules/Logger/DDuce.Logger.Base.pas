@@ -54,7 +54,6 @@ const
 
 type
   TLogger = class(TInterfacedObject, ILogger)
-  private
   type
     TTrack = class(TInterfacedObject)
     private
@@ -77,9 +76,12 @@ type
     FCheckList     : TStringList;
     FCounterList   : TStringList;
     FOnCustomData  : TCustomDataCallbackMethod;
+    FLogLevel      : Integer;
 
     procedure SetMaxStackCount(const AValue: Integer);
     function GetChannels: TChannelList;
+    function GetLogLevel: Integer;
+    procedure SetLogLevel(const Value: Integer);
 
   protected
     function StringValueOf(const AValue: TValue): string;
@@ -105,7 +107,7 @@ type
     { Sends a dedicated message to clear content in the receiver (LogViewer). }
     procedure Clear;
 
-    // Send functions
+    // Send procedures
     procedure Send(const AName: string; const AArgs: array of const); overload;
 
     procedure Send(const AName: string; const AValue: string = ''); overload;
@@ -237,6 +239,9 @@ type
     property Channels: TChannelList
       read GetChannels;
 
+    property LogLevel: Integer
+      read GetLogLevel write SetLogLevel;
+
     property LogStack: TStrings
       read FLogStack;
 
@@ -271,6 +276,7 @@ const
   STACKCOUNTLIMIT        = 256;
   DEFAULT_CHECKPOINTNAME = 'CheckPoint';
 
+{$REGION 'non-interfaced routines'}
 function GetInterfaceTypeName(AIntf: IInterface): Tuple<string,string>;
 var
   O        : TObject;
@@ -296,6 +302,7 @@ begin
     end;
   end;
 end;
+{$ENDREGION}
 
 {$REGION 'TLogger'}
 {$REGION 'construction and destruction'}
@@ -326,6 +333,16 @@ end;
 function TLogger.GetChannels: TChannelList;
 begin
   Result := FChannels;
+end;
+
+function TLogger.GetLogLevel: Integer;
+begin
+  Result := FLogLevel;
+end;
+
+procedure TLogger.SetLogLevel(const Value: Integer);
+begin
+  FLogLevel := Value;
 end;
 
 procedure TLogger.SetMaxStackCount(const AValue: Integer);
