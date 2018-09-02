@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{E8512919-7B0C-4B60-A5CC-06A6D2460151}</ProjectGuid>
         <MainSource>DDuce.Components.dpk</MainSource>
-        <ProjectVersion>18.2</ProjectVersion>
+        <ProjectVersion>18.4</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
@@ -95,8 +95,8 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <VerInfo_Build>34</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.34;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>52</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.52;ProductVersion=1.0.0.0</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -111,8 +111,8 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>7</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.7;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>8</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.8;ProductVersion=1.0.0.0</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>

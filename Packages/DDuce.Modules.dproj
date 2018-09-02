@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{D7CAE294-F3ED-4D62-B93F-3A92A4623EB6}</ProjectGuid>
         <MainSource>DDuce.Modules.dpk</MainSource>
-        <ProjectVersion>18.2</ProjectVersion>
+        <ProjectVersion>18.4</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>

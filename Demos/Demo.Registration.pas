@@ -41,6 +41,8 @@ uses
 {$REGION 'interfaced routines'}
 procedure RegisterDemos;
 begin
+  DemoManager.Register(TfrmValueListDemo, 'ValueList');
+  Exit;
   DemoManager.Register(TfrmLogger, 'Logger');
   DemoManager.Register(TfrmScopedReferences, 'Scoped references');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
@@ -51,7 +53,6 @@ begin
   DemoManager.Register(TfrmInspector, 'Inspector');
   DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmVirtualTrees, 'VirtualTrees');
-  DemoManager.Register(TfrmValueListDemo, 'ValueList');
   // not working yet
   //DemoManager.Register(TfrmXMLTree, 'XMLTree');
 end;

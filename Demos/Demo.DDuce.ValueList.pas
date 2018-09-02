@@ -49,16 +49,17 @@ implementation
 {$R *.dfm}
 
 uses
-  DDuce.Logger, DDuce.Factories.zObjInspector;
+  DDuce.Logger, DDuce.Logger.Channels.WinIPC, DDuce.Factories.zObjInspector;
 
 {$REGION 'construction and destruction'}
 procedure TfrmValueListDemo.AfterConstruction;
 begin
   inherited AfterConstruction;
+  Logger.Channels.Add(TWinIPCChannel.Create);
   FValueList        := TValueList.Create(Self);
   FValueList.Parent := pnlRight;
   FValueList.Align  := alClient;
-  FValueList.Data   := DynamicRecord.Create(Screen);
+  FValueList.Data   := DynamicRecord.Create(Application);
   FObjectInspector  := TzObjectInspectorFactory.Create(
     Self,
     pnlLeft,
