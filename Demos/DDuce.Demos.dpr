@@ -1,7 +1,6 @@
 program DDuce.Demos;
 
 uses
-  LeakCheck,
   Vcl.Forms,
   Vcl.Themes,
   Vcl.Styles,

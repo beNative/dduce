@@ -58,10 +58,10 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <VerInfo_Build>1</VerInfo_Build>
+        <VerInfo_Build>51</VerInfo_Build>
         <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>FileVersion=1.0.0.1;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=1.0.0.51;ProductVersion=2.6</VerInfo_Keys>
         <VerInfo_Locale>2067</VerInfo_Locale>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <GenDll>true</GenDll>
@@ -104,6 +104,8 @@
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
         <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
         <DCC_DebugInformation>0</DCC_DebugInformation>
+        <VerInfo_Keys>FileVersion=1.0.0.51;ProductVersion=2.6</VerInfo_Keys>
+        <VerInfo_Build>51</VerInfo_Build>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>

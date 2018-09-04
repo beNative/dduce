@@ -160,6 +160,8 @@ uses
   Test.Utils, Test.Resources;
 
 {$REGION 'non-interfaced routines'}
+{ Load libzmq from application resource if the file does not exist. }
+
 procedure EnsureZMQLibExists;
 const
   LIBZMQ = 'libzmq';
@@ -192,6 +194,7 @@ begin
   EnsureZMQLibExists;
   Logger.Channels.Add(TWinIPCChannel.Create);
   Logger.Channels.Add(TZeroMQChannel.Create);
+  Logger.Channels[1].Active := True;
   Logger.Clear;
 end;
 {$ENDREGION}
@@ -235,9 +238,7 @@ begin
   T[1].VBoolean := False;
   T[2].VType := vtInteger;
   T[2].VInteger := 4;
-
   Logger.Send('TestArrayOfConst', T);
-
 end;
 
 procedure TestLogger.Test_Send_method_for_Boolean_argument;

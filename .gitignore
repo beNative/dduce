@@ -27,3 +27,6 @@ Win64
 /*.db
 /Wiki/Thumbs.db
 *.skincfg
+/Demos/*.cbk
+/Demos/__recovery
+/Source/Components/*.cbk

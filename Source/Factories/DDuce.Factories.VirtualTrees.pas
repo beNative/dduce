@@ -526,8 +526,8 @@ begin
       with Result do
       begin
         HeaderOptions := [
-          hoAutoResize, hoRestrictDrag, hoShowHint, hoShowImages, hoShowSortGlyphs,
-          hoHeightResize, hoHeightDblClickResize, hoVisible
+          hoAutoResize, hoRestrictDrag, hoShowHint, hoShowImages,
+          hoShowSortGlyphs, hoHeightResize, hoHeightDblClickResize, hoVisible
         ];
         PaintOptions := [
           toHideFocusRect, toHideSelection, toPopupMode, toShowBackground,
@@ -573,8 +573,9 @@ begin
         PaintOptions := [
           toHideFocusRect, toHideSelection, toHotTrack, toPopupMode,
           toShowBackground, toShowButtons, toShowDropmark, toShowRoot,
-          toShowVertGridLines, toShowHorzGridLines, toThemeAware, toUseBlendedImages,
-          toUseBlendedSelection, toStaticBackground, toUseExplorerTheme
+          toShowVertGridLines, toShowHorzGridLines, toThemeAware,
+          toUseBlendedImages, toUseBlendedSelection, toStaticBackground,
+          toUseExplorerTheme
         ];
         AnimationOptions := [];
         AutoOptions := [
@@ -615,8 +616,8 @@ begin
         ];
         PaintOptions := [
           toHideFocusRect, toHotTrack, toPopupMode, toShowBackground,
-          toShowDropmark, toThemeAware, toUseBlendedImages, toUseBlendedSelection,
-          toUseExplorerTheme
+          toShowDropmark, toThemeAware, toUseBlendedImages,
+          toUseBlendedSelection, toUseExplorerTheme
         ];
         AnimationOptions := [];
         AutoOptions := [

@@ -127,6 +127,8 @@ type
     tmrSendCounter           : TTimer;
     tmrSendValue             : TTimer;
     trbMain                  : TTrackBar;
+    grpActions: TGroupBox;
+    chkActions: TCheckBox;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -171,6 +173,7 @@ type
     procedure actSendSQLExecute(Sender: TObject);
     procedure actZMQBindExecute(Sender: TObject);
     procedure actSendDataSetExecute(Sender: TObject);
+    procedure aclMainExecute(Action: TBasicAction; var Handled: Boolean);
     {$ENDREGION}
 
   private
@@ -477,6 +480,12 @@ begin
   Logger.SendText(LOREM_IPSUM);
 end;
 
+procedure TfrmLogger.aclMainExecute(Action: TBasicAction; var Handled: Boolean);
+begin
+  if chkActions.Checked then
+    Logger.Action(Action);
+end;
+
 procedure TfrmLogger.actAddCheckpointExecute(Sender: TObject);
 begin
   Logger.AddCheckPoint;
@@ -564,6 +573,7 @@ begin
   );
   edtMessageCount.Text := IntToStr(Settings.ReadInteger(UnitName, 'MessageCount'));
   edtEndPoint.Text := Settings.ReadString(UnitName, 'EndPoint');
+  chkActions.Checked := Settings.ReadBool(UnitName, 'LogActions');
 end;
 
 procedure TfrmLogger.SaveSettings;
@@ -575,6 +585,7 @@ begin
   Settings.WriteString(UnitName, 'edtMethod2.Text', edtMethod2.Text);
   Settings.WriteInteger(UnitName, 'MessageCount', StrToIntDef(edtMessageCount.Text, 0));
   Settings.WriteString(UnitName, 'EndPoint', edtEndPoint.Text);
+  Settings.WriteBool(UnitName, 'LogActions', chkActions.Checked);
 end;
 
 procedure TfrmLogger.TestProcedure1;
