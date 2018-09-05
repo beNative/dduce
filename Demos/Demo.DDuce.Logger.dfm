@@ -4,7 +4,7 @@ object frmLogger: TfrmLogger
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Logger'
-  ClientHeight = 712
+  ClientHeight = 656
   ClientWidth = 644
   Color = clBtnFace
   DoubleBuffered = True
@@ -23,27 +23,27 @@ object frmLogger: TfrmLogger
   object grpWatches: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 524
+    Top = 484
     Width = 638
-    Height = 58
+    Height = 50
     Align = alTop
     Caption = 'Watches'
     TabOrder = 0
     DesignSize = (
       638
-      58)
+      50)
     object lblPosition: TLabel
       Left = 12
-      Top = 30
+      Top = 27
       Width = 41
       Height = 13
       Caption = 'Position:'
     end
     object lblPositionValue: TLabel
-      Left = 86
-      Top = 11
+      Left = 68
+      Top = 14
       Width = 77
-      Height = 40
+      Height = 30
       Alignment = taCenter
       AutoSize = False
       Caption = '60'
@@ -56,10 +56,11 @@ object frmLogger: TfrmLogger
       ParentColor = False
       ParentFont = False
       Transparent = False
+      Layout = tlCenter
     end
     object trbMain: TTrackBar
-      Left = 168
-      Top = 22
+      Left = 163
+      Top = 15
       Width = 273
       Height = 29
       Anchors = [akLeft, akTop, akRight]
@@ -71,8 +72,8 @@ object frmLogger: TfrmLogger
       OnChange = trbMainChange
     end
     object chkSendRandomValueTimer: TCheckBox
-      Left = 474
-      Top = 20
+      Left = 449
+      Top = 23
       Width = 161
       Height = 17
       Caption = 'Send random value timer'
@@ -83,12 +84,13 @@ object frmLogger: TfrmLogger
   object grpMethodTracing: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 206
+    Top = 166
     Width = 638
     Height = 85
     Align = alTop
     Caption = 'Method tracing'
     TabOrder = 1
+    ExplicitTop = 206
     object btnEnterMethod1: TButton
       Left = 12
       Top = 22
@@ -171,38 +173,16 @@ object frmLogger: TfrmLogger
   object grpNotificationMessages: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 111
+    Top = 102
     Width = 638
-    Height = 89
+    Height = 58
     Align = alTop
     Caption = 'Notification messages'
     TabOrder = 2
-    DesignSize = (
-      638
-      89)
-    object edtLogMessage: TLabeledEdit
-      Left = 64
-      Top = 26
-      Width = 566
-      Height = 21
-      Alignment = taCenter
-      Anchors = [akLeft, akTop, akRight]
-      EditLabel.Width = 46
-      EditLabel.Height = 13
-      EditLabel.Caption = 'Message:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      LabelPosition = lpLeft
-      ParentFont = False
-      TabOrder = 0
-      Text = 'This message will be logged.'
-    end
+    ExplicitTop = 111
     object btnSendInfo: TButton
-      Left = 168
-      Top = 53
+      Left = 17
+      Top = 21
       Width = 150
       Height = 25
       Action = actSendInfo
@@ -214,38 +194,39 @@ object frmLogger: TfrmLogger
       ImageMargins.Left = 2
       Images = imlLogger
       ParentFont = False
-      TabOrder = 1
+      TabOrder = 0
     end
     object btnSendWarning: TButton
-      Left = 324
-      Top = 53
+      Left = 173
+      Top = 21
       Width = 150
       Height = 25
       Action = actSendWarning
       ImageMargins.Left = 2
       Images = imlLogger
-      TabOrder = 2
+      TabOrder = 1
     end
     object btnSendError: TButton
-      Left = 481
-      Top = 53
+      Left = 330
+      Top = 21
       Width = 150
       Height = 25
       Action = actSendError
       ImageMargins.Left = 2
       Images = imlLogger
-      TabOrder = 3
+      TabOrder = 2
     end
   end
   object grpCounters: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 297
+    Top = 257
     Width = 638
     Height = 58
     Align = alTop
     Caption = 'Counters'
     TabOrder = 3
+    ExplicitTop = 297
     object lblCounterValue: TLabel
       Left = 85
       Top = 12
@@ -308,13 +289,13 @@ object frmLogger: TfrmLogger
     Left = 3
     Top = 3
     Width = 638
-    Height = 102
+    Height = 93
     Align = alTop
     Caption = 'Logger channels'
     TabOrder = 4
     DesignSize = (
       638
-      102)
+      93)
     object lblLogViewer: TLabel
       Left = 220
       Top = 0
@@ -446,7 +427,7 @@ object frmLogger: TfrmLogger
       Left = 519
       Top = 19
       Width = 111
-      Height = 76
+      Height = 70
       Action = actSendClear
       Images = imlLogger
       TabOrder = 6
@@ -455,12 +436,13 @@ object frmLogger: TfrmLogger
   object grpCheckpoints: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 588
+    Top = 540
     Width = 638
     Height = 59
     Align = alTop
     Caption = 'Checkpoints'
     TabOrder = 5
+    ExplicitTop = 588
     object lblCheckpointDescription: TLabel
       Left = 12
       Top = 19
@@ -494,12 +476,13 @@ object frmLogger: TfrmLogger
   object grpValues: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 361
+    Top = 321
     Width = 638
     Height = 118
     Align = alTop
     Caption = 'Log values'
     TabOrder = 6
+    ExplicitTop = 361
     object btnSendObject: TButton
       Left = 324
       Top = 23
@@ -613,15 +596,16 @@ object frmLogger: TfrmLogger
   object grpCustom: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 653
+    Top = 605
     Width = 638
-    Height = 56
+    Height = 48
     Align = alClient
     Caption = 'Custom'
     TabOrder = 7
+    ExplicitHeight = 70
     object btnSendObject1: TButton
       Left = 325
-      Top = 24
+      Top = 16
       Width = 150
       Height = 25
       Action = actSendTestSequence
@@ -630,7 +614,7 @@ object frmLogger: TfrmLogger
     end
     object edtMessageCount: TLabeledEdit
       Left = 89
-      Top = 26
+      Top = 18
       Width = 73
       Height = 21
       Alignment = taRightJustify
@@ -656,7 +640,7 @@ object frmLogger: TfrmLogger
     end
     object btnSendMessages: TButton
       Left = 168
-      Top = 24
+      Top = 16
       Width = 150
       Height = 25
       Action = actSendMessages
@@ -664,7 +648,7 @@ object frmLogger: TfrmLogger
     end
     object btnSendODS: TButton
       Left = 481
-      Top = 24
+      Top = 16
       Width = 150
       Height = 25
       Action = actSendODS
@@ -673,15 +657,16 @@ object frmLogger: TfrmLogger
   end
   object grpActions: TGroupBox
     Left = 0
-    Top = 482
+    Top = 442
     Width = 644
     Height = 39
     Align = alTop
     Caption = 'Actions'
     TabOrder = 8
+    ExplicitTop = 482
     object chkActions: TCheckBox
-      Left = 20
-      Top = 18
+      Left = 28
+      Top = 19
       Width = 157
       Height = 17
       Caption = 'Log execution of actions.'
@@ -864,7 +849,7 @@ object frmLogger: TfrmLogger
     Left = 408
     Top = 72
     Bitmap = {
-      494C010118001D00240010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010118001D00280010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000007000000001002000000000000070
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

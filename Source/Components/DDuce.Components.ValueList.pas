@@ -190,10 +190,8 @@ procedure TValueList.DoBeforeCellPaint(Canvas: TCanvas; Node: PVirtualNode;
   Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect;
   var ContentRect: TRect);
 var
-  N : TValueListNode;
   L : Integer;
 begin
-  N := GetNodeData<TValueListNode>(Node);
   L := GetNodeLevel(Node);
   ContentRect.Offset(2, 0);
   if Column = 0 then

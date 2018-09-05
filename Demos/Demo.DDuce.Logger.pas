@@ -95,6 +95,7 @@ type
     btnSendText              : TButton;
     btnSendWarning           : TButton;
     btnZMQBind               : TButton;
+    chkActions               : TCheckBox;
     chkEnableCountTimer      : TCheckBox;
     chkLogFileChannelActive  : TCheckBox;
     chkSendRandomValueTimer  : TCheckBox;
@@ -102,10 +103,10 @@ type
     chkZeroMQChannelActive   : TCheckBox;
     edtEndPoint              : TLabeledEdit;
     edtLogFile               : TButtonedEdit;
-    edtLogMessage            : TLabeledEdit;
     edtMessageCount          : TLabeledEdit;
     edtMethod1               : TLabeledEdit;
     edtMethod2               : TLabeledEdit;
+    grpActions               : TGroupBox;
     grpCheckpoints           : TGroupBox;
     grpCounters              : TGroupBox;
     grpCustom                : TGroupBox;
@@ -127,13 +128,14 @@ type
     tmrSendCounter           : TTimer;
     tmrSendValue             : TTimer;
     trbMain                  : TTrackBar;
-    grpActions: TGroupBox;
-    chkActions: TCheckBox;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
     procedure chkEnableCountTimerClick(Sender: TObject);
+    procedure chkLogFileChannelActiveClick(Sender: TObject);
     procedure chkSendRandomValueTimerClick(Sender: TObject);
+    procedure chkWinIPCChannelActiveClick(Sender: TObject);
+    procedure chkZeroMQChannelActiveClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure tmrSendCounterTimer(Sender: TObject);
     procedure tmrSendValueTimer(Sender: TObject);
@@ -166,9 +168,6 @@ type
     procedure actSendInterfaceExecute(Sender: TObject);
     procedure actSendTextExecute(Sender: TObject);
     procedure actSendPersistentExecute(Sender: TObject);
-    procedure chkLogFileChannelActiveClick(Sender: TObject);
-    procedure chkWinIPCChannelActiveClick(Sender: TObject);
-    procedure chkZeroMQChannelActiveClick(Sender: TObject);
     procedure actSendMessagesExecute(Sender: TObject);
     procedure actSendSQLExecute(Sender: TObject);
     procedure actZMQBindExecute(Sender: TObject);
@@ -191,7 +190,6 @@ type
     procedure SaveSettings;
 
   protected
-    procedure ExecuteTestSequence;
     procedure UpdateActions; override;
 
     property Logger: ILogger
@@ -308,7 +306,7 @@ end;
 {$REGION 'action handlers'}
 procedure TfrmLogger.actSendInfoExecute(Sender: TObject);
 begin
-  Logger.Info(edtLogMessage.Text);
+  Logger.Info('Info message');
 end;
 
 procedure TfrmLogger.actSendInterfaceExecute(Sender: TObject);
@@ -330,7 +328,7 @@ end;
 
 procedure TfrmLogger.actSendWarningExecute(Sender: TObject);
 begin
-  Logger.Warn(edtLogMessage.Text);
+  Logger.Warn('Warning message');
 end;
 
 procedure TfrmLogger.actZMQBindExecute(Sender: TObject);
@@ -374,7 +372,7 @@ end;
 
 procedure TfrmLogger.actSendErrorExecute(Sender: TObject);
 begin
-  Logger.Error(edtLogMessage.Text);
+  Logger.Error('Error message');
 end;
 
 procedure TfrmLogger.actEnterMethod1Execute(Sender: TObject);
@@ -403,7 +401,7 @@ end;
 
 procedure TfrmLogger.actSendObjectExecute(Sender: TObject);
 var
-  F: TFont;
+  F : TFont;
 begin
   F := TFont.Create;
   try
@@ -464,7 +462,7 @@ end;
 
 procedure TfrmLogger.actSendTestSequenceExecute(Sender: TObject);
 var
-  I: Integer;
+  I : Integer;
 begin
   for I := 0 to 10 do
   begin
@@ -614,13 +612,6 @@ end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-procedure TfrmLogger.ExecuteTestSequence;
-begin
-  Logger.Track(Self, 'ExecuteTestSequence');
-  TestProcedure1;
-  TestProcedure2;
-end;
-
 procedure TfrmLogger.UpdateActions;
 begin
   inherited UpdateActions;
