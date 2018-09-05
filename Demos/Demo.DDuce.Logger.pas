@@ -30,7 +30,7 @@ uses
   Vcl.Bind.Editors,
   Data.Bind.EngExt, Data.Bind.Components,
 
-  DDuce.Logger.Interfaces;
+  DDuce.Logger.Interfaces, Vcl.Menus;
 
 type
   TfrmLogger = class(TForm)
@@ -76,7 +76,6 @@ type
     btnResetCheckpoint       : TButton;
     btnResetCounter          : TButton;
     btnSendBitmap            : TButton;
-    btnSendClear             : TButton;
     btnSendComponent         : TButton;
     btnSendDataSet           : TButton;
     btnSendError             : TButton;
@@ -97,10 +96,10 @@ type
     btnZMQBind               : TButton;
     chkActions               : TCheckBox;
     chkEnableCountTimer      : TCheckBox;
-    chkLogFileChannelActive  : TCheckBox;
+    chkLogFileChannel: TCheckBox;
     chkSendRandomValueTimer  : TCheckBox;
-    chkWinIPCChannelActive   : TCheckBox;
-    chkZeroMQChannelActive   : TCheckBox;
+    chkWinIPCChannel: TCheckBox;
+    chkZeroMQChannel: TCheckBox;
     edtEndPoint              : TLabeledEdit;
     edtLogFile               : TButtonedEdit;
     edtMessageCount          : TLabeledEdit;
@@ -128,15 +127,25 @@ type
     tmrSendCounter           : TTimer;
     tmrSendValue             : TTimer;
     trbMain                  : TTrackBar;
+    actZMQBindToEphemeralPort: TAction;
+    actZMQCloseSocket: TAction;
+    btnZMQCloseSocket: TButton;
+    actZMQBindToDefaultPort: TAction;
+    ppmBind: TPopupMenu;
+    Bindtodefaultport55551: TMenuItem;
+    Bindtoephemeralport1: TMenuItem;
+    Bind1: TMenuItem;
+    btnSendClear: TButton;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
     procedure chkEnableCountTimerClick(Sender: TObject);
-    procedure chkLogFileChannelActiveClick(Sender: TObject);
+    procedure chkLogFileChannelClick(Sender: TObject);
     procedure chkSendRandomValueTimerClick(Sender: TObject);
-    procedure chkWinIPCChannelActiveClick(Sender: TObject);
-    procedure chkZeroMQChannelActiveClick(Sender: TObject);
+    procedure chkWinIPCChannelClick(Sender: TObject);
+    procedure chkZeroMQChannelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
     procedure tmrSendCounterTimer(Sender: TObject);
     procedure tmrSendValueTimer(Sender: TObject);
     procedure trbMainChange(Sender: TObject);
@@ -173,6 +182,9 @@ type
     procedure actZMQBindExecute(Sender: TObject);
     procedure actSendDataSetExecute(Sender: TObject);
     procedure aclMainExecute(Action: TBasicAction; var Handled: Boolean);
+    procedure actZMQBindToEphemeralPortExecute(Sender: TObject);
+    procedure actZMQCloseSocketExecute(Sender: TObject);
+    procedure actZMQBindToDefaultPortExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -188,6 +200,8 @@ type
 
     procedure LoadSettings;
     procedure SaveSettings;
+
+    procedure WatchZeroMQChannel;
 
   protected
     procedure UpdateActions; override;
@@ -273,12 +287,9 @@ begin
   FLogger := TLoggerFactories.CreateLogger;
   FWinIPCChannel  := TWinIPCChannel.Create(False);
   FLogFileChannel := TLogFileChannel.Create;
-  if edtEndPoint.Text <> '' then
-    FZeroMQChannel  := TZeroMQChannel.Create(edtEndPoint.Text)
-  else
-    FZeroMQChannel  := TZeroMQChannel.Create;
+  FZeroMQChannel  := TZeroMQChannel.Create(False);
 
-  chkZeroMQChannelActive.Hint := Format(SVersion, [FZeroMQChannel.ZMQVersion]);
+  chkZeroMQChannel.Hint := Format(SVersion, [FZeroMQChannel.ZMQVersion]);
 
   Logger.Channels.Add(FLogFileChannel);
   Logger.Channels.Add(FWinIPCChannel);
@@ -334,6 +345,40 @@ end;
 procedure TfrmLogger.actZMQBindExecute(Sender: TObject);
 begin
   FZeroMQChannel.EndPoint := edtEndPoint.Text;
+  if FZeroMQChannel.Connect then
+  begin
+    lblPort.Caption := FZeroMQChannel.Port.ToString;
+    edtEndPoint.Text := FZeroMQChannel.EndPoint;
+  end;
+  WatchZeroMQChannel;
+end;
+
+procedure TfrmLogger.actZMQBindToDefaultPortExecute(Sender: TObject);
+begin
+  FZeroMQChannel.EndPoint := 'tcp://*:5555';
+  if FZeroMQChannel.Connect then
+  begin
+    lblPort.Caption := FZeroMQChannel.Port.ToString;
+    edtEndPoint.Text := FZeroMQChannel.EndPoint;
+  end;
+  WatchZeroMQChannel;
+end;
+
+procedure TfrmLogger.actZMQBindToEphemeralPortExecute(Sender: TObject);
+begin
+  FZeroMQChannel.EndPoint := 'tcp://*:*';
+  if FZeroMQChannel.Connect then
+  begin
+    lblPort.Caption := FZeroMQChannel.Port.ToString;
+    edtEndPoint.Text := FZeroMQChannel.EndPoint;
+  end;
+  WatchZeroMQChannel;
+end;
+
+procedure TfrmLogger.actZMQCloseSocketExecute(Sender: TObject);
+begin
+  FZeroMQChannel.Disconnect;
+  WatchZeroMQChannel;
 end;
 
 procedure TfrmLogger.actSendBitmapExecute(Sender: TObject);
@@ -516,9 +561,9 @@ begin
   tmrSendCounter.Enabled := chkEnableCountTimer.Checked;
 end;
 
-procedure TfrmLogger.chkLogFileChannelActiveClick(Sender: TObject);
+procedure TfrmLogger.chkLogFileChannelClick(Sender: TObject);
 begin
-  FLogFileChannel.Active := (Sender as TCheckBox).Checked;
+  FLogFileChannel.Enabled := (Sender as TCheckBox).Checked;
 end;
 
 procedure TfrmLogger.chkSendRandomValueTimerClick(Sender: TObject);
@@ -526,24 +571,27 @@ begin
   tmrSendValue.Enabled := chkSendRandomValueTimer.Checked;
 end;
 
-procedure TfrmLogger.chkWinIPCChannelActiveClick(Sender: TObject);
+procedure TfrmLogger.chkWinIPCChannelClick(Sender: TObject);
 begin
-  FWinIPCChannel.Active := (Sender as TCheckBox).Checked;
+  FWinIPCChannel.Enabled := (Sender as TCheckBox).Checked;
 end;
 
-procedure TfrmLogger.chkZeroMQChannelActiveClick(Sender: TObject);
+procedure TfrmLogger.chkZeroMQChannelClick(Sender: TObject);
 begin
-  FZeroMQChannel.Active := (Sender as TCheckBox).Checked;
+  FZeroMQChannel.Enabled := (Sender as TCheckBox).Checked;
+  UpdateActions;
 end;
 
 procedure TfrmLogger.tmrSendCounterTimer(Sender: TObject);
 begin
   Logger.IncCounter('Counter');
+  WatchZeroMQChannel;
 end;
 
 procedure TfrmLogger.tmrSendValueTimer(Sender: TObject);
 begin
   Logger.Send('RandomValue', Random(1000));
+  WatchZeroMQChannel;
 end;
 
 procedure TfrmLogger.trbMainChange(Sender: TObject);
@@ -555,14 +603,20 @@ procedure TfrmLogger.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
 end;
+
+procedure TfrmLogger.FormShow(Sender: TObject);
+begin
+  Caption := Format('%s (%d)', [Application.ExeName, GetCurrentProcessId]);
+  WatchZeroMQChannel;
+end;
 {$ENDREGION}
 
 {$REGION 'private methods'}
 procedure TfrmLogger.LoadSettings;
 begin
-  FLogFileChannel.Active := Settings.ReadBool(UnitName, 'LogFileChannel.Active');
-  FWinIPCChannel.Active  := Settings.ReadBool(UnitName, 'WinIPCChannel.Active');
-  FZeroMQChannel.Active  := Settings.ReadBool(UnitName, 'ZeroMQChannel.Active');
+  FLogFileChannel.Enabled := Settings.ReadBool(UnitName, 'LogFileChannel.Enabled');
+  FWinIPCChannel.Enabled  := Settings.ReadBool(UnitName, 'WinIPCChannel.Enabled');
+  FZeroMQChannel.Enabled  := Settings.ReadBool(UnitName, 'ZeroMQChannel.Enabled');
   edtMethod1.Text := Settings.ReadString(
     UnitName, 'edtMethod1.Text', 'MyObject.Execute'
   );
@@ -576,9 +630,9 @@ end;
 
 procedure TfrmLogger.SaveSettings;
 begin
-  Settings.WriteBool(UnitName, 'LogFileChannel.Active', FLogFileChannel.Active);
-  Settings.WriteBool(UnitName, 'WinIPCChannel.Active', FWinIPCChannel.Active);
-  Settings.WriteBool(UnitName, 'ZeroMQChannel.Active', FZeroMQChannel.Active);
+  Settings.WriteBool(UnitName, 'LogFileChannel.Enabled', FLogFileChannel.Enabled);
+  Settings.WriteBool(UnitName, 'WinIPCChannel.Enabled', FWinIPCChannel.Enabled);
+  Settings.WriteBool(UnitName, 'ZeroMQChannel.Enabled', FZeroMQChannel.Enabled);
   Settings.WriteString(UnitName, 'edtMethod1.Text', edtMethod1.Text);
   Settings.WriteString(UnitName, 'edtMethod2.Text', edtMethod2.Text);
   Settings.WriteInteger(UnitName, 'MessageCount', StrToIntDef(edtMessageCount.Text, 0));
@@ -595,9 +649,9 @@ begin
   Logger.Info('Information message.');
   Logger.Error('Fatal error occured! Something went wrong over here!');
   Logger.Warn('This message warns you about nothing.');
-  Logger.SendComponent('Form', Self); // will show DFM with published properties
-  Logger.SendPersistent('Font', Font);
-  Logger.SendObject('Font', Font);
+  Logger.SendComponent('Form', Self);  // sends DFM with published properties
+  Logger.SendPersistent('Font', Font); // sends published property values
+  Logger.SendObject('Font', Font);     // sends fields and property values
 end;
 
 procedure TfrmLogger.TestProcedure2;
@@ -609,10 +663,20 @@ begin
   Logger.SendColor('Color', clBlack);
   Logger.SendTime('CurrentTime', Now);
 end;
+
+procedure TfrmLogger.WatchZeroMQChannel;
+begin
+  Logger.Watch('FZeroMQChannel.Enabled', FZeroMQChannel.Enabled);
+  Logger.Watch('FZeroMQChannel.Connected', FZeroMQChannel.Connected);
+  Logger.Watch('FZeroMQChannel.Port', FZeroMQChannel.Port);
+  Logger.Watch('FZeroMQChannel.EndPoint', FZeroMQChannel.EndPoint);
+end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
 procedure TfrmLogger.UpdateActions;
+var
+  B : Boolean;
 begin
   inherited UpdateActions;
   actEnterMethod1.Caption := Format(SEnter, [edtMethod1.Text]);
@@ -623,13 +687,19 @@ begin
   actLeaveMethod1.Enabled := FM1Entered;
   actEnterMethod2.Enabled := not FM2Entered;
   actLeaveMethod2.Enabled := FM2Entered;
-  chkLogFileChannelActive.Checked := FLogFileChannel.Active;
-  chkWinIPCChannelActive.Checked  := FWinIPCChannel.Active;
-  chkZeroMQChannelActive.Checked  := FZeroMQChannel.Active;
+  chkLogFileChannel.Checked := FLogFileChannel.Enabled;
+  chkWinIPCChannel.Checked  := FWinIPCChannel.Enabled;
   lblCounterValue.Caption  := Logger.GetCounter('Counter').ToString;
   lblPositionValue.Caption := trbMain.Position.ToString;
   actSendMessages.Caption  := Format('Send %s messages', [edtMessageCount.Text]);
-  lblPort.Caption          := FZeroMQChannel.Port.ToString;
+
+  B := chkZeroMQChannel.Checked;
+  edtEndPoint.Enabled := B;
+  actZMQBind.Enabled := B and not FZeroMQChannel.Connected;
+  actZMQBindToEphemeralPort.Enabled := B and not FZeroMQChannel.Connected;
+  actZMQCloseSocket.Enabled := B and FZeroMQChannel.Connected;
+  lblPort.Caption := FZeroMQChannel.Port.ToString;
+
 end;
 {$ENDREGION}
 

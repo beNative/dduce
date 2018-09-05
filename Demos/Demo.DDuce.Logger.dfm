@@ -18,17 +18,19 @@ object frmLogger: TfrmLogger
   Position = poMainFormCenter
   ShowHint = True
   OnClose = FormClose
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object grpWatches: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 484
+    Top = 538
     Width = 638
     Height = 50
     Align = alTop
     Caption = 'Watches'
     TabOrder = 0
+    ExplicitTop = 484
     DesignSize = (
       638
       50)
@@ -84,13 +86,13 @@ object frmLogger: TfrmLogger
   object grpMethodTracing: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 166
+    Top = 220
     Width = 638
     Height = 85
     Align = alTop
     Caption = 'Method tracing'
     TabOrder = 1
-    ExplicitTop = 206
+    ExplicitTop = 166
     object btnEnterMethod1: TButton
       Left = 12
       Top = 22
@@ -173,13 +175,13 @@ object frmLogger: TfrmLogger
   object grpNotificationMessages: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 102
+    Top = 156
     Width = 638
     Height = 58
     Align = alTop
     Caption = 'Notification messages'
     TabOrder = 2
-    ExplicitTop = 111
+    ExplicitTop = 102
     object btnSendInfo: TButton
       Left = 17
       Top = 21
@@ -216,17 +218,26 @@ object frmLogger: TfrmLogger
       Images = imlLogger
       TabOrder = 2
     end
+    object btnSendClear: TButton
+      Left = 486
+      Top = 21
+      Width = 144
+      Height = 25
+      Action = actSendClear
+      Images = imlLogger
+      TabOrder = 3
+    end
   end
   object grpCounters: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 257
+    Top = 311
     Width = 638
     Height = 58
     Align = alTop
     Caption = 'Counters'
     TabOrder = 3
-    ExplicitTop = 297
+    ExplicitTop = 257
     object lblCounterValue: TLabel
       Left = 85
       Top = 12
@@ -311,7 +322,7 @@ object frmLogger: TfrmLogger
       Transparent = False
     end
     object lblPort: TLabel
-      Left = 354
+      Left = 540
       Top = 47
       Width = 47
       Height = 13
@@ -326,23 +337,23 @@ object frmLogger: TfrmLogger
       Layout = tlCenter
     end
     object lblPortCaption: TLabel
-      Left = 324
+      Left = 495
       Top = 47
       Width = 24
       Height = 13
       Caption = 'Port:'
     end
     object lblIPCaption: TLabel
-      Left = 403
-      Top = 47
+      Left = 495
+      Top = 63
       Width = 14
       Height = 13
       Caption = 'IP:'
     end
     object lblIPAddress: TLabel
-      Left = 425
-      Top = 47
-      Width = 89
+      Left = 540
+      Top = 63
+      Width = 85
       Height = 13
       AutoSize = False
       Caption = 'localhost'
@@ -353,7 +364,7 @@ object frmLogger: TfrmLogger
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object chkLogFileChannelActive: TCheckBox
+    object chkLogFileChannel: TCheckBox
       Left = 17
       Top = 22
       Width = 48
@@ -361,9 +372,9 @@ object frmLogger: TfrmLogger
       Hint = 'Enables or disables logfile channel.'
       Caption = 'Logfile'
       TabOrder = 0
-      OnClick = chkLogFileChannelActiveClick
+      OnClick = chkLogFileChannelClick
     end
-    object chkWinIPCChannelActive: TCheckBox
+    object chkWinIPCChannel: TCheckBox
       Left = 17
       Top = 69
       Width = 61
@@ -371,9 +382,9 @@ object frmLogger: TfrmLogger
       Hint = 'Enables or disables WinIPC channel.'
       Caption = 'WinIPC'
       TabOrder = 5
-      OnClick = chkWinIPCChannelActiveClick
+      OnClick = chkWinIPCChannelClick
     end
-    object chkZeroMQChannelActive: TCheckBox
+    object chkZeroMQChannel: TCheckBox
       Left = 17
       Top = 46
       Width = 61
@@ -381,12 +392,12 @@ object frmLogger: TfrmLogger
       Hint = 'Enables or disables ZeroMQ channel.'
       Caption = 'ZeroMQ'
       TabOrder = 2
-      OnClick = chkZeroMQChannelActiveClick
+      OnClick = chkZeroMQChannelClick
     end
     object edtLogFile: TButtonedEdit
       Left = 85
       Top = 20
-      Width = 428
+      Width = 545
       Height = 21
       Hint = 'Database (server or path).'
       Anchors = [akLeft, akTop, akRight]
@@ -396,9 +407,9 @@ object frmLogger: TfrmLogger
       TabOrder = 1
     end
     object edtEndPoint: TLabeledEdit
-      Left = 136
-      Top = 44
-      Width = 129
+      Left = 235
+      Top = 46
+      Width = 142
       Height = 21
       Alignment = taCenter
       Anchors = [akLeft, akTop, akRight]
@@ -416,33 +427,34 @@ object frmLogger: TfrmLogger
       Text = 'tcp://*:*'
     end
     object btnZMQBind: TButton
-      Left = 271
+      Left = 84
       Top = 43
-      Width = 47
-      Height = 24
+      Width = 92
+      Height = 25
       Action = actZMQBind
+      DropDownMenu = ppmBind
+      Style = bsSplitButton
       TabOrder = 4
     end
-    object btnSendClear: TButton
-      Left = 519
-      Top = 19
-      Width = 111
-      Height = 70
-      Action = actSendClear
-      Images = imlLogger
+    object btnZMQCloseSocket: TButton
+      Left = 383
+      Top = 43
+      Width = 97
+      Height = 25
+      Action = actZMQCloseSocket
       TabOrder = 6
     end
   end
   object grpCheckpoints: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 540
+    Top = 594
     Width = 638
     Height = 59
     Align = alTop
     Caption = 'Checkpoints'
     TabOrder = 5
-    ExplicitTop = 588
+    ExplicitTop = 540
     object lblCheckpointDescription: TLabel
       Left = 12
       Top = 19
@@ -476,13 +488,13 @@ object frmLogger: TfrmLogger
   object grpValues: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 321
+    Top = 375
     Width = 638
     Height = 118
     Align = alTop
     Caption = 'Log values'
     TabOrder = 6
-    ExplicitTop = 361
+    ExplicitTop = 321
     object btnSendObject: TButton
       Left = 324
       Top = 23
@@ -596,13 +608,14 @@ object frmLogger: TfrmLogger
   object grpCustom: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 605
+    Top = 102
     Width = 638
     Height = 48
-    Align = alClient
+    Align = alTop
     Caption = 'Custom'
     TabOrder = 7
-    ExplicitHeight = 70
+    ExplicitLeft = -2
+    ExplicitTop = 95
     object btnSendObject1: TButton
       Left = 325
       Top = 16
@@ -657,13 +670,13 @@ object frmLogger: TfrmLogger
   end
   object grpActions: TGroupBox
     Left = 0
-    Top = 442
+    Top = 496
     Width = 644
     Height = 39
     Align = alTop
     Caption = 'Actions'
     TabOrder = 8
-    ExplicitTop = 482
+    ExplicitTop = 442
     object chkActions: TCheckBox
       Left = 28
       Top = 19
@@ -678,8 +691,8 @@ object frmLogger: TfrmLogger
   object aclMain: TActionList
     Images = imlLogger
     OnExecute = aclMainExecute
-    Left = 456
-    Top = 72
+    Left = 352
+    Top = 152
     object actSendInfo: TAction
       Caption = 'Send Info'
       ImageIndex = 3
@@ -837,19 +850,31 @@ object frmLogger: TfrmLogger
       Caption = 'Bind'
       OnExecute = actZMQBindExecute
     end
+    object actZMQBindToEphemeralPort: TAction
+      Caption = 'Bind to ephemeral port'
+      OnExecute = actZMQBindToEphemeralPortExecute
+    end
+    object actZMQCloseSocket: TAction
+      Caption = 'Close socket'
+      OnExecute = actZMQCloseSocketExecute
+    end
+    object actZMQBindToDefaultPort: TAction
+      Caption = 'Bind to default port (5555)'
+      OnExecute = actZMQBindToDefaultPortExecute
+    end
   end
   object tmrSendCounter: TTimer
     Enabled = False
     OnTimer = tmrSendCounterTimer
-    Left = 360
-    Top = 72
+    Left = 248
+    Top = 152
   end
   object imlLogger: TImageList
     ColorDepth = cd32Bit
-    Left = 408
-    Top = 72
+    Left = 304
+    Top = 152
     Bitmap = {
-      494C010118001D00280010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010118001D00300010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000007000000001002000000000000070
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1786,5 +1811,18 @@ object frmLogger: TfrmLogger
     OnTimer = tmrSendValueTimer
     Left = 176
     Top = 520
+  end
+  object ppmBind: TPopupMenu
+    Left = 312
+    Top = 328
+    object Bindtodefaultport55551: TMenuItem
+      Action = actZMQBindToDefaultPort
+    end
+    object Bindtoephemeralport1: TMenuItem
+      Action = actZMQBindToEphemeralPort
+    end
+    object Bind1: TMenuItem
+      Action = actZMQBind
+    end
   end
 end

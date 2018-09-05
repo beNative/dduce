@@ -78,7 +78,6 @@ end;
 function TWinIPCChannel.Connect: Boolean;
 begin
   Result := FClient.Connect;
-  Connected := Result;
 end;
 
 function TWinIPCChannel.Disconnect: Boolean;
@@ -104,9 +103,9 @@ var
   TextSize : Integer;
   DataSize : Integer;
 begin
-  if Active then
+  if Enabled then
   begin
-    if not Connected then
+    if not Connected and AutoConnect then
       Connect;
     if Connected then
     begin

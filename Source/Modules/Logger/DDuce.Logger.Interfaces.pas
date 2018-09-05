@@ -96,23 +96,24 @@ type
   ILogChannel = interface
   ['{FDE37401-BB4F-4362-863A-CCCCF9228BD9}']
     {$REGION 'property access methods'}
-    function GetActive: Boolean;
-    procedure SetActive(const Value: Boolean);
+    function GetEnabled: Boolean;
+    procedure SetEnabled(const Value: Boolean);
     function GetConnected: Boolean;
-    procedure SetConnected(const Value: Boolean);
+    function GetAutoConnect: Boolean;
+    procedure SetAutoConnect(const Value: Boolean);
     {$ENDREGION}
 
     function Write(const AMsg: TLogMessage): Boolean;
     function Connect: Boolean;
     function Disconnect: Boolean;
 
-    property Active: Boolean
-      read GetActive write SetActive;
+    property Enabled: Boolean
+      read GetEnabled write SetEnabled;
 
     { True when the channel is connected with the server (or receiving)
       instance. }
     property Connected: Boolean
-      read GetConnected write SetConnected;
+      read GetConnected;
   end;
 
   ILogFileChannel = interface(ILogChannel)

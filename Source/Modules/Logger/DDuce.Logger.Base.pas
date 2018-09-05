@@ -394,7 +394,7 @@ begin
   LM.Text      := UTF8String(AText);
   LM.Data      := AStream;
   for LC in Channels do
-    if LC.Active then
+    if LC.Enabled then
       LC.Write(LM);
 end;
 

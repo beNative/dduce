@@ -105,7 +105,7 @@ begin
   FShowTime     := True;
   FShowStrings  := True;
   FShowHeader   := False;
-  Active        := False;
+  Enabled       := False;
   FStreamWriter.Create(function: TStreamWriter
     begin
       Result := TStreamWriter.Create(FFileName, True); // Append

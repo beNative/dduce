@@ -95,8 +95,8 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <VerInfo_Build>45</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.45;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>48</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.48;ProductVersion=1.0.0.0</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
