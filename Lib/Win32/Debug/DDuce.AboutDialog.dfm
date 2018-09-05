@@ -1,6 +1,7 @@
 object frmAboutDialog: TfrmAboutDialog
   Left = 0
   Top = 0
+  Caption = 'About'
   ClientHeight = 363
   ClientWidth = 555
   Color = clBtnFace
@@ -25,6 +26,5 @@ object frmAboutDialog: TfrmAboutDialog
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 439
   end
 end

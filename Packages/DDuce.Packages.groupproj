@@ -57,4 +57,24 @@
         <CallTarget Targets="DDuce_Core:Make;DDuce_Components:Make;DDuce_Modules:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+    <ItemGroup Condition="'$(BuildGroup)'=='BG'">
+        <BuildGroupProject Include="DDuce.Components.dproj">
+            <ProjectGuid>{E8512919-7B0C-4B60-A5CC-06A6D2460151}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="DDuce.Modules.dproj">
+            <ProjectGuid>{D7CAE294-F3ED-4D62-B93F-3A92A4623EB6}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="DDuce.Core.dproj">
+            <ProjectGuid>{4476808E-FE90-458A-8F43-C58050ED9914}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+    </ItemGroup>
 </Project>
