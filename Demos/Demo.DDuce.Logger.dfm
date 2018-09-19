@@ -30,7 +30,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Watches'
     TabOrder = 0
-    ExplicitTop = 484
     DesignSize = (
       638
       50)
@@ -92,7 +91,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Method tracing'
     TabOrder = 1
-    ExplicitTop = 166
     object btnEnterMethod1: TButton
       Left = 12
       Top = 22
@@ -181,7 +179,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Notification messages'
     TabOrder = 2
-    ExplicitTop = 102
     object btnSendInfo: TButton
       Left = 17
       Top = 21
@@ -237,7 +234,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Counters'
     TabOrder = 3
-    ExplicitTop = 257
     object lblCounterValue: TLabel
       Left = 85
       Top = 12
@@ -454,7 +450,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Checkpoints'
     TabOrder = 5
-    ExplicitTop = 540
     object lblCheckpointDescription: TLabel
       Left = 12
       Top = 19
@@ -494,7 +489,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Log values'
     TabOrder = 6
-    ExplicitTop = 321
     object btnSendObject: TButton
       Left = 324
       Top = 23
@@ -614,8 +608,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Custom'
     TabOrder = 7
-    ExplicitLeft = -2
-    ExplicitTop = 95
     object btnSendObject1: TButton
       Left = 325
       Top = 16
@@ -676,7 +668,6 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Actions'
     TabOrder = 8
-    ExplicitTop = 442
     object chkActions: TCheckBox
       Left = 28
       Top = 19
@@ -874,7 +865,7 @@ object frmLogger: TfrmLogger
     Left = 304
     Top = 152
     Bitmap = {
-      494C010118001D00300010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010118001D00340010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000007000000001002000000000000070
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

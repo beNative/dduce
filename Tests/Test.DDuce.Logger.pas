@@ -194,7 +194,7 @@ begin
   EnsureZMQLibExists;
   Logger.Channels.Add(TWinIPCChannel.Create);
   Logger.Channels.Add(TZeroMQChannel.Create);
-  Logger.Channels[1].Active := True;
+  Logger.Channels[1].Enabled := True;
   Logger.Clear;
 end;
 {$ENDREGION}

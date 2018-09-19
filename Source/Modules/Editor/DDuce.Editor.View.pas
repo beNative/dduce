@@ -81,6 +81,8 @@ type
       var AAction    : TBCEditorReplaceAction
     );
 
+    procedure EditorEnter(Sender: TObject);
+
     procedure EditorDropFiles(
       Sender : TObject;
       Pos    : TPoint;
@@ -245,6 +247,8 @@ type
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
+
+
     // public overridden methods
     function CloseQuery: Boolean; override;
 
@@ -276,6 +280,7 @@ type
       read GetLogicalCaretXY write SetLogicalCaretXY;
 
   public
+    function Focused: Boolean;
     { current X-coordinate of the caret on the screen. }
     property CaretX: Integer
       read GetCaretX write SetCaretX;
@@ -520,6 +525,11 @@ begin
 // TS: TEMP!
   Editor.LoadFromFile(AFiles[0]);
   Editor.Highlighter.LoadFromFile('Object Pascal.json');
+end;
+
+procedure TEditorView.EditorEnter(Sender: TObject);
+begin
+  Activate;
 end;
 
 procedure TEditorView.EditorReplaceText(Sender: TObject; const ASearch,
@@ -1318,6 +1328,7 @@ begin
   //AEditor.OnCommandProcessed     := EditorCommandProcessed;
   AEditor.OnDropFiles            := EditorDropFiles;
   AEditor.OnCustomTokenAttribute := EditorCustomTokenAttribute;
+  AEditor.OnEnter                := EditorEnter;
 
   // TEMP
   AEditor.Highlighter.Colors.LoadFromFile('tsColors.json');
@@ -1468,12 +1479,13 @@ end;
 procedure TEditorView.Activate;
 begin
   inherited Activate;
+  Logger.Track(Self, 'Activate');
   Manager.ActiveView := Self as IEditorView;
 end;
 
 function TEditorView.EditorViewFocused: Boolean;
 begin
-  Result := Focused or Editor.Focused;
+  Result := Editor.Focused;
 end;
 
 procedure TEditorView.SelectWord;
@@ -1516,42 +1528,37 @@ begin
   end;
 end;
 
+function TEditorView.Focused: Boolean;
+begin
+  Result := Editor.Focused;
+end;
+
 procedure TEditorView.UpdateActions;
 var
   B: Boolean;
 begin
   inherited UpdateActions;
-  B := Focused;
-  if not B and Assigned(Parent) then
-  begin
-    if Parent.Focused then
-      B := True;
-  end;
+//  B := Focused;
+//  if not B and Assigned(Parent) then
+//  begin
+//    if Parent.Focused then
+//      B := True;
+//  end;
+//
+//  if B then
+//  begin
+//    Activate;
+//  end;
 
-  if B then
-  begin
-    Activate;
-  end;
+//  if Assigned(Actions) then
+//    Actions.UpdateActions;
 
-  if IsActive then
-  begin
-//    Editor.Color := clWhite;
-//    UpdateSharedViews;
-  end
-  else
-  begin
-    if Settings.DimInactiveView then
-//      Editor.Color := GetHighLightColor(15329769, 10);
-  end;
-
-  if Assigned(Actions) then
-    Actions.UpdateActions;
-
-  if FUpdate then
-  begin
-    ApplySettings;
-    FUpdate := False;
-  end;
+    // TODO: Abstract error on releasing object
+//  if FUpdate then
+//  begin
+//    ApplySettings;
+//    FUpdate := False;
+//  end;
 end;
 
 {$ENDREGION}

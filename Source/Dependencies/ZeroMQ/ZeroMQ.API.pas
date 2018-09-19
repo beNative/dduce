@@ -39,8 +39,6 @@ uses
 const
   LIBZEROMQ = 'libzmq.dll';
 
-{.$DEFINE EXPERIMENTAL}
-
 {$WARN SYMBOL_PLATFORM OFF}
 (******************************************************************************)
 (*  0MQ versioning support.                                                   *)

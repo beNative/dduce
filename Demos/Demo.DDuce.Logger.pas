@@ -514,7 +514,7 @@ begin
     Logger.Send('I', I);
     Logger.Watch('I', I);
     TestProcedure1;
-    TestProcedure2;
+//    TestProcedure2;
   end;
 end;
 
@@ -649,7 +649,7 @@ begin
   Logger.Info('Information message.');
   Logger.Error('Fatal error occured! Something went wrong over here!');
   Logger.Warn('This message warns you about nothing.');
-  Logger.SendComponent('Form', Self);  // sends DFM with published properties
+//  Logger.SendComponent('Form', Self);  // sends DFM with published properties => ERROR!!!
   Logger.SendPersistent('Font', Font); // sends published property values
   Logger.SendObject('Font', Font);     // sends fields and property values
 end;

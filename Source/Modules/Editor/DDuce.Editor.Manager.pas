@@ -919,6 +919,7 @@ procedure TdmEditorManager.SetActiveView(AValue: IEditorView);
 begin
   if Assigned(AValue) and (AValue <> FActiveView) then
   begin
+    Logger.Track(Self, 'SetActiveView');
     FActiveView := AValue;
     Events.DoActiveViewChange;
     ActiveViewChanged;
@@ -1307,7 +1308,7 @@ end;
 
 procedure TdmEditorManager.actHelpExecute(Sender: TObject);
 begin
-//  ShortCuts.Show;
+  ShowMessage(SNotImplementedYet);
 end;
 
 procedure TdmEditorManager.actInsertColorValueExecute(Sender: TObject);
@@ -1318,16 +1319,6 @@ end;
 
 procedure TdmEditorManager.actInspectExecute(Sender: TObject);
 begin
-//  InspectComponents([
-//    HighlighterPopupMenu.Items,
-//    HighlighterPopupMenu.Items[0],
-//    HighlighterPopupMenu.Items[1],
-//    ActiveView.Editor,
-//    ActiveView.Editor.Gutter.ChangesPart,
-//    ActiveView.Editor.Gutter.LineNumberPart,
-//    ActiveView.Editor.Gutter.CodeFoldPart,
-//    ActiveView.Editor.Gutter.SeparatorPart
-//  ]);
   ShowMessage(SNotImplementedYet);
 end;
 
@@ -1493,11 +1484,6 @@ end;
 procedure TdmEditorManager.actSettingsExecute(Sender: TObject);
 begin
   ShowMessage(SNotImplementedYet);
-{  with TEditorSettingsDialog.Create(Self) do
-  begin
-    ShowModal;
-  end;         }
-//  ExecuteSettingsDialog(Self);
 end;
 
 procedure TdmEditorManager.actHighlighterExecute(Sender: TObject);
@@ -1678,6 +1664,7 @@ procedure TdmEditorManager.aclActionsExecute(AAction: TBasicAction;
   var Handled: Boolean);
 begin
   Events.DoActionExecute(AAction, Handled);
+  Logger.Action(AAction);
 end;
 
 procedure TdmEditorManager.actAlignAndSortSelectionExecute(Sender: TObject);
@@ -2481,6 +2468,7 @@ procedure TdmEditorManager.ExportLines(AFormat: string; AToClipBoard: Boolean;
 //  S  : string;
 //  SL : TStringList;
 begin
+  ShowMessage(SNotImplementedYet);
 //  SL := TStringList.Create;
 //  try
 //    if AFormat = 'HTML' then
@@ -2612,13 +2600,14 @@ var
   B  : Boolean;
   V  : IEditorView;
 begin
-  V := ActiveView;
-  if Assigned(V) then
+  if Assigned(ActiveView) then
   begin
-    B := ActiveView.Focused;
+    V := ActiveView;
+    //B := V.Focused;
+    B := V.Editor.Focused;
     actCut.Enabled   := actCut.Visible and B;
     actCopy.Enabled  := actCopy.Visible and B;
-    actPaste.Enabled := actPaste.Visible and ActiveView.CanPaste and B;
+    actPaste.Enabled := actPaste.Visible and V.CanPaste and B;
 
     if Assigned(Settings) and V.Focused {and FChanged} then
     begin
