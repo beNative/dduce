@@ -1534,8 +1534,8 @@ begin
 end;
 
 procedure TEditorView.UpdateActions;
-var
-  B: Boolean;
+//var
+//  B: Boolean;
 begin
   inherited UpdateActions;
 //  B := Focused;

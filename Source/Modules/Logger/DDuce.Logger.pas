@@ -37,7 +37,8 @@ var
 
 function Logger(const ALogLevel: Byte): ILogger;
 begin
-  FLogger.LogLevel := ALogLevel;
+  if Assigned(FLogger) then
+    FLogger.LogLevel := ALogLevel;
   Result := FLogger;
 end;
 

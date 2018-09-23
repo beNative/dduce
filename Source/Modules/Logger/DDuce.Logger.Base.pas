@@ -575,16 +575,6 @@ begin
   SendException('', AValue);
 end;
 
-procedure TLogger.SendHTML(const AValue: string);
-begin
-  SendText('', AValue, 'HTML');
-end;
-
-procedure TLogger.SendHTML(const AName, AValue: string);
-begin
-  SendText(AName, AValue, 'HTML');
-end;
-
 procedure TLogger.SendDataSet(const AName: string; AValue: TDataSet);
 var
   LFDMemTable : TFDMemTable;
@@ -623,16 +613,6 @@ end;
 procedure TLogger.SendVariant(const AValue: Variant);
 begin
   SendVariant('', AValue);
-end;
-
-procedure TLogger.SendXML(const AName, AValue: string);
-begin
-
-end;
-
-procedure TLogger.SendXML(const AValue: string);
-begin
-
 end;
 
 procedure TLogger.SendText(const AName, AText, AHighlighter: string);
@@ -866,29 +846,9 @@ begin
     InternalSend(lmtConditional, AText);
 end;
 
-procedure TLogger.SendINI(const AValue: string);
-begin
-  SendText('', AValue, 'INI');
-end;
-
-procedure TLogger.SendINI(const AName, AValue: string);
-begin
-  SendText(AName, AValue, 'INI');
-end;
-
 procedure TLogger.SendInterface(AValue: IInterface);
 begin
   SendInterface('', AValue);
-end;
-
-procedure TLogger.SendJSON(const AName, AValue: string);
-begin
-  SendText(AName, AValue, 'JSON');
-end;
-
-procedure TLogger.SendJSON(const AValue: string);
-begin
-  SendText('', AValue, 'JSON');
 end;
 
 procedure TLogger.SendInterface(const AName: string; AValue: IInterface);
@@ -1328,16 +1288,6 @@ begin
   SendShortCut('', AValue);
 end;
 
-procedure TLogger.SendSQL(const AName, AValue: string);
-begin
-
-end;
-
-procedure TLogger.SendSQL(const AValue: string);
-begin
-
-end;
-
 procedure TLogger.SendStrings(AValue: TStrings);
 begin
   SendStrings('', AValue);
@@ -1352,5 +1302,57 @@ procedure TLogger.SendDateTime(AValue: TDateTime);
 begin
   SendDateTime('', AValue);
 end;
+
+{$REGION 'specialized SendText methods'}
+procedure TLogger.SendINI(const AValue: string);
+begin
+  SendINI('', AValue);
+end;
+
+procedure TLogger.SendINI(const AName, AValue: string);
+begin
+  SendText(AName, AValue, 'INI');
+end;
+
+procedure TLogger.SendXML(const AName, AValue: string);
+begin
+  SendText(AName, AValue, 'XML');
+end;
+
+procedure TLogger.SendXML(const AValue: string);
+begin
+  SendXML('', AValue);
+end;
+
+procedure TLogger.SendJSON(const AName, AValue: string);
+begin
+  SendText(AName, AValue, 'JSON');
+end;
+
+procedure TLogger.SendJSON(const AValue: string);
+begin
+  SendJSON('', AValue);
+end;
+
+procedure TLogger.SendHTML(const AName, AValue: string);
+begin
+  SendText(AName, AValue, 'HTML');
+end;
+
+procedure TLogger.SendHTML(const AValue: string);
+begin
+  SendHTML('', AValue);
+end;
+
+procedure TLogger.SendSQL(const AName, AValue: string);
+begin
+  SendText(AName, AValue, 'SQL');
+end;
+
+procedure TLogger.SendSQL(const AValue: string);
+begin
+  SendSQL('', AValue);
+end;
+{$ENDREGION}
 
 end.

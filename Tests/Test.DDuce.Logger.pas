@@ -97,6 +97,11 @@ type
     procedure Test_SendBitmap_method;
     procedure Test_SendPersistent_method;
 
+    procedure Test_SendSQL_method;
+    procedure Test_SendXML_method;
+    procedure Test_SendINI_method;
+    procedure Test_SendJSON_method;
+
     procedure Test_SendIf_method;
     procedure Test_SendText_method;
 
@@ -674,12 +679,22 @@ begin
   Logger.SendIf('Following condition was True (1 = 0)', 1 = 0);
 end;
 
+procedure TestLogger.Test_SendINI_method;
+begin
+  Logger.SendINI('INI example', TEXT_INI);
+end;
+
 procedure TestLogger.Test_SendInterface_method;
 var
   T : IInterface;
 begin
   T := TInterfacedObject.Create;
   Logger.SendInterface('TestIInterface', T);
+end;
+
+procedure TestLogger.Test_SendJSON_method;
+begin
+  Logger.SendJSON('JSON example', TEXT_JSON);
 end;
 
 procedure TestLogger.Test_SendMemory_method;
@@ -829,6 +844,16 @@ var
 begin
   T := Unassigned;
   Logger.SendVariant('TestVariantUnassigned', T);
+end;
+
+procedure TestLogger.Test_SendSQL_method;
+begin
+  Logger.SendSQL('SQL example query', TEXT_SQL);
+end;
+
+procedure TestLogger.Test_SendXML_method;
+begin
+  Logger.SendXML('XML example document', TEXT_XML);
 end;
 {$ENDREGION}
 
