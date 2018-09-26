@@ -37,6 +37,9 @@ type
 
     // fails because no type information is generated for the legacy type Real48
     procedure Test_Send_method_for_Real48_argument;
+    // not implemented yet
+    procedure Test_SendException_method;
+    procedure Test_SendMemory_method;
 
   published
     procedure Test_Send_method_for_AnsiString_argument;
@@ -71,7 +74,6 @@ type
     procedure Test_Send_method_for_UInt32_argument;
     procedure Test_Send_method_for_UInt64_argument;
     procedure Test_Send_method_for_UInt8_argument;
-    procedure Test_Send_method_for_Variant_argument;
     procedure Test_Send_method_for_WideString_argument;
     procedure Test_Send_method_for_Word_argument;
 
@@ -92,7 +94,6 @@ type
     procedure Test_SendColor_method;
     procedure Test_SendAlphaColor_method;
     procedure Test_SendInterface_method;
-    procedure Test_SendException_method;
     procedure Test_SendShortCut_method;
     procedure Test_SendBitmap_method;
     procedure Test_SendPersistent_method;
@@ -112,7 +113,6 @@ type
     procedure Test_SendVariant_method_for_Null_argument;
     procedure Test_SendVariant_method_for_Unassigned_argument;
     procedure Test_SendVariant_method_for_EmptyParam_argument;
-    procedure Test_SendMemory_method;
 
     procedure Test_Send_method;
 
@@ -148,6 +148,8 @@ type
     procedure Test_Checkpoint_methods;
 
     procedure Test_OutputDebugString_method;
+    procedure Test_OutputDebugString_method_for_long_string;
+    procedure Test_OutputDebugString_method_for_valuelist;
   end;
 
 implementation
@@ -562,20 +564,6 @@ begin
   Logger.Send('TestUInt8', T);
 end;
 
-procedure TestLogger.Test_Send_method_for_Variant_argument;
-var
-  T : Variant;
-begin
-  T := 'Test';
-//  Logger.Send(Reflect.TypeName(T), T);
-//  T := Pi;
-//  Logger.Send(Reflect.TypeName(T), T);
-//  T := False;
-//  Logger.Send(Reflect.TypeName(T), T);
-//  T := 520;
-//  Logger.Send(Reflect.TypeName(T), T);
-end;
-
 procedure TestLogger.Test_Send_method_for_WideString_argument;
 var
   T : WideString;
@@ -779,7 +767,7 @@ end;
 
 procedure TestLogger.Test_SendText_method;
 begin
-  Logger.SendText(LOREM_IPSUM);
+  Logger.SendText(TEXT_LOREM_IPSUM);
 end;
 
 procedure TestLogger.Test_SendTime_method;
@@ -1047,11 +1035,6 @@ begin
   Logger.Info('Info');
 end;
 
-procedure TestLogger.Test_OutputDebugString_method;
-begin
-  OutputDebugString('Short OutputDebugString');
-end;
-
 procedure TestLogger.Test_Warn_method;
 begin
   Logger.Warn('Warning');
@@ -1098,6 +1081,23 @@ begin
   Logger.ResetCheckPoint('TestCheckPoint 1');
   Sleep(22);
   Logger.ResetCheckPoint('TestCheckPoint 2');
+end;
+{$ENDREGION}
+
+{$REGION 'OutputDebugString'}
+procedure TestLogger.Test_OutputDebugString_method;
+begin
+  OutputDebugString('Short OutputDebugString');
+end;
+
+procedure TestLogger.Test_OutputDebugString_method_for_long_string;
+begin
+  OutputDebugString(TEXT_LOREM_IPSUM);
+end;
+
+procedure TestLogger.Test_OutputDebugString_method_for_valuelist;
+begin
+//
 end;
 {$ENDREGION}
 

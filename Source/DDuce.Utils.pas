@@ -30,6 +30,9 @@ uses
 type
   TBitmap = Vcl.Graphics.TBitmap;
 
+type
+  TSizeFormatType = (sfByte, sfKB, sfMB, sfGB, sfAuto);
+
 procedure AppendLine(
   var AToString : string;
   const ALine   : string
@@ -138,12 +141,22 @@ function SetToString(
   ATrimChars   : Integer = -1
 ): string;
 
+function MemoryUsed: Int64;
+
+function FormatBytes(
+  ASize       : Int64;
+  AFormatType : TSizeFormatType = sfAuto;
+  APrecision  : Integer = 2
+) : string;
+
 implementation
 
 uses
   Winapi.Messages,
   System.Character, System.StrUtils,
-  Vcl.Dialogs;
+  Vcl.Dialogs,
+
+  Spring;
 
 var
   FRtti: TRttiContext;
@@ -541,8 +554,7 @@ var
   end;
 
 begin
-  if not Assigned(ADataSet) then
-    raise Exception.Create('ADataSet not assigned!');
+  Guard.CheckNotNull(ADataSet, 'ADataSet');
   ADataSet.DisableControls;
   try
     BM := ADataSet.Bookmark;
@@ -1014,5 +1026,57 @@ begin
     Result := '(' + Result + ')';
 end;
 
-end.
+//https://stackoverflow.com/questions/437683/how-to-get-the-memory-used-by-a-delphi-program
+function MemoryUsed: Int64;
+var
+  ST : TMemoryManagerState;
+  SB : TSmallBlockTypeState;
+begin
+  GetMemoryManagerState(ST);
+  Result :=  ST.TotalAllocatedMediumBlockSize * ST.AllocatedMediumBlockCount
+              + ST.TotalAllocatedLargeBlockSize * ST.AllocatedLargeBlockCount;
+  for SB in ST.SmallBlockTypeStates do
+  begin
+    Result := Result + SB.UseableBlockSize * SB.AllocatedBlockCount;
+  end;
+end;
 
+function FormatBytes(ASize: Int64; AFormatType: TSizeFormatType;
+  APrecision: Integer): string;
+var
+  D : Double;
+const
+  FormatArray: array [TSizeFormatType] of string = ('bytes', 'KB', 'MB', 'GB', '');
+
+  function BytesToKB(ASize: Int64): Int64;
+  begin
+    //This is how Win Explorer calculates it
+    Result := ASize div 1024;
+    if (ASize mod 1024 <> 0) then Result := Result + 1;
+  end;
+
+begin
+  Result := '';
+  D := ASize;
+  case AFormatType of
+    sfAuto:
+    begin
+      AFormatType := sfKB;  //start from KB
+      D := BytesToKB(ASize);
+      while (D > 1024) and (AFormatType < sfAuto) do
+      begin
+        D := D / 1024;
+        AFormatType := Succ(AFormatType);
+      end;
+    end;
+    sfByte: D := ASize;
+    sfKB:   D := BytesToKB(ASize);
+    sfMB:   D := BytesToKB(ASize) / 1024;
+    sfGB:   D := BytesToKB(ASize) / 1024 / 1024;
+  end;
+  if AFormatType <= sfKB then  //use the precision only for MB and GB
+    APrecision := 0;
+  Result := Format('%.'+ IntToStr(APrecision) + 'n ' + FormatArray[AFormatType], [D]);
+end;
+
+end.

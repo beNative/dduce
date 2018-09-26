@@ -63,6 +63,7 @@ type
       Node           : PVirtualNode;
       var ChildCount : Cardinal
     ) : Boolean; override;
+
     procedure DoBeforeCellPaint(
       Canvas          : TCanvas;
       Node            : PVirtualNode;
@@ -85,6 +86,7 @@ type
 
   public
     procedure AfterConstruction; override;
+    destructor Destroy; override;
 
     property Data: IDynamicRecord
       read GetData write SetData;
@@ -115,6 +117,13 @@ begin
   inherited AfterConstruction;
   FNodes := TCollections.CreateObjectList<TValueListNode>;
   Initialize;
+end;
+
+destructor TValueList.Destroy;
+begin
+  inherited Destroy;
+  FNodes := nil;
+  FData  := nil;
 end;
 {$ENDREGION}
 
@@ -192,6 +201,7 @@ end;
 {$ENDREGION}
 
 {$REGION 'event dispatch methods'}
+
 procedure TValueList.DoBeforeCellPaint(Canvas: TCanvas; Node: PVirtualNode;
   Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect;
   var ContentRect: TRect);
