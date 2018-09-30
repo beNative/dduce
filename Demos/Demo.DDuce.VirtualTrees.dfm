@@ -18,7 +18,7 @@ object frmVirtualTrees: TfrmVirtualTrees
     Top = 0
     Width = 984
     Height = 731
-    ActivePage = tsSettings
+    ActivePage = tsVSTList
     Align = alClient
     TabOrder = 0
     object tsSettings: TTabSheet
@@ -80,27 +80,21 @@ object frmVirtualTrees: TfrmVirtualTrees
             Value = 50.000000000000000000
           end>
         TabOrder = 0
-        ExplicitLeft = 400
-        ExplicitTop = 328
-        ExplicitWidth = 185
-        ExplicitHeight = 41
         object pnlVST: TPanel
           Left = 0
           Top = 0
-          Width = 324
-          Height = 350
+          Width = 325
+          Height = 351
           Align = alClient
           BevelOuter = bvNone
           Caption = 'pnlVST'
           ParentColor = True
           TabOrder = 0
-          ExplicitLeft = -5
-          ExplicitTop = -5
           object pnlVSTHeader: TPanel
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 318
+            Width = 319
             Height = 20
             Align = alTop
             BevelKind = bkFlat
@@ -117,24 +111,20 @@ object frmVirtualTrees: TfrmVirtualTrees
           end
         end
         object pnlVSTTree: TPanel
-          Left = 324
+          Left = 325
           Top = 0
-          Width = 324
-          Height = 350
+          Width = 325
+          Height = 351
           Align = alClient
           BevelOuter = bvNone
           Caption = 'pnlVSTTree'
           ParentColor = True
           TabOrder = 1
-          ExplicitLeft = 400
-          ExplicitTop = 328
-          ExplicitWidth = 185
-          ExplicitHeight = 41
           object pnlVSTTreeHeader: TPanel
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 318
+            Width = 319
             Height = 20
             Align = alTop
             BevelKind = bkFlat
@@ -151,19 +141,15 @@ object frmVirtualTrees: TfrmVirtualTrees
           end
         end
         object pnlVSTGrid: TPanel
-          Left = 648
+          Left = 650
           Top = 0
           Width = 326
-          Height = 350
+          Height = 351
           Align = alClient
           BevelOuter = bvNone
           Caption = 'pnlVSTGrid'
           ParentColor = True
           TabOrder = 2
-          ExplicitLeft = 400
-          ExplicitTop = 328
-          ExplicitWidth = 185
-          ExplicitHeight = 41
           object pnlVSTGridHeader: TPanel
             AlignWithMargins = True
             Left = 3
@@ -186,23 +172,19 @@ object frmVirtualTrees: TfrmVirtualTrees
         end
         object pnlVSTList: TPanel
           Left = 0
-          Top = 350
-          Width = 324
-          Height = 351
+          Top = 351
+          Width = 325
+          Height = 352
           Align = alClient
           BevelOuter = bvNone
           Caption = 'pnlVSTList'
           ParentColor = True
           TabOrder = 3
-          ExplicitLeft = 400
-          ExplicitTop = 328
-          ExplicitWidth = 185
-          ExplicitHeight = 41
           object pnlVSTListHeader: TPanel
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 318
+            Width = 319
             Height = 20
             Align = alTop
             BevelKind = bkFlat
@@ -219,24 +201,20 @@ object frmVirtualTrees: TfrmVirtualTrees
           end
         end
         object pnlVSTTreeList: TPanel
-          Left = 324
-          Top = 350
-          Width = 324
-          Height = 351
+          Left = 325
+          Top = 351
+          Width = 325
+          Height = 352
           Align = alClient
           BevelOuter = bvNone
           Caption = 'pnlVSTTreeList'
           ParentColor = True
           TabOrder = 4
-          ExplicitLeft = 400
-          ExplicitTop = 328
-          ExplicitWidth = 185
-          ExplicitHeight = 41
           object pnlVSTTreeListHeader: TPanel
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 318
+            Width = 319
             Height = 20
             Align = alTop
             BevelKind = bkFlat
@@ -253,19 +231,15 @@ object frmVirtualTrees: TfrmVirtualTrees
           end
         end
         object pnlVSTTreeGrid: TPanel
-          Left = 648
-          Top = 350
+          Left = 650
+          Top = 351
           Width = 326
-          Height = 351
+          Height = 352
           Align = alClient
           BevelOuter = bvNone
           Caption = 'pnlVSTTreeGrid'
           ParentColor = True
           TabOrder = 5
-          ExplicitLeft = 400
-          ExplicitTop = 328
-          ExplicitWidth = 185
-          ExplicitHeight = 41
           object pnlVSTTreeGridHeader: TPanel
             AlignWithMargins = True
             Left = 3
@@ -291,36 +265,25 @@ object frmVirtualTrees: TfrmVirtualTrees
     object tsVST: TTabSheet
       Caption = 'VST'
       ImageIndex = 5
-      ExplicitWidth = 1024
     end
     object tsVSTTree: TTabSheet
       Caption = 'Tree'
-      ExplicitWidth = 844
-      ExplicitHeight = 383
     end
     object tsVSTGrid: TTabSheet
       Caption = 'Grid'
       ImageIndex = 1
-      ExplicitLeft = 8
-      ExplicitTop = 28
     end
     object tsVSTList: TTabSheet
       Caption = 'List'
       ImageIndex = 2
-      ExplicitWidth = 844
-      ExplicitHeight = 383
     end
     object tsVSTTreeList: TTabSheet
       Caption = 'TreeList'
       ImageIndex = 3
-      ExplicitLeft = 8
-      ExplicitTop = 28
     end
     object tsVSTTreeGrid: TTabSheet
       Caption = 'TreeGrid'
       ImageIndex = 4
-      ExplicitWidth = 844
-      ExplicitHeight = 383
     end
   end
 end

@@ -1189,8 +1189,8 @@ function TXMLTree.DoGetImageIndex(ANode: PVirtualNode; Kind: TVTImageKind;
   Column: TColumnIndex; var Ghosted: Boolean; var Index: TImageIndex)
   : TCustomImageList;
 begin
-  if (Column = Header.MainColumn) and (Kind in [ikNormal, ikSelected]) then
-    Index := Ord(GetData(ANode).NodeType);
+//  if (Column = Header.MainColumn) and (Kind in [ikNormal, ikSelected]) then
+//    Index := Ord(GetData(ANode).NodeType);
   Result := inherited DoGetImageIndex(ANode, Kind, Column, Ghosted, Index);
 end;
 

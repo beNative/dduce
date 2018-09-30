@@ -41,18 +41,17 @@ uses
 {$REGION 'interfaced routines'}
 procedure RegisterDemos;
 begin
-  DemoManager.Register(TfrmLogger, 'Logger');
-  Exit;
-  DemoManager.Register(TfrmScopedReferences, 'Scoped references');
+  DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
+  DemoManager.Register(TfrmInspector, 'Inspector');
   DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
+  DemoManager.Register(TfrmValueListDemo, 'ValueList');
+  DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
   DemoManager.Register(TfrmReflect, 'Reflect');
   DemoManager.Register(TfrmEditor, 'Editor');
-  DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
-  DemoManager.Register(TfrmInspector, 'Inspector');
-  DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmVirtualTrees, 'VirtualTrees');
-  DemoManager.Register(TfrmValueListDemo, 'ValueList');
+  DemoManager.Register(TfrmLogger, 'Logger');
+  DemoManager.Register(TfrmScopedReferences, 'Scoped references');
   // not working yet
   //DemoManager.Register(TfrmXMLTree, 'XMLTree');
 end;

@@ -202,9 +202,9 @@ procedure TfrmVirtualTrees.InitializeTree(AVST: TVirtualStringTree);
 begin
   with AVST do
   begin
-    OnInitNode                := FVirtualStringTreeInitNode;
-    OnGetText                 := FVirtualStringTreeGetText;
-    OnFreeNode                := FVirtualStringTreeFreeNode;
+    OnInitNode := FVirtualStringTreeInitNode;
+    OnGetText  := FVirtualStringTreeGetText;
+    OnFreeNode := FVirtualStringTreeFreeNode;
     with Header.Columns.Add do
     begin
       Color    := clWhite;

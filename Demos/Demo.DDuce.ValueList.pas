@@ -56,11 +56,12 @@ procedure TfrmValueListDemo.AfterConstruction;
 begin
   inherited AfterConstruction;
   Logger.Channels.Add(TWinIPCChannel.Create);
-  FValueList        := TValueList.Create(Self);
-  FValueList.Parent := pnlRight;
-  FValueList.Align  := alClient;
-  FValueList.Data   := DynamicRecord.Create(Application);
-  FObjectInspector  := TzObjectInspectorFactory.Create(
+  FValueList            := TValueList.Create(Self);
+  FValueList.Parent     := pnlRight;
+  FValueList.Align      := alClient;
+  FValueList.ShowHeader := False;
+  FValueList.Data       := DynamicRecord.Create(Application);
+  FObjectInspector      := TzObjectInspectorFactory.Create(
     Self,
     pnlLeft,
     FValueList

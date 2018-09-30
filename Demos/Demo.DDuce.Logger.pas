@@ -457,13 +457,8 @@ begin
 end;
 
 procedure TfrmLogger.actSendODSExecute(Sender: TObject);
-var
-  I: Integer;
 begin
-  for I := 1 to 10000 do
-  begin
-    OutputDebugString(LOREM_IPSUM);
-  end;
+  OutputDebugString(LOREM_IPSUM);
 end;
 
 procedure TfrmLogger.actSendPersistentExecute(Sender: TObject);
