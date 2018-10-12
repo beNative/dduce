@@ -370,7 +370,7 @@ type
   end;
 
 const
-  LOG_PREFIXES: array [lmtInfo..lmtCounter] of string = (
+  LOG_PREFIXES: array [lmtInfo..lmtAction] of string = (
     'INFO',
     'ERROR',
     'WARNING',
@@ -392,7 +392,13 @@ const
     '',
     '',
     'WATCH',
-    'COUNTER'
+    'COUNTER',
+    'COLOR',
+    'ALPHACOLOR',
+    'SCREENSHOT',
+    'TEXT',
+    'DATASET',
+    'ACTION'
   );
 
 function LogMessageTypeNameOf(ALogMessageType: TLogMessageType): string;

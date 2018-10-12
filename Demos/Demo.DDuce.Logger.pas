@@ -699,7 +699,6 @@ begin
   actZMQBindToEphemeralPort.Enabled := B and not FZeroMQChannel.Connected;
   actZMQCloseSocket.Enabled := B and FZeroMQChannel.Connected;
   lblPort.Caption := FZeroMQChannel.Port.ToString;
-
 end;
 {$ENDREGION}
 

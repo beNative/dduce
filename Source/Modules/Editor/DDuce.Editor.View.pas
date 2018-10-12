@@ -89,7 +89,6 @@ type
       AFiles : TStrings
     );
 
-    function IsActive: Boolean;
     procedure ApplySettings;
 
   private
@@ -237,6 +236,7 @@ type
     procedure DoChange; dynamic;
 
   protected
+    function IsActive: Boolean;
     // TCustomForm overrides
     procedure Activate; override;
     procedure UpdateActions; override;
@@ -280,7 +280,7 @@ type
       read GetLogicalCaretXY write SetLogicalCaretXY;
 
   public
-    function Focused: Boolean;
+    function Focused: Boolean; override;
     { current X-coordinate of the caret on the screen. }
     property CaretX: Integer
       read GetCaretX write SetCaretX;
@@ -1550,8 +1550,13 @@ begin
 //    Activate;
 //  end;
 
-//  if Assigned(Actions) then
-//    Actions.UpdateActions;
+  if Assigned(Actions) then
+  begin
+    Actions.UpdateActions;
+    Logger.Watch(Self.Name, TValue.From(FEditor.ComponentState));
+
+  end;
+
 
     // TODO: Abstract error on releasing object
 //  if FUpdate then

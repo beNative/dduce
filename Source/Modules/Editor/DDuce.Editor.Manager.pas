@@ -753,6 +753,7 @@ begin
   RegisterToolViews;
   CreateActions;
   InitializePopupMenus;
+  aclActions.State := asSuspended;
 end;
 
 procedure TdmEditorManager.BeforeDestruction;
@@ -1285,7 +1286,7 @@ end;
 
 procedure TdmEditorManager.actCutExecute(Sender: TObject);
 begin
-  if ActiveView.Focused then
+  if Assigned(ActiveView) and ActiveView.Focused then
     ActiveView.Cut;
 end;
 
@@ -2602,6 +2603,7 @@ var
 begin
   if Assigned(ActiveView) then
   begin
+    aclActions.State := asNormal;
     V := ActiveView;
     //B := V.Focused;
     B := V.Editor.Focused;

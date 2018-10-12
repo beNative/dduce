@@ -41,6 +41,8 @@ uses
 {$REGION 'interfaced routines'}
 procedure RegisterDemos;
 begin
+  DemoManager.Register(TfrmLogger, 'Logger');
+  Exit;
   DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmInspector, 'Inspector');
