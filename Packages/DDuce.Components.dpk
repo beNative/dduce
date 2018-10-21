@@ -57,6 +57,8 @@ contains
   DDuce.Factories.TreeViewPresenter in '..\Source\Factories\DDuce.Factories.TreeViewPresenter.pas',
   DDuce.Factories.ValueList in '..\Source\Factories\DDuce.Factories.ValueList.pas',
   DDuce.Factories.VirtualTrees in '..\Source\Factories\DDuce.Factories.VirtualTrees.pas',
-  DDuce.Factories.zObjInspector in '..\Source\Factories\DDuce.Factories.zObjInspector.pas';
+  DDuce.Factories.zObjInspector in '..\Source\Factories\DDuce.Factories.zObjInspector.pas',
+  DDuce.Components.VirtualTrees.Node in '..\Source\Components\DDuce.Components.VirtualTrees.Node.pas',
+  DDuce.Components.DataTree in '..\Source\Components\DDuce.Components.DataTree.pas';
 
 end.

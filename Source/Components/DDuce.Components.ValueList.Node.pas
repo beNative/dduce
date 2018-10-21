@@ -27,7 +27,8 @@ uses
 
   Spring.Collections,
 
-  DDuce.DynamicRecord;
+  DDuce.DynamicRecord, DDuce.Components.VirtualTrees.Node;
+
 
 type
   TValueListNode = class

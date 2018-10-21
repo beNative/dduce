@@ -26,7 +26,8 @@ uses
   Demo.Resources in 'Demo.Resources.pas',
   Demo.DDuce.VirtualTrees in 'Demo.DDuce.VirtualTrees.pas' {frmVirtualTrees},
   Demo.DDuce.ValueList in 'Demo.DDuce.ValueList.pas' {frmValueListDemo},
-  Demo.Settings in 'Demo.Settings.pas';
+  Demo.Settings in 'Demo.Settings.pas',
+  Demo.DDuce.VTNode in 'Demo.DDuce.VTNode.pas' {frmVTNode};
 
 {$R *.res}
 

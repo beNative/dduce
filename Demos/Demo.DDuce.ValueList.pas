@@ -60,7 +60,7 @@ begin
   FValueList.Parent     := pnlRight;
   FValueList.Align      := alClient;
   FValueList.ShowHeader := False;
-  FValueList.Data       := DynamicRecord.Create(Application);
+  FValueList.Data       := DynamicRecord.Create(Self);
   FObjectInspector      := TzObjectInspectorFactory.Create(
     Self,
     pnlLeft,

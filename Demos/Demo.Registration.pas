@@ -35,6 +35,7 @@ uses
   Demo.DDuce.Editor,
   Demo.DDuce.VirtualTrees,
   Demo.DDuce.ValueList,
+  Demo.DDuce.VTNode,
 
   Demo.Manager;
 
@@ -42,16 +43,17 @@ uses
 procedure RegisterDemos;
 begin
   DemoManager.Register(TfrmLogger, 'Logger');
-  Exit;
+  //Exit;
   DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmInspector, 'Inspector');
   DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
   DemoManager.Register(TfrmValueListDemo, 'ValueList');
   DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
-  DemoManager.Register(TfrmReflect, 'Reflect');
+  //DemoManager.Register(TfrmReflect, 'Reflect');
   DemoManager.Register(TfrmEditor, 'Editor');
   DemoManager.Register(TfrmVirtualTrees, 'VirtualTrees');
+  DemoManager.Register(TfrmVTNode, 'VTNode');
   DemoManager.Register(TfrmLogger, 'Logger');
   DemoManager.Register(TfrmScopedReferences, 'Scoped references');
   // not working yet

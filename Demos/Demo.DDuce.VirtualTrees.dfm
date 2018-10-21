@@ -18,7 +18,7 @@ object frmVirtualTrees: TfrmVirtualTrees
     Top = 0
     Width = 984
     Height = 731
-    ActivePage = tsVSTList
+    ActivePage = tsSettings
     Align = alClient
     TabOrder = 0
     object tsSettings: TTabSheet
@@ -33,13 +33,13 @@ object frmVirtualTrees: TfrmVirtualTrees
         BevelOuter = bvNone
         ColumnCollection = <
           item
-            Value = 33.333333333333340000
+            Value = 33.333333333333330000
           end
           item
-            Value = 33.333333333333340000
+            Value = 33.333333333333330000
           end
           item
-            Value = 33.333333333333340000
+            Value = 33.333333333333330000
           end>
         ControlCollection = <
           item
@@ -265,13 +265,25 @@ object frmVirtualTrees: TfrmVirtualTrees
     object tsVST: TTabSheet
       Caption = 'VST'
       ImageIndex = 5
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tsVSTTree: TTabSheet
       Caption = 'Tree'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tsVSTGrid: TTabSheet
       Caption = 'Grid'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tsVSTList: TTabSheet
       Caption = 'List'
@@ -280,10 +292,18 @@ object frmVirtualTrees: TfrmVirtualTrees
     object tsVSTTreeList: TTabSheet
       Caption = 'TreeList'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tsVSTTreeGrid: TTabSheet
       Caption = 'TreeGrid'
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
   end
 end

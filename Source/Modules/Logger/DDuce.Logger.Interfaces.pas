@@ -59,7 +59,8 @@ type
     lmtText        = 25,  // arbitrary text with optional highlighter info
     lmtDataSet     = 26,
     lmtAction      = 27,  // TAction execution
-    lmtClear       = 99
+    lmtClear       = 99,
+    lmtNone        = 100  // can be used as a default value
   );
 
   ILogger = interface;

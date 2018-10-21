@@ -28,8 +28,11 @@ uses
 
   Spring, Spring.Collections,
 
-  DDuce.Factories.VirtualTrees, DDuce.DynamicRecord,
-  DDuce.Components.ValueList.Node;
+  DDuce.Components.VirtualTrees.Node, DDuce.Factories.VirtualTrees,
+  DDuce.DynamicRecord;
+
+type
+  TValueListNode = TVTNode<IDynamicField>;
 
 type
   TValueList = class(TCustomVirtualStringTree)
@@ -59,11 +62,6 @@ type
       Node           : PVirtualNode;
       var InitStates : TVirtualNodeInitStates
     ); override;
-    function DoInitChildren(
-      Node           : PVirtualNode;
-      var ChildCount : Cardinal
-    ) : Boolean; override;
-
     procedure DoBeforeCellPaint(
       Canvas          : TCanvas;
       Node            : PVirtualNode;
@@ -110,6 +108,9 @@ type
   end;
 
 implementation
+
+uses
+  System.SysUtils;
 
 {$REGION 'construction and destruction'}
 procedure TValueList.AfterConstruction;
@@ -183,6 +184,29 @@ begin
   Header.Columns.Items[1].Assign(Value);
 end;
 
+//procedure TValueList.UpdateNodes;
+//var
+//  S : string;
+//  A : TArray<string>;
+//  N : TValueListNode;
+//begin
+//  if Assigned(FNodes) then
+//    FNodes.Clear;
+//  S := FField.Value.ToString;
+//  if (not S.IsEmpty) and (S[1] = '[') and (S[S.Length] = ']') then
+//  begin
+//    S := Copy(S, 2, S.Length - 2);
+//    A := S.Split([',']);
+//    for S in A do
+//    begin
+//      N := TValueListNode.Create;
+//      N.Name  := S;
+//      N.Value := True;
+//      Nodes.Add(N);
+//    end;
+//  end;
+//end;
+
 function TValueList.GetShowHeader: Boolean;
 begin
   Result := hoVisible in Header.Options;
@@ -245,31 +269,13 @@ begin
   begin
     if pEventArgs.Column = 0 then
     begin
-      pEventArgs.CellText := N.Name
+      pEventArgs.CellText := N.Data.Name
     end
     else if pEventArgs.Column = 1 then
     begin
-      pEventArgs.CellText := N.Value.ToString;
+      pEventArgs.CellText := N.Data.Value.ToString;
     end;
   end;
-end;
-
-function TValueList.DoInitChildren(Node: PVirtualNode;
-  var ChildCount: Cardinal): Boolean;
-var
-  N : TValueListNode;
-  SN : TValueListNode;
-begin
-  N := GetNodeData<TValueListNode>(Node);
-  ChildCount := N.Count;
-  if N.Count > 0 then
-  begin
-    for SN in N.Nodes do
-    begin
-      SN.VTNode := AddChild(Node, SN);
-    end;
-  end;
-  Result := inherited DoInitChildren(Node, ChildCount);
 end;
 
 procedure TValueList.DoInitNode(Parent, Node: PVirtualNode;
@@ -277,10 +283,8 @@ procedure TValueList.DoInitNode(Parent, Node: PVirtualNode;
 var
   N  : TValueListNode;
 begin
-  N := TValueListNode.Create;
+  N := TValueListNode.Create(Self, FData.Items[Node.Index]);
   FNodes.Add(N);
-  N.VTNode := Node;
-  N.Field := FData.Items[Node.Index];
   if (Parent = nil) and (N.Count > 0) then
     InitStates := InitStates + [ivsHasChildren];
   Node.SetData(N);
@@ -295,9 +299,10 @@ var
   N : TValueListNode;
 begin
   N := GetNodeData<TValueListNode>(Node);
-  N.Value := Text;
+  N.Data.Value := Text;
   inherited DoNewText(Node, Column, Text);
 end;
+
 procedure TValueList.DoTextDrawing(var PaintInfo: TVTPaintInfo;
   const Text: string; CellRect: TRect; DrawFormat: Cardinal);
 begin
@@ -328,9 +333,7 @@ begin
   DT_HIDEPREFIX           = $00100000;
   DT_PREFIXONLY           = $00200000;
 *)
-
   inherited DoTextDrawing(PaintInfo, Text, CellRect, DrawFormat);
-
 end;
 
 {$ENDREGION}
