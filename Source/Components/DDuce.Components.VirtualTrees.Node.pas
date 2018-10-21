@@ -49,6 +49,8 @@ type
     FText       : string;
     FHint       : string;
     FImageIndex : Integer;
+    function GetVisible: Boolean;
+    procedure SetVisible(const Value: Boolean);
 
   protected
     {$REGION 'property access methods'}
@@ -119,6 +121,9 @@ type
 
     property Hint: string
       read GetHint write SetHint;
+
+    property Visible: Boolean
+      read GetVisible write SetVisible;
   end;
 
 implementation
@@ -130,18 +135,29 @@ uses
 constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree; const AData: T;
   const AText: string);
 begin
-  FTree := ATree;
-  FData := AData;
-  FText := AText;
-  FVNode := nil;
+  FTree  := ATree;
+  FData  := AData;
+  FText  := AText;
+//  FVNode := nil;
+//if FVNode = nil then // create root node if it does not exist
+//  if not Assigned(FTree.RootNode) then
+//    FVNode := FTree.AddChild(nil, Self)
+//  else
+//    FVNode := FTree.RootNode;
 end;
 
 constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree; const AText: string);
 begin
-  FTree := ATree;
-  FVNode := nil;
+  FTree  := ATree;
+  //FVNode := nil;
   FData  := Default(T);
+
+
   FText  := AText;
+//  if not Assigned(FTree.RootNode) then
+//    FVNode := FTree.AddChild(nil, Self)
+//  else
+//    FVNode := FTree.RootNode;
 end;
 
 procedure TVTNode<T>.AfterConstruction;
@@ -232,17 +248,29 @@ end;
 
 function TVTNode<T>.GetText: string;
 begin
+//  Result := FTree.Text[VNode, 0];
   Result := FText;
 end;
 
 procedure TVTNode<T>.SetText(const Value: string);
 begin
+  //FTree.Text[VNode, 0] := Value;
   FText := Value;
 end;
 
 function TVTNode<T>.GetNodes: IList<TVTNode<T>>;
 begin
   Result := FNodes.Value;
+end;
+
+function TVTNode<T>.GetVisible: Boolean;
+begin
+  Result := FTree.IsVisible[VNode];
+end;
+
+procedure TVTNode<T>.SetVisible(const Value: Boolean);
+begin
+  FTree.IsVisible[VNode] := Value;
 end;
 
 function TVTNode<T>.GetVNode: PVirtualNode;

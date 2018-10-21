@@ -54,10 +54,13 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages,
-  System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  System.SysUtils, System.Variants, System.Classes, System.Actions,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
+  Vcl.ActnList, Vcl.StdCtrls,
 
   VirtualTrees,
+
+  zObjInspector,
 
   DDuce.Components.VirtualTrees.Node;
 
@@ -73,9 +76,24 @@ type
   end;
 
   TfrmVTNode = class(TForm)
+    pnlTree: TPanel;
+    pnlMain: TPanel;
+    aclMain: TActionList;
+    btnDeleteNode: TButton;
+    actDeleteNode: TAction;
+    actAddChild: TAction;
+    btnAddChild: TButton;
+    btnSetNodeText: TButton;
+    btn3: TButton;
+    actSetNodeText: TAction;
+    pnl1: TPanel;
+    procedure actDeleteNodeExecute(Sender: TObject);
+    procedure actAddChildExecute(Sender: TObject);
+    procedure actSetNodeTextExecute(Sender: TObject);
   private
     FTree: TVirtualStringTree;
     FVTRoot : TVTNode<TMyData>;
+    FOIVST: TzObjectInspector;
 
     procedure FTreeFreeNode(
       Sender : TBaseVirtualTree;
@@ -87,6 +105,11 @@ type
       Column       : TColumnIndex;
       TextType     : TVSTTextType;
       var CellText : string
+    );
+    procedure FTreeFocusChanged(
+      Sender : TBaseVirtualTree;
+      Node   : PVirtualNode;
+      Column : TColumnIndex
     );
 
   public
@@ -100,20 +123,74 @@ implementation
 {$R *.dfm}
 
 uses
-  DDuce.Factories.VirtualTrees;
+  DDuce.Factories.VirtualTrees,
+
+   DDuce.Factories.zObjInspector,
+  DDuce.Logger, DDuce.Logger.Interfaces, DDuce.Logger.Channels.ZeroMQ;
 
 {$REGION 'construction and destruction'}
 procedure TfrmVTNode.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FTree := TVirtualStringTreeFactory.CreateTree(Self, Self);
-  FTree.OnFreeNode := FTreeFreeNode;
-  FTree.OnGetText  := FTreeGetText;
+  Logger.Channels.Add(TZeroMQChannel.Create);
+  Logger.Clear;
+  FTree := TVirtualStringTreeFactory.CreateTreeGrid(Self, pnlTree);
+  FTree.OnFreeNode     := FTreeFreeNode;
+  FTree.OnGetText      := FTreeGetText;
+  FTree.OnFocusChanged := FTreeFocusChanged;
+  FOIVST := TzObjectInspectorFactory.Create(
+    Self,
+    pnl1,
+    FTree
+  );
+
   BuildTree;
 end;
 {$ENDREGION}
 
+{$REGION 'action handlers'}
+procedure TfrmVTNode.actAddChildExecute(Sender: TObject);
+var
+  LVTNode : TVTNode<TMyData>;
+begin
+  LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
+  if Assigned(LVTNode) then
+    LVTNode.Add(TMyData.Create('ok'));
+end;
+
+procedure TfrmVTNode.actDeleteNodeExecute(Sender: TObject);
+begin
+  FTree.DeleteNode(FTree.FocusedNode);
+end;
+
+procedure TfrmVTNode.actSetNodeTextExecute(Sender: TObject);
+var
+  LVTNode : TVTNode<TMyData>;
+begin
+  LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
+  if Assigned(LVTNode) then
+  begin
+    LVTNode.Text := 'New text';
+    FTree.InvalidateNode(LVTNode.VNode);
+  end;
+end;
+
+{$ENDREGION}
+
 {$REGION 'event handlers'}
+procedure TfrmVTNode.FTreeFocusChanged(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Column: TColumnIndex);
+var
+  LVTNode : TVTNode<TMyData>;
+begin
+  LVTNode := Sender.GetNodeData<TVTNode<TMyData>>(Node);
+  if Assigned(LVTNode) then
+  begin
+    Logger.SendObject('VTNode', LVTNode);
+    Logger.SendObject('Data', LVTNode.Data);
+  end;
+end;
+
 procedure TfrmVTNode.FTreeFreeNode(Sender: TBaseVirtualTree;
   Node: PVirtualNode);
 var
@@ -128,6 +205,7 @@ procedure TfrmVTNode.FTreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
 var
   LVTNode : TVTNode<TMyData>;
 begin
+  Logger.Track(Self, 'FTreeGetText');
   LVTNode := Sender.GetNodeData<TVTNode<TMyData>>(Node);
   CellText := LVTNode.Data.Text;
 end;
@@ -141,6 +219,7 @@ var
 begin
   LData := TMyData.Create('Root');
   FVTRoot := TVTNode<TMyData>.Create(FTree, LData);
+  FVTRoot.Text := 'I am root';
   LData := TMyData.Create('Sub1');
   FVTRoot.Add(LData);
   LData := TMyData.Create('Sub2');
