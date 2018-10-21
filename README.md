@@ -2,6 +2,8 @@
 
 **DDuce** is a new Delphi code library. Since Delphi got new language features like operator overloading, attributes, generics, anonymous methods and extended RTTI it provides some new powerful tools to extend the developer's creativity.
 
+The library features components, modules, extensions and primitives that are used by my open source applications.
+
 The sources depend on the following libraries and components:
   * [Spring4D](http://bitbucket.org/sglienke/spring4d)
   * [DSharp](http://bitbucket.org/sglienke/dsharp)
