@@ -526,13 +526,17 @@ begin
       with Result do
       begin
         HeaderOptions := [
-          hoAutoResize, hoRestrictDrag, hoShowHint, hoShowImages, hoShowSortGlyphs,
-          hoHeightResize, hoHeightDblClickResize, hoVisible
+          hoAutoResize, hoHeightResize, hoHeightDblClickResize,
+          hoRestrictDrag,
+          hoShowHint, hoShowImages, hoShowSortGlyphs,
+          hoVisible
         ];
         PaintOptions := [
-          toHideFocusRect, toHideSelection, toPopupMode, toShowBackground,
-          toShowButtons, toShowDropmark, toShowRoot, toThemeAware,
-          toUseBlendedImages, toUseBlendedSelection, toStaticBackground
+          toHideFocusRect, {toHideSelection,} toPopupMode,
+          toShowButtons, toShowDropmark, toShowRoot,
+          toThemeAware,
+          toUseBlendedImages, toUseBlendedSelection,
+          toStaticBackground
         ];
         AnimationOptions := [];
         AutoOptions := [
@@ -542,8 +546,8 @@ begin
         StringOptions := [toAutoAcceptEditChange];
         SelectionOptions := [toExtendedFocus];
         MiscOptions := [
-          toInitOnSave, toToggleOnDblClick, toWheelPanning, toVariableNodeHeight,
-          toCheckSupport
+          toCheckSupport, toInitOnSave, toToggleOnDblClick, toWheelPanning,
+          toVariableNodeHeight
         ];
         ColumnOptions := [];
 
@@ -566,30 +570,37 @@ begin
       with Result do
       begin
         HeaderOptions := [
-          hoAutoResize, hoColumnResize, hoDblClickResize, hoDrag, hoRestrictDrag,
-          hoShowHint, hoShowImages, hoShowSortGlyphs, hoAutoSpring,
-          hoDisableAnimatedResize, hoVisible
+          hoAutoResize, hoColumnResize, hoDblClickResize, hoAutoSpring,
+          hoDisableAnimatedResize,
+          hoDrag, hoRestrictDrag,
+          hoShowHint, hoShowImages, hoShowSortGlyphs,
+          hoVisible
         ];
         PaintOptions := [
-          toHideFocusRect, toHideSelection, toHotTrack, toPopupMode,
-          toShowBackground, toShowButtons, toShowDropmark, toShowRoot,
-          toShowVertGridLines, toShowHorzGridLines, toThemeAware, toUseBlendedImages,
-          toUseBlendedSelection, toStaticBackground, toUseExplorerTheme
+          toHideFocusRect, { toHideSelection,} toPopupMode,
+          toHotTrack,
+          toShowButtons, toShowDropmark, toShowRoot,
+          toShowHorzGridLines, toShowVertGridLines,
+          toThemeAware, toUseExplorerTheme,
+          toUseBlendedImages, toUseBlendedSelection,
+          toStaticBackground
         ];
         AnimationOptions := [];
         AutoOptions := [
-          toAutoDropExpand, toAutoScroll, toAutoScrollOnExpand, toAutoSort,
-          toAutoTristateTracking, toAutoDeleteMovedNodes, toAutoChangeScale,
-          toDisableAutoscrollOnEdit, toAutoBidiColumnOrdering
+          toAutoDropExpand,
+          toAutoScroll, toAutoScrollOnExpand, toDisableAutoscrollOnEdit,
+          toAutoSort,
+          toAutoTristateTracking,toAutoDeleteMovedNodes, toAutoChangeScale,
+          toAutoBidiColumnOrdering
         ];
         StringOptions := [toAutoAcceptEditChange];
         SelectionOptions := [toExtendedFocus, toFullRowSelect];
         MiscOptions := [
           toCheckSupport, toInitOnSave, toToggleOnDblClick, toWheelPanning,
-          toVariableNodeHeight{, toGridExtensions}
+          toVariableNodeHeight
         ];
-        ColumnOptions := [];
 
+        ColumnOptions := [];
         LineStyle                    := lsSolid;
         LineMode                     := lmBands;
         DrawSelectionMode            := smBlendedRectangle;
@@ -609,14 +620,16 @@ begin
       with Result do
       begin
         HeaderOptions := [
-          hoAutoResize, hoColumnResize, hoDblClickResize, hoDrag, hoRestrictDrag,
-          hoShowHint, hoShowImages, hoShowSortGlyphs, hoAutoSpring,
-          hoDisableAnimatedResize, hoVisible
+          hoAutoResize, hoAutoSpring, hoColumnResize, hoDblClickResize,
+          hoDrag, hoRestrictDrag, hoDisableAnimatedResize,
+          hoShowHint, hoShowImages, hoShowSortGlyphs,
+          hoVisible
         ];
         PaintOptions := [
-          toHideFocusRect, toHotTrack, toPopupMode, toShowBackground,
-          toShowDropmark, toThemeAware, toUseBlendedImages, toUseBlendedSelection,
-          toUseExplorerTheme
+          toHideFocusRect, toHotTrack, toPopupMode,
+          toShowDropmark,
+          toThemeAware, toUseExplorerTheme,
+          toUseBlendedImages, toUseBlendedSelection
         ];
         AnimationOptions := [];
         AutoOptions := [
@@ -650,15 +663,18 @@ begin
       with Result do
       begin
         HeaderOptions := [
-          hoAutoResize, hoColumnResize, hoDblClickResize, hoRestrictDrag,
-          hoShowHint, hoShowImages, hoShowSortGlyphs, hoAutoSpring,
-          hoDisableAnimatedResize, hoVisible
+          hoAutoResize, hoAutoSpring, hoColumnResize, hoDblClickResize,
+          hoRestrictDrag, hoDisableAnimatedResize,
+          hoShowHint, hoShowImages, hoShowSortGlyphs,
+          hoVisible
         ];
         PaintOptions := [
-          toHideFocusRect, toHideSelection, toHotTrack, toPopupMode,
-          toShowBackground, toShowButtons, toShowDropmark, toStaticBackground,
-          toShowRoot, toShowVertGridLines, toThemeAware, toUseBlendedImages,
-          toUseBlendedSelection, toStaticBackground, toUseExplorerTheme
+          toHideFocusRect, {toHideSelection,} toPopupMode, toHotTrack,
+          toShowButtons, toShowDropmark, toShowRoot, toShowVertGridLines,
+          toStaticBackground,
+          toThemeAware, {toUseExplorerTheme,}
+          toUseBlendedImages, toUseBlendedSelection,
+          toStaticBackground
         ];
         AnimationOptions := [];
         AutoOptions := [
@@ -670,7 +686,7 @@ begin
         SelectionOptions := [toExtendedFocus, toFullRowSelect];
         MiscOptions := [
           toCheckSupport, toInitOnSave, toToggleOnDblClick, toWheelPanning,
-          toVariableNodeHeight{, toGridExtensions}
+          toVariableNodeHeight
         ];
         ColumnOptions := [];
 
@@ -693,15 +709,18 @@ begin
       with Result do
       begin
         HeaderOptions := [
-          hoAutoResize, hoColumnResize, hoDblClickResize, hoRestrictDrag,
-          hoShowHint, hoShowImages, hoShowSortGlyphs, hoAutoSpring,
-          hoDisableAnimatedResize, hoVisible
+          hoAutoResize, hoAutoSpring, hoColumnResize, hoDblClickResize,
+          hoRestrictDrag, hoDisableAnimatedResize,
+          hoShowHint, hoShowImages, hoShowSortGlyphs,
+          hoVisible
         ];
         PaintOptions := [
-          toHideFocusRect, toHideSelection, toHotTrack, toPopupMode,
-          toShowBackground, toShowButtons, toShowDropmark, toStaticBackground,
-          toShowRoot, toShowVertGridLines, toThemeAware, toUseBlendedImages,
-          toUseBlendedSelection, toStaticBackground, toUseExplorerTheme
+          toHideFocusRect, toHideSelection,
+          toHotTrack, toPopupMode,
+          toShowButtons, toShowDropmark, toShowRoot, toShowVertGridLines,
+          toThemeAware, {toUseExplorerTheme,}
+          toUseBlendedSelection, toUseBlendedImages,
+          toStaticBackground
         ];
         AnimationOptions := [];
         AutoOptions := [

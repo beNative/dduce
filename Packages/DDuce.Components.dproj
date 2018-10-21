@@ -95,14 +95,14 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <VerInfo_Build>86</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.86;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>92</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.92;ProductVersion=1.0.0.0</VerInfo_Keys>
         <Debugger_HostApplication>D:\development\delphi\libraries\dduce\Demos\Bin\Win32\DDuce.Demos.exe</Debugger_HostApplication>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>17</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.17;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>18</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.18;ProductVersion=1.0.0.0</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -112,13 +112,13 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>18</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.18;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>19</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.19;ProductVersion=1.0.0.0</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>10</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.10;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>11</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.11;ProductVersion=1.0.0.0</VerInfo_Keys>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -157,7 +157,6 @@
         <DCCReference Include="..\Source\Factories\DDuce.Factories.VirtualTrees.pas"/>
         <DCCReference Include="..\Source\Factories\DDuce.Factories.zObjInspector.pas"/>
         <DCCReference Include="..\Source\Components\DDuce.Components.VirtualTrees.Node.pas"/>
-        <DCCReference Include="..\Source\Components\DDuce.Components.DataTree.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

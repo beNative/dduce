@@ -141,7 +141,7 @@ function SetToString(
   ATrimChars   : Integer = -1
 ): string;
 
-function MemoryUsed: Int64;
+function MemoryUsed: UInt64;
 
 function FormatBytes(
   ASize       : Int64;
@@ -1027,7 +1027,7 @@ begin
 end;
 
 //https://stackoverflow.com/questions/437683/how-to-get-the-memory-used-by-a-delphi-program
-function MemoryUsed: Int64;
+function MemoryUsed: UInt64;
 var
   ST : TMemoryManagerState;
   SB : TSmallBlockTypeState;

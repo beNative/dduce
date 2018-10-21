@@ -33,7 +33,6 @@ uses
     method defined in TBaseVirtualStringTree:
           function GetNodeData<T>(pNode: PVirtualNode): T;
 
-
     type
       TMyData = class
         ...
@@ -52,6 +51,8 @@ type
 
   protected
     {$REGION 'property access methods'}
+    function GetVisible: Boolean;
+    procedure SetVisible(const Value: Boolean);
     function GetLevel: Integer;
     function GetIndex: Integer;
     function GetImageIndex: Integer;
@@ -119,6 +120,9 @@ type
 
     property Hint: string
       read GetHint write SetHint;
+
+    property Visible: Boolean
+      read GetVisible write SetVisible;
   end;
 
 implementation
@@ -130,16 +134,14 @@ uses
 constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree; const AData: T;
   const AText: string);
 begin
-  FTree := ATree;
-  FData := AData;
-  FText := AText;
-  FVNode := nil;
+  FTree  := ATree;
+  FData  := AData;
+  FText  := AText;
 end;
 
 constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree; const AText: string);
 begin
-  FTree := ATree;
-  FVNode := nil;
+  FTree  := ATree;
   FData  := Default(T);
   FText  := AText;
 end;
@@ -182,7 +184,8 @@ end;
 
 procedure TVTNode<T>.SetCheckType(const Value: TCheckType);
 begin
-  VNode.CheckType := Value;
+  if Assigned(VNode) then
+    VNode.CheckType := Value;
 end;
 
 function TVTNode<T>.GetCount: UInt32;
@@ -243,6 +246,16 @@ end;
 function TVTNode<T>.GetNodes: IList<TVTNode<T>>;
 begin
   Result := FNodes.Value;
+end;
+
+function TVTNode<T>.GetVisible: Boolean;
+begin
+  Result := FTree.IsVisible[VNode];
+end;
+
+procedure TVTNode<T>.SetVisible(const Value: Boolean);
+begin
+  FTree.IsVisible[VNode] := Value;
 end;
 
 function TVTNode<T>.GetVNode: PVirtualNode;
