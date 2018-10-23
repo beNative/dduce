@@ -144,7 +144,6 @@
         <DCCReference Include="..\Source\Components\DDuce.Components.PropertyInspector.StringsEditor.pas">
             <Form>StringsEditorDialog</Form>
         </DCCReference>
-        <DCCReference Include="..\Source\Components\DDuce.Components.ValueList.Node.pas"/>
         <DCCReference Include="..\Source\Components\DDuce.Components.ValueList.pas"/>
         <DCCReference Include="..\Source\Components\DDuce.Components.XMLTree.Editors.pas"/>
         <DCCReference Include="..\Source\Components\DDuce.Components.XMLTree.NodeAttributes.pas"/>
