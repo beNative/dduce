@@ -190,7 +190,10 @@ end;
 
 function TVTNode<T>.GetCount: UInt32;
 begin
-  Result := VNode.ChildCount;
+  if Assigned(VNode) then
+    Result := VNode.ChildCount
+  else
+    Result := 0;
 end;
 
 function TVTNode<T>.GetData: T;

@@ -136,7 +136,7 @@ end;
 
 procedure TValueList.SetData(const Value: IDynamicRecord);
 begin
-  //if Value <> Data then
+  if Value <> Data then
   begin
     FData := Value;
     if Assigned(FData) then
@@ -184,29 +184,6 @@ begin
   Header.Columns.Items[1].Assign(Value);
 end;
 
-//procedure TValueList.UpdateNodes;
-//var
-//  S : string;
-//  A : TArray<string>;
-//  N : TValueListNode;
-//begin
-//  if Assigned(FNodes) then
-//    FNodes.Clear;
-//  S := FField.Value.ToString;
-//  if (not S.IsEmpty) and (S[1] = '[') and (S[S.Length] = ']') then
-//  begin
-//    S := Copy(S, 2, S.Length - 2);
-//    A := S.Split([',']);
-//    for S in A do
-//    begin
-//      N := TValueListNode.Create;
-//      N.Name  := S;
-//      N.Value := True;
-//      Nodes.Add(N);
-//    end;
-//  end;
-//end;
-
 function TValueList.GetShowHeader: Boolean;
 begin
   Result := hoVisible in Header.Options;
@@ -225,7 +202,6 @@ end;
 {$ENDREGION}
 
 {$REGION 'event dispatch methods'}
-
 procedure TValueList.DoBeforeCellPaint(Canvas: TCanvas; Node: PVirtualNode;
   Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect;
   var ContentRect: TRect);
@@ -234,7 +210,7 @@ var
 begin
   L := GetNodeLevel(Node);
   ContentRect.Offset(2, 0);
-  if Column = 0 then
+  if (Column = 0) and (CellPaintMode = cpmPaint) then
   begin
     Canvas.Brush.Color := clCream;
     if L = 0 then
@@ -364,15 +340,6 @@ begin
     toEditable, toEditOnDblClick
   ];
   TreeOptions.EditOptions := toVerticalEdit;
-
-  LineStyle                    := lsSolid;
-  LineMode                     := lmNormal;
-  DrawSelectionMode            := smBlendedRectangle;
-  HintMode                     := hmTooltip;
-  Colors.SelectionRectangleBlendColor := clGray;
-  Colors.SelectionTextColor           := clBlack;
-  Colors.GridLineColor                := clSilver;
-
   with Header.Columns.Add do
   begin
     Color    := clWhite;
@@ -395,11 +362,18 @@ begin
     Text        := 'Value';
     EditOptions := toVerticalEdit;
   end;
+  Header.MainColumn    := 0;
+  Header.AutoSizeIndex := 1;
   Indent               := 8; // pixels between node levels
   Margin               := 0;
-  Header.AutoSizeIndex := 1;
-  Header.MainColumn    := 0;
   LineMode             := lmBands;
+  LineStyle            := lsSolid;
+  DrawSelectionMode    := smBlendedRectangle;
+  HintMode             := hmTooltip;
+
+  Colors.SelectionRectangleBlendColor := clGray;
+  Colors.SelectionTextColor           := clBlack;
+  Colors.GridLineColor                := clSilver;
 end;
 {$ENDREGION}
 

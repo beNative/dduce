@@ -77,16 +77,16 @@ type
 
   TfrmVTNode = class(TForm)
     {$REGION 'designer controls'}
-    pnlTree        : TPanel;
-    pnlMain        : TPanel;
-    aclMain        : TActionList;
-    btnDeleteNode  : TButton;
-    actDeleteNode  : TAction;
-    actAddChild    : TAction;
-    btnAddChild    : TButton;
-    btnSetNodeText : TButton;
-    actSetNodeText : TAction;
-    pnl1           : TPanel;
+    aclMain            : TActionList;
+    actAddChild        : TAction;
+    actDeleteNode      : TAction;
+    actSetNodeText     : TAction;
+    btnAddChild        : TButton;
+    btnDeleteNode      : TButton;
+    btnSetNodeText     : TButton;
+    pnlMain            : TPanel;
+    pnlObjectInspector : TPanel;
+    pnlTree            : TPanel;
     {$ENDREGION}
 
     procedure actDeleteNodeExecute(Sender: TObject);
@@ -115,8 +115,10 @@ type
       Column : TColumnIndex
     );
 
-  public
+  protected
     procedure BuildTree;
+
+  public
     procedure AfterConstruction; override;
 
   end;
@@ -127,7 +129,6 @@ implementation
 
 uses
   DDuce.Factories.VirtualTrees, DDuce.Factories.zObjInspector,
-
   DDuce.Logger, DDuce.Logger.Interfaces, DDuce.Logger.Channels.ZeroMQ;
 
 {$REGION 'construction and destruction'}
@@ -142,7 +143,7 @@ begin
   FTree.OnFocusChanged := FTreeFocusChanged;
   FOIVST := TzObjectInspectorFactory.Create(
     Self,
-    pnl1,
+    pnlObjectInspector,
     FTree
   );
 
@@ -157,7 +158,7 @@ var
 begin
   LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
   if Assigned(LVTNode) then
-    LVTNode.Add(TMyData.Create('ok'));
+    LVTNode.Add(TMyData.Create('Child node'));
 end;
 
 procedure TfrmVTNode.actDeleteNodeExecute(Sender: TObject);
@@ -217,19 +218,19 @@ var
   LData   : TMyData;
   LVTNode : TVTNode<TMyData>;
 begin
-  LData := TMyData.Create('Root');
+  LData := TMyData.Create('Root node');
   FVTRoot := TVTNode<TMyData>.Create(FTree, LData);
-  FVTRoot.Text := 'I am root';
-  LData := TMyData.Create('Sub1');
+  FVTRoot.Text := 'Root node';
+  LData := TMyData.Create('Child 1');
   FVTRoot.Add(LData);
-  LData := TMyData.Create('Sub2');
+  LData := TMyData.Create('Child 2');
   FVTRoot.Add(LData);
-  LData := TMyData.Create('Sub3');
+  LData := TMyData.Create('Child 3');
   LVTNode := FVTRoot.Add(LData);
   LVTNode.CheckType := ctCheckBox;
-  LData := TMyData.Create('Sub4');
+  LData := TMyData.Create('Child 4');
   LVTNode := FVTRoot.Add(LData);
-  LVTNode.Add(TMyData.Create('SubSub1'));
+  LVTNode.Add(TMyData.Create('Child 4.1'));
 end;
 {$ENDREGION}
 
