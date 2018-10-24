@@ -54,7 +54,6 @@ begin
   DemoManager.Register(TfrmEditor, 'Editor');
   DemoManager.Register(TfrmVirtualTrees, 'VirtualTrees');
   DemoManager.Register(TfrmVTNode, 'VTNode');
-  DemoManager.Register(TfrmLogger, 'Logger');
   DemoManager.Register(TfrmScopedReferences, 'Scoped references');
   // not working yet
   //DemoManager.Register(TfrmXMLTree, 'XMLTree');
