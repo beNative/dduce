@@ -14,7 +14,7 @@ In addition some lesser known but excellent open source Delphi components were p
 
 ## Editor module ##
 
-![IEditorView|https://github.com/beNative/dduce/blob/master/Wiki/dduce_editor_demo.png]
+![IEditorView](https://github.com/beNative/dduce/blob/master/Wiki/dduce_editor_demo.png)
 
 ## TPropertyInspector ##
 
