@@ -44,6 +44,7 @@ type
     FStringOptions                : TVTStringOptions;
     FSelectionOptions             : TVTSelectionOptions;
     FMiscOptions                  : TVTMiscOptions;
+    FEditOptions                  : TVTEditOptions;
     FColumnOptions                : TVTColumnOptions;
     FLineStyle                    : TVTLineStyle;     // style of the tree lines
     FLineMode                     : TVTLineMode;      // tree lines or bands etc.
@@ -77,6 +78,9 @@ type
 
     property MiscOptions: TVTMiscOptions
       read FMiscOptions write FMiscOptions;
+
+    property EditOptions: TVTEditOptions
+      read FEditOptions write FEditOptions;
 
     property ColumnOptions: TVTColumnOptions // TS: todo default column options
       read FColumnOptions write FColumnOptions;
@@ -197,6 +201,7 @@ begin
     MiscOptions                  := LOptions.MiscOptions;
     PaintOptions                 := LOptions.PaintOptions;
     SelectionOptions             := LOptions.SelectionOptions;
+    EditOptions                  := LOptions.EditOptions;
     HeaderOptions                := LOptions.HeaderOptions;
     LineStyle                    := LOptions.LineStyle;
     LineMode                     := LOptions.LineMode;
@@ -224,6 +229,7 @@ begin
     LTree.TreeOptions.MiscOptions             := MiscOptions;
     LTree.TreeOptions.PaintOptions            := PaintOptions;
     LTree.TreeOptions.SelectionOptions        := SelectionOptions;
+    LTree.TreeOptions.EditOptions             := EditOptions;
     LTree.Header.Options                      := HeaderOptions;
     LTree.LineStyle                           := LineStyle;
     LTree.LineMode                            := LineMode;
@@ -242,6 +248,7 @@ begin
     LOptions.MiscOptions                  := MiscOptions;
     LOptions.PaintOptions                 := PaintOptions;
     LOptions.SelectionOptions             := SelectionOptions;
+    LOptions.EditOptions                  := EditOptions;
     LOptions.HeaderOptions                := HeaderOptions;
     LOptions.LineStyle                    := LineStyle;
     LOptions.LineMode                     := LineMode;
@@ -260,6 +267,7 @@ end;
 {$REGION 'construction and destruction'}
 class constructor TVirtualStringTreeFactory.Create;
 begin
+  {$REGION 'FDefaultTreeOptions'}
   FDefaultTreeOptions.Create(
     function: TVSTOptions
     begin
@@ -289,7 +297,10 @@ begin
           toUseBlendedSelection,
           toStaticBackground
         ];
-        AnimationOptions := [];
+        AnimationOptions := [
+          {toAnimatedToggle,}
+          {toAdvancedAnimatedToggle}
+        ];
         AutoOptions := [
           {toAutoDropExpand,}
           toAutoScroll,
@@ -301,16 +312,63 @@ begin
           toAutoChangeScale,
           toAutoBidiColumnOrdering
         ];
-        StringOptions := [toAutoAcceptEditChange];
-        SelectionOptions := [toExtendedFocus];
+        StringOptions := [
+          toAutoAcceptEditChange
+        ];
+        SelectionOptions := [
+          {toDisableDrawSelection,}
+          toExtendedFocus,
+          {toFullRowSelect,}
+          {toLevelSelectConstraint,}
+          {toMiddleClickSelect,}
+          {toMultiSelect,}
+          {toRightClickSelect,}
+          {toSiblingSelectConstraint,}
+          {toCenterScrollIntoView,}
+          {toSimpleDrawSelection,}
+          toAlwaysSelectNode{,}
+          {toRestoreSelection,}
+          {toSyncCheckboxesWithSelection}
+        ];
         MiscOptions := [
+          {toAcceptOLEDrop,}
           toCheckSupport,
+          {toEditable,}
+          {toFullRepaintOnResize,}
+          {toGridExtensions,}
           toInitOnSave,
+          {toReportMode,}
           toToggleOnDblClick,
           toWheelPanning,
-          toVariableNodeHeight
+          {toReadOnly,}
+          toVariableNodeHeight{,}
+          {toFullRowDrag,}
+          {toNodeHeightResize,}
+          {toNodeHeightDblClickResize,}
+          {toEditOnClick,}
+          {toEditOnDblClick,}
+          {toReverseFullExpandHotKey}
         ];
-        ColumnOptions := [];
+        EditOptions := toDefaultEdit;
+        ColumnOptions := [
+          {coAllowClick,}
+          {coDraggable,}
+          {coEnabled,}
+          {coParentBidiMode,}
+          {coParentColor,}
+          {coResizable,}
+          {coShowDropMark,}
+          {coVisible,}
+          {coAutoSpring,}
+          {coFixed,}
+          {coSmartResize,}
+          {coAllowFocus,}
+          {coDisableAnimatedResize,}
+          {coWrapCaption,}
+          {coUseCaptionAlignment,}
+          {coEditable,}
+          {coStyleColor}
+        ];
 
         LineStyle                    := lsDotted;
         LineMode                     := lmNormal;
@@ -323,7 +381,9 @@ begin
     end,
     True
   );
+  {$ENDREGION}
 
+  {$REGION 'FDefaultGridOptions'}
   FDefaultGridOptions.Create(
     function: TVSTOptions
     begin
@@ -375,7 +435,10 @@ begin
           {toHideTreeLinesIfThemed,}
           {toShowFilteredNodes}
         ];
-        AnimationOptions := [];
+        AnimationOptions := [
+          {toAnimatedToggle,}
+          {toAdvancedAnimatedToggle}
+        ];
         AutoOptions := [
           toAutoDropExpand,
           {toAutoExpand,}
@@ -392,7 +455,9 @@ begin
           toDisableAutoscrollOnEdit,
           toAutoBidiColumnOrdering
         ];
-        StringOptions := [toAutoAcceptEditChange];
+        StringOptions := [
+          toAutoAcceptEditChange
+        ];
         SelectionOptions := [
           {toDisableDrawSelection,}
           toExtendedFocus,
@@ -427,8 +492,26 @@ begin
           {toEditOnDblClick,}
           {toReverseFullExpandHotKey}
         ];
-
-        ColumnOptions := [];
+        EditOptions := toDefaultEdit;
+        ColumnOptions := [
+          {coAllowClick,}
+          {coDraggable,}
+          {coEnabled,}
+          {coParentBidiMode,}
+          {coParentColor,}
+          {coResizable,}
+          {coShowDropMark,}
+          {coVisible,}
+          {coAutoSpring,}
+          {coFixed,}
+          {coSmartResize,}
+          {coAllowFocus,}
+          {coDisableAnimatedResize,}
+          {coWrapCaption,}
+          {coUseCaptionAlignment,}
+          {coEditable,}
+          {coStyleColor}
+        ];
         LineStyle                    := lsSolid;
         LineMode                     := lmBands;
         DrawSelectionMode            := smBlendedRectangle;
@@ -440,7 +523,9 @@ begin
     end,
     True
   );
+  {$ENDREGION}
 
+  {$REGION 'FDefaultListOptions'}
   FDefaultListOptions.Create(
     function: TVSTOptions
     begin
@@ -461,21 +546,64 @@ begin
           toUseBlendedImages, toUseBlendedSelection,
           toStaticBackground
         ];
-        AnimationOptions := [];
+        AnimationOptions := [
+          {toAnimatedToggle,}
+          {toAdvancedAnimatedToggle}
+        ];
         AutoOptions := [
           toAutoDropExpand,
-          toAutoScroll, toAutoScrollOnExpand, toDisableAutoscrollOnEdit,
+          toAutoScroll,
+          toAutoScrollOnExpand,
+          toDisableAutoscrollOnEdit,
           toAutoSort,
-          toAutoTristateTracking, toAutoDeleteMovedNodes, toAutoChangeScale,
+          toAutoTristateTracking,
+          toAutoDeleteMovedNodes,
+          toAutoChangeScale,
           toAutoBidiColumnOrdering
         ];
         StringOptions := [toAutoAcceptEditChange];
-        SelectionOptions := [toExtendedFocus, toFullRowSelect];
+        SelectionOptions := [
+          {toDisableDrawSelection,}
+          toExtendedFocus,
+          toFullRowSelect,
+          {toLevelSelectConstraint,}
+          {toMiddleClickSelect,}
+          {toMultiSelect,}
+          {toRightClickSelect,}
+          {toSiblingSelectConstraint,}
+          {toCenterScrollIntoView,}
+          {toSimpleDrawSelection,}
+          toAlwaysSelectNode{,}
+          {toRestoreSelection,}
+          {toSyncCheckboxesWithSelection}
+        ];
         MiscOptions := [
-          toCheckSupport, toInitOnSave, toToggleOnDblClick, toWheelPanning,
+          toCheckSupport,
+          toInitOnSave,
+          toToggleOnDblClick,
+          toWheelPanning,
           toVariableNodeHeight
         ];
-        ColumnOptions := [];
+        EditOptions := toDefaultEdit;
+        ColumnOptions := [
+          {coAllowClick,}
+          {coDraggable,}
+          {coEnabled,}
+          {coParentBidiMode,}
+          {coParentColor,}
+          {coResizable,}
+          {coShowDropMark,}
+          {coVisible,}
+          {coAutoSpring,}
+          {coFixed,}
+          {coSmartResize,}
+          {coAllowFocus,}
+          {coDisableAnimatedResize,}
+          {coWrapCaption,}
+          {coUseCaptionAlignment,}
+          {coEditable,}
+          {coStyleColor}
+        ];
         LineStyle                    := lsSolid;
         LineMode                     := lmNormal;
         DrawSelectionMode            := smBlendedRectangle;
@@ -487,7 +615,9 @@ begin
     end,
     True
   );
+  {$ENDREGION}
 
+  {$REGION 'FDefaultTreeGridOptions'}
   FDefaultTreeGridOptions.Create(
     function: TVSTOptions
     begin
@@ -508,7 +638,10 @@ begin
           toUseBlendedImages, toUseBlendedSelection,
           toStaticBackground
         ];
-        AnimationOptions := [];
+        AnimationOptions := [
+          {toAnimatedToggle,}
+          {toAdvancedAnimatedToggle}
+        ];
         AutoOptions := [
           toAutoDropExpand,
           toAutoScroll, toAutoScrollOnExpand, toDisableAutoscrollOnEdit,
@@ -517,12 +650,48 @@ begin
           toAutoBidiColumnOrdering
         ];
         StringOptions := [toAutoAcceptEditChange];
-        SelectionOptions := [toExtendedFocus, toFullRowSelect];
+        SelectionOptions := [
+          {toDisableDrawSelection,}
+          toExtendedFocus,
+          toFullRowSelect,
+          {toLevelSelectConstraint,}
+          {toMiddleClickSelect,}
+          {toMultiSelect,}
+          {toRightClickSelect,}
+          {toSiblingSelectConstraint,}
+          {toCenterScrollIntoView,}
+          {toSimpleDrawSelection,}
+          toAlwaysSelectNode{,}
+          {toRestoreSelection,}
+          {toSyncCheckboxesWithSelection}
+        ];
         MiscOptions := [
-          toCheckSupport, toInitOnSave, toToggleOnDblClick, toWheelPanning,
+          toCheckSupport,
+          toInitOnSave,
+          toToggleOnDblClick,
+          toWheelPanning,
           toVariableNodeHeight
         ];
-        ColumnOptions := [];
+        EditOptions := toDefaultEdit;
+        ColumnOptions := [
+          {coAllowClick,}
+          {coDraggable,}
+          {coEnabled,}
+          {coParentBidiMode,}
+          {coParentColor,}
+          {coResizable,}
+          {coShowDropMark,}
+          {coVisible,}
+          {coAutoSpring,}
+          {coFixed,}
+          {coSmartResize,}
+          {coAllowFocus,}
+          {coDisableAnimatedResize,}
+          {coWrapCaption,}
+          {coUseCaptionAlignment,}
+          {coEditable,}
+          {coStyleColor}
+        ];
 
         LineStyle                    := lsSolid;
         LineMode                     := lmNormal;
@@ -535,7 +704,9 @@ begin
     end,
     True
   );
+  {$ENDREGION}
 
+  {$REGION 'FDefaultTreeListOptions'}
   FDefaultTreeListOptions.Create(
     function: TVSTOptions
     begin
@@ -570,7 +741,10 @@ begin
           toUseBlendedImages,
           toStaticBackground
         ];
-        AnimationOptions := [];
+        AnimationOptions := [
+          {toAnimatedToggle,}
+          {toAdvancedAnimatedToggle}
+        ];
         AutoOptions := [
           toAutoDropExpand,
           toAutoScroll,
@@ -583,7 +757,21 @@ begin
           toAutoBidiColumnOrdering
         ];
         StringOptions := [toAutoAcceptEditChange];
-        SelectionOptions := [toExtendedFocus, toFullRowSelect];
+        SelectionOptions := [
+          {toDisableDrawSelection,}
+          toExtendedFocus,
+          toFullRowSelect,
+          {toLevelSelectConstraint,}
+          {toMiddleClickSelect,}
+          {toMultiSelect,}
+          {toRightClickSelect,}
+          {toSiblingSelectConstraint,}
+          {toCenterScrollIntoView,}
+          {toSimpleDrawSelection,}
+          toAlwaysSelectNode{,}
+          {toRestoreSelection,}
+          {toSyncCheckboxesWithSelection}
+        ];
         MiscOptions := [
           toCheckSupport,
           toInitOnSave,
@@ -591,7 +779,26 @@ begin
           toWheelPanning,
           toVariableNodeHeight
         ];
-        ColumnOptions := [];
+        EditOptions := toDefaultEdit;
+        ColumnOptions := [
+          {coAllowClick,}
+          {coDraggable,}
+          {coEnabled,}
+          {coParentBidiMode,}
+          {coParentColor,}
+          {coResizable,}
+          {coShowDropMark,}
+          {coVisible,}
+          {coAutoSpring,}
+          {coFixed,}
+          {coSmartResize,}
+          {coAllowFocus,}
+          {coDisableAnimatedResize,}
+          {coWrapCaption,}
+          {coUseCaptionAlignment,}
+          {coEditable,}
+          {coStyleColor}
+        ];
 
         LineStyle                    := lsSolid;
         LineMode                     := lmNormal;
@@ -604,6 +811,7 @@ begin
     end,
     True
   );
+  {$ENDREGION}
 end;
 {$ENDREGION}
 

@@ -87,16 +87,26 @@ type
     pnlMain            : TPanel;
     pnlObjectInspector : TPanel;
     pnlTree            : TPanel;
+    actBuildTree       : TAction;
+    actFullExpand      : TAction;
+    actFullCollapse    : TAction;
+    btnBuildTree       : TButton;
+    btnFullExpand      : TButton;
+    btnFullCollapse    : TButton;
+    btn4               : TButton;
     {$ENDREGION}
 
     procedure actDeleteNodeExecute(Sender: TObject);
     procedure actAddChildExecute(Sender: TObject);
     procedure actSetNodeTextExecute(Sender: TObject);
+    procedure actBuildTreeExecute(Sender: TObject);
+    procedure actFullExpandExecute(Sender: TObject);
+    procedure actFullCollapseExecute(Sender: TObject);
 
   private
-    FTree   : TVirtualStringTree;
-    FVTRoot : TVTNode<TMyData>;
-    FOIVST  : TzObjectInspector;
+    FTree            : TVirtualStringTree;
+    FVTRoot          : TVTNode<TMyData>;
+    FObjectInspector : TzObjectInspector;
 
     procedure FTreeFreeNode(
       Sender : TBaseVirtualTree;
@@ -129,24 +139,22 @@ implementation
 
 uses
   DDuce.Factories.VirtualTrees, DDuce.Factories.zObjInspector,
-  DDuce.Logger, DDuce.Logger.Interfaces, DDuce.Logger.Channels.ZeroMQ;
+  DDuce.Logger, DDuce.Logger.Interfaces;
 
 {$REGION 'construction and destruction'}
 procedure TfrmVTNode.AfterConstruction;
 begin
   inherited AfterConstruction;
-  Logger.Channels.Add(TZeroMQChannel.Create);
   Logger.Clear;
   FTree := TVirtualStringTreeFactory.CreateTree(Self, pnlTree);
   FTree.OnFreeNode     := FTreeFreeNode;
   FTree.OnGetText      := FTreeGetText;
   FTree.OnFocusChanged := FTreeFocusChanged;
-  FOIVST := TzObjectInspectorFactory.Create(
+  FObjectInspector     := TzObjectInspectorFactory.Create(
     Self,
     pnlObjectInspector,
     FTree
   );
-
   BuildTree;
 end;
 {$ENDREGION}
@@ -161,9 +169,24 @@ begin
     LVTNode.Add(TMyData.Create('Child node'));
 end;
 
+procedure TfrmVTNode.actBuildTreeExecute(Sender: TObject);
+begin
+  BuildTree;
+end;
+
 procedure TfrmVTNode.actDeleteNodeExecute(Sender: TObject);
 begin
   FTree.DeleteNode(FTree.FocusedNode);
+end;
+
+procedure TfrmVTNode.actFullCollapseExecute(Sender: TObject);
+begin
+  FTree.FullCollapse;
+end;
+
+procedure TfrmVTNode.actFullExpandExecute(Sender: TObject);
+begin
+  FTree.FullExpand;
 end;
 
 procedure TfrmVTNode.actSetNodeTextExecute(Sender: TObject);
@@ -207,7 +230,7 @@ procedure TfrmVTNode.FTreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
 var
   LVTNode : TVTNode<TMyData>;
 begin
-  LVTNode := Sender.GetNodeData<TVTNode<TMyData>>(Node);
+  LVTNode  := Sender.GetNodeData<TVTNode<TMyData>>(Node);
   CellText := LVTNode.Data.Text;
 end;
 {$ENDREGION}
@@ -217,20 +240,35 @@ procedure TfrmVTNode.BuildTree;
 var
   LData   : TMyData;
   LVTNode : TVTNode<TMyData>;
+  I       : Integer;
+  J       : Integer;
+  S       : string;
 begin
   LData := TMyData.Create('Root node');
   FVTRoot := TVTNode<TMyData>.Create(FTree, LData);
   FVTRoot.Text := 'Root node';
-  LData := TMyData.Create('Child 1');
-  FVTRoot.Add(LData);
-  LData := TMyData.Create('Child 2');
-  FVTRoot.Add(LData);
-  LData := TMyData.Create('Child 3');
-  LVTNode := FVTRoot.Add(LData);
-  LVTNode.CheckType := ctCheckBox;
-  LData := TMyData.Create('Child 4');
-  LVTNode := FVTRoot.Add(LData);
-  LVTNode.Add(TMyData.Create('Child 4.1'));
+  for I := 1 to 100 do
+  begin
+    S := Format('Child %d', [I]);
+    LVTNode := FVTRoot.Add(TMyData.Create(S));
+    for J := 1 to 100 do
+    begin
+      S := Format('Child %d.%d', [I, J]);
+      LVTNode.Add(TMyData.Create(S));
+    end;
+  end;
+  //FTree.FullExpand;
+
+//  LData := TMyData.Create('Child 1');
+//  FVTRoot.Add(LData);
+//  LData := TMyData.Create('Child 2');
+//  FVTRoot.Add(LData);
+//  LData := TMyData.Create('Child 3');
+//  LVTNode := FVTRoot.Add(LData);
+//  LVTNode.CheckType := ctCheckBox;
+//  LData := TMyData.Create('Child 4');
+//  LVTNode := FVTRoot.Add(LData);
+//  LVTNode.Add(TMyData.Create('Child 4.1'));
 end;
 {$ENDREGION}
 

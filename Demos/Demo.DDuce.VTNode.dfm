@@ -53,6 +53,38 @@ object frmVTNode: TfrmVTNode
       Action = actSetNodeText
       TabOrder = 2
     end
+    object btnBuildTree: TButton
+      Left = 6
+      Top = 101
+      Width = 139
+      Height = 25
+      Action = actBuildTree
+      TabOrder = 3
+    end
+    object btnFullExpand: TButton
+      Left = 6
+      Top = 132
+      Width = 139
+      Height = 25
+      Action = actFullExpand
+      TabOrder = 4
+    end
+    object btnFullCollapse: TButton
+      Left = 6
+      Top = 163
+      Width = 139
+      Height = 25
+      Action = actFullCollapse
+      TabOrder = 5
+    end
+    object btn4: TButton
+      Left = 6
+      Top = 194
+      Width = 139
+      Height = 25
+      Caption = 'btn1'
+      TabOrder = 6
+    end
   end
   object pnlObjectInspector: TPanel
     Left = 0
@@ -77,6 +109,18 @@ object frmVTNode: TfrmVTNode
     object actSetNodeText: TAction
       Caption = 'Set node text'
       OnExecute = actSetNodeTextExecute
+    end
+    object actBuildTree: TAction
+      Caption = 'Build tree'
+      OnExecute = actBuildTreeExecute
+    end
+    object actFullExpand: TAction
+      Caption = 'Full expand'
+      OnExecute = actFullExpandExecute
+    end
+    object actFullCollapse: TAction
+      Caption = 'Full collapse'
+      OnExecute = actFullCollapseExecute
     end
   end
 end

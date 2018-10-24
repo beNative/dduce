@@ -7,6 +7,9 @@ uses
   Vcl.Styles,
   Vcl.SysStyles,
   MidasLib,
+  DDuce.Logger,
+  DDuce.Logger.Interfaces,
+  DDuce.Logger.Channels.ZeroMQ,
   Demo.Contact in 'Demo.Contact.pas',
   Demo.Data in 'Demo.Data.pas' {dmData: TDataModule},
   Demo.DDuce.DBGridView in 'Demo.DDuce.DBGridView.pas' {frmDBGridView},
@@ -37,6 +40,7 @@ begin
   {$WARNINGS ON}
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  Logger.Channels.Add(TZeroMQChannel.Create);
   RegisterDemos;
   if DemoManager.ItemList.Count = 1 then
   begin

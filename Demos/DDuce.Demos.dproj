@@ -197,7 +197,6 @@
         <DCCReference Include="Demo.Settings.pas"/>
         <DCCReference Include="Demo.DDuce.VTNode.pas">
             <Form>frmVTNode</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

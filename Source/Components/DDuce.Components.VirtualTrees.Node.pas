@@ -39,18 +39,38 @@ uses
       end;
 }
 type
+  TVTNode<T> = class;
+
+  TVTNodeEnumerator<T> = record
+  strict private
+    FVTNode : TVTNode<T>;
+    FTree   : TCustomVirtualStringTree;
+  public
+    constructor Create(
+      ATree   : TCustomVirtualStringTree;
+      AVTNode : TVTNode<T>
+    );
+
+    function GetCurrent: TVTNode<T>;
+    function MoveNext: Boolean;
+    property Current: TVTNode<T>
+      read GetCurrent;
+  end;
+
   TVTNode<T> = class
   private
     FVNode      : PVirtualNode;
     FTree       : TCustomVirtualStringTree;
-    FNodes      : Lazy<IList<TVTNode<T>>>;
     FData       : T;
     FText       : string;
     FHint       : string;
     FImageIndex : Integer;
+    FCheckState : TCheckState;
+    FCheckType  : TCheckType;
 
   protected
     {$REGION 'property access methods'}
+    function GetItem(AIndex: UInt32): TVTNode<T>;
     function GetVisible: Boolean;
     procedure SetVisible(const Value: Boolean);
     function GetLevel: Integer;
@@ -67,11 +87,12 @@ type
     procedure SetVNode(const Value: PVirtualNode);
     function GetData: T;
     procedure SetData(const Value: T);
-    function GetNodes: IList<TVTNode<T>>;
-    function GetCount: UInt32;
+    function GetChildCount: UInt32;
     function GetText: string; virtual;
     procedure SetText(const Value: string); virtual;
     {$ENDREGION}
+
+    function GetEnumerator : TVTNodeEnumerator<T>;
 
   public
     constructor Create(
@@ -83,7 +104,6 @@ type
       ATree       : TCustomVirtualStringTree;
       const AText : string = ''
     ); overload; virtual;
-    procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
     function Add(const AData: T): TVTNode<T>;
@@ -91,11 +111,8 @@ type
     property VNode: PVirtualNode
       read GetVNode write SetVNode;
 
-    property Nodes: IList<TVTNode<T>>
-      read GetNodes;
-
-    property Count: UInt32
-      read GetCount;
+    property ChildCount: UInt32
+      read GetChildCount;
 
     property Data: T
       read GetData write SetData;
@@ -107,7 +124,10 @@ type
       read GetCheckType write SetCheckType;
 
     property ImageIndex: Integer
-     read GetImageIndex write SetImageIndex;
+      read GetImageIndex write SetImageIndex;
+
+    property Items[AIndex: UInt32]: TVTNode<T>
+      read GetItem; default;
 
     property Index: Integer
       read GetIndex;
@@ -146,22 +166,11 @@ begin
   FText  := AText;
 end;
 
-procedure TVTNode<T>.AfterConstruction;
-begin
-  inherited AfterConstruction;
-  FNodes.Create(function: IList<TVTNode<T>>
-    begin
-      Result := TCollections.CreateList<TVTNode<T>>;
-    end
-  );
-end;
-
 procedure TVTNode<T>.BeforeDestruction;
 begin
   if GetTypekind(T) = tkClass then
     FreeAndNil(FData);
   FTree  := nil;
-  FNodes := nil;
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
@@ -169,26 +178,33 @@ end;
 {$REGION 'property access methods'}
 function TVTNode<T>.GetCheckState: TCheckState;
 begin
-  Result := VNode.CheckState;
+  if Assigned(VNode) then
+    FCheckState := VNode.CheckState;
+  Result := FCheckState;
 end;
 
 procedure TVTNode<T>.SetCheckState(const Value: TCheckState);
 begin
-  VNode.CheckState := Value;
+  FCheckState := Value;
+  if Assigned(VNode) then
+    VNode.CheckState := Value;
 end;
 
 function TVTNode<T>.GetCheckType: TCheckType;
 begin
-  Result := VNode.CheckType;
+  if Assigned(VNode) then
+    FCheckType := VNode.CheckType;
+  Result := FCheckType;
 end;
 
 procedure TVTNode<T>.SetCheckType(const Value: TCheckType);
 begin
+  FCheckType := Value;
   if Assigned(VNode) then
     VNode.CheckType := Value;
 end;
 
-function TVTNode<T>.GetCount: UInt32;
+function TVTNode<T>.GetChildCount: UInt32;
 begin
   if Assigned(VNode) then
     Result := VNode.ChildCount
@@ -228,7 +244,25 @@ end;
 
 function TVTNode<T>.GetIndex: Integer;
 begin
-  Result := VNode.Index;
+  if Assigned(VNode) then
+    Result := VNode.Index
+  else
+    Result := 0;
+end;
+
+function TVTNode<T>.GetItem(AIndex: UInt32): TVTNode<T>;
+var
+  I	 : Integer;
+	VN : PVirtualNode;
+begin
+  Guard.CheckIndex(VNode.ChildCount, AIndex);
+	VN := VNode.FirstChild;
+  for I := 0 to AIndex - 1 do
+  begin
+    Guard.CheckNotNull(VN, 'VN');
+    VN := VN.NextSibling;
+  end;
+	Result := FTree.GetNodeData<TVTNode<T>>(VN);
 end;
 
 function TVTNode<T>.GetLevel: Integer;
@@ -244,11 +278,6 @@ end;
 procedure TVTNode<T>.SetText(const Value: string);
 begin
   FText := Value;
-end;
-
-function TVTNode<T>.GetNodes: IList<TVTNode<T>>;
-begin
-  Result := FNodes.Value;
 end;
 
 function TVTNode<T>.GetVisible: Boolean;
@@ -268,7 +297,22 @@ end;
 
 procedure TVTNode<T>.SetVNode(const Value: PVirtualNode);
 begin
-  FVNode := Value;
+  if Value <> VNode then
+  begin
+    FVNode := Value;
+    if Assigned(FVNode) then
+    begin
+      FVNode.CheckState := FCheckState;
+      FVNode.CheckType  := FCheckType;
+    end;
+  end;
+end;
+{$ENDREGION}
+
+{$REGION 'protected methods'}
+function TVTNode<T>.GetEnumerator: TVTNodeEnumerator<T>;
+begin
+  Result := TVTNodeEnumerator<T>.Create(FTree, Self);
 end;
 {$ENDREGION}
 
@@ -278,13 +322,34 @@ var
   LVTNode : TVTNode<T>;
   LVNode  : PVirtualNode;
 begin
-  if FVNode = nil then // create root node if it does not exist
-    FVNode := FTree.AddChild(nil, Self);
+  if not Assigned(VNode) then // create root node if it does not exist
+  begin
+    VNode := FTree.AddChild(nil, Self);
+  end;
   LVTNode := TVTNode<T>.Create(FTree, AData);
-  Nodes.Add(LVTNode);
+  //Nodes.Add(LVTNode);
   LVNode := FTree.AddChild(VNode, LVTNode);
   LVTNode.VNode := LVNode;
   Result := LVTNode;
+end;
+{$ENDREGION}
+
+{$REGION 'TVTNodeEnumerator<T>'}
+constructor TVTNodeEnumerator<T>.Create(ATree: TCustomVirtualStringTree;
+  AVTNode: TVTNode<T>);
+begin
+  FTree := ATree;
+  FVTNode := AVTNode;
+end;
+
+function TVTNodeEnumerator<T>.GetCurrent: TVTNode<T>;
+begin
+
+end;
+
+function TVTNodeEnumerator<T>.MoveNext: Boolean;
+begin
+
 end;
 {$ENDREGION}
 

@@ -69,9 +69,9 @@ type
     FOIVSTTreeGrid : TzObjectInspector;
 
     procedure FVirtualStringTreeInitNode(
-      Sender : TBaseVirtualTree;
+      Sender            : TBaseVirtualTree;
       ParentNode,
-      Node : PVirtualNode;
+      Node              : PVirtualNode;
       var InitialStates : TVirtualNodeInitStates
     );
 

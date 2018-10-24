@@ -261,7 +261,7 @@ var
 begin
   N := TValueListNode.Create(Self, FData.Items[Node.Index]);
   FNodes.Add(N);
-  if (Parent = nil) and (N.Count > 0) then
+  if (Parent = nil) and (N.ChildCount > 0) then
     InitStates := InitStates + [ivsHasChildren];
   Node.SetData(N);
   inherited DoInitNode(Parent, Node, InitStates);
