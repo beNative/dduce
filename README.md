@@ -20,6 +20,10 @@ In addition some lesser known but excellent open source Delphi components were p
 
 ![Virtualtrees factories](https://github.com/beNative/dduce/blob/master/Wiki/dduce_virtualtreefactories_demo.png)
 
+## TValuelist ##
+
+![TValueList](https://github.com/beNative/dduce/blob/master/Wiki/dduce_valuelist_demo.png)
+
 ## TPropertyInspector ##
 
 This component is based on the work of **Evgeny Balabuyev**. You may obtain a copy of the original code at http://www.torry.net/vcl/packs/lite/extlib.zip.
