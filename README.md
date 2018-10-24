@@ -12,6 +12,10 @@ The sources depend on the following libraries and components:
 
 In addition some lesser known but excellent open source Delphi components were ported and extended to support the latest versions of Delphi.
 
+## Editor module ##
+
+![IEditorView|https://github.com/beNative/dduce/blob/master/Wiki/dduce_editor_demo.png]
+
 ## TPropertyInspector ##
 
 This component is based on the work of **Evgeny Balabuyev**. You may obtain a copy of the original code at http://www.torry.net/vcl/packs/lite/extlib.zip.
