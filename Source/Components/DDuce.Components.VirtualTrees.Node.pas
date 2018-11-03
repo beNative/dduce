@@ -41,23 +41,24 @@ uses
 type
   TVTNode<T> = class;
 
-  TVTNodeEnumerator<T> = record
-  strict private
-    FVTNode : TVTNode<T>;
-    FTree   : TCustomVirtualStringTree;
-  public
-    constructor Create(
-      ATree   : TCustomVirtualStringTree;
-      AVTNode : TVTNode<T>
-    );
-
-    function GetCurrent: TVTNode<T>;
-    function MoveNext: Boolean;
-    property Current: TVTNode<T>
-      read GetCurrent;
-  end;
-
   TVTNode<T> = class
+  public type
+    TVTNodeEnumerator<K:T> = record
+    strict private
+      FVTNode : TVTNode<K>;
+      FTree   : TCustomVirtualStringTree;
+    public
+      constructor Create(
+        ATree   : TCustomVirtualStringTree;
+        AVTNode : TVTNode<K>
+      );
+
+      function GetCurrent: TVTNode<K>;
+      function MoveNext: Boolean;
+      property Current: TVTNode<K>
+        read GetCurrent;
+    end;
+
   private
     FVNode      : PVirtualNode;
     FTree       : TCustomVirtualStringTree;
@@ -335,19 +336,19 @@ end;
 {$ENDREGION}
 
 {$REGION 'TVTNodeEnumerator<T>'}
-constructor TVTNodeEnumerator<T>.Create(ATree: TCustomVirtualStringTree;
-  AVTNode: TVTNode<T>);
+constructor TVTNode<T>.TVTNodeEnumerator<K>.Create(ATree: TCustomVirtualStringTree;
+  AVTNode: TVTNode<K>);
 begin
   FTree := ATree;
   FVTNode := AVTNode;
 end;
 
-function TVTNodeEnumerator<T>.GetCurrent: TVTNode<T>;
+function TVTNode<T>.TVTNodeEnumerator<K>.GetCurrent: TVTNode<K>;
 begin
 
 end;
 
-function TVTNodeEnumerator<T>.MoveNext: Boolean;
+function TVTNode<T>.TVTNodeEnumerator<K>.MoveNext: Boolean;
 begin
 
 end;

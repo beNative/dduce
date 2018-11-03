@@ -63,6 +63,8 @@ type
     lmtNone        = 100  // can be used as a default value
   );
 
+  TLogMessageTypes = set of TLogMessageType;
+
   ILogger = interface;
 
   TLogMessage = packed record
