@@ -2605,7 +2605,6 @@ begin
   begin
     aclActions.State := asNormal;
     V := ActiveView;
-    //B := V.Focused;
     B := V.Editor.Focused;
     actCut.Enabled   := actCut.Visible and B;
     actCopy.Enabled  := actCopy.Visible and B;
@@ -2720,8 +2719,8 @@ begin
 //      if MI.Caption = '-' then
 //        MI.Visible := False;
 //    end;
+    actHighlighterMenu.Enabled := True;
   end;
-  actHighlighterMenu.Enabled := True;
 end;
 
 procedure TdmEditorManager.UpdateEncodingActions;

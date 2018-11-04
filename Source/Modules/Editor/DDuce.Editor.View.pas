@@ -968,7 +968,7 @@ end;
 
 function TEditorView.GetActions: IEditorActions;
 begin
-  Result := Owner as IEditorActions;
+  Result := Manager as IEditorActions;
 end;
 
 function TEditorView.GetCaretXY: TPoint;
@@ -1131,7 +1131,10 @@ end;
 
 function TEditorView.GetManager: IEditorManager;
 begin
-  Result := Owner as IEditorManager;
+  if Assigned(Owner) and Supports(Owner, IEditorManager) then
+    Result := Owner as IEditorManager
+  else
+    Result := nil;
 end;
 
 function TEditorView.GetVisible: Boolean;
@@ -1549,21 +1552,15 @@ begin
 //  begin
 //    Activate;
 //  end;
-
   if Assigned(Actions) then
   begin
-    Actions.UpdateActions;
-    Logger.Watch(Self.Name, TValue.From(FEditor.ComponentState));
-
+    if FUpdate then
+    begin
+      Actions.UpdateActions; // TODO: Abstract error on releasing object if this is placed outside FUpdate condition.
+      ApplySettings;
+      FUpdate := False;
+    end;
   end;
-
-
-    // TODO: Abstract error on releasing object
-//  if FUpdate then
-//  begin
-//    ApplySettings;
-//    FUpdate := False;
-//  end;
 end;
 
 {$ENDREGION}
