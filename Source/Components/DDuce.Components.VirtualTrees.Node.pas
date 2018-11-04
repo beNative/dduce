@@ -54,7 +54,9 @@ type
       );
 
       function GetCurrent: TVTNode<K>;
+
       function MoveNext: Boolean;
+
       property Current: TVTNode<K>
         read GetCurrent;
     end;
@@ -328,7 +330,6 @@ begin
     VNode := FTree.AddChild(nil, Self);
   end;
   LVTNode := TVTNode<T>.Create(FTree, AData);
-  //Nodes.Add(LVTNode);
   LVNode := FTree.AddChild(VNode, LVTNode);
   LVTNode.VNode := LVNode;
   Result := LVTNode;
@@ -339,7 +340,7 @@ end;
 constructor TVTNode<T>.TVTNodeEnumerator<K>.Create(ATree: TCustomVirtualStringTree;
   AVTNode: TVTNode<K>);
 begin
-  FTree := ATree;
+  FTree   := ATree;
   FVTNode := AVTNode;
 end;
 
@@ -350,7 +351,7 @@ end;
 
 function TVTNode<T>.TVTNodeEnumerator<K>.MoveNext: Boolean;
 begin
-
+  Result := False;
 end;
 {$ENDREGION}
 

@@ -1537,26 +1537,27 @@ begin
 end;
 
 procedure TEditorView.UpdateActions;
-//var
-//  B: Boolean;
+var
+  B: Boolean;
 begin
   inherited UpdateActions;
-//  B := Focused;
-//  if not B and Assigned(Parent) then
-//  begin
-//    if Parent.Focused then
-//      B := True;
-//  end;
-//
-//  if B then
-//  begin
-//    Activate;
-//  end;
+  B := Focused;
+  if not B and Assigned(Parent) then
+  begin
+    if Parent.Focused then
+      B := True;
+  end;
+
+  if B then
+  begin
+    Activate;
+  end;
+  Actions.UpdateActions; // TODO: Abstract error on releasing object if this is placed outside FUpdate condition.
+
   if Assigned(Actions) then
   begin
     if FUpdate then
     begin
-      Actions.UpdateActions; // TODO: Abstract error on releasing object if this is placed outside FUpdate condition.
       ApplySettings;
       FUpdate := False;
     end;
