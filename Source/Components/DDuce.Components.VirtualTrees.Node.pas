@@ -47,7 +47,6 @@ type
     TVTNodeEnumerator<K:T> = record
     strict private
       FCurrent : TVTNode<K>;
-      FTree    : TCustomVirtualStringTree;
     public
       constructor Create(AVTNode : TVTNode<K>);
 
