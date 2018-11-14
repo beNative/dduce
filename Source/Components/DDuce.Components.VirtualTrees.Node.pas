@@ -27,8 +27,9 @@ uses
 
 {
   Documentation
-    TVTNode is a type designed to be used as the data where each treenode in a
-    treeview is pointing to.
+    TVTNode is a type designed to be used as the data structure where each
+    treenode in a treeview is pointing to.
+
     For any treenode (of type PVirtualNode) this can be obtained by the following
     method defined in TBaseVirtualStringTree:
           function GetNodeData<T>(pNode: PVirtualNode): T;
@@ -45,13 +46,10 @@ type
   public type
     TVTNodeEnumerator<K:T> = record
     strict private
-      FVTNode : TVTNode<K>;
-      FTree   : TCustomVirtualStringTree;
+      FCurrent : TVTNode<K>;
+      FTree    : TCustomVirtualStringTree;
     public
-      constructor Create(
-        ATree   : TCustomVirtualStringTree;
-        AVTNode : TVTNode<K>
-      );
+      constructor Create(AVTNode : TVTNode<K>);
 
       function GetCurrent: TVTNode<K>;
 
@@ -95,28 +93,32 @@ type
     procedure SetText(const Value: string); virtual;
     {$ENDREGION}
 
-    function GetEnumerator : TVTNodeEnumerator<T>;
-
   public
     constructor Create(
-      ATree       : TCustomVirtualStringTree;
-      const AData : T;
-      const AText : string = ''
+      ATree        : TCustomVirtualStringTree;
+      const AData  : T;
+      AParentVNode : PVirtualNode = nil;
+      const AText  : string = ''
     ); overload; virtual;
     constructor Create(
-      ATree       : TCustomVirtualStringTree;
-      const AText : string = ''
+      ATree        : TCustomVirtualStringTree;
+      AParentVNode : PVirtualNode = nil;
+      const AText  : string = ''
     ); overload; virtual;
     procedure BeforeDestruction; override;
 
+    function GetEnumerator : TVTNodeEnumerator<T>;
+
     function Add(const AData: T): TVTNode<T>;
 
+    { Points to the corresponding node of the virtual treeview. }
     property VNode: PVirtualNode
       read GetVNode write SetVNode;
 
     property ChildCount: UInt32
       read GetChildCount;
 
+    { User defined data that is associated with the current node. }
     property Data: T
       read GetData write SetData;
 
@@ -155,18 +157,23 @@ uses
 
 {$REGION 'construction and destruction'}
 constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree; const AData: T;
-  const AText: string);
+  AParentVNode: PVirtualNode; const AText: string);
 begin
-  FTree  := ATree;
-  FData  := AData;
-  FText  := AText;
+  FTree := ATree;
+  FData := AData;
+  FText := AText;
+  if not Assigned(AParentVNode) then // create rootnode
+    FVNode := FTree.AddChild(nil, Self);
 end;
 
-constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree; const AText: string);
+constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree;
+AParentVNode: PVirtualNode; const AText: string);
 begin
-  FTree  := ATree;
-  FData  := Default(T);
-  FText  := AText;
+  FTree := ATree;
+  FData := Default(T);
+  FText := AText;
+  if not Assigned(AParentVNode) then // create rootnode
+    FVNode := FTree.AddChild(nil, Self);
 end;
 
 procedure TVTNode<T>.BeforeDestruction;
@@ -315,7 +322,9 @@ end;
 {$REGION 'protected methods'}
 function TVTNode<T>.GetEnumerator: TVTNodeEnumerator<T>;
 begin
-  Result := TVTNodeEnumerator<T>.Create(FTree, Self);
+  Result := TVTNodeEnumerator<T>.Create(
+    FTree.GetNodeData<TVTNode<T>>(VNode.FirstChild)
+  );
 end;
 {$ENDREGION}
 
@@ -329,7 +338,7 @@ begin
   begin
     VNode := FTree.AddChild(nil, Self);
   end;
-  LVTNode := TVTNode<T>.Create(FTree, AData);
+  LVTNode := TVTNode<T>.Create(FTree, AData, VNode);
   LVNode := FTree.AddChild(VNode, LVTNode);
   LVTNode.VNode := LVNode;
   Result := LVTNode;
@@ -337,21 +346,20 @@ end;
 {$ENDREGION}
 
 {$REGION 'TVTNodeEnumerator<T>'}
-constructor TVTNode<T>.TVTNodeEnumerator<K>.Create(ATree: TCustomVirtualStringTree;
-  AVTNode: TVTNode<K>);
+constructor TVTNode<T>.TVTNodeEnumerator<K>.Create(AVTNode: TVTNode<K>);
 begin
-  FTree   := ATree;
-  FVTNode := AVTNode;
+  FCurrent := AVTNode;
 end;
 
 function TVTNode<T>.TVTNodeEnumerator<K>.GetCurrent: TVTNode<K>;
 begin
-
+  Result := FCurrent;
 end;
 
 function TVTNode<T>.TVTNodeEnumerator<K>.MoveNext: Boolean;
 begin
-  Result := False;
+  FCurrent := FCurrent.VNode.NextSibling;
+  Result := Assigned(FCurrent);
 end;
 {$ENDREGION}
 
