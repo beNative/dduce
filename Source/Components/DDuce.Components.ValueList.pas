@@ -37,8 +37,7 @@ type
 type
   TValueList = class(TCustomVirtualStringTree)
   private
-    FData  : IDynamicRecord;
-    FNodes : IList<TValueListNode>;
+    FData : IDynamicRecord;
 
   protected
     {$REGION 'property access methods'}
@@ -55,13 +54,9 @@ type
     {$ENDREGION}
 
     procedure Initialize;
+    procedure BuildTree;
 
-    procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
-    procedure DoInitNode(
-      Parent         : PVirtualNode;
-      Node           : PVirtualNode;
-      var InitStates : TVirtualNodeInitStates
-    ); override;
+    procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;  
     procedure DoBeforeCellPaint(
       Canvas          : TCanvas;
       Node            : PVirtualNode;
@@ -81,6 +76,7 @@ type
       CellRect      : TRect;
       DrawFormat    : Cardinal
     ); override;
+    procedure DoFreeNode(Node: PVirtualNode); override;
 
   public
     procedure AfterConstruction; override;
@@ -116,15 +112,13 @@ uses
 procedure TValueList.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FNodes := TCollections.CreateObjectList<TValueListNode>;
   Initialize;
 end;
 
 destructor TValueList.Destroy;
 begin
-  inherited Destroy;
-  FNodes := nil;
-  FData  := nil;
+  FData := nil;
+  inherited Destroy;  
 end;
 {$ENDREGION}
 
@@ -142,7 +136,7 @@ begin
     if Assigned(FData) then
     begin
       NodeDataSize  := SizeOf(TValueListNode);
-      RootNodeCount := FData.Count;
+      BuildTree;
       Header.AutoFitColumns;
     end;
   end;
@@ -235,6 +229,15 @@ begin
   );
 end;
 
+procedure TValueList.DoFreeNode(Node: PVirtualNode);
+var
+  N : TValueListNode;
+begin
+  N := GetNodeData<TValueListNode>(Node);
+  N.Free;
+  inherited;
+end;
+
 procedure TValueList.DoGetText(var pEventArgs: TVSTGetCellTextEventArgs);
 var
   N : TValueListNode;
@@ -252,19 +255,6 @@ begin
       pEventArgs.CellText := N.Data.Value.ToString;
     end;
   end;
-end;
-
-procedure TValueList.DoInitNode(Parent, Node: PVirtualNode;
-  var InitStates: TVirtualNodeInitStates);
-var
-  N  : TValueListNode;
-begin
-  N := TValueListNode.Create(Self, FData.Items[Node.Index]);
-  FNodes.Add(N);
-  if (Parent = nil) and (N.ChildCount > 0) then
-    InitStates := InitStates + [ivsHasChildren];
-  Node.SetData(N);
-  inherited DoInitNode(Parent, Node, InitStates);
 end;
 
 { Gets called after text has been edited. }
@@ -311,10 +301,20 @@ begin
 *)
   inherited DoTextDrawing(PaintInfo, Text, CellRect, DrawFormat);
 end;
-
 {$ENDREGION}
 
 {$REGION 'protected methods'}
+procedure TValueList.BuildTree;
+var
+  LField : IDynamicField;
+begin
+  for LField in FData do
+  begin
+    TValueListNode.Create(Self, LField);  
+  end;
+  FullExpand;
+end;
+
 procedure TValueList.Initialize;
 begin
   Header.Options := [

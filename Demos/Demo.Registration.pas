@@ -23,6 +23,9 @@ procedure RegisterDemos;
 implementation
 
 uses
+  DDuce.Logger.Channels.WinIPC,
+  DDuce.Logger,
+
   Demo.DDuce.ScopedReference,
   Demo.DDuce.XMLTree,
   Demo.DDuce.PropertyInspector,
@@ -59,6 +62,9 @@ begin
   //DemoManager.Register(TfrmXMLTree, 'XMLTree');
 end;
 {$ENDREGION}
+
+initialization
+  Logger.Channels.Add(TWinIPCChannel.Create);
 
 end.
 

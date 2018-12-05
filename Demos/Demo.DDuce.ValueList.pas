@@ -53,15 +53,20 @@ uses
 
 {$REGION 'construction and destruction'}
 procedure TfrmValueListDemo.AfterConstruction;
+var
+  LDR : IDynamicRecord;
 begin
   inherited AfterConstruction;
-  Logger.Channels.Add(TWinIPCChannel.Create);
   FValueList            := TValueList.Create(Self);
   FValueList.Parent     := pnlRight;
   FValueList.Align      := alClient;
   FValueList.ShowHeader := False;
   FValueList.ShowHint   := True;
-  FValueList.Data       := DynamicRecord.Create(Self);
+  LDR := DynamicRecord.Create(Self.Font);
+  Logger.SendObject(Self.Font);
+  FValueList.Data       := LDR;
+  Logger.SendText(LDR.ToString);
+  Logger.SendText(FValueList.Data.ToString);
   FObjectInspector      := TzObjectInspectorFactory.Create(
     Self,
     pnlLeft,
