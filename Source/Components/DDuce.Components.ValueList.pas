@@ -38,6 +38,8 @@ type
   TValueList = class(TCustomVirtualStringTree)
   private
     FData : IDynamicRecord;
+    function GetMultiSelect: Boolean;
+    procedure SetMultiSelect(const Value: Boolean);
 
   protected
     {$REGION 'property access methods'}
@@ -95,6 +97,9 @@ type
 
     property Editable: Boolean
       read GetEditable write SetEditable;
+
+    property MultiSelect: Boolean
+      read GetMultiSelect write SetMultiSelect;
 
     property NameColumn: TVirtualTreeColumn
       read GetNameColumn write SetNameColumn;
@@ -155,6 +160,24 @@ begin
       TreeOptions.MiscOptions := TreeOptions.MiscOptions + [toEditable]
     else
       TreeOptions.MiscOptions := TreeOptions.MiscOptions - [toEditable];
+  end;
+end;
+
+function TValueList.GetMultiSelect: Boolean;
+begin
+  Result := toMultiSelect in TreeOptions.SelectionOptions;
+end;
+
+procedure TValueList.SetMultiSelect(const Value: Boolean);
+begin
+  if Value <> MultiSelect then
+  begin
+    if Value then
+      TreeOptions.SelectionOptions := 
+        TreeOptions.SelectionOptions + [toMultiSelect]
+    else
+      TreeOptions.SelectionOptions := 
+        TreeOptions.SelectionOptions - [toMultiSelect];
   end;
 end;
 
