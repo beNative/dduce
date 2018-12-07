@@ -38,8 +38,6 @@ type
   TValueList = class(TCustomVirtualStringTree)
   private
     FData : IDynamicRecord;
-    function GetMultiSelect: Boolean;
-    procedure SetMultiSelect(const Value: Boolean);
 
   protected
     {$REGION 'property access methods'}
@@ -53,6 +51,10 @@ type
     procedure SetShowHeader(const Value: Boolean);
     function GetData: IDynamicRecord;
     procedure SetData(const Value: IDynamicRecord);
+    function GetMultiSelect: Boolean;
+    procedure SetMultiSelect(const Value: Boolean);
+    function GetShowGutter: Boolean;
+    procedure SetShowGutter(const Value: Boolean);
     {$ENDREGION}
 
     procedure Initialize;
@@ -88,12 +90,88 @@ type
       read GetData write SetData;
 
   published
+    property Align;
+    property Alignment;
+    property Anchors;
+
+    property Background;
+    property BackgroundOffsetX;
+    property BackgroundOffsetY;
+
+    property BiDiMode;
+    property BevelEdges;
+    property BevelInner;
+    property BevelOuter;
+    property BevelKind;
+    property BevelWidth;
+    property BorderStyle;
+    property BottomSpace;
+    property ButtonFillMode;
+    property ButtonStyle;
+    property BorderWidth;
+    property ChangeDelay;
+    property ClipboardFormats;
+    property Color;
+    property Colors;
+
+    property Constraints;
+    property Ctl3D;
+    property CustomCheckImages;
+    property DefaultNodeHeight;
+    property DefaultPasteMode;
+    property DragCursor;
+    property DragHeight;
+    property DragKind;
+    property DragImageKind;
+    property DragMode;
+    property DragOperations;
+    property DragType;
+    property DragWidth;
+    property DrawSelectionMode;
+    property EditDelay;
+    property Enabled;
     property Font;
 
+    property HintMode;
+    property HotCursor;
+    property Images;
+    property IncrementalSearch;
+    property IncrementalSearchDirection;
+    property IncrementalSearchStart;
+    property IncrementalSearchTimeout;
+    property Indent;
+    property LineMode;
+    property LineStyle;
+    property Margin;
+
+    property ParentBiDiMode;
+    property ParentColor default False;
+    property ParentCtl3D;
+    property ParentFont;
+    property ParentShowHint;
+    property PopupMenu;
+
+    property ScrollBarOptions;
+    property SelectionBlendFactor;
+    property SelectionCurveRadius;
+    property ShowHint;
+
     property TreeOptions;
+    property Touch;
+
+    property StateImages;
+    property StyleElements;
+    property TabOrder;
+    property TabStop default True;
+    property TextMargin;
+
+    property Visible;
+    property WantTabs;
 
     property ShowHeader: Boolean
       read GetShowHeader write SetShowHeader;
+
+    property ShowGutter: Boolean read GetShowGutter write SetShowGutter;
 
     property Editable: Boolean
       read GetEditable write SetEditable;
@@ -111,7 +189,13 @@ type
 implementation
 
 uses
-  System.SysUtils;
+  System.SysUtils,
+  Vcl.Forms, Vcl.Controls;
+
+const
+  GUTTER_COLUMN = 0;
+  NAME_COLUMN   = 1;
+  VALUE_COLUMN  = 2;
 
 {$REGION 'construction and destruction'}
 procedure TValueList.AfterConstruction;
@@ -183,22 +267,40 @@ end;
 
 function TValueList.GetNameColumn: TVirtualTreeColumn;
 begin
-  Result := Header.Columns.Items[0];
+  Result := Header.Columns.Items[NAME_COLUMN];
 end;
 
 procedure TValueList.SetNameColumn(const Value: TVirtualTreeColumn);
 begin
-  Header.Columns.Items[0].Assign(Value);
+  Header.Columns.Items[NAME_COLUMN].Assign(Value);
 end;
 
 function TValueList.GetValueColumn: TVirtualTreeColumn;
 begin
-  Result := Header.Columns.Items[1];
+  Result := Header.Columns.Items[VALUE_COLUMN];
 end;
 
 procedure TValueList.SetValueColumn(const Value: TVirtualTreeColumn);
 begin
-  Header.Columns.Items[1].Assign(Value);
+  Header.Columns.Items[VALUE_COLUMN].Assign(Value);
+end;
+
+function TValueList.GetShowGutter: Boolean;
+begin
+  Result := coVisible in Header.Columns.Items[GUTTER_COLUMN].Options;
+end;
+
+procedure TValueList.SetShowGutter(const Value: Boolean);
+begin
+  if Value <> ShowGutter then
+  begin
+    if Value then
+      Header.Columns.Items[GUTTER_COLUMN].Options :=
+        Header.Columns.Items[GUTTER_COLUMN].Options + [coVisible]
+    else
+      Header.Columns.Items[GUTTER_COLUMN].Options :=
+        Header.Columns.Items[GUTTER_COLUMN].Options - [coVisible];
+  end;
 end;
 
 function TValueList.GetShowHeader: Boolean;
@@ -222,31 +324,31 @@ end;
 procedure TValueList.DoBeforeCellPaint(Canvas: TCanvas; Node: PVirtualNode;
   Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect;
   var ContentRect: TRect);
-var
-  L : Integer;
+//var
+//  L : Integer;
 begin
-  L := GetNodeLevel(Node);
-  ContentRect.Offset(2, 0);
-  if (Column = 0) and (CellPaintMode = cpmPaint) then
-  begin
-    Canvas.Brush.Color := clCream;
-    if L = 0 then
-    begin
-      Canvas.Pen.Color := clGray;
-      Canvas.MoveTo(CellRect.Left + 12, CellRect.Top);
-      Canvas.LineTo(CellRect.Left + 12, CellRect.Top + CellRect.Height);
-      Canvas.FillRect(Rect(0, 0, 12, CellRect.Height));
-    end
-    else
-    begin
-      Canvas.FillRect(Rect(0, 0, 20, CellRect.Height));
-      Canvas.Pen.Color := clGray;
-      Canvas.MoveTo(CellRect.Left + 12, CellRect.Top);
-      Canvas.LineTo(CellRect.Left + 20, CellRect.Top);
-      Canvas.LineTo(CellRect.Left + 20, CellRect.Top + CellRect.Height - 1);
-      Canvas.LineTo(CellRect.Left + 12, CellRect.Top + CellRect.Height - 1);
-    end;
-  end;
+//  L := GetNodeLevel(Node);
+//  ContentRect.Offset(2, 0);
+//  if (Column = NAME_COLUMN) and (CellPaintMode = cpmPaint) then
+//  begin
+//    Canvas.Brush.Color := clCream;
+//    if L = 0 then
+//    begin
+//      Canvas.Pen.Color := clGray;
+//      Canvas.MoveTo(CellRect.Left + 12, CellRect.Top);
+//      Canvas.LineTo(CellRect.Left + 12, CellRect.Top + CellRect.Height);
+//      Canvas.FillRect(Rect(0, 0, 12, CellRect.Height));
+//    end
+//    else
+//    begin
+//      Canvas.FillRect(Rect(0, 0, 20, CellRect.Height));
+//      Canvas.Pen.Color := clGray;
+//      Canvas.MoveTo(CellRect.Left + 12, CellRect.Top);
+//      Canvas.LineTo(CellRect.Left + 20, CellRect.Top);
+//      Canvas.LineTo(CellRect.Left + 20, CellRect.Top + CellRect.Height - 1);
+//      Canvas.LineTo(CellRect.Left + 12, CellRect.Top + CellRect.Height - 1);
+//    end;
+//  end;
   inherited DoBeforeCellPaint(
     Canvas, Node, Column, CellPaintMode, CellRect, ContentRect
   );
@@ -258,7 +360,7 @@ var
 begin
   N := GetNodeData<TValueListNode>(Node);
   N.Free;
-  inherited;
+  inherited DoFreeNode(Node);
 end;
 
 procedure TValueList.DoGetText(var pEventArgs: TVSTGetCellTextEventArgs);
@@ -269,11 +371,11 @@ begin
   N := GetNodeData<TValueListNode>(pEventArgs.Node);
   if Assigned(N) then
   begin
-    if pEventArgs.Column = 0 then
+    if pEventArgs.Column = NAME_COLUMN then
     begin
       pEventArgs.CellText := N.Data.Name
     end
-    else if pEventArgs.Column = 1 then
+    else if pEventArgs.Column = VALUE_COLUMN then
     begin
       pEventArgs.CellText := N.Data.Value.ToString;
     end;
@@ -288,7 +390,10 @@ var
   N : TValueListNode;
 begin
   N := GetNodeData<TValueListNode>(Node);
-  N.Data.Value := Text;
+  if Column = NAME_COLUMN then
+    N.Data.Name := Text
+  else if Column = VALUE_COLUMN then
+    N.Data.Value := Text;
   inherited DoNewText(Node, Column, Text);
 end;
 
@@ -357,21 +462,33 @@ begin
     toAutoTristateTracking, toAutoDeleteMovedNodes, toAutoChangeScale,
     toDisableAutoscrollOnEdit, toAutoBidiColumnOrdering
   ];
+  // toGridExtensions causes the inline editor to have the full size of the cell
   TreeOptions.SelectionOptions := [toExtendedFocus, toFullRowSelect];
   TreeOptions.MiscOptions := [
     toCheckSupport, toInitOnSave, toWheelPanning, toVariableNodeHeight,
-    toEditable, toEditOnDblClick
+    toEditable, toEditOnDblClick, toGridExtensions
   ];
   TreeOptions.EditOptions := toVerticalEdit;
+  with Header.Columns.Add do
+  begin
+    Color    := clCream;
+    MaxWidth := 12;
+    MinWidth := 12;
+    Options  := [coFixed, coAllowClick, coEnabled, coParentBidiMode, coVisible];
+    Position := GUTTER_COLUMN;
+    Width    := 12;
+    Text     := '';
+  end;
   with Header.Columns.Add do
   begin
     Color    := clWhite;
     MaxWidth := 400;
     MinWidth := 80;
+    // needs to be coFixed to allow column resizing when no header is shown.
     Options  := [coFixed, coAllowClick, coEnabled, coParentBidiMode, coResizable,
-      coVisible, coSmartResize];
-    Position := 0;
-    Width    := 200;
+      coVisible, coAutoSpring, coSmartResize, coAllowFocus, coEditable];
+    Position := NAME_COLUMN;
+    Width    := 100;
     Text     := 'Name';
   end;
   with Header.Columns.Add do
@@ -379,15 +496,15 @@ begin
     MaxWidth    := 800;
     MinWidth    := 50;
     Options     := [coAllowClick, coEnabled, coParentBidiMode, coResizable,
-      coVisible, coAutoSpring, coSmartResize, coAllowFocus, coEditable];
-    Position    := 1;
+      coVisible, coAutoSpring, {coSmartResize,} coAllowFocus, coEditable];
+    Position    := VALUE_COLUMN;
     Width       := 100;
     Text        := 'Value';
     EditOptions := toVerticalEdit;
   end;
-  Header.MainColumn    := 0;
-  Header.AutoSizeIndex := 1;
-  Indent               := 8; // pixels between node levels
+  Header.MainColumn    := GUTTER_COLUMN;
+  Header.AutoSizeIndex := VALUE_COLUMN;
+  Indent               := 0; // pixels between node levels
   Margin               := 0;
   LineMode             := lmBands;
   LineStyle            := lsSolid;
@@ -396,7 +513,13 @@ begin
 
   Colors.SelectionRectangleBlendColor := clGray;
   Colors.SelectionTextColor           := clBlack;
-  Colors.GridLineColor                := clSilver;
+  Colors.GridLineColor                := clBlack;
+  Colors.BorderColor                  := clBlack;
+
+  BorderStyle := bsNone;
+  BorderWidth := 1;
+  BevelInner  := bvNone;
+  BevelOuter  := bvNone;
 end;
 {$ENDREGION}
 

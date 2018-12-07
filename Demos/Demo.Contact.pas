@@ -16,7 +16,7 @@
 
 unit Demo.Contact;
 
-{ Sample model object that is typically a database entity object }
+{ Sample model object that is typically a database entity object. }
 
 interface
 

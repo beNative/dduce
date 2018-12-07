@@ -58,12 +58,13 @@ var
   LDR : IDynamicRecord;
 begin
   inherited AfterConstruction;
-  FValueList             := TValueList.Create(Self);
-  FValueList.Parent      := pnlRight;
-  FValueList.Align       := alClient;
-  FValueList.ShowHeader  := False;
-  FValueList.ShowHint    := True;
-  FValueList.MultiSelect := True;
+  FValueList                  := TValueList.Create(Self);
+  FValueList.Parent           := pnlRight;
+  FValueList.Align            := alClient;
+  FValueList.ShowHeader       := False;
+  FValueList.ShowHint         := True;
+  FValueList.MultiSelect      := True;
+  FValueList.AlignWithMargins := True;
   LDR := DynamicRecord.Create(Self.Font);
   Logger.SendObject(Self.Font);
   FValueList.Data       := LDR;
