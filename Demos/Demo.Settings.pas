@@ -34,7 +34,8 @@ type
     procedure WriteString(
       const ASection : string;
       const AIdent   : string;
-      const AValue   : string);
+      const AValue   : string
+    );
     function ReadInteger(
       const ASection : string;
       const AIdent   : string;
@@ -108,12 +109,14 @@ type
 var
   FSettings: ISettings;
 
+{$REGION 'interfaced routines'}
 function Settings: ISettings;
 begin
   if not Assigned(FSettings) then
     FSettings := TSettings.Create;
   Result := FSettings;
 end;
+{$ENDREGION}
 
 {$REGION 'construction and destruction'}
 procedure TSettings.AfterConstruction;

@@ -21,6 +21,7 @@ unit Demo.DDuce.VTNode;
 
 interface
 
+{$REGION 'Documentation'}
 { PVirtualNode = ^TVirtualNode
   TVirtualNode = record
   ...
@@ -28,8 +29,8 @@ interface
   ...
   end;
 
-  TVTNode<T> is a parameterizable node class intended to be used as the data
-  member of each virtual node in the treeviewer.
+  TVTNode<T> is a parameterizable node class intended to be used as the Data
+  member of each virtual node in the virtual treeview.
   T is the user defined type of which each TVTNode instance has a reference to.
 
   TVTNode<T> has following members that allow us to build a treeview from code:
@@ -39,18 +40,19 @@ interface
                          // the data.
     Nodes: IList<TVTNode<T>>; // list of child nodes for the current node
 
-  At lease following event handlers need to be implemented by the treeview.
-  The user defined data is accessed from the event handlers using the
-  GetNodeData member of TVirtualStringTree and the Sender and Node parameters
-  from the tree's event handler:
-      VTNode := Sender.GetNodeData<TVTNode<TMyData>>(Node);
-
+  At least following two event handlers need to be implemented by the treeview.
     OnGetText
       Assign CellText using the user defined data.
 
     OnFreeNode
       Free the TVTNode object.
+
+  The user defined data is accessed from the event handlers using the
+  GetNodeData member of TVirtualStringTree and the Sender and Node parameters
+  from the tree's event handler:
+      VTNode := Sender.GetNodeData<TVTNode<TMyData>>(Node);
 }
+{$ENDREGION}
 
 uses
   Winapi.Windows, Winapi.Messages,
@@ -68,6 +70,7 @@ type
   TMyData = class
   private
     FText : string;
+
   public
     constructor Create(const AText: string);
 
@@ -93,7 +96,6 @@ type
     btnBuildTree       : TButton;
     btnFullExpand      : TButton;
     btnFullCollapse    : TButton;
-    btn4               : TButton;
     {$ENDREGION}
 
     procedure actDeleteNodeExecute(Sender: TObject);
@@ -140,6 +142,13 @@ implementation
 uses
   DDuce.Factories.VirtualTrees, DDuce.Factories.zObjInspector,
   DDuce.Logger, DDuce.Logger.Interfaces;
+
+{$REGION 'TMyData'}
+constructor TMyData.Create(const AText: string);
+begin
+  FText := AText;
+end;
+{$ENDREGION}
 
 {$REGION 'construction and destruction'}
 procedure TfrmVTNode.AfterConstruction;
@@ -196,7 +205,7 @@ begin
   LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
   if Assigned(LVTNode) then
   begin
-    LVTNode.Text := 'New text';
+    LVTNode.Data.Text := 'New text';
     FTree.InvalidateNode(LVTNode.VNode);
   end;
 end;
@@ -257,25 +266,6 @@ begin
       LVTNode.Add(TMyData.Create(S));
     end;
   end;
-  //FTree.FullExpand;
-
-//  LData := TMyData.Create('Child 1');
-//  FVTRoot.Add(LData);
-//  LData := TMyData.Create('Child 2');
-//  FVTRoot.Add(LData);
-//  LData := TMyData.Create('Child 3');
-//  LVTNode := FVTRoot.Add(LData);
-//  LVTNode.CheckType := ctCheckBox;
-//  LData := TMyData.Create('Child 4');
-//  LVTNode := FVTRoot.Add(LData);
-//  LVTNode.Add(TMyData.Create('Child 4.1'));
-end;
-{$ENDREGION}
-
-{$REGION 'TMyData'}
-constructor TMyData.Create(const AText: string);
-begin
-  FText := AText;
 end;
 {$ENDREGION}
 

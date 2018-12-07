@@ -77,14 +77,6 @@ object frmVTNode: TfrmVTNode
       Action = actFullCollapse
       TabOrder = 5
     end
-    object btn4: TButton
-      Left = 6
-      Top = 194
-      Width = 139
-      Height = 25
-      Caption = 'btn1'
-      TabOrder = 6
-    end
   end
   object pnlObjectInspector: TPanel
     Left = 0

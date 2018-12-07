@@ -16,6 +16,8 @@
 
 unit Demo.DDuce.PropertyInspector;
 
+{ Form demonstrating the TPropertyInspector component. }
+
 interface
 
 uses

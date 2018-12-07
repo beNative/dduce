@@ -24,10 +24,6 @@ object frmVirtualTrees: TfrmVirtualTrees
     object tsSettings: TTabSheet
       Caption = 'Options'
       ImageIndex = 6
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlOptions: TGridPanel
         Left = 0
         Top = 0
@@ -37,13 +33,13 @@ object frmVirtualTrees: TfrmVirtualTrees
         BevelOuter = bvNone
         ColumnCollection = <
           item
-            Value = 33.333333333333330000
+            Value = 33.333333333333340000
           end
           item
-            Value = 33.333333333333330000
+            Value = 33.333333333333340000
           end
           item
-            Value = 33.333333333333330000
+            Value = 33.333333333333340000
           end>
         ControlCollection = <
           item

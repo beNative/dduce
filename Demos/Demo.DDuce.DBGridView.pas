@@ -16,7 +16,7 @@
 
 unit Demo.DDuce.DBGridView;
 
-{ Unit demonstrating the TDBGridView component. }
+{ Form demonstrating the TDBGridView component. }
 
 interface
 

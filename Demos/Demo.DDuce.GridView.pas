@@ -16,6 +16,8 @@
 
 unit Demo.DDuce.GridView;
 
+{ Form demonstrating the TGridView component. }
+
 interface
 
 uses

@@ -16,6 +16,8 @@
 
 unit Demo.DDuce.VirtualTrees;
 
+{ Form demonstrating the factories for creating virtual treeviews. }
+
 interface
 
 uses

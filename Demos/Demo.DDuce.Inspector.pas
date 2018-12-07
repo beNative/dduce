@@ -16,6 +16,8 @@
 
 unit Demo.DDuce.Inspector;
 
+{ Form demonstrating the TInspector component. }
+
 interface
 
 uses

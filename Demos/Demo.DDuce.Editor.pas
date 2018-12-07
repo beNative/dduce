@@ -16,6 +16,8 @@
 
 unit Demo.DDuce.Editor;
 
+{ Form demonstrating the IEditorView module. }
+
 interface
 
 uses

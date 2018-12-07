@@ -18,6 +18,8 @@ unit Demo.DDuce.ValueList;
 
 interface
 
+{ Form demonstrating the TValueList component. }
+
 uses
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, System.TypInfo,
