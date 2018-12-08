@@ -519,8 +519,13 @@ type
     procedure SetName(const AValue: string);
     function GetValue: TValue;
     procedure SetValue(const AValue: TValue);
+    procedure SetIndex(Value: Integer);
+    function GetIndex: Integer;
 
     function ToString: string;
+
+    property Index: Integer
+      read GetIndex write SetIndex;
 
     property Name: string
       read GetName write SetName;
@@ -696,6 +701,7 @@ type
     procedure SetName(const AValue: string);
     function GetValue: TValue;
     procedure SetValue(const AValue: TValue);
+    function GetIndex: Integer;
 
     { IInterface }
     function QueryInterface(const IID: TGUID; out Obj): HResult; stdcall;
@@ -2126,6 +2132,11 @@ end;
 
 {$REGION 'TDynamicField'}
 {$REGION 'property access methods'}
+function TDynamicField.GetIndex: Integer;
+begin
+  Result := inherited Index;
+end;
+
 function TDynamicField.GetName: string;
 begin
   Result := FName;

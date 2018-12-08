@@ -55,12 +55,13 @@ type
     procedure SetMultiSelect(const Value: Boolean);
     function GetShowGutter: Boolean;
     procedure SetShowGutter(const Value: Boolean);
+    function GetFocusedField: IDynamicField;
     {$ENDREGION}
 
     procedure Initialize;
     procedure BuildTree;
 
-    procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;  
+    procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
     procedure DoBeforeCellPaint(
       Canvas          : TCanvas;
       Node            : PVirtualNode;
@@ -85,6 +86,8 @@ type
   public
     procedure AfterConstruction; override;
     destructor Destroy; override;
+
+    procedure Repaint; override;
 
     property Data: IDynamicRecord
       read GetData write SetData;
@@ -144,6 +147,9 @@ type
     property LineStyle;
     property Margin;
 
+    property OnEnter;
+    property OnExit;
+
     property ParentBiDiMode;
     property ParentColor default False;
     property ParentCtl3D;
@@ -171,10 +177,14 @@ type
     property ShowHeader: Boolean
       read GetShowHeader write SetShowHeader;
 
-    property ShowGutter: Boolean read GetShowGutter write SetShowGutter;
+    property ShowGutter: Boolean
+      read GetShowGutter write SetShowGutter;
 
     property Editable: Boolean
       read GetEditable write SetEditable;
+
+    property FocusedField: IDynamicField
+      read GetFocusedField;
 
     property MultiSelect: Boolean
       read GetMultiSelect write SetMultiSelect;
@@ -207,7 +217,7 @@ end;
 destructor TValueList.Destroy;
 begin
   FData := nil;
-  inherited Destroy;  
+  inherited Destroy;
 end;
 {$ENDREGION}
 
@@ -257,10 +267,10 @@ begin
   if Value <> MultiSelect then
   begin
     if Value then
-      TreeOptions.SelectionOptions := 
+      TreeOptions.SelectionOptions :=
         TreeOptions.SelectionOptions + [toMultiSelect]
     else
-      TreeOptions.SelectionOptions := 
+      TreeOptions.SelectionOptions :=
         TreeOptions.SelectionOptions - [toMultiSelect];
   end;
 end;
@@ -283,6 +293,17 @@ end;
 procedure TValueList.SetValueColumn(const Value: TVirtualTreeColumn);
 begin
   Header.Columns.Items[VALUE_COLUMN].Assign(Value);
+end;
+
+function TValueList.GetFocusedField: IDynamicField;
+var
+  N : TValueListNode;
+begin
+  N := GetNodeData<TValueListNode>(FocusedNode);
+  if Assigned(N) then
+    Result := N.Data
+  else
+    Result := nil;
 end;
 
 function TValueList.GetShowGutter: Boolean;
@@ -436,6 +457,7 @@ procedure TValueList.BuildTree;
 var
   LField : IDynamicField;
 begin
+  Clear;
   for LField in FData do
   begin
     TValueListNode.Create(Self, LField);  
@@ -447,14 +469,14 @@ procedure TValueList.Initialize;
 begin
   Header.Options := [
     hoAutoResize, hoColumnResize, hoDblClickResize, hoRestrictDrag,
-    hoShowHint, hoShowImages, hoShowSortGlyphs, hoAutoSpring,
-    hoDisableAnimatedResize, hoVisible
+    hoShowHint, hoShowImages, hoShowSortGlyphs, hoAutoSpring, hoVisible,
+    hoDisableAnimatedResize
   ];
   TreeOptions.PaintOptions := [
-    toHideFocusRect, toHideSelection, toHotTrack, toPopupMode,
-    toShowBackground, toShowButtons, toShowDropmark, toStaticBackground,
-    toShowRoot, toShowVertGridLines, toThemeAware, toUseBlendedImages,
-    toUseBlendedSelection, toStaticBackground, toUseExplorerTheme
+    toHideFocusRect, toHotTrack, toPopupMode, toShowBackground, toShowButtons,
+    toShowDropmark, toStaticBackground, toShowRoot, toShowVertGridLines,
+    toThemeAware, toUseBlendedImages, toUseBlendedSelection, toStaticBackground,
+    toUseExplorerTheme
   ];
   TreeOptions.AnimationOptions := [];
   TreeOptions.AutoOptions := [
@@ -462,8 +484,9 @@ begin
     toAutoTristateTracking, toAutoDeleteMovedNodes, toAutoChangeScale,
     toDisableAutoscrollOnEdit, toAutoBidiColumnOrdering
   ];
+  TreeOptions.SelectionOptions := [toExtendedFocus, toFullRowSelect,
+    toAlwaysSelectNode];
   // toGridExtensions causes the inline editor to have the full size of the cell
-  TreeOptions.SelectionOptions := [toExtendedFocus, toFullRowSelect];
   TreeOptions.MiscOptions := [
     toCheckSupport, toInitOnSave, toWheelPanning, toVariableNodeHeight,
     toEditable, toEditOnDblClick, toGridExtensions
@@ -496,7 +519,7 @@ begin
     MaxWidth    := 800;
     MinWidth    := 50;
     Options     := [coAllowClick, coEnabled, coParentBidiMode, coResizable,
-      coVisible, coAutoSpring, {coSmartResize,} coAllowFocus, coEditable];
+      coVisible, coAutoSpring, coAllowFocus, coEditable];
     Position    := VALUE_COLUMN;
     Width       := 100;
     Text        := 'Value';
@@ -513,13 +536,12 @@ begin
 
   Colors.SelectionRectangleBlendColor := clGray;
   Colors.SelectionTextColor           := clBlack;
-  Colors.GridLineColor                := clBlack;
-  Colors.BorderColor                  := clBlack;
+end;
 
-  BorderStyle := bsNone;
-  BorderWidth := 1;
-  BevelInner  := bvNone;
-  BevelOuter  := bvNone;
+procedure TValueList.Repaint;
+begin
+  BuildTree;
+  inherited Repaint;
 end;
 {$ENDREGION}
 

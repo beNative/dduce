@@ -625,17 +625,30 @@ begin
       with Result do
       begin
         HeaderOptions := [
-          hoAutoResize, hoAutoSpring, hoColumnResize, hoDblClickResize,
-          hoRestrictDrag, hoDisableAnimatedResize,
-          hoShowHint, hoShowImages, hoShowSortGlyphs,
+          hoAutoResize,
+          hoAutoSpring,
+          hoColumnResize,
+          hoDblClickResize,
+          hoRestrictDrag,
+          hoDisableAnimatedResize,
+          hoShowHint,
+          hoShowImages,
+          hoShowSortGlyphs,
           hoVisible
         ];
         PaintOptions := [
-          toHideFocusRect, {toHideSelection,} {toHotTrack,} toPopupMode,
-          toShowButtons, toShowDropmark, toShowRoot,
-          toShowHorzGridLines, toShowVertGridLines,
+          toHideFocusRect,
+          {toHideSelection,}
+          {toHotTrack,}
+          toPopupMode,
+          toShowButtons,
+          toShowDropmark,
+          toShowRoot,
+          toShowHorzGridLines,
+          toShowVertGridLines,
           toThemeAware, {toUseExplorerTheme,}
-          toUseBlendedImages, toUseBlendedSelection,
+          toUseBlendedImages,
+          toUseBlendedSelection,
           toStaticBackground
         ];
         AnimationOptions := [
@@ -644,9 +657,13 @@ begin
         ];
         AutoOptions := [
           toAutoDropExpand,
-          toAutoScroll, toAutoScrollOnExpand, toDisableAutoscrollOnEdit,
+          toAutoScroll,
+          toAutoScrollOnExpand,
+          toDisableAutoscrollOnEdit,
           toAutoSort,
-          toAutoTristateTracking, toAutoDeleteMovedNodes, toAutoChangeScale,
+          toAutoTristateTracking,
+          toAutoDeleteMovedNodes,
+          toAutoChangeScale,
           toAutoBidiColumnOrdering
         ];
         StringOptions := [toAutoAcceptEditChange];
@@ -727,7 +744,7 @@ begin
         ];
         PaintOptions := [
           toHideFocusRect,
-          toHideSelection,
+          {toHideSelection,}
           toHotTrack,
           toPopupMode,
           toShowButtons,

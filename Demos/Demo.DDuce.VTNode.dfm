@@ -31,11 +31,11 @@ object frmVTNode: TfrmVTNode
     TabOrder = 1
     object btnDeleteNode: TButton
       Left = 6
-      Top = 8
+      Top = 225
       Width = 140
       Height = 25
       Action = actDeleteNode
-      TabOrder = 0
+      TabOrder = 7
     end
     object btnAddChild: TButton
       Left = 6
@@ -55,27 +55,43 @@ object frmVTNode: TfrmVTNode
     end
     object btnBuildTree: TButton
       Left = 6
-      Top = 101
+      Top = 8
       Width = 139
       Height = 25
       Action = actBuildTree
-      TabOrder = 3
+      TabOrder = 0
     end
     object btnFullExpand: TButton
+      Left = 6
+      Top = 101
+      Width = 139
+      Height = 25
+      Action = actFullExpand
+      TabOrder = 3
+    end
+    object btnFullCollapse: TButton
       Left = 6
       Top = 132
       Width = 139
       Height = 25
-      Action = actFullExpand
+      Action = actFullCollapse
       TabOrder = 4
     end
-    object btnFullCollapse: TButton
+    object btnMoveUp: TButton
       Left = 6
       Top = 163
       Width = 139
       Height = 25
-      Action = actFullCollapse
+      Action = actMoveUp
       TabOrder = 5
+    end
+    object btnMoveDown: TButton
+      Left = 6
+      Top = 194
+      Width = 139
+      Height = 25
+      Action = actMoveDown
+      TabOrder = 6
     end
   end
   object pnlObjectInspector: TPanel
@@ -113,6 +129,14 @@ object frmVTNode: TfrmVTNode
     object actFullCollapse: TAction
       Caption = 'Full collapse'
       OnExecute = actFullCollapseExecute
+    end
+    object actMoveUp: TAction
+      Caption = 'Move up'
+      OnExecute = actMoveUpExecute
+    end
+    object actMoveDown: TAction
+      Caption = 'Move down'
+      OnExecute = actMoveDownExecute
     end
   end
 end

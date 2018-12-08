@@ -82,20 +82,24 @@ type
     {$REGION 'designer controls'}
     aclMain            : TActionList;
     actAddChild        : TAction;
+    actBuildTree       : TAction;
     actDeleteNode      : TAction;
+    actFullCollapse    : TAction;
+    actFullExpand      : TAction;
+    actMoveDown        : TAction;
+    actMoveUp          : TAction;
     actSetNodeText     : TAction;
     btnAddChild        : TButton;
+    btnBuildTree       : TButton;
     btnDeleteNode      : TButton;
+    btnFullCollapse    : TButton;
+    btnFullExpand      : TButton;
+    btnMoveDown        : TButton;
+    btnMoveUp          : TButton;
     btnSetNodeText     : TButton;
     pnlMain            : TPanel;
     pnlObjectInspector : TPanel;
     pnlTree            : TPanel;
-    actBuildTree       : TAction;
-    actFullExpand      : TAction;
-    actFullCollapse    : TAction;
-    btnBuildTree       : TButton;
-    btnFullExpand      : TButton;
-    btnFullCollapse    : TButton;
     {$ENDREGION}
 
     procedure actDeleteNodeExecute(Sender: TObject);
@@ -104,6 +108,8 @@ type
     procedure actBuildTreeExecute(Sender: TObject);
     procedure actFullExpandExecute(Sender: TObject);
     procedure actFullCollapseExecute(Sender: TObject);
+    procedure actMoveUpExecute(Sender: TObject);
+    procedure actMoveDownExecute(Sender: TObject);
 
   private
     FTree            : TVirtualStringTree;
@@ -128,7 +134,11 @@ type
     );
 
   protected
+    function CanMoveUp: Boolean;
+    function CanMoveDown: Boolean;
+
     procedure BuildTree;
+    procedure UpdateActions; override;
 
   public
     procedure AfterConstruction; override;
@@ -198,6 +208,32 @@ begin
   FTree.FullExpand;
 end;
 
+procedure TfrmVTNode.actMoveDownExecute(Sender: TObject);
+begin
+  if Assigned(FTree.FocusedNode) then
+  begin
+    FTree.MoveTo(
+      FTree.FocusedNode,
+      FTree.FocusedNode.NextSibling,
+      amInsertAfter,
+      False
+    );
+  end;
+end;
+
+procedure TfrmVTNode.actMoveUpExecute(Sender: TObject);
+begin
+  if Assigned(FTree.FocusedNode) then
+  begin
+    FTree.MoveTo(
+      FTree.FocusedNode,
+      FTree.FocusedNode.PrevSibling,
+      amInsertBefore,
+      False
+    );
+  end;
+end;
+
 procedure TfrmVTNode.actSetNodeTextExecute(Sender: TObject);
 var
   LVTNode : TVTNode<TMyData>;
@@ -244,6 +280,15 @@ begin
 end;
 {$ENDREGION}
 
+{$REGION 'protected methods'}
+procedure TfrmVTNode.UpdateActions;
+begin
+  inherited UpdateActions;
+  actMoveUp.Enabled   := CanMoveUp;
+  actMoveDown.Enabled := CanMoveDown;
+end;
+{$ENDREGION}
+
 {$REGION 'public methods'}
 procedure TfrmVTNode.BuildTree;
 var
@@ -266,6 +311,24 @@ begin
       LVTNode.Add(TMyData.Create(S));
     end;
   end;
+end;
+
+function TfrmVTNode.CanMoveDown: Boolean;
+begin
+  if Assigned(FTree.FocusedNode) then
+    Result := Assigned(FTree.FocusedNode.NextSibling)
+  else
+    Result := False;
+end;
+
+function TfrmVTNode.CanMoveUp: Boolean;
+begin
+  if Assigned(FTree.FocusedNode) then
+  begin
+    Result := Assigned(FTree.FocusedNode.PrevSibling);
+  end
+  else
+    Result := False;
 end;
 {$ENDREGION}
 
