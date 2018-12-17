@@ -124,6 +124,8 @@
         <DCCReference Include="Spring.Core.dcp"/>
         <DCCReference Include="Spring.Base.dcp"/>
         <DCCReference Include="Spring.Extensions.dcp"/>
+        <DCCReference Include="IndySystem.dcp"/>
+        <DCCReference Include="IndyCore.dcp"/>
         <DCCReference Include="..\Source\Settings\DDuce.Settings.Form.pas"/>
         <DCCReference Include="..\Source\Settings\DDuce.Settings.TextFormat.pas"/>
         <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Bindings.Collections.pas"/>
@@ -162,6 +164,9 @@
         <DCCReference Include="..\Source\DDuce.Utils.WinApi.pas"/>
         <DCCReference Include="..\Source\DDuce.WinIPC.Client.pas"/>
         <DCCReference Include="..\Source\DDuce.WinIPC.Server.pas"/>
+        <DCCReference Include="..\Source\Dependencies\MQTT\MQTT.pas"/>
+        <DCCReference Include="..\Source\Dependencies\MQTT\MQTTHeaders.pas"/>
+        <DCCReference Include="..\Source\Dependencies\MQTT\MQTTReadThread.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -53,19 +53,39 @@ begin
   with DS.FieldDefs.AddFieldDef do
   begin
     DataType := ftString;
-    Name     := 'Name';
+    Name     := 'FirstName';
+  end;
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Name     := 'LastName';
   end;
   with DS.FieldDefs.AddFieldDef do
   begin
     DataType := ftInteger;
     Name     := 'Age';
   end;
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Size     := 40;
+    Name     := 'CompanyName';
+  end;
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Size     := 80;
+    Name     := 'Address';
+  end;
   DS.CreateDataSet;
   for I := 0 to Pred(ARecordCount) do
   begin
     DS.Append;
-    DS.FieldByName('Name').AsString := RandomData.FirstName(gnMale);
-    DS.FieldByName('Age').AsInteger := RandomData.Number(50);
+    DS.FieldByName('FirstName').AsString   := RandomData.FirstName;
+    DS.FieldByName('LastName').AsString    := RandomData.LastName;
+    DS.FieldByName('Age').AsInteger        := RandomData.Number(20, 68);
+    DS.FieldByName('CompanyName').AsString := RandomData.CompanyName;
+    DS.FieldByName('Address').AsString     := RandomData.Address;
     DS.Post;
   end;
   DS.First;

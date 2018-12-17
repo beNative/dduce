@@ -28,6 +28,7 @@ type
     class function CreateLogger: ILogger;
     class function CreateWinIPCChannel: IWinIPCChannel;
     class function CreateZeroMQChannel: IZeroMQChannel;
+    class function CreateMQTTChannel: IMQTTChannel;
     class function CreateLogFileChannel(AFileName: string = ''): ILogFileChannel;
 
   end;
@@ -36,11 +37,16 @@ implementation
 
 uses
   DDuce.Logger.Base, DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.ZeroMQ,
-  DDuce.Logger.Channels.LogFile;
+  DDuce.Logger.Channels.MQTT, DDuce.Logger.Channels.LogFile;
 
 class function TLoggerFactories.CreateLogger: ILogger;
 begin
   Result := TLogger.Create;
+end;
+
+class function TLoggerFactories.CreateMQTTChannel: IMQTTChannel;
+begin
+  Result := TMQTTChannel.Create;
 end;
 
 class function TLoggerFactories.CreateWinIPCChannel: IWinIPCChannel;

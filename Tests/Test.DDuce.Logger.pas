@@ -82,6 +82,10 @@ type
     procedure Test_Send_method_for_dynamic_array_of_Integer_argument;
     procedure Test_Send_method_for_array_of_const_argument;
 
+    procedure Test_Send_method_for_Record_argument;
+    procedure Test_Send_method_for_Object_argument;
+    procedure Test_Send_method_for_Interface_argument;
+
     procedure Test_SendDateTime_method;
     procedure Test_SendDate_method;
     procedure Test_SendTime_method;
@@ -97,6 +101,7 @@ type
     procedure Test_SendShortCut_method;
     procedure Test_SendBitmap_method;
     procedure Test_SendPersistent_method;
+    procedure Test_SendDataSet_method;
 
     procedure Test_SendSQL_method;
     procedure Test_SendXML_method;
@@ -158,6 +163,7 @@ uses
   System.TypInfo, System.Rtti, System.Types, System.UITypes, System.UIConsts,
   System.Variants,
   Vcl.Forms, Vcl.Graphics, Vcl.Menus, Vcl.Dialogs,
+  Data.DB,
 
   Spring,
 
@@ -416,6 +422,31 @@ begin
   Logger.Send('TestNativeUInt', T);
 end;
 
+{ This will send the object reference information, not the content. }
+
+procedure TestLogger.Test_Send_method_for_Object_argument;
+var
+  T : TObject;
+begin
+  T := TTestUtils.CreateTestObject;
+  try
+    Logger.Send('TestObject', T);
+  finally
+    T.Free;
+  end;
+end;
+
+{ This will send the reference information of the interface variable, not the
+  content. }
+
+procedure TestLogger.Test_Send_method_for_Interface_argument;
+var
+  T : IInterface;
+begin
+  T := TInterfacedObject.Create;
+  Logger.Send('TestInterface', TValue.From(T));
+end;
+
 { This test fails because no RTTI is generated for the legacy Real48 type. }
 
 procedure TestLogger.Test_Send_method_for_Real48_argument;
@@ -426,6 +457,11 @@ begin
   T := Pi;
   V := TValue.From(T);
   Logger.Send('TestReal48', V);
+end;
+
+procedure TestLogger.Test_Send_method_for_Record_argument;
+begin
+  Logger.Send('TestRecord', TValue.From(TTestUtils.CreateTestRecord));
 end;
 
 procedure TestLogger.Test_Send_method_for_Set_argument;
@@ -632,6 +668,18 @@ begin
   Logger.SendComponent('TestTComponent', T);
 end;
 
+procedure TestLogger.Test_SendDataSet_method;
+var
+  DS : TDataSet;
+begin
+  DS := TTestUtils.CreateDataSet(100);
+  try
+    Logger.SendDataSet('TestDataSet', DS);
+  finally
+    DS.Free;
+  end;
+end;
+
 procedure TestLogger.Test_SendDateTime_method;
 var
   T : TDateTime;
@@ -697,8 +745,15 @@ begin
 end;
 
 procedure TestLogger.Test_SendObject_method;
+var
+  O : TObject;
 begin
-  Logger.SendObject('TestTObject', Self);
+  O := TTestUtils.CreateTestObject;
+  try
+    Logger.SendObject('TestTObject', O);
+  finally
+    O.Free;
+  end;
 end;
 
 procedure TestLogger.Test_SendPersistent_method;
