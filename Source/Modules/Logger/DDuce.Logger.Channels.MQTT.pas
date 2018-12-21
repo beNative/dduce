@@ -43,6 +43,9 @@ type
     //FEndPoint  : string;
     //FBound     : Boolean;
 
+  protected
+    function GetPort: Integer; override;
+
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
@@ -85,7 +88,15 @@ constructor TMQTTChannel.Create(const ABrokerHost: string; APort: Integer;
   AActive: Boolean);
 begin
   inherited Create(AActive);
-  FMQTT := TMQTT.Create(ABrokerHost, APort);
+  FPort := APort;
+  FMQTT := TMQTT.Create(UTF8String(ABrokerHost), APort);
+end;
+{$ENDREGION}
+
+{$REGION 'property access methods'}
+function TMQTTChannel.GetPort: Integer;
+begin
+  Result := FPort;
 end;
 {$ENDREGION}
 
@@ -134,7 +145,7 @@ begin
       end
       else
         FBuffer.WriteBuffer(ZeroBuf);
-      //Result := FMQTT.Publish('', FBuffer.DataString);
+      Result := FMQTT.Publish('Test', UTF8Encode(FBuffer.DataString));
     end
     else
     begin

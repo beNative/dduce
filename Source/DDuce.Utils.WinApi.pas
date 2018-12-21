@@ -51,11 +51,14 @@ procedure RunApplication(
   AWait         : Boolean = True
 );
 
+procedure OpenLink(const ALink: string);
+
 implementation
 
 uses
   Winapi.PsAPI, Winapi.TlHelp32, Winapi.WinSock, Winapi.WinInet,
   Winapi.ShellAPI, Winapi.Messages,
+  Vcl.Forms,
 
   System.DateUtils, System.Generics.Collections,
 
@@ -374,6 +377,11 @@ begin
   else
     raise Exception.CreateFmt('"%s" not found', [AFile]);
 end;
+
+procedure OpenLink(const ALink: string);
+begin
+  ShellExecute(Application.MainForm.Handle, 'open', PWideChar(ALink), nil, nil, SW_SHOW);
+end;
 {$ENDREGION}
 
 function GetRunningProcessIDs: TArray<TProcessId>;
@@ -480,6 +488,63 @@ begin
   for LProcessId in LRunningProcessIds do
     Result := Result + GetProcessCpuUsagePct(LProcessId);
 end;
+
+
+
+{
+uses
+  SysUtils,
+  ActiveX,
+  ComObj,
+  Variants;
+
+// Serial Port Name
+
+procedure  GetMSSerial_PortNameInfo;
+const
+  wbemFlagForwardOnly = $00000020;
+var
+  FSWbemLocator : OLEVariant;
+  FWMIService   : OLEVariant;
+  FWbemObjectSet: OLEVariant;
+  FWbemObject   : OLEVariant;
+  oEnum         : IEnumvariant;
+  iValue        : LongWord;
+begin;
+  FSWbemLocator := CreateOleObject('WbemScripting.SWbemLocator');
+  FWMIService   := FSWbemLocator.ConnectServer('localhost', 'root\WMI', '', '');
+  FWbemObjectSet:= FWMIService.ExecQuery('SELECT * FROM MSSerial_PortName','WQL',wbemFlagForwardOnly);
+  oEnum         := IUnknown(FWbemObjectSet._NewEnum) as IEnumVariant;
+  while oEnum.Next(1, FWbemObject, iValue) = 0 do
+  begin
+    Writeln(Format('Active          %s',[FWbemObject.Active]));// Boolean
+    Writeln(Format('InstanceName    %s',[FWbemObject.InstanceName]));// String
+    Writeln(Format('PortName        %s',[FWbemObject.PortName]));// String
+
+    Writeln('');
+    FWbemObject:=Unassigned;
+  end;
+end;
+
+
+begin
+ try
+    CoInitialize(nil);
+    try
+      GetMSSerial_PortNameInfo;
+      Readln;
+    finally
+    CoUninitialize;
+    end;
+ except
+    on E:Exception do
+    begin
+        Writeln(E.Classname, ':', E.Message);
+        Readln;
+    end;
+  end;
+end.
+}
 
 initialization
   LatestProcessCpuUsageCache := TProcessCpuUsageList.Create([doOwnsValues]);

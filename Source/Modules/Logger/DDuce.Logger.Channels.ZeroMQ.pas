@@ -198,7 +198,7 @@ begin
   Result := Connected;
 end;
 
-{ Returns true if successful. }
+{ Returns True if successful. }
 
 function TZeroMQChannel.Disconnect: Boolean;
 begin

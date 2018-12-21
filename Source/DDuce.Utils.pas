@@ -48,6 +48,8 @@ function AsPropString(AValue: TValue): string;
 
 function AsFieldString(AValue: TValue): string;
 
+function Explode(ASeparator, AText: string): TStringList;
+
 procedure FixControlStylesForDrag(AParent: TControl);
 
 procedure HourGlass(AProc: TProc);
@@ -638,6 +640,30 @@ begin
     APanel.Width := GetTextWidth(APanel.Caption, APanel.Font) + 10
   else
     APanel.Width := 0;
+end;
+
+function Explode(ASeparator, AText: string): TStringList;
+var
+  I    : Integer;
+  Item : string;
+begin
+  // Explode a string by separator into a TStringList
+  Result := TStringList.Create;
+  while True do
+  begin
+    I := Pos(ASeparator, AText);
+    if I = 0 then
+    begin
+      // Last or only segment: Add to list if it's the last. Add also if it's not empty and list is empty.
+      // Do not add if list is empty and text is also empty.
+      if (Result.Count > 0) or (AText <> '') then
+        Result.Add(AText);
+      Break;
+    end;
+    Item := Trim(Copy(AText, 1, I - 1));
+    Result.Add(Item);
+    Delete(AText, 1, I - 1 + Length(ASeparator));
+  end;
 end;
 
 { Extracts the string between ADelim1 and ADelim2 from the given AString. }

@@ -440,6 +440,15 @@ object frmLogger: TfrmLogger
       Action = actZMQCloseSocket
       TabOrder = 6
     end
+    object chkMQTTChannel: TCheckBox
+      Left = 84
+      Top = 69
+      Width = 53
+      Height = 17
+      Hint = 'Enables or disables MQTT channel.'
+      Caption = 'MQTT'
+      TabOrder = 7
+    end
   end
   object grpCheckpoints: TGroupBox
     AlignWithMargins = True
@@ -865,7 +874,7 @@ object frmLogger: TfrmLogger
     Left = 304
     Top = 152
     Bitmap = {
-      494C010118001D00340010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010118001D00480010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000007000000001002000000000000070
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

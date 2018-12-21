@@ -136,6 +136,7 @@ type
     tmrSendCounter            : TTimer;
     tmrSendValue              : TTimer;
     trbMain                   : TTrackBar;
+    chkMQTTChannel: TCheckBox;
     {$ENDREGION}
 
     {$REGION 'event handlers'}

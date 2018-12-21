@@ -47,8 +47,9 @@ type
     TVTNodeEnumerator<K:T> = record
     strict private
       FCurrent : TVTNode<K>;
+      FFirst   : Boolean;
     public
-      constructor Create(AVTNode : TVTNode<K>);
+      constructor Create(AVTNode: TVTNode<K>);
 
       function GetCurrent: TVTNode<K>;
 
@@ -59,8 +60,8 @@ type
     end;
 
   private
-    FVNode      : PVirtualNode;
     FTree       : TCustomVirtualStringTree;
+    FVNode      : PVirtualNode;
     FData       : T;
     FText       : string;
     FHint       : string;
@@ -69,6 +70,7 @@ type
     FCheckType  : TCheckType;
 
   protected
+
     {$REGION 'property access methods'}
     function GetItem(AIndex: UInt32): TVTNode<T>;
     function GetVisible: Boolean;
@@ -106,7 +108,7 @@ type
     ); overload; virtual;
     procedure BeforeDestruction; override;
 
-    function GetEnumerator : TVTNodeEnumerator<T>;
+    function GetEnumerator: TVTNodeEnumerator<T>;
 
     function Add(const AData: T): TVTNode<T>;
 
@@ -348,6 +350,7 @@ end;
 constructor TVTNode<T>.TVTNodeEnumerator<K>.Create(AVTNode: TVTNode<K>);
 begin
   FCurrent := AVTNode;
+  FFirst   := True;
 end;
 
 function TVTNode<T>.TVTNodeEnumerator<K>.GetCurrent: TVTNode<K>;
@@ -356,8 +359,21 @@ begin
 end;
 
 function TVTNode<T>.TVTNodeEnumerator<K>.MoveNext: Boolean;
+var
+  LTree : TCustomVirtualStringTree;
 begin
-  FCurrent := FCurrent.VNode.NextSibling;
+  if Assigned(FCurrent) then
+  begin
+    if FFirst then
+    begin
+      FFirst := False;
+    end
+    else
+    begin
+      LTree := FCurrent.FTree;
+      FCurrent := LTree.GetNodeData<TVTNode<K>>(FCurrent.VNode.NextSibling);
+    end;
+  end;
   Result := Assigned(FCurrent);
 end;
 {$ENDREGION}
