@@ -1552,10 +1552,9 @@ begin
   begin
     Activate;
   end;
-  Actions.UpdateActions; // TODO: Abstract error on releasing object if this is placed outside FUpdate condition.
-
   if Assigned(Actions) then
   begin
+    Actions.UpdateActions; // TODO: Abstract error on releasing object if this is placed outside FUpdate condition.
     if FUpdate then
     begin
       ApplySettings;
