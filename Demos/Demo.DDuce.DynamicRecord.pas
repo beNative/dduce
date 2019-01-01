@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2018 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2019 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -253,7 +253,7 @@ type
     tsDataSet                                 : TTabSheet;
     tsTestClass                               : TTabSheet;
     tsTestRecord                              : TTabSheet;
-    tsTRecord                                 : TTabSheet;
+    tsDynamicRecord: TTabSheet;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -303,10 +303,10 @@ type
     FStrings          : TStrings;
 
     // the test dummies to play with.
-    FRecord1          : DynamicRecord;
-    FRecord2          : DynamicRecord;
-    FDynamicRecord1   : IDynamicRecord;
-    FDynamicRecord2   : IDynamicRecord;
+    FRec1  : DynamicRecord;
+    FRec2  : DynamicRecord;
+    FIntf1 : IDynamicRecord;
+    FIntf2 : IDynamicRecord;
 
     procedure FInspectorGetCellText(
       Sender    : TObject;
@@ -399,9 +399,9 @@ begin
   CreateTestRecord;
   CreateTestTRecord;
   CreateTestManagedClass;
-  FRecord1.Clear;
-  FDynamicRecord1 := DynamicRecord.CreateDynamicRecord;
-  FDynamicRecord2 := DynamicRecord.CreateDynamicRecord;
+  FRec1.Clear;
+  FIntf1 := DynamicRecord.CreateDynamicRecord;
+  FIntf2 := DynamicRecord.CreateDynamicRecord;
   Changed;
 end;
 
@@ -410,8 +410,8 @@ begin
   FreeAndNil(FStrings);
   FreeAndNil(FContact);
   FreeAndNil(FTestClass);
-  FDynamicRecord1 := nil;
-  FDynamicRecord2 := nil;
+  FIntf1 := nil;
+  FIntf2 := nil;
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
@@ -436,7 +436,7 @@ begin
   begin
     ExecuteAssignTTestRecord;
   end
-  else if pgcMain.ActivePage = tsTRecord then
+  else if pgcMain.ActivePage = tsDynamicRecord then
   begin
     ExecuteAssignTRecord;
   end
@@ -547,56 +547,38 @@ begin
   CreateContact;
   R.From(FContact);
   ShowMessage(R.ToString);
-
-
 //  R.Data.FirstName := 'John';
 //  R.Data.LastName  := 'Doe';
-//  R.Data.Address := 'ReetStreet';
-//
-//  Rg := R;        // copy
-//
-//
-//  Rg.Data.Address := 'Geen reetstreet hier';
-
-//  Rn.Data.Extra := 'extra';
-//  Rn.Data.FirstName := 'Test';
   ShowMessage(Rg.ToString);
-
-
-
-
-//  R.Assign(Rn);
-//  for F in R do
-//    ShowMessage(F.ToString);
 end;
 
 procedure TfrmDynamicRecords.actFDynamicRecord1ClearExecute(Sender: TObject);
 begin
-  if Assigned(FDynamicRecord1) then
+  if Assigned(FIntf1) then
   begin
-    FDynamicRecord1.Clear;
+    FIntf1.Clear;
     Changed;
   end;
 end;
 
 procedure TfrmDynamicRecords.actFDynamicRecord2ClearExecute(Sender: TObject);
 begin
-  if Assigned(FDynamicRecord2) then
+  if Assigned(FIntf2) then
   begin
-    FDynamicRecord2.Clear;
+    FIntf2.Clear;
     Changed;
   end;
 end;
 
 procedure TfrmDynamicRecords.actFRecord1ClearExecute(Sender: TObject);
 begin
-  FRecord1.Clear;
+  FRec1.Clear;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.actFRecord2ClearExecute(Sender: TObject);
 begin
-  FRecord2.Clear;
+  FRec2.Clear;
   Changed;
 end;
 
@@ -789,97 +771,97 @@ end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFieldValueToFDynamicRecord1;
 begin
-  FDynamicRecord1[edtFieldName.Text] := edtValue.Text;
+  FIntf1[edtFieldName.Text] := edtValue.Text;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFieldValueToFDynamicRecord2;
 begin
-  FDynamicRecord2[edtFieldName.Text] := edtValue.Text;
+  FIntf2[edtFieldName.Text] := edtValue.Text;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFieldValueToFRecord1;
 begin
-  FRecord1[edtFieldName.Text] := edtValue.Text;
+  FRec1[edtFieldName.Text] := edtValue.Text;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFieldValueToFRecord2;
 begin
-  FRecord2[edtFieldName.Text] := edtValue.Text;
+  FRec2[edtFieldName.Text] := edtValue.Text;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFRecord2ToFRecord1;
 begin
-  FRecord1 := FRecord2;
+  FRec1 := FRec2;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFDynamicRecord1ToFRecord1;
 begin
-  FRecord1 := FDynamicRecord1;
+  FRec1 := FIntf1;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFDynamicRecord2ToFRecord1;
 begin
-  FRecord1 := FDynamicRecord2;
+  FRec1 := FIntf2;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFRecord1ToFRecord2;
 begin
-  FRecord2 := FRecord1;
+  FRec2 := FRec1;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFDynamicRecord1ToFRecord2;
 begin
-  FRecord2 := FDynamicRecord1;
+  FRec2 := FIntf1;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFDynamicRecord2ToFRecord2;
 begin
-  FRecord2 := FDynamicRecord2;
+  FRec2 := FIntf2;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFRecord1ToFDynamicRecord1;
 begin
-  FDynamicRecord1 := FRecord1;
+  FIntf1 := FRec1;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFRecord2ToFDynamicRecord1;
 begin
-  FDynamicRecord1 := FRecord2;
+  FIntf1 := FRec2;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFDynamicRecord2ToFDynamicRecord1;
 begin
-  FDynamicRecord1 := FDynamicRecord2;
+  FIntf1 := FIntf2;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFRecord1ToFDynamicRecord2;
 begin
-  FDynamicRecord2 := FRecord1;
+  FIntf2 := FRec1;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFRecord2ToFDynamicRecord2;
 begin
-  FDynamicRecord2 := FRecord2;
+  FIntf2 := FRec2;
   Changed;
 end;
 
 procedure TfrmDynamicRecords.ExecuteAssignFDynamicRecord1ToFDynamicRecord2;
 begin
-  FDynamicRecord2 := FDynamicRecord1;
+  FIntf2 := FIntf1;
   Changed;
 end;
 
@@ -929,16 +911,16 @@ end;
 
 procedure TfrmDynamicRecords.UpdateRefCountDisplay;
 begin
-  if Assigned(FDynamicRecord1) then
+  if Assigned(FIntf1) then
   begin
-    lblFDynamicRecord1.Caption := FDynamicRecord1.ToString;
+    lblFDynamicRecord1.Caption := FIntf1.ToString;
   end;
-  if Assigned(FDynamicRecord2) then
+  if Assigned(FIntf2) then
   begin
-    lblFDynamicRecord2.Caption := FDynamicRecord2.ToString;
+    lblFDynamicRecord2.Caption := FIntf2.ToString;
   end;
-  lblFRecord1.Caption      := FRecord1.ToString;
-  lblFRecord2.Caption      := FRecord2.ToString;
+  lblFRecord1.Caption      := FRec1.ToString;
+  lblFRecord2.Caption      := FRec2.ToString;
 end;
 {$ENDREGION}
 

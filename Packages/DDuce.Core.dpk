@@ -77,9 +77,6 @@ contains
   DDuce.Utils in '..\Source\DDuce.Utils.pas',
   DDuce.Utils.WinApi in '..\Source\DDuce.Utils.WinApi.pas',
   DDuce.WinIPC.Client in '..\Source\DDuce.WinIPC.Client.pas',
-  DDuce.WinIPC.Server in '..\Source\DDuce.WinIPC.Server.pas',
-  MQTT in '..\Source\Dependencies\MQTT\MQTT.pas',
-  MQTTHeaders in '..\Source\Dependencies\MQTT\MQTTHeaders.pas',
-  MQTTReadThread in '..\Source\Dependencies\MQTT\MQTTReadThread.pas';
+  DDuce.WinIPC.Server in '..\Source\DDuce.WinIPC.Server.pas';
 
 end.

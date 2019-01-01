@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2018 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2019 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ implementation
 
 uses
   DDuce.Logger.Base, DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.ZeroMQ,
-  DDuce.Logger.Channels.MQTT, DDuce.Logger.Channels.LogFile;
+  {DDuce.Logger.Channels.MQTT,} DDuce.Logger.Channels.LogFile;
 
 class function TLoggerFactories.CreateLogger: ILogger;
 begin
@@ -46,7 +46,7 @@ end;
 
 class function TLoggerFactories.CreateMQTTChannel: IMQTTChannel;
 begin
-  Result := TMQTTChannel.Create;
+//  Result := TMQTTChannel.Create;
 end;
 
 class function TLoggerFactories.CreateWinIPCChannel: IWinIPCChannel;

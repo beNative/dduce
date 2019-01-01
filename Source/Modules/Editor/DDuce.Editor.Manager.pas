@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2018 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2019 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -2598,8 +2598,8 @@ end;
 
 procedure TdmEditorManager.UpdateActions;
 var
-  B  : Boolean;
-  V  : IEditorView;
+  B : Boolean;
+  V : IEditorView;
 begin
   if Assigned(ActiveView) then
   begin

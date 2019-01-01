@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2018 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2019 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -60,6 +60,8 @@ type
 
     procedure Initialize;
     procedure BuildTree;
+
+    procedure FDataChanged(Sender: TObject);
 
     procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
     procedure DoBeforeCellPaint(
@@ -231,12 +233,16 @@ procedure TValueList.SetData(const Value: IDynamicRecord);
 begin
   if Value <> Data then
   begin
+//    if Assigned(FData) then
+//      FData.OnChanged.Remove(FDataChanged);
+
     FData := Value;
     if Assigned(FData) then
     begin
-      NodeDataSize  := SizeOf(TValueListNode);
+      NodeDataSize := SizeOf(TValueListNode);
       BuildTree;
       Header.AutoFitColumns;
+//      FData.OnChanged.Add(FDataChanged);
     end;
   end;
 end;
@@ -450,6 +456,12 @@ begin
 *)
   inherited DoTextDrawing(PaintInfo, Text, CellRect, DrawFormat);
 end;
+
+procedure TValueList.FDataChanged(Sender: TObject);
+begin
+//  Repaint;
+end;
+
 {$ENDREGION}
 
 {$REGION 'protected methods'}

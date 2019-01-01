@@ -229,12 +229,15 @@
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.LogFile.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinIPC.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.MQTT.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Factories.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas"/>
         <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.pas"/>
         <DCCReference Include="..\Source\Modules\DDuce.AboutDialog.pas">
             <Form>frmAboutDialog</Form>
+        </DCCReference>
+        <DCCReference Include="..\Source\Modules\DDuce.EditList.pas">
+            <Form>EditList</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

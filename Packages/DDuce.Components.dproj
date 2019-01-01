@@ -95,15 +95,15 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <VerInfo_Build>151</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.151;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>170</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.170;ProductVersion=1.0.0.0</VerInfo_Keys>
         <Debugger_HostApplication>D:\development\delphi\libraries\dduce\Demos\Bin\Win32\DDuce.Demos.exe</Debugger_HostApplication>
         <Debugger_CWD>D:\development\delphi\libraries\dduce\Demos\Bin\Win32</Debugger_CWD>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>19</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.19;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>21</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.21;ProductVersion=1.0.0.0</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>

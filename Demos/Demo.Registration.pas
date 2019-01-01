@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2018 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2019 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ uses
   Demo.DDuce.VirtualTrees,
   Demo.DDuce.ValueList,
   Demo.DDuce.VTNode,
+  Demo.DDuce.EditList,
 
   Demo.Manager;
 
@@ -46,7 +47,6 @@ uses
 procedure RegisterDemos;
 begin
   DemoManager.Register(TfrmLogger, 'Logger');
-  //Exit;
   DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmInspector, 'Inspector');
@@ -58,6 +58,7 @@ begin
   DemoManager.Register(TfrmVirtualTrees, 'VirtualTrees');
   DemoManager.Register(TfrmVTNode, 'VTNode');
   DemoManager.Register(TfrmScopedReferences, 'Scoped references');
+  DemoManager.Register(TfrmEditList, 'EditList');
   // not working yet
   //DemoManager.Register(TfrmXMLTree, 'XMLTree');
 end;

@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2018 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2019 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -1554,7 +1554,11 @@ begin
   end;
   if Assigned(Actions) then
   begin
-    Actions.UpdateActions; // TODO: Abstract error on releasing object if this is placed outside FUpdate condition.
+//    if not (csDestroying in ComponentState) then
+//    begin
+//      if Assigned(Actions.ActionList) then
+        Actions.UpdateActions; // TODO: Abstract error on releasing object if this is placed outside FUpdate condition.
+    //end;
     if FUpdate then
     begin
       ApplySettings;

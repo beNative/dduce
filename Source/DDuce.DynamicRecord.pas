@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2018 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2019 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
   limitations under the License.
 }
 
-//{$I DDuce.inc}
+{$I DDuce.inc}
 
 unit DDuce.DynamicRecord;
 
@@ -22,7 +22,9 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.Rtti,
-  Data.DB;
+  Data.DB,
+
+  Spring;
 
 {$REGION 'Documentation'}
 {
@@ -99,13 +101,6 @@ uses
       IDynamicRecord<T> and IDynamicRecord variables.
     - Does the same as Scoped instances
 
-  Future enhancements:
-    - DynamicRecord<T>: add overloaded constructor with factory method (TFunc<T>).
-      This allows more customized autoconstruction.
-    - Add more events
-    - Control/data binding support
-    - track changes
-
   Remarks:
     - To be able to compile the generic version it was necessary to move some of
       the internal types from the implementation section to the interface
@@ -129,7 +124,7 @@ uses
     TODO does not work yet when mixing generic and non generic instances.
       A notable side effect is that assignments from/to DynamicRecord and
       IDynamicRecord variables cause copies to be made where in this case we
-      want to have a reference.
+      just want to keep a reference.
       We tried to compensate for this by keeping a seperate reference count
       variable in the DynamicRecord instance to keep track of any external user
       defined interface variables (IDynamicRecord) that reference the DynamicRecord
@@ -545,6 +540,7 @@ type
     function GetData: Variant;
     function GetCount: Integer;
     function GetRefCount: Integer;
+    function GetOnChanged: INotifyEvent;
 
     function GetEnumerator: DynamicRecordEnumerator;
 
@@ -666,6 +662,9 @@ type
 
     property RefCount: Integer
       read GetRefCount;
+
+    property OnChanged: INotifyEvent
+      read GetOnChanged;
   end;
   {$ENDREGION}
 
@@ -757,9 +756,9 @@ type
   { TDynamicRecord is a collection used as the storage of the contained data.}
 
   TDynamicRecord = class(TCollection, IDynamicRecord)
-  strict private
+  private
     FRttiContext : TRttiContext;
-    FOnChanged   : TNotifyEvent;
+    FOnChanged   : Event<TNotifyEvent>;
     FRefCount    : Integer;
 
     { IInterface }
@@ -767,21 +766,18 @@ type
     function _AddRef: Integer; stdcall;
     function _Release: Integer; stdcall;
 
+  protected
     function GetData: Variant;
     function GetRefCount: Integer;
-
-  protected
     function GetCount: Integer; reintroduce; virtual;
     function GetField(const AName: string): IDynamicField; virtual;
     function GetItem(Index: Integer): IDynamicField; virtual;
     function GetItemValue(const AName: string): TValue; virtual;
     procedure SetItemValue(const AName: string; const AValue: TValue); virtual;
-
-
+    procedure SetItemName(Item: TCollectionItem); override;
+    function GetOnChanged: INotifyEvent;
 
     procedure Update(AItem: TCollectionItem); override;
-    procedure SetItemName(Item: TCollectionItem); override;
-
     function Add: IDynamicField;
     function Insert(Index: Integer): IDynamicField;
 
@@ -899,8 +895,8 @@ type
     property Values[const AName : string]: TValue
       read GetItemValue write SetItemValue; default;
 
-    property OnChanged: TNotifyEvent
-      read FOnChanged write FOnChanged;
+    property OnChanged: INotifyEvent
+      read GetOnChanged;
 
     { Dynamic record instance represented by our custom variant type. }
     property Data: Variant
@@ -909,8 +905,6 @@ type
     property Count: Integer
       read GetCount;
 
-    //procedure From<T>(const Value: T);
-  protected
     property RefCount: Integer
       read GetRefCount;
 
@@ -1387,6 +1381,11 @@ begin
     Result := TValue.Empty;
 end;
 
+function TDynamicRecord.GetOnChanged: INotifyEvent;
+begin
+  Result := FOnChanged;
+end;
+
 function TDynamicRecord.GetRefCount: Integer;
 begin
   Result := FRefCount;
@@ -1486,8 +1485,8 @@ procedure TDynamicRecord.Update(AItem: TCollectionItem);
 begin
 // Make necessary adjustments when items in the collection change.
 // Update gets called from TCollection.Changed.
-  if Assigned(FOnChanged) then
-    FOnChanged(Self);
+  if not Assigned(AItem) and FOnChanged.CanInvoke then
+    FOnChanged.Invoke(Self);
 end;
 
 { Constructs a unique itemn ame for a new collection-item.

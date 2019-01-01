@@ -164,9 +164,6 @@
         <DCCReference Include="..\Source\DDuce.Utils.WinApi.pas"/>
         <DCCReference Include="..\Source\DDuce.WinIPC.Client.pas"/>
         <DCCReference Include="..\Source\DDuce.WinIPC.Server.pas"/>
-        <DCCReference Include="..\Source\Dependencies\MQTT\MQTT.pas"/>
-        <DCCReference Include="..\Source\Dependencies\MQTT\MQTTHeaders.pas"/>
-        <DCCReference Include="..\Source\Dependencies\MQTT\MQTTReadThread.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
