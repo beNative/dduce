@@ -31,8 +31,6 @@ type
     pnlRight       : TPanel;
     splVertical    : TSplitter;
     chkMultiSelect : TCheckBox;
-    edtName        : TLabeledEdit;
-    edtValue       : TLabeledEdit;
     mmoData        : TMemo;
 
     procedure chkMultiSelectClick(Sender: TObject);
@@ -79,6 +77,9 @@ type
 
 implementation
 
+uses
+  DDuce.Logger;
+
 {$R *.dfm}
 
 {$REGION 'construction and destruction'}
@@ -91,6 +92,7 @@ begin
   FEditList.OnDeleteItem.Add(FEditListDeleteItem);
   FEditList.OnExecute.Add(FEditListExecute);
   FEditList.OnExecuteItem.Add(FEditListExecuteItem);
+  Logger.SendComponent(FEditList.PopupMenu);
 end;
 {$ENDREGION}
 

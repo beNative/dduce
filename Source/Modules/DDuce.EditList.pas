@@ -67,8 +67,11 @@ type
     mniN2        : TMenuItem;
     mniN3        : TMenuItem;
     pnlMain      : TPanel;
-    ppmEndpoints : TPopupMenu;
+    ppmMain: TPopupMenu;
     tlbMain      : TToolBar;
+    actRefresh: TAction;
+    btnRefresh: TToolButton;
+    mniRefresh: TMenuItem;
 
     procedure actMoveUpExecute(Sender: TObject);
     procedure actMoveDownExecute(Sender: TObject);
@@ -101,6 +104,7 @@ type
     function GetActionExecute: TAction;
     function GetActionMoveDown: TAction;
     function GetActionMoveUp: TAction;
+    function GetActionRefresh: TAction;
     {$ENDREGION}
 
   protected
@@ -145,6 +149,8 @@ type
       AParent : TWinControl
     ); reintroduce; virtual;
 
+    procedure Refresh; virtual;
+
     property ValueList: TValueList
       read GetValueList;
 
@@ -168,6 +174,9 @@ type
 
     property ActionDuplicate: TAction
       read GetActionDuplicate;
+
+    property ActionRefresh: TAction
+      read GetActionRefresh;
 
     property OnAdd: IEvent<TEditListItemEvent>
       read GetOnAdd;
@@ -377,6 +386,11 @@ begin
   Result := actMoveUp;
 end;
 
+function TEditList.GetActionRefresh: TAction;
+begin
+  Result := actRefresh;
+end;
+
 function TEditList.GetData: IDynamicRecord;
 begin
   Result := FValueList.Data;
@@ -445,6 +459,14 @@ begin
   actDelete.Enabled    := not Data.IsEmpty;
   actExecute.Enabled   := not Data.IsEmpty and FOnExecute.CanInvoke;
 end;
+{$ENDREGION}
+
+{$REGION 'public methods'}
+procedure TEditList.Refresh;
+begin
+  FValueList.Repaint;
+end;
+
 {$ENDREGION}
 
 end.
