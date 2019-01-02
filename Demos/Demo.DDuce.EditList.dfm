@@ -1,6 +1,7 @@
 object frmEditList: TfrmEditList
   Left = 0
   Top = 0
+  Caption = 'TEditList module demo'
   ClientHeight = 411
   ClientWidth = 635
   Color = clBtnFace
@@ -28,7 +29,6 @@ object frmEditList: TfrmEditList
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -1
   end
   object pnlRight: TPanel
     Left = 326
@@ -38,12 +38,23 @@ object frmEditList: TfrmEditList
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 408
+    DesignSize = (
+      309
+      411)
+    object lblSelected: TLabel
+      Left = 6
+      Top = 42
+      Width = 291
+      Height = 13
+      Anchors = [akLeft, akTop, akRight]
+      AutoSize = False
+      Caption = 'Selected:'
+    end
     object mmoData: TMemo
       Left = 0
-      Top = 38
+      Top = 72
       Width = 309
-      Height = 373
+      Height = 339
       Align = alBottom
       BevelInner = bvNone
       BevelOuter = bvNone
@@ -57,6 +68,8 @@ object frmEditList: TfrmEditList
       ParentFont = False
       ReadOnly = True
       TabOrder = 0
+      ExplicitLeft = -16
+      ExplicitTop = 24
     end
   end
   object chkMultiSelect: TCheckBox
@@ -65,6 +78,8 @@ object frmEditList: TfrmEditList
     Width = 97
     Height = 17
     Caption = 'MultiSelect'
+    Checked = True
+    State = cbChecked
     TabOrder = 2
     OnClick = chkMultiSelectClick
   end

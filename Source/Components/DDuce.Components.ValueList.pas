@@ -38,6 +38,7 @@ type
   TValueList = class(TCustomVirtualStringTree)
   private
     FData : IDynamicRecord;
+    procedure SetFocusedField(const Value: IDynamicField);
 
   protected
     {$REGION 'property access methods'}
@@ -90,6 +91,7 @@ type
     destructor Destroy; override;
 
     procedure Repaint; override;
+    procedure Refresh; virtual;
 
     property Data: IDynamicRecord
       read GetData write SetData;
@@ -186,7 +188,7 @@ type
       read GetEditable write SetEditable;
 
     property FocusedField: IDynamicField
-      read GetFocusedField;
+      read GetFocusedField write SetFocusedField;
 
     property MultiSelect: Boolean
       read GetMultiSelect write SetMultiSelect;
@@ -310,6 +312,26 @@ begin
     Result := N.Data
   else
     Result := nil;
+end;
+
+procedure TValueList.SetFocusedField(const Value: IDynamicField);
+var
+  VN : PVirtualNode;
+  N  : TValueListNode;
+begin
+  BeginUpdate;
+  for VN in Nodes do
+  begin
+    N := GetNodeData<TValueListNode>(VN);
+    if Assigned(N) and (N.Data = Value) then
+    begin
+      ClearSelection;
+      FocusedNode := VN;
+      Selected[VN] := True;
+      Break;
+    end;
+  end;
+  EndUpdate;
 end;
 
 function TValueList.GetShowGutter: Boolean;
@@ -469,12 +491,14 @@ procedure TValueList.BuildTree;
 var
   LField : IDynamicField;
 begin
+  BeginUpdate;
   Clear;
   for LField in FData do
   begin
-    TValueListNode.Create(Self, LField);  
+    TValueListNode.Create(Self, LField);
   end;
   FullExpand;
+  EndUpdate;
 end;
 
 procedure TValueList.Initialize;
@@ -548,6 +572,15 @@ begin
 
   Colors.SelectionRectangleBlendColor := clGray;
   Colors.SelectionTextColor           := clBlack;
+end;
+
+procedure TValueList.Refresh;
+var
+  F : IDynamicField;
+begin
+  F := FocusedField;
+  Repaint;
+  FocusedField := F;
 end;
 
 procedure TValueList.Repaint;

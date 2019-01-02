@@ -16,6 +16,8 @@
 
 unit DDuce.EditList;
 
+{ A user configurable list of key-value pairs. }
+
 interface
 
 uses
@@ -40,6 +42,7 @@ type
 
 type
   TEditList = class(TForm)
+    {$REGION 'designer controls'}
     aclMain      : TActionList;
     actAdd       : TAction;
     actDelete    : TAction;
@@ -67,18 +70,22 @@ type
     mniN2        : TMenuItem;
     mniN3        : TMenuItem;
     pnlMain      : TPanel;
-    ppmMain: TPopupMenu;
+    ppmMain      : TPopupMenu;
     tlbMain      : TToolBar;
-    actRefresh: TAction;
-    btnRefresh: TToolButton;
-    mniRefresh: TMenuItem;
+    actRefresh   : TAction;
+    btnRefresh   : TToolButton;
+    mniRefresh   : TMenuItem;
+    {$ENDREGION}
 
+    {$REGION 'action handlers'}
     procedure actMoveUpExecute(Sender: TObject);
     procedure actMoveDownExecute(Sender: TObject);
     procedure actAddExecute(Sender: TObject);
     procedure actDeleteExecute(Sender: TObject);
     procedure actDuplicateExecute(Sender: TObject);
     procedure actExecuteExecute(Sender: TObject);
+    procedure actRefreshExecute(Sender: TObject);
+    {$ENDREGION}
 
   private
     FValueList     : TValueList;
@@ -88,6 +95,7 @@ type
     FOnDeleteItem  : Event<TEditListItemEvent>;
     FOnExecute     : Event<TEditListItemEvent>;
     FOnExecuteItem : Event<TEditListItemEvent>;
+    FUpdate        : Boolean;
 
     {$REGION 'property access methods'}
     function GetOnAdd: IEvent<TEditListItemEvent>;
@@ -105,12 +113,17 @@ type
     function GetActionMoveDown: TAction;
     function GetActionMoveUp: TAction;
     function GetActionRefresh: TAction;
+    function GetMultiSelect: Boolean;
+    procedure SetMultiSelect(const Value: Boolean);
     {$ENDREGION}
+
+    procedure FValueListDataChanged(ASender: TObject);
 
   protected
     function CanMoveUp: Boolean; virtual;
     function CanMoveDown: Boolean; virtual;
     procedure UpdateActions; override;
+    procedure Modified;
 
     procedure DoAdd(
       var AName  : string;
@@ -156,6 +169,9 @@ type
 
     property Data: IDynamicRecord
       read GetData;
+
+    property MultiSelect: Boolean
+      read GetMultiSelect write SetMultiSelect;
 
     property ActionMoveUp: TAction
       read GetActionMoveUp;
@@ -214,6 +230,9 @@ begin
   FValueList.ShowGutter  := False;
   FValueList.MultiSelect := True;
   FValueList.Data        := DynamicRecord.CreateDynamicRecord;
+  FValueList.Data.OnChanged.Add(FValueListDataChanged);
+  actAdd.Enabled         := True;
+  actRefresh.Enabled     := True;
 end;
 
 constructor TEditList.Create(AOwner: TComponent; AParent: TWinControl);
@@ -279,6 +298,7 @@ begin
     LNode := FValueList.GetFirstSelectedNodeData<TValueListNode>;
     LNode.Data.Index := LNode.Data.Index + 1;
     FValueList.MoveTo(LNode.VNode, LNode.VNode.NextSibling, amInsertAfter, False);
+    FValueList.FocusedNode := LNode.VNode;
   end;
 end;
 
@@ -291,7 +311,20 @@ begin
     LNode := FValueList.GetFirstSelectedNodeData<TValueListNode>;
     LNode.Data.Index := LNode.Data.Index - 1;
     FValueList.MoveTo(LNode.VNode, LNode.VNode.PrevSibling, amInsertBefore, False);
+    FValueList.FocusedNode := LNode.VNode;
   end;
+end;
+
+procedure TEditList.actRefreshExecute(Sender: TObject);
+begin
+  Refresh;
+end;
+{$ENDREGION}
+
+{$REGION 'event handlers'}
+procedure TEditList.FValueListDataChanged(ASender: TObject);
+begin
+  Modified;
 end;
 {$ENDREGION}
 
@@ -315,7 +348,7 @@ begin
     AName := S;
     FOnAdd.Invoke(Self, AName, AValue);
     FValueList.Data[AName] := AValue;
-    FValueList.Repaint;
+    Modified;
   end;
 end;
 
@@ -396,6 +429,16 @@ begin
   Result := FValueList.Data;
 end;
 
+function TEditList.GetMultiSelect: Boolean;
+begin
+  Result := FValueList.MultiSelect;
+end;
+
+procedure TEditList.SetMultiSelect(const Value: Boolean);
+begin
+  FValueList.MultiSelect := Value;
+end;
+
 function TEditList.GetOnAdd: IEvent<TEditListItemEvent>;
 begin
   Result := FOnAdd;
@@ -430,12 +473,17 @@ function TEditList.GetValueList: TValueList;
 begin
   Result := FValueList;
 end;
+
+procedure TEditList.Modified;
+begin
+  FUpdate := True;
+end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
 function TEditList.CanMoveDown: Boolean;
 begin
-  if Assigned(FValueList.FocusedNode) then
+  if Assigned(FValueList.FocusedNode) and (FValueList.SelectedCount = 1) then
     Result := Assigned(FValueList.FocusedNode.NextSibling)
   else
     Result := False;
@@ -443,7 +491,7 @@ end;
 
 function TEditList.CanMoveUp: Boolean;
 begin
-  if Assigned(FValueList.FocusedNode) then
+  if Assigned(FValueList.FocusedNode) and (FValueList.SelectedCount = 1) then
     Result := Assigned(FValueList.FocusedNode.PrevSibling)
   else
     Result := False;
@@ -454,19 +502,22 @@ begin
   inherited UpdateActions;
   actMoveUp.Enabled    := CanMoveUp;
   actMoveDown.Enabled  := CanMoveDown;
-  actAdd.Enabled       := True;
   actDuplicate.Enabled := not Data.IsEmpty  and FOnDuplicate.CanInvoke;
   actDelete.Enabled    := not Data.IsEmpty;
   actExecute.Enabled   := not Data.IsEmpty and FOnExecute.CanInvoke;
+  if FUpdate then
+  begin
+    Refresh;
+    FUpdate := False;
+  end;
 end;
 {$ENDREGION}
 
 {$REGION 'public methods'}
 procedure TEditList.Refresh;
 begin
-  FValueList.Repaint;
+  FValueList.Refresh;
 end;
-
 {$ENDREGION}
 
 end.

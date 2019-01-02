@@ -16,6 +16,8 @@
 
 unit Demo.DDuce.EditList;
 
+{ Demonstrates the TEditList module. }
+
 interface
 
 uses
@@ -32,6 +34,7 @@ type
     splVertical    : TSplitter;
     chkMultiSelect : TCheckBox;
     mmoData        : TMemo;
+    lblSelected: TLabel;
 
     procedure chkMultiSelectClick(Sender: TObject);
 
@@ -43,30 +46,27 @@ type
       var AName  : string;
       var AValue : TValue
     );
-
     procedure FEditListExecute(
       ASender    : TObject;
       var AName  : string;
       var AValue : TValue
     );
-
     procedure FEditListExecuteItem(
       ASender    : TObject;
       var AName  : string;
       var AValue : TValue
     );
-
     procedure FEditListDelete(
       ASender    : TObject;
       var AName  : string;
       var AValue : TValue
     );
-
     procedure FEditListDeleteItem(
       ASender    : TObject;
       var AName  : string;
       var AValue : TValue
     );
+
   protected
     procedure UpdateActions; override;
 
@@ -78,7 +78,7 @@ type
 implementation
 
 uses
-  DDuce.Logger;
+  DDuce.Logger, DDuce.DynamicRecord;
 
 {$R *.dfm}
 
@@ -92,7 +92,6 @@ begin
   FEditList.OnDeleteItem.Add(FEditListDeleteItem);
   FEditList.OnExecute.Add(FEditListExecute);
   FEditList.OnExecuteItem.Add(FEditListExecuteItem);
-  Logger.SendComponent(FEditList.PopupMenu);
 end;
 {$ENDREGION}
 
@@ -105,40 +104,48 @@ end;
 procedure TfrmEditList.FEditListAdd(ASender: TObject; var AName: string;
   var AValue: TValue);
 begin
-//
+  Logger.Track(Self, 'FEditListAdd');
 end;
 
 procedure TfrmEditList.FEditListDelete(ASender: TObject; var AName: string;
   var AValue: TValue);
 begin
-//
+  Logger.Track(Self, 'FEditListDelete');
 end;
 
 procedure TfrmEditList.FEditListDeleteItem(ASender: TObject;
   var AName: string; var AValue: TValue);
 begin
-//
+  Logger.Track(Self, 'FEditListDeleteItem');
 end;
 
 procedure TfrmEditList.FEditListExecute(ASender: TObject; var AName: string;
   var AValue: TValue);
 begin
+  Logger.Track(Self, 'FEditListExecute');
   ShowMessageFmt('Executed %s = %s', [AName, AValue.ToString]);
 end;
 
 procedure TfrmEditList.FEditListExecuteItem(ASender: TObject;
   var AName: string; var AValue: TValue);
 begin
+  Logger.Track(Self, 'FEditListExecuteItem');
   ShowMessageFmt('Executed %s = %s', [AName, AValue.ToString]);
 end;
-
 {$ENDREGION}
 
 {$REGION 'protected methods'}
 procedure TfrmEditList.UpdateActions;
+var
+  F : IDynamicField;
 begin
   inherited UpdateActions;
   mmoData.Lines.Text := FEditList.Data.ToString;
+  if Assigned(FEditList.ValueList.FocusedField) then
+  begin
+    F := FEditList.ValueList.FocusedField;
+    lblSelected.Caption := Format('Selected: %s: %s', [F.Name, F.Value.ToString]);
+  end;
 end;
 {$ENDREGION}
 
