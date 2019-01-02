@@ -200,7 +200,6 @@
         </DCCReference>
         <DCCReference Include="Demo.DDuce.EditList.pas">
             <Form>frmEditList</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

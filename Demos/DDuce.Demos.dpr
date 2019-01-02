@@ -7,6 +7,7 @@ uses
   Vcl.Styles,
   Vcl.SysStyles,
   MidasLib,
+  DDuce.CustomImageDrawHook,
   Demo.Contact in 'Demo.Contact.pas',
   Demo.Data in 'Demo.Data.pas' {dmData: TDataModule},
   Demo.DDuce.DBGridView in 'Demo.DDuce.DBGridView.pas' {frmDBGridView},

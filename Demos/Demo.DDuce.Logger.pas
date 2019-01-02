@@ -196,15 +196,14 @@ type
     FZeroMQChannel  : IZeroMQChannel;
     FLogger         : ILogger;
 
-    procedure TestProcedure1;
-    procedure TestProcedure2;
-
     procedure LoadSettings;
     procedure SaveSettings;
 
     procedure WatchZeroMQChannel;
 
   protected
+    procedure TestProcedure1;
+    procedure TestProcedure2;
     procedure UpdateActions; override;
 
     property Logger: ILogger
