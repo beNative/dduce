@@ -1557,7 +1557,12 @@ begin
 //    if not (csDestroying in ComponentState) then
 //    begin
 //      if Assigned(Actions.ActionList) then
+      try
         Actions.UpdateActions; // TODO: Abstract error on releasing object if this is placed outside FUpdate condition.
+      except
+        on E: EAbstractError do
+        ;
+      end;
     //end;
     if FUpdate then
     begin

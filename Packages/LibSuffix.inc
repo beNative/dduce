@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2018 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2019 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -48,5 +48,17 @@
 {$IFDEF VER300}
   {$LIBSUFFIX '.Delphi10Seattle'}
 {$ENDIF VER300}
+
+{$IFDEF VER310}
+  {$LIBSUFFIX '.Delphi10Berlin'}
+{$ENDIF VER310}
+
+{$IFDEF VER320}
+  {$LIBSUFFIX '.Delphi10Tokyo'}
+{$ENDIF VER320}
+
+{$IFDEF VER330}
+  {$LIBSUFFIX '.Delphi10Rio'}
+{$ENDIF VER330}
 
 {$ENDIF ~LIBSUFFIX_INC}
