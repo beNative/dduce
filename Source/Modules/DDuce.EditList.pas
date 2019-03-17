@@ -75,6 +75,7 @@ type
     actRefresh   : TAction;
     btnRefresh   : TToolButton;
     mniRefresh   : TMenuItem;
+    actEdit: TAction;
     {$ENDREGION}
 
     {$REGION 'action handlers'}
@@ -85,6 +86,7 @@ type
     procedure actDuplicateExecute(Sender: TObject);
     procedure actExecuteExecute(Sender: TObject);
     procedure actRefreshExecute(Sender: TObject);
+    procedure actEditExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -273,6 +275,11 @@ end;
 procedure TEditList.actDuplicateExecute(Sender: TObject);
 begin
 //
+end;
+
+procedure TEditList.actEditExecute(Sender: TObject);
+begin
+  FValueList.EditNode(FValueList.FocusedNode, FValueList.FocusedColumn);
 end;
 
 procedure TEditList.actExecuteExecute(Sender: TObject);

@@ -55,6 +55,7 @@ type
     procedure PassingArgumentByInterfaceParam(ARecord: IDynamicRecord);
 
   public
+
     procedure SetUp; override;
     procedure TearDown; override;
 
@@ -166,7 +167,6 @@ end;
 
 {$REGION 'private methods'}
 // helper methods used in tests
-
 procedure TestDynamicRecord.PassingArgumentByConstParam(const ARecord: DynamicRecord);
 var
   S : string;
@@ -322,13 +322,14 @@ var
   DS : TDataSet;
   R  : DynamicRecord;
   F  : IDynamicField;
+  I  : Integer;
 begin
   DS := TTestUtils.CreateDataSet(100);
   try
     DS.First;
     while not DS.Eof do
     begin
-      R.FromDataSet(DS);
+      R.FromDataSet(DS, True);
       for F in R do
       begin
         CheckTrue(F.Value.Equals(TValue.FromVariant(DS[F.Name])));

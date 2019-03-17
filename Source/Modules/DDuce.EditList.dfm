@@ -92,7 +92,7 @@ object EditList: TEditList
     Left = 83
     Top = 48
     Bitmap = {
-      494C010107000801240110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010107000801280110001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000070702650C0C03870C0C03870C0C03870C0C03870C0C03870C0C
@@ -383,12 +383,14 @@ object EditList: TEditList
       Caption = 'Add'
       Hint = 'Add a new item.'
       ImageIndex = 2
+      ShortCut = 16429
       OnExecute = actAddExecute
     end
     object actDelete: TAction
       Caption = 'Delete'
       Hint = 'Delete'
       ImageIndex = 3
+      ShortCut = 16430
       OnExecute = actDeleteExecute
     end
     object actDuplicate: TAction
@@ -406,6 +408,11 @@ object EditList: TEditList
       Caption = 'Refresh'
       ImageIndex = 6
       OnExecute = actRefreshExecute
+    end
+    object actEdit: TAction
+      Caption = 'Edit'
+      ShortCut = 113
+      OnExecute = actEditExecute
     end
   end
   object ppmMain: TPopupMenu

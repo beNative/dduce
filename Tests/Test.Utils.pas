@@ -23,26 +23,41 @@ unit Test.Utils;
 interface
 
 uses
-  System.Rtti,
+  System.Rtti, System.Types,
   Data.DB,
 
   Test.Data;
 
 type
-  TTestUtils = record
-    class function CreateDataSet(ARecordCount: Integer): TDataSet; static;
-    class function CreateTestObject: TTestClass; static;
-    class function CreateTestRecord: TTestRecord; static;
+  TTestUtils = class
+    class function CreateDataSet(ARecordCount: Integer): TDataSet;
+    class function CreateTestObject: TTestClass;
+    class function CreateTestRecord: TTestRecord;
+    class procedure EnsureZMQLibExists;
+
+    class constructor Create;
   end;
 
 implementation
 
 uses
   System.SysUtils, System.TypInfo, System.StrUtils, System.Variants,
-  System.Classes,
+  System.Classes, System.UIConsts,
   DataSnap.DBClient, MidasLib,
 
-  DDuce.RandomData;
+  DDuce.RandomData, DDuce.Logger,
+  DDuce.Logger.Channels.ZeroMQ, DDuce.Logger.Channels.WinIPC,
+
+  Test.Resources;
+
+class constructor TTestUtils.Create;
+begin
+  EnsureZMQLibExists;
+//  Logger.Channels.Add(TWinIPCChannel.Create);
+  Logger.Channels.Add(TZeroMQChannel.Create);
+  Logger.Channels[0].Enabled := True;
+  Logger.Clear;
+end;
 
 class function TTestUtils.CreateDataSet(ARecordCount: Integer): TDataSet;
 var
@@ -52,12 +67,14 @@ begin
   DS := TClientDataSet.Create(nil);
   with DS.FieldDefs.AddFieldDef do
   begin
-    DataType := ftString;
+    DataType := ftWideString;
+    Size     := 40;
     Name     := 'FirstName';
   end;
   with DS.FieldDefs.AddFieldDef do
   begin
-    DataType := ftString;
+    DataType := ftWideString;
+    Size     := 40;
     Name     := 'LastName';
   end;
   with DS.FieldDefs.AddFieldDef do
@@ -67,13 +84,13 @@ begin
   end;
   with DS.FieldDefs.AddFieldDef do
   begin
-    DataType := ftString;
+    DataType := ftWideString;
     Size     := 40;
     Name     := 'CompanyName';
   end;
   with DS.FieldDefs.AddFieldDef do
   begin
-    DataType := ftString;
+    DataType := ftWideString;
     Size     := 80;
     Name     := 'Address';
   end;
@@ -111,6 +128,33 @@ begin
   Result.TestDouble   := Pi;
   Result.TestInteger  := RandomData.Number(100);
   Result.TestString   := RandomData.Vegetable;
+end;
+
+{ Load libzmq from application resource if the file does not exist. }
+
+class procedure TTestUtils.EnsureZMQLibExists;
+const
+  LIBZMQ = 'libzmq';
+var
+  LResStream  : TResourceStream;
+  LFileStream : TFileStream;
+  LPath       : string;
+begin
+  LPath := Format('%s\%s.dll', [ExtractFileDir(ParamStr(0)), LIBZMQ]);
+  if not FileExists(LPath) then
+  begin
+    LResStream := TResourceStream.Create(HInstance, LIBZMQ, RT_RCDATA);
+    try
+      LFileStream := TFileStream.Create(LPath, fmCreate);
+      try
+        LFileStream.CopyFrom(LResStream, 0);
+      finally
+        LFileStream.Free;
+      end;
+    finally
+      LResStream.Free;
+    end;
+  end;
 end;
 
 end.

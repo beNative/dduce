@@ -1,4 +1,4 @@
-{
+ {
   Copyright (C) 2013-2019 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -206,7 +206,6 @@ type
     chkAlignValues                            : TCheckBox;
     chkQuoteValues                            : TCheckBox;
     dscTest                                   : TDataSource;
-    dsTest                                    : TClientDataSet;
     edtDelimiter                              : TLabeledEdit;
     edtFieldName                              : TLabeledEdit;
     edtQuoteChar                              : TLabeledEdit;
@@ -253,7 +252,7 @@ type
     tsDataSet                                 : TTabSheet;
     tsTestClass                               : TTabSheet;
     tsTestRecord                              : TTabSheet;
-    tsDynamicRecord: TTabSheet;
+    tsDynamicRecord                           : TTabSheet;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -301,6 +300,7 @@ type
     FRecord           : DynamicRecord;
     FUpdate           : Boolean;
     FStrings          : TStrings;
+    FDataSet          : TClientDataSet;
 
     // the test dummies to play with.
     FRec1  : DynamicRecord;
@@ -336,6 +336,7 @@ type
     procedure CreateTestRecord;
     procedure CreateTestTRecord;
     procedure CreateTestManagedClass;
+    function CreateTestDataSet: TClientDataSet;
 
     procedure Changed;
     procedure UpdateControls;
@@ -386,7 +387,7 @@ uses
   System.TypInfo,
   Vcl.Dialogs,
 
-  DDuce.Utils;
+  DDuce.Utils, DDuce.RandomData;
 
 {$REGION 'construction and destruction'}
 procedure TfrmDynamicRecords.AfterConstruction;
@@ -399,6 +400,8 @@ begin
   CreateTestRecord;
   CreateTestTRecord;
   CreateTestManagedClass;
+  FDataSet := CreateTestDataSet;
+  dscTest.DataSet := FDataSet;
   FRec1.Clear;
   FIntf1 := DynamicRecord.CreateDynamicRecord;
   FIntf2 := DynamicRecord.CreateDynamicRecord;
@@ -407,6 +410,7 @@ end;
 
 procedure TfrmDynamicRecords.BeforeDestruction;
 begin
+  FreeAndNil(FDataSet);
   FreeAndNil(FStrings);
   FreeAndNil(FContact);
   FreeAndNil(FTestClass);
@@ -708,6 +712,56 @@ begin
   FTestClass.TestNullableDateTime := nil;
 end;
 
+function TfrmDynamicRecords.CreateTestDataSet: TClientDataSet;
+var
+  DS           : TClientDataSet;
+  I            : Integer;
+  LRecordCount : Integer;
+begin
+  LRecordCount := 1000;
+  DS := TClientDataSet.Create(nil);
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Name     := 'FirstName';
+  end;
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Name     := 'LastName';
+  end;
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftInteger;
+    Name     := 'Age';
+  end;
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Size     := 40;
+    Name     := 'CompanyName';
+  end;
+  with DS.FieldDefs.AddFieldDef do
+  begin
+    DataType := ftString;
+    Size     := 80;
+    Name     := 'Address';
+  end;
+  DS.CreateDataSet;
+  for I := 0 to Pred(LRecordCount) do
+  begin
+    DS.Append;
+    DS.FieldByName('FirstName').AsString   := RandomData.FirstName;
+    DS.FieldByName('LastName').AsString    := RandomData.LastName;
+    DS.FieldByName('Age').AsInteger        := RandomData.Number(20, 68);
+    DS.FieldByName('CompanyName').AsString := RandomData.CompanyName;
+    DS.FieldByName('Address').AsString     := RandomData.Address;
+    DS.Post;
+  end;
+  DS.First;
+  Result := DS;
+end;
+
 procedure TfrmDynamicRecords.CreateTestManagedClass;
 begin
   FTestManagedClass.Data.TestBoolean  := True;
@@ -867,7 +921,7 @@ end;
 
 procedure TfrmDynamicRecords.ExecuteFromDataSet;
 begin
-  FRecord.FromDataSet(dsTest);
+  FRecord.FromDataSet(FDataSet);
   Changed;
 end;
 

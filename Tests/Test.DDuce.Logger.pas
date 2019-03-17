@@ -33,8 +33,6 @@ type
     procedure SetUp; override;
 
   public
-    class constructor Create;
-
     // fails because no type information is generated for the legacy type Real48
     procedure Test_Send_method_for_Real48_argument;
     // not implemented yet
@@ -171,46 +169,6 @@ uses
   DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.ZeroMQ,
 
   Test.Utils, Test.Resources;
-
-{$REGION 'non-interfaced routines'}
-{ Load libzmq from application resource if the file does not exist. }
-
-procedure EnsureZMQLibExists;
-const
-  LIBZMQ = 'libzmq';
-var
-  LResStream  : TResourceStream;
-  LFileStream : TFileStream;
-  LPath       : string;
-begin
-  LPath := Format('%s\%s.dll', [ExtractFileDir(ParamStr(0)), LIBZMQ]);
-  if not FileExists(LPath) then
-  begin
-    LResStream := TResourceStream.Create(HInstance, LIBZMQ, RT_RCDATA);
-    try
-      LFileStream := TFileStream.Create(LPath, fmCreate);
-      try
-        LFileStream.CopyFrom(LResStream, 0);
-      finally
-        LFileStream.Free;
-      end;
-    finally
-      LResStream.Free;
-    end;
-  end;
-end;
-{$ENDREGION}
-
-{$REGION 'construction and destruction'}
-class constructor TestLogger.Create;
-begin
-  EnsureZMQLibExists;
-  Logger.Channels.Add(TWinIPCChannel.Create);
-  Logger.Channels.Add(TZeroMQChannel.Create);
-  Logger.Channels[1].Enabled := True;
-  Logger.Clear;
-end;
-{$ENDREGION}
 
 {$REGION 'public methods'}
 procedure TestLogger.SetUp;
