@@ -3,241 +3,349 @@ unit MQTTHeaders;
 interface
 
 uses
-  SysUtils,
-  Types,
-  Classes;
+  System.SysUtils, System.Types, System.Classes;
 
 type
 
   TMQTTMessageType = (
-        Reserved0,	//0	Reserved
-        CONNECT, //	1	Client request to connect to Broker
-        CONNACK, //	2	Connect Acknowledgment
-        PUBLISH, //	3	Publish message
-        PUBACK, //	4	Publish Acknowledgment
-        PUBREC, //	5	Publish Received (assured delivery part 1)
-        PUBREL, //	6	Publish Release (assured delivery part 2)
-        PUBCOMP, //	7	Publish Complete (assured delivery part 3)
-        SUBSCRIBE, //	8	Client Subscribe request
-        SUBACK, //	9	Subscribe Acknowledgment
-        UNSUBSCRIBE, // 10	Client Unsubscribe request
-        UNSUBACK, // 11	Unsubscribe Acknowledgment
-        PINGREQ, //	12	PING Request
-        PINGRESP, //	13	PING Response
-        DISCONNECT, // 14	Client is Disconnecting
-        Reserved15 //	15
-      );
+    Reserved0,   // 0	Reserved
+    CONNECT,     // 1	Client request to connect to Broker
+    CONNACK,     // 2	Connect Acknowledgment
+    PUBLISH,     // 3	Publish message
+    PUBACK,      // 4	Publish Acknowledgment
+    PUBREC,      // 5	Publish Received (assured delivery part 1)
+    PUBREL,      // 6	Publish Release (assured delivery part 2)
+    PUBCOMP,     // 7	Publish Complete (assured delivery part 3)
+    SUBSCRIBE,   // 8	Client Subscribe request
+    SUBACK,      // 9	Subscribe Acknowledgment
+    UNSUBSCRIBE, // 10	Client Unsubscribe request
+    UNSUBACK,    // 11	Unsubscribe Acknowledgment
+    PINGREQ,     // 12	PING Request
+    PINGRESP,    // 13	PING Response
+    DISCONNECT,  // 14	Client is Disconnecting
+    Reserved15   // 15
+  );
 
   TMQTTRecvState = (
-        FixedHeaderByte,
-        RemainingLength,
-        RemainingLength1,
-        RemainingLength2,
-        RemainingLength3,
-        RemainingLength4,
-        Data
+    FixedHeaderByte,
+    RemainingLength,
+    RemainingLength1,
+    RemainingLength2,
+    RemainingLength3,
+    RemainingLength4,
+    Data
   );
 
   {
-  bit	    7	6	5	4	      3	        2	1	      0
-  byte 1	Message Type	DUP flag	QoS level	RETAIN
-  byte 2	Remaining Length
+    bit	    7	6	5	4	      3	        2	1	      0
+    byte 1	Message Type	DUP flag	QoS level	RETAIN
+    byte 2	Remaining Length
   }
   TMQTTFixedHeader = packed record
-    private
-      function GetBits(const aIndex: Integer): Integer;
-      procedure SetBits(const aIndex: Integer; const aValue: Integer);
-    public
-      Flags: Byte;
-      property Retain: Integer index $0001 read GetBits write SetBits;     // 1 bits at offset 0
-      property QoSLevel: Integer index $0102 read GetBits write SetBits;       // 2 bits at offset 1
-      property Duplicate: Integer index $0301 read GetBits write SetBits;         // 1 bits at offset 3
-      property MessageType: Integer index $0404 read GetBits write SetBits;        // 4 bits at offset 4
+  private
+    function GetBits(const AIndex : Integer) : Integer;
+    procedure SetBits(
+      const AIndex : Integer;
+      const AValue : Integer
+    );
+
+  public
+    Flags           : Byte;
+
+    property Retain : Integer
+      index $0001 read GetBits write SetBits;
+    // 1 bits at offset 0
+    property QoSLevel : Integer
+      index $0102 read GetBits write SetBits;
+    // 2 bits at offset 1
+    property Duplicate : Integer
+      index $0301 read GetBits write SetBits;
+    // 1 bits at offset 3
+    property MessageType : Integer
+      index $0404 read GetBits write SetBits;
+    // 4 bits at offset 4
   end;
 
   {
-	Description	    7	6	5	4	3	2	1	0
-  Connect Flags
-  byte 10	        1	1	0	0	1	1	1	x
-  Will RETAIN (0)
-  Will QoS (01)
-  Will flag (1)
-  Clean Start (1)
-  Username Flag (1)
-  Password Flag (1)
+    Description	    7	6	5	4	3	2	1	0
+    Connect Flags
+    byte 10	        1	1	0	0	1	1	1	x
+    Will RETAIN (0)
+    Will QoS (01)
+    Will flag (1)
+    Clean Start (1)
+    Username Flag (1)
+    Password Flag (1)
   }
   TMQTTConnectFlags = packed record
-    private
-      function GetBits(const aIndex: Integer): Integer;
-      procedure SetBits(const aIndex: Integer; const aValue: Integer);
-    public
-      Flags: Byte;
-      property CleanStart: Integer index $0101 read GetBits write SetBits;     // 1 bit at offset 1
-      property WillFlag: Integer index $0201 read GetBits write SetBits;       // 1 bit at offset 2
-      property WillQoS: Integer index $0302 read GetBits write SetBits;         // 2 bits at offset 3
-      property WillRetain: Integer index $0501 read GetBits write SetBits;        // 1 bit at offset 5
-      property Password: Integer index $0601 read GetBits write SetBits;      // 1 bit at offset 6
-      property UserName: Integer index $0701 read GetBits write SetBits;      // 1 bit at offset 7
+  private
+    function GetBits(const AIndex: Integer): Integer;
+    procedure SetBits(const AIndex: Integer; const AValue: Integer);
+
+  public
+    Flags : Byte;
+
+    property CleanStart : Integer
+      index $0101 read GetBits write SetBits;
+    // 1 bit at offset 1
+    property WillFlag : Integer
+      index $0201 read GetBits write SetBits;
+    // 1 bit at offset 2
+    property WillQoS : Integer
+      index $0302 read GetBits write SetBits;
+    // 2 bits at offset 3
+    property WillRetain : Integer
+      index $0501 read GetBits write SetBits;
+    // 1 bit at offset 5
+    property Password : Integer
+      index $0601 read GetBits write SetBits;
+    // 1 bit at offset 6
+    property UserName : Integer
+      index $0701 read GetBits write SetBits;
+    // 1 bit at offset 7
   end;
 
-  TConnAckEvent = procedure (Sender: TObject; ReturnCode: integer) of object;
-  TPublishEvent = procedure (Sender: TObject; topic, payload: UTF8String) of object;
-  TPingRespEvent = procedure (Sender: TObject) of object;
-  TPingReqEvent = procedure (Sender: TObject) of object;
-  TSubAckEvent = procedure (Sender: TObject; MessageID: integer; GrantedQoS: Array of integer) of object;
-  TUnSubAckEvent = procedure (Sender: TObject; MessageID: integer) of object;
-  TPubAckEvent = procedure (Sender: TObject; MessageID: integer) of object;
-  TPubRelEvent = procedure (Sender: TObject; MessageID: integer) of object;
-  TPubRecEvent = procedure (Sender: TObject; MessageID: integer) of object;
-  TPubCompEvent = procedure (Sender: TObject; MessageID: integer) of object;
+  TConnAckEvent = procedure(
+    Sender     : TObject;
+    ReturnCode : Integer
+  ) of object;
+
+  TPublishEvent = procedure(
+    Sender   : TObject;
+    ATopic   : UTF8String;
+    APayload : UTF8String
+  ) of object;
+
+  TPingRespEvent = procedure(Sender : TObject) of object;
+  TPingReqEvent  = procedure(Sender : TObject) of object;
+
+  TSubAckEvent   = procedure(
+    Sender      : TObject;
+    AMessageID  : Integer;
+    AGrantedQoS : array of Integer
+  ) of object;
+
+  TUnSubAckEvent = procedure(
+    Sender    : TObject;
+    AMessageID : Integer
+  ) of object;
+
+  TPubAckEvent = procedure(
+    Sender    : TObject;
+    AMessageID : Integer
+  ) of object;
+
+  TPubRelEvent = procedure(
+    Sender    : TObject;
+    AMessageID : Integer
+  ) of object;
+
+  TPubRecEvent = procedure(
+    Sender    : TObject;
+    AMessageID : Integer
+  ) of object;
+
+  TPubCompEvent = procedure(
+    Sender    : TObject;
+    AMessageID : Integer
+  ) of object;
 
   TMQTTVariableHeader = class
-    private
-      FBytes: TBytes;
-    protected
-      procedure AddField(AByte: Byte); overload;
-      procedure AddField(ABytes: TBytes); overload;
-      procedure ClearField;
-    public
-      constructor Create;
-      function ToBytes: TBytes; virtual;
+  private
+    FBytes : TBytes;
+
+  protected
+    procedure AddField(AByte : Byte); overload;
+    procedure AddField(ABytes : TBytes); overload;
+    procedure ClearField;
+
+  public
+
+    constructor Create;
+    function ToBytes : TBytes; virtual;
   end;
 
   TMQTTConnectVarHeader = class(TMQTTVariableHeader)
-    const
-      PROTOCOL_ID = 'MQIsdp';
-      PROTOCOL_VER = 3;
-    private
-      FConnectFlags: TMQTTConnectFlags;
-      FKeepAlive: integer;
-      function rebuildHeader: boolean;
-      procedure setupDefaultValues;
-      function get_CleanStart: integer;
-      function get_QoSLevel: integer;
-      function get_Retain: integer;
-      procedure set_CleanStart(const Value: integer);
-      procedure set_QoSLevel(const Value: integer);
-      procedure set_Retain(const Value: integer);
-      function get_WillFlag: integer;
-      procedure set_WillFlag(const Value: integer);
-      function get_Username: integer;
-      procedure set_Username(const Value: integer);
-      function get_Password: integer;
-      procedure set_Password(const Value: integer);
-    public
-      constructor Create(AKeepAlive: integer); overload;
-      constructor Create; overload;
-      constructor Create(ACleanStart: boolean); overload;
-      property KeepAlive: integer read FKeepAlive write FKeepAlive;
-      property CleanStart: integer read get_CleanStart write set_CleanStart;
-      property QoSLevel: integer read get_QoSLevel write set_QoSLevel;
-      property Retain: integer read get_Retain write set_Retain;
-      property Username: integer read get_Username write set_Username;
-      property Password: integer read get_Password write set_Password;
-      property WillFlag: integer read get_WillFlag write set_WillFlag;
-      function ToBytes: TBytes; override;
+  const
+    PROTOCOL_ID  = 'MQIsdp';
+    PROTOCOL_VER = 3;
+
+  private
+    FConnectFlags : TMQTTConnectFlags;
+    FKeepAlive    : Integer;
+
+    function RebuildHeader : Boolean;
+    procedure SetupDefaultValues;
+    function GetCleanStart : Integer;
+    function GetQoSLevel : Integer;
+    function GetRetain : Integer;
+    procedure SetCleanStart(const Value : Integer);
+    procedure SetQoSLevel(const Value : Integer);
+    procedure SetRetain(const Value : Integer);
+    function GetWillFlag : Integer;
+    procedure SetWillFlag(const Value : Integer);
+    function GetUserName : Integer;
+    procedure SetUsername(const Value : Integer);
+    function GetPassword : Integer;
+    procedure SetPassword(const Value : Integer);
+
+  public
+    constructor Create(AKeepAlive : Integer); overload;
+    constructor Create; overload;
+    constructor Create(ACleanStart : Boolean); overload;
+
+    property KeepAlive : Integer
+      read FKeepAlive write FKeepAlive;
+
+    property CleanStart : Integer
+      read GetCleanStart write SetCleanStart;
+
+    property QoSLevel : Integer
+      read GetQoSLevel write SetQoSLevel;
+
+    property Retain : Integer
+      read GetRetain write SetRetain;
+
+    property UserName : Integer
+      read GetUserName write SetUsername;
+
+    property Password : Integer
+      read GetPassword write SetPassword;
+
+    property WillFlag : Integer
+      read GetWillFlag write SetWillFlag;
+
+    function ToBytes : TBytes; override;
   end;
 
   TMQTTPublishVarHeader = class(TMQTTVariableHeader)
-    private
-      FTopic: UTF8String;
-      FQoSLevel: integer;
-      FMessageID: integer;
-      function get_MessageID: integer;
-      function get_QoSLevel: integer;
-      procedure set_MessageID(const Value: integer);
-      procedure set_QoSLevel(const Value: integer);
-      function get_Topic: UTF8String;
-      procedure set_Topic(const Value: UTF8String);
-      procedure rebuildHeader;
-    public
-      constructor Create(QoSLevel: integer); overload;
-      property MessageID: integer read get_MessageID write set_MessageID;
-      property QoSLevel: integer read get_QoSLevel write set_QoSLevel;
-      property Topic: UTF8String read get_Topic write set_Topic;
-      function ToBytes: TBytes; override;
+  private
+    FTopic     : UTF8String;
+    FQoSLevel  : Integer;
+    FMessageID : Integer;
+
+    function GetMessageID : Integer;
+    function GetQoSLevel : Integer;
+    procedure SetMessageID(const Value : Integer);
+    procedure SetQoSLevel(const Value : Integer);
+    function GetTopic : UTF8String;
+    procedure SetTopic(const Value : UTF8String);
+    procedure RebuildHeader;
+
+  public
+    constructor Create(QoSLevel : Integer); overload;
+
+    property MessageID : Integer
+      read GetMessageID write SetMessageID;
+
+    property QoSLevel : Integer
+      read GetQoSLevel write SetQoSLevel;
+
+    property Topic : UTF8String
+      read GetTopic write SetTopic;
+
+    function ToBytes : TBytes; override;
   end;
 
   TMQTTSubscribeVarHeader = class(TMQTTVariableHeader)
-    private
-      FMessageID: integer;
-    function get_MessageID: integer;
-    procedure set_MessageID(const Value: integer);
-    public
-      constructor Create(MessageId: integer); overload;
-      property MessageID: integer read get_MessageID write set_MessageID;
-      function ToBytes: TBytes; override;
+  private
+    FMessageID : Integer;
+
+    function GetMessageID : Integer;
+    procedure SetMessageID(const Value : Integer);
+
+  public
+    constructor Create(AMessageID : Integer); overload;
+
+    property MessageID : Integer
+      read GetMessageID write SetMessageID;
+
+    function ToBytes : TBytes; override;
   end;
 
   TMQTTUnsubscribeVarHeader = class(TMQTTVariableHeader)
-    private
-      FMessageID: integer;
-    function get_MessageID: integer;
-    procedure set_MessageID(const Value: integer);
-    public
-      constructor Create(MessageId: integer); overload;
-      property MessageID: integer read get_MessageID write set_MessageID;
-      function ToBytes: TBytes; override;
+  private
+    FMessageID : Integer;
+
+    function GetMessageID : Integer;
+    procedure SetMessageID(const Value : Integer);
+
+  public
+    constructor Create(AMessageID : Integer); overload;
+
+    property AMessageID : Integer
+      read GetMessageID write SetMessageID;
+
+    function ToBytes : TBytes; override;
   end;
 
   TMQTTPayload = class
-    private
-      FContents: TStringList;
-      FContainsIntLiterals: boolean;
-      FPublishMessage: boolean;
-    public
-      constructor Create;
-      destructor Destroy; override;
-      function ToBytes: TBytes; overload;
-      function ToBytes(WithIntegerLiterals: boolean): TBytes; overload;
-      property Contents: TStringList read FContents;
-      property ContainsIntLiterals: boolean read FContainsIntLiterals write FContainsIntLiterals;
-      property PublishMessage: boolean read FPublishMessage write FPublishMessage;
+  private
+    FContents            : TStringList;
+    FContainsIntLiterals : Boolean;
+    FPublishMessage      : Boolean;
+  public
+    constructor Create;
+    destructor Destroy; override;
+
+    function ToBytes : TBytes; overload;
+    function ToBytes(WithIntegerLiterals : Boolean) : TBytes; overload;
+
+    property Contents : TStringList
+      read FContents;
+
+    property ContainsIntLiterals : Boolean
+      read FContainsIntLiterals write FContainsIntLiterals;
+
+    property PublishMessage : Boolean
+      read FPublishMessage write FPublishMessage;
   end;
 
   TMQTTMessage = class
-    private
-      FRemainingLength: Integer;
-    public
-      FixedHeader: TMQTTFixedHeader;
-      VariableHeader: TMQTTVariableHeader;
-      Payload: TMQTTPayload;
-      constructor Create;
-      destructor Destroy; override;
-      function ToBytes: TBytes;
-      property RemainingLength: integer read FRemainingLength;
+  private
+    FRemainingLength : Integer;
+  public
+    FixedHeader    : TMQTTFixedHeader;
+    VariableHeader : TMQTTVariableHeader;
+    Payload        : TMQTTPayload;
+    constructor Create;
+    destructor Destroy; override;
+    function ToBytes : TBytes;
+    property RemainingLength : Integer read FRemainingLength;
   end;
 
   TMQTTUtilities = class
-    public
-      class function UTF8EncodeToBytes(AStrToEncode: UTF8String): TBytes;
-      class function UTF8EncodeToBytesNoLength(AStrToEncode: UTF8String): TBytes;
-      class function RLIntToBytes(ARlInt: integer): TBytes;
-      class function IntToMSBLSB(ANumber: Word): TBytes;
+  public
+    class function UTF8EncodeToBytes(AStrToEncode : UTF8String) : TBytes;
+    class function UTF8EncodeToBytesNoLength(AStrToEncode : UTF8String)
+      : TBytes;
+    class function RLIntToBytes(ARlInt : Integer) : TBytes;
+    class function IntToMSBLSB(ANumber : Word) : TBytes;
   end;
 
 implementation
 
-function GetDWordBits(const Bits: Byte; const aIndex: Integer): Integer;
+function GetDWordBits(const ABits: Byte; const AIndex: Integer) : Integer;
 begin
-  Result := (Bits shr (aIndex shr 8))       // offset
-            and ((1 shl Byte(aIndex)) - 1); // mask
+  Result := (ABits shr (AIndex shr 8)) // offset
+    and ((1 shl Byte(AIndex)) - 1);   // mask
 end;
 
-procedure SetDWordBits(var Bits: Byte; const aIndex: Integer; const aValue: Integer);
+procedure SetDWordBits(var ABits: Byte; const AIndex: Integer;
+  const AValue: Integer);
 var
-  Offset: Byte;
-  Mask: Integer;
+  LOffset : Byte;
+  LMask   : Integer;
 begin
-  Mask := ((1 shl Byte(aIndex)) - 1);
-  Assert(aValue <= Mask);
+  LMask := ((1 shl Byte(AIndex)) - 1);
+  Assert(AValue <= LMask);
 
-  Offset := aIndex shr 8;
-  Bits := (Bits and (not (Mask shl Offset)))
-          or DWORD(aValue shl Offset);
+  LOffset := AIndex shr 8;
+  ABits   := (ABits and (not(LMask shl LOffset)))
+    or DWORD(AValue shl LOffset);
 end;
 
-class function TMQTTUtilities.IntToMSBLSB(ANumber: Word): TBytes;
+class function TMQTTUtilities.IntToMSBLSB(ANumber : Word) : TBytes;
 begin
   SetLength(Result, 2);
   Result[0] := ANumber div 256;
@@ -248,109 +356,111 @@ end;
 
 class function TMQTTUtilities.UTF8EncodeToBytes(AStrToEncode: UTF8String): TBytes;
 var
-  i: integer;
-  //==============================================================================
+  I : Integer;
+  // ==============================================================================
   // HammerOh
-  temp: TBytes;
-  //==============================================================================
+  LTemp : TBytes;
+  // ==============================================================================
 begin
   { This is a UTF-8 hack to give 2 Bytes of Length MSB-LSB followed by a Single-byte
-  per character UTF8String. }
-  //==============================================================================
+    per character UTF8String. }
+  // ==============================================================================
   // HammerOh
-  temp := TEncoding.UTF8.GetBytes(AStrToEncode);
-  //==============================================================================
-
+  LTemp := TEncoding.UTF8.GetBytes(string(AStrToEncode));
+  // ==============================================================================
 
   SetLength(Result, Length(AStrToEncode) + 2);
 
   Result[0] := Length(AStrToEncode) div 256;
   Result[1] := Length(AStrToEncode) mod 256;
-  //==============================================================================
+  // ==============================================================================
   // HammerOh
-  (*)
-  for I := 0 to Length(AStrToEncode) - 1 do
-  begin
+  (* )
+    for I := 0 to Length(AStrToEncode) - 1 do
+    begin
     Result[i + 2] := Ord(AStrToEncode[i + 1]);
-  end;
-  (*)
+    end;
+    ( *)
   for I := 0 to Length(AStrToEncode) - 1 do
   begin
-    Result[i + 2] := temp[i];
+    Result[I + 2] := LTemp[I];
   end;
 
-  //==============================================================================
+  // ==============================================================================
 end;
 
-class function TMQTTUtilities.UTF8EncodeToBytesNoLength(AStrToEncode: UTF8String): TBytes;
+class function TMQTTUtilities.UTF8EncodeToBytesNoLength(
+  AStrToEncode: UTF8String) : TBytes;
 var
-  i: integer;
-  //==============================================================================
+  I : Integer;
+  // ==============================================================================
   // HammerOh
-  temp: TBytes;
-  //==============================================================================
+  LTemp : TBytes;
+  // ==============================================================================
 begin
-  //==============================================================================
+  // ==============================================================================
   // HammerOh
-  temp := TEncoding.UTF8.GetBytes(AStrToEncode);
-  //==============================================================================
+  LTemp := TEncoding.UTF8.GetBytes(string(AStrToEncode));
+  // ==============================================================================
   SetLength(Result, Length(AStrToEncode));
-  //==============================================================================
+  // ==============================================================================
   // HammerOh
-  (*)
-  for i := 0 to Length(AStrToEncode) - 1 do
-  begin
+  (* )
+    for i := 0 to Length(AStrToEncode) - 1 do
+    begin
     Result[i] := Ord(AStrToEncode[i + 1]);
-  end;
-  (*)
-  for i := 0 to Length(AStrToEncode) - 1 do
+    end;
+    ( *)
+  for I := 0 to Length(AStrToEncode) - 1 do
   begin
-    Result[i] := temp[i];
+    Result[I] := LTemp[I];
   end;
 
-  //==============================================================================
+  // ==============================================================================
 end;
 
 procedure AppendToByteArray(ASourceBytes: TBytes; var ATargetBytes: TBytes); overload;
 var
-  iUpperBnd: integer;
+  LUpperBnd : Integer;
 begin
   if Length(ASourceBytes) > 0 then
   begin
-    iUpperBnd := Length(ATargetBytes);
-    SetLength(ATargetBytes, iUpperBnd + Length(ASourceBytes));
-    Move(ASourceBytes[0], ATargetBytes[iUpperBnd], Length(ASourceBytes));
+    LUpperBnd := Length(ATargetBytes);
+    SetLength(ATargetBytes, LUpperBnd + Length(ASourceBytes));
+    Move(ASourceBytes[0], ATargetBytes[LUpperBnd], Length(ASourceBytes));
   end;
 end;
 
-procedure AppendToByteArray(ASourceByte: Byte; var ATargetBytes: TBytes); overload;
+procedure AppendToByteArray(
+  ASourceByte      : Byte;
+  var ATargetBytes : TBytes); overload;
 var
-  iUpperBnd: integer;
+  LUpperBnd : Integer;
 begin
-  iUpperBnd := Length(ATargetBytes);
-  SetLength(ATargetBytes, iUpperBnd + 1);
-  Move(ASourceByte, ATargetBytes[iUpperBnd], 1);
+  LUpperBnd := Length(ATargetBytes);
+  SetLength(ATargetBytes, LUpperBnd + 1);
+  Move(ASourceByte, ATargetBytes[LUpperBnd], 1);
 end;
 
-class function TMQTTUtilities.RLIntToBytes(ARlInt: integer): TBytes;
+class function TMQTTUtilities.RLIntToBytes(ARlInt : Integer) : TBytes;
 var
-  byteindex: integer;
-  digit: integer;
+  LByteIndex : Integer;
+  LDigit     : Integer;
 begin
   SetLength(Result, 1);
-  byteindex := 0;
-  while (ARlInt > 0) do
+  LByteIndex := 0;
+  while ARlInt > 0 do
   begin
-    digit := ARlInt mod 128;
+    LDigit := ARlInt mod 128;
     ARlInt := ARlInt div 128;
     if ARlInt > 0 then
     begin
-      digit := digit or $80;
+      LDigit := LDigit or $80;
     end;
-    Result[byteindex] := digit;
+    Result[LByteIndex] := LDigit;
     if ARlInt > 0 then
     begin
-      inc(byteindex);
+      inc(LByteIndex);
       SetLength(Result, Length(Result) + 1);
     end;
   end;
@@ -358,37 +468,36 @@ end;
 
 { TMQTTFixedHeader }
 
-function TMQTTFixedHeader.GetBits(const aIndex: Integer): Integer;
+function TMQTTFixedHeader.GetBits(const AIndex: Integer): Integer;
 begin
-  Result := GetDWordBits(Flags, aIndex);
+  Result := GetDWordBits(Flags, AIndex);
 end;
 
-procedure TMQTTFixedHeader.SetBits(const aIndex, aValue: Integer);
+procedure TMQTTFixedHeader.SetBits(const AIndex, AValue: Integer);
 begin
-  SetDWordBits(Flags, aIndex, aValue);
+  SetDWordBits(Flags, AIndex, AValue);
 end;
 
 { TMQTTMessage }
-
 
 { TMQTTVariableHeader }
 
 procedure TMQTTVariableHeader.AddField(AByte: Byte);
 var
-  DestUpperBnd: Integer;
+  LDestUpperBnd : Integer;
 begin
-  DestUpperBnd := Length(FBytes);
-  SetLength(FBytes, DestUpperBnd + SizeOf(AByte));
-  Move(AByte, FBytes[DestUpperBnd], SizeOf(AByte));
+  LDestUpperBnd := Length(FBytes);
+  SetLength(FBytes, LDestUpperBnd + SizeOf(AByte));
+  Move(AByte, FBytes[LDestUpperBnd], SizeOf(AByte));
 end;
 
-procedure TMQTTVariableHeader.AddField(ABytes: TBytes);
+procedure TMQTTVariableHeader.AddField(ABytes : TBytes);
 var
-  DestUpperBnd: Integer;
+  LDestUpperBnd : Integer;
 begin
-  DestUpperBnd := Length(FBytes);
-  SetLength(FBytes, DestUpperBnd + Length(ABytes));
-  Move(ABytes[0], FBytes[DestUpperBnd], Length(ABytes));
+  LDestUpperBnd := Length(FBytes);
+  SetLength(FBytes, LDestUpperBnd + Length(ABytes));
+  Move(ABytes[0], FBytes[LDestUpperBnd], Length(ABytes));
 end;
 
 procedure TMQTTVariableHeader.ClearField;
@@ -400,64 +509,64 @@ constructor TMQTTVariableHeader.Create;
 begin
 end;
 
-function TMQTTVariableHeader.ToBytes: TBytes;
+function TMQTTVariableHeader.ToBytes : TBytes;
 begin
   Result := FBytes;
 end;
 
 { TMQTTConnectVarHeader }
 
-constructor TMQTTConnectVarHeader.Create(ACleanStart: boolean);
+constructor TMQTTConnectVarHeader.Create(ACleanStart: Boolean);
 begin
   inherited Create;
-  setupDefaultValues;
-  Self.FConnectFlags.CleanStart := Ord(ACleanStart);
+  SetupDefaultValues;
+  FConnectFlags.CleanStart := Ord(ACleanStart);
 end;
 
-function TMQTTConnectVarHeader.get_CleanStart: integer;
+function TMQTTConnectVarHeader.GetCleanStart: Integer;
 begin
-  Result := Self.FConnectFlags.CleanStart;
+  Result := FConnectFlags.CleanStart;
 end;
 
-function TMQTTConnectVarHeader.get_Password: integer;
+function TMQTTConnectVarHeader.GetPassword: Integer;
 begin
-  Result := Self.FConnectFlags.Password;
+  Result := FConnectFlags.Password;
 end;
 
-function TMQTTConnectVarHeader.get_QoSLevel: integer;
+function TMQTTConnectVarHeader.GetQoSLevel: Integer;
 begin
-  Result := Self.FConnectFlags.WillQoS;
+  Result := FConnectFlags.WillQoS;
 end;
 
-function TMQTTConnectVarHeader.get_Retain: integer;
+function TMQTTConnectVarHeader.GetRetain: Integer;
 begin
-  Result := Self.FConnectFlags.WillRetain;
+  Result := FConnectFlags.WillRetain;
 end;
 
-function TMQTTConnectVarHeader.get_Username: integer;
+function TMQTTConnectVarHeader.GetUserName: Integer;
 begin
-  Result := Self.FConnectFlags.UserName;
+  Result := FConnectFlags.UserName;
 end;
 
-function TMQTTConnectVarHeader.get_WillFlag: integer;
+function TMQTTConnectVarHeader.GetWillFlag: Integer;
 begin
-  Result := Self.FConnectFlags.WillFlag;
+  Result := FConnectFlags.WillFlag;
 end;
 
-constructor TMQTTConnectVarHeader.Create(AKeepAlive: integer);
+constructor TMQTTConnectVarHeader.Create(AKeepAlive: Integer);
 begin
   inherited Create;
-  setupDefaultValues;
+  SetupDefaultValues;
   Self.FKeepAlive := AKeepAlive;
 end;
 
 constructor TMQTTConnectVarHeader.Create;
 begin
   inherited Create;
-  setupDefaultValues;
+  SetupDefaultValues;
 end;
 
-function TMQTTConnectVarHeader.rebuildHeader: boolean;
+function TMQTTConnectVarHeader.RebuildHeader : Boolean;
 begin
   try
     ClearField;
@@ -466,78 +575,78 @@ begin
     AddField(FConnectFlags.Flags);
     AddField(TMQTTUtilities.IntToMSBLSB(FKeepAlive));
   except
-    Result := false;
+    Result := False;
   end;
-  Result := true;
+  Result := True;
 end;
 
-procedure TMQTTConnectVarHeader.setupDefaultValues;
+procedure TMQTTConnectVarHeader.SetupDefaultValues;
 begin
-  Self.FConnectFlags.Flags := 0;
+  Self.FConnectFlags.Flags      := 0;
   Self.FConnectFlags.CleanStart := 1;
-  Self.FConnectFlags.WillQoS := 1;
+  Self.FConnectFlags.WillQoS    := 1;
   Self.FConnectFlags.WillRetain := 0;
-  Self.FConnectFlags.WillFlag := 1;
-  Self.FConnectFlags.UserName := 0;
-  Self.FConnectFlags.Password := 0;
-  Self.FKeepAlive := 10;
+  Self.FConnectFlags.WillFlag   := 1;
+  Self.FConnectFlags.UserName   := 0;
+  Self.FConnectFlags.Password   := 0;
+  Self.FKeepAlive               := 10;
 end;
 
-procedure TMQTTConnectVarHeader.set_CleanStart(const Value: integer);
+procedure TMQTTConnectVarHeader.SetCleanStart(const Value : Integer);
 begin
   Self.FConnectFlags.CleanStart := Value;
 end;
 
-procedure TMQTTConnectVarHeader.set_Password(const Value: integer);
+procedure TMQTTConnectVarHeader.SetPassword(const Value : Integer);
 begin
   Self.FConnectFlags.UserName := Value;
 end;
 
-procedure TMQTTConnectVarHeader.set_QoSLevel(const Value: integer);
+procedure TMQTTConnectVarHeader.SetQoSLevel(const Value : Integer);
 begin
   Self.FConnectFlags.WillQoS := Value;
 end;
 
-procedure TMQTTConnectVarHeader.set_Retain(const Value: integer);
+procedure TMQTTConnectVarHeader.SetRetain(const Value : Integer);
 begin
   Self.FConnectFlags.WillRetain := Value;
 end;
 
-procedure TMQTTConnectVarHeader.set_Username(const Value: integer);
+procedure TMQTTConnectVarHeader.SetUsername(const Value : Integer);
 begin
   Self.FConnectFlags.Password := Value;
 end;
 
-procedure TMQTTConnectVarHeader.set_WillFlag(const Value: integer);
+procedure TMQTTConnectVarHeader.SetWillFlag(const Value : Integer);
 begin
   Self.FConnectFlags.WillFlag := Value;
 end;
 
-function TMQTTConnectVarHeader.ToBytes: TBytes;
+function TMQTTConnectVarHeader.ToBytes : TBytes;
 begin
-  Self.rebuildHeader;
+  Self.RebuildHeader;
   Result := FBytes;
 end;
 
 { TMQTTConnectFlags }
 
-function TMQTTConnectFlags.GetBits(const aIndex: Integer): Integer;
+function TMQTTConnectFlags.GetBits(const AIndex : Integer) : Integer;
 begin
-  Result := GetDWordBits(Flags, aIndex);
+  Result := GetDWordBits(Flags, AIndex);
 end;
 
-procedure TMQTTConnectFlags.SetBits(const aIndex, aValue: Integer);
+procedure TMQTTConnectFlags.SetBits(const AIndex, AValue : Integer);
 begin
-  SetDWordBits(Flags, aIndex, aValue);
+  SetDWordBits(Flags, AIndex, AValue);
 end;
 
 { TMQTTPayload }
 
 constructor TMQTTPayload.Create;
 begin
-  FContents := TStringList.Create();
-  FContainsIntLiterals := false;
-  FPublishMessage := false;
+  FContents            := TStringList.Create();
+  FContainsIntLiterals := False;
+  FPublishMessage      := False;
 end;
 
 destructor TMQTTPayload.Destroy;
@@ -546,37 +655,37 @@ begin
   inherited;
 end;
 
-function TMQTTPayload.ToBytes(WithIntegerLiterals: boolean): TBytes;
+function TMQTTPayload.ToBytes(WithIntegerLiterals : Boolean) : TBytes;
 var
-  line: UTF8String;
-  lineAsBytes: TBytes;
-  lineAsInt: integer;
+  LLine        : UTF8String;
+  LLineAsBytes : TBytes;
+  LLineAsInt   : Integer;
 begin
   SetLength(Result, 0);
-  for line in FContents do
+  for LLine in FContents do
   begin
     // This is really nasty and needs refactoring into subclasses
     if PublishMessage then
     begin
-      lineAsBytes := TMQTTUtilities.UTF8EncodeToBytesNoLength(line);
-      AppendToByteArray(lineAsBytes, Result);
+      LLineAsBytes := TMQTTUtilities.UTF8EncodeToBytesNoLength(LLine);
+      AppendToByteArray(LLineAsBytes, Result);
     end
     else
     begin
-      if (WithIntegerLiterals and TryStrToInt(line, lineAsInt))then
+      if (WithIntegerLiterals and TryStrToInt(LLine, LLineAsInt)) then
       begin
-        AppendToByteArray(Lo(lineAsInt), Result);
+        AppendToByteArray(Lo(LLineAsInt), Result);
       end
       else
       begin
-        lineAsBytes := TMQTTUtilities.UTF8EncodeToBytes(line);
-        AppendToByteArray(lineAsBytes, Result);
+        LLineAsBytes := TMQTTUtilities.UTF8EncodeToBytes(LLine);
+        AppendToByteArray(LLineAsBytes, Result);
       end;
     end;
   end;
 end;
 
-function TMQTTPayload.ToBytes: TBytes;
+function TMQTTPayload.ToBytes : TBytes;
 begin
   Result := ToBytes(FContainsIntLiterals);
 end;
@@ -587,66 +696,69 @@ constructor TMQTTMessage.Create;
 begin
   inherited;
   // Fill our Fixed Header with Zeros to wipe any unintended noise.
-  //FillChar(FixedHeader, SizeOf(FixedHeader), #0);
+  // FillChar(FixedHeader, SizeOf(FixedHeader), #0);
 end;
 
 destructor TMQTTMessage.Destroy;
 begin
-  if Assigned(VariableHeader) then VariableHeader.Free;
-  if Assigned(Payload) then Payload.Free;
+  if Assigned(VariableHeader) then
+    VariableHeader.Free;
+  if Assigned(Payload) then
+    Payload.Free;
   inherited;
 end;
 
-function TMQTTMessage.ToBytes: TBytes;
+function TMQTTMessage.ToBytes : TBytes;
 var
-  iRemainingLength: integer;
-  bytesRemainingLength: TBytes;
-  i: integer;
+  LRemainingLength      : Integer;
+  LBytesRemainingLength : TBytes;
+  I                     : Integer;
 begin
-
   try
-    iRemainingLength := 0;
-    if Assigned(VariableHeader) then iRemainingLength := iRemainingLength + Length(VariableHeader.ToBytes);
-    if Assigned(Payload) then iRemainingLength := iRemainingLength + Length(Payload.ToBytes);
+    LRemainingLength := 0;
+    if Assigned(VariableHeader) then
+      LRemainingLength := LRemainingLength + Length(VariableHeader.ToBytes);
+    if Assigned(Payload) then
+      LRemainingLength := LRemainingLength + Length(Payload.ToBytes);
 
-    FRemainingLength := iRemainingLength;
-    bytesRemainingLength := TMQTTUtilities.RLIntToBytes(FRemainingLength);
+    FRemainingLength     := LRemainingLength;
+    LBytesRemainingLength := TMQTTUtilities.RLIntToBytes(FRemainingLength);
 
     AppendToByteArray(FixedHeader.Flags, Result);
-    AppendToByteArray(bytesRemainingLength, Result);
-    if Assigned(VariableHeader) then AppendToByteArray(VariableHeader.ToBytes, Result);
-    if Assigned(Payload) then AppendToByteArray(Payload.ToBytes, Result);
-
+    AppendToByteArray(LBytesRemainingLength, Result);
+    if Assigned(VariableHeader) then
+      AppendToByteArray(VariableHeader.ToBytes, Result);
+    if Assigned(Payload) then
+      AppendToByteArray(Payload.ToBytes, Result);
   except
-    //on E:Exception do
-
+    // on E:Exception do
   end;
 end;
 
 { TMQTTPublishVarHeader }
 
-constructor TMQTTPublishVarHeader.Create(QoSLevel: integer);
+constructor TMQTTPublishVarHeader.Create(QoSLevel : Integer);
 begin
   inherited Create;
-  FQosLevel := QoSLevel;
+  FQoSLevel := QoSLevel;
 end;
 
-function TMQTTPublishVarHeader.get_MessageID: integer;
+function TMQTTPublishVarHeader.GetMessageID : Integer;
 begin
   Result := FMessageID;
 end;
 
-function TMQTTPublishVarHeader.get_QoSLevel: integer;
+function TMQTTPublishVarHeader.GetQoSLevel : Integer;
 begin
   Result := FQoSLevel;
 end;
 
-function TMQTTPublishVarHeader.get_Topic: UTF8String;
+function TMQTTPublishVarHeader.GetTopic : UTF8String;
 begin
   Result := FTopic;
 end;
 
-procedure TMQTTPublishVarHeader.rebuildHeader;
+procedure TMQTTPublishVarHeader.RebuildHeader;
 begin
   ClearField;
   AddField(TMQTTUtilities.UTF8EncodeToBytes(FTopic));
@@ -656,46 +768,46 @@ begin
   end;
 end;
 
-procedure TMQTTPublishVarHeader.set_MessageID(const Value: integer);
+procedure TMQTTPublishVarHeader.SetMessageID(const Value : Integer);
 begin
   FMessageID := Value;
 end;
 
-procedure TMQTTPublishVarHeader.set_QoSLevel(const Value: integer);
+procedure TMQTTPublishVarHeader.SetQoSLevel(const Value : Integer);
 begin
   FQoSLevel := Value;
 end;
 
-procedure TMQTTPublishVarHeader.set_Topic(const Value: UTF8String);
+procedure TMQTTPublishVarHeader.SetTopic(const Value : UTF8String);
 begin
   FTopic := Value;
 end;
 
-function TMQTTPublishVarHeader.ToBytes: TBytes;
+function TMQTTPublishVarHeader.ToBytes : TBytes;
 begin
-  Self.rebuildHeader;
+  Self.RebuildHeader;
   Result := Self.FBytes;
 end;
 
 { TMQTTSubscribeVarHeader }
 
-constructor TMQTTSubscribeVarHeader.Create(MessageId: integer);
+constructor TMQTTSubscribeVarHeader.Create(AMessageID : Integer);
 begin
   inherited Create;
-  FMessageID := MessageId;
+  FMessageID := AMessageID;
 end;
 
-function TMQTTSubscribeVarHeader.get_MessageID: integer;
+function TMQTTSubscribeVarHeader.GetMessageID : Integer;
 begin
   Result := FMessageID;
 end;
 
-procedure TMQTTSubscribeVarHeader.set_MessageID(const Value: integer);
+procedure TMQTTSubscribeVarHeader.SetMessageID(const Value : Integer);
 begin
   FMessageID := Value;
 end;
 
-function TMQTTSubscribeVarHeader.ToBytes: TBytes;
+function TMQTTSubscribeVarHeader.ToBytes : TBytes;
 begin
   ClearField;
   AddField(TMQTTUtilities.IntToMSBLSB(FMessageID));
@@ -704,23 +816,23 @@ end;
 
 { TMQTTUnsubscribeVarHeader }
 
-constructor TMQTTUnsubscribeVarHeader.Create(MessageId: integer);
+constructor TMQTTUnsubscribeVarHeader.Create(AMessageID : Integer);
 begin
   inherited Create;
-  FMessageID := MessageId;
+  FMessageID := AMessageID;
 end;
 
-function TMQTTUnsubscribeVarHeader.get_MessageID: integer;
+function TMQTTUnsubscribeVarHeader.GetMessageID : Integer;
 begin
   Result := FMessageID;
 end;
 
-procedure TMQTTUnsubscribeVarHeader.set_MessageID(const Value: integer);
+procedure TMQTTUnsubscribeVarHeader.SetMessageID(const Value : Integer);
 begin
   FMessageID := Value;
 end;
 
-function TMQTTUnsubscribeVarHeader.ToBytes: TBytes;
+function TMQTTUnsubscribeVarHeader.ToBytes : TBytes;
 begin
   ClearField;
   AddField(TMQTTUtilities.IntToMSBLSB(FMessageID));
@@ -728,4 +840,3 @@ begin
 end;
 
 end.
-

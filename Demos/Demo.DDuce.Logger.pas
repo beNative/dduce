@@ -136,7 +136,7 @@ type
     tmrSendCounter            : TTimer;
     tmrSendValue              : TTimer;
     trbMain                   : TTrackBar;
-    chkMQTTChannel: TCheckBox;
+    chkMQTTChannel            : TCheckBox;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -194,6 +194,7 @@ type
     FLogFileChannel : ILogFileChannel;
     FWinIPCChannel  : IWinIPCChannel;
     FZeroMQChannel  : IZeroMQChannel;
+    FMQTTChannel    : IMQTTChannel;
     FLogger         : ILogger;
 
     procedure LoadSettings;
@@ -226,7 +227,7 @@ uses
   DDuce.Utils.Winapi,
   DDuce.Logger.Factories,
   DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.LogFile,
-  DDuce.Logger.Channels.ZeroMQ,
+  DDuce.Logger.Channels.ZeroMQ, DDuce.Logger.Channels.MQTT,
 
   Demo.Data, Demo.Resources, Demo.Settings, Demo.Factories;
 
@@ -285,17 +286,22 @@ begin
   btnSendInfo.Images      := imlLogger;
 
   FLogger := TLoggerFactories.CreateLogger;
+  LoadSettings;
   FWinIPCChannel  := TWinIPCChannel.Create(False);
-  FLogFileChannel := TLogFileChannel.Create;
+  FLogFileChannel := TLogFileChannel.Create(edtLogFile.Text);
   FZeroMQChannel  := TZeroMQChannel.Create(False);
+  FMQTTChannel    := TMQTTChannel.Create('192.168.0.219');
+//  FMQTTChannel    := TMQTTChannel.Create('localhost');
+//  FMQTTChannel.Enabled := True;
 
   chkZeroMQChannel.Hint := Format(SVersion, [FZeroMQChannel.ZMQVersion]);
 
   Logger.Channels.Add(FLogFileChannel);
   Logger.Channels.Add(FWinIPCChannel);
   Logger.Channels.Add(FZeroMQChannel);
+  Logger.Channels.Add(FMQTTChannel);
   Randomize;
-  LoadSettings;
+  edtLogFile.Text := FLogFileChannel.FileName;
 
   SL := TStringList.Create;
   try
@@ -310,6 +316,7 @@ end;
 procedure TfrmLogger.BeforeDestruction;
 begin
   SaveSettings;
+  FLogFileChannel.Enabled := False;
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
@@ -563,7 +570,11 @@ end;
 
 procedure TfrmLogger.chkLogFileChannelClick(Sender: TObject);
 begin
-  FLogFileChannel.Enabled := (Sender as TCheckBox).Checked;
+  if Assigned(FLogFileChannel) then
+  begin
+    FLogFileChannel.Enabled := (Sender as TCheckBox).Checked;
+    FLogFileChannel.FileName := edtLogFile.Text;
+  end;
 end;
 
 procedure TfrmLogger.chkSendRandomValueTimerClick(Sender: TObject);
@@ -578,8 +589,11 @@ end;
 
 procedure TfrmLogger.chkZeroMQChannelClick(Sender: TObject);
 begin
-  FZeroMQChannel.Enabled := (Sender as TCheckBox).Checked;
-  UpdateActions;
+  if Assigned(FZeroMQChannel) then
+  begin
+    FZeroMQChannel.Enabled := (Sender as TCheckBox).Checked;
+    UpdateActions;
+  end;
 end;
 
 procedure TfrmLogger.tmrSendCounterTimer(Sender: TObject);
@@ -614,9 +628,11 @@ end;
 {$REGION 'private methods'}
 procedure TfrmLogger.LoadSettings;
 begin
-  FLogFileChannel.Enabled := Settings.ReadBool(UnitName, 'LogFileChannel.Enabled');
-  FWinIPCChannel.Enabled  := Settings.ReadBool(UnitName, 'WinIPCChannel.Enabled');
-  FZeroMQChannel.Enabled  := Settings.ReadBool(UnitName, 'ZeroMQChannel.Enabled');
+  edtLogFile.Text := Settings.ReadString(UnitName, 'LogFileChannel.FileName');
+  chkLogFileChannel.Checked := Settings.ReadBool(UnitName, 'LogFileChannel.Enabled');
+  chkWinIPCChannel.Checked := Settings.ReadBool(UnitName, 'WinIPCChannel.Enabled');
+  chkZeroMQChannel.Checked := Settings.ReadBool(UnitName, 'ZeroMQChannel.Enabled');
+  //chkMQTTChannel.Checked := Settings.ReadBool(UnitName, 'MQTTChannel.Enabled');
   edtMethod1.Text := Settings.ReadString(
     UnitName, 'edtMethod1.Text', 'MyObject.Execute'
   );
@@ -631,8 +647,10 @@ end;
 procedure TfrmLogger.SaveSettings;
 begin
   Settings.WriteBool(UnitName, 'LogFileChannel.Enabled', FLogFileChannel.Enabled);
+  Settings.WriteString(UnitName, 'LogFileChannel.FileName', FLogFileChannel.FileName);
   Settings.WriteBool(UnitName, 'WinIPCChannel.Enabled', FWinIPCChannel.Enabled);
   Settings.WriteBool(UnitName, 'ZeroMQChannel.Enabled', FZeroMQChannel.Enabled);
+  Settings.WriteBool(UnitName, 'MQTTChannel.Enabled', FMQTTChannel.Enabled);
   Settings.WriteString(UnitName, 'edtMethod1.Text', edtMethod1.Text);
   Settings.WriteString(UnitName, 'edtMethod2.Text', edtMethod2.Text);
   Settings.WriteInteger(UnitName, 'MessageCount', StrToIntDef(edtMessageCount.Text, 0));

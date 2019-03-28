@@ -322,7 +322,6 @@ var
   DS : TDataSet;
   R  : DynamicRecord;
   F  : IDynamicField;
-  I  : Integer;
 begin
   DS := TTestUtils.CreateDataSet(100);
   try

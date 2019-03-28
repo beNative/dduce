@@ -97,7 +97,8 @@ contains
   DDuce.Logger.Interfaces in '..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas',
   DDuce.Logger in '..\Source\Modules\Logger\DDuce.Logger.pas',
   DDuce.AboutDialog in '..\Source\Modules\DDuce.AboutDialog.pas' {frmAboutDialog},
-  DDuce.EditList in '..\Source\Modules\DDuce.EditList.pas' {EditList};
+  DDuce.EditList in '..\Source\Modules\DDuce.EditList.pas' {EditList},
+  DDuce.Logger.Channels.MQTT in '..\Source\Modules\Logger\DDuce.Logger.Channels.MQTT.pas';
 
 end.
 

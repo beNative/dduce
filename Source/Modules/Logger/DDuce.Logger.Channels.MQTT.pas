@@ -36,12 +36,9 @@ uses
 type
   TMQTTChannel = class(TCustomLogChannel, ILogChannel, IMQTTChannel)
   private
-    FBuffer    : TStringStream;
-    FMQTT      : TMQTT;
-    //FPublisher : IZMQPair;
-    FPort      : Integer;
-    //FEndPoint  : string;
-    //FBound     : Boolean;
+    FBuffer : TStringStream;
+    FMQTT   : TMQTT;
+    FPort   : Integer;
 
   protected
     function GetPort: Integer; override;
@@ -51,9 +48,11 @@ type
     procedure BeforeDestruction; override;
     constructor Create(
       const ABrokerHost : string = '';
-      APort             : Integer = 1833;
+      APort             : Integer = 1883;
       AActive           : Boolean = True
     ); reintroduce; overload; virtual;
+
+    function GetConnected: Boolean; override;
 
     function Connect: Boolean; override;
     function Disconnect: Boolean; override;
@@ -71,6 +70,7 @@ uses
 procedure TMQTTChannel.AfterConstruction;
 begin
   inherited AfterConstruction;
+  FBuffer := TStringStream.Create;
   if Enabled then
   begin
     Connect;
@@ -81,6 +81,7 @@ procedure TMQTTChannel.BeforeDestruction;
 begin
   FMQTT.Disconnect;
   FMQTT.Free;
+  FBuffer.Free;
   inherited BeforeDestruction;
 end;
 
@@ -90,10 +91,17 @@ begin
   inherited Create(AActive);
   FPort := APort;
   FMQTT := TMQTT.Create(UTF8String(ABrokerHost), APort);
+  FMQTT.WillTopic := 'a';
+  FMQTT.WillMsg := 'a';
 end;
 {$ENDREGION}
 
 {$REGION 'property access methods'}
+function TMQTTChannel.GetConnected: Boolean;
+begin
+  Result := FMQTT.Connected;
+end;
+
 function TMQTTChannel.GetPort: Integer;
 begin
   Result := FPort;

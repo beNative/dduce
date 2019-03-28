@@ -39,6 +39,7 @@ type
     FShowStrings    : Boolean;
     FStreamWriter   : Lazy<TStreamWriter>;
     FFileName       : string;
+    FFileStream     : TFileStream;
 
     function Space(ACount: Integer): string;
     procedure UpdateIndentation;
@@ -106,9 +107,11 @@ begin
   FShowStrings  := True;
   FShowHeader   := False;
   Enabled       := False;
+  FFileStream := TFileStream.Create(FFileName, fmOpenWrite or fmShareDenyNone);
+
   FStreamWriter.Create(function: TStreamWriter
     begin
-      Result := TStreamWriter.Create(FFileName, True); // Append
+      Result := TStreamWriter.Create(FFileStream);
       if FShowHeader then
         Result.WriteLine('============|Log Session Started at ' + DateTimeToStr(Now)
           + ' by ' + Application.Title + '|============');
@@ -119,6 +122,7 @@ end;
 
 procedure TLogFileChannel.BeforeDestruction;
 begin
+  FFileStream.Free;
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
