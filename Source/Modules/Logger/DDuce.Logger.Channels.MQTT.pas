@@ -23,7 +23,7 @@ interface
 { Channel holding a MQTT publisher socket where one or more Logviewers can
   subscribe to.
 
-  The channel connects to a MQTT broker (like Mosquitto)
+  The channel connects to a MQTT broker (like Mosquitto).
 }
 
 uses
@@ -39,20 +39,27 @@ type
     FBuffer : TStringStream;
     FMQTT   : TMQTT;
     FPort   : Integer;
+    FBroker : string;
 
   protected
+    {$REGION 'property access methods'}
+    function GetBroker: string;
+    procedure SetBroker(const Value: string);
     function GetPort: Integer; override;
+    function GetConnected: Boolean; override;
+    {$ENDREGION}
+
+    property Broker: string
+      read GetBroker write SetBroker;
 
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
     constructor Create(
-      const ABrokerHost : string = '';
-      APort             : Integer = 1883;
-      AActive           : Boolean = True
+      const ABroker : string = '';
+      APort         : Integer = 1883;
+      AActive       : Boolean = True
     ); reintroduce; overload; virtual;
-
-    function GetConnected: Boolean; override;
 
     function Connect: Boolean; override;
     function Disconnect: Boolean; override;
@@ -85,18 +92,32 @@ begin
   inherited BeforeDestruction;
 end;
 
-constructor TMQTTChannel.Create(const ABrokerHost: string; APort: Integer;
+constructor TMQTTChannel.Create(const ABroker: string; APort: Integer;
   AActive: Boolean);
 begin
   inherited Create(AActive);
   FPort := APort;
-  FMQTT := TMQTT.Create(UTF8String(ABrokerHost), APort);
+  FMQTT := TMQTT.Create(UTF8String(ABroker), APort);
+  // some brokers require these to have a value
   FMQTT.WillTopic := 'a';
-  FMQTT.WillMsg := 'a';
+  FMQTT.WillMsg   := 'a';
 end;
 {$ENDREGION}
 
 {$REGION 'property access methods'}
+function TMQTTChannel.GetBroker: string;
+begin
+  Result := FBroker;
+end;
+
+procedure TMQTTChannel.SetBroker(const Value: string);
+begin
+  if Value <> Broker then
+  begin
+    FBroker := Value;
+  end;
+end;
+
 function TMQTTChannel.GetConnected: Boolean;
 begin
   Result := FMQTT.Connected;

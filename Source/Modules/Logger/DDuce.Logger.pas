@@ -20,7 +20,7 @@ unit DDuce.Logger;
 
 interface
 
-{ A global logger singleton for shared usage }
+{ A global logger singleton for shared usage. }
 
 uses
   DDuce.Logger.Interfaces;

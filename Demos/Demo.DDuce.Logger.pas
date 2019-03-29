@@ -79,6 +79,7 @@ type
     btnExitMethod1            : TButton;
     btnExitMethod2            : TButton;
     btnIncCounter             : TButton;
+    btnMQTTConnect            : TButton;
     btnResetCheckpoint        : TButton;
     btnResetCounter           : TButton;
     btnSendBitmap             : TButton;
@@ -105,6 +106,7 @@ type
     chkActions                : TCheckBox;
     chkEnableCountTimer       : TCheckBox;
     chkLogFileChannel         : TCheckBox;
+    chkMQTTChannel            : TCheckBox;
     chkSendRandomValueTimer   : TCheckBox;
     chkWinIPCChannel          : TCheckBox;
     chkZeroMQChannel          : TCheckBox;
@@ -113,6 +115,7 @@ type
     edtMessageCount           : TLabeledEdit;
     edtMethod1                : TLabeledEdit;
     edtMethod2                : TLabeledEdit;
+    edtMQTTBroker             : TLabeledEdit;
     grpActions                : TGroupBox;
     grpCheckpoints            : TGroupBox;
     grpCounters               : TGroupBox;
@@ -136,7 +139,6 @@ type
     tmrSendCounter            : TTimer;
     tmrSendValue              : TTimer;
     trbMain                   : TTrackBar;
-    chkMQTTChannel            : TCheckBox;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -286,22 +288,24 @@ begin
   btnSendInfo.Images      := imlLogger;
 
   FLogger := TLoggerFactories.CreateLogger;
-  LoadSettings;
   FWinIPCChannel  := TWinIPCChannel.Create(False);
-  FLogFileChannel := TLogFileChannel.Create(edtLogFile.Text);
+  //FLogFileChannel := TLogFileChannel.Create(edtLogFile.Text);
   FZeroMQChannel  := TZeroMQChannel.Create(False);
   FMQTTChannel    := TMQTTChannel.Create('192.168.0.219');
 //  FMQTTChannel    := TMQTTChannel.Create('localhost');
 //  FMQTTChannel.Enabled := True;
 
+
   chkZeroMQChannel.Hint := Format(SVersion, [FZeroMQChannel.ZMQVersion]);
 
-  Logger.Channels.Add(FLogFileChannel);
+  LoadSettings;
+
+  //Logger.Channels.Add(FLogFileChannel);
   Logger.Channels.Add(FWinIPCChannel);
   Logger.Channels.Add(FZeroMQChannel);
   Logger.Channels.Add(FMQTTChannel);
   Randomize;
-  edtLogFile.Text := FLogFileChannel.FileName;
+  //edtLogFile.Text := FLogFileChannel.FileName;
 
   SL := TStringList.Create;
   try
@@ -316,7 +320,7 @@ end;
 procedure TfrmLogger.BeforeDestruction;
 begin
   SaveSettings;
-  FLogFileChannel.Enabled := False;
+  //FLogFileChannel.Enabled := False;
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
@@ -629,33 +633,44 @@ end;
 procedure TfrmLogger.LoadSettings;
 begin
   edtLogFile.Text := Settings.ReadString(UnitName, 'LogFileChannel.FileName');
-  chkLogFileChannel.Checked := Settings.ReadBool(UnitName, 'LogFileChannel.Enabled');
-  chkWinIPCChannel.Checked := Settings.ReadBool(UnitName, 'WinIPCChannel.Enabled');
-  chkZeroMQChannel.Checked := Settings.ReadBool(UnitName, 'ZeroMQChannel.Enabled');
-  //chkMQTTChannel.Checked := Settings.ReadBool(UnitName, 'MQTTChannel.Enabled');
+  chkLogFileChannel.Checked :=
+    Settings.ReadBool(UnitName, 'LogFileChannel.Enabled');
+  chkWinIPCChannel.Checked :=
+    Settings.ReadBool(UnitName, 'WinIPCChannel.Enabled');
+  chkZeroMQChannel.Checked :=
+    Settings.ReadBool(UnitName, 'ZeroMQChannel.Enabled');
+  edtEndPoint.Text := Settings.ReadString(UnitName, 'ZeroMQChannel.EndPoint');
+  chkMQTTChannel.Checked :=
+    Settings.ReadBool(UnitName, 'MQTTChannel.Enabled');
+  edtMQTTBroker.Text :=
+    Settings.ReadString(UnitName, 'MQTTChannel.Broker');
   edtMethod1.Text := Settings.ReadString(
     UnitName, 'edtMethod1.Text', 'MyObject.Execute'
   );
   edtMethod2.Text := Settings.ReadString(
     UnitName, 'edtMethod2.Text', 'MyObject.Update'
   );
-  edtMessageCount.Text := IntToStr(Settings.ReadInteger(UnitName, 'MessageCount'));
-  edtEndPoint.Text := Settings.ReadString(UnitName, 'EndPoint');
+  edtMessageCount.Text :=
+    IntToStr(Settings.ReadInteger(UnitName, 'MessageCount'));
   chkActions.Checked := Settings.ReadBool(UnitName, 'LogActions');
 end;
 
 procedure TfrmLogger.SaveSettings;
 begin
-  Settings.WriteBool(UnitName, 'LogFileChannel.Enabled', FLogFileChannel.Enabled);
-  Settings.WriteString(UnitName, 'LogFileChannel.FileName', FLogFileChannel.FileName);
-  Settings.WriteBool(UnitName, 'WinIPCChannel.Enabled', FWinIPCChannel.Enabled);
-  Settings.WriteBool(UnitName, 'ZeroMQChannel.Enabled', FZeroMQChannel.Enabled);
-  Settings.WriteBool(UnitName, 'MQTTChannel.Enabled', FMQTTChannel.Enabled);
-  Settings.WriteString(UnitName, 'edtMethod1.Text', edtMethod1.Text);
-  Settings.WriteString(UnitName, 'edtMethod2.Text', edtMethod2.Text);
-  Settings.WriteInteger(UnitName, 'MessageCount', StrToIntDef(edtMessageCount.Text, 0));
-  Settings.WriteString(UnitName, 'EndPoint', edtEndPoint.Text);
-  Settings.WriteBool(UnitName, 'LogActions', chkActions.Checked);
+  with Settings do
+  begin
+    //WriteBool(UnitName, 'LogFileChannel.Enabled', FLogFileChannel.Enabled);
+    //WriteString(UnitName, 'LogFileChannel.FileName', FLogFileChannel.FileName);
+    WriteBool(UnitName, 'WinIPCChannel.Enabled', FWinIPCChannel.Enabled);
+    WriteBool(UnitName, 'ZeroMQChannel.Enabled', FZeroMQChannel.Enabled);
+    WriteString(UnitName, 'ZeroMQChannel.EndPoint', edtEndPoint.Text);
+    WriteBool(UnitName, 'MQTTChannel.Enabled', FMQTTChannel.Enabled);
+    WriteString(UnitName, 'MQTTChannel.Broker', edtMQTTBroker.Text);
+    WriteString(UnitName, 'edtMethod1.Text', edtMethod1.Text);
+    WriteString(UnitName, 'edtMethod2.Text', edtMethod2.Text);
+    WriteInteger(UnitName, 'MessageCount', StrToIntDef(edtMessageCount.Text, 0));
+    WriteBool(UnitName, 'LogActions', chkActions.Checked);
+  end;
 end;
 
 procedure TfrmLogger.TestProcedure1;
@@ -705,11 +720,11 @@ begin
   actLeaveMethod1.Enabled := FM1Entered;
   actEnterMethod2.Enabled := not FM2Entered;
   actLeaveMethod2.Enabled := FM2Entered;
-  chkLogFileChannel.Checked := FLogFileChannel.Enabled;
-  chkWinIPCChannel.Checked  := FWinIPCChannel.Enabled;
-  lblCounterValue.Caption  := Logger.GetCounter('Counter').ToString;
+  //chkLogFileChannel.Checked := FLogFileChannel.Enabled;
+  chkWinIPCChannel.Checked := FWinIPCChannel.Enabled;
+  lblCounterValue.Caption := Logger.GetCounter('Counter').ToString;
   lblPositionValue.Caption := trbMain.Position.ToString;
-  actSendMessages.Caption  := Format('Send %s messages', [edtMessageCount.Text]);
+  actSendMessages.Caption := Format('Send %s messages', [edtMessageCount.Text]);
 
   B := chkZeroMQChannel.Checked;
   edtEndPoint.Enabled := B;

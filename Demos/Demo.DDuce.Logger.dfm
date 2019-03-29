@@ -4,7 +4,7 @@ object frmLogger: TfrmLogger
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Logger'
-  ClientHeight = 656
+  ClientHeight = 701
   ClientWidth = 644
   Color = clBtnFace
   DoubleBuffered = True
@@ -24,7 +24,7 @@ object frmLogger: TfrmLogger
   object grpWatches: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 538
+    Top = 579
     Width = 638
     Height = 50
     Align = alTop
@@ -85,7 +85,7 @@ object frmLogger: TfrmLogger
   object grpMethodTracing: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 220
+    Top = 261
     Width = 638
     Height = 85
     Align = alTop
@@ -173,7 +173,7 @@ object frmLogger: TfrmLogger
   object grpNotificationMessages: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 156
+    Top = 197
     Width = 638
     Height = 58
     Align = alTop
@@ -228,7 +228,7 @@ object frmLogger: TfrmLogger
   object grpCounters: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 311
+    Top = 352
     Width = 638
     Height = 58
     Align = alTop
@@ -296,13 +296,13 @@ object frmLogger: TfrmLogger
     Left = 3
     Top = 3
     Width = 638
-    Height = 93
+    Height = 134
     Align = alTop
     Caption = 'Logger channels'
     TabOrder = 4
     DesignSize = (
       638
-      93)
+      134)
     object lblLogViewer: TLabel
       Left = 220
       Top = 0
@@ -372,7 +372,7 @@ object frmLogger: TfrmLogger
     end
     object chkWinIPCChannel: TCheckBox
       Left = 17
-      Top = 69
+      Top = 103
       Width = 61
       Height = 17
       Hint = 'Enables or disables WinIPC channel.'
@@ -382,7 +382,7 @@ object frmLogger: TfrmLogger
     end
     object chkZeroMQChannel: TCheckBox
       Left = 17
-      Top = 46
+      Top = 48
       Width = 61
       Height = 17
       Hint = 'Enables or disables ZeroMQ channel.'
@@ -404,7 +404,7 @@ object frmLogger: TfrmLogger
     end
     object edtEndPoint: TLabeledEdit
       Left = 235
-      Top = 46
+      Top = 44
       Width = 142
       Height = 21
       Alignment = taCenter
@@ -441,19 +441,48 @@ object frmLogger: TfrmLogger
       TabOrder = 6
     end
     object chkMQTTChannel: TCheckBox
-      Left = 84
-      Top = 69
+      Left = 17
+      Top = 74
       Width = 53
       Height = 17
       Hint = 'Enables or disables MQTT channel.'
       Caption = 'MQTT'
       TabOrder = 7
     end
+    object edtMQTTBroker: TLabeledEdit
+      Left = 235
+      Top = 72
+      Width = 142
+      Height = 21
+      Alignment = taCenter
+      Anchors = [akLeft, akTop, akRight]
+      EditLabel.Width = 35
+      EditLabel.Height = 13
+      EditLabel.Caption = 'Broker:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      LabelPosition = lpLeft
+      ParentFont = False
+      TabOrder = 8
+      Text = 'localhost'
+    end
+    object btnMQTTConnect: TButton
+      Left = 85
+      Top = 70
+      Width = 91
+      Height = 25
+      Caption = 'Connect'
+      TabOrder = 9
+      OnClick = actZMQBindExecute
+    end
   end
   object grpCheckpoints: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 594
+    Top = 635
     Width = 638
     Height = 59
     Align = alTop
@@ -492,7 +521,7 @@ object frmLogger: TfrmLogger
   object grpValues: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 375
+    Top = 416
     Width = 638
     Height = 118
     Align = alTop
@@ -611,7 +640,7 @@ object frmLogger: TfrmLogger
   object grpCustom: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 102
+    Top = 143
     Width = 638
     Height = 48
     Align = alTop
@@ -671,7 +700,7 @@ object frmLogger: TfrmLogger
   end
   object grpActions: TGroupBox
     Left = 0
-    Top = 496
+    Top = 537
     Width = 644
     Height = 39
     Align = alTop
@@ -691,8 +720,8 @@ object frmLogger: TfrmLogger
   object aclMain: TActionList
     Images = imlLogger
     OnExecute = aclMainExecute
-    Left = 352
-    Top = 152
+    Left = 528
+    Top = 88
     object actSendInfo: TAction
       Caption = 'Send Info'
       ImageIndex = 3
@@ -866,15 +895,15 @@ object frmLogger: TfrmLogger
   object tmrSendCounter: TTimer
     Enabled = False
     OnTimer = tmrSendCounterTimer
-    Left = 248
-    Top = 152
+    Left = 400
+    Top = 88
   end
   object imlLogger: TImageList
     ColorDepth = cd32Bit
-    Left = 304
-    Top = 152
+    Left = 464
+    Top = 88
     Bitmap = {
-      494C010118001D00480010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010118001D005C0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000007000000001002000000000000070
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

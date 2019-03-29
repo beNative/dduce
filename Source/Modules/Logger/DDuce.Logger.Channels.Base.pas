@@ -82,6 +82,11 @@ begin
   Result := FEnabled;
 end;
 
+procedure TCustomLogChannel.SetEnabled(const Value: Boolean);
+begin
+  FEnabled := Value;
+end;
+
 function TCustomLogChannel.GetAutoConnect: Boolean;
 begin
   Result := FAutoConnect;
@@ -92,11 +97,6 @@ begin
   FAutoConnect := Value;
 end;
 
-procedure TCustomLogChannel.SetEnabled(const Value: Boolean);
-begin
-  FEnabled := Value;
-end;
-
 function TCustomLogChannel.GetConnected: Boolean;
 begin
   Result := False; // to be overridden in descendants
@@ -104,7 +104,7 @@ end;
 
 function TCustomLogChannel.GetPort: Integer;
 begin
-  Result := 0;
+  Result := 0;  // to be overridden in descendants
 end;
 {$ENDREGION}
 

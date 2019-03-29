@@ -233,7 +233,6 @@ end;
 {$REGION 'public methods'}
 function TLogFileChannel.Write(const AMsg: TLogMessage): Boolean;
 begin
-  // Exit method identation must be set before
   if (AMsg.MsgType = Integer(lmtLeaveMethod)) and (FRelativeIndent >= 2) then
     Dec(FRelativeIndent, 2);
   if ShowDate then

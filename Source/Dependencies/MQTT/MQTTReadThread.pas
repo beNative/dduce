@@ -3,11 +3,8 @@ unit MQTTReadThread;
 interface
 
 uses
-  Classes, SysUtils,
-{$IFDEF MSWINDOWS}
-  Windows,
-{$ENDIF}
-  Generics.Collections, SyncObjs,
+  Winapi.Windows,
+  System.Classes, System.SysUtils, System.Generics.Collections, System.SyncObjs,
 
   // ==============================================================================
   // HammerOh
@@ -24,8 +21,8 @@ type
 
   TMQTTRecvUtilities = class
   public
-    class function MSBLSBToInt(ALengthBytes : TBytes) : Integer;
-    class function RLBytesToInt(ARlBytes : TBytes) : Integer;
+    class function MSBLSBToInt(ALengthBytes: TBytes): Integer;
+    class function RLBytesToInt(ARlBytes: TBytes): Integer;
   end;
 
   TUnparsedMsg = record
@@ -69,7 +66,7 @@ type
     function ReadMessageId(
       const ADataStream   : TBytes;
       const AIndexStartAt : Integer;
-      var messageId      : Integer
+      var AMessageId      : Integer
     ) : Integer;
     function ReadStringWithoutPrefix(
       const ADataStream   : TBytes;
@@ -90,7 +87,6 @@ type
       var CSSock : TCriticalSection);
     // ==============================================================================
 
-    // Event properties.
     property OnConnAck : TConnAckEvent
       read FConnAckEvent write FConnAckEvent;
 
@@ -127,7 +123,22 @@ implementation
 uses
   MQTT;
 
-class function TMQTTRecvUtilities.MSBLSBToInt(ALengthBytes : TBytes) : Integer;
+{$REGION 'non-interfaced routines'}
+procedure AppendBytes(var ADestArray: TBytes; const ANewBytes: TBytes);
+var
+  LDestLen : Integer;
+begin
+  if Length(ANewBytes) > 0 then
+  begin
+    LDestLen := Length(ADestArray);
+    SetLength(ADestArray, LDestLen + Length(ANewBytes));
+    Move(ANewBytes[0], ADestArray[LDestLen], Length(ANewBytes));
+  end;
+end;
+{$ENDREGION}
+
+{$REGION 'TMQTTRecvUtilities'}
+class function TMQTTRecvUtilities.MSBLSBToInt(ALengthBytes: TBytes): Integer;
 begin
   Assert(ALengthBytes <> nil, 'Must not pass nil to this method');
   Assert(Length(ALengthBytes) = 2,
@@ -138,7 +149,7 @@ begin
   Result := Result + ALengthBytes[1];
 end;
 
-class function TMQTTRecvUtilities.RLBytesToInt(ARlBytes : TBytes) : Integer;
+class function TMQTTRecvUtilities.RLBytesToInt(ARlBytes: TBytes): Integer;
 var
   LMulti : Integer;
   I      : Integer;
@@ -161,21 +172,9 @@ begin
     until ((LDigit and 128) = 0);
   end;
 end;
+{$ENDREGION}
 
-procedure AppendBytes(var ADestArray  : TBytes; const ANewBytes : TBytes);
-var
-  LDestLen : Integer;
-begin
-  if Length(ANewBytes) > 0 then
-  begin
-    LDestLen := Length(ADestArray);
-    SetLength(ADestArray, LDestLen + Length(ANewBytes));
-    Move(ANewBytes[0], ADestArray[LDestLen], Length(ANewBytes));
-  end;
-end;
-
-{ TMQTTReadThread }
-
+{$REGION 'TMQTTReadThread'}
 procedure TMQTTReadThread.CleanStart;
 begin
   FCurrentRecvState := TMQTTRecvState.FixedHeaderByte;
@@ -184,8 +183,8 @@ end;
 // ==============================================================================
 // HammerOh
 // constructor TMQTTReadThread.Create(Socket: TTCPBlockSocket; CSSock: TCriticalSection);
-constructor TMQTTReadThread.Create(var Socket : TIdTCPClient;
-  var CSSock : TCriticalSection);
+constructor TMQTTReadThread.Create(var Socket: TIdTCPClient;
+  var CSSock: TCriticalSection);
 // ==============================================================================
 begin
   inherited Create(false);
@@ -466,20 +465,16 @@ begin
 
 end;
 
-function TMQTTReadThread.ReadMessageId(
-  const ADataStream   : TBytes;
-  const AIndexStartAt : Integer;
-  var messageId      : Integer) : Integer;
+function TMQTTReadThread.ReadMessageId(const ADataStream: TBytes;
+  const AIndexStartAt: Integer; var AMessageId: Integer) : Integer;
 begin
-  messageId := TMQTTRecvUtilities.MSBLSBToInt
+  AMessageId := TMQTTRecvUtilities.MSBLSBToInt
     (Copy(ADataStream, AIndexStartAt, 2));
   Result := AIndexStartAt + 2;
 end;
 
-function TMQTTReadThread.ReadStringWithoutPrefix(
-  const ADataStream   : TBytes;
-  const AIndexStartAt : Integer;
-  var AStringRead     : string) : Integer;
+function TMQTTReadThread.ReadStringWithoutPrefix(const ADataStream: TBytes;
+  const AIndexStartAt : Integer; var AStringRead: string): Integer;
 var
   LLength : Integer;
 begin
@@ -514,5 +509,6 @@ begin
   end;
   Result := AIndexStartAt + LLength;
 end;
+{$ENDREGION}
 
 end.
