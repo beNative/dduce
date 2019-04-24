@@ -20,7 +20,7 @@ type
   TMQTT = class
   private
     FClientId   : UTF8String;
-    FHostname   : UTF8String;
+    FHostname   : string;
     FPort       : Integer;
     FMessageId  : Integer;
     FConnected  : Boolean;
@@ -137,8 +137,8 @@ type
     function PingReq: Boolean;
 
     constructor Create(
-      AHostName : UTF8String;
-      APort     : Integer
+      const AHostName : string;
+      APort           : Integer
     );
     destructor Destroy; override;
 
@@ -214,7 +214,7 @@ begin
     // HammerOh
     // FSocket.Connect(Self.FHostname, IntToStr(Self.FPort));
     FSocket.Host := FHostname;
-    FSocket.port := FPort;
+    FSocket.Port := FPort;
     FSocket.Connect;
     // ==============================================================================
     FConnected := True;
@@ -241,7 +241,7 @@ begin
         LMsg.Payload.Contents.Add(Self.FWillMsg);
       end;
 
-      if ((Length(FUsername) > 1) and (Length(FPassword) > 1)) then
+      if (Length(FUsername) > 1) and (Length(FPassword) > 1) then
       begin
         LMsg.Payload.Contents.Add(FUsername);
         LMsg.Payload.Contents.Add(FPassword);
@@ -277,9 +277,7 @@ begin
   Result.FixedHeader.Duplicate   := 0;
 end;
 
-constructor TMQTT.Create(
-  AHostName : UTF8String;
-  APort     : Integer);
+constructor TMQTT.Create(const AHostName: string; APort: Integer);
 begin
   inherited Create;
 
@@ -338,7 +336,7 @@ begin
   begin
     FreeAndNil(FCSSock);
   end;
-  inherited;
+  inherited Destroy;
 end;
 
 function TMQTT.Disconnect: Boolean;

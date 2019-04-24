@@ -28,47 +28,71 @@ uses
 
   DDuce.Reflect,
 
-  TestFramework,
+  DUnitX.TestFramework,
 
   Test.Data;
 
 type
-  TestReflect = class(TTestCase)
+  [Testfixture]
+  TestReflect = class
   private
     FTestObject : TTestClass;
     FTestRecord : TTestRecord;
 
   public
-    procedure SetUp; override;
-    procedure TearDown; override;
+    [Setup]
+    procedure Setup;
+    [TearDown]
+    procedure TearDown;
 
     { For the Real48 legacy type no RTTI is generated. }
+    [Test][Ignore('For the Real48 legacy type no RTTI is generated.')]
     procedure Test_TypeName_method_for_Real48_argument;
-
-  published
+    [Test]
     procedure Test_TypeName_method_for_Boolean_argument;
+    [Test]
     procedure Test_TypeName_method_for_Byte_argument;
+    [Test]
     procedure Test_TypeName_method_for_Cardinal_argument;
+    [Test]
     procedure Test_TypeName_method_for_Currency_argument;
+    [Test]
     procedure Test_TypeName_method_for_Double_argument;
+    [Test]
     procedure Test_TypeName_method_for_Extended_argument;
+    [Test]
     procedure Test_TypeName_method_for_Int64_argument;
+    [Test]
     procedure Test_TypeName_method_for_Integer_argument;
+    [Test]
     procedure Test_TypeName_method_for_LongInt_argument;
+    [Test]
     procedure Test_TypeName_method_for_LongWord_argument;
+    [Test]
     procedure Test_TypeName_method_for_NativeInt_argument;
+    [Test]
     procedure Test_TypeName_method_for_NativeUInt_argument;
+    [Test]
     procedure Test_TypeName_method_for_Real_argument;
+    [Test]
     procedure Test_TypeName_method_for_ShortInt_argument;
+    [Test]
     procedure Test_TypeName_method_for_Single_argument;
+    [Test]
     procedure Test_TypeName_method_for_string_argument;
+    [Test]
     procedure Test_TypeName_method_for_Variant_argument;
+    [Test]
     procedure Test_TypeName_method_for_Word_argument;
 
+    [Test]
     procedure Test_Fields_method_for_class_argument;
+    [Test]
     procedure Test_Fields_method_for_record_argument;
+    [Test]
     procedure Test_Fields_method_for_TValue_argument;
 
+    [Test]
     procedure Test_Properties_method_for_class_argument;
 
   end;
@@ -80,19 +104,17 @@ uses
 
   Test.Utils,
 
-  DDuce.Logger, DDuce.DynamicRecord;
+  DDuce.DynamicRecord;
 
 {$REGION 'SetUp and TearDown methods'}
-procedure TestReflect.SetUp;
+procedure TestReflect.Setup;
 begin
-  inherited SetUp;
   FTestObject := TTestUtils.CreateTestObject;
   FTestRecord := TTestUtils.CreateTestRecord;
 end;
 
 procedure TestReflect.TearDown;
 begin
-  inherited TearDown;
   FTestObject.Free;
 end;
 {$ENDREGION}
@@ -103,12 +125,12 @@ var
   DR : IDynamicRecord;
 begin
   DR := Reflect.Fields(FTestObject);
-  CheckEqualsString(FTestObject.TestString, DR['FTestString'].AsString);
-  CheckEquals(FTestObject.TestBoolean, DR['FTestBoolean'].AsBoolean);
-  CheckEquals(FTestObject.TestChar, DR['FTestChar'].AsType<Char>);
-  CheckEquals(FTestObject.TestDateTime, DR['FTestDateTime'].AsType<TDateTime>);
-  CheckEquals(FTestObject.TestDouble, DR['FTestDouble'].AsExtended);
-  CheckEquals(FTestObject.TestInteger, DR['FTestInteger'].AsInteger);
+  Assert.AreEqual(FTestObject.TestString, DR['FTestString'].AsString);
+  Assert.AreEqual(FTestObject.TestBoolean, DR['FTestBoolean'].AsBoolean);
+  Assert.AreEqual(FTestObject.TestChar, DR['FTestChar'].AsType<Char>);
+  Assert.AreEqual(FTestObject.TestDateTime, DR['FTestDateTime'].AsType<TDateTime>);
+  Assert.AreEqual(FTestObject.TestDouble, Double(DR['FTestDouble'].AsExtended));
+  Assert.AreEqual(FTestObject.TestInteger, DR['FTestInteger'].AsInteger);
 end;
 
 procedure TestReflect.Test_Fields_method_for_record_argument;
@@ -116,12 +138,12 @@ var
   DR : IDynamicRecord;
 begin
   DR := Reflect.Fields(FTestRecord);
-  CheckEqualsString(FTestRecord.TestString, DR['FTestString'].AsString);
-  CheckEquals(FTestRecord.TestBoolean, DR['FTestBoolean'].AsBoolean);
-  CheckEquals(FTestRecord.TestChar, DR['FTestChar'].AsType<Char>);
-  CheckEquals(FTestRecord.TestDateTime, DR['FTestDateTime'].AsType<TDateTime>);
-  CheckEquals(FTestRecord.TestDouble, DR['FTestDouble'].AsExtended);
-  CheckEquals(FTestRecord.TestInteger, DR['FTestInteger'].AsInteger);
+  Assert.AreEqual(FTestRecord.TestString, DR['FTestString'].AsString);
+  Assert.AreEqual(FTestRecord.TestBoolean, DR['FTestBoolean'].AsBoolean);
+  Assert.AreEqual(FTestRecord.TestChar, DR['FTestChar'].AsType<Char>);
+  Assert.AreEqual(FTestRecord.TestDateTime, DR['FTestDateTime'].AsType<TDateTime>);
+  Assert.AreEqual(FTestRecord.TestDouble, Double(DR['FTestDouble'].AsExtended));
+  Assert.AreEqual(FTestRecord.TestInteger, DR['FTestInteger'].AsInteger);
 end;
 
 procedure TestReflect.Test_Fields_method_for_TValue_argument;
@@ -131,12 +153,12 @@ var
 begin
   V := TValue.From(FTestRecord);
   DR := Reflect.Fields(V);
-  CheckEqualsString(FTestRecord.TestString, DR['FTestString'].AsString);
-  CheckEquals(FTestRecord.TestBoolean, DR['FTestBoolean'].AsBoolean);
-  CheckEquals(FTestRecord.TestChar, DR['FTestChar'].AsType<Char>);
-  CheckEquals(FTestRecord.TestDateTime, DR['FTestDateTime'].AsType<TDateTime>);
-  CheckEquals(FTestRecord.TestDouble, DR['FTestDouble'].AsExtended);
-  CheckEquals(FTestRecord.TestInteger, DR['FTestInteger'].AsInteger);
+  Assert.AreEqual(FTestRecord.TestString, DR['FTestString'].AsString);
+  Assert.AreEqual(FTestRecord.TestBoolean, DR['FTestBoolean'].AsBoolean);
+  Assert.AreEqual(FTestRecord.TestChar, DR['FTestChar'].AsType<Char>);
+  Assert.AreEqual(FTestRecord.TestDateTime, DR['FTestDateTime'].AsType<TDateTime>);
+  Assert.AreEqual(FTestRecord.TestDouble,Double(DR['FTestDouble'].AsExtended));
+  Assert.AreEqual(FTestRecord.TestInteger, DR['FTestInteger'].AsInteger);
 end;
 {$ENDREGION}
 
@@ -146,19 +168,19 @@ var
   DR : IDynamicRecord;
 begin
   DR := Reflect.Properties(FTestObject);
-  CheckEqualsString(FTestObject.TestString, DR['TestString'].AsString);
-  CheckEquals(FTestObject.TestBoolean, DR['TestBoolean'].AsBoolean);
-  CheckEquals(FTestObject.TestChar, DR['TestChar'].AsType<Char>);
-  CheckEquals(FTestObject.TestDateTime, DR['TestDateTime'].AsType<TDateTime>);
-  CheckEquals(FTestObject.TestDouble, DR['TestDouble'].AsExtended);
-  CheckEquals(FTestObject.TestInteger, DR['TestInteger'].AsInteger);
+  Assert.AreEqual(FTestObject.TestString, DR['TestString'].AsString);
+  Assert.AreEqual(FTestObject.TestBoolean, DR['TestBoolean'].AsBoolean);
+  Assert.AreEqual(FTestObject.TestChar, DR['TestChar'].AsType<Char>);
+  Assert.AreEqual(FTestObject.TestDateTime, DR['TestDateTime'].AsType<TDateTime>);
+  Assert.AreEqual(FTestObject.TestDouble, Double(DR['TestDouble'].AsExtended));
+  Assert.AreEqual(FTestObject.TestInteger, DR['TestInteger'].AsInteger);
 
   // the same, but using the Data member to access the values
-  CheckEquals(FTestObject.TestBoolean, DR.Data.TestBoolean);
-  CheckEquals(FTestObject.TestChar, DR.Data.TestChar);
-  CheckEquals(FTestObject.TestDateTime, DR.Data.TestDateTime);
-  CheckEquals(FTestObject.TestDouble, DR.Data.TestDouble);
-  CheckEquals(FTestObject.TestInteger, DR.Data.TestInteger);
+  Assert.AreEqual(FTestObject.TestBoolean, Boolean(DR.Data.TestBoolean));
+  //Assert.AreEqual(FTestObject.TestChar, WideChar(DR.Data.TestChar));
+  Assert.AreEqual(FTestObject.TestDateTime, TDateTime(DR.Data.TestDateTime));
+  Assert.AreEqual(FTestObject.TestDouble, Double(DR.Data.TestDouble));
+  Assert.AreEqual(FTestObject.TestInteger, Integer(DR.Data.TestInteger));
 end;
 {$ENDREGION}
 
@@ -168,7 +190,7 @@ var
   T : Boolean;
 begin
   T := True;
-  CheckEqualsString('Boolean', Reflect.TypeName(T));
+  Assert.AreEqual('Boolean', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_Byte_argument;
@@ -176,7 +198,7 @@ var
   T : Byte;
 begin
   T := 128;
-  CheckEqualsString('Byte', Reflect.TypeName(T));
+  Assert.AreEqual('Byte', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_Cardinal_argument;
@@ -184,7 +206,7 @@ var
   T : Cardinal;
 begin
   T := 525;
-  CheckEqualsString('Cardinal', Reflect.TypeName(T));
+  Assert.AreEqual('Cardinal', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_Currency_argument;
@@ -192,7 +214,7 @@ var
   T : Currency;
 begin
   T := 0;
-  CheckEqualsString('Currency', Reflect.TypeName(T));
+  Assert.AreEqual('Currency', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_Double_argument;
@@ -200,7 +222,7 @@ var
   T : Double;
 begin
   T := 0;
-  CheckEqualsString('Double', Reflect.TypeName(T));
+  Assert.AreEqual('Double', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_Extended_argument;
@@ -208,7 +230,7 @@ var
   T : Extended;
 begin
   T := 0;
-  CheckEqualsString('Extended', Reflect.TypeName(T));
+  Assert.AreEqual('Extended', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_Int64_argument;
@@ -216,7 +238,7 @@ var
   T : Int64;
 begin
   T := 0;
-  CheckEqualsString('Int64', Reflect.TypeName(T));
+  Assert.AreEqual('Int64', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_Integer_argument;
@@ -224,7 +246,7 @@ var
   T : Integer;
 begin
   T := 0;
-  CheckEqualsString('Integer', Reflect.TypeName(T));
+  Assert.AreEqual('Integer', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_LongInt_argument;
@@ -233,7 +255,7 @@ var
 begin
   T := 0;
   // will return Integer on all 32 bit and Win 64 bit and Int64 on 64bit iOS
-  CheckEqualsString('Integer', Reflect.TypeName(T));
+  Assert.AreEqual('Integer', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_LongWord_argument;
@@ -242,7 +264,7 @@ var
 begin
   T := 0;
   // will return Cardinal on all 32 bit and Win 64 bit and UInt64 on 64bit iOS
-  CheckEqualsString('Cardinal', Reflect.TypeName(T));
+  Assert.AreEqual('Cardinal', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_NativeInt_argument;
@@ -250,7 +272,7 @@ var
   T : NativeInt;
 begin
   T := 0;
-  CheckEqualsString('NativeInt', Reflect.TypeName(T));
+  Assert.AreEqual('NativeInt', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_NativeUInt_argument;
@@ -258,7 +280,7 @@ var
   T : NativeUInt;
 begin
   T := 0;
-  CheckEqualsString('NativeUInt', Reflect.TypeName(T));
+  Assert.AreEqual('NativeUInt', Reflect.TypeName(T));
 end;
 
 { For the Real48 legacy type no RTTI is generated. }
@@ -269,7 +291,7 @@ var
 begin
   T := 0;
   // no type info for Real48
-  CheckEqualsString('Real48', Reflect.TypeName(T));
+  Assert.AreEqual('Real48', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_Real_argument;
@@ -277,7 +299,7 @@ var
   T : Real;
 begin
   T := 0;
-  CheckEqualsString('Real', Reflect.TypeName(T));
+  Assert.AreEqual('Real', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_ShortInt_argument;
@@ -285,7 +307,7 @@ var
   T : ShortInt;
 begin
   T := 0;
-  CheckEqualsString('ShortInt', Reflect.TypeName(T));
+  Assert.AreEqual('ShortInt', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_Single_argument;
@@ -293,7 +315,7 @@ var
   T : Single;
 begin
   T := 0;
-  CheckEqualsString('Single', Reflect.TypeName(T));
+  Assert.AreEqual('Single', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_string_argument;
@@ -301,7 +323,7 @@ var
   T : string;
 begin
   T := '';
-  CheckEqualsString('string', Reflect.TypeName(T));
+  Assert.AreEqual('string', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_Variant_argument;
@@ -309,7 +331,7 @@ var
   T : Variant;
 begin
   T := '';
-  CheckEqualsString('Variant', Reflect.TypeName(T));
+  Assert.AreEqual('Variant', Reflect.TypeName(T));
 end;
 
 procedure TestReflect.Test_TypeName_method_for_Word_argument;
@@ -317,7 +339,7 @@ var
   T : Word;
 begin
   T := 0;
-  CheckEqualsString('Word', Reflect.TypeName(T));
+  Assert.AreEqual('Word', Reflect.TypeName(T));
 end;
 {$ENDREGION}
 

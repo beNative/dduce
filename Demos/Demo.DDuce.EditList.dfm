@@ -52,10 +52,11 @@ object frmEditList: TfrmEditList
     end
     object mmoData: TMemo
       Left = 0
-      Top = 72
+      Top = 58
       Width = 309
-      Height = 339
+      Height = 353
       Align = alBottom
+      Anchors = [akLeft, akTop, akRight, akBottom]
       BevelInner = bvNone
       BevelOuter = bvNone
       BorderStyle = bsNone
@@ -68,8 +69,6 @@ object frmEditList: TfrmEditList
       ParentFont = False
       ReadOnly = True
       TabOrder = 0
-      ExplicitLeft = -16
-      ExplicitTop = 24
     end
   end
   object chkMultiSelect: TCheckBox

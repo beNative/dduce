@@ -25,17 +25,18 @@ procedure RegisterTests;
 implementation
 
 uses
-  TestFramework,
+  DUnitX.TestFramework,
 
   Test.DDuce.DynamicRecord, Test.DDuce.DynamicRecord.Generic,
-  Test.DDuce.Reflect, Test.DDuce.Logger;
+  Test.DDuce.Reflect, Test.DDuce.Logger, Test.DDuce.Mosquitto;
 
 procedure RegisterTests;
 begin
-  RegisterTest('DynamicRecord', TestDynamicRecord.Suite);
-  RegisterTest('DynamicRecord<T>', TestGenericDynamicRecord.Suite);
-  RegisterTest('Reflect', TestReflect.Suite);
-  RegisterTest('Logger', TestLogger.Suite);
+  TDUnitX.RegisterTestFixture(TestDynamicRecord, 'DynamicRecord');
+  TDUnitX.RegisterTestFixture(TestGenericDynamicRecord, 'DynamicRecord<T>');
+  TDUnitX.RegisterTestFixture(TestReflect, 'Reflect');
+  TDUnitX.RegisterTestFixture(TestLogger, 'Logger');
+  TDUnitX.RegisterTestFixture(TestMosquitto, 'Mosquitto');
 end;
 
 end.

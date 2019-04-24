@@ -19,8 +19,7 @@ object frmInspector: TfrmInspector
     Top = 0
     Width = 6
     Height = 605
-    ExplicitLeft = 198
-    ExplicitHeight = 450
+    ExplicitLeft = 318
   end
   object pnlLeft: TPanel
     Left = 0
@@ -41,13 +40,12 @@ object frmInspector: TfrmInspector
     TabOrder = 1
     object splHorizontal: TSplitter
       Left = 0
-      Top = 481
+      Top = 482
       Width = 657
-      Height = 7
+      Height = 6
       Cursor = crVSplit
       Align = alBottom
-      ExplicitTop = 208
-      ExplicitWidth = 333
+      ExplicitTop = 481
     end
     object pnlInspector: TPanel
       Left = 0
@@ -63,7 +61,7 @@ object frmInspector: TfrmInspector
       Left = 3
       Top = 3
       Width = 651
-      Height = 475
+      Height = 476
       Align = alClient
       DataSource = dscMain
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]

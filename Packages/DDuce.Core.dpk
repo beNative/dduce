@@ -13,8 +13,8 @@ package DDuce.Core;
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
 {$OPTIMIZATION OFF}
-{$OVERFLOWCHECKS OFF}
-{$RANGECHECKS OFF}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
 {$REFERENCEINFO ON}
 {$SAFEDIVIDE OFF}
 {$STACKFRAMES ON}
@@ -81,6 +81,9 @@ contains
   DDuce.CustomImageDrawHook in '..\Source\DDuce.CustomImageDrawHook.pas',
   MQTT in '..\Source\Dependencies\MQTT\MQTT.pas',
   MQTTHeaders in '..\Source\Dependencies\MQTT\MQTTHeaders.pas',
-  MQTTReadThread in '..\Source\Dependencies\MQTT\MQTTReadThread.pas';
+  MQTTReadThread in '..\Source\Dependencies\MQTT\MQTTReadThread.pas',
+  Mosquitto.API in '..\Source\Dependencies\Mosquitto\Mosquitto.API.pas',
+  Mosquitto in '..\Source\Dependencies\Mosquitto\Mosquitto.pas',
+  ctypes in '..\Source\Dependencies\Mosquitto\ctypes.pas';
 
 end.

@@ -66,8 +66,8 @@ type
     procedure LoadTree;
 
     function FindTreeViewText(
-      const AText     : string;
-            ATreeView : TTreeView
+      const AText : string;
+      ATreeView   : TTreeView
     ): TTreeNode;
     procedure CollapseTree;
     procedure ExpandTree;

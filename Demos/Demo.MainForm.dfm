@@ -3,7 +3,7 @@ object frmMainMenu: TfrmMainMenu
   Top = 244
   ActiveControl = edtFilter
   Caption = 'DDuce demos'
-  ClientHeight = 333
+  ClientHeight = 407
   ClientWidth = 369
   Color = clBtnFace
   DefaultMonitor = dmMainForm
@@ -21,10 +21,11 @@ object frmMainMenu: TfrmMainMenu
     Left = 0
     Top = 29
     Width = 369
-    Height = 254
+    Height = 327
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitHeight = 254
   end
   object pnlTop: TPanel
     Left = 0
@@ -57,18 +58,19 @@ object frmMainMenu: TfrmMainMenu
   end
   object sbrMain: TStatusBar
     Left = 0
-    Top = 314
+    Top = 388
     Width = 369
     Height = 19
     Panels = <>
     SimplePanel = True
+    ExplicitTop = 314
   end
   object btnExecute: TButton
     AlignWithMargins = True
     Left = 3
-    Top = 286
+    Top = 359
     Width = 363
-    Height = 25
+    Height = 26
     Action = actExecute
     Align = alBottom
     Default = True
@@ -78,6 +80,7 @@ object frmMainMenu: TfrmMainMenu
     ImageMargins.Bottom = 3
     Images = imlMain
     TabOrder = 0
+    ExplicitTop = 360
   end
   object aclMain: TActionList
     Images = imlMain
@@ -107,7 +110,7 @@ object frmMainMenu: TfrmMainMenu
     Left = 176
     Top = 168
     Bitmap = {
-      494C010102000500040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C0101020005000C0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000328492FFC7CDCEFF00000000000000000000000000000000000000000000
@@ -289,7 +292,6 @@ object frmMainMenu: TfrmMainMenu
           0000C0070000C0070000C0070000C0070000400500003FF900001FF10000}
       end>
     TabProperties = [AppThumbAlways, AppPeekAlways]
-    OnThumbButtonClick = tbrMainThumbButtonClick
     Left = 224
     Top = 168
   end

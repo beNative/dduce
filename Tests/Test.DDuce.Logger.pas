@@ -25,134 +25,231 @@ uses
 
   DDuce.Logger,
 
-  TestFramework;
+  DUnitX.TestFramework;
 
 type
-  TestLogger = class(TTestCase)
+  TestLogger = class
   protected
-    procedure SetUp; override;
-
-  public
     // fails because no type information is generated for the legacy type Real48
     procedure Test_Send_method_for_Real48_argument;
     // not implemented yet
     procedure Test_SendException_method;
     procedure Test_SendMemory_method;
 
-  published
+    [Test]
     procedure Test_Send_method_for_AnsiString_argument;
+    [Test]
     procedure Test_Send_method_for_Boolean_argument;
+    [Test]
     procedure Test_Send_method_for_Byte_argument;
+    [Test]
     procedure Test_Send_method_for_Cardinal_argument;
+    [Test]
     procedure Test_Send_method_for_Currency_argument;
+    [Test]
     procedure Test_Send_method_for_Double_argument;
+    [Test]
     procedure Test_Send_method_for_Enumeration_argument;
+    [Test]
     procedure Test_Send_method_for_Extended_argument;
+    [Test]
     procedure Test_Send_method_for_FixedInt_argument;
+    [Test]
     procedure Test_Send_method_for_FixedUInt_argument;
+    [Test]
     procedure Test_Send_method_for_Int16_argument;
+    [Test]
     procedure Test_Send_method_for_Int32_argument;
+    [Test]
     procedure Test_Send_method_for_Int64_argument;
+    [Test]
     procedure Test_Send_method_for_Int8_argument;
+    [Test]
     procedure Test_Send_method_for_Integer_argument;
+    [Test]
     procedure Test_Send_method_for_LongInt_argument;
+    [Test]
     procedure Test_Send_method_for_LongWord_argument;
+    [Test]
     procedure Test_Send_method_for_NativeInt_argument;
+    [Test]
     procedure Test_Send_method_for_NativeUInt_argument;
+    [Test]
     procedure Test_Send_method_for_Set_argument;
+    [Test]
     procedure Test_Send_method_for_ShortInt_argument;
+    [Test]
     procedure Test_Send_method_for_ShortString_argument;
+    [Test]
     procedure Test_Send_method_for_Single_argument;
+    [Test]
     procedure Test_Send_method_for_SmallInt_argument;
+    [Test]
     procedure Test_Send_method_for_string_argument;
+    [Test]
     procedure Test_Send_method_for_TDateTime_argument;
+    [Test]
     procedure Test_Send_method_for_TDate_argument;
+    [Test]
     procedure Test_Send_method_for_TTime_argument;
+    [Test]
     procedure Test_Send_method_for_UInt16_argument;
+    [Test]
     procedure Test_Send_method_for_UInt32_argument;
+    [Test]
     procedure Test_Send_method_for_UInt64_argument;
+    [Test]
     procedure Test_Send_method_for_UInt8_argument;
+    [Test]
     procedure Test_Send_method_for_WideString_argument;
+    [Test]
     procedure Test_Send_method_for_Word_argument;
 
+    [Test]
     procedure Test_Send_method_for_static_array_of_string_argument;
+    [Test]
     procedure Test_Send_method_for_static_array_of_Integer_argument;
+    [Test]
     procedure Test_Send_method_for_dynamic_array_of_Integer_argument;
+    [Test]
     procedure Test_Send_method_for_array_of_const_argument;
 
+    [Test]
     procedure Test_Send_method_for_Record_argument;
+    [Test]
     procedure Test_Send_method_for_Object_argument;
+    [Test]
     procedure Test_Send_method_for_Interface_argument;
 
+    [Test]
     procedure Test_SendDateTime_method;
+    [Test]
     procedure Test_SendDate_method;
+    [Test]
     procedure Test_SendTime_method;
+    [Test]
     procedure Test_SendRect_method;
+    [Test]
     procedure Test_SendPoint_method;
+    [Test]
     procedure Test_SendPointer_method;
+    [Test]
     procedure Test_SendComponent_method;
+    [Test]
     procedure Test_SendObject_method;
+    [Test]
     procedure Test_SendStrings_method;
+    [Test]
     procedure Test_SendColor_method;
+    [Test]
     procedure Test_SendAlphaColor_method;
+    [Test]
     procedure Test_SendInterface_method;
+    [Test]
     procedure Test_SendShortCut_method;
+    [Test]
     procedure Test_SendBitmap_method;
+    [Test]
     procedure Test_SendPersistent_method;
+    [Test]
     procedure Test_SendDataSet_method;
 
+    [Test]
     procedure Test_SendSQL_method;
+    [Test]
     procedure Test_SendXML_method;
+    [Test]
     procedure Test_SendINI_method;
+    [Test]
     procedure Test_SendJSON_method;
 
+    [Test]
     procedure Test_SendIf_method;
+    [Test]
     procedure Test_SendText_method;
 
+    [Test]
     procedure Test_SendVariant_method_for_TDateTime_argument;
+    [Test]
     procedure Test_SendVariant_method_for_string_argument;
+    [Test]
     procedure Test_SendVariant_method_for_Integer_argument;
+    [Test]
     procedure Test_SendVariant_method_for_Double_argument;
+    [Test]
     procedure Test_SendVariant_method_for_Null_argument;
+    [Test]
     procedure Test_SendVariant_method_for_Unassigned_argument;
+    [Test]
     procedure Test_SendVariant_method_for_EmptyParam_argument;
 
+    [Test]
     procedure Test_Send_method;
 
+    [Test]
     procedure Test_Watch_method_for_AnsiString_argument;
+    [Test]
     procedure Test_Watch_method_for_Boolean_argument;
+    [Test]
     procedure Test_Watch_method_for_Cardinal_argument;
+    [Test]
     procedure Test_Watch_method_for_Double_argument;
+    [Test]
     procedure Test_Watch_method_for_Enumeration_argument;
+    [Test]
     procedure Test_Watch_method_for_Extended_argument;
+    [Test]
     procedure Test_Watch_method_for_Int64_argument;
+    [Test]
     procedure Test_Watch_method_for_Integer_argument;
+    [Test]
     procedure Test_Watch_method_for_Set_argument;
+    [Test]
     procedure Test_Watch_method_for_ShortString_argument;
+    [Test]
     procedure Test_Watch_method_for_Single_argument;
+    [Test]
     procedure Test_Watch_method_for_string_argument;
+    [Test]
     procedure Test_Watch_method_for_TDateTime_argument;
+    [Test]
     procedure Test_Watch_method_for_TDate_argument;
+    [Test]
     procedure Test_Watch_method_for_TTime_argument;
+    [Test]
     procedure Test_Watch_method_for_Variant_argument;
+    [Test]
     procedure Test_Watch_method_for_WideString_argument;
 
+    [Test]
     procedure Test_Enter_and_Leave_methods_for_routine;
+    [Test]
     procedure Test_Enter_and_Leave_methods_for_method;
+    [Test]
     procedure Test_Track_method_for_method;
+    [Test]
     procedure Test_Track_method_for_routine;
 
+    [Test]
     procedure Test_Info_method;
+    [Test]
     procedure Test_Warn_method;
+    [Test]
     procedure Test_Error_method;
 
+    [Test]
     procedure Test_Counter_methods;
 
+    [Test]
     procedure Test_Checkpoint_methods;
 
+    [Test]
     procedure Test_OutputDebugString_method;
+    [Test]
     procedure Test_OutputDebugString_method_for_long_string;
+    [Test]
     procedure Test_OutputDebugString_method_for_valuelist;
+
   end;
 
 implementation
@@ -170,15 +267,6 @@ uses
 
   Test.Utils, Test.Resources;
 
-{$REGION 'public methods'}
-procedure TestLogger.SetUp;
-begin
-  inherited SetUp;
-  // Test results need to be evaluated by the LogViewer application
-  FailsOnNoChecksExecuted := False;
-end;
-{$ENDREGION}
-
 {$REGION 'Test Send methods'}
 procedure TestLogger.Test_Send_method;
 var
@@ -187,6 +275,7 @@ begin
   T.X := 4;
   T.Y := 5;
   Logger.Send('TestTPoint', TValue.From(T));
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_AnsiString_argument;
@@ -195,6 +284,7 @@ var
 begin
   T := 'Test';
   Logger.Send('TestAnsiString', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_array_of_const_argument;
@@ -218,6 +308,7 @@ var
 begin
   T := True;
   Logger.Send('TestBoolean', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Byte_argument;
@@ -226,6 +317,7 @@ var
 begin
   T := 128;
   Logger.Send('TestByte', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Cardinal_argument;
@@ -234,6 +326,7 @@ var
 begin
   T := 8888888;
   Logger.Send('TestCardinal', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Currency_argument;
@@ -242,6 +335,7 @@ var
 begin
   T := Pi;
   Logger.Send('TestCurrency', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Double_argument;
@@ -250,6 +344,7 @@ var
 begin
   T := Pi;
   Logger.Send('TestDouble', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_dynamic_array_of_Integer_argument;
@@ -258,6 +353,7 @@ var
 begin
   T := [1, 2 , 3, 4, 5];
   Logger.Send('TestTArrayOfInteger', TValue.From(T));
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Enumeration_argument;
@@ -266,6 +362,7 @@ var
 begin
   T := taCenter;
   Logger.Send('TestEnum', TValue.From(T));
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Extended_argument;
@@ -274,6 +371,7 @@ var
 begin
   T := Pi;
   Logger.Send('TestExtended', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_FixedInt_argument;
@@ -282,6 +380,7 @@ var
 begin
   T := 12345;
   Logger.Send('TestFixedInt', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_FixedUInt_argument;
@@ -290,6 +389,7 @@ var
 begin
   T := 12345;
   Logger.Send('TestFixedUInt', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Int16_argument;
@@ -298,6 +398,7 @@ var
 begin
   T := 12345;
   Logger.Send('TestInt16', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Int32_argument;
@@ -306,6 +407,7 @@ var
 begin
   T := 12345;
   Logger.Send('TestInt32', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Int64_argument;
@@ -314,6 +416,7 @@ var
 begin
   T := 1234567899843211234;
   Logger.Send('TestInt64', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Int8_argument;
@@ -322,6 +425,7 @@ var
 begin
   T := 123;
   Logger.Send('TestInt8', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Integer_argument;
@@ -330,6 +434,7 @@ var
 begin
   T := MaxInt;
   Logger.Send('TestInteger', T);
+  Assert.Pass;
 end;
 
 { REMARK: LongInt is platform-dependent!
@@ -342,6 +447,7 @@ var
 begin
   T := -489;
   Logger.Send('TestLongInt', T);
+  Assert.Pass;
 end;
 
 { REMARK: LongWord is platform-dependent!
@@ -354,6 +460,7 @@ var
 begin
   T := 564564123;
   Logger.Send('TestLongWord', T);
+  Assert.Pass;
 end;
 
 { REMARK: NativeInt is platform-dependent!
@@ -366,6 +473,7 @@ var
 begin
   T := 312;
   Logger.Send('TestNativeInt', T);
+  Assert.Pass;
 end;
 
 { REMARK: NativeUInt is platform-dependent!
@@ -378,6 +486,7 @@ var
 begin
   T := 428;
   Logger.Send('TestNativeUInt', T);
+  Assert.Pass;
 end;
 
 { This will send the object reference information, not the content. }
@@ -392,6 +501,7 @@ begin
   finally
     T.Free;
   end;
+  Assert.Pass;
 end;
 
 { This will send the reference information of the interface variable, not the
@@ -403,6 +513,7 @@ var
 begin
   T := TInterfacedObject.Create;
   Logger.Send('TestInterface', TValue.From(T));
+  Assert.Pass;
 end;
 
 { This test fails because no RTTI is generated for the legacy Real48 type. }
@@ -415,11 +526,13 @@ begin
   T := Pi;
   V := TValue.From(T);
   Logger.Send('TestReal48', V);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Record_argument;
 begin
   Logger.Send('TestRecord', TValue.From(TTestUtils.CreateTestRecord));
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Set_argument;
@@ -428,6 +541,7 @@ var
 begin
   T := [biSystemMenu, biMinimize, biMaximize, biHelp];
   Logger.Send('TestSet', TValue.From(T));
+  Assert.Pass;
 end;
 
 { ShortStrings use single byte chars. }
@@ -438,6 +552,7 @@ var
 begin
   T := -123;
   Logger.Send('TestShortInt', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_ShortString_argument;
@@ -446,6 +561,7 @@ var
 begin
   T := 'Test ShortString';
   Logger.Send('TestShortString', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Single_argument;
@@ -454,6 +570,7 @@ var
 begin
   T := Pi;
   Logger.Send('TestSingle', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_SmallInt_argument;
@@ -462,6 +579,7 @@ var
 begin
   T := -10256;
   Logger.Send('TestSmallInt', T);
+  Assert.Pass;
 end;
 
 { REMARK: no RTTI is generated by the compiler if no type declaration is
@@ -477,6 +595,7 @@ begin
   T[1] := 2;
   T[2] := 3;
   Logger.Send('TestStaticArrayOfInteger', TValue.From(T));
+  Assert.Pass;
 end;
 
 { REMARK: no RTTI is generated by the compiler if no type declaration is
@@ -492,6 +611,7 @@ begin
   T[1] := 'two';
   T[2] := 'three';
   Logger.Send('TestStaticArrayOfString', TValue.From(T));
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_string_argument;
@@ -500,6 +620,7 @@ var
 begin
   T := 'Test';
   Logger.Send('TestString', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_TDateTime_argument;
@@ -508,6 +629,7 @@ var
 begin
   T := Now;
   Logger.Send('TestTDateTime', TValue.From(T)); // no implicit cast for TDateTime
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_TDate_argument;
@@ -516,6 +638,7 @@ var
 begin
   T := Now;
   Logger.Send('TestTDate', TValue.From(T)); // no implicit cast for TDate
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_TTime_argument;
@@ -524,6 +647,7 @@ var
 begin
   T := Now;
   Logger.Send('TestTTime', TValue.From(T)); // no implicit cast for TTime
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_UInt16_argument;
@@ -532,6 +656,7 @@ var
 begin
   T := 12345;
   Logger.Send('TestUInt16', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_UInt32_argument;
@@ -540,6 +665,7 @@ var
 begin
   T := 12345;
   Logger.Send('TestUInt32', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_UInt64_argument;
@@ -548,6 +674,7 @@ var
 begin
   T := 1234567890;
   Logger.Send('TestUInt64', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_UInt8_argument;
@@ -556,6 +683,7 @@ var
 begin
   T := 123;
   Logger.Send('TestUInt8', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_WideString_argument;
@@ -564,6 +692,7 @@ var
 begin
   T := 'Test';
   Logger.Send('TestWideString', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Word_argument;
@@ -572,8 +701,8 @@ var
 begin
   T := 32000;
   Logger.Send('TestWord', T);
+  Assert.Pass;
 end;
-
 {$ENDREGION}
 
 {$REGION 'Test custom Send methods'}
@@ -585,6 +714,7 @@ begin
   Logger.SendAlphaColor('TestTAlphaColor', T);
   T := claAntiquewhite;
   Logger.SendAlphaColor('TestTAlphaColor', T);
+  Assert.Pass;
 end;
 
 { Makes a bitmap with a red cross (100 x 100 pixels) }
@@ -606,6 +736,7 @@ begin
   finally
     T.Free;
   end;
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendColor_method;
@@ -616,6 +747,7 @@ begin
   Logger.SendColor('TestTColor', T);
   T := $00C08080;
   Logger.SendColor('TestTColor', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendComponent_method;
@@ -624,6 +756,7 @@ var
 begin
   T := Application;
   Logger.SendComponent('TestTComponent', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendDataSet_method;
@@ -636,6 +769,7 @@ begin
   finally
     DS.Free;
   end;
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendDateTime_method;
@@ -644,6 +778,7 @@ var
 begin
   T := Now;
   Logger.SendDateTime('TestTDateTime', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendDate_method;
@@ -652,6 +787,7 @@ var
 begin
   T := Now;
   Logger.SendDate('TestTDate', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendException_method;
@@ -664,6 +800,7 @@ begin
   finally
     T.Free;
   end;
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendIf_method;
@@ -671,11 +808,13 @@ begin
   Logger.SendIf('Following condition was True (1 = 1)', 1 = 1);
   Logger.SendIf('Following condition was False (1 = 0)', 1 = 0, False);
   Logger.SendIf('Following condition was True (1 = 0)', 1 = 0);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendINI_method;
 begin
   Logger.SendINI('INI example', TEXT_INI);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendInterface_method;
@@ -684,11 +823,13 @@ var
 begin
   T := TInterfacedObject.Create;
   Logger.SendInterface('TestIInterface', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendJSON_method;
 begin
   Logger.SendJSON('JSON example', TEXT_JSON);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendMemory_method;
@@ -700,6 +841,7 @@ begin
   M := Self;
   S := Self.InstanceSize;
   Logger.SendMemory('Self', M, S);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendObject_method;
@@ -712,6 +854,7 @@ begin
   finally
     O.Free;
   end;
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendPersistent_method;
@@ -724,6 +867,7 @@ begin
   finally
     F.Free;
   end;
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendPointer_method;
@@ -732,6 +876,7 @@ var
 begin
   T := Application;
   Logger.SendPointer('TestPointer', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendPoint_method;
@@ -741,6 +886,7 @@ begin
   T.X := 3;
   T.Y := 8;
   Logger.SendPoint('TestTPoint', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendRect_method;
@@ -752,6 +898,7 @@ begin
   T.Top    := 8;
   T.Bottom := 10;
   Logger.SendRect('TestTRect', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendShortCut_method;
@@ -760,6 +907,7 @@ var
 begin
   T := TextToShortCut('CTRL+S');
   Logger.SendShortCut('TestTShortCut', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendStrings_method;
@@ -776,11 +924,13 @@ begin
   finally
     SL.Free;
   end;
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendText_method;
 begin
   Logger.SendText(TEXT_LOREM_IPSUM);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendTime_method;
@@ -789,6 +939,7 @@ var
 begin
   T := Now;
   Logger.SendTime('TestTTime', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendVariant_method_for_Double_argument;
@@ -797,6 +948,7 @@ var
 begin
   T := Pi;
   Logger.SendVariant('TestVariantDouble', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendVariant_method_for_EmptyParam_argument;
@@ -805,6 +957,7 @@ var
 begin
   T := EmptyParam;
   Logger.SendVariant('TestVariantEmptyParam', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendVariant_method_for_Integer_argument;
@@ -813,6 +966,7 @@ var
 begin
   T := 25;
   Logger.SendVariant('TestVariantInteger', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendVariant_method_for_Null_argument;
@@ -821,6 +975,7 @@ var
 begin
   T := Null;
   Logger.SendVariant('TestVariantNull', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendVariant_method_for_string_argument;
@@ -829,6 +984,7 @@ var
 begin
   T := 'Test';
   Logger.SendVariant('TestVariantString', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendVariant_method_for_TDateTime_argument;
@@ -837,6 +993,7 @@ var
 begin
   T := Now;
   Logger.SendVariant('TestVariantTDateTime', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendVariant_method_for_Unassigned_argument;
@@ -845,16 +1002,19 @@ var
 begin
   T := Unassigned;
   Logger.SendVariant('TestVariantUnassigned', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendSQL_method;
 begin
   Logger.SendSQL('SQL example query', TEXT_SQL);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_SendXML_method;
 begin
   Logger.SendXML('XML example document', TEXT_XML);
+  Assert.Pass;
 end;
 {$ENDREGION}
 
@@ -865,6 +1025,7 @@ var
 begin
   T := 'Test';
   Logger.Watch('TestAnsiString', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_Boolean_argument;
@@ -873,6 +1034,7 @@ var
 begin
   T := True;
   Logger.Watch('TestBoolean', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_Cardinal_argument;
@@ -881,6 +1043,7 @@ var
 begin
   T := 525;
   Logger.Watch('TestCardinal', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_Double_argument;
@@ -889,6 +1052,7 @@ var
 begin
   T := Pi;
   Logger.Watch('TestDouble', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_Enumeration_argument;
@@ -897,6 +1061,7 @@ var
 begin
   T := fsStayOnTop;
   Logger.Watch('TestEnum', TValue.From(T));
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_Extended_argument;
@@ -905,6 +1070,7 @@ var
 begin
   T := Pi;
   Logger.Watch('TestExtended', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_Int64_argument;
@@ -913,6 +1079,7 @@ var
 begin
   T := 1234567899843211234;
   Logger.Watch('TestInt64', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_Integer_argument;
@@ -921,6 +1088,7 @@ var
 begin
   T := MaxInt;
   Logger.Watch('TestInteger', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_Set_argument;
@@ -929,6 +1097,7 @@ var
 begin
   T := [biSystemMenu, biMinimize, biMaximize, biHelp];
   Logger.Watch('TestSet', TValue.From(T));
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_ShortString_argument;
@@ -937,6 +1106,7 @@ var
 begin
   T := 'Succes!';
   Logger.Watch('TestShortString', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_Single_argument;
@@ -945,6 +1115,7 @@ var
 begin
   T := Pi;
   Logger.Watch('TestSingle', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_string_argument;
@@ -953,6 +1124,7 @@ var
 begin
   T := 'Hello!';
   Logger.Watch('TestString', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_TDateTime_argument;
@@ -961,6 +1133,7 @@ var
 begin
   T := Now;
   Logger.Watch('TestTDateTime', TValue.From(T)); // no implicit cast for TDateTime
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_TDate_argument;
@@ -969,6 +1142,7 @@ var
 begin
   T := Now;
   Logger.Watch('TestTDate', TValue.From(T)); // no implicit cast for TDate
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_TTime_argument;
@@ -977,6 +1151,7 @@ var
 begin
   T := Now;
   Logger.Watch('TestTTime', TValue.From(T)); // no implicit cast for TTime
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_Variant_argument;
@@ -992,6 +1167,7 @@ begin
   Logger.Watch(Reflect.TypeName(T), T);
   T := 520;
   Logger.Watch(Reflect.TypeName(T), T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Watch_method_for_WideString_argument;
@@ -1000,6 +1176,7 @@ var
 begin
   T := 'Hi there!';
   Logger.Watch('TestWideString', T);
+  Assert.Pass;
 end;
 {$ENDREGION}
 
@@ -1009,6 +1186,7 @@ begin
   Logger.Enter(Self, 'Test_Enter_and_Leave_methods_for_method');
   Sleep(100);
   Logger.Leave(Self, 'Test_Enter_and_Leave_methods_for_method');
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Enter_and_Leave_methods_for_routine;
@@ -1016,6 +1194,7 @@ begin
   Logger.Enter('Test_Enter_and_Leave_methods_for_routine');
   Sleep(100);
   Logger.Leave('Test_Enter_and_Leave_methods_for_routine');
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Track_method_for_method;
@@ -1025,6 +1204,7 @@ begin
   Logger.Track(Self, 'Level 2');
   Logger.Track(Self, 'Level 3');
   Sleep(100);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Track_method_for_routine;
@@ -1034,6 +1214,7 @@ begin
   Logger.Track('Level 2');
   Logger.Track('Level 3');
   Sleep(53);
+  Assert.Pass;
 end;
 {$ENDREGION}
 
@@ -1041,16 +1222,19 @@ end;
 procedure TestLogger.Test_Error_method;
 begin
   Logger.Error('Error');
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Info_method;
 begin
   Logger.Info('Info');
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Warn_method;
 begin
   Logger.Warn('Warning');
+  Assert.Pass;
 end;
 {$ENDREGION}
 
@@ -1077,6 +1261,7 @@ begin
   Logger.Leave('Decreasing counter');
   Logger.ResetCounter(S);
   Logger.Info('Last known value for %s is %d', [S, Logger.GetCounter(S)]);
+  Assert.Pass;
 end;
 {$ENDREGION}
 
@@ -1094,6 +1279,7 @@ begin
   Logger.ResetCheckPoint('TestCheckPoint 1');
   Sleep(22);
   Logger.ResetCheckPoint('TestCheckPoint 2');
+  Assert.Pass;
 end;
 {$ENDREGION}
 
@@ -1101,16 +1287,19 @@ end;
 procedure TestLogger.Test_OutputDebugString_method;
 begin
   OutputDebugString('Short OutputDebugString');
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_OutputDebugString_method_for_long_string;
 begin
   OutputDebugString(TEXT_LOREM_IPSUM);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_OutputDebugString_method_for_valuelist;
 begin
 //
+  Assert.Pass;
 end;
 {$ENDREGION}
 

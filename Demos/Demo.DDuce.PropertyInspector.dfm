@@ -26,12 +26,9 @@ object frmPropertyInspector: TfrmPropertyInspector
     object splSplitter: TSplitter
       Left = 313
       Top = 0
-      Width = 8
+      Width = 6
       Height = 567
       ResizeStyle = rsUpdate
-      ExplicitLeft = 273
-      ExplicitTop = 1
-      ExplicitHeight = 362
     end
     object pnlLeft: TPanel
       Left = 0
@@ -56,20 +53,22 @@ object frmPropertyInspector: TfrmPropertyInspector
       end
     end
     object pnlRight: TPanel
-      Left = 321
+      Left = 319
       Top = 0
-      Width = 509
+      Width = 511
       Height = 567
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitLeft = 321
+      ExplicitWidth = 509
       DesignSize = (
-        509
+        511
         567)
       object lblLabel: TLabel
         Left = 6
         Top = 3
-        Width = 498
+        Width = 500
         Height = 62
         Alignment = taCenter
         Anchors = [akLeft, akTop, akRight]
@@ -104,12 +103,13 @@ object frmPropertyInspector: TfrmPropertyInspector
       object chkCheckBox: TCheckBox
         Left = 6
         Top = 132
-        Width = 249
+        Width = 251
         Height = 17
         Anchors = [akLeft, akTop, akRight]
         Caption = 'TCheckBox'
         State = cbGrayed
         TabOrder = 2
+        ExplicitWidth = 249
       end
       object edtEdit: TEdit
         Left = 8
@@ -122,7 +122,7 @@ object frmPropertyInspector: TfrmPropertyInspector
       object bgMain: TButtonGroup
         Left = 6
         Top = 155
-        Width = 498
+        Width = 500
         Height = 406
         Anchors = [akLeft, akTop, akRight, akBottom]
         BevelInner = bvNone
@@ -131,16 +131,18 @@ object frmPropertyInspector: TfrmPropertyInspector
         ButtonOptions = [gboAllowReorder, gboShowCaptions]
         Items = <>
         TabOrder = 3
+        ExplicitWidth = 498
       end
       object trbTrackBar: TTrackBar
         Left = 6
         Top = 100
-        Width = 498
+        Width = 500
         Height = 26
         Anchors = [akLeft, akTop, akRight]
         PositionToolTip = ptTop
         ShowSelRange = False
         TabOrder = 4
+        ExplicitWidth = 498
       end
       object edtButtonedEdit: TButtonedEdit
         Left = 121

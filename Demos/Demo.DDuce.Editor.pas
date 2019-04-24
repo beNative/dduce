@@ -32,9 +32,9 @@ uses
 
 type
   TfrmEditor = class(TForm)
-    sbrMain     : TStatusBar;
     pnlLeft     : TPanel;
     pnlRight    : TPanel;
+    sbrMain     : TStatusBar;
     splVertical : TSplitter;
 
   private

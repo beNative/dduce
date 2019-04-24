@@ -62,8 +62,6 @@ type
     procedure Initialize;
     procedure BuildTree;
 
-    procedure FDataChanged(Sender: TObject);
-
     procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
     procedure DoBeforeCellPaint(
       Canvas          : TCanvas;
@@ -235,16 +233,12 @@ procedure TValueList.SetData(const Value: IDynamicRecord);
 begin
   if Value <> Data then
   begin
-//    if Assigned(FData) then
-//      FData.OnChanged.Remove(FDataChanged);
-
     FData := Value;
     if Assigned(FData) then
     begin
       NodeDataSize := SizeOf(TValueListNode);
       BuildTree;
       Header.AutoFitColumns;
-//      FData.OnChanged.Add(FDataChanged);
     end;
   end;
 end;
@@ -478,12 +472,6 @@ begin
 *)
   inherited DoTextDrawing(PaintInfo, Text, CellRect, DrawFormat);
 end;
-
-procedure TValueList.FDataChanged(Sender: TObject);
-begin
-//  Repaint;
-end;
-
 {$ENDREGION}
 
 {$REGION 'protected methods'}

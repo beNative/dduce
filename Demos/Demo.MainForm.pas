@@ -46,6 +46,7 @@ type
 
     procedure actExecuteExecute(Sender: TObject);
     procedure actFocusFilterExecute(Sender: TObject);
+    procedure actCenterMainFormExecute(Sender: TObject);
 
     procedure FVSTKeyPress(Sender: TObject; var Key: Char);
     procedure FVSTPaintBackground(
@@ -79,8 +80,6 @@ type
       var Key : Word;
       Shift   : TShiftState
     );
-    procedure actCenterMainFormExecute(Sender: TObject);
-    procedure tbrMainThumbButtonClick(Sender: TObject; AButtonID: Integer);
 
   private
     FVKPressed : Boolean;
@@ -182,6 +181,7 @@ begin
   FTVP.OnDoubleClick := FTVPDoubleClick;
   FVST.Header.AutoFitColumns;
   sbrMain.SimpleText := Format(SDemosLoaded, [DemoManager.ItemList.Count]);
+  FTVP.SelectedItem := FTVP.View.ItemsSource.FirstOrDefault;
 end;
 {$ENDREGION}
 
@@ -251,12 +251,6 @@ begin
   FVST.BackgroundOffsetX := FVST.ClientWidth - 128;
   FVST.BackgroundOffsetY := (FVST.ClientHeight) - 128;
   Handled := False;
-end;
-
-procedure TfrmMainMenu.tbrMainThumbButtonClick(Sender: TObject;
-  AButtonID: Integer);
-begin
-//
 end;
 
 procedure TfrmMainMenu.edtFilterChange(Sender: TObject);

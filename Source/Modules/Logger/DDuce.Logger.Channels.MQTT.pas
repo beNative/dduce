@@ -29,6 +29,8 @@ interface
 uses
   System.Classes, System.SysUtils,
 
+  Spring,
+
   MQTT,
 
   DDuce.Logger.Interfaces, DDuce.Logger.Channels.Base;
@@ -37,12 +39,13 @@ type
   TMQTTChannel = class(TCustomLogChannel, ILogChannel, IMQTTChannel)
   private
     FBuffer : TStringStream;
-    FMQTT   : TMQTT;
+    FMQTT   : Lazy<TMQTT>;
     FPort   : Integer;
     FBroker : string;
 
   protected
     {$REGION 'property access methods'}
+    function GetMQTT: TMQTT;
     function GetBroker: string;
     procedure SetBroker(const Value: string);
     function GetPort: Integer; override;
@@ -51,6 +54,9 @@ type
 
     property Broker: string
       read GetBroker write SetBroker;
+
+    property MQTT: TMQTT
+      read GetMQTT;
 
   public
     procedure AfterConstruction; override;
@@ -71,13 +77,13 @@ type
 implementation
 
 uses
-  Spring, Spring.Helpers, Spring.SystemUtils;
+  Spring.Helpers, Spring.SystemUtils;
 
 {$REGION 'construction and destruction'}
 procedure TMQTTChannel.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FBuffer := TStringStream.Create;
+  //FBuffer := TStringStream.Create;
   if Enabled then
   begin
     Connect;
@@ -86,8 +92,8 @@ end;
 
 procedure TMQTTChannel.BeforeDestruction;
 begin
-  FMQTT.Disconnect;
-  FMQTT.Free;
+  if FMQTT.IsValueCreated then
+    FMQTT.Value.Free; // we need to do an explicit call to Free
   FBuffer.Free;
   inherited BeforeDestruction;
 end;
@@ -96,11 +102,17 @@ constructor TMQTTChannel.Create(const ABroker: string; APort: Integer;
   AActive: Boolean);
 begin
   inherited Create(AActive);
-  FPort := APort;
-  FMQTT := TMQTT.Create(UTF8String(ABroker), APort);
+  FPort   := APort;
+  FBroker := ABroker;
+  FBuffer := TStringStream.Create;
+  FMQTT.Create(function: TMQTT
+    begin
+      Result := TMQTT.Create(UTF8String(FBroker), FPort);
   // some brokers require these to have a value
-  FMQTT.WillTopic := 'a';
-  FMQTT.WillMsg   := 'a';
+      Result.WillTopic := 'a';
+      Result.WillMsg   := 'a';
+    end
+  );
 end;
 {$ENDREGION}
 
@@ -120,7 +132,12 @@ end;
 
 function TMQTTChannel.GetConnected: Boolean;
 begin
-  Result := FMQTT.Connected;
+  Result := MQTT.Connected;
+end;
+
+function TMQTTChannel.GetMQTT: TMQTT;
+begin
+  Result := FMQTT.Value;
 end;
 
 function TMQTTChannel.GetPort: Integer;
@@ -132,12 +149,12 @@ end;
 {$REGION 'protected methods'}
 function TMQTTChannel.Connect: Boolean;
 begin
-  Result := FMQTT.Connect;
+  Result := MQTT.Connect;
 end;
 
 function TMQTTChannel.Disconnect: Boolean;
 begin
-  Result := FMQTT.Disconnect;
+  Result := MQTT.Disconnect;
 end;
 
 function TMQTTChannel.Write(const AMsg: TLogMessage): Boolean;
@@ -174,7 +191,7 @@ begin
       end
       else
         FBuffer.WriteBuffer(ZeroBuf);
-      Result := FMQTT.Publish('Test', UTF8Encode(FBuffer.DataString));
+      Result := MQTT.Publish('Test', UTF8Encode(FBuffer.DataString));
     end
     else
     begin

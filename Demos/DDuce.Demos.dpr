@@ -1,7 +1,7 @@
 program DDuce.Demos;
 
 uses
-  LeakCheck,
+  //LeakCheck,
   Vcl.Forms,
   Vcl.Themes,
   Vcl.Styles,
@@ -29,7 +29,8 @@ uses
   Demo.DDuce.ValueList in 'Demo.DDuce.ValueList.pas' {frmValueListDemo},
   Demo.Settings in 'Demo.Settings.pas',
   Demo.DDuce.VTNode in 'Demo.DDuce.VTNode.pas' {frmVTNode},
-  Demo.DDuce.EditList in 'Demo.DDuce.EditList.pas' {frmEditList};
+  Demo.DDuce.EditList in 'Demo.DDuce.EditList.pas' {frmEditList},
+  Demo.DDuce.Dialogs in 'Demo.DDuce.Dialogs.pas' {frmDialogs};
 
 {$R *.res}
 

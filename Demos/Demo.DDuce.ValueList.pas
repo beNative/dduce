@@ -40,6 +40,7 @@ type
   private
     FValueList       : TValueList;
     FObjectInspector : TzObjectInspector;
+
   public
     procedure AfterConstruction; override;
 

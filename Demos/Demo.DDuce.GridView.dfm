@@ -14,7 +14,7 @@ object frmGridView: TfrmGridView
   PixelsPerInch = 96
   TextHeight = 13
   object splVertical: TSplitter
-    Left = 289
+    Left = 345
     Top = 0
     Width = 6
     Height = 665
@@ -25,16 +25,16 @@ object frmGridView: TfrmGridView
   object pnlLeft: TPanel
     Left = 0
     Top = 0
-    Width = 289
+    Width = 345
     Height = 665
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
   end
   object pnlRight: TPanel
-    Left = 295
+    Left = 351
     Top = 0
-    Width = 713
+    Width = 657
     Height = 665
     Align = alClient
     BevelOuter = bvNone

@@ -91,13 +91,17 @@
         <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
         <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
+        <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
+        <DCC_RangeChecking>true</DCC_RangeChecking>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
+        <DCC_MapFile>3</DCC_MapFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <DCC_MapFile>3</DCC_MapFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -168,6 +172,9 @@
         <DCCReference Include="..\Source\Dependencies\MQTT\MQTT.pas"/>
         <DCCReference Include="..\Source\Dependencies\MQTT\MQTTHeaders.pas"/>
         <DCCReference Include="..\Source\Dependencies\MQTT\MQTTReadThread.pas"/>
+        <DCCReference Include="..\Source\Dependencies\Mosquitto\Mosquitto.API.pas"/>
+        <DCCReference Include="..\Source\Dependencies\Mosquitto\Mosquitto.pas"/>
+        <DCCReference Include="..\Source\Dependencies\Mosquitto\ctypes.pas"/>
         <None Include="LibSuffix.inc"/>
         <None Include="jedi.inc"/>
         <BuildConfiguration Include="Release">

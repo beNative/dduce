@@ -33,18 +33,18 @@ uses
 
 type
   TfrmXMLTree = class(TForm)
-    pnlTop       : TPanel;
     aclMain      : TActionList;
-    actExpand    : TAction;
     actCollapse  : TAction;
-    btnExpand    : TButton;
+    actExpand    : TAction;
     btnCollapse  : TButton;
-    pnlMain      : TPanel;
-    pnlXMLTree   : TPanel;
-    pnlEditor    : TPanel;
-    splVertical  : TSplitter;
+    btnExpand    : TButton;
     mmoXML       : TMemo;
+    pnlEditor    : TPanel;
     pnlInspector : TPanel;
+    pnlMain      : TPanel;
+    pnlTop       : TPanel;
+    pnlXMLTree   : TPanel;
+    splVertical  : TSplitter;
 
     procedure actExpandExecute(Sender: TObject);
     procedure actCollapseExecute(Sender: TObject);

@@ -29,12 +29,12 @@ uses
 
 type
   TfrmEditList = class(TForm)
+    chkMultiSelect : TCheckBox;
+    lblSelected    : TLabel;
+    mmoData        : TMemo;
     pnlLeft        : TPanel;
     pnlRight       : TPanel;
     splVertical    : TSplitter;
-    chkMultiSelect : TCheckBox;
-    mmoData        : TMemo;
-    lblSelected: TLabel;
 
     procedure chkMultiSelectClick(Sender: TObject);
 

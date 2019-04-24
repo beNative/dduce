@@ -48,6 +48,7 @@ type
   private
     procedure ShowClassNames;
     procedure CreateScopedButton;
+
   end;
 
 implementation

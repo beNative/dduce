@@ -40,6 +40,7 @@ uses
   Demo.DDuce.ValueList,
   Demo.DDuce.VTNode,
   Demo.DDuce.EditList,
+  Demo.DDuce.Dialogs,
 
   Demo.Manager;
 
@@ -59,6 +60,7 @@ begin
   DemoManager.Register(TfrmVTNode, 'VTNode');
   DemoManager.Register(TfrmScopedReferences, 'Scoped references');
   DemoManager.Register(TfrmEditList, 'EditList');
+  DemoManager.Register(TfrmDialogs, 'Dialogs');
   // not working yet
   //DemoManager.Register(TfrmXMLTree, 'XMLTree');
 end;

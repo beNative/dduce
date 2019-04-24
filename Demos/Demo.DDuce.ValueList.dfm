@@ -16,11 +16,8 @@ object frmValueListDemo: TfrmValueListDemo
   object splVertical: TSplitter
     Left = 321
     Top = 0
-    Width = 5
+    Width = 6
     Height = 540
-    ExplicitLeft = -1
-    ExplicitTop = 1
-    ExplicitHeight = 538
   end
   object pnlLeft: TPanel
     Left = 0
@@ -32,9 +29,9 @@ object frmValueListDemo: TfrmValueListDemo
     TabOrder = 0
   end
   object pnlRight: TPanel
-    Left = 326
+    Left = 327
     Top = 0
-    Width = 550
+    Width = 549
     Height = 540
     Align = alClient
     BevelOuter = bvNone

@@ -49,11 +49,8 @@ object frmXMLTree: TfrmXMLTree
     object splVertical: TSplitter
       Left = 361
       Top = 0
-      Width = 7
+      Width = 6
       Height = 516
-      ExplicitLeft = 306
-      ExplicitTop = 1
-      ExplicitHeight = 441
     end
     object pnlXMLTree: TPanel
       Left = 0
@@ -65,17 +62,19 @@ object frmXMLTree: TfrmXMLTree
       TabOrder = 0
     end
     object pnlEditor: TPanel
-      Left = 368
+      Left = 367
       Top = 0
-      Width = 729
+      Width = 730
       Height = 516
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitLeft = 368
+      ExplicitWidth = 729
       object mmoXML: TMemo
         Left = 0
         Top = 0
-        Width = 431
+        Width = 432
         Height = 516
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
@@ -86,15 +85,17 @@ object frmXMLTree: TfrmXMLTree
         ParentFont = False
         TabOrder = 0
         OnChange = mmoXMLChange
+        ExplicitWidth = 431
       end
       object pnlInspector: TPanel
-        Left = 431
+        Left = 432
         Top = 0
         Width = 298
         Height = 516
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitLeft = 431
       end
     end
   end

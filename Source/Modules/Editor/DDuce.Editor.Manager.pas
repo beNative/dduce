@@ -84,12 +84,13 @@ uses
   Vcl.Controls, Vcl.ActnList, Vcl.Menus, Vcl.Dialogs, Vcl.Forms, Vcl.ImgList,
   Vcl.ActnPopup,
 
-  Spring.Collections,
+  Spring, Spring.Collections,
 
   BCEditor.Editor, BCEditor.Editor.KeyCommands,
 
   DDuce.Editor.Types, DDuce.Editor.Interfaces, DDuce.Editor.Resources,
   DDuce.Editor.View, DDuce.Editor.Highlighters,
+  DDuce.Editor.Commands,
 
   DDuce.Logger;
 
@@ -414,7 +415,7 @@ type
     FPersistSettings : Boolean;
     FToolViews       : IEditorToolViews;
     FEvents          : IEditorEvents;
-    FCommands        : IEditorCommands;
+    FCommands        : TEditorCommands;
     FSettings        : IEditorSettings;
     FActiveView      : IEditorView;
     FViewList        : IList<IEditorView>;
@@ -698,8 +699,6 @@ uses
   System.StrUtils, System.TypInfo,
   Vcl.Clipbrd,
 
-  Spring,
-
   DDuce.Editor.Settings, DDuce.Editor.Utils,
 
   DDuce.Editor.ToolView.Manager,
@@ -718,8 +717,7 @@ uses
   DDuce.Editor.Search.Engine.Settings,
   DDuce.Editor.SortStrings.Settings,
   DDuce.Editor.Search.Engine,
-
-  DDuce.Editor.Events, DDuce.Editor.Commands;
+  DDuce.Editor.Events;
 const
   // prefixes used for naming dynamically created actions.
   ACTION_PREFIX_ENCODING       = 'actEncoding';
@@ -735,6 +733,7 @@ begin
   FSettings := ASettings;
   if not Assigned(FSettings) then
     FSettings := TEditorSettings.Create(Self);
+  FSettings.OnChanged.Add(EditorSettingsChanged);
 end;
 
 procedure TdmEditorManager.AfterConstruction;
@@ -749,7 +748,6 @@ begin
   FCommands         := TEditorCommands.Create(Self);
   FViewList         := TCollections.CreateInterfaceList<IEditorView>;;
   FSearchEngine     := TSearchEngine.Create(Self);
-  FSettings.OnChanged.Add(EditorSettingsChanged);
   RegisterToolViews;
   CreateActions;
   InitializePopupMenus;

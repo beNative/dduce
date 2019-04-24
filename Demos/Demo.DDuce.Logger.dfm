@@ -62,7 +62,7 @@ object frmLogger: TfrmLogger
     object trbMain: TTrackBar
       Left = 163
       Top = 15
-      Width = 273
+      Width = 312
       Height = 29
       Anchors = [akLeft, akTop, akRight]
       Max = 100
@@ -73,9 +73,9 @@ object frmLogger: TfrmLogger
       OnChange = trbMainChange
     end
     object chkSendRandomValueTimer: TCheckBox
-      Left = 449
-      Top = 23
-      Width = 161
+      Left = 492
+      Top = 19
+      Width = 143
       Height = 17
       Caption = 'Send random value timer'
       TabOrder = 1
@@ -95,7 +95,7 @@ object frmLogger: TfrmLogger
       Left = 12
       Top = 22
       Width = 150
-      Height = 25
+      Height = 26
       Action = actEnterMethod1
       ImageMargins.Left = 2
       Images = imlLogger
@@ -105,7 +105,7 @@ object frmLogger: TfrmLogger
       Left = 12
       Top = 51
       Width = 150
-      Height = 25
+      Height = 26
       Action = actEnterMethod2
       ImageMargins.Left = 2
       Images = imlLogger
@@ -115,7 +115,7 @@ object frmLogger: TfrmLogger
       Left = 480
       Top = 20
       Width = 150
-      Height = 25
+      Height = 26
       Action = actLeaveMethod1
       ImageMargins.Left = 2
       Images = imlLogger
@@ -125,7 +125,7 @@ object frmLogger: TfrmLogger
       Left = 480
       Top = 51
       Width = 150
-      Height = 25
+      Height = 26
       Action = actLeaveMethod2
       ImageMargins.Left = 2
       Images = imlLogger
@@ -183,7 +183,7 @@ object frmLogger: TfrmLogger
       Left = 17
       Top = 21
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendInfo
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -199,7 +199,7 @@ object frmLogger: TfrmLogger
       Left = 173
       Top = 21
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendWarning
       ImageMargins.Left = 2
       Images = imlLogger
@@ -209,7 +209,7 @@ object frmLogger: TfrmLogger
       Left = 330
       Top = 21
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendError
       ImageMargins.Left = 2
       Images = imlLogger
@@ -219,7 +219,7 @@ object frmLogger: TfrmLogger
       Left = 486
       Top = 21
       Width = 144
-      Height = 25
+      Height = 26
       Action = actSendClear
       Images = imlLogger
       TabOrder = 3
@@ -256,7 +256,7 @@ object frmLogger: TfrmLogger
       Left = 168
       Top = 22
       Width = 150
-      Height = 25
+      Height = 26
       Action = actIncCounter
       Images = imlLogger
       TabOrder = 1
@@ -265,7 +265,7 @@ object frmLogger: TfrmLogger
       Left = 480
       Top = 21
       Width = 150
-      Height = 25
+      Height = 26
       Action = actResetCounter
       Images = imlLogger
       TabOrder = 3
@@ -274,7 +274,7 @@ object frmLogger: TfrmLogger
       Left = 324
       Top = 22
       Width = 150
-      Height = 25
+      Height = 26
       Action = actDecCounter
       Images = imlLogger
       TabOrder = 2
@@ -317,13 +317,13 @@ object frmLogger: TfrmLogger
       ParentFont = False
       Transparent = False
     end
-    object lblPort: TLabel
-      Left = 540
-      Top = 47
-      Width = 47
+    object lblZeroMQPort: TLabel
+      Left = 598
+      Top = 50
+      Width = 32
       Height = 13
       AutoSize = False
-      Caption = '000000'
+      Caption = '0000'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -332,24 +332,24 @@ object frmLogger: TfrmLogger
       ParentFont = False
       Layout = tlCenter
     end
-    object lblPortCaption: TLabel
-      Left = 495
-      Top = 47
+    object lblZeroMQPortCaption: TLabel
+      Left = 570
+      Top = 50
       Width = 24
       Height = 13
       Caption = 'Port:'
     end
     object lblIPCaption: TLabel
-      Left = 495
-      Top = 63
+      Left = 469
+      Top = 50
       Width = 14
       Height = 13
       Caption = 'IP:'
     end
     object lblIPAddress: TLabel
-      Left = 540
-      Top = 63
-      Width = 85
+      Left = 486
+      Top = 50
+      Width = 79
       Height = 13
       AutoSize = False
       Caption = 'localhost'
@@ -382,7 +382,7 @@ object frmLogger: TfrmLogger
     end
     object chkZeroMQChannel: TCheckBox
       Left = 17
-      Top = 48
+      Top = 49
       Width = 61
       Height = 17
       Hint = 'Enables or disables ZeroMQ channel.'
@@ -404,7 +404,7 @@ object frmLogger: TfrmLogger
     end
     object edtEndPoint: TLabeledEdit
       Left = 235
-      Top = 44
+      Top = 47
       Width = 142
       Height = 21
       Alignment = taCenter
@@ -423,8 +423,8 @@ object frmLogger: TfrmLogger
       Text = 'tcp://*:*'
     end
     object btnZMQBind: TButton
-      Left = 84
-      Top = 43
+      Left = 85
+      Top = 45
       Width = 92
       Height = 25
       Action = actZMQBind
@@ -434,15 +434,15 @@ object frmLogger: TfrmLogger
     end
     object btnZMQCloseSocket: TButton
       Left = 383
-      Top = 43
-      Width = 97
-      Height = 25
+      Top = 45
+      Width = 82
+      Height = 26
       Action = actZMQCloseSocket
       TabOrder = 6
     end
     object chkMQTTChannel: TCheckBox
       Left = 17
-      Top = 74
+      Top = 76
       Width = 53
       Height = 17
       Hint = 'Enables or disables MQTT channel.'
@@ -451,7 +451,7 @@ object frmLogger: TfrmLogger
     end
     object edtMQTTBroker: TLabeledEdit
       Left = 235
-      Top = 72
+      Top = 74
       Width = 142
       Height = 21
       Alignment = taCenter
@@ -471,12 +471,31 @@ object frmLogger: TfrmLogger
     end
     object btnMQTTConnect: TButton
       Left = 85
-      Top = 70
-      Width = 91
+      Top = 72
+      Width = 92
       Height = 25
-      Caption = 'Connect'
+      Action = actMQTTConnect
       TabOrder = 9
-      OnClick = actZMQBindExecute
+    end
+    object edtMQTTPort: TLabeledEdit
+      Left = 411
+      Top = 74
+      Width = 54
+      Height = 21
+      Alignment = taCenter
+      Anchors = [akLeft, akTop, akRight]
+      EditLabel.Width = 24
+      EditLabel.Height = 13
+      EditLabel.Caption = 'Port:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      LabelPosition = lpLeft
+      ParentFont = False
+      TabOrder = 10
+      Text = '1883'
     end
   end
   object grpCheckpoints: TGroupBox
@@ -502,7 +521,7 @@ object frmLogger: TfrmLogger
       Left = 480
       Top = 19
       Width = 150
-      Height = 25
+      Height = 26
       Action = actResetCheckpoint
       Images = imlLogger
       TabOrder = 1
@@ -511,7 +530,7 @@ object frmLogger: TfrmLogger
       Left = 324
       Top = 19
       Width = 150
-      Height = 25
+      Height = 26
       Action = actAddCheckpoint
       ImageMargins.Left = 3
       Images = imlLogger
@@ -531,7 +550,7 @@ object frmLogger: TfrmLogger
       Left = 324
       Top = 23
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendObject
       Caption = 'Send TObject'
       Images = imlLogger
@@ -541,7 +560,7 @@ object frmLogger: TfrmLogger
       Left = 168
       Top = 23
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendRecord
       Images = imlLogger
       TabOrder = 1
@@ -550,7 +569,7 @@ object frmLogger: TfrmLogger
       Left = 168
       Top = 54
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendComponent
       Images = imlLogger
       TabOrder = 5
@@ -559,7 +578,7 @@ object frmLogger: TfrmLogger
       Left = 324
       Top = 54
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendStrings
       Images = imlLogger
       TabOrder = 6
@@ -568,7 +587,7 @@ object frmLogger: TfrmLogger
       Left = 480
       Top = 85
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendDataSet
       Images = imlLogger
       TabOrder = 11
@@ -577,7 +596,7 @@ object frmLogger: TfrmLogger
       Left = 480
       Top = 54
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendBitmap
       Images = imlLogger
       TabOrder = 7
@@ -586,7 +605,7 @@ object frmLogger: TfrmLogger
       Left = 168
       Top = 85
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendRect
       Images = imlLogger
       TabOrder = 9
@@ -595,7 +614,7 @@ object frmLogger: TfrmLogger
       Left = 12
       Top = 85
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendPoint
       Images = imlLogger
       TabOrder = 8
@@ -604,7 +623,7 @@ object frmLogger: TfrmLogger
       Left = 480
       Top = 23
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendInterface
       Images = imlLogger
       TabOrder = 3
@@ -613,7 +632,7 @@ object frmLogger: TfrmLogger
       Left = 12
       Top = 23
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendText
       Images = imlLogger
       TabOrder = 0
@@ -622,7 +641,7 @@ object frmLogger: TfrmLogger
       Left = 12
       Top = 54
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendPersistent
       Images = imlLogger
       TabOrder = 4
@@ -631,7 +650,7 @@ object frmLogger: TfrmLogger
       Left = 324
       Top = 85
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendSQL
       Images = imlLogger
       TabOrder = 10
@@ -650,7 +669,7 @@ object frmLogger: TfrmLogger
       Left = 325
       Top = 16
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendTestSequence
       Images = imlLogger
       TabOrder = 2
@@ -685,7 +704,7 @@ object frmLogger: TfrmLogger
       Left = 168
       Top = 16
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendMessages
       TabOrder = 1
     end
@@ -693,7 +712,7 @@ object frmLogger: TfrmLogger
       Left = 481
       Top = 16
       Width = 150
-      Height = 25
+      Height = 26
       Action = actSendODS
       TabOrder = 3
     end
@@ -720,8 +739,8 @@ object frmLogger: TfrmLogger
   object aclMain: TActionList
     Images = imlLogger
     OnExecute = aclMainExecute
-    Left = 528
-    Top = 88
+    Left = 592
+    Top = 104
     object actSendInfo: TAction
       Caption = 'Send Info'
       ImageIndex = 3
@@ -891,19 +910,24 @@ object frmLogger: TfrmLogger
       Caption = 'Bind to default port (5555)'
       OnExecute = actZMQBindToDefaultPortExecute
     end
+    object actMQTTConnect: TAction
+      Caption = 'Connect'
+      Hint = 'Connect to MQTT broker instance.'
+      OnExecute = actMQTTConnectExecute
+    end
   end
   object tmrSendCounter: TTimer
     Enabled = False
     OnTimer = tmrSendCounterTimer
-    Left = 400
-    Top = 88
+    Left = 456
+    Top = 104
   end
   object imlLogger: TImageList
     ColorDepth = cd32Bit
-    Left = 464
-    Top = 88
+    Left = 528
+    Top = 104
     Bitmap = {
-      494C010118001D005C0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010118001D006C0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000007000000001002000000000000070
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -1,33 +1,32 @@
 program DDuce.Tests;
-{
-
-  Delphi DUnit Test Project
-  -------------------------
-  This project contains the DUnit test framework and the GUI/Console test runners.
-  Add "CONSOLE_TESTRUNNER" to the conditional defines entry in the project options
-  to use the console test runner.  Otherwise the GUI test runner will be used by
-  default.
-
-}
 
 {$I Test.DDuce.inc}
 
-{$IFDEF CONSOLE_TESTRUNNER}
+{$IFNDEF TESTINSIGHT}
 {$APPTYPE CONSOLE}
-{$ENDIF}
+{$ENDIF}{$STRONGLINKTYPES ON}
 
 {$R *.dres}
 
 uses
+  FastMM4,
   {$IFDEF LEAKCHECK}
   LeakCheck,
+  LeakCheck.Setup.Trace,
+  LeakCheck.MapFile,
+  LeakCheck.Trace.Map,
+  LeakCheck.Trace.WinApi,
+  DUnitX.MemoryLeakMonitor.LeakCheck,
   {$ENDIF }
-  Forms,
   {$IFDEF TESTINSIGHT}
-  TestInsight.DUnit,
-  {$ELSE}
-  GUITestRunner,
+  TestInsight.DUnitX,
   {$ENDIF }
+  Vcl.Forms,
+  DUnitX.Loggers.GUI.VCL,
+  DUnitX.Windows.Console,
+  DUnitX.MemoryLeakMonitor.FastMM4,
+  DUnitX.TestFramework,
+  System.SysUtils,
   Test.Registration in 'Test.Registration.pas',
   Test.Data in 'Test.Data.pas',
   Test.Utils in 'Test.Utils.pas',
@@ -35,16 +34,17 @@ uses
   Test.DDuce.DynamicRecord in 'Test.DDuce.DynamicRecord.pas',
   Test.DDuce.DynamicRecord.Generic in 'Test.DDuce.DynamicRecord.Generic.pas',
   Test.DDuce.Reflect in 'Test.DDuce.Reflect.pas',
-  Test.DDuce.Logger in 'Test.DDuce.Logger.pas';
-
-{$R *.RES}
+  Test.DDuce.Logger in 'Test.DDuce.Logger.pas',
+  Test.DDuce.Mosquitto in 'Test.DDuce.Mosquitto.pas';
 
 begin
-  {$WARNINGS OFF}
-  ReportMemoryLeaksOnShutdown := True;
-  {$WARNINGS ON}
   Application.Initialize;
+  ReportMemoryLeaksOnShutdown := False;
   RegisterTests;
+  {$IFDEF TESTINSIGHT}
   RunRegisteredTests;
+  Exit;
+  {$ENDIF}
+  DUnitX.Loggers.GUI.VCL.Run;
 end.
 

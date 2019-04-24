@@ -357,8 +357,8 @@ type
   DynamicRecord<T: class, constructor> = record
   private
     InternalDynamicRecord : IDynamicRecord<T>;
-    FSaveProc      : TProc;
-    FLoadProc      : TProc;
+    FSaveProc             : TProc;
+    FLoadProc             : TProc;
 
     function GetItemValue(const AName: string): TValue;
     procedure SetItemValue(const AName: string; const AValue: TValue);
@@ -1806,7 +1806,7 @@ begin
                 end
                 else
                 begin
-                 // raise Exception.Create('TryGetUnderlyingValue failed.');
+                  raise Exception.Create('TryGetUnderlyingValue failed.');
                 end;
               end
               else

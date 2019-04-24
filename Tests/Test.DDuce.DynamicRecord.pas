@@ -33,83 +33,127 @@ uses
 
   Spring,
 
-  TestFramework, // DUnit
+  DUnitX.TestFramework,
 
   Test.Data;
 
 type
-  TestDynamicRecord = class(TTestCase)
+  {$M+}
+  [TestFixture][IgnoreMemoryLeaks]
+  TestDynamicRecord = class
   private
     FRecord        : DynamicRecord;
     FDynamicRecord : IDynamicRecord;
 
     function RetrieveRecord(
       const AString : string;
-       var  ARecord : DynamicRecord
+      var  ARecord  : DynamicRecord
     ): Boolean;
     function RetrieveRecordFunction: DynamicRecord;
 
+
+
+  protected
+    procedure Test_From_method_for_record;
+
     procedure PassingArgumentByValueParam(ARecord: DynamicRecord);
-    procedure PassingArgumentByConstParam(const ARecord: DynamicRecord);
+
     procedure PassingArgumentByVarParam(var ARecord: DynamicRecord);
     procedure PassingArgumentByInterfaceParam(ARecord: IDynamicRecord);
 
+    procedure PassingArgumentByConstParam(const ARecord: DynamicRecord);
+
   public
+    [Setup]
+    procedure Setup;
+    [TearDown]
+    procedure TearDown;
 
-    procedure SetUp; override;
-    procedure TearDown; override;
-
-    procedure Test_From_method_for_record;
-
-  published
+    [Test]
     procedure Test_passing_DynamicRecord_argument_as_const_parameter;
+    [Test]
     procedure Test_passing_DynamicRecord_argument_as_var_parameter;
+    [Test]
     procedure Test_passing_DynamicRecord_argument_as_value_parameter;
+    [Test]
     procedure Test_passing_DynamicRecord_argument_as_IDynamicRecord_parameter;
+    [Test]
     procedure Test_passing_IDynamicRecord_argument_as_value_parameter;
+    [Test]
     procedure Test_passing_IDynamicRecord_argument_as_const_parameter;
+    [Test]
     procedure Test_passing_IDynamicRecord_argument_as_IDynamicRecord_parameter;
 
+    [Test]
     procedure Test_Assign_method_for_IDynamicRecord_argument;
+    [Test]
     procedure Test_Assign_method_for_DynamicRecord_argument;
+    [Test]
     procedure Test_Assign_method_for_generic_IDynamicRecord_argument;
+    [Test]
     procedure Test_Assign_method_for_generic_DynamicRecord_argument;
 
+    [Test]
     procedure Test_assignment_operator_for_DynamicRecord_to_DynamicRecord;
+    [Test]
     procedure Test_assignment_operator_for_DynamicRecord_to_IDynamicRecord;
+    [Test]
     procedure Test_assignment_operator_for_IDynamicRecord_to_DynamicRecord;
 
+    [Test]
     procedure Test_faulty_condition;
 
+    [Test]
     procedure Test_ContainsField_method;
+    [Test]
     procedure Test_DeleteField_method;
 
+    [Test]
     procedure Test_IsEmpty_method;
+    [Test]
     procedure Test_IsBlank_method;
 
     // test methods with automatic conversion to destination type
+    [Test]
     procedure Test_ToFloat_method;
+    [Test]
     procedure Test_ToInteger_method;
+    [Test]
     procedure Test_ToString_method;
+    [Test]
     procedure Test_ToBoolean_method;
 
+    [Test]
     procedure Test_FromDataSet_method;
+    [Test]
     procedure Test_FromStrings_method;
+    [Test]
     procedure Test_FromStrings_method_with_spaces;
+    [Test]
     procedure Test_FromString_method;
+    [Test]
     procedure Test_FromArray_method;
+    [Test]
     procedure Test_From_method_for_object;
 
+    [Test]
     procedure Test_ToDelimitedText_method;
+    [Test]
     procedure Test_ToVarArray_method;
+    [Test]
     procedure Test_ToCommaText_method;
+    [Test]
     procedure Test_ToStrings_method;
 
+    [Test]
     procedure Test_AssignProperty_method;
 
+    [Test]
     procedure Test_AssignTo_method_for_Object;
 
+    [Test]
     procedure Test_RetrieveRecord;
+    [Test]
     procedure Test_RetrieveRecordFunction;
 
   end;
@@ -137,9 +181,9 @@ const
   TEST_NON_EXISTENT_VALUE = 'TestNonExistentValue';
 
 {$REGION 'SetUp and TearDown methods'}
-procedure TestDynamicRecord.SetUp;
+procedure TestDynamicRecord.Setup;
 begin
-  FRecord := DynamicRecord.CreateDynamicRecord;
+  //FRecord := DynamicRecord.CreateDynamicRecord;
   FRecord[TEST_INTEGER]        := 5;
   FRecord[TEST_STRING]         := 'Test';
   FRecord[TEST_STRING_INTEGER] := '5';
@@ -147,7 +191,6 @@ begin
   FRecord[TEST_BOOLEAN]        := True;
   FRecord[TEST_DOUBLE]         := 3.14;
   FRecord[TEST_CHAR]           := 'C';
-
   FDynamicRecord := DynamicRecord.CreateDynamicRecord;
   FDynamicRecord[TEST_INTEGER]        := 5;
   FDynamicRecord[TEST_STRING]         := 'Test';
@@ -169,7 +212,19 @@ end;
 // helper methods used in tests
 procedure TestDynamicRecord.PassingArgumentByConstParam(const ARecord: DynamicRecord);
 var
-  S : string;
+  F : IDynamicField;
+begin
+  ARecord['NewValue']  := 'Test';
+  ARecord['NewValue2'] := 'Test';
+  for F in ARecord do
+  begin
+    Status(F.ToString);
+  end;
+end;
+
+procedure TestDynamicRecord.PassingArgumentByInterfaceParam(
+  ARecord: IDynamicRecord);
+var
   F : IDynamicField;
 begin
   ARecord.Data.NewValue := 'Test';
@@ -178,29 +233,18 @@ begin
   begin
     Status(F.ToString);
   end;
-  S := Format('PassingRecordThroughConstParam: '#13#10'%s', [ARecord.ToString]);
-end;
-
-procedure TestDynamicRecord.PassingArgumentByInterfaceParam(
-  ARecord: IDynamicRecord);
-var
-  S : string;
-begin
-  ARecord.Data.NewValue := 'Test';
-  ARecord['NewValue2'] := 'Test';
-  S := Format('PassingRecordThroughInterfaceParam: '#13#10'%s', [ARecord.ToString]);
 end;
 
 procedure TestDynamicRecord.PassingArgumentByValueParam(ARecord: DynamicRecord);
 var
   F : IDynamicField;
 begin
+  ARecord.Data.NewValue := 'Test';
+  ARecord['NewValue2'] := 'Test';
   for F in ARecord do
   begin
     Status(F.ToString);
   end;
-  ARecord.Data.NewValue := 'Test';
-  ARecord['NewValue2'] := 'Test';
 end;
 
 { For var parameters the type of the passed value does have to match with the
@@ -210,12 +254,14 @@ end;
 }
 procedure TestDynamicRecord.PassingArgumentByVarParam(var ARecord: DynamicRecord);
 var
-  S : string;
+  F : IDynamicField;
 begin
   ARecord.Data.NewValue := 'Test';
   ARecord['NewValue2'] := 'Test';
-  S := Format('PassingRecordThroughVarParam: '#13#10'%s', [ARecord.ToString]);
-  Status(S);
+  for F in ARecord do
+  begin
+    Status(F.ToString);
+  end;
 end;
 
 function TestDynamicRecord.RetrieveRecordFunction: DynamicRecord;
@@ -243,7 +289,7 @@ end;
 {$REGION 'Test methods that convert all content to another format'}
 procedure TestDynamicRecord.Test_ToCommaText_method;
 begin
-  CheckEqualsString(
+  Assert.AreEqual(
     '5,Test,5,3,14,True,3,14,C',
     FRecord.ToCommaText
   );
@@ -251,8 +297,8 @@ end;
 
 procedure TestDynamicRecord.Test_ToDelimitedText_method;
 begin
-  CheckEqualsString('5,Test,5,3,14,True,3,14,C', FRecord.ToDelimitedText(','));
-  CheckEqualsString('5', FRecord.ToDelimitedText(TEST_INTEGER, ','));
+  Assert.AreEqual('5,Test,5,3,14,True,3,14,C', FRecord.ToDelimitedText(','));
+  Assert.AreEqual('5', FRecord.ToDelimitedText(TEST_INTEGER, ','));
 end;
 
 procedure TestDynamicRecord.Test_ToVarArray_method;
@@ -270,7 +316,7 @@ begin
     V := VarArrayGet(VA, [I]);
     S := Format('[%d] = %s', [I, VarToStrDef(V, '')]);
     Status(S);
-    CheckEqualsString(VarToStrDef(V, ''), FRecord.Items[I].Value.ToString);
+    Assert.AreEqual(VarToStrDef(V, ''), FRecord.Items[I].Value.ToString);
   end;
 end;
 
@@ -284,7 +330,7 @@ begin
     FRecord.ToStrings(SL);
     for F in FRecord do
     begin
-      CheckEqualsString(F.Value.ToString, SL.Values[F.Name]);
+      Assert.AreEqual(F.Value.ToString, SL.Values[F.Name]);
     end;
   finally
     SL.Free;
@@ -304,17 +350,17 @@ begin
   SA := ['zero', 'one', 'two', 'three'];
   S := '0 = zero'#13#10'1 = one'#13#10'2 = two'#13#10'3 = three';
   R.FromArray<string>(SA);
-  CheckEqualsString(S, R.ToString(False));
+  Assert.AreEqual(S, R.ToString(False));
 
   IA := [0, 1, 2, 3];
   S := '0 = 0'#13#10'1 = 1'#13#10'2 = 2'#13#10'3 = 3';
   R.FromArray<Integer>(IA);
-  CheckEqualsString(S, R.ToString(False));
+  Assert.AreEqual(S, R.ToString(False));
 
   DA := [0, 1, 2, 3];
   S := '0 = 0'#13#10'1 = 1'#13#10'2 = 2'#13#10'3 = 3';
   R.FromArray<Double>(DA);
-  CheckEqualsString(S, R.ToString(False));
+  Assert.AreEqual(S, R.ToString(False));
 end;
 
 procedure TestDynamicRecord.Test_FromDataSet_method;
@@ -331,9 +377,8 @@ begin
       R.FromDataSet(DS, True);
       for F in R do
       begin
-        CheckTrue(F.Value.Equals(TValue.FromVariant(DS[F.Name])));
+        Assert.IsTrue(F.Value.Equals(TValue.FromVariant(DS[F.Name])));
       end;
-      Status(R.ToString);
       DS.Next;
     end;
   finally
@@ -351,8 +396,8 @@ begin
     SL.Values['S'] := 'test';
     SL.Values['I'] := '5';
     R.FromStrings(SL);
-    CheckTrue(R.ToInteger('I') = 5, 'I');
-    CheckTrue(R.ToString('S') = 'test', 'S');
+    Assert.IsTrue(R.ToInteger('I') = 5, 'I');
+    Assert.IsTrue(R.ToString('S') = 'test', 'S');
   finally
     SL.Free;
   end;
@@ -368,8 +413,8 @@ begin
     SL.Add('S               = test');
     SL.Add('I               = 5');
     R.FromStrings(SL, True);
-    CheckTrue(R.ToInteger('I') = 5, 'I');
-    CheckTrue(R.ToString('S') = 'test', 'S');
+    Assert.IsTrue(R.ToInteger('I') = 5, 'I');
+    Assert.IsTrue(R.ToString('S') = 'test', 'S');
   finally
     SL.Free;
   end;
@@ -384,9 +429,9 @@ var
   R  : DynamicRecord;
 begin
   R.FromString(MY_STRING, True);
-  CheckTrue(R.ToInteger('One') = 1, 'One');
-  CheckTrue(R.ToInteger('Two') = 2, 'Two');
-  CheckTrue(R.ToString('3') = 'Three', '3');
+  Assert.IsTrue(R.ToInteger('One') = 1, 'One');
+  Assert.IsTrue(R.ToInteger('Two') = 2, 'Two');
+  Assert.IsTrue(R.ToString('3') = 'Three', '3');
 end;
 {$ENDREGION}
 
@@ -399,11 +444,11 @@ begin
   R.Assign(FDynamicRecord);
   for F in R do
   begin
-    CheckTrue(FDynamicRecord[F.Name].Equals(F.Value));
+    Assert.IsTrue(FDynamicRecord[F.Name].Equals(F.Value));
   end;
-  CheckEquals(FDynamicRecord.Data.TestBoolean, R[TEST_BOOLEAN].AsBoolean, TEST_BOOLEAN);
-  CheckEquals(FDynamicRecord.Data.TestInteger, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
-  CheckEquals(FDynamicRecord.Data.TestString, R[TEST_STRING].AsString, TEST_STRING);
+  Assert.AreEqual(Boolean(FDynamicRecord.Data.TestBoolean), R[TEST_BOOLEAN].AsBoolean, TEST_BOOLEAN);
+  Assert.AreEqual(Integer(FDynamicRecord.Data.TestInteger), R[TEST_INTEGER].AsInteger, TEST_INTEGER);
+  Assert.AreEqual(string(FDynamicRecord.Data.TestString), R[TEST_STRING].AsString, TEST_STRING);
 end;
 
 procedure TestDynamicRecord.Test_Assign_method_for_DynamicRecord_argument;
@@ -414,11 +459,11 @@ begin
   R.Assign(FRecord);
   for F in R do
   begin
-    CheckTrue(FRecord[F.Name].Equals(F.Value));
+    Assert.IsTrue(FRecord[F.Name].Equals(F.Value));
   end;
-  CheckEquals(FRecord.Data.TestBoolean, R[TEST_BOOLEAN].AsBoolean, TEST_BOOLEAN);
-  CheckEquals(FRecord.Data.TestInteger, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
-  CheckEquals(FRecord.Data.TestString, R[TEST_STRING].AsString, TEST_STRING);
+  Assert.AreEqual(Boolean(FRecord.Data.TestBoolean), R[TEST_BOOLEAN].AsBoolean, TEST_BOOLEAN);
+  Assert.AreEqual(Integer(FRecord.Data.TestInteger), R[TEST_INTEGER].AsInteger, TEST_INTEGER);
+  Assert.AreEqual(string(FRecord.Data.TestString), R[TEST_STRING].AsString, TEST_STRING);
 end;
 {$ENDREGION}
 
@@ -426,20 +471,20 @@ end;
 procedure TestDynamicRecord.Test_ContainsField_method;
 begin
   // Test ContainsField method
-  CheckTrue(FRecord.ContainsField(TEST_INTEGER), TEST_INTEGER);
-  CheckTrue(FRecord.ContainsField(UpperCase(TEST_INTEGER)), TEST_INTEGER);
-  CheckTrue(FRecord.ContainsField(TEST_STRING), TEST_STRING);
-  CheckTrue(FRecord.ContainsField(TEST_BOOLEAN), TEST_BOOLEAN);
-  CheckFalse(FRecord.ContainsField(TEST_NON_EXISTENT_VALUE), TEST_NON_EXISTENT_VALUE);
-  CheckTrue(FRecord.ContainsField(TEST_DOUBLE), TEST_DOUBLE);
+  Assert.IsTrue(FRecord.ContainsField(TEST_INTEGER), TEST_INTEGER);
+  Assert.IsTrue(FRecord.ContainsField(UpperCase(TEST_INTEGER)), TEST_INTEGER);
+  Assert.IsTrue(FRecord.ContainsField(TEST_STRING), TEST_STRING);
+  Assert.IsTrue(FRecord.ContainsField(TEST_BOOLEAN), TEST_BOOLEAN);
+  Assert.IsFalse(FRecord.ContainsField(TEST_NON_EXISTENT_VALUE), TEST_NON_EXISTENT_VALUE);
+  Assert.IsTrue(FRecord.ContainsField(TEST_DOUBLE), TEST_DOUBLE);
 end;
 
 procedure TestDynamicRecord.Test_DeleteField_method;
 begin
   // Test DeleteField
-  CheckTrue(FRecord.DeleteField(TEST_INTEGER), TEST_INTEGER);
+  Assert.IsTrue(FRecord.DeleteField(TEST_INTEGER), TEST_INTEGER);
   // Check if it is really gone
-  CheckFalse(FRecord.ContainsField(TEST_INTEGER), TEST_INTEGER);
+  Assert.IsFalse(FRecord.ContainsField(TEST_INTEGER), TEST_INTEGER);
 end;
 {$ENDREGION}
 
@@ -450,69 +495,69 @@ var
   S : string;
 begin
   S := TEST_NON_EXISTENT_VALUE;
-  CheckTrue(R.IsBlank(S), S);
+  Assert.IsTrue(R.IsBlank(S), S);
 
   S := 'TestEmptyString';
   R[S] := '';
-  CheckTrue(R.IsBlank(S), S);
+  Assert.IsTrue(R.IsBlank(S), S);
 
   S := 'TestEmptyValue';
   R[S] := TValue.Empty;
-  CheckTrue(R.IsBlank(S), S);
+  Assert.IsTrue(R.IsBlank(S), S);
 
   S := TEST_STRING;
   R[S] := 'Test';
-  CheckFalse(R.IsBlank(S), S);
+  Assert.IsFalse(R.IsBlank(S), S);
 
   S := TEST_INTEGER;
   R[S] := 0;
-  CheckFalse(R.IsBlank(S), S);
+  Assert.IsFalse(R.IsBlank(S), S);
 
   S := TEST_DOUBLE;
   R[S] := 3.14;
-  CheckFalse(R.IsBlank(S), S);
+  Assert.IsFalse(R.IsBlank(S), S);
   R[S] := NaN;
-  CheckFalse(R.IsBlank(S), S);
+  Assert.IsFalse(R.IsBlank(S), S);
   R[S] := Infinity;
-  CheckFalse(R.IsBlank(S), S);
+  Assert.IsFalse(R.IsBlank(S), S);
   R[S] := NegInfinity;
-  CheckFalse(R.IsBlank(S), S);
+  Assert.IsFalse(R.IsBlank(S), S);
   R[S] := 0.0;
-  CheckFalse(R.IsBlank(S), S);
+  Assert.IsFalse(R.IsBlank(S), S);
 
   S := TEST_BOOLEAN;
   R[S] := False;
-  CheckFalse(R.IsBlank(S), S);
+  Assert.IsFalse(R.IsBlank(S), S);
 
   S := TEST_VARIANT;
   R[S] := TValue.FromVariant(Null);
-  CheckTrue(R.IsBlank(S), 'Null');
+  Assert.IsTrue(R.IsBlank(S), 'Null');
   R[S] := TValue.FromVariant(Unassigned);
-  CheckTrue(R.IsBlank(S), 'Unassigned');
+  Assert.IsTrue(R.IsBlank(S), 'Unassigned');
   // EmptyParam does not translate to TValue.Empty.
   R[S] := TValue.FromVariant(EmptyParam);
-  CheckFalse(R.IsBlank(S), 'EmptyParam');
+  Assert.IsFalse(R.IsBlank(S), 'EmptyParam');
 
   R[S] := TValue.FromVariant('');
-  CheckTrue(R.IsBlank(S), 'Empty string');
+  Assert.IsTrue(R.IsBlank(S), 'Empty string');
 end;
 
 procedure TestDynamicRecord.Test_IsEmpty_method;
 var
   R : DynamicRecord;
 begin
-  CheckTrue(R.IsEmpty);
+  Assert.IsTrue(R.IsEmpty);
 
   R['S'] := 'test';
-  CheckFalse(R.IsEmpty);
+  Assert.IsFalse(R.IsEmpty);
 
   R['T'] := 'test';
   R.Clear;
-  CheckTrue(R.IsEmpty);
+  Assert.IsTrue(R.IsEmpty);
 
   R['T'] := 'test';
   R.DeleteField('T');
-  CheckTrue(R.IsEmpty);
+  Assert.IsTrue(R.IsEmpty);
 end;
 {$ENDREGION}
 
@@ -533,8 +578,8 @@ begin
   R.Data.S := 'string';
   R.Data.F := 3.14;
   PassingArgumentByConstParam(R);
-  CheckTrue(R.Data.NewValue = 'Test');
-  CheckTrue(R.Data.NewValue2 = 'Test');
+  Assert.IsTrue(R.Data.NewValue = 'Test');
+  Assert.IsTrue(R.Data.NewValue2 = 'Test');
 end;
 
 { When passing a DynamicRecord value through a IDynamicRecord parameter, an implicit
@@ -548,8 +593,8 @@ begin
   R.Data.S := 'string';
   R.Data.F := 3.14;
   PassingArgumentByInterfaceParam(R);
-  CheckFalse(R.Data.NewValue = 'Test');
-  CheckFalse(R.Data.NewValue2 = 'Test');
+  Assert.IsFalse(R.Data.NewValue = 'Test');
+  Assert.IsFalse(R.Data.NewValue2 = 'Test');
 end;
 
 { When passing a DynamicRecord by value, an implicit copy is created. }
@@ -562,16 +607,16 @@ begin
   R.Data.S := 'string';
   R.Data.F := 3.14;
   PassingArgumentByValueParam(R);
-  CheckFalse(R.Data.NewValue = 'Test');
-  CheckFalse(R.Data.NewValue2 = 'Test');
+  Assert.IsFalse(R.Data.NewValue = 'Test');
+  Assert.IsFalse(R.Data.NewValue2 = 'Test');
 end;
 
 { When passing a DynamicRecord by reference (var parameter), no copy is created. }
 procedure TestDynamicRecord.Test_passing_DynamicRecord_argument_as_var_parameter;
 begin
   PassingArgumentByVarParam(FRecord);
-  CheckTrue(FRecord.Data.NewValue = 'Test');
-  CheckTrue(FRecord.Data.NewValue2 = 'Test');
+  Assert.IsTrue(FRecord.Data.NewValue = 'Test');
+  Assert.IsTrue(FRecord.Data.NewValue2 = 'Test');
 end;
 
 { As the IDynamicRecord argument is implicitly casted to DynamicRecord, a copy of
@@ -579,17 +624,17 @@ end;
 procedure TestDynamicRecord.Test_passing_IDynamicRecord_argument_as_value_parameter;
 begin
   PassingArgumentByValueParam(FDynamicRecord);
-  CheckFalse(FDynamicRecord.Data.NewValue = 'Test');
-  CheckFalse(FDynamicRecord.Data.NewValue2 = 'Test');
+  Assert.IsFalse(FDynamicRecord.Data.NewValue = 'Test');
+  Assert.IsFalse(FDynamicRecord.Data.NewValue2 = 'Test');
 end;
 
 { As the IDynamicRecord argument is implicitly casted to DynamicRecord, a copy of
   its content is made. }
 procedure TestDynamicRecord.Test_passing_IDynamicRecord_argument_as_const_parameter;
 begin
-  //PassingArgumentByConstParam(FDynamicRecord);
-  CheckFalse(FDynamicRecord.Data.NewValue = 'Test');
-  CheckFalse(FDynamicRecord.Data.NewValue2 = 'Test');
+  PassingArgumentByConstParam(FDynamicRecord);
+  Assert.IsFalse(FDynamicRecord.Data.NewValue = 'Test');
+  Assert.IsFalse(FDynamicRecord.Data.NewValue2 = 'Test');
   Status(FDynamicRecord.ToString);
 end;
 
@@ -597,8 +642,8 @@ end;
 procedure TestDynamicRecord.Test_passing_IDynamicRecord_argument_as_IDynamicRecord_parameter;
 begin
   PassingArgumentByInterfaceParam(FDynamicRecord);
-  CheckTrue(FDynamicRecord.Data.NewValue = 'Test');
-  CheckTrue(FDynamicRecord.Data.NewValue2 = 'Test');
+  Assert.IsTrue(FDynamicRecord.Data.NewValue = 'Test');
+  Assert.IsTrue(FDynamicRecord.Data.NewValue2 = 'Test');
   Status(FDynamicRecord.ToString);
 end;
 {$ENDREGION}
@@ -606,42 +651,42 @@ end;
 {$REGION 'Tests for methods that convert the TValue to the destination type'}
 procedure TestDynamicRecord.Test_ToBoolean_method;
 begin
-  CheckTrue(FRecord.ToBoolean(TEST_STRING, True), TEST_STRING);
-  CheckTrue(FRecord.ToBoolean(TEST_STRING_INTEGER, True), TEST_STRING_INTEGER);
-  CheckTrue(FRecord.ToBoolean(TEST_STRING_DOUBLE, True), TEST_STRING_DOUBLE);
-  CheckTrue(FRecord.ToBoolean(TEST_DOUBLE, True), TEST_DOUBLE);
-  CheckTrue(FRecord.ToBoolean(TEST_BOOLEAN, True), TEST_BOOLEAN);
-  CheckTrue(FRecord.ToBoolean(TEST_INTEGER, True), TEST_INTEGER);
+  Assert.IsTrue(FRecord.ToBoolean(TEST_STRING, True), TEST_STRING);
+  Assert.IsTrue(FRecord.ToBoolean(TEST_STRING_INTEGER, True), TEST_STRING_INTEGER);
+  Assert.IsTrue(FRecord.ToBoolean(TEST_STRING_DOUBLE, True), TEST_STRING_DOUBLE);
+  Assert.IsTrue(FRecord.ToBoolean(TEST_DOUBLE, True), TEST_DOUBLE);
+  Assert.IsTrue(FRecord.ToBoolean(TEST_BOOLEAN, True), TEST_BOOLEAN);
+  Assert.IsTrue(FRecord.ToBoolean(TEST_INTEGER, True), TEST_INTEGER);
 end;
 
 procedure TestDynamicRecord.Test_ToFloat_method;
 begin
-  CheckEquals(5, FRecord.ToFloat(TEST_INTEGER), TEST_INTEGER);
-  CheckTrue(IsZero(FRecord.ToFloat(TEST_STRING)), TEST_STRING);
-  CheckTrue(IsZero(FRecord.ToFloat(TEST_BOOLEAN)), TEST_BOOLEAN);
-  CheckEquals(3.14, FRecord.ToFloat(TEST_DOUBLE), 0.001);
+  Assert.AreEqual(Double(5), FRecord.ToFloat(TEST_INTEGER), TEST_INTEGER);
+  Assert.IsTrue(IsZero(FRecord.ToFloat(TEST_STRING)), TEST_STRING);
+  Assert.IsTrue(IsZero(FRecord.ToFloat(TEST_BOOLEAN)), TEST_BOOLEAN);
+  Assert.AreEqual(3.14, FRecord.ToFloat(TEST_DOUBLE), 0.001);
 end;
 
 procedure TestDynamicRecord.Test_ToInteger_method;
 begin
-  CheckEquals(1, FRecord.ToInteger(TEST_BOOLEAN), TEST_BOOLEAN);
-  CheckEquals(5, FRecord.ToInteger(TEST_INTEGER), TEST_INTEGER);
-  CheckEquals(0, FRecord.ToInteger(TEST_STRING), TEST_STRING);
-  CheckEquals(5, FRecord.ToInteger(TEST_STRING_INTEGER), TEST_STRING_INTEGER);
-  CheckEquals(0, FRecord.ToInteger(TEST_STRING_DOUBLE), TEST_STRING_DOUBLE);
+  Assert.AreEqual(1, FRecord.ToInteger(TEST_BOOLEAN), TEST_BOOLEAN);
+  Assert.AreEqual(5, FRecord.ToInteger(TEST_INTEGER), TEST_INTEGER);
+  Assert.AreEqual(0, FRecord.ToInteger(TEST_STRING), TEST_STRING);
+  Assert.AreEqual(5, FRecord.ToInteger(TEST_STRING_INTEGER), TEST_STRING_INTEGER);
+  Assert.AreEqual(0, FRecord.ToInteger(TEST_STRING_DOUBLE), TEST_STRING_DOUBLE);
 
   // float values are not rounded or trunked when converting. Conversion fails.
-  CheckEquals(0, FRecord.ToInteger(TEST_DOUBLE), TEST_DOUBLE);
+  Assert.AreEqual(0, FRecord.ToInteger(TEST_DOUBLE), TEST_DOUBLE);
 end;
 
 procedure TestDynamicRecord.Test_ToString_method;
 begin
-  CheckEquals('True', FRecord.ToString(TEST_BOOLEAN), TEST_BOOLEAN);
-  CheckEquals('5', FRecord.ToString(TEST_INTEGER), TEST_INTEGER);
-  CheckEquals('Test', FRecord.ToString(TEST_STRING), TEST_STRING);
-  CheckEquals('5', FRecord.ToString(TEST_STRING_INTEGER), TEST_STRING_INTEGER);
-  CheckEquals('3,14', FRecord.ToString(TEST_STRING_DOUBLE), TEST_STRING_DOUBLE);
-  CheckEquals('3,14', FRecord.ToString(TEST_DOUBLE), TEST_DOUBLE);
+  Assert.AreEqual('True', FRecord.ToString(TEST_BOOLEAN), TEST_BOOLEAN);
+  Assert.AreEqual('5', FRecord.ToString(TEST_INTEGER), TEST_INTEGER);
+  Assert.AreEqual('Test', FRecord.ToString(TEST_STRING), TEST_STRING);
+  Assert.AreEqual('5', FRecord.ToString(TEST_STRING_INTEGER), TEST_STRING_INTEGER);
+  Assert.AreEqual('3,14', FRecord.ToString(TEST_STRING_DOUBLE), TEST_STRING_DOUBLE);
+  Assert.AreEqual('3,14', FRecord.ToString(TEST_DOUBLE), TEST_DOUBLE);
 end;
 
 {$REGION 'Operator overload tests'}
@@ -652,7 +697,7 @@ var
 begin
   R := FRecord;
   FRecord[TEST_INTEGER] := 6;
-  CheckEquals(5, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
+  Assert.AreEqual(5, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
 end;
 
 { Assigning a DynamicRecord to a IDynamicRecord results in creating a copy of the
@@ -665,7 +710,7 @@ begin
   // automatically created by the overloaded assignment operator of DynamicRecord.
   DR := FRecord;
   FRecord[TEST_STRING] := 'another value';
-  CheckEquals('Test', DR[TEST_STRING].AsString); // a copy has been made
+  Assert.AreEqual('Test', DR[TEST_STRING].AsString); // a copy has been made
 end;
 
 { Assigning an IDynamicRecord to a DynamicRecord results in creating a copy. }
@@ -675,7 +720,7 @@ var
 begin
   R := FDynamicRecord;
   R[TEST_INTEGER] := 6;
-  CheckEquals(5, FDynamicRecord[TEST_INTEGER].AsInteger, TEST_INTEGER);
+  Assert.AreEqual(5, FDynamicRecord[TEST_INTEGER].AsInteger, TEST_INTEGER);
 end;
 {$ENDREGION}
 
@@ -695,10 +740,10 @@ begin
     R.AssignProperty(O, TEST_STRING);
     R.AssignProperty(O, TEST_INTEGER);
     R.AssignProperty(O, TEST_DOUBLE);
-    CheckEquals(O.TestBoolean, R[TEST_BOOLEAN].AsBoolean, TEST_BOOLEAN);
-    CheckEquals(O.TestInteger, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
-    CheckEquals(O.TestString, R[TEST_STRING].AsString, TEST_STRING);
-    CheckEquals(O.TestDouble, R[TEST_DOUBLE].AsExtended, TEST_DOUBLE);
+    Assert.AreEqual(O.TestBoolean, R[TEST_BOOLEAN].AsBoolean, TEST_BOOLEAN);
+    Assert.AreEqual(O.TestInteger, R[TEST_INTEGER].AsInteger, TEST_INTEGER);
+    Assert.AreEqual(O.TestString, R[TEST_STRING].AsString, TEST_STRING);
+    Assert.AreEqual(O.TestDouble, Double(R[TEST_DOUBLE].AsExtended), TEST_DOUBLE);
   finally
     O.Free;
   end;
@@ -714,7 +759,7 @@ begin
     RetrieveRecord(RandomData.Name, R);
     Status(R['Test'].AsString);
   end;
-  CheckTrue(True, 'OK');
+  Assert.IsTrue(True, 'OK');
 end;
 
 procedure TestDynamicRecord.Test_RetrieveRecordFunction;
@@ -722,30 +767,30 @@ var
   R : DynamicRecord;
 begin
   R := RetrieveRecordFunction;
-  CheckEquals('test', R['Test'].AsString);
+  Assert.AreEqual('test', R['Test'].AsString);
 end;
 
 procedure TestDynamicRecord.Test_faulty_condition;
 begin
   FDynamicRecord[TEST_STRING] := '';
   FRecord := FDynamicRecord;
-  CheckEqualsString('', FRecord[TEST_STRING].AsString);
+  Assert.AreEqual('', FRecord[TEST_STRING].AsString);
 
   FRecord[TEST_STRING] := 'New Value';
-  CheckNotEqualsString('New Value', FDynamicRecord[TEST_STRING].AsString);
+  Assert.AreNotEqual('New Value', FDynamicRecord[TEST_STRING].AsString);
 
   FDynamicRecord[TEST_STRING] := 'Bad';
-  CheckNotEqualsString('Bad', FRecord[TEST_STRING].AsString);
+  Assert.AreNotEqual('Bad', FRecord[TEST_STRING].AsString);
 
   FRecord := FDynamicRecord;
   FRecord[TEST_STRING] := 'Good';
-  CheckEqualsString('Bad', FDynamicRecord[TEST_STRING].AsString);
+  Assert.AreEqual('Bad', FDynamicRecord[TEST_STRING].AsString);
 
   FDynamicRecord := FRecord;
-  CheckEqualsString('Good', FDynamicRecord[TEST_STRING].AsString);
+  Assert.AreEqual('Good', FDynamicRecord[TEST_STRING].AsString);
 
   FDynamicRecord[TEST_STRING] := 'Bad';
-  CheckEqualsString('Good', FRecord[TEST_STRING].AsString);
+  Assert.AreEqual('Good', FRecord[TEST_STRING].AsString);
 end;
 
 procedure TestDynamicRecord.Test_From_method_for_object;
@@ -760,7 +805,7 @@ begin
     O2 := TTestClass.Create;
     try
       R.AssignTo(O2);
-      CheckEquals(O1.TestInteger, O2.TestInteger);
+      Assert.AreEqual(O1.TestInteger, O2.TestInteger);
     finally
       O2.Free;
     end;
@@ -780,7 +825,7 @@ begin
   // record properties
   R.From(R1, False, True);
   R.AssignTo(R2);
-  CheckEquals(R1.TestInteger, R2.TestInteger);
+  Assert.AreEqual(R1.TestInteger, R2.TestInteger);
 end;
 
 procedure TestDynamicRecord.Test_AssignTo_method_for_object;
@@ -795,7 +840,7 @@ begin
     O2 := TTestClass.Create;
     try
       R.AssignTo(O2);
-      CheckTrue(O1.Equals(O2));
+      Assert.IsTrue(O1.Equals(O2));
     finally
       O2.Free;
     end;
@@ -812,8 +857,8 @@ begin
   DR.Data.TestString := 'Some teststring';
   DR.Data.TestChar   := 'A';
   FRecord.Assign(DR);
-  CheckEquals(FRecord[TEST_STRING].AsString, DR.Data.TestString);
-  CheckEquals(FRecord[TEST_CHAR].AsString, DR.Data.TestChar);
+  Assert.AreEqual(FRecord[TEST_STRING].AsString, DR.Data.TestString);
+  Assert.AreEqual(FRecord[TEST_CHAR].AsString, DR.Data.TestChar);
 end;
 
 procedure TestDynamicRecord.Test_Assign_method_for_generic_DynamicRecord_argument;
@@ -823,8 +868,8 @@ begin
   R.Data.TestString := 'Some teststring';
   R.Data.TestChar   := 'A';
   FRecord.Assign(R);
-  CheckEquals(FRecord[TEST_STRING].AsString, R.Data.TestString);
-  CheckEquals(FRecord[TEST_CHAR].AsString, R.Data.TestChar);
+  Assert.AreEqual(FRecord[TEST_STRING].AsString, R.Data.TestString);
+  Assert.AreEqual(FRecord[TEST_CHAR].AsString, R.Data.TestChar);
 end;
 {$ENDREGION}
 
