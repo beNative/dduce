@@ -16,6 +16,8 @@
 
 unit DDuce.Editor.Search.Engine;
 
+interface
+
 { Search logic to find text in one or all managed editor views. }
 
 {
@@ -36,8 +38,6 @@ unit DDuce.Editor.Search.Engine;
     Replace search matches
 
 }
-
-interface
 
 uses
   System.Classes, System.SysUtils, System.Types,

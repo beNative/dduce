@@ -16,9 +16,9 @@
 
 unit DDuce.Editor.Resources;
 
-{ Shared resources. }
-
 interface
+
+{ Shared resources. }
 
 uses
   System.Classes, System.SysUtils, System.ImageList,

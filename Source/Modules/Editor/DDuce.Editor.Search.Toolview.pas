@@ -16,6 +16,8 @@
 
 unit DDuce.Editor.Search.Toolview;
 
+interface
+
 { Searchform to use in combination with an EditorManager instance. This toolform
   provides search/replace functionality for the active view or all views that
   are managed by the EditorManager. }
@@ -25,8 +27,6 @@ unit DDuce.Editor.Search.Toolview;
     - only show function keys when focused.
     - copy all matches to a stringlist when regular expressions are used
 }
-
-interface
 
 uses
   System.SysUtils, System.Classes, System.Actions,
