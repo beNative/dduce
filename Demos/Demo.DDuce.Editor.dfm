@@ -4,6 +4,7 @@ object frmEditor: TfrmEditor
   ClientHeight = 568
   ClientWidth = 1004
   Color = clBtnFace
+  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

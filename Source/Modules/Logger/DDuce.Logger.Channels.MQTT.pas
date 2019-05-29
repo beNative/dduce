@@ -107,7 +107,7 @@ begin
   FBuffer := TStringStream.Create;
   FMQTT.Create(function: TMQTT
     begin
-      Result := TMQTT.Create(UTF8String(FBroker), FPort);
+      Result := TMQTT.Create(FBroker, FPort);
   // some brokers require these to have a value
       Result.WillTopic := 'a';
       Result.WillMsg   := 'a';

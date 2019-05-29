@@ -16,9 +16,9 @@
 
 unit DDuce.Editor.ToolView.Manager;
 
-interface
-
 { TToolViewManager allows for lazy instantiation of registered toolviews. }
+
+interface
 
 uses
   System.Classes, System.SysUtils,

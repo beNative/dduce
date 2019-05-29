@@ -51,8 +51,6 @@ type
     ): Boolean;
     function RetrieveRecordFunction: DynamicRecord;
 
-
-
   protected
     procedure Test_From_method_for_record;
 

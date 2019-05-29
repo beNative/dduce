@@ -5,6 +5,7 @@ object frmGridView: TfrmGridView
   ClientHeight = 665
   ClientWidth = 1008
   Color = clBtnFace
+  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

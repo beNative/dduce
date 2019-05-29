@@ -22,12 +22,18 @@ interface
 
 uses
   System.Classes, System.TypInfo,
-  Vcl.Controls,
+  Vcl.Controls, Vcl.Forms,
 
   zObjInspector, zValueManager;
 
 type
   TzObjectInspectorFactory = class sealed
+  private class var
+    FDefaultBorderStyle : TBorderStyle;
+
+  public
+    class constructor Create;
+
     class function Create(
       AOwner        : TComponent;
       AParent       : TWinControl;
@@ -36,9 +42,21 @@ type
       const AName   : string = ''
     ): TzObjectInspector; static;
 
+    class property DefaultBorderStyle: TBorderStyle
+      read FDefaultBorderStyle write FDefaultBorderStyle default bsSingle;
+
   end;
 
 implementation
+
+uses
+  Vcl.Graphics;
+
+{$REGION 'construction and destruction'}
+class constructor TzObjectInspectorFactory.Create;
+begin
+  FDefaultBorderStyle := bsNone;
+end;
 
 class function TzObjectInspectorFactory.Create(AOwner: TComponent;
   AParent: TWinControl; AObject: TObject; AValueManager: TzCustomValueManager;
@@ -54,7 +72,11 @@ begin
   OI.Component        := AObject;
   OI.ObjectVisibility := mvPublic;
   OI.SplitterPos      := OI.ClientWidth div 2;
+  OI.BorderStyle      := DefaultBorderStyle;
+  OI.GutterEdgeColor  := clSilver;
+  OI.SplitterColor    := clSilver;
   Result := OI;
 end;
+{$ENDREGION}
 
 end.

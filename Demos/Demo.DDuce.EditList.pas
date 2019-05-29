@@ -87,6 +87,7 @@ procedure TfrmEditList.AfterConstruction;
 begin
   inherited AfterConstruction;
   FEditList := TEditList.Create(Self, pnlLeft);
+  FEditList.AlignWithMargins := True;
   FEditList.OnAdd.Add(FEditListAdd);
   FEditList.OnDelete.Add(FEditListDelete);
   FEditList.OnDeleteItem.Add(FEditListDeleteItem);

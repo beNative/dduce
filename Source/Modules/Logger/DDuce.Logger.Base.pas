@@ -276,7 +276,7 @@ type
 
     { Watches support }
     procedure Watch(const AName: string; const AValue: TValue); overload;
-    procedure Watch(const AName: string; const AValue: string = ''); overload;
+    procedure Watch(const AName: string; const AValue: string); overload;
     procedure Watch(const AName: string; const AValue: AnsiString); overload;
     procedure Watch(const AName: string; const AValue: WideString); overload;
     procedure Watch(const AName: string; const AValue: ShortString); overload;
@@ -1156,49 +1156,6 @@ procedure TLogger.Watch(const AName: string; const AValue: TValue);
 var
   S : string;
 begin
-//  case AValue.Kind of
-//    tkEnumeration:
-//    begin
-//      if AValue.TypeInfo = TypeInfo(Boolean) then
-//      begin
-//        S := BoolToStr(AValue.AsBoolean, True);
-//      end
-//      else
-//      begin
-//        S := AValue.ToString;
-//      end;
-//    end;
-//    tkString, tkLString, tkWString, tkUString:
-//      S := AValue.AsString;
-//    tkFloat:
-//    begin
-//      if AValue.TypeInfo = TypeInfo(TDate) then
-//      begin
-//        S := DateToStr(AValue.AsType<TDate>);
-//      end
-//      else
-//      if AValue.TypeInfo = TypeInfo(TDateTime) then
-//      begin
-//        S := DateTimeToStr(AValue.AsType<TDateTime>);
-//      end
-//      else
-//      if AValue.TypeInfo = TypeInfo(TTime) then
-//      begin
-//        S := TimeToStr(AValue.AsType<TTime>);
-//      end
-//      else
-//      begin
-//        S := FloatToStr(AValue.AsExtended);
-//      end;
-//    end;
-//    tkInteger:
-//      S := AValue.AsInteger.ToString;
-//    tkInt64:
-//      S := AValue.AsInt64.ToString
-//    else
-//      S := AValue.ToString;
-//  end;
-//  InternalSend(lmtWatch, AName + ' = ' + S);
   if AValue.TypeInfo <> nil then
   begin
     S := Format('%s (%s) = %s', [

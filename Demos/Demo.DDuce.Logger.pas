@@ -141,6 +141,9 @@ type
     tmrSendCounter            : TTimer;
     tmrSendValue              : TTimer;
     trbMain                   : TTrackBar;
+    trbLogLevel: TTrackBar;
+    lblLogLevel: TLabel;
+    lblLogLevelValue: TLabel;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -191,6 +194,7 @@ type
     procedure actZMQCloseSocketExecute(Sender: TObject);
     procedure actZMQBindToDefaultPortExecute(Sender: TObject);
     procedure actMQTTConnectExecute(Sender: TObject);
+    procedure trbLogLevelChange(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -206,6 +210,7 @@ type
     procedure SaveSettings;
 
     procedure WatchZeroMQChannel;
+    function GetLogger: ILogger;
 
   protected
     procedure TestProcedure1;
@@ -213,7 +218,7 @@ type
     procedure UpdateActions; override;
 
     property Logger: ILogger
-      read FLogger;
+      read GetLogger;
 
   public
     procedure AfterConstruction; override;
@@ -322,6 +327,13 @@ procedure TfrmLogger.BeforeDestruction;
 begin
   SaveSettings;
   inherited BeforeDestruction;
+end;
+{$ENDREGION}
+
+{$REGION 'property access methods'}
+function TfrmLogger.GetLogger: ILogger;
+begin
+  Result := FLogger;
 end;
 {$ENDREGION}
 
@@ -525,12 +537,12 @@ procedure TfrmLogger.actSendTestSequenceExecute(Sender: TObject);
 var
   I : Integer;
 begin
+  Logger.Track(Self, 'actSendTestSequenceExecute');
   for I := 0 to 10 do
   begin
     Logger.Send('I', I);
     Logger.Watch('I', I);
     TestProcedure1;
-//    TestProcedure2;
   end;
 end;
 
@@ -617,6 +629,11 @@ begin
   WatchZeroMQChannel;
 end;
 
+procedure TfrmLogger.trbLogLevelChange(Sender: TObject);
+begin
+  Logger.LogLevel := Byte(trbLogLevel.Position);
+end;
+
 procedure TfrmLogger.trbMainChange(Sender: TObject);
 begin
   Logger.Watch('Trackbar', trbMain.Position);
@@ -699,9 +716,9 @@ begin
   Logger.Info('Information message.');
   Logger.Error('Fatal error occured! Something went wrong over here!');
   Logger.Warn('This message warns you about nothing.');
-//  Logger.SendComponent('Form', Self);  // sends DFM with published properties => ERROR!!!
   Logger.SendPersistent('Font', Font); // sends published property values
   Logger.SendObject('Font', Font);     // sends fields and property values
+  TestProcedure2;
 end;
 
 procedure TfrmLogger.TestProcedure2;
@@ -758,6 +775,7 @@ begin
   actMQTTConnect.Enabled := B;
 
   edtLogFile.Enabled := chkLogFileChannel.Checked;
+  lblLogLevelValue.Caption := trbLogLevel.Position.ToString;
 end;
 {$ENDREGION}
 

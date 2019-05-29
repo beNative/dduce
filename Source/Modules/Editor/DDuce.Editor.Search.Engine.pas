@@ -16,9 +16,9 @@
 
 unit DDuce.Editor.Search.Engine;
 
-interface
-
 { Search logic to find text in one or all managed editor views. }
+
+interface
 
 {
   Refactoring notes (20/11/2013, TS)

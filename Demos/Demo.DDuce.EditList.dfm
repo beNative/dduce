@@ -5,6 +5,7 @@ object frmEditList: TfrmEditList
   ClientHeight = 411
   ClientWidth = 635
   Color = clBtnFace
+  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -27,6 +28,7 @@ object frmEditList: TfrmEditList
     Width = 321
     Height = 411
     Align = alLeft
+    BevelEdges = []
     BevelOuter = bvNone
     TabOrder = 0
   end
@@ -36,6 +38,7 @@ object frmEditList: TfrmEditList
     Width = 309
     Height = 411
     Align = alClient
+    BevelEdges = []
     BevelOuter = bvNone
     TabOrder = 1
     DesignSize = (

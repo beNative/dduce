@@ -759,6 +759,7 @@ begin
   if PersistSettings then
     FSettings.Save;
   FSettings.OnChanged.Remove(EditorSettingsChanged);
+  FSettings := nil;
   inherited BeforeDestruction;
 end;
 {$ENDREGION}

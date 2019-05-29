@@ -77,6 +77,7 @@ begin
     FManager.Actions,
     FManager.Menus
   );
+  FMainToolbar.Color := clWhite;
   FOI := TzObjectInspectorFactory.Create(
     Self,
     pnlLeft,

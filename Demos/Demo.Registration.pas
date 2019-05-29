@@ -50,15 +50,15 @@ begin
   DemoManager.Register(TfrmLogger, 'Logger');
   DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
-  DemoManager.Register(TfrmInspector, 'Inspector');
-  DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
+  //DemoManager.Register(TfrmInspector, 'Inspector');
+  //DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
   DemoManager.Register(TfrmValueListDemo, 'ValueList');
   DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
   //DemoManager.Register(TfrmReflect, 'Reflect');
   DemoManager.Register(TfrmEditor, 'Editor');
-  DemoManager.Register(TfrmVirtualTrees, 'VirtualTrees');
+  DemoManager.Register(TfrmVirtualTrees, 'VirtualTrees factories');
   DemoManager.Register(TfrmVTNode, 'VTNode');
-  DemoManager.Register(TfrmScopedReferences, 'Scoped references');
+  //DemoManager.Register(TfrmScopedReferences, 'Scoped references');
   DemoManager.Register(TfrmEditList, 'EditList');
   DemoManager.Register(TfrmDialogs, 'Dialogs');
   // not working yet

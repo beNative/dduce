@@ -16,11 +16,12 @@
 
 unit DDuce.Editor.Search.Toolview;
 
+{ Searchform to use in combination with an EditorManager instance. }
+
 interface
 
-{ Searchform to use in combination with an EditorManager instance. This toolform
-  provides search/replace functionality for the active view or all views that
-  are managed by the EditorManager. }
+{ This toolform provides search/replace functionality for the active view or all
+  views that are managed by the EditorManager. }
 
 {
   TODO:

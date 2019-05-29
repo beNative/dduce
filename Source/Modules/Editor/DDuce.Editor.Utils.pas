@@ -16,9 +16,9 @@
 
 unit DDuce.Editor.Utils;
 
-interface
-
 { Some static editor helper routines. }
+
+interface
 
 uses
   Winapi.Windows,

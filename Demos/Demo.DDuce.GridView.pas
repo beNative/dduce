@@ -95,6 +95,7 @@ var
 begin
   inherited AfterConstruction;
   FGridView := TGridViewFactory.CreateGridView(Self, pnlRight);
+  FGridView.BorderStyle := bsNone;
   FObjectInspector := TzObjectInspectorFactory.Create(
     Self,
     pnlLeft,

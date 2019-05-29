@@ -41,9 +41,9 @@ object frmLogger: TfrmLogger
       Caption = 'Position:'
     end
     object lblPositionValue: TLabel
-      Left = 68
-      Top = 14
-      Width = 77
+      Left = 59
+      Top = 13
+      Width = 53
       Height = 30
       Alignment = taCenter
       AutoSize = False
@@ -51,7 +51,7 @@ object frmLogger: TfrmLogger
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -27
+      Font.Height = -21
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentColor = False
@@ -60,15 +60,17 @@ object frmLogger: TfrmLogger
       Layout = tlCenter
     end
     object trbMain: TTrackBar
-      Left = 163
+      Left = 119
       Top = 15
-      Width = 312
+      Width = 363
       Height = 29
       Anchors = [akLeft, akTop, akRight]
       Max = 100
       PageSize = 10
+      Frequency = 5
       Position = 50
       PositionToolTip = ptTop
+      ShowSelRange = False
       TabOrder = 0
       OnChange = trbMainChange
     end
@@ -236,21 +238,22 @@ object frmLogger: TfrmLogger
     TabOrder = 3
     object lblCounterValue: TLabel
       Left = 85
-      Top = 12
+      Top = 18
       Width = 77
-      Height = 40
+      Height = 30
       Alignment = taCenter
       AutoSize = False
       Caption = '0'
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -27
+      Font.Height = -21
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentColor = False
       ParentFont = False
       Transparent = False
+      Layout = tlCenter
     end
     object btnIncCounter: TButton
       Left = 168
@@ -723,17 +726,58 @@ object frmLogger: TfrmLogger
     Width = 644
     Height = 39
     Align = alTop
-    Caption = 'Actions'
     TabOrder = 8
+    ExplicitLeft = -3
+    ExplicitTop = 534
+    DesignSize = (
+      644
+      39)
+    object lblLogLevel: TLabel
+      Left = 171
+      Top = 13
+      Width = 46
+      Height = 13
+      Caption = 'Log level:'
+    end
+    object lblLogLevelValue: TLabel
+      Left = 223
+      Top = 4
+      Width = 42
+      Height = 30
+      Alignment = taCenter
+      AutoSize = False
+      Caption = '0'
+      Color = clWhite
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -21
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentColor = False
+      ParentFont = False
+      Transparent = False
+    end
     object chkActions: TCheckBox
-      Left = 28
-      Top = 19
+      Left = 14
+      Top = 12
       Width = 157
       Height = 17
       Caption = 'Log execution of actions.'
       Checked = True
       State = cbChecked
       TabOrder = 0
+    end
+    object trbLogLevel: TTrackBar
+      Left = 271
+      Top = 7
+      Width = 362
+      Height = 25
+      Anchors = [akLeft, akTop, akRight]
+      Max = 137
+      Frequency = 10
+      ShowSelRange = False
+      TabOrder = 1
+      OnChange = trbLogLevelChange
     end
   end
   object aclMain: TActionList
@@ -927,7 +971,7 @@ object frmLogger: TfrmLogger
     Left = 528
     Top = 104
     Bitmap = {
-      494C010118001D006C0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010118001D00780010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000007000000001002000000000000070
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1862,8 +1906,8 @@ object frmLogger: TfrmLogger
     Enabled = False
     Interval = 400
     OnTimer = tmrSendValueTimer
-    Left = 176
-    Top = 520
+    Left = 16
+    Top = 424
   end
   object ppmBind: TPopupMenu
     Left = 312

@@ -233,6 +233,7 @@ begin
   FValueList.MultiSelect := True;
   FValueList.Data        := DynamicRecord.CreateDynamicRecord;
   FValueList.Data.OnChanged.Add(FValueListDataChanged);
+  FValueList.BorderStyle := bsNone;
   actAdd.Enabled         := True;
   actRefresh.Enabled     := True;
 end;

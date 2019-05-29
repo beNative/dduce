@@ -66,9 +66,10 @@ begin
   FValueList.ShowHint         := True;
   FValueList.MultiSelect      := True;
   FValueList.AlignWithMargins := True;
+  FValueList.BorderStyle      := bsNone;
   LDR := DynamicRecord.Create(Self.Font);
   Logger.SendObject(Self.Font);
-  FValueList.Data       := LDR;
+  FValueList.Data := LDR;
   Logger.SendText(LDR.ToString);
   Logger.SendText(FValueList.Data.ToString);
   FObjectInspector      := TzObjectInspectorFactory.Create(

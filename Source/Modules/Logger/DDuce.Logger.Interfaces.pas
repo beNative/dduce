@@ -352,7 +352,7 @@ type
 
     { Monitors a named value in the LogViewer application }
     procedure Watch(const AName: string; const AValue: TValue); overload;
-    procedure Watch(const AName: string; const AValue: string = ''); overload;
+    procedure Watch(const AName: string; const AValue: string); overload;
     procedure Watch(const AName: string; const AValue: ShortString); overload;
     procedure Watch(const AName: string; const AValue: AnsiString); overload;
     procedure Watch(const AName: string; const AValue: WideString); overload;
