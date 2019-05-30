@@ -67,7 +67,7 @@ begin
   OI                  := TzObjectInspector.Create(AOwner, AValueManager);
   OI.Parent           := AParent;
   OI.Align            := alClient;
-  OI.AlignWithMargins := True;
+  OI.AlignWithMargins := False;
   OI.Name             := AName;
   OI.Component        := AObject;
   OI.ObjectVisibility := mvPublic;

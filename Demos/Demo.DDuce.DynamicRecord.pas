@@ -246,7 +246,7 @@ type
     pnlRightBottomHeader                      : TPanel;
     pnlTop                                    : TPanel;
     pnlTRecordRepresentations                 : TGridPanel;
-    spl1                                      : TSplitter;
+    splHorizontal: TSplitter;
     tsAssignments                             : TTabSheet;
     tsContactObject                           : TTabSheet;
     tsDataSet                                 : TTabSheet;

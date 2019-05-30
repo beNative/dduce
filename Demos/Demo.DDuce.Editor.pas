@@ -83,6 +83,7 @@ begin
     pnlLeft,
     (FSettings as IInterfaceComponentReference).GetComponent
   );
+  FOI.BorderStyle := bsNone;
 
 //  FRightToolbar := TEditorFactories.CreateTopRightToolbar(
 //    Self,

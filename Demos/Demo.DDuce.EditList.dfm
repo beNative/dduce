@@ -17,10 +17,10 @@ object frmEditList: TfrmEditList
   object splVertical: TSplitter
     Left = 321
     Top = 0
-    Width = 5
+    Width = 2
     Height = 411
-    ExplicitTop = -129
-    ExplicitHeight = 540
+    Color = clScrollBar
+    ParentColor = False
   end
   object pnlLeft: TPanel
     Left = 0
@@ -30,33 +30,38 @@ object frmEditList: TfrmEditList
     Align = alLeft
     BevelEdges = []
     BevelOuter = bvNone
+    Color = clWhite
+    ParentBackground = False
     TabOrder = 0
   end
   object pnlRight: TPanel
-    Left = 326
+    Left = 323
     Top = 0
-    Width = 309
+    Width = 312
     Height = 411
     Align = alClient
     BevelEdges = []
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitLeft = 326
+    ExplicitWidth = 309
     DesignSize = (
-      309
+      312
       411)
     object lblSelected: TLabel
       Left = 6
       Top = 42
-      Width = 291
+      Width = 294
       Height = 13
       Anchors = [akLeft, akTop, akRight]
       AutoSize = False
       Caption = 'Selected:'
+      ExplicitWidth = 291
     end
     object mmoData: TMemo
       Left = 0
       Top = 58
-      Width = 309
+      Width = 312
       Height = 353
       Align = alBottom
       Anchors = [akLeft, akTop, akRight, akBottom]
@@ -72,6 +77,8 @@ object frmEditList: TfrmEditList
       ParentFont = False
       ReadOnly = True
       TabOrder = 0
+      ExplicitLeft = 1
+      ExplicitWidth = 309
     end
   end
   object chkMultiSelect: TCheckBox

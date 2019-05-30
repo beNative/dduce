@@ -17,12 +17,14 @@ object frmDBGridView: TfrmDBGridView
   TextHeight = 13
   object splMain: TSplitter
     Left = 0
-    Top = 337
+    Top = 341
     Width = 845
-    Height = 6
+    Height = 2
     Cursor = crVSplit
     Align = alBottom
-    ExplicitTop = 338
+    Color = clScrollBar
+    ParentColor = False
+    ExplicitTop = 337
   end
   object pnlLog: TPanel
     Left = 0
@@ -36,37 +38,38 @@ object frmDBGridView: TfrmDBGridView
   end
   object pgcMain: TPageControl
     Left = 0
-    Top = 41
+    Top = 34
     Width = 845
-    Height = 296
+    Height = 307
     ActivePage = tsDBGridView
     Align = alClient
     TabOrder = 2
-    ExplicitHeight = 297
+    ExplicitTop = 41
+    ExplicitHeight = 296
     object tsDBGridView: TTabSheet
       Caption = 'DBGridView'
       ImageIndex = 1
-      ExplicitHeight = 269
+      ExplicitHeight = 268
     end
     object tsDBGridViewEvents: TTabSheet
       Caption = 'DBGridView Events'
       ImageIndex = 2
-      ExplicitHeight = 269
+      ExplicitHeight = 268
       object pnlDBGridViewEvents: TPanel
         Left = 0
         Top = 0
         Width = 837
-        Height = 268
+        Height = 279
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 269
+        ExplicitHeight = 268
         object lbxDBGridViewEvents: TCheckListBox
           AlignWithMargins = True
           Left = 3
           Top = 3
           Width = 831
-          Height = 262
+          Height = 273
           Align = alClient
           Columns = 4
           ItemHeight = 13
@@ -151,29 +154,29 @@ object frmDBGridView: TfrmDBGridView
             'OnSetEditText'
             'OnStartDrag')
           TabOrder = 0
-          ExplicitHeight = 263
+          ExplicitHeight = 262
         end
       end
     end
     object tsDataSourceEvents: TTabSheet
       Caption = 'DataSource Events'
       ImageIndex = 2
-      ExplicitHeight = 269
+      ExplicitHeight = 268
       object pnlDataSourceEvents: TPanel
         Left = 0
         Top = 0
         Width = 837
-        Height = 268
+        Height = 279
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 269
+        ExplicitHeight = 268
         object lbxDataSourceEvents: TCheckListBox
           AlignWithMargins = True
           Left = 3
           Top = 3
           Width = 831
-          Height = 262
+          Height = 273
           Align = alClient
           Columns = 4
           ItemHeight = 13
@@ -182,7 +185,7 @@ object frmDBGridView: TfrmDBGridView
             'OnStateChange'
             'OnUpdateData')
           TabOrder = 0
-          ExplicitHeight = 263
+          ExplicitHeight = 262
         end
       end
     end
@@ -191,13 +194,13 @@ object frmDBGridView: TfrmDBGridView
     Left = 0
     Top = 0
     Width = 845
-    Height = 41
+    Height = 34
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
     DesignSize = (
       845
-      41)
+      34)
     object chkActive: TCheckBox
       Left = 741
       Top = 8
@@ -283,7 +286,7 @@ object frmDBGridView: TfrmDBGridView
     Left = 304
     Top = 544
     Bitmap = {
-      494C010104000900180010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101040009001C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -14,15 +14,16 @@ object frmDynamicRecords: TfrmDynamicRecords
   ShowHint = True
   PixelsPerInch = 96
   TextHeight = 13
-  object spl1: TSplitter
+  object splHorizontal: TSplitter
     Left = 0
-    Top = 274
+    Top = 278
     Width = 784
-    Height = 6
+    Height = 2
     Cursor = crVSplit
     Align = alBottom
-    ExplicitTop = 273
-    ExplicitWidth = 1091
+    Color = clScrollBar
+    ParentColor = False
+    ExplicitTop = 274
   end
   object pnlBottom: TGridPanel
     Left = 0
@@ -379,16 +380,17 @@ object frmDynamicRecords: TfrmDynamicRecords
     Left = 0
     Top = 0
     Width = 784
-    Height = 274
+    Height = 278
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitHeight = 274
     DesignSize = (
       784
-      274)
+      278)
     object pgcMain: TPageControl
       Left = 63
-      Top = 8
+      Top = 0
       Width = 721
       Height = 266
       ActivePage = tsContactObject
@@ -1276,7 +1278,7 @@ object frmDynamicRecords: TfrmDynamicRecords
     end
     object btnTestAssign: TButton
       Left = 3
-      Top = 8
+      Top = 3
       Width = 57
       Height = 25
       Action = actTestAssign
@@ -1284,7 +1286,7 @@ object frmDynamicRecords: TfrmDynamicRecords
     end
     object btnTestAssignTo: TButton
       Left = 3
-      Top = 39
+      Top = 34
       Width = 57
       Height = 25
       Action = actTestAssignTo
@@ -1292,7 +1294,7 @@ object frmDynamicRecords: TfrmDynamicRecords
     end
     object btnTestAssignTo1: TButton
       Left = 3
-      Top = 70
+      Top = 65
       Width = 57
       Height = 25
       Action = actToStrings
@@ -1306,7 +1308,7 @@ object frmDynamicRecords: TfrmDynamicRecords
     end
     object btnTestData: TButton
       Left = 3
-      Top = 99
+      Top = 94
       Width = 57
       Height = 25
       Action = actTestData
@@ -1314,7 +1316,7 @@ object frmDynamicRecords: TfrmDynamicRecords
     end
     object btnCustomTest: TButton
       Left = 3
-      Top = 130
+      Top = 125
       Width = 57
       Height = 25
       Action = actCustomTest
