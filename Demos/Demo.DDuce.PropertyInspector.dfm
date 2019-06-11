@@ -6,11 +6,7 @@ object frmPropertyInspector: TfrmPropertyInspector
   ClientWidth = 830
   Color = clBtnFace
   DoubleBuffered = True
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
+  ParentFont = True
   OldCreateOrder = False
   ShowHint = True
   PixelsPerInch = 96
@@ -60,8 +56,6 @@ object frmPropertyInspector: TfrmPropertyInspector
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 321
-      ExplicitWidth = 509
       DesignSize = (
         511
         567)
@@ -80,8 +74,8 @@ object frmPropertyInspector: TfrmPropertyInspector
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
+        Font.Name = 'Segoe UI'
+        Font.Style = []
         ParentFont = False
         Layout = tlCenter
         WordWrap = True
@@ -109,7 +103,6 @@ object frmPropertyInspector: TfrmPropertyInspector
         Caption = 'TCheckBox'
         State = cbGrayed
         TabOrder = 2
-        ExplicitWidth = 249
       end
       object edtEdit: TEdit
         Left = 8
@@ -131,7 +124,6 @@ object frmPropertyInspector: TfrmPropertyInspector
         ButtonOptions = [gboAllowReorder, gboShowCaptions]
         Items = <>
         TabOrder = 3
-        ExplicitWidth = 498
       end
       object trbTrackBar: TTrackBar
         Left = 6
@@ -142,7 +134,6 @@ object frmPropertyInspector: TfrmPropertyInspector
         PositionToolTip = ptTop
         ShowSelRange = False
         TabOrder = 4
-        ExplicitWidth = 498
       end
       object edtButtonedEdit: TButtonedEdit
         Left = 121
@@ -164,8 +155,10 @@ object frmPropertyInspector: TfrmPropertyInspector
       Width = 830
       Height = 19
       Panels = <>
+      ParentFont = True
       ParentShowHint = False
       ShowHint = True
+      UseSystemFont = False
     end
   end
 end

@@ -1,20 +1,17 @@
 object frmMainMenu: TfrmMainMenu
   Left = 515
   Top = 244
-  ActiveControl = edtFilter
+  ActiveControl = pnlVST
   Caption = 'DDuce demos'
   ClientHeight = 355
   ClientWidth = 369
   Color = clWhite
   DefaultMonitor = dmMainForm
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
+  ParentFont = True
   OldCreateOrder = False
   Position = poScreenCenter
   ShowHint = True
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object pnlVST: TPanel
@@ -25,8 +22,6 @@ object frmMainMenu: TfrmMainMenu
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 29
-    ExplicitHeight = 275
   end
   object pnlTop: TPanel
     Left = 0
@@ -49,12 +44,14 @@ object frmMainMenu: TfrmMainMenu
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsItalic]
       ParentFont = False
       TabOrder = 0
       TextHint = 'Filter'
       OnChange = edtFilterChange
+      OnEnter = edtFilterEnter
+      OnExit = edtFilterExit
       OnKeyDown = edtFilterKeyDown
       OnKeyUp = edtFilterKeyUp
     end
@@ -111,7 +108,7 @@ object frmMainMenu: TfrmMainMenu
     Left = 176
     Top = 168
     Bitmap = {
-      494C010102000500140010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102000500200010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000328492FFC7CDCEFF00000000000000000000000000000000000000000000

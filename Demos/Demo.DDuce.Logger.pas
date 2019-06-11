@@ -144,6 +144,8 @@ type
     trbLogLevel: TTrackBar;
     lblLogLevel: TLabel;
     lblLogLevelValue: TLabel;
+    ppmtest: TPopupMenu;
+    imltest: TImageList;
     {$ENDREGION}
 
     {$REGION 'event handlers'}

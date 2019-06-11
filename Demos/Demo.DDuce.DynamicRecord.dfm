@@ -3,12 +3,12 @@ object frmDynamicRecords: TfrmDynamicRecords
   Top = 0
   ClientHeight = 609
   ClientWidth = 784
-  Color = clBtnFace
+  Color = clWindow
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
+  Font.Name = 'Segoe UI'
   Font.Style = []
   OldCreateOrder = False
   ShowHint = True
@@ -51,12 +51,6 @@ object frmDynamicRecords: TfrmDynamicRecords
         Control = pnlBottomRight
         Row = 0
       end>
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
     RowCollection = <
       item
         Value = 100.000000000000000000
@@ -80,14 +74,13 @@ object frmDynamicRecords: TfrmDynamicRecords
         Width = 288
         Height = 19
         Align = alTop
-        BevelKind = bkFlat
         BevelOuter = bvNone
         Caption = 'DynamicRecord content'
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
+        Font.Color = clWindowText
         Font.Height = -11
-        Font.Name = 'Tahoma'
+        Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentBackground = False
         ParentFont = False
@@ -109,14 +102,13 @@ object frmDynamicRecords: TfrmDynamicRecords
         Width = 484
         Height = 19
         Align = alTop
-        BevelKind = bkFlat
         BevelOuter = bvNone
         Caption = 'Conversion methods'
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
+        Font.Color = clWindowText
         Font.Height = -11
-        Font.Name = 'Tahoma'
+        Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentBackground = False
         ParentFont = False
@@ -210,12 +202,6 @@ object frmDynamicRecords: TfrmDynamicRecords
           Height = 69
           Align = alClient
           Caption = 'AsDelimitedText'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
           TabOrder = 1
           object chkQuoteValues: TCheckBox
             Left = 11
@@ -237,7 +223,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Top = 47
             Width = 64
             Height = 21
-            EditLabel.Width = 45
+            EditLabel.Width = 49
             EditLabel.Height = 13
             EditLabel.Caption = 'Delimiter:'
             Font.Charset = DEFAULT_CHARSET
@@ -256,7 +242,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Top = 20
             Width = 17
             Height = 21
-            EditLabel.Width = 58
+            EditLabel.Width = 60
             EditLabel.Height = 13
             EditLabel.Caption = 'Quote char:'
             LabelPosition = lpLeft
@@ -384,7 +370,6 @@ object frmDynamicRecords: TfrmDynamicRecords
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitHeight = 274
     DesignSize = (
       784
       278)
@@ -399,11 +384,10 @@ object frmDynamicRecords: TfrmDynamicRecords
       object tsContactObject: TTabSheet
         Caption = 'TContact object'
         object lblContact: TLabel
-          AlignWithMargins = True
-          Left = 3
-          Top = 3
-          Width = 707
-          Height = 235
+          Left = 0
+          Top = 0
+          Width = 713
+          Height = 238
           Align = alClient
           AutoSize = False
           Color = clInfoBk
@@ -427,11 +411,10 @@ object frmDynamicRecords: TfrmDynamicRecords
         Caption = 'DataSet'
         ImageIndex = 1
         object grdTest: TDBGrid
-          AlignWithMargins = True
-          Left = 3
-          Top = 3
-          Width = 707
-          Height = 232
+          Left = 0
+          Top = 0
+          Width = 713
+          Height = 238
           Align = alClient
           DataSource = dscTest
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -439,7 +422,7 @@ object frmDynamicRecords: TfrmDynamicRecords
           TitleFont.Charset = DEFAULT_CHARSET
           TitleFont.Color = clWindowText
           TitleFont.Height = -11
-          TitleFont.Name = 'Tahoma'
+          TitleFont.Name = 'Segoe UI'
           TitleFont.Style = []
         end
       end
@@ -447,11 +430,10 @@ object frmDynamicRecords: TfrmDynamicRecords
         Caption = 'TTestClass'
         ImageIndex = 2
         object lblTestClass: TLabel
-          AlignWithMargins = True
-          Left = 3
-          Top = 3
-          Width = 707
-          Height = 235
+          Left = 0
+          Top = 0
+          Width = 713
+          Height = 238
           Align = alClient
           AutoSize = False
           Color = clInfoBk
@@ -466,7 +448,6 @@ object frmDynamicRecords: TfrmDynamicRecords
           ShowHint = True
           Transparent = False
           ExplicitLeft = 37
-          ExplicitTop = 0
           ExplicitWidth = 245
           ExplicitHeight = 364
         end
@@ -475,11 +456,10 @@ object frmDynamicRecords: TfrmDynamicRecords
         Caption = 'TTestRecord'
         ImageIndex = 3
         object lblTestRecord: TLabel
-          AlignWithMargins = True
-          Left = 3
-          Top = 3
-          Width = 707
-          Height = 235
+          Left = 0
+          Top = 0
+          Width = 713
+          Height = 238
           Align = alClient
           AutoSize = False
           Color = clInfoBk
@@ -503,11 +483,10 @@ object frmDynamicRecords: TfrmDynamicRecords
         Caption = 'DynamicRecord'
         ImageIndex = 4
         object lblTestTRecord: TLabel
-          AlignWithMargins = True
-          Left = 3
-          Top = 3
-          Width = 707
-          Height = 235
+          Left = 0
+          Top = 0
+          Width = 713
+          Height = 238
           Align = alClient
           AutoSize = False
           Color = clInfoBk
@@ -522,7 +501,6 @@ object frmDynamicRecords: TfrmDynamicRecords
           ShowHint = True
           Transparent = False
           ExplicitLeft = 37
-          ExplicitTop = 0
           ExplicitWidth = 245
           ExplicitHeight = 364
         end
@@ -767,7 +745,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 63
             Top = 3
             Width = 137
-            Height = 28
+            Height = 25
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -790,7 +768,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 206
             Top = 3
             Width = 137
-            Height = 28
+            Height = 25
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -813,7 +791,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 349
             Top = 3
             Width = 137
-            Height = 28
+            Height = 25
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -836,7 +814,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 492
             Top = 3
             Width = 137
-            Height = 28
+            Height = 25
             Align = alClient
             Alignment = taCenter
             AutoSize = False
@@ -1154,7 +1132,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 63
             Top = 153
             Width = 137
-            Height = 85
+            Height = 82
             Align = alClient
             AutoSize = False
             Color = clCream
@@ -1176,7 +1154,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 206
             Top = 153
             Width = 137
-            Height = 85
+            Height = 82
             Align = alClient
             AutoSize = False
             Color = clCream
@@ -1198,7 +1176,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 349
             Top = 153
             Width = 137
-            Height = 85
+            Height = 82
             Align = alClient
             AutoSize = False
             Color = clCream
@@ -1220,7 +1198,7 @@ object frmDynamicRecords: TfrmDynamicRecords
             Left = 492
             Top = 153
             Width = 137
-            Height = 85
+            Height = 82
             Align = alClient
             AutoSize = False
             Color = clCream
@@ -1254,7 +1232,7 @@ object frmDynamicRecords: TfrmDynamicRecords
               Width = 68
               Height = 21
               Anchors = [akLeft, akRight]
-              EditLabel.Width = 53
+              EditLabel.Width = 57
               EditLabel.Height = 13
               EditLabel.Caption = 'FieldName:'
               TabOrder = 0
@@ -1266,7 +1244,7 @@ object frmDynamicRecords: TfrmDynamicRecords
               Width = 68
               Height = 21
               Anchors = [akLeft, akRight]
-              EditLabel.Width = 52
+              EditLabel.Width = 56
               EditLabel.Height = 13
               EditLabel.Caption = 'FieldValue:'
               TabOrder = 1

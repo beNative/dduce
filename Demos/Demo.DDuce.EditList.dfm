@@ -6,11 +6,7 @@ object frmEditList: TfrmEditList
   ClientWidth = 635
   Color = clBtnFace
   DoubleBuffered = True
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
+  ParentFont = True
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
@@ -43,8 +39,6 @@ object frmEditList: TfrmEditList
     BevelEdges = []
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 326
-    ExplicitWidth = 309
     DesignSize = (
       312
       411)
@@ -68,17 +62,9 @@ object frmEditList: TfrmEditList
       BevelInner = bvNone
       BevelOuter = bvNone
       BorderStyle = bsNone
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Consolas'
-      Font.Style = []
       ParentColor = True
-      ParentFont = False
       ReadOnly = True
       TabOrder = 0
-      ExplicitLeft = 1
-      ExplicitWidth = 309
     end
   end
   object chkMultiSelect: TCheckBox

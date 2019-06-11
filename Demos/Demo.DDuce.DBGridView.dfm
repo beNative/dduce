@@ -9,7 +9,7 @@ object frmDBGridView: TfrmDBGridView
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
+  Font.Name = 'Segoe UI'
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
@@ -44,17 +44,13 @@ object frmDBGridView: TfrmDBGridView
     ActivePage = tsDBGridView
     Align = alClient
     TabOrder = 2
-    ExplicitTop = 41
-    ExplicitHeight = 296
     object tsDBGridView: TTabSheet
       Caption = 'DBGridView'
       ImageIndex = 1
-      ExplicitHeight = 268
     end
     object tsDBGridViewEvents: TTabSheet
       Caption = 'DBGridView Events'
       ImageIndex = 2
-      ExplicitHeight = 268
       object pnlDBGridViewEvents: TPanel
         Left = 0
         Top = 0
@@ -63,7 +59,6 @@ object frmDBGridView: TfrmDBGridView
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 268
         object lbxDBGridViewEvents: TCheckListBox
           AlignWithMargins = True
           Left = 3
@@ -154,14 +149,12 @@ object frmDBGridView: TfrmDBGridView
             'OnSetEditText'
             'OnStartDrag')
           TabOrder = 0
-          ExplicitHeight = 262
         end
       end
     end
     object tsDataSourceEvents: TTabSheet
       Caption = 'DataSource Events'
       ImageIndex = 2
-      ExplicitHeight = 268
       object pnlDataSourceEvents: TPanel
         Left = 0
         Top = 0
@@ -170,7 +163,6 @@ object frmDBGridView: TfrmDBGridView
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 268
         object lbxDataSourceEvents: TCheckListBox
           AlignWithMargins = True
           Left = 3
@@ -185,7 +177,6 @@ object frmDBGridView: TfrmDBGridView
             'OnStateChange'
             'OnUpdateData')
           TabOrder = 0
-          ExplicitHeight = 262
         end
       end
     end
@@ -286,7 +277,7 @@ object frmDBGridView: TfrmDBGridView
     Left = 304
     Top = 544
     Bitmap = {
-      494C0101040009001C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010104000900200010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -2,12 +2,13 @@ program DDuce.Demos;
 
 uses
   //LeakCheck,
+  DDuce.CustomImageDrawHook,
+  System.SysUtils,
   Vcl.Forms,
   Vcl.Themes,
   Vcl.Styles,
   Vcl.SysStyles,
   MidasLib,
-  DDuce.CustomImageDrawHook,
   Demo.Contact in 'Demo.Contact.pas',
   Demo.Data in 'Demo.Data.pas' {dmData: TDataModule},
   Demo.DDuce.DBGridView in 'Demo.DDuce.DBGridView.pas' {frmDBGridView},
@@ -39,6 +40,11 @@ begin
   ReportMemoryLeaksOnShutdown := DebugHook > 0;
   {$WARNINGS ON}
   Application.Initialize;
+  if CheckWin32Version(6) then // at least Vista
+  begin
+   Application.DefaultFont.Name := 'Segoe UI';
+   Application.DefaultFont.Size := 9;
+  end;
   Application.MainFormOnTaskbar := True;
   RegisterDemos;
   if DemoManager.ItemList.Count = 1 then

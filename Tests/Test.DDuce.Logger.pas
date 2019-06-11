@@ -263,8 +263,6 @@ type
     [Test]
     procedure Test_OutputDebugString_method_for_valuelist;
 
-
-
   end;
 
 implementation
@@ -286,7 +284,8 @@ uses
 procedure TestLogger.AfterConstruction;
 begin
   inherited AfterConstruction;
-  Logger.Channels.Add(TWinIPCChannel.Create);
+  //Logger.Channels.Add(TWinIPCChannel.Create);
+  Logger.Channels.Add(TZeroMQChannel.Create);
 end;
 {$ENDREGION}
 

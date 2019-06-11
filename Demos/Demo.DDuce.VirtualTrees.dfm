@@ -5,11 +5,7 @@ object frmVirtualTrees: TfrmVirtualTrees
   ClientWidth = 984
   Color = clBtnFace
   DoubleBuffered = True
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
+  ParentFont = True
   OldCreateOrder = False
   Position = poOwnerFormCenter
   PixelsPerInch = 96
@@ -110,9 +106,6 @@ object frmVirtualTrees: TfrmVirtualTrees
             ParentBackground = False
             ParentFont = False
             TabOrder = 0
-            ExplicitLeft = 3
-            ExplicitTop = 3
-            ExplicitWidth = 319
           end
         end
         object pnlVSTTree: TPanel
@@ -144,9 +137,6 @@ object frmVirtualTrees: TfrmVirtualTrees
             ParentBackground = False
             ParentFont = False
             TabOrder = 0
-            ExplicitLeft = 3
-            ExplicitTop = 3
-            ExplicitWidth = 319
           end
         end
         object pnlVSTGrid: TPanel
@@ -178,9 +168,6 @@ object frmVirtualTrees: TfrmVirtualTrees
             ParentBackground = False
             ParentFont = False
             TabOrder = 0
-            ExplicitLeft = 3
-            ExplicitTop = 3
-            ExplicitWidth = 320
           end
         end
         object pnlVSTList: TPanel
@@ -194,8 +181,6 @@ object frmVirtualTrees: TfrmVirtualTrees
           Caption = 'pnlVSTList'
           ParentColor = True
           TabOrder = 3
-          ExplicitLeft = -6
-          ExplicitTop = 357
           object pnlVSTListHeader: TPanel
             Left = 0
             Top = 0
@@ -214,9 +199,6 @@ object frmVirtualTrees: TfrmVirtualTrees
             ParentBackground = False
             ParentFont = False
             TabOrder = 0
-            ExplicitLeft = 3
-            ExplicitTop = 3
-            ExplicitWidth = 319
           end
         end
         object pnlVSTTreeList: TPanel
@@ -248,9 +230,6 @@ object frmVirtualTrees: TfrmVirtualTrees
             ParentBackground = False
             ParentFont = False
             TabOrder = 0
-            ExplicitLeft = 3
-            ExplicitTop = 3
-            ExplicitWidth = 319
           end
         end
         object pnlVSTTreeGrid: TPanel
@@ -282,9 +261,6 @@ object frmVirtualTrees: TfrmVirtualTrees
             ParentBackground = False
             ParentFont = False
             TabOrder = 0
-            ExplicitLeft = 3
-            ExplicitTop = 3
-            ExplicitWidth = 320
           end
         end
       end
@@ -292,25 +268,49 @@ object frmVirtualTrees: TfrmVirtualTrees
     object tsVST: TTabSheet
       Caption = 'VST'
       ImageIndex = 5
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tsVSTTree: TTabSheet
       Caption = 'Tree'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tsVSTGrid: TTabSheet
       Caption = 'Grid'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tsVSTList: TTabSheet
       Caption = 'List'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tsVSTTreeList: TTabSheet
       Caption = 'TreeList'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tsVSTTreeGrid: TTabSheet
       Caption = 'TreeGrid'
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
   end
 end

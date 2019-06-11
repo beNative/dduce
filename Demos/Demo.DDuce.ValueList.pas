@@ -72,7 +72,7 @@ begin
   FValueList.Data := LDR;
   Logger.SendText(LDR.ToString);
   Logger.SendText(FValueList.Data.ToString);
-  FObjectInspector      := TzObjectInspectorFactory.Create(
+  FObjectInspector := TzObjectInspectorFactory.Create(
     Self,
     pnlLeft,
     FValueList

@@ -5,11 +5,7 @@ object frmEditor: TfrmEditor
   ClientWidth = 1004
   Color = clBtnFace
   DoubleBuffered = True
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
+  ParentFont = True
   OldCreateOrder = False
   ShowHint = True
   PixelsPerInch = 96
@@ -46,7 +42,5 @@ object frmEditor: TfrmEditor
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 383
-    ExplicitWidth = 621
   end
 end

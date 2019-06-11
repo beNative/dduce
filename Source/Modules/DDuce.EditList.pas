@@ -76,6 +76,7 @@ type
     pnlMain      : TPanel;
     ppmMain      : TPopupMenu;
     tlbMain      : TToolBar;
+    imlTest: TImageList;
     {$ENDREGION}
 
     {$REGION 'action handlers'}
