@@ -171,6 +171,8 @@ type
     procedure SendPoint(const AValue: TPoint); overload;
     procedure SendStrings(const AName: string; AValue: TStrings); overload;
     procedure SendStrings(AValue: TStrings); overload;
+    procedure SendStrings(AValue: string); overload;
+    procedure SendStrings(const AName: string; AValue: string); overload;
     { Will send the component as a dfm-stream. }
     procedure SendComponent(const AName: string; AValue: TComponent); overload;
     procedure SendComponent(AValue: TComponent); overload;
@@ -563,6 +565,19 @@ begin
     + #13#10 + #13#10 + Reflect.Properties(AValue).ToString]
     )
   );
+end;
+
+procedure TLogger.SendStrings(const AName: string; AValue: string);
+begin
+  InternalSend(
+    lmtStrings,
+    Format('%s = ' + sLineBreak + '%s', [AName, AValue])
+  );
+end;
+
+procedure TLogger.SendStrings(AValue: string);
+begin
+  SendStrings('', AValue);
 end;
 
 procedure TLogger.SendDateTime(const AName: string; AValue: TDateTime);

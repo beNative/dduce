@@ -285,6 +285,8 @@ type
     procedure SendPoint(const AValue: TPoint); overload;
     procedure SendStrings(const AName: string; AValue: TStrings); overload;
     procedure SendStrings(AValue: TStrings); overload;
+    procedure SendStrings(AValue: string); overload;
+    procedure SendStrings(const AName: string; AValue: string); overload;
     procedure SendComponent(const AName: string; AValue: TComponent); overload;
     procedure SendComponent(AValue: TComponent); overload;
     procedure SendPointer(const AName: string; AValue: Pointer); overload;
