@@ -52,8 +52,7 @@ type
     );
 
     function Connect: Boolean;
-
-    procedure SendStream(AStream: TStream);
+    procedure SendStream(AStream: TBytesStream);
 
     property ServerMsgWindowClassName: string
       read FServerMsgWindowClassName write FServerMsgWindowClassName;
@@ -161,33 +160,15 @@ end;
     lpData: pointer to buffer to send (cbData bytes in size).
 }
 
-procedure TWinIPCClient.SendStream(AStream: TStream);
+procedure TWinIPCClient.SendStream(AStream: TBytesStream);
 var
   CDS  : TCopyDataStruct;
-  Data : TMemoryStream;
-  MS   : TMemoryStream;
 begin
   if Connected then
   begin
-    if AStream is TMemoryStream then
-    begin
-      Data := TMemoryStream(AStream);
-      MS   := nil
-    end
-    else
-    begin
-      MS := TMemoryStream.Create;
-      try
-        Data := MS;
-        MS.CopyFrom(AStream, 0);
-        MS.Seek(0, soFromBeginning);
-      finally
-        FreeAndNil(MS);
-      end;
-    end;
     CDS.dwData := GetCurrentProcessId;
-    CDS.lpData := Data.Memory;
-    CDS.cbData := Data.Size;
+    CDS.lpData := AStream.Memory;
+    CDS.cbData := AStream.Size;
     Winapi.Windows.SendMessage(
       ServerHandle,
       WM_COPYDATA,

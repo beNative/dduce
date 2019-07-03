@@ -60,6 +60,7 @@ type
     { Simple string message }
     function SendString(const Data: string; Flags: MessageFlags): Integer; overload;
     function SendString(const Data: string; DontWait: Boolean = False): Integer; overload;
+    //function SendBytesStream(AStream: TBytesStream): Integer;
     function ReceiveString(DontWait: Boolean = False): string;
     { Multipart string message }
     function SendStrings(const Data: array of string; DontWait: Boolean = False): Integer;
@@ -142,6 +143,8 @@ type
     { Simple string message }
     function SendString(const Data: string; Flags: MessageFlags): Integer; overload;
     function SendString(const Data: string; DontWait: Boolean = False): Integer; overload;
+    { Send bytestream }
+    function SendBytesStream(AStream: TBytesStream): Integer;
     function ReceiveString(DontWait: Boolean = False): string;
     { Multipart string message }
     function SendStrings(const Data: array of string; DontWait: Boolean = False): Integer;
@@ -387,6 +390,21 @@ begin
   finally
     L.Free;
   end;
+end;
+
+function TZMQPair.SendBytesStream(AStream: TBytesStream): Integer;
+//var
+//  msg: TZmqMsg;
+//  len: NativeUInt;
+begin
+//  len := NativeUInt(AStream.Size);
+//  Result := zmq_msg_init_size(@msg, len);
+//  if Result = 0 then
+//  begin
+//    Move(AStream.Memory, zmq_msg_data(@msg)^, len);
+//    Result := SendMessage(msg, [DontWait]);
+//    zmq_msg_close(@msg);
+//  end;
 end;
 
 function TZMQPair.SendMessage(var Msg: TZmqMsg; Flags: MessageFlags): Integer;
