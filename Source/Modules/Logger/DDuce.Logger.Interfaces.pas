@@ -51,6 +51,7 @@ type
     lmtObject      = 16,
     lmtInterface   = 17,
     lmtPersistent  = 18,
+    lmtReserved    = 19,
     lmtWatch       = 20,
     lmtCounter     = 21,
     lmtColor       = 22,
