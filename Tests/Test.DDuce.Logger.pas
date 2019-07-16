@@ -257,6 +257,9 @@ type
     procedure Test_Checkpoint_methods;
 
     [Test]
+    procedure Test_Method_Chaining;
+
+    [Test]
     procedure Test_OutputDebugString_method;
     [Test]
     procedure Test_OutputDebugString_method_for_long_string;
@@ -1269,6 +1272,15 @@ begin
   Assert.Pass;
 end;
 
+procedure TestLogger.Test_Method_Chaining;
+begin
+  Logger.Track(Self, 'Test_Method_Chaining');
+  Logger.SendDateTime('Now', Now)
+        .Send('TestInteger', 2)
+        .Info('Info message')
+        .Warn('Warning message');
+end;
+
 procedure TestLogger.Test_Warn_method;
 begin
   Logger.Warn('Warning');
@@ -1290,7 +1302,6 @@ begin
     Logger.IncCounter(S);
   end;
   Logger.Leave('Increasing counter');
-
   Logger.Enter('Decreasing counter');
   for I := 1 to 50 do
   begin

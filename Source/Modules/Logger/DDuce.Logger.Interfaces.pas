@@ -66,6 +66,24 @@ type
 
   TLogMessageTypes = set of TLogMessageType;
 
+const
+  TracingMessages      : TLogMessageTypes =
+    [lmtEnterMethod, lmtLeaveMethod];
+  NotificationMessages : TLogMessageTypes =
+    [lmtInfo, lmtError, lmtWarning, lmtConditional];
+  DataValueMessages    : TLogMessageTypes = [
+    lmtValue, lmtStrings, lmtComponent, lmtException, lmtBitmap, lmtObject,
+    lmtInterface, lmtPersistent, lmtColor, lmtAlphaColor, lmtScreenShot,
+    lmtText, lmtDataSet, lmtAction, lmtMemory
+  ];
+  StateMessages        : TLogMessageTypes =
+    [lmtCounter, lmtCheckpoint];
+  CommandMessages      : TLogMessageTypes =
+     [lmtClear];
+  DiagnosticMessages   : TLogMessageTypes =
+    [lmtCallStack, lmtHeapInfo];
+
+type
   ILogger = interface;
 
   TLogMessage = packed record

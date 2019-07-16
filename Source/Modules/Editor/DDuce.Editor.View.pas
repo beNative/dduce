@@ -1551,7 +1551,8 @@ begin
 
   if B then
   begin
-    Activate;
+  {TODO -oTS -cBug : This call causes a recursive call of Activate}
+  //  Activate;
   end;
   if Assigned(Actions) then
   begin
@@ -1572,7 +1573,6 @@ begin
     end;
   end;
 end;
-
 {$ENDREGION}
 
 {$REGION'public methods'}

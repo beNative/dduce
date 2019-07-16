@@ -244,8 +244,8 @@ begin
       end
       else
         FBuffer.WriteBuffer(ZeroBuf);
-      //Result := FPublisher.SendString(FBuffer.DataString) > 0;
-      Result := FPublisher.SendBytesStream(FBuffer) > 0;
+      Result := FPublisher.SendString(FBuffer.DataString) > 0;
+      //sult := FPublisher.SendBytesStream(FBuffer) > 0;
       // String(FBuffer.DataString) > 0;
     end
     else

@@ -342,7 +342,7 @@ end;
 {$REGION 'action handlers'}
 procedure TfrmLogger.actSendInfoExecute(Sender: TObject);
 begin
-  Logger.Info('Info message');
+  Logger.Info('Information message');
 end;
 
 procedure TfrmLogger.actSendInterfaceExecute(Sender: TObject);
@@ -716,8 +716,8 @@ begin
   Logger.Watch('Caption', Caption);
   Logger.SendTime('Now', Now);
   Logger.Info('Information message.');
-  Logger.Error('Fatal error occured! Something went wrong over here!');
-  Logger.Warn('This message warns you about nothing.');
+  Logger.Error('Error message.');
+  Logger.Warn('Warning message.');
   Logger.SendPersistent('Font', Font); // sends published property values
   Logger.SendObject('Font', Font);     // sends fields and property values
   TestProcedure2;
