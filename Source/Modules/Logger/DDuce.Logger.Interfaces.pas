@@ -317,16 +317,16 @@ type
     ); overload;
     procedure SendText(const AText: string); overload;
 
-    procedure SendSQL(const AName: string; const AValue: string); overload;
-    procedure SendSQL(const AValue: string); overload;
-    procedure SendXML(const AName: string; const AValue: string); overload;
-    procedure SendXML(const AValue: string); overload;
-    procedure SendHTML(const AName: string; const AValue: string); overload;
-    procedure SendHTML(const AValue: string); overload;
-    procedure SendINI(const AName: string; const AValue: string); overload;
-    procedure SendINI(const AValue: string); overload;
-    procedure SendJSON(const AName: string; const AValue: string); overload;
-    procedure SendJSON(const AValue: string); overload;
+    procedure SendSql(const AName: string; const AValue: string); overload;
+    procedure SendSql(const AValue: string); overload;
+    procedure SendXml(const AName: string; const AValue: string); overload;
+    procedure SendXml(const AValue: string); overload;
+    procedure SendHtml(const AName: string; const AValue: string); overload;
+    procedure SendHtml(const AValue: string); overload;
+    procedure SendIni(const AName: string; const AValue: string); overload;
+    procedure SendIni(const AValue: string); overload;
+    procedure SendJson(const AName: string; const AValue: string); overload;
+    procedure SendJson(const AValue: string); overload;
 
     procedure IncCounter(const AName: string);
     procedure DecCounter(const AName: string);

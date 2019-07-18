@@ -28,7 +28,8 @@ uses
   DUnitX.TestFramework,
 
   Test.DDuce.DynamicRecord, Test.DDuce.DynamicRecord.Generic,
-  Test.DDuce.Reflect, Test.DDuce.Logger, Test.DDuce.Mosquitto;
+  Test.DDuce.Reflect, Test.DDuce.Logger;
+  //Test.DDuce.Mosquitto;
 
 procedure RegisterTests;
 begin
@@ -36,7 +37,7 @@ begin
   TDUnitX.RegisterTestFixture(TestGenericDynamicRecord, 'DynamicRecord<T>');
   TDUnitX.RegisterTestFixture(TestReflect, 'Reflect');
   TDUnitX.RegisterTestFixture(TestLogger, 'Logger');
-  TDUnitX.RegisterTestFixture(TestMosquitto, 'Mosquitto');
+  //TDUnitX.RegisterTestFixture(TestMosquitto, 'Mosquitto');
 end;
 
 end.

@@ -9,7 +9,7 @@ program DDuce.Tests;
 {$R *.dres}
 
 uses
-  FastMM4,
+  //FastMM4,
   {$IFDEF LEAKCHECK}
   LeakCheck,
   LeakCheck.Setup.Trace,
@@ -17,7 +17,7 @@ uses
   LeakCheck.Trace.Map,
   LeakCheck.Trace.WinApi,
   DUnitX.MemoryLeakMonitor.LeakCheck,
-  {$ENDIF }
+  {$ENDIF } // extra space is needed to avoid auto-removal by IDE.
   {$IFDEF TESTINSIGHT}
   TestInsight.DUnitX,
   {$ENDIF }
@@ -34,8 +34,8 @@ uses
   Test.DDuce.DynamicRecord in 'Test.DDuce.DynamicRecord.pas',
   Test.DDuce.DynamicRecord.Generic in 'Test.DDuce.DynamicRecord.Generic.pas',
   Test.DDuce.Reflect in 'Test.DDuce.Reflect.pas',
-  Test.DDuce.Logger in 'Test.DDuce.Logger.pas',
-  Test.DDuce.Mosquitto in 'Test.DDuce.Mosquitto.pas';
+  Test.DDuce.Logger in 'Test.DDuce.Logger.pas';
+  //Test.DDuce.Mosquitto in 'Test.DDuce.Mosquitto.pas';
 
 begin
   Application.Initialize;
