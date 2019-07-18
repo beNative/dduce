@@ -4086,7 +4086,6 @@ var
   begin
     R := Rect;
     R.Right := R.Left;
-    { sort out subtitles}
     for I := 0 to Sections.Count - 1 do
     begin
       S := Sections[I];

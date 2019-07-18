@@ -77,6 +77,7 @@ begin
   GV.ColumnClick      := True;
   GV.ShowIndicator    := True;
   GV.DataSource       := ADataSource;
+
   GV.AutoSizeCols;
   Result := GV;
 end;

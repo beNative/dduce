@@ -35,10 +35,6 @@ type
     procedure actAboutDialogExecute(Sender: TObject);
     procedure actRTTEyeExecute(Sender: TObject);
 
-  private
-
-  public
-
   end;
 
 implementation

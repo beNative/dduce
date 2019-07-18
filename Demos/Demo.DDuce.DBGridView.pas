@@ -28,6 +28,7 @@ uses
   Data.DB,
 
   DDuce.Components.GridView, DDuce.Components.DBGridView,
+
   DDuce.Components.LogTree;
 
 type
@@ -906,13 +907,13 @@ begin
     OnColumnResizing     := grdDBGVColumnResizing;
     OnColumnResize       := grdDBGVColumnResize;
     OnDblClick           := grdDBGVDblClick;
-    OnDataActiveChanged  := grdDBGVDataActiveChanged;
-    OnDataChanged        := grdDBGVDataChanged;
+    //OnDataActiveChanged  := grdDBGVDataActiveChanged;
+    //OnDataChanged        := grdDBGVDataChanged;
     OnDataDeleteRecord   := grdDBGVDataDeleteRecord;
     OnDataEditError      := grdDBGVDataEditError;
     OnDataInsertRecord   := grdDBGVDataInsertRecord;
     OnDataUpdateField    := grdDBGVDataUpdateField;
-    OnDataLayoutChanged  := grdDBGVDataLayoutChanged;
+    //OnDataLayoutChanged  := grdDBGVDataLayoutChanged;
     OnDataUpdateError    := grdDBGVDataUpdateError;
     OnDragDrop           := grdDBGVDragDrop;
     OnDragOver           := grdDBGVDragOver;
@@ -967,8 +968,8 @@ begin
     OnResize             := grdDBGVResize;
     OnSetEditText        := grdDBGVSetEditText;
     OnStartDrag          := grdDBGVStartDrag;
-    OnRowMultiSelect     := grdDBGVRowMultiSelect;
-    OnClearMultiSelect   := grdDBGVClearMultiSelect;
+    //OnRowMultiSelect     := grdDBGVRowMultiSelect;
+    //OnClearMultiSelect   := grdDBGVClearMultiSelect;
   end;
 end;
 
@@ -992,13 +993,13 @@ begin
     OnColumnResizing     := nil;
     OnColumnResize       := nil;
     OnDblClick           := nil;
-    OnDataActiveChanged  := nil;
-    OnDataChanged        := nil;
+    //OnDataActiveChanged  := nil;
+    //OnDataChanged        := nil;
     OnDataDeleteRecord   := nil;
     OnDataEditError      := nil;
     OnDataInsertRecord   := nil;
     OnDataUpdateField    := nil;
-    OnDataLayoutChanged  := nil;
+    //OnDataLayoutChanged  := nil;
     OnDataUpdateError    := nil;
     OnDragDrop           := nil;
     OnDragOver           := nil;
