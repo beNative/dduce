@@ -70,7 +70,6 @@ type
     FCheckType  : TCheckType;
 
   protected
-
     {$REGION 'property access methods'}
     function GetItem(AIndex: UInt32): TVTNode<T>;
     function GetVisible: Boolean;
