@@ -2,13 +2,10 @@ object frmValueListDemo: TfrmValueListDemo
   Left = 0
   Top = 0
   ClientHeight = 540
-  ClientWidth = 876
+  ClientWidth = 661
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
+  DoubleBuffered = True
+  ParentFont = True
   OldCreateOrder = False
   Position = poMainFormCenter
   PixelsPerInch = 96
@@ -25,15 +22,17 @@ object frmValueListDemo: TfrmValueListDemo
     Width = 321
     Height = 540
     Align = alLeft
+    BevelEdges = []
     BevelOuter = bvNone
     TabOrder = 0
   end
   object pnlRight: TPanel
     Left = 327
     Top = 0
-    Width = 549
+    Width = 334
     Height = 540
     Align = alClient
+    BevelEdges = []
     BevelOuter = bvNone
     TabOrder = 1
   end

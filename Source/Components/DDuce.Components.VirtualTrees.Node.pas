@@ -263,15 +263,18 @@ end;
 
 function TVTNode<T>.GetItem(AIndex: UInt32): TVTNode<T>;
 var
-  I	 : Integer;
+  I	 : UInt32;
 	VN : PVirtualNode;
 begin
   Guard.CheckIndex(VNode.ChildCount, AIndex);
 	VN := VNode.FirstChild;
-  for I := 0 to AIndex - 1 do
+  if AIndex > 0 then
   begin
-    Guard.CheckNotNull(VN, 'VN');
-    VN := VN.NextSibling;
+    for I := 0 to AIndex - 1 do
+    begin
+      Guard.CheckNotNull(VN, 'VN');
+      VN := VN.NextSibling;
+    end;
   end;
 	Result := FTree.GetNodeData<TVTNode<T>>(VN);
 end;

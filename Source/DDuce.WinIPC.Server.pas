@@ -39,18 +39,19 @@ type
   private
     FMsgWindowClass     : TWndClass;
     FOnMessage          : TWinIPCMessageEvent;
-    FMsgData            : TStream;
+    FMsgData            : TBytesStream;
     FActive             : Boolean;
     FServerHandle       : THandle;
     FMsgWindowClassName : string;
     FWindowName         : string;
 
     procedure SetActive(const AValue : Boolean);
+    function GetMsgData: TBytesStream;
 
   protected
     procedure DoMessage(ASourceId: UInt32; AData: TStream);
     function AllocateHWnd: THandle;
-    procedure ReadMsgData(var Msg : TMsg);
+    procedure ReadMsgData(var AMsg : TMsg);
     procedure StartServer;
     procedure StopServer;
 
@@ -65,8 +66,8 @@ type
     property Active : Boolean
       read FActive write SetActive;
 
-    property MsgData : TStream
-      read FMsgData;
+    property MsgData : TBytesStream
+      read GetMsgData;
 
     property OnMessage : TWinIPCMessageEvent
       read FOnMessage write FOnMessage;
@@ -136,7 +137,7 @@ begin
     FMsgWindowClassName := MSG_WND_CLASSNAME;
   if FWindowName.IsEmpty then
     FWindowName := SERVER_WINDOWNAME;
-  FMsgData := TStringStream.Create;
+  FMsgData := TBytesStream.Create;
 end;
 
 procedure TWinIPCServer.BeforeDestruction;
@@ -157,6 +158,12 @@ begin
       StopServer;
   end;
 end;
+
+function TWinIPCServer.GetMsgData: TBytesStream;
+begin
+  Result := FMsgData;
+end;
+
 {$ENDREGION}
 
 {$REGION 'event dispatch methods'}
@@ -215,13 +222,13 @@ end;
 
 { This method gets called for each received message. }
 
-procedure TWinIPCServer.ReadMsgData(var Msg: TMsg);
+procedure TWinIPCServer.ReadMsgData(var AMsg: TMsg);
 var
-  CDS  : PCopyDataStruct;
+  CDS              : PCopyDataStruct;
   LClientProcessId : Integer;
 begin
-  CDS := PCopyDataStruct(Msg.LParam);
-  FMsgData.Size := 0;
+  CDS := PCopyDataStruct(AMsg.LParam);
+  FMsgData.Clear;
   FMsgData.Seek(0, soFrombeginning);
   FMsgData.WriteBuffer(CDS^.lpData^, CDS^.cbData);
   LClientProcessId := CDS.dwData;

@@ -16,6 +16,8 @@
 
 unit DDuce.Editor.Filter.ToolView;
 
+interface
+
 {
   This is an attempt to make a reusable filter view using a virtual treeview and
   a presenter.
@@ -32,8 +34,6 @@ unit DDuce.Editor.Filter.ToolView;
   - assign TVP.ItemsSource property
   - assign TVP.Treeview property
 }
-
-interface
 
 uses
   System.Classes, System.SysUtils, System.Contnrs, System.Actions,

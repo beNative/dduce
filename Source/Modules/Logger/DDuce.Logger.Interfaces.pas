@@ -51,6 +51,7 @@ type
     lmtObject      = 16,
     lmtInterface   = 17,
     lmtPersistent  = 18,
+    lmtReserved    = 19,
     lmtWatch       = 20,
     lmtCounter     = 21,
     lmtColor       = 22,
@@ -65,6 +66,24 @@ type
 
   TLogMessageTypes = set of TLogMessageType;
 
+const
+  TracingMessages      : TLogMessageTypes =
+    [lmtEnterMethod, lmtLeaveMethod];
+  NotificationMessages : TLogMessageTypes =
+    [lmtInfo, lmtError, lmtWarning, lmtConditional];
+  DataValueMessages    : TLogMessageTypes = [
+    lmtValue, lmtStrings, lmtComponent, lmtException, lmtBitmap, lmtObject,
+    lmtInterface, lmtPersistent, lmtColor, lmtAlphaColor, lmtScreenShot,
+    lmtText, lmtDataSet, lmtAction, lmtMemory
+  ];
+  StateMessages        : TLogMessageTypes =
+    [lmtCounter, lmtCheckpoint];
+  CommandMessages      : TLogMessageTypes =
+     [lmtClear];
+  DiagnosticMessages   : TLogMessageTypes =
+    [lmtCallStack, lmtHeapInfo];
+
+type
   ILogger = interface;
 
   TLogMessage = packed record
@@ -197,33 +216,35 @@ type
 
   ILogger = interface
   ['{28E9BADE-6B42-4399-8867-1CA115576E40}']
+    {$REGION 'property access methods'}
     function GetChannels: TChannelList;
     function GetLogLevel: Byte;
     procedure SetLogLevel(const Value: Byte);
+    {$ENDREGION}
 
-    procedure Send(const AName: string; const AArgs: array of const); overload;
+    function Send(const AName: string; const AArgs: array of const): ILogger; overload;
 
     { These three overloads are here because TValue would cast them implicitely
       to string (and we would lose type information of AValue) }
-    procedure Send(const AName: string; const AValue: AnsiString); overload;
-    procedure Send(const AName: string; const AValue: WideString); overload;
-    procedure Send(const AName: string; const AValue: ShortString); overload;
-    procedure Send(const AName: string; const AValue: string); overload;
+    function Send(const AName: string; const AValue: AnsiString): ILogger; overload;
+    function Send(const AName: string; const AValue: WideString): ILogger; overload;
+    function Send(const AName: string; const AValue: ShortString): ILogger; overload;
+    function Send(const AName: string; const AValue: string): ILogger; overload;
 
     { UInt8 = Byte }
-    procedure Send(const AName: string; const AValue: Byte); overload;
+    function Send(const AName: string; const AValue: Byte): ILogger; overload;
     { UInt16 = Word }
-    procedure Send(const AName: string; const AValue: Word); overload;
+    function Send(const AName: string; const AValue: Word): ILogger; overload;
     { UInt32 = Cardinal = FixedUInt }
-    procedure Send(const AName: string; const AValue: Cardinal); overload;
+    function Send(const AName: string; const AValue: Cardinal): ILogger; overload;
     { UInt64 }
-    procedure Send(const AName: string; const AValue: UInt64); overload;
+    function Send(const AName: string; const AValue: UInt64): ILogger; overload;
     { Int8 = ShortInt }
-    procedure Send(const AName: string; const AValue: ShortInt); overload;
+    function Send(const AName: string; const AValue: ShortInt): ILogger; overload;
     { Int16 = SmallInt }
-    procedure Send(const AName: string; const AValue: SmallInt); overload;
+    function Send(const AName: string; const AValue: SmallInt): ILogger; overload;
     { Int32 = Integer = FixedInt }
-    procedure Send(const AName: string; const AValue: FixedInt); overload;
+    function Send(const AName: string; const AValue: FixedInt): ILogger; overload;
 
     { All types that can implicitely be casted to TValue will be handled
       through this call. }
@@ -241,102 +262,104 @@ type
        TObject ?
        TClass ?
     }
-    procedure Send(const AName: string; const AValue: TValue); overload;
-    procedure Send(const AValue: AnsiString); overload;
-    procedure Send(const AValue: WideString); overload;
-    procedure Send(const AValue: ShortString); overload;
-    procedure Send(const AValue: string); overload;
+    function Send(const AName: string; const AValue: TValue): ILogger; overload;
+    function Send(const AValue: AnsiString): ILogger; overload;
+    function Send(const AValue: WideString): ILogger; overload;
+    function Send(const AValue: ShortString): ILogger; overload;
+    function Send(const AValue: string): ILogger; overload;
 
-    procedure Send(const AValue: Byte); overload;
-    procedure Send(const AValue: Word); overload;
-    procedure Send(const AValue: Cardinal); overload;
-    procedure Send(const AValue: UInt64); overload;
-    procedure Send(const AValue: ShortInt); overload;
-    procedure Send(const AValue: SmallInt); overload;
-    procedure Send(const AValue: FixedInt); overload;
+    function Send(const AValue: Byte): ILogger; overload;
+    function Send(const AValue: Word): ILogger; overload;
+    function Send(const AValue: Cardinal): ILogger; overload;
+    function Send(const AValue: UInt64): ILogger; overload;
+    function Send(const AValue: ShortInt): ILogger; overload;
+    function Send(const AValue: SmallInt): ILogger; overload;
+    function Send(const AValue: FixedInt): ILogger; overload;
 
-    procedure Send(const AValue: TValue); overload;
+    function Send(const AValue: TValue): ILogger; overload;
 
     { Send methods for types that do not have an implicit cast to TValue
       These are equivalent to Send(AName, TValue.From(AValue)); }
-    procedure SendDateTime(const AName: string; AValue: TDateTime); overload;
-    procedure SendDateTime(AValue: TDateTime); overload;
-    procedure SendDate(const AName: string; AValue: TDate); overload;
-    procedure SendDate(AValue: TDate); overload;
-    procedure SendTime(const AName: string; AValue: TTime); overload;
-    procedure SendTime(AValue: TTime); overload;
+    function SendDateTime(const AName: string; AValue: TDateTime): ILogger; overload;
+    function SendDateTime(AValue: TDateTime): ILogger; overload;
+    function SendDate(const AName: string; AValue: TDate): ILogger; overload;
+    function SendDate(AValue: TDate): ILogger; overload;
+    function SendTime(const AName: string; AValue: TTime): ILogger; overload;
+    function SendTime(AValue: TTime): ILogger; overload;
 
     { Send methods for types that need a custom representation. }
-    procedure SendColor(const AName: string; AColor: TColor); overload;
-    procedure SendColor(AColor: TColor); overload;
-    procedure SendAlphaColor(const AName: string; AAlphaColor: TAlphaColor); overload;
-    procedure SendAlphaColor(AAlphaColor: TAlphaColor); overload;
-    procedure SendObject(const AName: string; AValue: TObject); overload;
-    procedure SendObject(AValue: TObject); overload;
+    function SendColor(const AName: string; AColor: TColor): ILogger; overload;
+    function SendColor(AColor: TColor): ILogger; overload;
+    function SendAlphaColor(const AName: string; AAlphaColor: TAlphaColor): ILogger; overload;
+    function SendAlphaColor(AAlphaColor: TAlphaColor): ILogger; overload;
+    function SendObject(const AName: string; AValue: TObject): ILogger; overload;
+    function SendObject(AValue: TObject): ILogger; overload;
     { Logs interface properties. }
-    procedure SendInterface(const AName: string; AValue: IInterface); overload;
-    procedure SendInterface(AValue: IInterface); overload;
+    function SendInterface(const AName: string; AValue: IInterface): ILogger; overload;
+    function SendInterface(AValue: IInterface): ILogger; overload;
     { Logs published properties. }
-    procedure SendPersistent(const AName: string; AValue: TPersistent); overload;
-    procedure SendPersistent(AValue: TPersistent); overload;
-    procedure SendRect(const AName: string; const AValue: TRect); overload;
-    procedure SendRect(const AValue: TRect); overload;
-    procedure SendPoint(const AName: string; const AValue: TPoint); overload;
-    procedure SendPoint(const AValue: TPoint); overload;
-    procedure SendStrings(const AName: string; AValue: TStrings); overload;
-    procedure SendStrings(AValue: TStrings); overload;
-    procedure SendComponent(const AName: string; AValue: TComponent); overload;
-    procedure SendComponent(AValue: TComponent); overload;
-    procedure SendPointer(const AName: string; AValue: Pointer); overload;
-    procedure SendPointer(AValue: Pointer); overload;
-    procedure SendException(const AName: string; AValue: Exception); overload;
-    procedure SendException(AValue: Exception); overload;
-    procedure SendBitmap(const AName: string; AValue: TBitmap); overload;
-    procedure SendBitmap(AValue: TBitmap); overload;
-    procedure SendScreenShot(const AName: string; AForm: TCustomForm); overload;
-    procedure SendScreenShot(AForm: TCustomForm); overload;
-    procedure SendDataSet(const AName: string; AValue: TDataSet); overload;
-    procedure SendDataSet(AValue: TDataSet); overload;
-    procedure SendShortCut(const AName: string; AValue: TShortCut); overload;
-    procedure SendShortCut(AValue: TShortCut); overload;
-    procedure SendVariant(const AName: string; const AValue: Variant); overload;
-    procedure SendVariant(const AValue: Variant); overload;
+    function SendPersistent(const AName: string; AValue: TPersistent): ILogger; overload;
+    function SendPersistent(AValue: TPersistent): ILogger; overload;
+    function SendRect(const AName: string; const AValue: TRect): ILogger; overload;
+    function SendRect(const AValue: TRect): ILogger; overload;
+    function SendPoint(const AName: string; const AValue: TPoint): ILogger; overload;
+    function SendPoint(const AValue: TPoint): ILogger; overload;
+    function SendStrings(const AName: string; AValue: TStrings): ILogger; overload;
+    function SendStrings(AValue: TStrings): ILogger; overload;
+    function SendStrings(const AValue: string): ILogger; overload;
+    function SendStrings(const AName: string; AValue: string): ILogger; overload;
+    function SendComponent(const AName: string; AValue: TComponent): ILogger; overload;
+    function SendComponent(AValue: TComponent): ILogger; overload;
+    function SendPointer(const AName: string; AValue: Pointer): ILogger; overload;
+    function SendPointer(AValue: Pointer): ILogger; overload;
+    function SendException(const AName: string; AValue: Exception): ILogger; overload;
+    function SendException(AValue: Exception): ILogger; overload;
+    function SendBitmap(const AName: string; AValue: TBitmap): ILogger; overload;
+    function SendBitmap(AValue: TBitmap): ILogger; overload;
+    function SendScreenShot(const AName: string; AForm: TCustomForm): ILogger; overload;
+    function SendScreenShot(AForm: TCustomForm): ILogger; overload;
+    function SendDataSet(const AName: string; AValue: TDataSet): ILogger; overload;
+    function SendDataSet(AValue: TDataSet): ILogger; overload;
+    function SendShortCut(const AName: string; AValue: TShortCut): ILogger; overload;
+    function SendShortCut(AValue: TShortCut): ILogger; overload;
+    function SendVariant(const AName: string; const AValue: Variant): ILogger; overload;
+    function SendVariant(const AValue: Variant): ILogger; overload;
 
-    procedure SendMemory(
+    function SendMemory(
       const AName: string;
       AAddress   : Pointer;
       ASize      : LongWord
-    );
+    ): ILogger;
 
     { Send methods for (optionally named) text that optionally can be displayed
       with a dedicated highlighter. }
-    procedure SendText(
+    function SendText(
       const AName        : string;
       const AText        : string;
       const AHighlighter : string = ''
-    ); overload;
-    procedure SendText(const AText: string); overload;
+    ): ILogger; overload;
+    function SendText(const AText: string): ILogger; overload;
 
-    procedure SendSql(const AName: string; const AValue: string); overload;
-    procedure SendSql(const AValue: string); overload;
-    procedure SendXml(const AName: string; const AValue: string); overload;
-    procedure SendXml(const AValue: string); overload;
-    procedure SendHtml(const AName: string; const AValue: string); overload;
-    procedure SendHtml(const AValue: string); overload;
-    procedure SendIni(const AName: string; const AValue: string); overload;
-    procedure SendIni(const AValue: string); overload;
-    procedure SendJson(const AName: string; const AValue: string); overload;
-    procedure SendJson(const AValue: string); overload;
+    function SendSQL(const AName: string; const AValue: string): ILogger; overload;
+    function SendSQL(const AValue: string): ILogger; overload;
+    function SendXML(const AName: string; const AValue: string): ILogger; overload;
+    function SendXML(const AValue: string): ILogger; overload;
+    function SendHTML(const AName: string; const AValue: string): ILogger; overload;
+    function SendHTML(const AValue: string): ILogger; overload;
+    function SendINI(const AName: string; const AValue: string): ILogger; overload;
+    function SendINI(const AValue: string): ILogger; overload;
+    function SendJSON(const AName: string; const AValue: string): ILogger; overload;
+    function SendJSON(const AValue: string): ILogger; overload;
 
-    procedure IncCounter(const AName: string);
-    procedure DecCounter(const AName: string);
-    procedure ResetCounter(const AName: string);
+    function IncCounter(const AName: string): ILogger;
+    function DecCounter(const AName: string): ILogger;
+    function ResetCounter(const AName: string): ILogger;
     function GetCounter(const AName: string): Integer;
 
-    procedure Enter(const AName: string); overload;
-    procedure Enter(ASender: TObject; const AName: string); overload;
-    procedure Leave(const AName: string); overload;
-    procedure Leave(ASender: TObject; const AName: string); overload;
+    function Enter(const AName: string): ILogger; overload;
+    function Enter(ASender: TObject; const AName: string): ILogger; overload;
+    function Leave(const AName: string): ILogger; overload;
+    function Leave(ASender: TObject; const AName: string): ILogger; overload;
     { Track uses an interface variable to replace Enter/Leave calls in the
       scope of the method where it is called. A call to Track will create an
       instance and trigger the Enter method. When the interface variable goes
@@ -345,41 +368,41 @@ type
     function Track(const AName: string): IInterface; overload;
     function Track(ASender: TObject; const AName: string): IInterface; overload;
 
-    procedure Action(AAction: TBasicAction);
+    function Action(AAction: TBasicAction): ILogger;
 
-    procedure AddCheckPoint(const AName: string = '');
-    procedure ResetCheckPoint(const AName: string = '');
+    function AddCheckPoint(const AName: string = ''): ILogger;
+    function ResetCheckPoint(const AName: string = ''): ILogger;
 
     { Monitors a named value in the LogViewer application }
-    procedure Watch(const AName: string; const AValue: TValue); overload;
-    procedure Watch(const AName: string; const AValue: string = ''); overload;
-    procedure Watch(const AName: string; const AValue: ShortString); overload;
-    procedure Watch(const AName: string; const AValue: AnsiString); overload;
-    procedure Watch(const AName: string; const AValue: WideString); overload;
+    function Watch(const AName: string; const AValue: TValue): ILogger; overload;
+    function Watch(const AName: string; const AValue: string): ILogger; overload;
+    function Watch(const AName: string; const AValue: ShortString): ILogger; overload;
+    function Watch(const AName: string; const AValue: AnsiString): ILogger; overload;
+    function Watch(const AName: string; const AValue: WideString): ILogger; overload;
 
-    procedure Warn(const AText: string); overload;
-    procedure Warn(
+    function Warn(const AText: string): ILogger; overload;
+    function Warn(
       const AText : string;
       const AArgs : array of const
-    ); overload;
-    procedure Error(const AText: string); overload;
-    procedure Error(
+    ): ILogger; overload;
+    function Error(const AText: string): ILogger; overload;
+    function Error(
       const AText : string;
       const AArgs : array of const
-    ); overload;
-    procedure Info(const AText: string); overload;
-    procedure Info(
+    ): ILogger; overload;
+    function Info(const AText: string): ILogger; overload;
+    function Info(
       const AText: string;
       const AArgs: array of const
-    ); overload;
+    ): ILogger; overload;
 
-    procedure SendIf(
+    function SendIf(
       const AText : string;
       AExpression : Boolean;
       AIsTrue     : Boolean = True
-    );
+    ): ILogger;
     { Sends out a dedicated message to clear the logviewer contents. }
-    procedure Clear;
+    function Clear: ILogger;
 
     property LogLevel: Byte
       read GetLogLevel write SetLogLevel;

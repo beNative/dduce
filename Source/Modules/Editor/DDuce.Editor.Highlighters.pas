@@ -18,6 +18,8 @@ unit DDuce.Editor.Highlighters;
 
 { Holds settings that are specific to each supported highlighter. }
 
+interface
+
 { REMARKS about TBCEditorHighlighter:
   - a TBCEditorHighlighter requires a TBCEditor component to be able to load
     its properties from the definition file.
@@ -27,8 +29,6 @@ unit DDuce.Editor.Highlighters;
     object that works closely with the associated editor instance to render its
     text.
 }
-
-interface
 
 uses
   System.SysUtils, System.Classes, System.Contnrs,

@@ -18,9 +18,9 @@ unit DDuce.Editor.CommentStripper;
 
 { Comment stripper classes. }
 
-{ TODO: Implement ICommentStripper }
-
 interface
+
+{ TODO: Implement ICommentStripper }
 
 uses
   System.Classes, System.SysUtils;
@@ -117,8 +117,7 @@ type
 
 implementation
 
-{ TCustomCommentStripper }
-
+{$REGION 'construction and destruction'}
 constructor TCustomCommentStripper.Create(AOwner: TComponent);
 begin
   inherited;
@@ -132,6 +131,7 @@ begin
   FReservedItems.Free;
   inherited;
 end;
+{$ENDREGION}
 
 procedure TCustomCommentStripper.DoBlockEndProcess;
 begin

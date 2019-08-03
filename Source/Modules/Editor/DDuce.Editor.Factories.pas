@@ -14,15 +14,15 @@
   limitations under the License.
 }
 
+unit DDuce.Editor.Factories;
+
+interface
+
 {
   TODO:
     factory for statusbar with customizable sections
     factory for custom toolbar, popup menus, etc.
 }
-
-unit DDuce.Editor.Factories;
-
-interface
 
 uses
   System.Classes, System.SysUtils,

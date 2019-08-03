@@ -77,11 +77,13 @@ begin
     FManager.Actions,
     FManager.Menus
   );
+  FMainToolbar.Color := clWhite;
   FOI := TzObjectInspectorFactory.Create(
     Self,
     pnlLeft,
     (FSettings as IInterfaceComponentReference).GetComponent
   );
+  FOI.BorderStyle := bsNone;
 
 //  FRightToolbar := TEditorFactories.CreateTopRightToolbar(
 //    Self,

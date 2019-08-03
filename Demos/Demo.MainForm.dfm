@@ -1,74 +1,73 @@
 object frmMainMenu: TfrmMainMenu
   Left = 515
   Top = 244
-  ActiveControl = edtFilter
+  ActiveControl = pnlVST
   Caption = 'DDuce demos'
-  ClientHeight = 407
+  ClientHeight = 355
   ClientWidth = 369
-  Color = clBtnFace
+  Color = clWhite
   DefaultMonitor = dmMainForm
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
+  ParentFont = True
   OldCreateOrder = False
   Position = poScreenCenter
   ShowHint = True
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object pnlVST: TPanel
     Left = 0
-    Top = 29
+    Top = 18
     Width = 369
-    Height = 327
+    Height = 286
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitHeight = 254
   end
   object pnlTop: TPanel
     Left = 0
     Top = 0
     Width = 369
-    Height = 29
+    Height = 18
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
     object edtFilter: TEdit
-      AlignWithMargins = True
-      Left = 3
-      Top = 3
-      Width = 363
-      Height = 23
+      Left = 0
+      Top = 0
+      Width = 369
+      Height = 18
       Align = alClient
+      Alignment = taCenter
+      BevelInner = bvNone
+      BevelOuter = bvNone
+      BorderStyle = bsNone
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsItalic]
       ParentFont = False
       TabOrder = 0
       TextHint = 'Filter'
       OnChange = edtFilterChange
+      OnEnter = edtFilterEnter
+      OnExit = edtFilterExit
       OnKeyDown = edtFilterKeyDown
       OnKeyUp = edtFilterKeyUp
-      ExplicitHeight = 21
     end
   end
   object sbrMain: TStatusBar
     Left = 0
-    Top = 388
+    Top = 336
     Width = 369
     Height = 19
     Panels = <>
     SimplePanel = True
-    ExplicitTop = 314
   end
   object btnExecute: TButton
     AlignWithMargins = True
     Left = 3
-    Top = 359
+    Top = 307
     Width = 363
     Height = 26
     Action = actExecute
@@ -80,7 +79,6 @@ object frmMainMenu: TfrmMainMenu
     ImageMargins.Bottom = 3
     Images = imlMain
     TabOrder = 0
-    ExplicitTop = 360
   end
   object aclMain: TActionList
     Images = imlMain
@@ -110,7 +108,7 @@ object frmMainMenu: TfrmMainMenu
     Left = 176
     Top = 168
     Bitmap = {
-      494C0101020005000C0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102000500200010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000328492FFC7CDCEFF00000000000000000000000000000000000000000000

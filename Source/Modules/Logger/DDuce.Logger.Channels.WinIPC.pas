@@ -30,7 +30,7 @@ type
   TWinIPCChannel = class(TCustomLogChannel, ILogChannel, IWinIPCChannel)
   private
     FClient : TWinIPCClient; // sends to the server
-    FBuffer : TMemoryStream;
+    FBuffer : TBytesStream;
 
   protected
     function GetConnected: Boolean; override;
@@ -54,7 +54,7 @@ uses
 procedure TWinIPCChannel.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FBuffer := TMemoryStream.Create;
+  FBuffer := TBytesStream.Create;
   FClient := TWinIPCClient.Create;
   FClient.Connect;
 end;
@@ -103,12 +103,14 @@ var
   TextSize : Integer;
   DataSize : Integer;
 begin
+  Result := False;
   if Enabled then
   begin
     if not Connected and AutoConnect then
       Connect;
     if Connected then
     begin
+      FBuffer.Clear;
       TextSize := Length(AMsg.Text);
       FBuffer.Seek(0, soFromBeginning);
       FBuffer.WriteBuffer(AMsg.MsgType);
@@ -130,15 +132,7 @@ begin
         FBuffer.WriteBuffer(ZeroBuf); // indicates empty stream
       FClient.SendStream(FBuffer);
       Result := True;
-    end
-    else
-    begin
-      Result := False;
     end;
-  end
-  else
-  begin
-    Result := False;
   end;
 end;
 {$ENDREGION}

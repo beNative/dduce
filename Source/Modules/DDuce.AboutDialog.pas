@@ -28,8 +28,6 @@ uses
 
 type
   TfrmAboutDialog = class(TForm)
-    pnlVersionInfo: TPanel;
-
   private
     FVersionInfoList : TValueList;
 
@@ -69,11 +67,14 @@ end;
 procedure TfrmAboutDialog.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FVersionInfoList            := TValueList.Create(Self);
-  FVersionInfoList.Parent     := pnlVersionInfo;
-  FVersionInfoList.Align      := alClient;
-  FVersionInfoList.Editable   := False;
-  FVersionInfoList.ShowHeader := False;
+  FVersionInfoList                  := TValueList.Create(Self);
+  FVersionInfoList.Parent           := Self;
+  FVersionInfoList.Align            := alClient;
+  FVersionInfoList.BorderStyle      := bsNone;
+  FVersionInfoList.AlignWithMargins := False;
+  FVersionInfoList.Editable         := False;
+  FVersionInfoList.ShowHeader       := False;
+  FVersionInfoList.ShowGutter       := False;
 
   UpdateVersionInfoDisplay;
 end;

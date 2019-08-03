@@ -47,9 +47,11 @@ type
     actAdd       : TAction;
     actDelete    : TAction;
     actDuplicate : TAction;
+    actEdit      : TAction;
     actExecute   : TAction;
     actMoveDown  : TAction;
     actMoveUp    : TAction;
+    actRefresh   : TAction;
     btn1         : TToolButton;
     btnAdd       : TToolButton;
     btnDelete    : TToolButton;
@@ -57,6 +59,7 @@ type
     btnExecute   : TToolButton;
     btnMoveDown  : TToolButton;
     btnMoveUp    : TToolButton;
+    btnRefresh   : TToolButton;
     btnSpacer1   : TToolButton;
     btnSpacer2   : TToolButton;
     imlMain      : TImageList;
@@ -69,13 +72,11 @@ type
     mniN1        : TMenuItem;
     mniN2        : TMenuItem;
     mniN3        : TMenuItem;
+    mniRefresh   : TMenuItem;
     pnlMain      : TPanel;
     ppmMain      : TPopupMenu;
     tlbMain      : TToolBar;
-    actRefresh   : TAction;
-    btnRefresh   : TToolButton;
-    mniRefresh   : TMenuItem;
-    actEdit: TAction;
+    imlTest: TImageList;
     {$ENDREGION}
 
     {$REGION 'action handlers'}
@@ -233,6 +234,7 @@ begin
   FValueList.MultiSelect := True;
   FValueList.Data        := DynamicRecord.CreateDynamicRecord;
   FValueList.Data.OnChanged.Add(FValueListDataChanged);
+  FValueList.BorderStyle := bsNone;
   actAdd.Enabled         := True;
   actRefresh.Enabled     := True;
 end;

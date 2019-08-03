@@ -16,9 +16,9 @@
 
 unit DDuce.Editor.Filter.Data;
 
-interface
-
 { Data structure used to feed the Filter view. }
+
+interface
 
 uses
   System.Classes, System.SysUtils;

@@ -16,12 +16,13 @@
 
 unit DDuce.Editor.Interfaces;
 
-{ This unit hosts all interfaces of the editor module.
-  To make an editor instance you need to use this unit in the interface section
-  and DDuce.Editor.Factories in the implementation part to let you create
-  instances supporting one or more of these interfaces. }
+{ This unit hosts all interfaces of the editor module. }
 
 interface
+
+{ To make an editor instance you need to use this unit in the interface section
+  and DDuce.Editor.Factories in the implementation part to let you create
+  instances supporting one or more of these interfaces. }
 
 uses
   System.Classes, System.Contnrs, System.Types, System.SysUtils,

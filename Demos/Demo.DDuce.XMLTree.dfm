@@ -4,11 +4,7 @@ object frmXMLTree: TfrmXMLTree
   ClientHeight = 548
   ClientWidth = 1097
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
+  ParentFont = True
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
@@ -69,8 +65,6 @@ object frmXMLTree: TfrmXMLTree
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 368
-      ExplicitWidth = 729
       object mmoXML: TMemo
         Left = 0
         Top = 0
@@ -85,7 +79,6 @@ object frmXMLTree: TfrmXMLTree
         ParentFont = False
         TabOrder = 0
         OnChange = mmoXMLChange
-        ExplicitWidth = 431
       end
       object pnlInspector: TPanel
         Left = 432
@@ -95,7 +88,6 @@ object frmXMLTree: TfrmXMLTree
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 431
       end
     end
   end

@@ -252,6 +252,7 @@ begin
 
   FDimInactiveView := DEFAULT_DIM_ACTIVE_VIEW;
   FLanguageCode    := DEFAULT_LANGUAGE_CODE;
+  FOnChanged.UseFreeNotification := False; // test TS
 
   AssignDefaultColors;
 end;

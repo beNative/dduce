@@ -16,6 +16,9 @@
 
 unit DDuce.Editor.ToolView.Base;
 
+interface
+
+{$REGION 'documentation'}
 { Base toolview form that can be used to create descendants that implement
   IEditorToolView.
   It reacts to changes in the common settings (IEditorSettings) which are
@@ -33,8 +36,7 @@ unit DDuce.Editor.ToolView.Base;
   settings. It acts as an observer to react on any relevant changes in the
   observed instances.
 }
-
-interface
+{$ENDREGION}
 
 uses
   System.Classes,

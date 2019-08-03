@@ -18,9 +18,9 @@ unit DDuce.Editor.Search.Data;
 
 { Data structures used to display the search results hierarchically. }
 
-{ IEditorView -> TSearchResultGroup -> TSearchResultLine -> TSearchResult }
-
 interface
+
+{ IEditorView -> TSearchResultGroup -> TSearchResultLine -> TSearchResult }
 
 uses
   System.Classes, System.SysUtils, System.Contnrs, System.Types,

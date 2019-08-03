@@ -16,6 +16,8 @@
 
 unit DDuce.Editor.Manager;
 
+interface
+
 {$REGION 'documentation'}
 {
   Datamodule holding common actions, menu's to manage one or more IEditorView
@@ -75,8 +77,6 @@ unit DDuce.Editor.Manager;
         Set of commands that can be executed on the active editor view.
 }
 {$ENDREGION}
-
-interface
 
 uses
   System.Classes, System.SysUtils, System.Variants, System.Actions,
@@ -759,6 +759,7 @@ begin
   if PersistSettings then
     FSettings.Save;
   FSettings.OnChanged.Remove(EditorSettingsChanged);
+  FSettings := nil;
   inherited BeforeDestruction;
 end;
 {$ENDREGION}

@@ -27,6 +27,9 @@ uses
 
   DUnitX.TestFramework;
 
+{ REMARK: these unit tests should be executed in combination with a LogViewer
+  instance to test the display of the logged messages. }
+
 type
   TestLogger = class
   protected
@@ -35,6 +38,9 @@ type
     // not implemented yet
     procedure Test_SendException_method;
     procedure Test_SendMemory_method;
+
+  public
+    procedure AfterConstruction; override;
 
     [Test]
     procedure Test_Send_method_for_AnsiString_argument;
@@ -222,6 +228,13 @@ type
     procedure Test_Watch_method_for_WideString_argument;
 
     [Test]
+    procedure Test_Watch_method_with_empty_name_argument; // should fail
+
+    [Test]
+    { For a watch the name/type combination is used to identify the watch. }
+    procedure Test_Watch_methods_with_same_name_and_different_type;
+
+    [Test]
     procedure Test_Enter_and_Leave_methods_for_routine;
     [Test]
     procedure Test_Enter_and_Leave_methods_for_method;
@@ -242,6 +255,9 @@ type
 
     [Test]
     procedure Test_Checkpoint_methods;
+
+    [Test]
+    procedure Test_Method_Chaining;
 
     [Test]
     procedure Test_OutputDebugString_method;
@@ -266,6 +282,15 @@ uses
   DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.ZeroMQ,
 
   Test.Utils, Test.Resources;
+
+{$REGION 'construction and destruction'}
+procedure TestLogger.AfterConstruction;
+begin
+  inherited AfterConstruction;
+  //Logger.Channels.Add(TWinIPCChannel.Create);
+  Logger.Channels.Add(TZeroMQChannel.Create);
+end;
+{$ENDREGION}
 
 {$REGION 'Test Send methods'}
 procedure TestLogger.Test_Send_method;
@@ -300,6 +325,7 @@ begin
   T[2].VType := vtInteger;
   T[2].VInteger := 4;
   Logger.Send('TestArrayOfConst', T);
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Send_method_for_Boolean_argument;
@@ -1178,6 +1204,21 @@ begin
   Logger.Watch('TestWideString', T);
   Assert.Pass;
 end;
+
+procedure TestLogger.Test_Watch_method_with_empty_name_argument;
+begin
+  Logger.Watch('', Self);
+  Logger.Watch('', 5);
+  Assert.Pass;
+end;
+
+procedure TestLogger.Test_Watch_methods_with_same_name_and_different_type;
+begin
+  Logger.Watch('ChangingType', 'String');
+  Logger.Watch('ChangingType', 5);
+  Logger.Watch('ChangingType', Self);
+  Assert.Pass;
+end;
 {$ENDREGION}
 
 {$REGION 'Test methods for Enter and Leave'}
@@ -1231,6 +1272,15 @@ begin
   Assert.Pass;
 end;
 
+procedure TestLogger.Test_Method_Chaining;
+begin
+  Logger.Track(Self, 'Test_Method_Chaining');
+  Logger.SendDateTime('Now', Now)
+        .Send('TestInteger', 2)
+        .Info('Info message')
+        .Warn('Warning message');
+end;
+
 procedure TestLogger.Test_Warn_method;
 begin
   Logger.Warn('Warning');
@@ -1252,7 +1302,6 @@ begin
     Logger.IncCounter(S);
   end;
   Logger.Leave('Increasing counter');
-
   Logger.Enter('Decreasing counter');
   for I := 1 to 50 do
   begin

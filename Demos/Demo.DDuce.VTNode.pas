@@ -22,35 +22,63 @@ unit Demo.DDuce.VTNode;
 interface
 
 {$REGION 'Documentation'}
-{ PVirtualNode = ^TVirtualNode
-  TVirtualNode = record
-  ...
-    Data: record end; // Data gets assigned user defined data
-  ...
-  end;
+{
+  The virtual tree component consists of nodes which are declared as pointers
+  (PVirtualNode) to a record type (TVirtualNode). User defined data of each
+  node needs to be provided on demand (a.k.a. The virtual paradigm). The tree
+  is instrumented by handling a set of events that are called when the tree
+  is initialized or redrawn.
+
+    PVirtualNode = ^TVirtualNode
+    TVirtualNode = record
+    ...
+      Data: record end; // Data gets assigned user defined data
+    ...
+    end;
 
   TVTNode<T> is a parameterizable node class intended to be used as the Data
-  member of each virtual node in the virtual treeview.
+  member of each virtual node in a virtual treeview control.
   T is the user defined type of which each TVTNode instance has a reference to.
 
   TVTNode<T> has following members that allow us to build a treeview from code:
-    Data: T;  // holds the user defined data with all needed information to show
-              // in the tree.
-    VNode: PVirtualNode; // points back to the native tree node associated with
-                         // the data.
-    Nodes: IList<TVTNode<T>>; // list of child nodes for the current node
+    Data: T;
+       The user defined object with all data that needs to be shown. In this
+       demo this is TMyData.
+    VNode: PVirtualNode;
+       References the tree node associated with the data.
+    Nodes: IList<TVTNode<T>>;
+       Holds children of the current node.
 
-  At least following two event handlers need to be implemented by the treeview.
+  First we need a root node build the tree viewer. In this example this is
+  declared as follows:
+     FVTRoot: TVTNode<TMyData>;
+
+  The tree control itself is declared as follows in this example:
+     FTree: TVirtualStringTree;
+
+  At least the following event handlers need to be implemented by the treeview
+  control:
     OnGetText
-      Assign CellText using the user defined data.
-
+      Assign CellText using the user defined data (FTreeGetText).
     OnFreeNode
-      Free the TVTNode object.
+      Free the TVTNode object (FTreeFreeNode).
+    OnFocusChanged
+      Retrieve the data of the focused node (FTreeFocusChanged).
 
   The user defined data is accessed from the event handlers using the
   GetNodeData member of TVirtualStringTree and the Sender and Node parameters
-  from the tree's event handler:
+  of the tree's event handlers:
       VTNode := Sender.GetNodeData<TVTNode<TMyData>>(Node);
+
+  This demo demonstrates how to setup the tree with data and how to manipulate
+  both nodes and the corresponding data in the treeview with the following
+  actions:
+    actBuildTree
+    actAddChild
+    actDeleteNode
+    actMoveUp/actMoveDown
+    actFullExpand/actFullCollapse
+    actSetNodeText
 }
 {$ENDREGION}
 
@@ -102,6 +130,7 @@ type
     pnlTree            : TPanel;
     {$ENDREGION}
 
+    {$REGION 'action handlers'}
     procedure actDeleteNodeExecute(Sender: TObject);
     procedure actAddChildExecute(Sender: TObject);
     procedure actSetNodeTextExecute(Sender: TObject);
@@ -110,6 +139,7 @@ type
     procedure actFullCollapseExecute(Sender: TObject);
     procedure actMoveUpExecute(Sender: TObject);
     procedure actMoveDownExecute(Sender: TObject);
+    {$ENDREGION}
 
   private
     FTree            : TVirtualStringTree;
@@ -287,9 +317,7 @@ begin
   actMoveUp.Enabled   := CanMoveUp;
   actMoveDown.Enabled := CanMoveDown;
 end;
-{$ENDREGION}
 
-{$REGION 'public methods'}
 procedure TfrmVTNode.BuildTree;
 var
   LData   : TMyData;

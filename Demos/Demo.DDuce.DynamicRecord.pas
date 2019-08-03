@@ -33,7 +33,7 @@ uses
 
   Spring, // for using Nullable types.
 
-  DDuce.Components.GridView, DDuce.Components.Inspector,
+  DDuce.Components.GridView, DDuce.Components.ValueList,
 
   DDuce.DynamicRecord,
 
@@ -246,7 +246,7 @@ type
     pnlRightBottomHeader                      : TPanel;
     pnlTop                                    : TPanel;
     pnlTRecordRepresentations                 : TGridPanel;
-    spl1                                      : TSplitter;
+    splHorizontal: TSplitter;
     tsAssignments                             : TTabSheet;
     tsContactObject                           : TTabSheet;
     tsDataSet                                 : TTabSheet;
@@ -296,7 +296,7 @@ type
     FTestClass        : TTestClass;
     FTestTRecord      : DynamicRecord;
     FTestManagedClass : TManagedClass;
-    FInspector        : TInspector;
+    FValueList        : TValueList;
     FRecord           : DynamicRecord;
     FUpdate           : Boolean;
     FStrings          : TStrings;
@@ -307,29 +307,6 @@ type
     FRec2  : DynamicRecord;
     FIntf1 : IDynamicRecord;
     FIntf2 : IDynamicRecord;
-
-    procedure FInspectorGetCellText(
-      Sender    : TObject;
-      Cell      : TGridCell;
-      var Value : string
-    );
-    procedure FInspectorSetEditText(
-      Sender    : TObject;
-      Cell      : TGridCell;
-      var Value : string
-    );
-    procedure FInspectorGetEditStyle(
-      Sender    : TObject;
-      Cell      : TGridCell;
-      var Style : TGridEditStyle
-    );
-    procedure FInspectorGetEditText(
-      Sender    : TObject;
-      Cell      : TGridCell;
-      var Value : string
-    );
-
-    function CreateInspector(AParent : TWinControl): TInspector;
 
     procedure CreateContact;
     procedure CreateTestClass;
@@ -393,7 +370,14 @@ uses
 procedure TfrmDynamicRecords.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FInspector := CreateInspector(pnlRecordInspector);
+  FValueList                  := TValueList.Create(Self);
+  FValueList.Parent           := pnlRecordInspector;
+  FValueList.Align            := alClient;
+  FValueList.ShowHeader       := False;
+  FValueList.ShowHint         := True;
+  FValueList.MultiSelect      := False;
+  FValueList.BorderStyle      := bsNone;
+  FValueList.Editable         := False;
   FStrings   := TStringList.Create;
   CreateContact;
   CreateTestClass;
@@ -605,48 +589,6 @@ end;
 {$ENDREGION}
 
 {$REGION 'event handlers'}
-procedure TfrmDynamicRecords.FInspectorGetCellText(Sender: TObject;
-  Cell: TGridCell; var Value: string);
-begin
-  if Cell.Col = 0 then
-  begin
-    Value := FRecord.Items[Cell.Row].Name;
-  end
-  else
-  begin
-    Value := FRecord.ToString(FRecord.Items[Cell.Row].Name);
-  end;
-end;
-
-procedure TfrmDynamicRecords.FInspectorGetEditStyle(Sender: TObject;
-  Cell: TGridCell; var Style: TGridEditStyle);
-begin
-  Style := geSimple;
-end;
-
-procedure TfrmDynamicRecords.FInspectorGetEditText(Sender: TObject;
-  Cell: TGridCell; var Value: string);
-begin
-  if Cell.Col = 0 then
-  begin
-    Value := FRecord.Items[Cell.Row].Name;
-  end
-  else
-  begin
-    Value := FRecord.Items[Cell.Row].Value.ToString;
-  end;
-end;
-
-procedure TfrmDynamicRecords.FInspectorSetEditText(Sender: TObject;
-  Cell: TGridCell; var Value: String);
-begin
-  if Cell.Col = 1 then
-  begin
-    FRecord.Items[Cell.Row].Value := Value;
-    Changed;
-  end;
-end;
-
 procedure TfrmDynamicRecords.dscTestDataChange(Sender: TObject; Field: TField);
 begin
   if Field = nil then
@@ -783,18 +725,6 @@ begin
   FContact.Country   := 'USA';
   FContact.Number    := 5;
   FContact.BirthDate := Now - 20000;
-end;
-
-function TfrmDynamicRecords.CreateInspector(AParent : TWinControl): TInspector;
-begin
-  Result := TInspector.Create(Self);
-  Result.Parent         := AParent;
-  Result.Align          := alClient;
-  Result.AlwaysEdit     := False;
-  Result.OnGetCellText  := FInspectorGetCellText;
-  Result.OnGetEditStyle := FInspectorGetEditStyle;
-  Result.OnSetEditText  := FInspectorSetEditText;
-  Result.OnGetEditText  := FInspectorGetEditText;
 end;
 {$ENDREGION}
 
@@ -941,8 +871,9 @@ procedure TfrmDynamicRecords.UpdateControls;
 begin
   if FUpdate then
   begin
-    FInspector.Rows.Count := FRecord.Count;
-    FInspector.InvalidateGrid;
+//    FInspector.Rows.Count := FRecord.Count;
+    //FInspector.InvalidateGrid;
+    FValueList.Data        := FRecord;
     lblContact.Caption     := AsPropString(FContact);
     lblTestClass.Caption   := AsPropString(FTestClass);
     lblTestRecord.Caption  := AsFieldString(TValue.From(FTestRecord));
@@ -955,7 +886,7 @@ begin
       chkQuoteValues.Checked,
       edtQuoteChar.Text[1]
     );
-    mmoToString.Text := FRecord.ToString(chkAlignValues.Checked);
+    mmoToString.Text  := FRecord.ToString(chkAlignValues.Checked);
     mmoToStrings.Text := FStrings.Text;
 
     UpdateRefCountDisplay;

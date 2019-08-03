@@ -80,6 +80,9 @@ type
       var Key : Word;
       Shift   : TShiftState
     );
+    procedure edtFilterEnter(Sender: TObject);
+    procedure edtFilterExit(Sender: TObject);
+    procedure FormShow(Sender: TObject);
 
   private
     FVKPressed : Boolean;
@@ -204,6 +207,11 @@ end;
 {$ENDREGION}
 
 {$REGION 'event handlers'}
+procedure TfrmMainMenu.FormShow(Sender: TObject);
+begin
+  FVST.SetFocus;
+end;
+
 procedure TfrmMainMenu.FTVPDoubleClick(Sender: TObject);
 begin
   actExecute.Execute;
@@ -258,6 +266,16 @@ begin
   ApplyFilter;
   FVST.FocusedNode := FVST.GetFirstVisible;
   FVST.Selected[FVST.FocusedNode] := True;
+end;
+
+procedure TfrmMainMenu.edtFilterEnter(Sender: TObject);
+begin
+  edtFilter.Font.Style := [fsBold];
+end;
+
+procedure TfrmMainMenu.edtFilterExit(Sender: TObject);
+begin
+  edtFilter.Font.Style := [fsItalic];
 end;
 
 procedure TfrmMainMenu.edtFilterKeyDown(Sender: TObject; var Key: Word;
