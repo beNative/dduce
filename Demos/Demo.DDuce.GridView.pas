@@ -134,8 +134,8 @@ begin
   FGridView.OnGetCellText   := FGridViewGetCellText;
   FGridView.OnGetCheckState := FGridViewGetCheckState;
   FGridView.OnGetCellColors := FGridViewGetCellColors;
-  FGridView.AutoSizeCols;
-  FGridView.FitColsToClient := True;
+//  FGridView.AutoSizeCols;
+//  FGridView.FitColsToClient := True;
 end;
 {$ENDREGION}
 

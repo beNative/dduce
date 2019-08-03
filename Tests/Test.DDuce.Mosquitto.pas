@@ -23,15 +23,15 @@ interface
 uses
   Spring,
 
-  DUnitX.TestFramework,
+  DUnitX.TestFramework;
 
-  Mosquitto;
+  //Mosquitto;
 
 type
   [TestFixture]
   TestMosquitto = class
   private
-    FMosquitto : TMosquitto;
+    //FMosquitto : TMosquitto;
 
   protected
     [Setup]
@@ -47,12 +47,12 @@ implementation
 
 procedure TestMosquitto.SetUp;
 begin
-  FMosquitto := TMosquitto.Create;
+  //FMosquitto := TMosquitto.Create;
 end;
 
 procedure TestMosquitto.TearDown;
 begin
-  FMosquitto.Free;
+  //FMosquitto.Free;
 end;
 
 procedure TestMosquitto.Test_Connect_method;
