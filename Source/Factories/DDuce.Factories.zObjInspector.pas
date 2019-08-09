@@ -62,7 +62,7 @@ class function TzObjectInspectorFactory.Create(AOwner: TComponent;
   AParent: TWinControl; AObject: TObject; AValueManager: TzCustomValueManager;
   const AName: string): TzObjectInspector;
 var
-  OI: TzObjectInspector;
+  OI : TzObjectInspector;
 begin
   OI                  := TzObjectInspector.Create(AOwner, AValueManager);
   OI.Parent           := AParent;

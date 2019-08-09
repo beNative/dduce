@@ -85,6 +85,7 @@ implementation
 procedure TFormSettings.AfterConstruction;
 begin
   inherited AfterConstruction;
+  FOnChanged.UseFreeNotification := False;
   FWidth  := 800;
   FHeight := 600;
 end;

@@ -116,6 +116,7 @@ procedure TTextFormatSettings.AfterConstruction;
 begin
   inherited AfterConstruction;
   FFont := TFont.Create;
+  FOnChanged.UseFreeNotification := False;
 end;
 
 procedure TTextFormatSettings.BeforeDestruction;
@@ -172,7 +173,6 @@ begin
     DoChanged;
   end;
 end;
-
 
 function TTextFormatSettings.GetFontSize: Integer;
 begin

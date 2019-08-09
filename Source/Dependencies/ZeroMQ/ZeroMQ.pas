@@ -202,10 +202,10 @@ var
   LHWM: Integer;
 begin
   Result := TZMQPair.Create(Self, zmq_socket(FContext, Ord(Kind)));
-  LHWM := 200000;
+//  LHWM := 200000;
    // TS
-  zmq_setsockopt ((Result as TZMQPair).FSocket, ZMQ_SNDHWM, @LHWM, SizeOf(LHWM));
-  zmq_setsockopt ((Result as TZMQPair).FSocket, ZMQ_RCVHWM, @LHWM, SizeOf(LHWM));
+//  zmq_setsockopt ((Result as TZMQPair).FSocket, ZMQ_SNDHWM, @LHWM, SizeOf(LHWM));
+//zmq_setsockopt ((Result as TZMQPair).FSocket, ZMQ_RCVHWM, @LHWM, SizeOf(LHWM));
 
   FPairs.Add(Result);
 end;

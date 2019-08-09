@@ -128,24 +128,24 @@ type
     grpValues                 : TGroupBox;
     grpWatches                : TGroupBox;
     imlLogger                 : TImageList;
+    imltest                   : TImageList;
     lblCheckpointDescription  : TLabel;
     lblCounterValue           : TLabel;
     lblIPAddress              : TLabel;
     lblIPCaption              : TLabel;
+    lblLogLevel               : TLabel;
+    lblLogLevelValue          : TLabel;
     lblLogViewer              : TLabel;
     lblPosition               : TLabel;
     lblPositionValue          : TLabel;
     lblZeroMQPort             : TLabel;
     lblZeroMQPortCaption      : TLabel;
     ppmBind                   : TPopupMenu;
+    ppmtest                   : TPopupMenu;
     tmrSendCounter            : TTimer;
     tmrSendValue              : TTimer;
+    trbLogLevel               : TTrackBar;
     trbMain                   : TTrackBar;
-    trbLogLevel: TTrackBar;
-    lblLogLevel: TLabel;
-    lblLogLevelValue: TLabel;
-    ppmtest: TPopupMenu;
-    imltest: TImageList;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -159,6 +159,7 @@ type
     procedure tmrSendCounterTimer(Sender: TObject);
     procedure tmrSendValueTimer(Sender: TObject);
     procedure trbMainChange(Sender: TObject);
+    procedure trbLogLevelChange(Sender: TObject);
     {$ENDREGION}
 
     {$REGION 'action handlers'}
@@ -196,7 +197,6 @@ type
     procedure actZMQCloseSocketExecute(Sender: TObject);
     procedure actZMQBindToDefaultPortExecute(Sender: TObject);
     procedure actMQTTConnectExecute(Sender: TObject);
-    procedure trbLogLevelChange(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -412,7 +412,8 @@ var
 begin
   B := GetFormImage;
   try
-    Logger.SendBitmap('Bitmap', B);
+    // TODO: for an unknown reason this introduces lag in successive messages.
+    Logger.SendBitmap(B);
   finally
     B.Free;
   end;
@@ -432,7 +433,7 @@ procedure TfrmLogger.actSendDataSetExecute(Sender: TObject);
 var
   LDataSet : TDataSet;
 begin
-  LDataSet := TDemoFactories.CreateContactDataSet(nil, 100);
+  LDataSet := TDemoFactories.CreateContactDataSet(nil, 10000);
   try
    Logger.SendDataSet('DataSet', LDataSet);
   finally

@@ -432,6 +432,7 @@ var
   LC : ILogChannel;
 begin
   Result := Self;
+  LM := Default(TLogMessage);
   LM.MsgType   := Byte(AMsgType);
   LM.LogLevel  := LogLevel;
   LM.Reserved1 := 0;
@@ -836,6 +837,7 @@ begin
   LStream := TMemoryStream.Create;
   try
     AValue.SaveToStream(LStream);
+    LStream.Position := 0;
     InternalSendStream(lmtBitmap, AName, LStream);
   finally
     LStream.Free;
