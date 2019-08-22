@@ -357,16 +357,22 @@ type
     function GetCounter(const AName: string): Integer;
 
     function Enter(const AName: string): ILogger; overload;
+    function Enter(const AName: string; const AArgs: array of const): ILogger; overload;
     function Enter(ASender: TObject; const AName: string): ILogger; overload;
+    function Enter(ASender: TObject; const AName: string; const AArgs: array of const): ILogger; overload;
     function Leave(const AName: string): ILogger; overload;
+    function Leave(const AName: string; const AArgs: array of const): ILogger; overload;
     function Leave(ASender: TObject; const AName: string): ILogger; overload;
+    function Leave(ASender: TObject; const AName: string; const AArgs: array of const): ILogger; overload;
     { Track uses an interface variable to replace Enter/Leave calls in the
       scope of the method where it is called. A call to Track will create an
       instance and trigger the Enter method. When the interface variable goes
       out of scope (end of the routine or method) a call to the logger's Leave
       method is triggered. }
     function Track(const AName: string): IInterface; overload;
+    function Track(const AName: string; const AArgs: array of const): IInterface; overload;
     function Track(ASender: TObject; const AName: string): IInterface; overload;
+    function Track(ASender: TObject; const AName: string; const AArgs: array of const): IInterface; overload;
 
     function Action(AAction: TBasicAction): ILogger;
 

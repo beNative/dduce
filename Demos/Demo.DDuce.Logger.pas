@@ -410,10 +410,17 @@ procedure TfrmLogger.actSendBitmapExecute(Sender: TObject);
 var
   B : TBitmap;
 begin
-  B := GetFormImage;
+  //B := GetFormImage;
+  B := TBitmap.Create;
   try
+    B.Width := 1000;
+    B.Height := 1000;
+    B.Canvas.FillRect(Rect(0,0,1000,1000));
     // TODO: for an unknown reason this introduces lag in successive messages.
     Logger.SendBitmap(B);
+    B.ReleaseHandle;
+    B.Dormant;
+    B.FreeImage;
   finally
     B.Free;
   end;
@@ -715,6 +722,13 @@ begin
   Logger.Track(Self, 'TestProcedure1');
   Logger.SendRect('Form.ClientRect', ClientRect);
   Logger.Watch('Caption', Caption);
+  Logger.Enter('1');
+  Logger.AddCheckPoint('Checkpoint1');
+  Logger.Enter('2');
+  Logger.AddCheckPoint('Checkpoint2');
+  Logger.Leave('2');
+  Logger.AddCheckPoint('Checkpoint1');
+  Logger.Leave('1');
   Logger.SendTime('Now', Now);
   Logger.Info('Information message.');
   Logger.Error('Error message.');
@@ -736,10 +750,10 @@ end;
 
 procedure TfrmLogger.WatchZeroMQChannel;
 begin
-  Logger.Watch('FZeroMQChannel.Enabled', FZeroMQChannel.Enabled);
-  Logger.Watch('FZeroMQChannel.Connected', FZeroMQChannel.Connected);
-  Logger.Watch('FZeroMQChannel.Port', FZeroMQChannel.Port);
-  Logger.Watch('FZeroMQChannel.EndPoint', FZeroMQChannel.EndPoint);
+//  Logger.Watch('FZeroMQChannel.Enabled', FZeroMQChannel.Enabled);
+//  Logger.Watch('FZeroMQChannel.Connected', FZeroMQChannel.Connected);
+//  Logger.Watch('FZeroMQChannel.Port', FZeroMQChannel.Port);
+//  Logger.Watch('FZeroMQChannel.EndPoint', FZeroMQChannel.EndPoint);
 end;
 {$ENDREGION}
 

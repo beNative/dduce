@@ -16,7 +16,7 @@
 
 {$I DDuce.inc}
 
-unit DDuce.WinIPC.Server;
+unit DDuce.Winipc.Server;
 
 interface
 
@@ -28,17 +28,17 @@ uses
     from one or more TWinIPCClient instances. }
 
 type
-  TWinIPCMessageEvent = procedure(
+  TWinipcMessageEvent = procedure(
     ASender   : TObject;
     ASourceId : UInt32; // unique source id for the sending process
     AData     : TStream
   ) of object;
 
 type
-  TWinIPCServer = class
+  TWinipcServer = class
   private
     FMsgWindowClass     : TWndClass;
-    FOnMessage          : TWinIPCMessageEvent;
+    FOnMessage          : TWinipcMessageEvent;
     FMsgData            : TBytesStream;
     FActive             : Boolean;
     FServerHandle       : THandle;
@@ -69,7 +69,7 @@ type
     property MsgData : TBytesStream
       read GetMsgData;
 
-    property OnMessage : TWinIPCMessageEvent
+    property OnMessage : TWinipcMessageEvent
       read FOnMessage write FOnMessage;
 
     property MsgWindowClassName: string
@@ -101,13 +101,13 @@ resourcestring
 function MsgWndProc(AWindowHandle: THandle; AMessage, WParam, LParam: LongInt):
   LongInt; stdcall;
 var
-  WIS : TWinIPCServer;
+  WIS : TWinipcServer;
   Msg : TMsg;
 begin
   Result := 0;
   if AMessage = WM_COPYDATA then
   begin
-    WIS := TWinIPCServer(GetWindowLongPtr(AWindowHandle, GWL_USERDATA));
+    WIS := TWinipcServer(GetWindowLongPtr(AWindowHandle, GWL_USERDATA));
     if Assigned(WIS) then
     begin
       Msg.Message := AMessage;
@@ -123,14 +123,14 @@ end;
 {$ENDREGION}
 
 {$REGION 'construction and destruction'}
-constructor TWinIPCServer.Create(const AMsgWindowClassName, AWindowName: string);
+constructor TWinipcServer.Create(const AMsgWindowClassName, AWindowName: string);
 begin
   inherited Create;
   FMsgWindowClassName := AMsgWindowClassName;
   FWindowName         := AWindowName
 end;
 
-procedure TWinIPCServer.AfterConstruction;
+procedure TWinipcServer.AfterConstruction;
 begin
   inherited AfterConstruction;
   if FMsgWindowClassName.IsEmpty then
@@ -140,7 +140,7 @@ begin
   FMsgData := TBytesStream.Create;
 end;
 
-procedure TWinIPCServer.BeforeDestruction;
+procedure TWinipcServer.BeforeDestruction;
 begin
   FreeAndNil(FMsgData);
   inherited BeforeDestruction;
@@ -148,7 +148,7 @@ end;
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-procedure TWinIPCServer.SetActive(const AValue : Boolean);
+procedure TWinipcServer.SetActive(const AValue : Boolean);
 begin
   if Active <> AValue then
   begin
@@ -159,7 +159,7 @@ begin
   end;
 end;
 
-function TWinIPCServer.GetMsgData: TBytesStream;
+function TWinipcServer.GetMsgData: TBytesStream;
 begin
   Result := FMsgData;
 end;
@@ -167,7 +167,7 @@ end;
 {$ENDREGION}
 
 {$REGION 'event dispatch methods'}
-procedure TWinIPCServer.DoMessage(ASourceId: UInt32; AData: TStream);
+procedure TWinipcServer.DoMessage(ASourceId: UInt32; AData: TStream);
 begin
   if Assigned(FOnMessage) then
     FOnMessage(Self, ASourceId, AData);
@@ -175,7 +175,7 @@ end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-function TWinIPCServer.AllocateHWnd: THandle;
+function TWinipcServer.AllocateHWnd: THandle;
 var
   WC : TWndClass;
 begin
@@ -207,13 +207,13 @@ begin
     raise Exception.CreateFmt(SFailedToCreateWindow, [WindowName])
 end;
 
-procedure TWinIPCServer.StartServer;
+procedure TWinipcServer.StartServer;
 begin
   FServerHandle  := AllocateHWnd;
   FActive := True;
 end;
 
-procedure TWinIPCServer.StopServer;
+procedure TWinipcServer.StopServer;
 begin
   DestroyWindow(FServerHandle);
   FServerHandle := 0;
@@ -222,7 +222,7 @@ end;
 
 { This method gets called for each received message. }
 
-procedure TWinIPCServer.ReadMsgData(var AMsg: TMsg);
+procedure TWinipcServer.ReadMsgData(var AMsg: TMsg);
 var
   CDS              : PCopyDataStruct;
   LClientProcessId : Integer;

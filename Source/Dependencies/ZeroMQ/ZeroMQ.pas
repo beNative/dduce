@@ -63,7 +63,6 @@ type
     { Simple string message }
     function SendString(const Data: string; Flags: MessageFlags): Integer; overload;
     function SendString(const Data: string; DontWait: Boolean = False): Integer; overload;
-    function SendBytesStream(AStream: TBytesStream): Integer;
     function ReceiveString(DontWait: Boolean = False): string;
     { Multipart string message }
     function SendStrings(const Data: array of string; DontWait: Boolean = False): Integer;
@@ -150,8 +149,6 @@ type
     { Simple string message }
     function SendString(const Data: string; Flags: MessageFlags): Integer; overload;
     function SendString(const Data: string; DontWait: Boolean = False): Integer; overload;
-    { Send bytestream }
-    function SendBytesStream(AStream: TBytesStream): Integer;
     function ReceiveString(DontWait: Boolean = False): string;
     { Multipart string message }
     function SendStrings(const Data: array of string; DontWait: Boolean = False): Integer;
@@ -181,6 +178,8 @@ begin
   FPairs := TList<IZMQPair>.Create;
   FContext := zmq_ctx_new;
 
+  //zmq_ctx_set(FContext, ZMQ_BLOCKY, 0);
+
   // TS
   //zmq_ctx_set(FContext, ZMQ_IO_THREADS, 1);
 end;
@@ -198,10 +197,9 @@ begin
 end;
 
 function TZeroMQ.Start(Kind: ZMQSocket): IZMQPair;
-var
-  LHWM: Integer;
 begin
   Result := TZMQPair.Create(Self, zmq_socket(FContext, Ord(Kind)));
+
 //  LHWM := 200000;
    // TS
 //  zmq_setsockopt ((Result as TZMQPair).FSocket, ZMQ_SNDHWM, @LHWM, SizeOf(LHWM));
@@ -406,21 +404,6 @@ begin
     Result := L.ToArray;
   finally
     L.Free;
-  end;
-end;
-
-function TZMQPair.SendBytesStream(AStream: TBytesStream): Integer;
-var
-  msg: TZmqMsg;
-  len: NativeUInt;
-begin
-  len := NativeUInt(AStream.Size);
-  Result := zmq_msg_init_size(@msg, len);
-  if Result = 0 then
-  begin
-    Move(AStream.Memory, zmq_msg_data(@msg)^, len);
-    Result := SendMessage(msg, [DontWait]);
-    zmq_msg_close(@msg);
   end;
 end;
 

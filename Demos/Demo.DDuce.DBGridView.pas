@@ -907,13 +907,13 @@ begin
     OnColumnResizing     := grdDBGVColumnResizing;
     OnColumnResize       := grdDBGVColumnResize;
     OnDblClick           := grdDBGVDblClick;
-    //OnDataActiveChanged  := grdDBGVDataActiveChanged;
-    //OnDataChanged        := grdDBGVDataChanged;
+    OnDataActiveChanged  := grdDBGVDataActiveChanged;
+    OnDataChanged        := grdDBGVDataChanged;
     OnDataDeleteRecord   := grdDBGVDataDeleteRecord;
     OnDataEditError      := grdDBGVDataEditError;
     OnDataInsertRecord   := grdDBGVDataInsertRecord;
     OnDataUpdateField    := grdDBGVDataUpdateField;
-    //OnDataLayoutChanged  := grdDBGVDataLayoutChanged;
+    OnDataLayoutChanged  := grdDBGVDataLayoutChanged;
     OnDataUpdateError    := grdDBGVDataUpdateError;
     OnDragDrop           := grdDBGVDragDrop;
     OnDragOver           := grdDBGVDragOver;
@@ -968,8 +968,8 @@ begin
     OnResize             := grdDBGVResize;
     OnSetEditText        := grdDBGVSetEditText;
     OnStartDrag          := grdDBGVStartDrag;
-    //OnRowMultiSelect     := grdDBGVRowMultiSelect;
-    //OnClearMultiSelect   := grdDBGVClearMultiSelect;
+    OnRowMultiSelect     := grdDBGVRowMultiSelect;
+    OnClearMultiSelect   := grdDBGVClearMultiSelect;
   end;
 end;
 

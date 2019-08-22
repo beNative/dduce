@@ -266,13 +266,20 @@ type
     function ResetCounter(const AName: string): ILogger;
     function GetCounter(const AName: string): Integer;
 
-    { Callstack logging methods }
+    { Method tracing }
     function Enter(const AName: string): ILogger; overload;
+    function Enter(const AName: string; const AArgs: array of const): ILogger; overload;
     function Enter(ASender: TObject; const AName: string): ILogger; overload;
+    function Enter(ASender: TObject; const AName: string; const AArgs: array of const): ILogger; overload;
     function Leave(const AName: string): ILogger; overload;
+    function Leave(const AName: string; const AArgs: array of const): ILogger; overload;
     function Leave(ASender: TObject; const AName: string): ILogger; overload;
+    function Leave(ASender: TObject; const AName: string; const AArgs: array of const): ILogger; overload;
     function Track(const AName: string): IInterface; overload;
+    function Track(const AName: string; const AArgs: array of const): IInterface; overload;
     function Track(ASender: TObject; const AName: string): IInterface; overload;
+    function Track(ASender: TObject; const AName: string; const AArgs: array of const): IInterface; overload;
+
 
     function Action(AAction: TBasicAction): ILogger;
 
@@ -309,7 +316,7 @@ implementation
 
 uses
   System.TypInfo, System.UIConsts,
-  Vcl.Menus,
+  Vcl.Menus, Vcl.Dialogs,
   FireDAC.Comp.Client, FireDAC.Stan.Intf, FireDAC.Comp.DataSet,
   FireDAC.Stan.StorageBin,
 
@@ -1249,6 +1256,18 @@ begin
     InternalSend(lmtEnterMethod, AName);
 end;
 
+function TLogger.Enter(ASender: TObject; const AName: string;
+  const AArgs: array of const): ILogger;
+begin
+  Result := Enter(ASender, Format(AName, AArgs));
+end;
+
+function TLogger.Enter(const AName: string;
+  const AArgs: array of const): ILogger;
+begin
+  Result := Enter(nil, AName, AArgs);
+end;
+
 function TLogger.Leave(const AName: string): ILogger;
 begin
   Result := Leave(nil, AName);
@@ -1278,6 +1297,18 @@ begin
     InternalSend(lmtLeaveMethod, AName);
 end;
 
+function TLogger.Leave(ASender: TObject; const AName: string;
+  const AArgs: array of const): ILogger;
+begin
+  Result := Leave(ASender, Format(AName, AArgs));
+end;
+
+function TLogger.Leave(const AName: string;
+  const AArgs: array of const): ILogger;
+begin
+  Result := Leave(nil, AName, AArgs);
+end;
+
 function TLogger.Track(const AName: string): IInterface;
 begin
   Result := TTrack.Create(Self, nil, AName);
@@ -1286,6 +1317,18 @@ end;
 function TLogger.Track(ASender: TObject; const AName: string): IInterface;
 begin
   Result := TTrack.Create(Self, ASender, AName);
+end;
+
+function TLogger.Track(const AName: string;
+  const AArgs: array of const): IInterface;
+begin
+  Result := TTrack.Create(Self, nil, Format(AName, AArgs));
+end;
+
+function TLogger.Track(ASender: TObject; const AName: string;
+  const AArgs: array of const): IInterface;
+begin
+  Result := TTrack.Create(Self, ASender, Format(AName, AArgs));
 end;
 {$ENDREGION}
 

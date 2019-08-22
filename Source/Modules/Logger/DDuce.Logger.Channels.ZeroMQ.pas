@@ -103,7 +103,7 @@ begin
     FileExists(LIBZEROMQ),
     Format('ZeroMQ library (%s) is missing!', [LIBZEROMQ])
   );
-  FBuffer := TStringStream.Create;
+  FBuffer := TStringStream.Create('', TEncoding.ANSI);
   FZMQ    := TZeroMQ.Create;
   if FEndPoint = '' then
   begin
@@ -205,7 +205,9 @@ begin
   Result := True;
   if Connected then
   begin
+    FBuffer.Clear;
     Result := FPublisher.Close;
+    FPublisher := nil;
     FBound := False;
   end;
 end;
@@ -214,8 +216,8 @@ function TZeroMQChannel.Write(const AMsg: TLogMessage): Boolean;
 const
   ZeroBuf: Integer = 0;
 var
-  TextSize : Integer;
-  DataSize : Integer;
+  LTextSize : Integer;
+  LDataSize : Integer;
 begin
   if Enabled then
   begin
@@ -223,30 +225,28 @@ begin
       Connect;
     if Connected then
     begin
-      TextSize := Length(AMsg.Text);
+      LTextSize := Length(AMsg.Text);
       FBuffer.Seek(0, soFromBeginning);
       FBuffer.WriteBuffer(AMsg.MsgType);
       FBuffer.WriteBuffer(AMsg.LogLevel);
       FBuffer.WriteBuffer(AMsg.Reserved1);
       FBuffer.WriteBuffer(AMsg.Reserved2);
       FBuffer.WriteBuffer(AMsg.TimeStamp);
-      FBuffer.WriteBuffer(TextSize);
-      if TextSize > 0 then
+      FBuffer.WriteBuffer(LTextSize);
+      if LTextSize > 0 then
       begin
-        FBuffer.WriteBuffer(AMsg.Text[1], TextSize);
+        FBuffer.WriteBuffer(AMsg.Text[1], LTextSize);
       end;
       if AMsg.Data <> nil then
       begin
-        DataSize := AMsg.Data.Size;
-        FBuffer.WriteBuffer(DataSize);
+        LDataSize := AMsg.Data.Size;
+        FBuffer.WriteBuffer(LDataSize);
         AMsg.Data.Position := 0;
-        FBuffer.CopyFrom(AMsg.Data, DataSize);
+        FBuffer.CopyFrom(AMsg.Data, LDataSize);
       end
       else
         FBuffer.WriteBuffer(ZeroBuf);
       Result := FPublisher.SendString(FBuffer.DataString) > 0;
-      //sult := FPublisher.SendBytesStream(FBuffer) > 0;
-      // String(FBuffer.DataString) > 0;
     end
     else
     begin
