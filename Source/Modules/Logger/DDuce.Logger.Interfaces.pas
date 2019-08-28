@@ -64,7 +64,8 @@ type
     lmtNone        = 100  // can be used as a default value
   );
 
-  TLogMessageTypes = set of TLogMessageType;
+  TLogMessageTypes  = set of TLogMessageType;
+  TLogMessageLevels = set of Byte;
 
 const
   TracingMessages      : TLogMessageTypes =
@@ -478,15 +479,17 @@ begin
     lmtObject      : S := 'lmtObject';
     lmtInterface   : S := 'lmtInterface';
     lmtPersistent  : S := 'lmtPersistent';
+    lmtReserved    : S := 'lmtReserved';
     lmtWatch       : S := 'lmtWatch';
     lmtCounter     : S := 'lmtCounter';
     lmtColor       : S := 'lmtColor';
     lmtAlphaColor  : S := 'lmtAlphaColor';
     lmtScreenShot  : S := 'lmtScreenShot';
     lmtText        : S := 'lmtText';
-    lmtClear       : S := 'lmtClear';
     lmtDataSet     : S := 'lmtDataSet';
     lmtAction      : S := 'lmtAction';
+    lmtClear       : S := 'lmtClear';
+    lmtNone        : S := 'lmtNone';
   else
     S := '';
   end;
