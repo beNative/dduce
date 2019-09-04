@@ -40,7 +40,7 @@ type
   TZeroMQChannel = class(TCustomLogChannel, ILogChannel, IZeroMQChannel)
   private
     FBuffer    : TStringStream;
-    FZMQ       : IZeroMQ;
+    FZmq       : IZeroMQ;
     FPublisher : IZMQPair;
     FPort      : Integer;
     FEndPoint  : string;
@@ -69,11 +69,11 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
     constructor Create(
       const AEndPoint : string = '';
       AActive         : Boolean = True
     ); reintroduce; overload; virtual;
+    destructor Destroy; override;
 
     function Connect: Boolean; override;
     function Disconnect: Boolean; override;
@@ -104,7 +104,7 @@ begin
     Format('ZeroMQ library (%s) is missing!', [LIBZEROMQ])
   );
   FBuffer := TStringStream.Create('', TEncoding.ANSI);
-  FZMQ    := TZeroMQ.Create;
+  FZmq    := TZeroMQ.Create;
   if FEndPoint = '' then
   begin
     FEndPoint := DEFAULT_ENDPOINT;
@@ -115,7 +115,7 @@ begin
   end;
 end;
 
-procedure TZeroMQChannel.BeforeDestruction;
+destructor TZeroMQChannel.Destroy;
 begin
   if Assigned(FBuffer) then
   begin
@@ -125,14 +125,16 @@ begin
   begin
     Disconnect;
   end;
-  inherited BeforeDestruction;
+
+  inherited Destroy;
+  FZmq := nil;
 end;
 {$ENDREGION}
 
 {$REGION 'property access methods'}
 function TZeroMQChannel.GetEnabled: Boolean;
 begin
-  Result := Assigned(FZMQ) and inherited GetEnabled;
+  Result := Assigned(FZmq) and inherited GetEnabled;
 end;
 
 function TZeroMQChannel.GetConnected: Boolean;
@@ -179,7 +181,7 @@ var
 begin
   if Enabled then
   begin
-    FPublisher := FZMQ.Start(ZMQSocket.Publisher);
+    FPublisher := FZmq.Start(ZMQSocket.Publisher);
     FBound := FPublisher.Bind(FEndPoint) = 0; // 0 when successful
     // Physical connection is always a bit after Connected reports True.
     // https://stackoverflow.com/questions/11634830/zeromq-always-loses-the-first-message

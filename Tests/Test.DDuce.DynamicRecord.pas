@@ -162,8 +162,6 @@ uses
   System.Math, System.Types, System.Rtti,
   Vcl.Dialogs,
 
-  DDuce.Logger,
-
   Test.Utils;
 
 const
@@ -181,7 +179,6 @@ const
 {$REGION 'SetUp and TearDown methods'}
 procedure TestDynamicRecord.Setup;
 begin
-  //FRecord := DynamicRecord.CreateDynamicRecord;
   FRecord[TEST_INTEGER]        := 5;
   FRecord[TEST_STRING]         := 'Test';
   FRecord[TEST_STRING_INTEGER] := '5';

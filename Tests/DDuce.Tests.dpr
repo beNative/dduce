@@ -24,7 +24,7 @@ uses
   Vcl.Forms,
   DUnitX.Loggers.GUI.VCL,
   DUnitX.Windows.Console,
-  DUnitX.MemoryLeakMonitor.FastMM4,
+  //DUnitX.MemoryLeakMonitor.FastMM4,
   DUnitX.TestFramework,
   System.SysUtils,
   Test.Registration in 'Test.Registration.pas',
@@ -45,6 +45,6 @@ begin
   RunRegisteredTests;
   Exit;
   {$ENDIF}
-  DUnitX.Loggers.GUI.VCL.Run;
+  //DUnitX.Loggers.GUI.VCL.Run;
 end.
 

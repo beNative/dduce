@@ -74,7 +74,7 @@ type
     FChannels      : IList<ILogChannel>;
     FLogStack      : TStrings;
     FCheckList     : TStringList;
-    FCounterList   : TStringList;
+    FCounterList   : IDictionary<string, Int64>;
     FOnCustomData  : TCustomDataCallbackMethod;
     FLogLevel      : Byte;
 
@@ -280,7 +280,6 @@ type
     function Track(ASender: TObject; const AName: string): IInterface; overload;
     function Track(ASender: TObject; const AName: string; const AArgs: array of const): IInterface; overload;
 
-
     function Action(AAction: TBasicAction): ILogger;
 
     { Watches support }
@@ -367,16 +366,14 @@ begin
   FCheckList                 := TStringList.Create;
   FCheckList.CaseSensitive   := False;
   FCheckList.Sorted          := True;
-  FCounterList               := TStringList.Create;
-  FCounterList.CaseSensitive := False;
-  FCounterList.Sorted        := True;
+  FCounterList               := TCollections.CreateDictionary<string, Int64>;
 end;
 
 procedure TLogger.BeforeDestruction;
 begin
   FLogStack.Free;
   FCheckList.Free;
-  FCounterList.Free;
+  FCounterList := nil;
   inherited BeforeDestruction;
 end;
 {$ENDREGION}
@@ -1134,64 +1131,61 @@ end;
 {$REGION 'Counter'}
 function TLogger.IncCounter(const AName: string): ILogger;
 var
-  I : Integer;
-  J : Integer;
+  LValue : Int64;
 begin
-  I := FCounterList.IndexOf(AName);
-  if I <> -1 then
+  if not FCounterList.ContainsKey(AName) then
   begin
-    J := Integer(FCounterList.Objects[I]) + 1;
-    FCounterList.Objects[I] := TObject(J);
+    LValue := 1;
+    FCounterList.AddOrSetValue(AName, LValue);
   end
   else
   begin
-    FCounterList.AddObject(AName, TObject(1));
-    J := 1;
+    LValue := FCounterList[AName] + 1;
+    FCounterList[AName] := LValue;
   end;
-  Result := InternalSend(lmtCounter, AName + '=' + IntToStr(J));
+  Result := InternalSend(lmtCounter, AName + ' = ' + IntToStr(LValue));
 end;
 
 function TLogger.DecCounter(const AName: string): ILogger;
 var
-  I : Integer;
-  J : Integer;
+  LValue : Int64;
 begin
-  I := FCounterList.IndexOf(AName);
-  if I <> -1 then
+  if not FCounterList.ContainsKey(AName) then
   begin
-    J := Integer(FCounterList.Objects[I]) - 1;
-    FCounterList.Objects[I] := TObject(J);
+    LValue := -1;
+    FCounterList.AddOrSetValue(AName, LValue);
   end
   else
   begin
-    FCounterList.AddObject(AName, TObject(-1));
-    J := -1;
+    LValue := FCounterList[AName] - 1;
+    FCounterList[AName] := LValue;
   end;
-  Result := InternalSend(lmtCounter, AName + '=' + IntToStr(J));
+  Result := InternalSend(lmtCounter, AName + ' = ' + IntToStr(LValue));
 end;
 
 function TLogger.ResetCounter(const AName: string): ILogger;
-var
-  I : Integer;
 begin
-  Result := Self;
-  I := FCounterList.IndexOf(AName);
-  if I <> -1 then
+  if not FCounterList.ContainsKey(AName) then
   begin
-    FCounterList.Objects[I] := TObject(0);
-    InternalSend(lmtCounter, FCounterList[I] + '= 0');
+    FCounterList.Add(AName, 0);
+  end
+  else
+  begin
+    FCounterList[AName] := 0;
   end;
+  Result := InternalSend(lmtCounter, AName + ' = 0');
 end;
 
 function TLogger.GetCounter(const AName: string): Integer;
-var
-  I : Integer;
 begin
-  I := FCounterList.IndexOf(AName);
-  if I <> -1 then
-    Result := Integer(FCounterList.Objects[I])
-  else
+  if not FCounterList.ContainsKey(AName) then
+  begin
     Result := 0;
+  end
+  else
+  begin
+    Result := FCounterList[AName];
+  end;
 end;
 {$ENDREGION}
 

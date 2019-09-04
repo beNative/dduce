@@ -279,7 +279,7 @@ uses
   Spring,
 
   DDuce.Reflect, DDuce.Utils,
-  DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.ZeroMQ,
+  DDuce.Logger.Channels.WinIPC,
 
   Test.Utils, Test.Resources;
 
@@ -287,8 +287,7 @@ uses
 procedure TestLogger.AfterConstruction;
 begin
   inherited AfterConstruction;
-  //Logger.Channels.Add(TWinIPCChannel.Create);
-  Logger.Channels.Add(TZeroMQChannel.Create);
+  Logger.Channels.Add(TWinIPCChannel.Create);
 end;
 {$ENDREGION}
 
@@ -1279,6 +1278,7 @@ begin
         .Send('TestInteger', 2)
         .Info('Info message')
         .Warn('Warning message');
+  Assert.Pass;
 end;
 
 procedure TestLogger.Test_Warn_method;
@@ -1296,12 +1296,14 @@ var
 begin
   S := 'TestCounter';
   Logger.IncCounter(S);
+  Assert.IsTrue(Logger.GetCounter(S) = 1, Logger.GetCounter('TestCounter').ToString);
   Logger.Enter('Increasing counter');
   for I := 1 to 100 do
   begin
     Logger.IncCounter(S);
   end;
   Logger.Leave('Increasing counter');
+  Assert.IsTrue(Logger.GetCounter(S) = 101, Logger.GetCounter('TestCounter').ToString);
   Logger.Enter('Decreasing counter');
   for I := 1 to 50 do
   begin
