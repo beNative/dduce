@@ -41,6 +41,7 @@ type
 
   public
     procedure AfterConstruction; override;
+    destructor Destroy; override;
 
     [Test]
     procedure Test_Send_method_for_AnsiString_argument;
@@ -279,7 +280,7 @@ uses
   Spring,
 
   DDuce.Reflect, DDuce.Utils,
-  DDuce.Logger.Channels.WinIPC,
+  DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.ZeroMQ,
 
   Test.Utils, Test.Resources;
 
@@ -287,7 +288,12 @@ uses
 procedure TestLogger.AfterConstruction;
 begin
   inherited AfterConstruction;
-  Logger.Channels.Add(TWinIPCChannel.Create);
+  //Logger.Channels.Add(TWinIPCChannel.Create);
+  Logger.Channels.Add(TZeroMQChannel.Create('tcp://*:5555'));
+  Sleep(1000);
+  Logger.Clear;
+  Logger.Clear;
+  Logger.Clear;
 end;
 {$ENDREGION}
 
@@ -1317,6 +1323,12 @@ end;
 {$ENDREGION}
 
 {$REGION 'Checkpoint test methods'}
+destructor TestLogger.Destroy;
+begin
+  Logger.Channels.First.Disconnect;
+  inherited Destroy;
+end;
+
 procedure TestLogger.Test_Checkpoint_methods;
 begin
   Logger.AddCheckPoint('TestCheckPoint 1');
@@ -1349,7 +1361,6 @@ end;
 
 procedure TestLogger.Test_OutputDebugString_method_for_valuelist;
 begin
-//
   Assert.Pass;
 end;
 {$ENDREGION}

@@ -9,7 +9,6 @@ program DDuce.Tests;
 {$R *.dres}
 
 uses
-  //FastMM4,
   {$IFDEF LEAKCHECK}
   LeakCheck,
   LeakCheck.Setup.Trace,
@@ -24,7 +23,6 @@ uses
   Vcl.Forms,
   DUnitX.Loggers.GUI.VCL,
   DUnitX.Windows.Console,
-  //DUnitX.MemoryLeakMonitor.FastMM4,
   DUnitX.TestFramework,
   System.SysUtils,
   Test.Registration in 'Test.Registration.pas',
@@ -39,12 +37,12 @@ uses
 
 begin
   Application.Initialize;
-  ReportMemoryLeaksOnShutdown := False;
+//  ReportMemoryLeaksOnShutdown := False;
   RegisterTests;
-  {$IFDEF TESTINSIGHT}
-  RunRegisteredTests;
-  Exit;
-  {$ENDIF}
-  //DUnitX.Loggers.GUI.VCL.Run;
+  DUnitX.Loggers.GUI.VCL.Run;
+//  {$IFDEF TESTINSIGHT}
+//  RunRegisteredTests;
+//  Exit;
+//  {$ENDIF}
 end.
 

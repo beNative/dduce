@@ -14,7 +14,7 @@
   limitations under the License.
 }
 
-{$DEFINE TESTINSIGHT}
+{.$DEFINE TESTINSIGHT}
 //NOTE : Memory leak tracking does not work very well at the moment, as it's
 //reporting leaks when logging information during tests (calls to .Status etc).
 {.$DEFINE LEAKCHECK}  // enables LeakCheck support
