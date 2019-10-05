@@ -63,9 +63,10 @@ type
     lmtClear       = 99,
     lmtNone        = 100  // can be used as a default value
   );
-
   TLogMessageTypes  = set of TLogMessageType;
-  TLogMessageLevels = set of Byte;
+
+  TLogMessageLevel  = 0..31;
+  TLogMessageLevels = set of TLogMessageLevel;
 
 const
   TracingMessages      : TLogMessageTypes =
@@ -83,26 +84,32 @@ const
      [lmtClear];
   DiagnosticMessages   : TLogMessageTypes =
     [lmtCallStack, lmtHeapInfo];
+  AllMessages          : TLogMessageTypes = [
+    lmtEnterMethod, lmtLeaveMethod,
+    lmtInfo, lmtError, lmtWarning, lmtConditional,
+    lmtValue, lmtStrings, lmtComponent, lmtException, lmtBitmap, lmtObject,
+    lmtInterface, lmtPersistent, lmtColor, lmtAlphaColor, lmtScreenShot,
+    lmtText, lmtDataSet, lmtAction, lmtMemory,
+    lmtCounter, lmtCheckpoint,
+    lmtClear,
+    lmtCallStack, lmtHeapInfo
+  ];
+  AllLevels : TLogMessageLevels =
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+     21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
 
 type
   ILogger = interface;
 
   TLogMessage = packed record
     MsgType   : Byte; // TLogMessageType
-    LogLevel  : Byte;
+    LogLevel  : Byte; // TLogMessageLevel
     Reserved1 : Byte;
     Reserved2 : Byte;
     TimeStamp : TDateTime;
     Text      : UTF8String;
     Data      : TStream;
   end;
-
-  (*
-    ProcessId                  source process Id (WinIPC, WinODS)
-    ThreadId
-    IpAddress                  source IP address (ZeroMQ)
-
-  *)
 
   TCustomDataCallbackMethod = function(
     ASender     : ILogger;

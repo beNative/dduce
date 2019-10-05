@@ -123,11 +123,11 @@ begin
   end;
   if Assigned(FPublisher) then
   begin
-    Disconnect;
+    FPublisher.Close;
+    FPublisher := nil;
   end;
-
-  inherited Destroy;
   FZmq := nil;
+  inherited Destroy;
 end;
 {$ENDREGION}
 
