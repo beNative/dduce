@@ -72,14 +72,14 @@ const
   TracingMessages      : TLogMessageTypes =
     [lmtEnterMethod, lmtLeaveMethod];
   NotificationMessages : TLogMessageTypes =
-    [lmtInfo, lmtError, lmtWarning, lmtConditional];
+    [lmtInfo, lmtError, lmtWarning, lmtConditional, lmtCheckpoint];
   DataValueMessages    : TLogMessageTypes = [
     lmtValue, lmtStrings, lmtComponent, lmtException, lmtBitmap, lmtObject,
     lmtInterface, lmtPersistent, lmtColor, lmtAlphaColor, lmtScreenShot,
     lmtText, lmtDataSet, lmtAction, lmtMemory
   ];
   StateMessages        : TLogMessageTypes =
-    [lmtCounter, lmtCheckpoint];
+    [lmtCounter, lmtWatch];
   CommandMessages      : TLogMessageTypes =
      [lmtClear];
   DiagnosticMessages   : TLogMessageTypes =
@@ -89,10 +89,14 @@ const
     lmtInfo, lmtError, lmtWarning, lmtConditional,
     lmtValue, lmtStrings, lmtComponent, lmtException, lmtBitmap, lmtObject,
     lmtInterface, lmtPersistent, lmtColor, lmtAlphaColor, lmtScreenShot,
+    lmtCustomData,
     lmtText, lmtDataSet, lmtAction, lmtMemory,
     lmtCounter, lmtCheckpoint,
+    lmtWatch,
+    lmtReserved,
     lmtClear,
-    lmtCallStack, lmtHeapInfo
+    lmtCallStack, lmtHeapInfo,
+    lmtNone
   ];
   AllLevels : TLogMessageLevels =
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,

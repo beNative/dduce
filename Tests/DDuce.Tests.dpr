@@ -37,12 +37,11 @@ uses
 
 begin
   Application.Initialize;
-//  ReportMemoryLeaksOnShutdown := False;
   RegisterTests;
+  {$IFDEF TESTINSIGHT}
+  RunRegisteredTests;
+  Exit;
+  {$ENDIF}
   DUnitX.Loggers.GUI.VCL.Run;
-//  {$IFDEF TESTINSIGHT}
-//  RunRegisteredTests;
-//  Exit;
-//  {$ENDIF}
 end.
 
