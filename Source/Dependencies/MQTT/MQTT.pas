@@ -83,9 +83,9 @@ type
       AMessageId : Integer
     );
     procedure GotPub(
-      Sender   : TObject;
-      ATopic   : UTF8String;
-      APayload : UTF8String
+      Sender         : TObject;
+      const ATopic   : UTF8String;
+      const APayload : UTF8String
     );
     procedure GotPubAck(
       Sender     : TObject;
@@ -123,15 +123,26 @@ type
       ARetain  : Boolean;
       AQoS     : Integer
     ): Boolean; overload;
+    function Publish(
+      const ATopic   : string;
+      const APayload : string;
+      ARetain        : Boolean;
+      AQoS           : Integer
+    ): Boolean; overload;
 
     function Subscribe(
-      ATopic      : UTF8String;
-      ARequestQoS : Integer
+      const ATopic : UTF8String;
+      ARequestQoS  : Integer
+    ): Integer; overload;
+    function Subscribe(
+      const ATopic : string;
+      ARequestQoS  : Integer
     ): Integer; overload;
     function Subscribe(ATopics: TDictionary<UTF8String, Integer>): Integer;
       overload;
 
-    function Unsubscribe(ATopic: UTF8String): Integer; overload;
+    function Unsubscribe(const ATopic: UTF8String): Integer; overload;
+    function Unsubscribe(const ATopic: string): Integer; overload;
     function Unsubscribe(ATopics: TStringList): Integer; overload;
 
     function PingReq: Boolean;
@@ -233,12 +244,12 @@ begin
   begin
     LMsg := ConnectMessage;
     try
-      LMsg.Payload.Contents.Add(Self.FClientId);
+      LMsg.Payload.Contents.Add(FClientId);
       (LMsg.VariableHeader as TMQTTConnectVarHeader).WillFlag := Ord(HasWill);
       if HasWill then
       begin
-        LMsg.Payload.Contents.Add(Self.FWillTopic);
-        LMsg.Payload.Contents.Add(Self.FWillMsg);
+        LMsg.Payload.Contents.Add(FWillTopic);
+        LMsg.Payload.Contents.Add(FWillMsg);
       end;
 
       if (Length(FUsername) > 1) and (Length(FPassword) > 1) then
@@ -453,6 +464,7 @@ function TMQTT.Publish(ATopic, APayload: UTF8String; ARetain: Boolean;
 var
   LMsg : TMQTTMessage;
 begin
+  Result := False;
   if (AQoS > -1) and (AQoS <= 3) then
   begin
     if Connected then
@@ -480,6 +492,12 @@ begin
       ('QoS level can only be equal to or between 0 and 3.');
 end;
 
+function TMQTT.Publish(const ATopic, APayload: string; ARetain: Boolean;
+  AQoS: Integer): Boolean;
+begin
+  Result := Publish(UTF8String(ATopic), UTF8String(APayload), ARetain, AQoS);
+end;
+
 function TMQTT.PublishMessage: TMQTTMessage;
 begin
   Result                         := TMQTTMessage.Create;
@@ -500,7 +518,7 @@ begin
     OnPubRel(Self, AMessageId);
 end;
 
-function TMQTT.Subscribe(ATopic: UTF8String; ARequestQoS: Integer): Integer;
+function TMQTT.Subscribe(const ATopic: UTF8String; ARequestQoS: Integer): Integer;
 var
   LTopics : TDictionary<UTF8String, Integer>;
 begin
@@ -521,7 +539,7 @@ function TMQTT.Subscribe(ATopics: TDictionary<UTF8String, Integer>): Integer;
 var
   LMsg   : TMQTTMessage;
   LMsgId : Integer;
-  LTopic : UTF8String;
+  LTopic : string;
   LData  : TBytes;
 begin
   Result := -1;
@@ -547,6 +565,11 @@ begin
   end;
 end;
 
+function TMQTT.Subscribe(const ATopic: string; ARequestQoS: Integer): Integer;
+begin
+  Result := Subscribe(UTF8String(ATopic), ARequestQoS);
+end;
+
 function TMQTT.SubscribeMessage: TMQTTMessage;
 begin
   Result                         := TMQTTMessage.Create;
@@ -556,7 +579,7 @@ begin
   Result.Payload                 := TMQTTPayload.Create;
 end;
 
-function TMQTT.Unsubscribe(ATopic: UTF8String): Integer;
+function TMQTT.Unsubscribe(const ATopic: UTF8String): Integer;
 var
   LTopics : TStringList;
 begin
@@ -591,6 +614,11 @@ begin
 
     LMsg.Free;
   end;
+end;
+
+function TMQTT.Unsubscribe(const ATopic: string): Integer;
+begin
+  Result := Unsubscribe(UTF8String(ATopic));
 end;
 
 function TMQTT.UnsubscribeMessage: TMQTTMessage;
@@ -655,7 +683,7 @@ begin
   end;
 end;
 
-procedure TMQTT.GotPub(Sender: TObject; ATopic, APayload: UTF8String);
+procedure TMQTT.GotPub(Sender: TObject; const ATopic, APayload: UTF8String);
 begin
   if Assigned(FPublishEvent) then
     OnPublish(Self, ATopic, APayload);

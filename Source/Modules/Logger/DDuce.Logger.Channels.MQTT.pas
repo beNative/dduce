@@ -29,9 +29,7 @@ interface
 uses
   System.Classes, System.SysUtils,
 
-  Spring,
-
-  MQTT,
+  Spring, MQTT,
 
   DDuce.Logger.Interfaces, DDuce.Logger.Channels.Base;
 
@@ -83,7 +81,6 @@ uses
 procedure TMQTTChannel.AfterConstruction;
 begin
   inherited AfterConstruction;
-  //FBuffer := TStringStream.Create;
   if Enabled then
   begin
     Connect;

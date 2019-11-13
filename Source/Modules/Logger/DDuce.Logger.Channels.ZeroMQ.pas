@@ -181,6 +181,7 @@ var
 begin
   if Enabled then
   begin
+    FBuffer.Clear;
     FPublisher := FZmq.Start(ZMQSocket.Publisher);
     FBound := FPublisher.Bind(FEndPoint) = 0; // 0 when successful
     // Physical connection is always a bit after Connected reports True.
@@ -227,6 +228,8 @@ begin
       Connect;
     if Connected then
     begin
+      FBuffer.Clear;
+      FBuffer.Size := 0;
       LTextSize := Length(AMsg.Text);
       FBuffer.Seek(0, soFromBeginning);
       FBuffer.WriteBuffer(AMsg.MsgType);

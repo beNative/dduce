@@ -410,13 +410,8 @@ procedure TfrmLogger.actSendBitmapExecute(Sender: TObject);
 var
   B : TBitmap;
 begin
-  //B := GetFormImage;
-  B := TBitmap.Create;
+  B := GetFormImage;
   try
-    B.Width := 1000;
-    B.Height := 1000;
-    B.Canvas.FillRect(Rect(0,0,1000,1000));
-    // TODO: for an unknown reason this introduces lag in successive messages.
     Logger.SendBitmap(B);
     B.ReleaseHandle;
     B.Dormant;
