@@ -728,6 +728,7 @@ begin
   Logger.Info('Information message.');
   Logger.Error('Error message.');
   Logger.Warn('Warning message.');
+  Logger.SendScreenShot('Screenshot', Self);
   Logger.SendPersistent('Font', Font); // sends published property values
   Logger.SendObject('Font', Font);     // sends fields and property values
   TestProcedure2;
