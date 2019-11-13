@@ -227,6 +227,7 @@ begin
       Connect;
     if Connected then
     begin
+      FBuffer.Clear;
       LTextSize := Length(AMsg.Text);
       FBuffer.Seek(0, soFromBeginning);
       FBuffer.WriteBuffer(AMsg.MsgType);

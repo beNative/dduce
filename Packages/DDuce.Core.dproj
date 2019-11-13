@@ -172,9 +172,6 @@
         <DCCReference Include="..\Source\Dependencies\MQTT\MQTT.pas"/>
         <DCCReference Include="..\Source\Dependencies\MQTT\MQTTHeaders.pas"/>
         <DCCReference Include="..\Source\Dependencies\MQTT\MQTTReadThread.pas"/>
-        <DCCReference Include="..\Source\Dependencies\Mosquitto\Mosquitto.API.pas"/>
-        <DCCReference Include="..\Source\Dependencies\Mosquitto\Mosquitto.pas"/>
-        <DCCReference Include="..\Source\Dependencies\Mosquitto\ctypes.pas"/>
         <None Include="LibSuffix.inc"/>
         <None Include="jedi.inc"/>
         <BuildConfiguration Include="Release">

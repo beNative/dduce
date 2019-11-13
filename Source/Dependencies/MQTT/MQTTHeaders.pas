@@ -110,9 +110,9 @@ type
   ) of object;
 
   TPublishEvent = procedure(
-    Sender   : TObject;
-    ATopic   : UTF8String;
-    APayload : UTF8String
+    Sender         : TObject;
+    const ATopic   : UTF8String;
+    const APayload : UTF8String
   ) of object;
 
   TPingRespEvent = procedure(Sender: TObject) of object;
@@ -572,10 +572,10 @@ begin
     AddField(Byte(Self.PROTOCOL_VER));
     AddField(FConnectFlags.Flags);
     AddField(TMQTTUtilities.IntToMSBLSB(FKeepAlive));
+    Result := True;
   except
     Result := False;
   end;
-  Result := True;
 end;
 
 procedure TMQTTConnectVarHeader.SetupDefaultValues;
@@ -710,7 +710,6 @@ function TMQTTMessage.ToBytes: TBytes;
 var
   LRemainingLength      : Integer;
   LBytesRemainingLength : TBytes;
-  I                     : Integer;
 begin
   try
     LRemainingLength := 0;
