@@ -326,8 +326,8 @@ type
     function SendPointer(AValue: Pointer): ILogger; overload;
     function SendException(const AName: string; AValue: Exception): ILogger; overload;
     function SendException(AValue: Exception): ILogger; overload;
-    function SendBitmap(const AName: string; AValue: TBitmap): ILogger; overload;
-    function SendBitmap(AValue: TBitmap): ILogger; overload;
+    function SendBitmap(const AName: string; AValue: TBitmap; ASendCompressed: Boolean = True): ILogger; overload;
+    function SendBitmap(AValue: TBitmap; ASendCompressed: Boolean = True): ILogger; overload;
     function SendScreenShot(const AName: string; AForm: TCustomForm): ILogger; overload;
     function SendScreenShot(AForm: TCustomForm): ILogger; overload;
     function SendDataSet(const AName: string; AValue: TDataSet): ILogger; overload;

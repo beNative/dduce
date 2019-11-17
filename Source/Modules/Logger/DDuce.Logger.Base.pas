@@ -180,8 +180,10 @@ type
     function SendPointer(AValue: Pointer): ILogger; overload;
     function SendException(const AName: string; AValue: Exception): ILogger; overload;
     function SendException(AValue: Exception): ILogger; overload;
-    function SendBitmap(const AName: string; AValue: TBitmap): ILogger; overload;
-    function SendBitmap(AValue: TBitmap): ILogger; overload;
+    function SendBitmap(const AName: string; AValue: TBitmap; ASendCompressed: Boolean = True): ILogger; overload;
+    function SendBitmap(AValue: TBitmap; ASendCompressed: Boolean = True): ILogger; overload;
+    function SendGraphic(const AName: string; AValue: TGraphic): ILogger; overload;
+    function SendGraphic(AValue: TGraphic): ILogger; overload;
     function SendScreenShot(const AName: string; AForm: TCustomForm): ILogger; overload;
     function SendScreenShot(AForm: TCustomForm): ILogger; overload;
     function SendDataSet(const AName: string; AValue: TDataSet): ILogger; overload;
@@ -315,7 +317,7 @@ implementation
 
 uses
   System.TypInfo, System.UIConsts,
-  Vcl.Menus, Vcl.Dialogs,
+  Vcl.Menus, Vcl.Dialogs, Vcl.Imaging.pngimage, Vcl.Imaging.jpeg,
   FireDAC.Comp.Client, FireDAC.Stan.Intf, FireDAC.Comp.DataSet,
   FireDAC.Stan.StorageBin,
 
@@ -696,18 +698,29 @@ end;
 
 function TLogger.SendScreenShot(const AName: string; AForm: TCustomForm): ILogger;
 var
-  LBitmap : TBitmap;
-  LStream : TMemoryStream;
+  LBitmap  : TBitmap;
+  LStream  : TMemoryStream;
+  LPicture : TPicture;
+  LPng     : TPngImage;
+  LJpg     : TJPEGImage;
 begin
+  LPng := TPngImage.Create;
+  LPng.CompressionLevel := 9;
   Result := Self;
   LStream := TMemoryStream.Create;
   try
    LBitmap := AForm.GetFormImage;
    try
-     LBitmap.SaveToStream(LStream);
+     LPng.Assign(LBitmap);
+    // LJpg.Assign(LBitmap);
+     //LBitmap.SaveToStream(LStream);
+     LPng.SaveToStream(LStream);
+     //LJpg.SaveToStream(LStream);
      InternalSendStream(lmtScreenShot, AName, LStream); 
    finally
      LBitmap.Free;
+     //LJpg.Free;
+     LPng.Free;
    end;
  finally
     LStream.Free;
@@ -761,6 +774,25 @@ end;
 function TLogger.SendException(AValue: Exception): ILogger;
 begin
   Result := SendException('', AValue);
+end;
+
+function TLogger.SendGraphic(const AName: string; AValue: TGraphic): ILogger;
+var
+  LStream  : TMemoryStream;
+begin
+  Result := Self;
+  LStream := TMemoryStream.Create;
+  try
+    AValue.SaveToStream(LStream);
+    InternalSendStream(lmtBitmap, AName, LStream);
+  finally
+    LStream.Free;
+  end;
+end;
+
+function TLogger.SendGraphic(AValue: TGraphic): ILogger;
+begin
+  Result := SendGraphic('', AValue);
 end;
 
 function TLogger.SendDataSet(const AName: string; AValue: TDataSet): ILogger;
@@ -833,19 +865,24 @@ begin
   Result := Send(AName, TValue.FromVariant(AValue));
 end;
 
-function TLogger.SendBitmap(const AName: string; AValue: TBitmap): ILogger;
+function TLogger.SendBitmap(const AName: string; AValue: TBitmap;
+  ASendCompressed: Boolean): ILogger;
 var
-  LStream : TMemoryStream;
+  LPngImage : TPngImage;
 begin
-  Result := Self;
-  LStream := TMemoryStream.Create;
-  try
-    AValue.SaveToStream(LStream);
-    LStream.Position := 0;
-    InternalSendStream(lmtBitmap, AName, LStream);
-  finally
-    LStream.Free;
-  end;
+  LPngImage := nil;
+  if ASendCompressed then
+  begin
+    LPngImage := TPngImage.Create;
+    try
+      LPngImage.Assign(AValue);
+      Result := SendGraphic(LPngImage);
+    finally
+      LPngImage.Free;
+    end;
+  end
+  else
+    Result := SendGraphic(AValue);
 end;
 
 function TLogger.SendPersistent(const AName: string; AValue: TPersistent): ILogger;
@@ -889,9 +926,9 @@ begin
   Result := SendObject('', AValue);
 end;
 
-function TLogger.SendBitmap(AValue: TBitmap): ILogger;
+function TLogger.SendBitmap(AValue: TBitmap; ASendCompressed: Boolean): ILogger;
 begin
-  Result := SendBitmap('', AValue);
+  Result := SendBitmap('', AValue, ASendCompressed);
 end;
 
 { SendIf sends a message if it meets a given condition. AText is intended to be

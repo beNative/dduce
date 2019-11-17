@@ -156,6 +156,7 @@
         <DCCReference Include="FireDAC.dcp"/>
         <DCCReference Include="FireDACCommonDriver.dcp"/>
         <DCCReference Include="FireDACCommon.dcp"/>
+        <DCCReference Include="vclimg.dcp"/>
         <DCCReference Include="..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas">
             <Form>frmComponentInspector</Form>
         </DCCReference>

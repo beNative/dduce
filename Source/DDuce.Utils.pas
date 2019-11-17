@@ -1076,7 +1076,6 @@ const
 
   function BytesToKB(ASize: Int64): Int64;
   begin
-    //This is how Win Explorer calculates it
     Result := ASize div 1024;
     if (ASize mod 1024 <> 0) then Result := Result + 1;
   end;

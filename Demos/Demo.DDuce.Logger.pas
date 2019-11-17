@@ -410,6 +410,7 @@ procedure TfrmLogger.actSendBitmapExecute(Sender: TObject);
 var
   B : TBitmap;
 begin
+//  Logger.SendScreenShot('SS', Self);
   B := GetFormImage;
   try
     Logger.SendBitmap(B);
