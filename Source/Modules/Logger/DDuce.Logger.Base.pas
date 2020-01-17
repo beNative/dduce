@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2019 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2020 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -406,7 +406,6 @@ end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
-
 {$REGION 'Internal methods'}
 function TLogger.StringValueOf(const AValue: TValue): string;
 var
@@ -700,9 +699,7 @@ function TLogger.SendScreenShot(const AName: string; AForm: TCustomForm): ILogge
 var
   LBitmap  : TBitmap;
   LStream  : TMemoryStream;
-  LPicture : TPicture;
   LPng     : TPngImage;
-  LJpg     : TJPEGImage;
 begin
   LPng := TPngImage.Create;
   LPng.CompressionLevel := 9;
@@ -712,14 +709,10 @@ begin
    LBitmap := AForm.GetFormImage;
    try
      LPng.Assign(LBitmap);
-    // LJpg.Assign(LBitmap);
-     //LBitmap.SaveToStream(LStream);
      LPng.SaveToStream(LStream);
-     //LJpg.SaveToStream(LStream);
      InternalSendStream(lmtScreenShot, AName, LStream); 
    finally
      LBitmap.Free;
-     //LJpg.Free;
      LPng.Free;
    end;
  finally
