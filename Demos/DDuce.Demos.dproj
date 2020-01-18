@@ -164,9 +164,6 @@
         <DCCReference Include="Demo.DDuce.Reflect.pas">
             <Form>frmReflect</Form>
         </DCCReference>
-        <DCCReference Include="Demo.DDuce.ScopedReference.pas">
-            <Form>frmScopedReferences</Form>
-        </DCCReference>
         <DCCReference Include="Demo.DDuce.XMLTree.pas">
             <Form>frmXMLTree</Form>
         </DCCReference>

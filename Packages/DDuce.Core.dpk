@@ -73,7 +73,6 @@ contains
   DDuce.DynamicRecord in '..\Source\DDuce.DynamicRecord.pas',
   DDuce.RandomData in '..\Source\DDuce.RandomData.pas',
   DDuce.Reflect in '..\Source\DDuce.Reflect.pas',
-  DDuce.ScopedReference in '..\Source\DDuce.ScopedReference.pas',
   DDuce.Utils in '..\Source\DDuce.Utils.pas',
   DDuce.Utils.WinApi in '..\Source\DDuce.Utils.WinApi.pas',
   DDuce.WinIPC.Client in '..\Source\DDuce.WinIPC.Client.pas',
