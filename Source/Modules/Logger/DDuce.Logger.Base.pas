@@ -77,12 +77,15 @@ type
     FCounterList   : IDictionary<string, Int64>;
     FOnCustomData  : TCustomDataCallbackMethod;
     FLogLevel      : Byte;
+    FEnabled       : Boolean;
 
     {$REGION 'property access methods'}
     procedure SetMaxStackCount(const AValue: Integer);
     function GetChannels: TChannelList;
     function GetLogLevel: Byte;
     procedure SetLogLevel(const Value: Byte);
+    function GetEnabled: Boolean;
+    procedure SetEnabled(const Value: Boolean);
     {$ENDREGION}
 
   protected
@@ -301,6 +304,9 @@ type
     property LogStack: TStrings
       read FLogStack;
 
+    property Enabled: Boolean
+      read GetEnabled write SetEnabled;
+
     { not used yet }
     property MaxStackCount: Integer
       read FMaxStackCount write SetMaxStackCount default DEFAULT_MAXSTACKCOUNT;
@@ -368,6 +374,7 @@ begin
   FCheckList                 := TStringList.Create;
   FCheckList.CaseSensitive   := False;
   FCheckList.Sorted          := True;
+  FEnabled                   := True;
   FCounterList               := TCollections.CreateDictionary<string, Int64>;
 end;
 
@@ -384,6 +391,16 @@ end;
 function TLogger.GetChannels: TChannelList;
 begin
   Result := FChannels;
+end;
+
+function TLogger.GetEnabled: Boolean;
+begin
+  Result := FEnabled;
+end;
+
+procedure TLogger.SetEnabled(const Value: Boolean);
+begin
+  FEnabled := Value;
 end;
 
 function TLogger.GetLogLevel: Byte;
@@ -437,17 +454,20 @@ var
   LC : ILogChannel;
 begin
   Result := Self;
-  LM := Default(TLogMessage);
-  LM.MsgType   := Byte(AMsgType);
-  LM.LogLevel  := LogLevel;
-  LM.Reserved1 := 0;
-  LM.Reserved2 := 0;
-  LM.TimeStamp := Now;
-  LM.Text      := UTF8String(AText);
-  LM.Data      := AStream;
-  for LC in Channels do
-    if LC.Enabled then
-      LC.Write(LM);
+  if Enabled then
+  begin
+    LM := Default(TLogMessage);
+    LM.MsgType   := Byte(AMsgType);
+    LM.LogLevel  := LogLevel;
+    LM.Reserved1 := 0;
+    LM.Reserved2 := 0;
+    LM.TimeStamp := Now;
+    LM.Text      := UTF8String(AText);
+    LM.Data      := AStream;
+    for LC in Channels do
+      if LC.Enabled then
+        LC.Write(LM);
+  end;
 end;
 
 function TLogger.InternalSend(AMsgType: TLogMessageType; const AText: string)

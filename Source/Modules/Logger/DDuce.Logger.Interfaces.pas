@@ -232,6 +232,8 @@ type
     function GetChannels: TChannelList;
     function GetLogLevel: Byte;
     procedure SetLogLevel(const Value: Byte);
+    function GetEnabled: Boolean;
+    procedure SetEnabled(const Value: Boolean);
     {$ENDREGION}
 
     function Send(const AName: string; const AArgs: array of const): ILogger; overload;
@@ -421,6 +423,9 @@ type
     ): ILogger;
     { Sends out a dedicated message to clear the logviewer contents. }
     function Clear: ILogger;
+
+    property Enabled: Boolean
+      read GetEnabled write SetEnabled;
 
     property LogLevel: Byte
       read GetLogLevel write SetLogLevel;
