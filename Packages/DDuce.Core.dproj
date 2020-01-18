@@ -163,7 +163,6 @@
         <DCCReference Include="..\Source\DDuce.DynamicRecord.pas"/>
         <DCCReference Include="..\Source\DDuce.RandomData.pas"/>
         <DCCReference Include="..\Source\DDuce.Reflect.pas"/>
-        <DCCReference Include="..\Source\DDuce.ScopedReference.pas"/>
         <DCCReference Include="..\Source\DDuce.Utils.pas"/>
         <DCCReference Include="..\Source\DDuce.Utils.WinApi.pas"/>
         <DCCReference Include="..\Source\DDuce.WinIPC.Client.pas"/>

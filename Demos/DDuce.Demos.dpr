@@ -1,8 +1,7 @@
 program DDuce.Demos;
 
 uses
-  //LeakCheck,
-  DDuce.CustomImageDrawHook,
+//  DDuce.CustomImageDrawHook,
   System.SysUtils,
   Vcl.Forms,
   Vcl.Themes,
@@ -15,7 +14,6 @@ uses
   Demo.DDuce.DynamicRecord in 'Demo.DDuce.DynamicRecord.pas' {frmDynamicRecords},
   Demo.DDuce.PropertyInspector in 'Demo.DDuce.PropertyInspector.pas' {frmPropertyInspector},
   Demo.DDuce.Reflect in 'Demo.DDuce.Reflect.pas' {frmReflect},
-  Demo.DDuce.ScopedReference in 'Demo.DDuce.ScopedReference.pas' {frmScopedReferences},
   Demo.DDuce.XMLTree in 'Demo.DDuce.XMLTree.pas' {frmXMLTree},
   Demo.Factories in 'Demo.Factories.pas',
   Demo.MainForm in 'Demo.MainForm.pas' {frmMainMenu},

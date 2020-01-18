@@ -26,7 +26,6 @@ uses
   DDuce.Logger.Channels.WinIPC,
   DDuce.Logger,
 
-  Demo.DDuce.ScopedReference,
   Demo.DDuce.XMLTree,
   Demo.DDuce.PropertyInspector,
   Demo.DDuce.Reflect,
@@ -48,20 +47,18 @@ uses
 procedure RegisterDemos;
 begin
   DemoManager.Register(TfrmLogger, 'Logger');
-  Exit;
   DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
-  //DemoManager.Register(TfrmInspector, 'Inspector');
-  //DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
   DemoManager.Register(TfrmValueListDemo, 'ValueList');
   DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
-  //DemoManager.Register(TfrmReflect, 'Reflect');
   DemoManager.Register(TfrmEditor, 'Editor');
   DemoManager.Register(TfrmVirtualTrees, 'VirtualTrees factories');
   DemoManager.Register(TfrmVTNode, 'VTNode');
-  //DemoManager.Register(TfrmScopedReferences, 'Scoped references');
   DemoManager.Register(TfrmEditList, 'EditList');
   DemoManager.Register(TfrmDialogs, 'Dialogs');
+  //DemoManager.Register(TfrmReflect, 'Reflect');
+  //DemoManager.Register(TfrmInspector, 'Inspector');
+  //DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
   // not working yet
   //DemoManager.Register(TfrmXMLTree, 'XMLTree');
 end;

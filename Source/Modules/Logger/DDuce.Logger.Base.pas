@@ -883,7 +883,6 @@ function TLogger.SendBitmap(const AName: string; AValue: TBitmap;
 var
   LPngImage : TPngImage;
 begin
-  LPngImage := nil;
   if ASendCompressed then
   begin
     LPngImage := TPngImage.Create;

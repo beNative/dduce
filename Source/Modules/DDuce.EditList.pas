@@ -14,6 +14,8 @@
   limitations under the License.
 }
 
+{$I DDuce.inc}
+
 unit DDuce.EditList;
 
 { A user configurable list of key-value pairs. }

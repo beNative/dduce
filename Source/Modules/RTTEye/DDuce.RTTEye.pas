@@ -39,12 +39,12 @@ type
     btnLoad     : TButton;
     btnSearch   : TButton;
     EditSearch  : TEdit;
+    imlMain     : TImageList;
     lvRtti      : TListView;
     pnlBottom   : TPanel;
     pnlMain     : TPanel;
     splVertical : TSplitter;
     tvRtti      : TTreeView;
-    imlMain: TImageList;
     {$ENDREGION}
 
     procedure tvRttiCustomDrawItem(
