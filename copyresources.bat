@@ -58,4 +58,3 @@ set dest=.\Lib\Win64\Debug
 copy %source% %dest%
 set dest=.\Lib\Win64\Release
 copy %source% %dest%
-pause
