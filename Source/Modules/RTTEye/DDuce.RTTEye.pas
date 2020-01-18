@@ -24,7 +24,7 @@ uses
   Winapi.Windows, Winapi.Messages,
   System.Actions, System.Classes, System.Rtti,
   Vcl.ActnList, Vcl.StdCtrls, Vcl.Controls, Vcl.ComCtrls, Vcl.ExtCtrls,
-  Vcl.Forms;
+  Vcl.Forms, System.ImageList, Vcl.ImgList;
 
 type
   TfrmRTTEye = class(TForm)
@@ -44,6 +44,7 @@ type
     pnlMain     : TPanel;
     splVertical : TSplitter;
     tvRtti      : TTreeView;
+    imlMain: TImageList;
     {$ENDREGION}
 
     procedure tvRttiCustomDrawItem(
