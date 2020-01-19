@@ -53,6 +53,15 @@ procedure RunApplication(
 
 procedure OpenLink(const ALink: string);
 
+function StartImpersonate(
+  const ADomainName : string;
+  const AUserName   : string;
+  const APassword   : string;
+  out AHUserToken   : THandle
+): Boolean;
+
+procedure StopImpersonate(var AHUserToken: THandle);
+
 implementation
 
 uses
@@ -64,6 +73,7 @@ uses
 
   DDuce.Utils;
 
+{$REGION 'non-interfaced routines'}
 type
   TSystemTimesRec = record
     KernelTime : TFileTIme;
@@ -85,6 +95,137 @@ type
 
 var
   LatestProcessCpuUsageCache : TProcessCpuUsageList;
+
+function GetRunningProcessIDs: TArray<TProcessId>;
+var
+  SnapProcHandle: THandle;
+  ProcEntry: TProcessEntry32;
+  NextProc: Boolean;
+begin
+  SnapProcHandle := CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+  if SnapProcHandle <> INVALID_HANDLE_VALUE then
+  begin
+    try
+      ProcEntry.dwSize := SizeOf(ProcEntry);
+      NextProc := Process32First(SnapProcHandle, ProcEntry);
+      while NextProc do
+      begin
+        SetLength(Result, Length(Result) + 1);
+        Result[Length(Result) - 1] := ProcEntry.th32ProcessID;
+        NextProc := Process32Next(SnapProcHandle, ProcEntry);
+      end;
+    finally
+      CloseHandle(SnapProcHandle);
+    end;
+    TArray.Sort<TProcessId>(Result);
+  end;
+end;
+
+function GetProcessCpuUsagePct(AProcessId: TProcessId): Double;
+  function SubtractFileTime(FileTime1: TFileTIme; FileTime2: TFileTIme): TFileTIme;
+  begin
+    Result := TFileTIme(Int64(FileTime1) - Int64(FileTime2));
+  end;
+
+var
+  LProcessCpuUsage          : TProcessCpuUsage;
+  LProcessHandle            : THandle;
+  LSystemTimes              : TSystemTimesRec;
+  LSystemDiffTimes          : TSystemTimesRec;
+  LProcessDiffTimes         : TProcessTimesRec;
+  LProcessTimes             : TProcessTimesRec;
+
+  LSystemTimesIdleTime      : TFileTime;
+  LProcessTimesCreationTime : TFileTime;
+  LProcessTimesExitTime     : TFileTime;
+begin
+  Result := 0.0;
+
+  LatestProcessCpuUsageCache.TryGetValue(AProcessId, LProcessCpuUsage);
+  if LProcessCpuUsage = nil then
+  begin
+    LProcessCpuUsage := TProcessCpuUsage.Create;
+    LatestProcessCpuUsageCache.Add(AProcessId, LProcessCpuUsage);
+  end;
+  // method from:
+  // http://www.philosophicalgeek.com/2009/01/03/determine-cpu-usage-of-current-process-c-and-c/
+  LProcessHandle := OpenProcess(
+    PROCESS_QUERY_INFORMATION or PROCESS_VM_READ, False, AProcessId
+  );
+  if LProcessHandle <> 0 then
+  begin
+    try
+      if GetSystemTimes(LSystemTimesIdleTime, LSystemTimes.KernelTime,
+        LSystemTimes.UserTime) then
+      begin
+        LSystemDiffTimes.KernelTime := SubtractFileTime(
+          LSystemTimes.KernelTime,
+          LProcessCpuUsage.LastSystemTimes.KernelTime
+        );
+        LSystemDiffTimes.UserTime := SubtractFileTime(
+          LSystemTimes.UserTime,
+          LProcessCpuUsage.LastSystemTimes.UserTime
+        );
+        LProcessCpuUsage.LastSystemTimes := LSystemTimes;
+        if GetProcessTimes(
+          LProcessHandle,
+          LProcessTimesCreationTime,
+          LProcessTimesExitTime,
+          LProcessTimes.KernelTime,
+          LProcessTimes.UserTime
+        ) then
+        begin
+          LProcessDiffTimes.KernelTime := SubtractFileTime(
+              LProcessTimes.KernelTime,
+              LProcessCpuUsage.LastProcessTimes.KernelTime
+            );
+          LProcessDiffTimes.UserTime := SubtractFileTime(
+            LProcessTimes.UserTime,
+            LProcessCpuUsage.LastProcessTimes.UserTime
+          );
+          LProcessCpuUsage.LastProcessTimes := LProcessTimes;
+          if (Int64(LSystemDiffTimes.KernelTime) +
+              Int64(LSystemDiffTimes.UserTime)) > 0 then
+            Result := (Int64(LProcessDiffTimes.KernelTime) +
+                Int64(LProcessDiffTimes.UserTime)) /
+              (Int64(LSystemDiffTimes.KernelTime) +
+                Int64(LSystemDiffTimes.UserTime)) * 100;
+        end;
+      end;
+    finally
+      CloseHandle(LProcessHandle);
+    end;
+  end;
+end;
+
+procedure DeleteNonExistingProcessIDsFromCache(const RunningProcessIds: TArray<TProcessId>);
+var
+  LKeyIdx : Integer;
+  LKeys   : TArray<TProcessId>;
+  I       : Integer;
+begin
+  LKeys := LatestProcessCpuUsageCache.Keys.ToArray;
+  for I := Low(LKeys) to High(LKeys) do
+  begin
+    if not TArray.BinarySearch<TProcessId>(RunningProcessIds, LKeys[I], LKeyIdx) then
+      LatestProcessCpuUsageCache.Remove(LKeys[I]);
+  end;
+end;
+
+function GetTotalCpuUsagePct(): Double;
+var
+  LProcessId         : TProcessId;
+  LRunningProcessIds : TArray<TProcessId>;
+begin
+  Result := 0.0;
+  LRunningProcessIds := GetRunningProcessIDs;
+
+  DeleteNonExistingProcessIDsFromCache(LRunningProcessIds);
+
+  for LProcessId in LRunningProcessIds do
+    Result := Result + GetProcessCpuUsagePct(LProcessId);
+end;
+{$ENDREGION}
 
 {$REGION 'interfaced routines'}
 function GetExenameForProcessUsingPsAPI(AProcessId: TProcessId): string;
@@ -382,114 +523,49 @@ procedure OpenLink(const ALink: string);
 begin
   ShellExecute(Application.MainForm.Handle, 'open', PWideChar(ALink), nil, nil, SW_SHOW);
 end;
+
+{ Lets the calling thread impersonate the security context of a logged-on user.
+  The user is represented by a token handle (AUserToken). }
+
+function StartImpersonate(const ADomainName: string; const AUserName: string;
+  const APassword: string; out AHUserToken: THandle): Boolean;
+const
+  LOGON32_LOGON_NEW_CREDENTIALS = 9;
+var
+  LHUserToken : THandle;
+  LLoggedOn   : Boolean;
+begin
+  Result := False;
+  LLoggedOn := LogonUser(
+    PChar(AUserName),
+    PChar(ADomainName),
+    PChar(APassword),
+    LOGON32_LOGON_NEW_CREDENTIALS,
+    LOGON32_PROVIDER_DEFAULT,
+    LHUserToken
+  );
+  if LLoggedOn then
+  begin
+    if ImpersonateLoggedOnUser(LHUserToken) then
+    begin
+      AHUserToken := LHUserToken;
+      Result := True;
+    end
+  end
+end;
+
+{ The impersonation started with StartImpersonate lasts until the thread exits
+  or until it calls StopImpersonate. }
+
+procedure StopImpersonate(var AHUserToken: THandle);
+begin
+  if AHUserToken <> INVALID_HANDLE_VALUE then
+  begin
+    RevertToSelf;
+    AHUserToken := INVALID_HANDLE_VALUE;
+  end;
+end;
 {$ENDREGION}
-
-function GetRunningProcessIDs: TArray<TProcessId>;
-var
-  SnapProcHandle: THandle;
-  ProcEntry: TProcessEntry32;
-  NextProc: Boolean;
-begin
-  SnapProcHandle := CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-  if SnapProcHandle <> INVALID_HANDLE_VALUE then
-  begin
-    try
-      ProcEntry.dwSize := SizeOf(ProcEntry);
-      NextProc := Process32First(SnapProcHandle, ProcEntry);
-      while NextProc do
-      begin
-        SetLength(Result, Length(Result) + 1);
-        Result[Length(Result) - 1] := ProcEntry.th32ProcessID;
-        NextProc := Process32Next(SnapProcHandle, ProcEntry);
-      end;
-    finally
-      CloseHandle(SnapProcHandle);
-    end;
-    TArray.Sort<TProcessId>(Result);
-  end;
-end;
-
-function GetProcessCpuUsagePct(AProcessId: TProcessId): Double;
-  function SubtractFileTime(FileTime1: TFileTIme; FileTime2: TFileTIme): TFileTIme;
-  begin
-    Result := TFileTIme(Int64(FileTime1) - Int64(FileTime2));
-  end;
-
-var
-  LProcessCpuUsage          : TProcessCpuUsage;
-  LProcessHandle            : THandle;
-  LSystemTimes              : TSystemTimesRec;
-  LSystemDiffTimes          : TSystemTimesRec;
-  LProcessDiffTimes         : TProcessTimesRec;
-  LProcessTimes             : TProcessTimesRec;
-
-  LSystemTimesIdleTime      : TFileTime;
-  LProcessTimesCreationTime : TFileTime;
-  LProcessTimesExitTime     : TFileTime;
-begin
-  Result := 0.0;
-
-  LatestProcessCpuUsageCache.TryGetValue(AProcessId, LProcessCpuUsage);
-  if LProcessCpuUsage = nil then
-  begin
-    LProcessCpuUsage := TProcessCpuUsage.Create;
-    LatestProcessCpuUsageCache.Add(AProcessId, LProcessCpuUsage);
-  end;
-  // method from:
-  // http://www.philosophicalgeek.com/2009/01/03/determine-cpu-usage-of-current-process-c-and-c/
-  LProcessHandle := OpenProcess(PROCESS_QUERY_INFORMATION or PROCESS_VM_READ, False, AProcessId);
-  if LProcessHandle <> 0 then
-  begin
-    try
-      if GetSystemTimes(LSystemTimesIdleTime, LSystemTimes.KernelTime, LSystemTimes.UserTime) then
-      begin
-        LSystemDiffTimes.KernelTime := SubtractFileTime(LSystemTimes.KernelTime, LProcessCpuUsage.LastSystemTimes.KernelTime);
-        LSystemDiffTimes.UserTime := SubtractFileTime(LSystemTimes.UserTime, LProcessCpuUsage.LastSystemTimes.UserTime);
-        LProcessCpuUsage.LastSystemTimes := LSystemTimes;
-        if GetProcessTimes(LProcessHandle, LProcessTimesCreationTime, LProcessTimesExitTime, LProcessTimes.KernelTime, LProcessTimes.UserTime) then
-        begin
-          LProcessDiffTimes.KernelTime := SubtractFileTime(LProcessTimes.KernelTime, LProcessCpuUsage.LastProcessTimes.KernelTime);
-          LProcessDiffTimes.UserTime := SubtractFileTime(LProcessTimes.UserTime, LProcessCpuUsage.LastProcessTimes.UserTime);
-          LProcessCpuUsage.LastProcessTimes := LProcessTimes;
-          if (Int64(LSystemDiffTimes.KernelTime) + Int64(LSystemDiffTimes.UserTime)) > 0 then
-            Result := (Int64(LProcessDiffTimes.KernelTime) + Int64(LProcessDiffTimes.UserTime)) / (Int64(LSystemDiffTimes.KernelTime) + Int64(LSystemDiffTimes.UserTime)) * 100;
-        end;
-      end;
-    finally
-      CloseHandle(LProcessHandle);
-    end;
-  end;
-end;
-
-procedure DeleteNonExistingProcessIDsFromCache(const RunningProcessIds: TArray<TProcessId>);
-var
-  FoundKeyIdx: Integer;
-  Keys: TArray<TProcessId>;
-  n: Integer;
-begin
-  Keys := LatestProcessCpuUsageCache.Keys.ToArray;
-  for n := Low(Keys) to High(Keys) do
-  begin
-    if not TArray.BinarySearch<TProcessId>(RunningProcessIds, Keys[n], FoundKeyIdx) then
-      LatestProcessCpuUsageCache.Remove(Keys[n]);
-  end;
-end;
-
-function GetTotalCpuUsagePct(): Double;
-var
-  LProcessId         : TProcessId;
-  LRunningProcessIds : TArray<TProcessId>;
-begin
-  Result := 0.0;
-  LRunningProcessIds := GetRunningProcessIDs;
-
-  DeleteNonExistingProcessIDsFromCache(LRunningProcessIds);
-
-  for LProcessId in LRunningProcessIds do
-    Result := Result + GetProcessCpuUsagePct(LProcessId);
-end;
-
-
 
 {
 uses
