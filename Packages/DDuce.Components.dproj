@@ -97,8 +97,8 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <VerInfo_Build>321</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.321;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>322</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.322;ProductVersion=1.0.0.0</VerInfo_Keys>
         <Debugger_HostApplication>D:\development\delphi\libraries\dduce\Demos\Bin\Win32\DDuce.Demos.exe</Debugger_HostApplication>
         <Debugger_CWD>D:\development\delphi\libraries\dduce\Demos\Bin\Win32</Debugger_CWD>
         <DCC_MapFile>3</DCC_MapFile>
