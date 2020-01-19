@@ -62,14 +62,35 @@ function StartImpersonate(
 
 procedure StopImpersonate(var AHUserToken: THandle);
 
+function StartService(
+  const AHostName    : string;
+  const AServiceName : string
+): Boolean;
+
+function StopService(
+  const AHostName     : string;
+  const AServiceName : string
+): Boolean;
+
+function CreateService(
+  const AHostName           : string;
+  const AServiceName        : string;
+  const AServiceDisplayText : string;
+  const AServiceFileName    : string
+): Boolean;
+
+function DeleteService(
+  const AHostName    : string;
+  const AServiceName : string
+): Boolean;
+
 implementation
 
 uses
-  Winapi.PsAPI, Winapi.TlHelp32, Winapi.WinSock, Winapi.WinInet,
+  Winapi.PsAPI, Winapi.TlHelp32, Winapi.WinSock, Winapi.WinInet, Winapi.WinSvc,
   Winapi.ShellAPI, Winapi.Messages,
+  System.SysConst, System.DateUtils, System.Generics.Collections,
   Vcl.Forms,
-
-  System.DateUtils, System.Generics.Collections,
 
   DDuce.Utils;
 
@@ -563,6 +584,272 @@ begin
   begin
     RevertToSelf;
     AHUserToken := INVALID_HANDLE_VALUE;
+  end;
+end;
+
+function CreateService(const AHostName: string; const AServiceName: string;
+  const AServiceDisplayText: string; const AServiceFileName: string): Boolean;
+var
+  LSCManager : SC_HANDLE;
+  LService   : SC_HANDLE;
+begin
+  Result := False;
+  // Get a handle to the SCM database.
+  LSCManager := OpenSCManager(
+    PChar(AHostName), nil, SC_MANAGER_CONNECT or SC_MANAGER_CREATE_SERVICE
+  );
+  if LSCManager <> 0 then
+  begin
+    try
+      LService := OpenService(
+        LSCManager, PChar(AServiceName), SERVICE_QUERY_STATUS
+      );
+      if LService = 0 then
+      begin
+        LService := Winapi.WinSvc.CreateService(
+          LSCManager,                // SCM database
+          PChar(AServiceName),         //
+          PChar(AServiceDisplayText),  // service name to display
+            SERVICE_ALL_ACCESS,        // desired access
+            SERVICE_WIN32_OWN_PROCESS, // service type
+            SERVICE_DEMAND_START,      // start type
+            SERVICE_ERROR_NORMAL,      // error control type
+          PChar(AServiceFileName),     // path to service's binary
+            nil,                       // no load ordering group
+            nil,                       // no tag identifier
+            nil,                       // no dependencies
+            nil,                       // LocalSystem account
+            nil                        // no password
+        );
+      end;
+
+      if LService > 0 then
+      begin
+        CloseServiceHandle(LService);
+        Result := True;
+      end;
+    finally
+      CloseServiceHandle(LSCManager);
+    end;
+  end;
+end;
+
+function DeleteService(const AHostName: string; const AServiceName: string): Boolean;
+var
+  LSCManager : SC_HANDLE;
+  LService   : SC_HANDLE;
+begin
+  Result := False;
+  // Get a handle to the SCM database.
+  LSCManager :=
+    OpenSCManager(PChar(AHostName), nil, SC_MANAGER_CONNECT or _DELETE);
+  if LSCManager <> 0 then
+  begin
+    try
+      LService := OpenService(LSCManager, PChar(AServiceName), _DELETE);
+      if LService > 0 then
+      begin
+        try
+          if Winapi.WinSvc.DeleteService(LService) then
+          begin
+            Result := True;
+          end
+        finally
+          CloseServiceHandle(LService);
+        end;
+      end;
+    finally
+      CloseServiceHandle(LSCManager);
+    end;
+  end
+end;
+
+function StartService(const AHostName: string;
+  const AServiceName: string): Boolean;
+var
+  LHSCManager : SC_HANDLE;
+  LHService   : SC_HANDLE;
+  LStatus     : TServiceStatus;
+  LWaitTime   : Cardinal;
+begin
+  // Get a handle to the SCM database.
+  LHSCManager := OpenSCManager(PChar(AHostName), nil, SC_MANAGER_CONNECT);
+  try
+    // Get a handle to the service.
+    LHService := OpenService(LHSCManager, PChar(AServiceName), SERVICE_START or SERVICE_QUERY_STATUS);
+    try
+      // Check the status in case the service is not stopped.
+      if not QueryServiceStatus(LHService, LStatus) then
+      begin
+        LStatus.dwCurrentState := SERVICE_STOPPED;
+      end;
+
+      // Check if the service is already running
+      if (LStatus.dwCurrentState <> SERVICE_STOP_PENDING) and (LStatus.dwCurrentState <> SERVICE_STOPPED) then
+      begin
+        Result := True;
+        Exit;
+      end;
+
+      // Wait for the service to stop before attempting to start it.
+      while LStatus.dwCurrentState = SERVICE_STOP_PENDING do
+      begin
+        // Do not wait longer than the wait hint. A good interval is
+        // one-tenth of the wait hint but not less than 1 second
+        // and not more than 10 seconds.
+
+        LWaitTime := LStatus.dwWaitHint div 10;
+
+        if (LWaitTime < 1000) then
+          LWaitTime := 1000
+        else if (LWaitTime > 10000) then
+          LWaitTime := 10000;
+
+        Sleep(LWaitTime);
+
+        // Check the status until the service is no longer stop pending.
+
+        if not QueryServiceStatus(LHService, LStatus) then
+        begin
+          Break;
+        end;
+      end;
+
+      // Attempt to start the service.
+
+      // NOTE: if you use a version of Delphi that incorrectly declares
+      // StartService() with a 'var' lpServiceArgVectors parameter, you
+      // can't pass a nil value directly in the 3rd parameter, you would
+      // have to pass it indirectly as either PPChar(nil)^ or PChar(nil^)
+      Winapi.WinSvc.StartService(LHService, 0, PChar(nil^));
+
+      // Check the status until the service is no longer start pending.
+      if not QueryServiceStatus(LHService, LStatus) then
+      begin
+        LStatus.dwCurrentState := SERVICE_STOPPED;
+      end;
+
+      while LStatus.dwCurrentState = SERVICE_START_PENDING do
+      begin
+        // Do not wait longer than the wait hint. A good interval is
+        // one-tenth the wait hint, but no less than 1 second and no
+        // more than 10 seconds.
+
+        LWaitTime := LStatus.dwWaitHint div 10;
+
+        if LWaitTime < 1000 then
+          LWaitTime := 1000
+        else if LWaitTime > 10000 then
+          LWaitTime := 10000;
+
+        Sleep(LWaitTime);
+
+        // Check the status again.
+        if not QueryServiceStatus(LHService, LStatus) then
+        begin
+          LStatus.dwCurrentState := SERVICE_STOPPED;
+          Break;
+        end;
+      end;
+
+      // Determine whether the service is running.
+      Result := LStatus.dwCurrentState = SERVICE_RUNNING;
+    finally
+      CloseServiceHandle(LHService);
+    end;
+  finally
+    CloseServiceHandle(LHSCManager);
+  end;
+end;
+
+function StopService(const AHostName: string; const AServiceName: string)
+  : Boolean;
+var
+  LSCManager : SC_HANDLE;
+  LService   : SC_HANDLE;
+  LStatus    : TServiceStatus;
+  LWaitTime  : Cardinal;
+begin
+  // Get a handle to the SCM database.
+  LSCManager := OpenSCManager(PChar(AHostName), nil, SC_MANAGER_CONNECT);
+  try
+    // Get a handle to the service.
+    LService := OpenService(LSCManager, PChar(AServiceName), SERVICE_STOP or SERVICE_QUERY_STATUS);
+    try
+      // Check the status in case the service is not stopped.
+      if not QueryServiceStatus(LService, LStatus) then
+      begin
+        LStatus.dwCurrentState := SERVICE_STOPPED;
+      end;
+
+      // Check if the service is already stopping
+      if (LStatus.dwCurrentState <> SERVICE_START_PENDING)
+        and (LStatus.dwCurrentState <> SERVICE_RUNNING) then
+      begin
+        Result := True;
+        Exit;
+      end;
+
+      // Wait for the service to start before attempting to stop it.
+      while LStatus.dwCurrentState = SERVICE_START_PENDING do
+      begin
+        // Do not wait longer than the wait hint. A good interval is
+        // one-tenth of the wait hint but not less than 1 second
+        // and not more than 10 seconds.
+
+        LWaitTime := LStatus.dwWaitHint div 10;
+        if LWaitTime < 1000 then
+          LWaitTime := 1000
+        else if LWaitTime > 10000 then
+          LWaitTime := 10000;
+
+        Sleep(LWaitTime);
+
+        // Check the status until the service is no longer stop pending.
+        if not QueryServiceStatus(LService, LStatus) then
+        begin
+          Break;
+        end;
+      end;
+
+      ControlService(LService, SERVICE_CONTROL_STOP, LStatus);
+
+      // Check the status until the service is no longer start pending.
+      if not QueryServiceStatus(LService, LStatus) then
+      begin
+        LStatus.dwCurrentState := SERVICE_STOPPED;
+      end;
+
+      while LStatus.dwCurrentState = SERVICE_STOP_PENDING do
+      begin
+        // Do not wait longer than the wait hint. A good interval is
+        // one-tenth the wait hint, but no less than 1 second and no
+        // more than 10 seconds.
+
+        LWaitTime := LStatus.dwWaitHint div 10;
+
+        if (LWaitTime < 1000) then
+          LWaitTime := 1000
+        else if (LWaitTime > 10000) then
+          LWaitTime := 10000;
+
+        Sleep(LWaitTime);
+
+        // Check the status again.
+        if not QueryServiceStatus(LService, LStatus) then
+        begin
+          LStatus.dwCurrentState := SERVICE_STOPPED;
+          Break;
+        end;
+      end;
+
+      // Determine whether the service is running.
+      Result := LStatus.dwCurrentState = SERVICE_STOPPED;
+    finally
+      CloseServiceHandle(LService);
+    end;
+  finally
+    CloseServiceHandle(LSCManager);
   end;
 end;
 {$ENDREGION}
