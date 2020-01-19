@@ -151,6 +151,12 @@ function FormatBytes(
   APrecision  : Integer = 2
 ) : string;
 
+procedure ExtractFileFromResource(
+  const AResourceName : string;
+  const AFileName     : string;
+  const ADestPath     : string = ''
+);
+
 implementation
 
 uses
@@ -1102,6 +1108,35 @@ begin
   if AFormatType <= sfKB then  //use the precision only for MB and GB
     APrecision := 0;
   Result := Format('%.'+ IntToStr(APrecision) + 'n ' + FormatArray[AFormatType], [D]);
+end;
+
+procedure ExtractFileFromResource(const AResourceName: string;
+  const AFileName: string; const ADestPath: string);
+var
+  LResStream  : TResourceStream;
+  LFileStream : TFileStream;
+  LDestPath   : string;
+  LPath       : string;
+begin
+  if ADestPath.IsEmpty then
+    LDestPath := ExtractFileDir(ParamStr(0))
+  else
+    LDestPath := ADestPath;
+  LPath := Format('%s\%s', [LDestPath, AFileName]);
+  if not FileExists(LPath) then
+  begin
+    LResStream := TResourceStream.Create(HInstance, AResourceName, RT_RCDATA);
+    try
+      LFileStream := TFileStream.Create(LPath, fmCreate);
+      try
+        LFileStream.CopyFrom(LResStream, 0);
+      finally
+        LFileStream.Free;
+      end;
+    finally
+      LResStream.Free;
+    end;
+  end;
 end;
 
 end.
