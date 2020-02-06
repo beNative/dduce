@@ -239,7 +239,7 @@ uses
   DDuce.Utils.Winapi,
   DDuce.Logger.Factories,
   DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.LogFile,
-  DDuce.Logger.Channels.ZeroMQ, DDuce.Logger.Channels.MQTT,
+  DDuce.Logger.Channels.ZeroMQ,
 
   Demo.Data, Demo.Resources, Demo.Settings, Demo.Factories;
 

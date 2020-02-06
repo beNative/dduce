@@ -37,6 +37,7 @@ type
 
   public
     procedure AfterConstruction; override;
+    destructor Destroy; override;
 
   end;
 
@@ -56,7 +57,7 @@ procedure ShowAboutDialog;
 var
   F : TfrmAboutDialog;
 begin
-  F := TfrmAboutDialog.Create(Application);
+  F := TfrmAboutDialog.Create(nil);
   try
     F.ShowModal;
   finally
@@ -83,6 +84,12 @@ end;
 {$ENDREGION}
 
 {$REGION 'private methods'}
+destructor TfrmAboutDialog.Destroy;
+begin
+  FreeAndNil(FVersionInfoList);
+  inherited Destroy;
+end;
+
 procedure TfrmAboutDialog.UpdateVersionInfoDisplay;
 var
   R : DynamicRecord;
