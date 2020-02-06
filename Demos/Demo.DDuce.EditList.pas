@@ -51,7 +51,7 @@ type
       var AName  : string;
       var AValue : TValue
     );
-    procedure FEditListExecuteItem(
+    procedure FEditListItemExecute(
       ASender    : TObject;
       var AName  : string;
       var AValue : TValue
@@ -61,7 +61,27 @@ type
       var AName  : string;
       var AValue : TValue
     );
-    procedure FEditListDeleteItem(
+    procedure FEditListItemDelete(
+      ASender    : TObject;
+      var AName  : string;
+      var AValue : TValue
+    );
+    procedure FEditListDuplicate(
+      ASender    : TObject;
+      var AName  : string;
+      var AValue : TValue
+    );
+    procedure FEditListItemDuplicate(
+      ASender    : TObject;
+      var AName  : string;
+      var AValue : TValue
+    );
+    procedure FEditListItemMoveUp(
+      ASender    : TObject;
+      var AName  : string;
+      var AValue : TValue
+    );
+    procedure FEditListItemMoveDown(
       ASender    : TObject;
       var AName  : string;
       var AValue : TValue
@@ -72,6 +92,7 @@ type
 
   public
     procedure AfterConstruction; override;
+    destructor Destroy; override;
 
   end;
 
@@ -90,9 +111,27 @@ begin
   FEditList.AlignWithMargins := True;
   FEditList.OnAdd.Add(FEditListAdd);
   FEditList.OnDelete.Add(FEditListDelete);
-  FEditList.OnDeleteItem.Add(FEditListDeleteItem);
+  FEditList.OnItemDelete.Add(FEditListItemDelete);
   FEditList.OnExecute.Add(FEditListExecute);
-  FEditList.OnExecuteItem.Add(FEditListExecuteItem);
+  FEditList.OnItemExecute.Add(FEditListItemExecute);
+  FEditList.OnDuplicate.Add(FEditListDuplicate);
+  FEditList.OnItemDuplicate.Add(FEditListItemDuplicate);
+  FEditList.OnItemMoveUp.Add(FEditListItemMoveUp);
+  FEditList.OnItemMoveDown.Add(FEditListItemMoveDown);
+end;
+
+destructor TfrmEditList.Destroy;
+begin
+  FEditList.OnAdd.RemoveAll(Self);
+  FEditList.OnDelete.RemoveAll(Self);
+  FEditList.OnItemDelete.RemoveAll(Self);
+  FEditList.OnExecute.RemoveAll(Self);
+  FEditList.OnItemExecute.RemoveAll(Self);
+  FEditList.OnDuplicate.RemoveAll(Self);
+  FEditList.OnItemDuplicate.RemoveAll(Self);
+  FEditList.OnItemMoveUp.RemoveAll(Self);
+  FEditList.OnItemMoveDown.RemoveAll(Self);
+  inherited Destroy;
 end;
 {$ENDREGION}
 
@@ -102,36 +141,70 @@ begin
   FEditList.ValueList.MultiSelect := (Sender as TCheckBox).Checked;
 end;
 
+
 procedure TfrmEditList.FEditListAdd(ASender: TObject; var AName: string;
   var AValue: TValue);
 begin
   Logger.Track(Self, 'FEditListAdd');
+  Logger.Send(AName, AValue);
 end;
 
 procedure TfrmEditList.FEditListDelete(ASender: TObject; var AName: string;
   var AValue: TValue);
 begin
   Logger.Track(Self, 'FEditListDelete');
+  Logger.Send(AName, AValue);
 end;
 
-procedure TfrmEditList.FEditListDeleteItem(ASender: TObject;
+procedure TfrmEditList.FEditListItemDelete(ASender: TObject;
   var AName: string; var AValue: TValue);
 begin
-  Logger.Track(Self, 'FEditListDeleteItem');
+  Logger.Track(Self, 'FEditListItemDelete');
+  Logger.Send(AName, AValue);
+end;
+
+procedure TfrmEditList.FEditListDuplicate(ASender: TObject; var AName: string;
+  var AValue: TValue);
+begin
+  Logger.Track(Self, 'FEditListDuplicate');
+  Logger.Send(AName, AValue);
+end;
+
+procedure TfrmEditList.FEditListItemDuplicate(ASender: TObject;
+  var AName: string; var AValue: TValue);
+begin
+  Logger.Track(Self, 'FEditListItemDuplicate');
+  Logger.Send(AName, AValue);
 end;
 
 procedure TfrmEditList.FEditListExecute(ASender: TObject; var AName: string;
   var AValue: TValue);
 begin
   Logger.Track(Self, 'FEditListExecute');
+  Logger.Send(AName, AValue);
   ShowMessageFmt('Executed %s = %s', [AName, AValue.ToString]);
 end;
 
-procedure TfrmEditList.FEditListExecuteItem(ASender: TObject;
+procedure TfrmEditList.FEditListItemExecute(ASender: TObject;
   var AName: string; var AValue: TValue);
 begin
-  Logger.Track(Self, 'FEditListExecuteItem');
+  Logger.Track(Self, 'FEditListItemExecute');
+  Logger.Send(AName, AValue);
   ShowMessageFmt('Executed %s = %s', [AName, AValue.ToString]);
+end;
+
+procedure TfrmEditList.FEditListItemMoveDown(ASender: TObject;
+  var AName: string; var AValue: TValue);
+begin
+  Logger.Track(Self, 'FEditListItemMoveDown');
+  Logger.Send(AName, AValue);
+end;
+
+procedure TfrmEditList.FEditListItemMoveUp(ASender: TObject; var AName: string;
+  var AValue: TValue);
+begin
+  Logger.Track(Self, 'FEditListItemMoveUp');
+  Logger.Send(AName, AValue);
 end;
 {$ENDREGION}
 

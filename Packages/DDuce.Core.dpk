@@ -78,6 +78,4 @@ contains
   DDuce.WinIPC.Client in '..\Source\DDuce.WinIPC.Client.pas',
   DDuce.WinIPC.Server in '..\Source\DDuce.WinIPC.Server.pas',
   DDuce.CustomImageDrawHook in '..\Source\DDuce.CustomImageDrawHook.pas';
-
 end.
-
