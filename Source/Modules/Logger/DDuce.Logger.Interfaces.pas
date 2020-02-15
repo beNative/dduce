@@ -201,7 +201,7 @@ type
       read GetPort;
   end;
 
-  IMQTTChannel = interface(ILogChannel)
+  IMqttChannel = interface(ILogChannel)
   ['{5D482099-AB68-462B-8EE8-CCE4DBB60C44}']
     {$REGION 'property access methods'}
     function GetPort: Integer;
@@ -216,7 +216,7 @@ type
       read GetPort;
   end;
 
-  IWinIPCChannel = interface(ILogChannel)
+  IWinipcChannel = interface(ILogChannel)
   ['{E23B78DA-F62D-4D2B-A0FB-33C3CE106FFA}']
   end;
 

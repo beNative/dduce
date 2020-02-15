@@ -288,8 +288,8 @@ uses
 procedure TestLogger.AfterConstruction;
 begin
   inherited AfterConstruction;
-  //Logger.Channels.Add(TWinIPCChannel.Create);
-  Logger.Channels.Add(TZeroMQChannel.Create('tcp://*:5555'));
+  Logger.Channels.Add(TWinIPCChannel.Create);
+  //Logger.Channels.Add(TZeroMQChannel.Create('tcp://*:5555'));
   Sleep(1000);
   Logger.Clear;
   Logger.Clear;

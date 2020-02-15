@@ -479,9 +479,9 @@ end;
 function TLogger.InternalSendBuffer(AMsgType: TLogMessageType; const AText: string;
   var ABuffer; ACount: LongWord): ILogger;
 var
-  LStream: TStream;
+  LStream : TStream;
 begin
-  Result := Self;
+  Result  := Self;
   LStream := nil;
   if ACount > 0 then
   begin
