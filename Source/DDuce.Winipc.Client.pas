@@ -16,7 +16,7 @@
 
 {$I DDuce.inc}
 
-unit DDuce.WinIPC.Client;
+unit DDuce.Winipc.Client;
 
 interface
 
@@ -28,7 +28,7 @@ uses
     messages to the corresponding TWinIPCServer. }
 
 type
-  TWinIPCClient = class
+  TWinipcClient = class
   private
     FServerProcessId          : Integer;
     FServerThreadId           : Integer;
@@ -88,7 +88,7 @@ resourcestring
   SServerNotActive = 'Server with ID %s is not active.';
 
 {$REGION 'construction and destruction'}
-constructor TWinIPCClient.Create(const AServerMsgWindowClassName,
+constructor TWinipcClient.Create(const AServerMsgWindowClassName,
   AServerWindowName: string);
 begin
   inherited Create;
@@ -96,7 +96,7 @@ begin
   FServerWindowName         := AServerWindowName;
 end;
 
-procedure TWinIPCClient.AfterConstruction;
+procedure TWinipcClient.AfterConstruction;
 begin
   inherited AfterConstruction;
   if FServerMsgWindowClassName.IsEmpty then
@@ -107,35 +107,35 @@ end;
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-function TWinIPCClient.GetConnected: Boolean;
+function TWinipcClient.GetConnected: Boolean;
 begin
   Result := ServerHandle <> 0;
 end;
 
-procedure TWinIPCClient.SetConnected(const Value: Boolean);
+procedure TWinipcClient.SetConnected(const Value: Boolean);
 begin
   if Value then
     Connect;
 end;
 
-function TWinIPCClient.GetServerHandle: THandle;
+function TWinipcClient.GetServerHandle: THandle;
 begin
   Result := FindWindow(PChar(ServerMsgWindowClassName), PChar(ServerWindowName));
 end;
 
-function TWinIPCClient.GetServerProcessId: Integer;
+function TWinipcClient.GetServerProcessId: Integer;
 begin
   Result := FServerProcessId;
 end;
 
-function TWinIPCClient.GetServerThreadId: Integer;
+function TWinipcClient.GetServerThreadId: Integer;
 begin
   Result := FServerThreadId;
 end;
 {$ENDREGION}
 
 {$REGION 'public methods'}
-function TWinIPCClient.Connect: Boolean;
+function TWinipcClient.Connect: Boolean;
 begin
   Result := ServerHandle <> 0;
   if Result then
@@ -160,7 +160,7 @@ end;
     lpData: pointer to buffer to send (cbData bytes in size).
 }
 
-procedure TWinIPCClient.SendStream(AStream: TBytesStream);
+procedure TWinipcClient.SendStream(AStream: TBytesStream);
 var
   CDS  : TCopyDataStruct;
 begin

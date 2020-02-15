@@ -165,8 +165,8 @@
         <DCCReference Include="..\Source\DDuce.Reflect.pas"/>
         <DCCReference Include="..\Source\DDuce.Utils.pas"/>
         <DCCReference Include="..\Source\DDuce.Utils.WinApi.pas"/>
-        <DCCReference Include="..\Source\DDuce.WinIPC.Client.pas"/>
-        <DCCReference Include="..\Source\DDuce.WinIPC.Server.pas"/>
+        <DCCReference Include="..\Source\DDuce.Winipc.Client.pas"/>
+        <DCCReference Include="..\Source\DDuce.Winipc.Server.pas"/>
         <DCCReference Include="..\Source\DDuce.CustomImageDrawHook.pas"/>
         <None Include="LibSuffix.inc"/>
         <None Include="jedi.inc"/>

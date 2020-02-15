@@ -309,12 +309,16 @@ begin
   Result := False;
   LIcmpClient:= TIdIcmpClient.Create(nil);
   try
-    LIcmpClient.Host:= AHostName;
-    LIcmpClient.Ping;
-    Sleep(2000);
-    LBytes:= LIcmpClient.ReplyStatus.BytesReceived;
-    if LBytes > 0 then
-      Result := True
+    try
+      LIcmpClient.Host:= AHostName;
+      LIcmpClient.Ping;
+      Sleep(2000);
+      LBytes := LIcmpClient.ReplyStatus.BytesReceived;
+      if LBytes > 0 then
+        Result := True
+    except
+      //Ignore exceptions
+    end;
   finally
     LIcmpClient.Free;
   end;
