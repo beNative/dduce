@@ -82,11 +82,9 @@
     * RETURN in edit mode on last cell resulted in unwanted saving of #13#10
       sequences.
 
-
   TODO
     - ColumnsFullDrag property does not work
     - DefaultEditMenu property does not work
-
 }
 
 {$I DDuce.inc}

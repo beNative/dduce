@@ -33,7 +33,7 @@ uses
 
   DDuce.Components.GridView,
 
-  Demo.Contact;
+  Demo.Contact, Vcl.Menus;
 
 type
   TfrmGridView = class(TForm)
@@ -42,6 +42,10 @@ type
     pnlLeft     : TPanel;
     splVertical : TSplitter;
     pnlRight    : TPanel;
+    ppmGridView: TPopupMenu;
+    actAutoSizeCols: TAction;
+    mniAutoSizeCols: TMenuItem;
+    procedure actAutoSizeColsExecute(Sender: TObject);
 
   private
     FGridView        : TGridView;
@@ -101,10 +105,8 @@ begin
     pnlLeft,
     FGridView
   );
-
   FList := TDemoFactories.CreateContactList(1000);
   R.From(FList[0]);
-
   for F in R do
   begin
     with FGridView.Columns.Add do
@@ -127,15 +129,22 @@ begin
         Visible := False;
     end;
   end;
-
   FGridView.ShowCellTips    := True;
+  FGridView.RowSelect       := True;
   FGridView.Rows.Count      := FList.Count;
   FGridView.OnDrawCell      := FGridViewDrawCell;
   FGridView.OnGetCellText   := FGridViewGetCellText;
   FGridView.OnGetCheckState := FGridViewGetCheckState;
   FGridView.OnGetCellColors := FGridViewGetCellColors;
-//  FGridView.AutoSizeCols;
-//  FGridView.FitColsToClient := True;
+  FGridView.PopupMenu       := ppmGridView;
+  FGridView.FitColsToClient := True;
+end;
+{$ENDREGION}
+
+{$REGION 'action handlers'}
+procedure TfrmGridView.actAutoSizeColsExecute(Sender: TObject);
+begin
+  FGridView.AutoSizeCols;
 end;
 {$ENDREGION}
 

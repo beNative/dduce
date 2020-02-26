@@ -35,8 +35,10 @@ type
     pnlLeft        : TPanel;
     pnlRight       : TPanel;
     splVertical    : TSplitter;
+    btn1: TButton;
 
     procedure chkMultiSelectClick(Sender: TObject);
+    procedure btn1Click(Sender: TObject);
 
   private
     FEditList : TEditList;
@@ -136,11 +138,15 @@ end;
 {$ENDREGION}
 
 {$REGION 'event handlers'}
+procedure TfrmEditList.btn1Click(Sender: TObject);
+begin
+  FEditList.ValueList.SelectNode(FEditList.ValueList.Data.Count - 1);
+end;
+
 procedure TfrmEditList.chkMultiSelectClick(Sender: TObject);
 begin
   FEditList.ValueList.MultiSelect := (Sender as TCheckBox).Checked;
 end;
-
 
 procedure TfrmEditList.FEditListAdd(ASender: TObject; var AName: string;
   var AValue: TValue);
@@ -214,12 +220,12 @@ var
   F : IDynamicField;
 begin
   inherited UpdateActions;
-  mmoData.Lines.Text := FEditList.Data.ToString;
-  if Assigned(FEditList.ValueList.FocusedField) then
-  begin
-    F := FEditList.ValueList.FocusedField;
-    lblSelected.Caption := Format('Selected: %s: %s', [F.Name, F.Value.ToString]);
-  end;
+//  mmoData.Lines.Text := FEditList.Data.ToString;
+//  if Assigned(FEditList.ValueList.FocusedField) then
+//  begin
+//    F := FEditList.ValueList.FocusedField;
+//    lblSelected.Caption := Format('Selected: %s: %s', [F.Name, F.Value.ToString]);
+//  end;
 end;
 {$ENDREGION}
 

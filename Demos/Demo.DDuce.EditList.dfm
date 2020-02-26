@@ -66,6 +66,15 @@ object frmEditList: TfrmEditList
       ReadOnly = True
       TabOrder = 0
     end
+    object btn1: TButton
+      Left = 176
+      Top = 24
+      Width = 75
+      Height = 25
+      Caption = 'btn1'
+      TabOrder = 1
+      OnClick = btn1Click
+    end
   end
   object chkMultiSelect: TCheckBox
     Left = 332

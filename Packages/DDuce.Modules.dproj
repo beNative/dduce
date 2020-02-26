@@ -145,15 +145,6 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="rtl.dcp"/>
-        <DCCReference Include="vclactnband.dcp"/>
-        <DCCReference Include="vcl.dcp"/>
-        <DCCReference Include="dbrtl.dcp"/>
-        <DCCReference Include="vcldb.dcp"/>
-        <DCCReference Include="vclimg.dcp"/>
-        <DCCReference Include="FireDAC.dcp"/>
-        <DCCReference Include="FireDACCommonDriver.dcp"/>
-        <DCCReference Include="FireDACCommon.dcp"/>
         <DCCReference Include="BCEditor.Delphi.Runtime.dcp"/>
         <DCCReference Include="DDuce.Core.dcp"/>
         <DCCReference Include="DDuce.Components.dcp"/>
@@ -238,14 +229,6 @@
         <DCCReference Include="..\Source\Modules\Editor\DDuce.Editor.Viewlist.ToolView.pas">
             <Form>frmViewList</Form>
         </DCCReference>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Base.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.Base.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.LogFile.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.WinIPC.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Channels.ZeroMQ.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Factories.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.Interfaces.pas"/>
-        <DCCReference Include="..\Source\Modules\Logger\DDuce.Logger.pas"/>
         <DCCReference Include="..\Source\Modules\DDuce.AboutDialog.pas">
             <Form>frmAboutDialog</Form>
         </DCCReference>

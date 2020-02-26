@@ -1079,6 +1079,7 @@ begin
     TabOrder         := 0;
     FitColsToClient  := False;
     MultiSelect      := False;
+    RowSelect        := True;
   end;
 end;
 

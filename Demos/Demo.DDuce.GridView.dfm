@@ -38,11 +38,22 @@ object frmGridView: TfrmGridView
     TabOrder = 1
   end
   object imlMain: TImageList
-    Left = 368
-    Top = 224
+    Left = 88
+    Top = 24
   end
   object aclMain: TActionList
-    Left = 312
-    Top = 232
+    Left = 24
+    Top = 24
+    object actAutoSizeCols: TAction
+      Caption = 'Autosize colums'
+      OnExecute = actAutoSizeColsExecute
+    end
+  end
+  object ppmGridView: TPopupMenu
+    Left = 583
+    Top = 120
+    object mniAutoSizeCols: TMenuItem
+      Action = actAutoSizeCols
+    end
   end
 end

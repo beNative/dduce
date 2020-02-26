@@ -18,6 +18,8 @@
 
 unit DDuce.Components.ValueList;
 
+{ TCustomVirtualStringTree descendant to display key-value pairs. }
+
 interface
 
 uses
@@ -62,6 +64,12 @@ type
     procedure Initialize;
     procedure BuildTree;
 
+    function FindNode(
+      AIdx        : Integer;
+      AParentNode : PVirtualNode
+    ): PVirtualNode;
+    procedure SelectNode(ANode : PVirtualNode); overload;
+
     procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
     procedure DoNewText(
       Node       : PVirtualNode;
@@ -82,6 +90,11 @@ type
 
     procedure Repaint; override;
     procedure Refresh; virtual;
+    procedure SetFocusedFieldByName(const AName: string);
+    procedure SelectNode(
+      AIdx        : Integer;
+      AParentNode : PVirtualNode = nil
+    ); overload;
 
     property Data: IDynamicRecord
       read GetData write SetData;
@@ -460,6 +473,7 @@ begin
       ClearSelection;
       FocusedNode := VN;
       Selected[VN] := True;
+      ScrollIntoView(VN, False);
       Break;
     end;
   end;
@@ -577,6 +591,28 @@ begin
 *)
   inherited DoTextDrawing(PaintInfo, Text, CellRect, DrawFormat);
 end;
+
+function TValueList.FindNode(AIdx: Integer;
+  AParentNode: PVirtualNode): PVirtualNode;
+var
+  Node: PVirtualNode;
+begin
+  // Helper to find a node by its index
+  Result := nil;
+  if Assigned(AParentNode) then
+    Node := GetFirstChild(AParentNode)
+  else
+    Node := GetFirst;
+  while Assigned(Node) do
+  begin
+    if Node.Index = Cardinal(AIdx) then
+    begin
+      Result := Node;
+      Break;
+    end;
+    Node := GetNextSibling(Node);
+  end;
+end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
@@ -669,18 +705,51 @@ begin
 end;
 
 procedure TValueList.Refresh;
+//var
+//  F : IDynamicField;
 var
-  F : IDynamicField;
+  I : Integer;
 begin
-  F := FocusedField;
+  if Assigned(FocusedNode) then
+    I := FocusedNode.Index
+  else
+    I := -1;
+//  F := FocusedField;
   Repaint;
-  FocusedField := F;
+  if I >= 0 then
+    SelectNode(I);
+//  FocusedField := F;
 end;
 
 procedure TValueList.Repaint;
 begin
   BuildTree;
   inherited Repaint;
+end;
+
+procedure TValueList.SelectNode(ANode: PVirtualNode);
+begin
+  ClearSelection;
+  FocusedNode := ANode;
+  Selected[ANode] := True;
+  ScrollIntoView(ANode, False);
+end;
+{$ENDREGION}
+
+{$REGION 'public methods'}
+procedure TValueList.SetFocusedFieldByName(const AName: string);
+begin
+  FocusedField := Data.Fields[AName];
+end;
+
+procedure TValueList.SelectNode(AIdx: Integer; AParentNode: PVirtualNode);
+var
+  LNode : PVirtualNode;
+begin
+  // Helper to focus and highlight a node by its index
+  LNode := FindNode(AIdx, AParentNode);
+  if Assigned(LNode) then
+    SelectNode(LNode);
 end;
 {$ENDREGION}
 

@@ -36,6 +36,12 @@ requires
   Spring.Core,
   Spring.Base,
   Spring.Extensions,
+  vclactnband,
+  vcldb,
+  vclimg,
+  FireDAC,
+  FireDACCommonDriver,
+  FireDACCommon,
   IndySystem,
   IndyCore;
 
@@ -77,5 +83,14 @@ contains
   DDuce.Utils.Winapi in '..\Source\DDuce.Utils.Winapi.pas',
   DDuce.Winipc.Client in '..\Source\DDuce.Winipc.Client.pas',
   DDuce.Winipc.Server in '..\Source\DDuce.Winipc.Server.pas',
-  DDuce.CustomImageDrawHook in '..\Source\DDuce.CustomImageDrawHook.pas';
+  DDuce.CustomImageDrawHook in '..\Source\DDuce.CustomImageDrawHook.pas',
+  DDuce.Logger.Base in '..\Source\Logger\DDuce.Logger.Base.pas',
+  DDuce.Logger.Channels.Base in '..\Source\Logger\DDuce.Logger.Channels.Base.pas',
+  DDuce.Logger.Channels.LogFile in '..\Source\Logger\DDuce.Logger.Channels.LogFile.pas',
+  DDuce.Logger.Channels.Winipc in '..\Source\Logger\DDuce.Logger.Channels.Winipc.pas',
+  DDuce.Logger.Channels.ZeroMQ in '..\Source\Logger\DDuce.Logger.Channels.ZeroMQ.pas',
+  DDuce.Logger.Factories in '..\Source\Logger\DDuce.Logger.Factories.pas',
+  DDuce.Logger.Interfaces in '..\Source\Logger\DDuce.Logger.Interfaces.pas',
+  DDuce.Logger in '..\Source\Logger\DDuce.Logger.pas';
+
 end.

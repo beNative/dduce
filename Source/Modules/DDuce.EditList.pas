@@ -33,7 +33,7 @@ uses
 
   VirtualTrees,
 
-  DDuce.DynamicRecord, DDuce.Components.ValueList;
+  DDuce.DynamicRecord, DDuce.Components.ValueList, DDuce.Logger;
 
 {$REGION 'documentation'}
 {  TODO :
@@ -297,6 +297,13 @@ begin
   LName := S;
   DoItemAdd(LName, LValue);
   FValueList.Data[LName] := LValue;
+  if  FValueList.Data.ContainsField(LName) then
+  begin
+    Guard.CheckNotNull(FValueList.Data.Fields[LName], LName);
+    FValueList.SelectNode(Data.Count - 1);
+    Abort;
+    FValueList.FocusedField := FValueList.Data.Fields[LName];
+  end;
   Modified;
 end;
 
@@ -413,6 +420,7 @@ end;
 {$REGION 'event handlers'}
 procedure TEditList.FValueListDataChanged(ASender: TObject);
 begin
+  Logger.Track(Self, 'FValueListDataChanged');
   Modified;
 end;
 {$ENDREGION}
@@ -420,6 +428,7 @@ end;
 {$REGION 'event dispatch methods'}
 procedure TEditList.DoItemAdd(var AName: string; var AValue: TValue);
 begin
+  Logger.Track(Self, 'DoItemAdd');
   if FOnItemAdd.CanInvoke then
     FOnItemAdd.Invoke(Self, AName, AValue);
   Modified;
