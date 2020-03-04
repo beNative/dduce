@@ -24,7 +24,7 @@ uses
   Winapi.Windows,
   System.Classes, System.SysUtils, System.UITypes, System.Rtti, System.Variants,
   System.TypInfo,
-  Vcl.Forms, Vcl.Controls, Vcl.Graphics, Vcl.ExtCtrls,
+  Vcl.Forms, Vcl.Controls, Vcl.Graphics, Vcl.ExtCtrls, Vcl.Menus, Vcl.ActnList,
   Data.DB;
 
 type
@@ -156,6 +156,16 @@ procedure ExtractFileFromResource(
   const AFileName     : string;
   const ADestPath     : string = ''
 );
+
+function AddMenuItem(
+  AParent : TMenuItem;
+  AAction : TBasicAction = nil
+): TMenuItem; overload;
+
+function AddMenuItem(
+  AParent : TMenuItem;
+  AMenu   : TMenu
+): TMenuItem; overload;
 
 implementation
 
@@ -1137,6 +1147,58 @@ begin
       LResStream.Free;
     end;
   end;
+end;
+
+function AddMenuItem(AParent: TMenuItem; AAction: TBasicAction): TMenuItem;
+var
+  MI: TMenuItem;
+begin
+  if not Assigned(AAction) then
+  begin
+    MI := TMenuItem.Create(AParent.Owner);
+    MI.Caption := ('-');
+    AParent.Add(MI);
+    Result := nil;
+  end
+  else
+  begin
+    MI := TMenuItem.Create(AParent.Owner);
+    MI.Action := AAction;
+    if (AAction is TAction) and (TAction(AAction).GroupIndex > 0) then
+    begin
+      MI.RadioItem := True;
+    end;
+    AParent.Add(MI);
+    Result := MI;
+  end;
+end;
+
+function AddMenuItem(AParent: TMenuItem; AMenu: TMenu): TMenuItem;
+var
+  MI  : TMenuItem;
+  M   : TMenuItem;
+  SM  : TMenuItem;
+  SMI : TMenuItem;
+  I   : Integer;
+begin
+  MI := TMenuItem.Create(AMenu);
+  MI.Action := AMenu.Items.Action;
+  AParent.Add(MI);
+  for M in AMenu.Items do
+  begin
+    SMI := AddMenuItem(MI, M.Action);
+    // add submenu(s)
+    if M.Count > 0 then
+    begin
+      for I := 0 to M.Count - 1 do
+      begin
+        SM := M.Items[I];
+        AddMenuItem(SMI, SM.Action);
+      end;
+    end;
+  end;
+  MI.Enabled := True;
+  Result := MI;
 end;
 
 end.
