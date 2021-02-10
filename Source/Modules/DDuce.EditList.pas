@@ -260,11 +260,10 @@ begin
   FValueList             := TValueList.Create(Self);
   FValueList.Parent      := pnlMain;
   FValueList.Align       := alClient;
-  FValueList.ShowGutter  := False;
-  FValueList.MultiSelect := True;
   FValueList.Data        := DynamicRecord.CreateDynamicRecord;
   FValueList.Data.OnChanged.Add(FValueListDataChanged);
   FValueList.BorderStyle := bsNone;
+  FValueList.ShowGutter  := False;
   actAdd.Enabled         := True;
   actRefresh.Enabled     := True;
 end;
@@ -636,7 +635,8 @@ end;
 {$REGION 'public methods'}
 procedure TEditList.Refresh;
 begin
-  FValueList.Refresh;
+  if Assigned(FValueList) then
+    FValueList.Refresh;
 end;
 {$ENDREGION}
 

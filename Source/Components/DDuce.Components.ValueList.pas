@@ -39,7 +39,8 @@ type
 type
   TValueList = class(TCustomVirtualStringTree)
   private
-    FData : IDynamicRecord;
+    FData        : IDynamicRecord;
+    FInitialized : Boolean;
 
   protected
     {$REGION 'property access methods'}
@@ -364,7 +365,7 @@ const
 procedure TValueList.AfterConstruction;
 begin
   inherited AfterConstruction;
-  Initialize;
+//  Initialize;
 end;
 
 destructor TValueList.Destroy;
@@ -387,6 +388,8 @@ begin
     FData := Value;
     if Assigned(FData) then
     begin
+      if not FInitialized then
+        Initialize;
       NodeDataSize := SizeOf(TValueListNode);
       BuildTree;
       Header.AutoFitColumns;
@@ -702,11 +705,10 @@ begin
   Colors.SelectionRectangleBlendColor := clGray;
   Colors.SelectionTextColor           := clBlack;
   Colors.GridLineColor                := clSilver;
+  FInitialized := True;
 end;
 
 procedure TValueList.Refresh;
-//var
-//  F : IDynamicField;
 var
   I : Integer;
 begin
@@ -714,11 +716,9 @@ begin
     I := FocusedNode.Index
   else
     I := -1;
-//  F := FocusedField;
   Repaint;
   if I >= 0 then
     SelectNode(I);
-//  FocusedField := F;
 end;
 
 procedure TValueList.Repaint;

@@ -140,12 +140,13 @@ end;
 {$REGION 'event handlers'}
 procedure TfrmEditList.btn1Click(Sender: TObject);
 begin
-  FEditList.ValueList.SelectNode(FEditList.ValueList.Data.Count - 1);
+  FEditList.Refresh;
+  //FEditList.ValueList.SelectNode(FEditList.ValueList.Data.Count - 1);
 end;
 
 procedure TfrmEditList.chkMultiSelectClick(Sender: TObject);
 begin
-  FEditList.ValueList.MultiSelect := (Sender as TCheckBox).Checked;
+  //FEditList.ValueList.MultiSelect := (Sender as TCheckBox).Checked;
 end;
 
 procedure TfrmEditList.FEditListAdd(ASender: TObject; var AName: string;
