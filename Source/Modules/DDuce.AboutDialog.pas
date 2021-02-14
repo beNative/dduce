@@ -77,7 +77,7 @@ begin
   FVersionInfoList.AlignWithMargins := False;
   FVersionInfoList.Editable         := False;
   FVersionInfoList.ShowHeader       := False;
-  FVersionInfoList.ShowGutter       := False;
+//  FVersionInfoList.ShowGutter       := False;
 
   UpdateVersionInfoDisplay;
 end;

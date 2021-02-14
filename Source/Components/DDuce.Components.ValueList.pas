@@ -41,6 +41,7 @@ type
   private
     FData        : IDynamicRecord;
     FInitialized : Boolean;
+    FShowGutter  : Boolean;
 
   protected
     {$REGION 'property access methods'}
@@ -89,6 +90,7 @@ type
     procedure AfterConstruction; override;
     destructor Destroy; override;
 
+    procedure UpdateColumns;
     procedure Repaint; override;
     procedure Refresh; virtual;
     procedure SetFocusedFieldByName(const AName: string);
@@ -492,12 +494,8 @@ procedure TValueList.SetShowGutter(const Value: Boolean);
 begin
   if Value <> ShowGutter then
   begin
-    if Value then
-      Header.Columns.Items[GUTTER_COLUMN].Options :=
-        Header.Columns.Items[GUTTER_COLUMN].Options + [coVisible]
-    else
-      Header.Columns.Items[GUTTER_COLUMN].Options :=
-        Header.Columns.Items[GUTTER_COLUMN].Options - [coVisible];
+    FShowGutter := Value;
+    UpdateColumns;
   end;
 end;
 
@@ -740,6 +738,19 @@ end;
 procedure TValueList.SetFocusedFieldByName(const AName: string);
 begin
   FocusedField := Data.Fields[AName];
+end;
+
+procedure TValueList.UpdateColumns;
+begin
+  if Header.Columns.Count > GUTTER_COLUMN then
+  begin
+    if FShowGutter then
+      Header.Columns.Items[GUTTER_COLUMN].Options :=
+        Header.Columns.Items[GUTTER_COLUMN].Options + [coVisible]
+    else
+      Header.Columns.Items[GUTTER_COLUMN].Options :=
+        Header.Columns.Items[GUTTER_COLUMN].Options - [coVisible];
+  end;
 end;
 
 procedure TValueList.SelectNode(AIdx: Integer; AParentNode: PVirtualNode);
