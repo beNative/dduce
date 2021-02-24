@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2020 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2021 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ uses
 procedure RegisterDemos;
 begin
   DemoManager.Register(TfrmLogger, 'Logger');
+  Exit;
   DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmValueListDemo, 'ValueList');
@@ -56,6 +57,7 @@ begin
   DemoManager.Register(TfrmVTNode, 'VTNode');
   DemoManager.Register(TfrmEditList, 'EditList');
   DemoManager.Register(TfrmDialogs, 'Dialogs');
+
   //DemoManager.Register(TfrmReflect, 'Reflect');
   //DemoManager.Register(TfrmInspector, 'Inspector');
   //DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');

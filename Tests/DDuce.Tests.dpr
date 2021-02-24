@@ -21,7 +21,7 @@ uses
   TestInsight.DUnitX,
   {$ENDIF }
   Vcl.Forms,
-  DUnitX.Loggers.GUI.VCL,
+  //DUnitX.Loggers.GUI.VCL,
   DUnitX.Windows.Console,
   DUnitX.TestFramework,
   System.SysUtils,
@@ -42,6 +42,6 @@ begin
   RunRegisteredTests;
   Exit;
   {$ENDIF}
-  DUnitX.Loggers.GUI.VCL.Run;
+//  DUnitX.Loggers.GUI.VCL.Run;
 end.
 
