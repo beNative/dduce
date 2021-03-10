@@ -1,6 +1,6 @@
 # Introduction #
 
-**DDuce** is a new Delphi code library. Since Delphi got new language features like operator overloading, attributes, generics, anonymous methods and extended RTTI it provides some new powerful tools to extend the developer's creativity.
+**DDuce** is a Delphi code library. Since Delphi got new language features like operator overloading, attributes, generics, anonymous methods and extended RTTI it provides some new powerful tools to extend the developer's creativity.
 
 The library features components, modules, extensions and primitives that are used by my open source applications.
 
