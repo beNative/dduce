@@ -909,6 +909,7 @@ type
       const AFileName : string = '';
       AShowDialog     : Boolean = False
     ): Boolean;
+    function AsComponent: TComponent;
 
     property PersistSettings: Boolean
       read GetPersistSettings write SetPersistSettings;

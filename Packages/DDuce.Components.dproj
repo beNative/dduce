@@ -97,16 +97,16 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <VerInfo_Build>359</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.359;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>366</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.366;ProductVersion=1.0.0.0</VerInfo_Keys>
         <Debugger_HostApplication>D:\development\delphi\libraries\dduce\Demos\Bin\Win32\DDuce.Demos.exe</Debugger_HostApplication>
         <Debugger_CWD>D:\development\delphi\libraries\dduce\Demos\Bin\Win32</Debugger_CWD>
         <DCC_MapFile>3</DCC_MapFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>49</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.49;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>51</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.51;ProductVersion=1.0.0.0</VerInfo_Keys>
         <DCC_MapFile>3</DCC_MapFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -117,13 +117,13 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>47</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.47;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>49</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.49;ProductVersion=1.0.0.0</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>38</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.38;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>40</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.40;ProductVersion=1.0.0.0</VerInfo_Keys>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

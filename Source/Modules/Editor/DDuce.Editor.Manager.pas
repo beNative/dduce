@@ -499,6 +499,8 @@ type
       ANativeFormat : Boolean = True
     );
 
+    function AsComponent: TComponent;
+
     {$REGION 'IEditorViews'}
     function IEditorViews.Add = AddView;
     function IEditorViews.GetCount = GetViewCount;
@@ -2211,6 +2213,11 @@ end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
+function TdmEditorManager.AsComponent: TComponent;
+begin
+  Result := Self;
+end;
+
 { Called when the active view is set to another view in the list. }
 procedure TdmEditorManager.ActiveViewChanged;
 begin

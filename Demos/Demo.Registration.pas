@@ -47,7 +47,7 @@ uses
 procedure RegisterDemos;
 begin
   DemoManager.Register(TfrmLogger, 'Logger');
-  Exit;
+  //Exit;
   DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmValueListDemo, 'ValueList');
