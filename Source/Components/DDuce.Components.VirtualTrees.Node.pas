@@ -21,8 +21,6 @@ unit DDuce.Components.VirtualTrees.Node;
 interface
 
 uses
-  Spring, Spring.Collections,
-
   VirtualTrees;
 
 {
@@ -68,6 +66,7 @@ type
     FImageIndex : Integer;
     FCheckState : TCheckState;
     FCheckType  : TCheckType;
+    FOwnsObject : Boolean;
 
   protected
     {$REGION 'property access methods'}
@@ -91,25 +90,29 @@ type
     function GetChildCount: UInt32;
     function GetText: string; virtual;
     procedure SetText(const Value: string); virtual;
+    function GetOwnsObject: Boolean;
+    procedure SetOwnsObject(AValue: Boolean);
     {$ENDREGION}
 
   public
     constructor Create(
       ATree        : TCustomVirtualStringTree;
       const AData  : T;
+      AOwnsObject  : Boolean = True;
       AParentVNode : PVirtualNode = nil;
       const AText  : string = ''
     ); overload; virtual;
     constructor Create(
       ATree        : TCustomVirtualStringTree;
+      AOwnsObject  : Boolean = True;
       AParentVNode : PVirtualNode = nil;
       const AText  : string = ''
     ); overload; virtual;
-    procedure BeforeDestruction; override;
+    destructor Destroy; override;
 
     function GetEnumerator: TVTNodeEnumerator<T>;
 
-    function Add(const AData: T): TVTNode<T>;
+    function Add(const AData: T; AOwnsObject: Boolean = True): TVTNode<T>;
 
     { Points to the corresponding node of the virtual treeview. }
     property VNode: PVirtualNode
@@ -140,6 +143,9 @@ type
     property Level: Integer
       read GetLevel;
 
+    property OwnsObject: Boolean
+      read GetOwnsObject write SetOwnsObject;
+
     property Text: string
       read GetText write SetText;
 
@@ -157,31 +163,33 @@ uses
 
 {$REGION 'construction and destruction'}
 constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree; const AData: T;
-  AParentVNode: PVirtualNode; const AText: string);
+  AOwnsObject: Boolean; AParentVNode: PVirtualNode; const AText: string);
 begin
-  FTree := ATree;
-  FData := AData;
-  FText := AText;
+  FTree       := ATree;
+  FData       := AData;
+  FOwnsObject := AOwnsObject;
+  FText       := AText;
   if not Assigned(AParentVNode) then // create rootnode
     FVNode := FTree.AddChild(nil, Self);
 end;
 
 constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree;
-AParentVNode: PVirtualNode; const AText: string);
+  AOwnsObject: Boolean; AParentVNode: PVirtualNode; const AText: string);
 begin
-  FTree := ATree;
-  FData := Default(T);
-  FText := AText;
+  FTree       := ATree;
+  FData       := Default(T);
+  FOwnsObject := AOwnsObject;
+  FText       := AText;
   if not Assigned(AParentVNode) then // create rootnode
     FVNode := FTree.AddChild(nil, Self);
 end;
 
-procedure TVTNode<T>.BeforeDestruction;
+destructor TVTNode<T>.Destroy;
 begin
-  if GetTypekind(T) = tkClass then
+  if (GetTypekind(T) = tkClass) and OwnsObject then
     FreeAndNil(FData);
   FTree  := nil;
-  inherited BeforeDestruction;
+  inherited Destroy;
 end;
 {$ENDREGION}
 
@@ -252,6 +260,16 @@ begin
   FImageIndex := Value;
 end;
 
+function TVTNode<T>.GetOwnsObject: Boolean;
+begin
+  Result := FOwnsObject;
+end;
+
+procedure TVTNode<T>.SetOwnsObject(AValue: Boolean);
+begin
+  FOwnsObject := AValue;
+end;
+
 function TVTNode<T>.GetIndex: Integer;
 begin
   if Assigned(VNode) then
@@ -265,13 +283,13 @@ var
   I	 : UInt32;
 	VN : PVirtualNode;
 begin
-  Guard.CheckIndex(VNode.ChildCount, AIndex);
+  //Guard.CheckIndex(VNode.ChildCount, AIndex);
 	VN := VNode.FirstChild;
   if AIndex > 0 then
   begin
     for I := 0 to AIndex - 1 do
     begin
-      Guard.CheckNotNull(VN, 'VN');
+      //Guard.CheckNotNull(VN, 'VN');
       VN := VN.NextSibling;
     end;
   end;
@@ -332,7 +350,7 @@ end;
 {$ENDREGION}
 
 {$REGION 'public methods'}
-function TVTNode<T>.Add(const AData: T): TVTNode<T>;
+function TVTNode<T>.Add(const AData: T; AOwnsObject: Boolean): TVTNode<T>;
 var
   LVTNode : TVTNode<T>;
   LVNode  : PVirtualNode;
@@ -341,7 +359,7 @@ begin
   begin
     VNode := FTree.AddChild(nil, Self);
   end;
-  LVTNode := TVTNode<T>.Create(FTree, AData, VNode);
+  LVTNode := TVTNode<T>.Create(FTree, AData, AOwnsObject, VNode);
   LVNode := FTree.AddChild(VNode, LVTNode);
   LVTNode.VNode := LVNode;
   Result := LVTNode;

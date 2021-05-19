@@ -25,7 +25,7 @@ interface
 {
   The virtual tree component consists of nodes which are declared as pointers
   (PVirtualNode) to a record type (TVirtualNode). User defined data of each
-  node needs to be provided on demand (a.k.a. The virtual paradigm). The tree
+  node needs to be provided on demand (a.k.a. the virtual paradigm). The tree
   is instrumented by handling a set of events that are called when the tree
   is initialized or redrawn.
 

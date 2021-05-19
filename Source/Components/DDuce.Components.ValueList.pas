@@ -70,7 +70,7 @@ type
       AIdx        : Integer;
       AParentNode : PVirtualNode
     ): PVirtualNode;
-    procedure SelectNode(ANode : PVirtualNode); overload;
+    procedure SelectNode(ANode: PVirtualNode); overload;
 
     procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
     procedure DoNewText(
@@ -592,28 +592,6 @@ begin
 *)
   inherited DoTextDrawing(PaintInfo, Text, CellRect, DrawFormat);
 end;
-
-function TValueList.FindNode(AIdx: Integer;
-  AParentNode: PVirtualNode): PVirtualNode;
-var
-  Node: PVirtualNode;
-begin
-  // Helper to find a node by its index
-  Result := nil;
-  if Assigned(AParentNode) then
-    Node := GetFirstChild(AParentNode)
-  else
-    Node := GetFirst;
-  while Assigned(Node) do
-  begin
-    if Node.Index = Cardinal(AIdx) then
-    begin
-      Result := Node;
-      Break;
-    end;
-    Node := GetNextSibling(Node);
-  end;
-end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
@@ -629,6 +607,28 @@ begin
   end;
   FullExpand;
   EndUpdate;
+end;
+
+function TValueList.FindNode(AIdx: Integer;
+  AParentNode: PVirtualNode): PVirtualNode;
+var
+  LNode: PVirtualNode;
+begin
+  // Helper to find a Node by its index
+  Result := nil;
+  if Assigned(AParentNode) then
+    LNode := GetFirstChild(AParentNode)
+  else
+    LNode := GetFirst;
+  while Assigned(LNode) do
+  begin
+    if LNode.Index = Cardinal(AIdx) then
+    begin
+      Result := LNode;
+      Break;
+    end;
+    LNode := GetNextSibling(LNode);
+  end;
 end;
 
 procedure TValueList.Initialize;
@@ -765,3 +765,4 @@ end;
 {$ENDREGION}
 
 end.
+
