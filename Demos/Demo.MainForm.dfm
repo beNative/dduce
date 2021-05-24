@@ -10,7 +10,7 @@ object frmMainMenu: TfrmMainMenu
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -13
   Font.Name = 'Segoe UI'
   Font.Style = []
   OldCreateOrder = False
@@ -18,7 +18,7 @@ object frmMainMenu: TfrmMainMenu
   ShowHint = True
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 17
   object pnlVST: TPanel
     Left = 0
     Top = 18
@@ -48,7 +48,7 @@ object frmMainMenu: TfrmMainMenu
       BorderStyle = bsNone
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -11
+      Font.Height = -13
       Font.Name = 'Segoe UI'
       Font.Style = [fsItalic]
       ParentFont = False

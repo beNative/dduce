@@ -1069,17 +1069,19 @@ begin
   );
   with FDBGV do
   begin
-    AlignWithMargins := True;
-    CursorKeys       := [gkArrows, gkTabs, gkReturn, gkMouse, gkMouseWheel];
-    DoubleBuffered   := True;
-    ParentFont       := False;
-    ParentShowHint   := False;
-    ShowCellTips     := True;
-    ShowHint         := True;
-    TabOrder         := 0;
-    FitColsToClient  := False;
-    MultiSelect      := False;
-    RowSelect        := True;
+    AlignWithMargins  := True;
+    CursorKeys        := [gkArrows, gkTabs, gkReturn, gkMouse, gkMouseWheel];
+    DoubleBuffered    := True;
+    ParentFont        := False;
+    ParentShowHint    := False;
+    ShowCellTips      := True;
+    ShowHint          := True;
+    TabOrder          := 0;
+    FitColsToClient   := False;
+    MultiSelect       := False;
+    RowSelect         := True;
+    Rows.AutoHeight   := True;
+    Header.AutoHeight := True;
   end;
 end;
 

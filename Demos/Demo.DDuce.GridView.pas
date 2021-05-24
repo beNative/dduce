@@ -37,14 +37,15 @@ uses
 
 type
   TfrmGridView = class(TForm)
-    imlMain     : TImageList;
-    aclMain     : TActionList;
-    pnlLeft     : TPanel;
-    splVertical : TSplitter;
-    pnlRight    : TPanel;
-    ppmGridView: TPopupMenu;
-    actAutoSizeCols: TAction;
-    mniAutoSizeCols: TMenuItem;
+    imlMain         : TImageList;
+    aclMain         : TActionList;
+    pnlLeft         : TPanel;
+    splVertical     : TSplitter;
+    pnlRight        : TPanel;
+    ppmGridView     : TPopupMenu;
+    actAutoSizeCols : TAction;
+    mniAutoSizeCols : TMenuItem;
+
     procedure actAutoSizeColsExecute(Sender: TObject);
 
   private
@@ -129,15 +130,17 @@ begin
         Visible := False;
     end;
   end;
-  FGridView.ShowCellTips    := True;
-  FGridView.RowSelect       := True;
-  FGridView.Rows.Count      := FList.Count;
-  FGridView.OnDrawCell      := FGridViewDrawCell;
-  FGridView.OnGetCellText   := FGridViewGetCellText;
-  FGridView.OnGetCheckState := FGridViewGetCheckState;
-  FGridView.OnGetCellColors := FGridViewGetCellColors;
-  FGridView.PopupMenu       := ppmGridView;
-  FGridView.FitColsToClient := True;
+  FGridView.ShowCellTips      := True;
+  FGridView.RowSelect         := True;
+  FGridView.Rows.Count        := FList.Count;
+  FGridView.Rows.AutoHeight   := True;
+  FGridView.OnDrawCell        := FGridViewDrawCell;
+  FGridView.OnGetCellText     := FGridViewGetCellText;
+  FGridView.OnGetCheckState   := FGridViewGetCheckState;
+  FGridView.OnGetCellColors   := FGridViewGetCellColors;
+  FGridView.PopupMenu         := ppmGridView;
+  FGridView.FitColsToClient   := True;
+  FGridView.Header.AutoHeight := True;
 end;
 {$ENDREGION}
 

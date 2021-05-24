@@ -36,7 +36,6 @@ object frmDBGridView: TfrmDBGridView
     BevelOuter = bvNone
     FullRepaint = False
     TabOrder = 0
-    ExplicitWidth = 845
   end
   object pgcMain: TPageControl
     Left = 0
@@ -46,22 +45,13 @@ object frmDBGridView: TfrmDBGridView
     ActivePage = tsDBGridView
     Align = alClient
     TabOrder = 2
-    ExplicitWidth = 845
     object tsDBGridView: TTabSheet
       Caption = 'DBGridView'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 837
-      ExplicitHeight = 0
     end
     object tsDBGridViewEvents: TTabSheet
       Caption = 'DBGridView Events'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 837
-      ExplicitHeight = 0
       object pnlDBGridViewEvents: TPanel
         Left = 0
         Top = 0
@@ -70,7 +60,6 @@ object frmDBGridView: TfrmDBGridView
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 837
         object lbxDBGridViewEvents: TCheckListBox
           AlignWithMargins = True
           Left = 3
@@ -161,17 +150,12 @@ object frmDBGridView: TfrmDBGridView
             'OnSetEditText'
             'OnStartDrag')
           TabOrder = 0
-          ExplicitWidth = 831
         end
       end
     end
     object tsDataSourceEvents: TTabSheet
       Caption = 'DataSource Events'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 837
-      ExplicitHeight = 0
       object pnlDataSourceEvents: TPanel
         Left = 0
         Top = 0
@@ -180,7 +164,6 @@ object frmDBGridView: TfrmDBGridView
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 837
         object lbxDataSourceEvents: TCheckListBox
           AlignWithMargins = True
           Left = 3
@@ -195,7 +178,6 @@ object frmDBGridView: TfrmDBGridView
             'OnStateChange'
             'OnUpdateData')
           TabOrder = 0
-          ExplicitWidth = 831
         end
       end
     end
@@ -208,7 +190,6 @@ object frmDBGridView: TfrmDBGridView
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 845
     DesignSize = (
       867
       34)
@@ -223,7 +204,6 @@ object frmDBGridView: TfrmDBGridView
       State = cbChecked
       TabOrder = 0
       OnClick = chkActiveClick
-      ExplicitLeft = 741
     end
     object btnAutoSizeDisplayWidths: TButton
       Left = 4
@@ -250,7 +230,6 @@ object frmDBGridView: TfrmDBGridView
       Caption = 'Multiselect'
       TabOrder = 3
       OnClick = chkMultiselectClick
-      ExplicitLeft = 638
     end
     object btnInspectComponent: TButton
       Left = 316
@@ -269,7 +248,6 @@ object frmDBGridView: TfrmDBGridView
       Caption = 'Connect events'
       TabOrder = 5
       OnClick = chkConnectEventsClick
-      ExplicitLeft = 524
     end
   end
   object dscMain: TDataSource
@@ -300,7 +278,7 @@ object frmDBGridView: TfrmDBGridView
     Left = 304
     Top = 544
     Bitmap = {
-      494C0101040009002C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010104000900040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
