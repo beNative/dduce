@@ -5,7 +5,11 @@ object frmDialogs: TfrmDialogs
   ClientHeight = 69
   ClientWidth = 169
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13

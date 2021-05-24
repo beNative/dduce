@@ -6,7 +6,11 @@ object frmPropertyInspector: TfrmPropertyInspector
   ClientWidth = 830
   Color = clBtnFace
   DoubleBuffered = True
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   OldCreateOrder = False
   ShowHint = True
   PixelsPerInch = 96

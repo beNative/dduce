@@ -307,18 +307,18 @@ var
   LBytes      : Integer;
 begin
   Result := False;
-  LIcmpClient:= TIdIcmpClient.Create(nil);
+  LIcmpClient := TIdIcmpClient.Create(nil);
   try
-    try
-      LIcmpClient.Host:= AHostName;
+//    try
+      LIcmpClient.Host := AHostName;
       LIcmpClient.Ping;
       Sleep(2000);
       LBytes := LIcmpClient.ReplyStatus.BytesReceived;
       if LBytes > 0 then
         Result := True
-    except
-      //Ignore exceptions
-    end;
+//    except
+//      //Ignore exceptions
+//    end;
   finally
     LIcmpClient.Free;
   end;

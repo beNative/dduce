@@ -5,7 +5,11 @@ object frmVirtualTrees: TfrmVirtualTrees
   ClientWidth = 984
   Color = clBtnFace
   DoubleBuffered = True
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   OldCreateOrder = False
   Position = poOwnerFormCenter
   PixelsPerInch = 96
@@ -36,7 +40,7 @@ object frmVirtualTrees: TfrmVirtualTrees
             Value = 33.333333333333340000
           end
           item
-            Value = 33.333333333333340000
+            Value = 33.333333333333310000
           end>
         ControlCollection = <
           item
@@ -81,7 +85,7 @@ object frmVirtualTrees: TfrmVirtualTrees
           Left = 0
           Top = 0
           Width = 325
-          Height = 351
+          Height = 352
           Align = alClient
           BevelEdges = []
           BevelOuter = bvNone
@@ -111,8 +115,8 @@ object frmVirtualTrees: TfrmVirtualTrees
         object pnlVSTTree: TPanel
           Left = 325
           Top = 0
-          Width = 325
-          Height = 351
+          Width = 326
+          Height = 352
           Align = alClient
           BevelEdges = []
           BevelOuter = bvNone
@@ -122,7 +126,7 @@ object frmVirtualTrees: TfrmVirtualTrees
           object pnlVSTTreeHeader: TPanel
             Left = 0
             Top = 0
-            Width = 325
+            Width = 326
             Height = 20
             Align = alTop
             BevelEdges = []
@@ -140,10 +144,10 @@ object frmVirtualTrees: TfrmVirtualTrees
           end
         end
         object pnlVSTGrid: TPanel
-          Left = 650
+          Left = 651
           Top = 0
-          Width = 326
-          Height = 351
+          Width = 325
+          Height = 352
           Align = alClient
           BevelEdges = []
           BevelOuter = bvNone
@@ -153,7 +157,7 @@ object frmVirtualTrees: TfrmVirtualTrees
           object pnlVSTGridHeader: TPanel
             Left = 0
             Top = 0
-            Width = 326
+            Width = 325
             Height = 20
             Align = alTop
             BevelEdges = []
@@ -172,9 +176,9 @@ object frmVirtualTrees: TfrmVirtualTrees
         end
         object pnlVSTList: TPanel
           Left = 0
-          Top = 351
+          Top = 352
           Width = 325
-          Height = 352
+          Height = 351
           Align = alClient
           BevelEdges = []
           BevelOuter = bvNone
@@ -203,9 +207,9 @@ object frmVirtualTrees: TfrmVirtualTrees
         end
         object pnlVSTTreeList: TPanel
           Left = 325
-          Top = 351
-          Width = 325
-          Height = 352
+          Top = 352
+          Width = 326
+          Height = 351
           Align = alClient
           BevelEdges = []
           BevelOuter = bvNone
@@ -215,7 +219,7 @@ object frmVirtualTrees: TfrmVirtualTrees
           object pnlVSTTreeListHeader: TPanel
             Left = 0
             Top = 0
-            Width = 325
+            Width = 326
             Height = 20
             Align = alTop
             BevelEdges = []
@@ -233,10 +237,10 @@ object frmVirtualTrees: TfrmVirtualTrees
           end
         end
         object pnlVSTTreeGrid: TPanel
-          Left = 650
-          Top = 351
-          Width = 326
-          Height = 352
+          Left = 651
+          Top = 352
+          Width = 325
+          Height = 351
           Align = alClient
           BevelEdges = []
           BevelOuter = bvNone
@@ -246,7 +250,7 @@ object frmVirtualTrees: TfrmVirtualTrees
           object pnlVSTTreeGridHeader: TPanel
             Left = 0
             Top = 0
-            Width = 326
+            Width = 325
             Height = 20
             Align = alTop
             BevelEdges = []
@@ -268,49 +272,25 @@ object frmVirtualTrees: TfrmVirtualTrees
     object tsVST: TTabSheet
       Caption = 'VST'
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tsVSTTree: TTabSheet
       Caption = 'Tree'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tsVSTGrid: TTabSheet
       Caption = 'Grid'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tsVSTList: TTabSheet
       Caption = 'List'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tsVSTTreeList: TTabSheet
       Caption = 'TreeList'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tsVSTTreeGrid: TTabSheet
       Caption = 'TreeGrid'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
   end
 end

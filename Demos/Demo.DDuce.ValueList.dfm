@@ -5,7 +5,11 @@ object frmValueListDemo: TfrmValueListDemo
   ClientWidth = 661
   Color = clBtnFace
   DoubleBuffered = True
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
   PixelsPerInch = 96

@@ -4,7 +4,12 @@ object frmVTNode: TfrmVTNode
   ClientHeight = 489
   ClientWidth = 764
   Color = clBtnFace
-  ParentFont = True
+  DoubleBuffered = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13

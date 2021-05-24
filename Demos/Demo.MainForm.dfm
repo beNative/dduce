@@ -7,7 +7,12 @@ object frmMainMenu: TfrmMainMenu
   ClientWidth = 369
   Color = clWhite
   DefaultMonitor = dmMainForm
-  ParentFont = True
+  DoubleBuffered = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
   ShowHint = True
@@ -108,7 +113,7 @@ object frmMainMenu: TfrmMainMenu
     Left = 176
     Top = 168
     Bitmap = {
-      494C010102000500240010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102000500040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000328492FFC7CDCEFF00000000000000000000000000000000000000000000
