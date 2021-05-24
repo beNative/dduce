@@ -709,8 +709,6 @@ type
     property WordWrap;
   end;
 
-{ TGridColumns }
-
   TGridColumns = class(TCollection)
   private
     FGrid     : TCustomGridView;
@@ -745,7 +743,6 @@ type
       read GetLayout write SetLayout;
   end;
 
-{ TCustomGridRows }
   TCustomGridRows = class(TPersistent)
   private
     FGrid       : TCustomGridView;
@@ -769,7 +766,7 @@ type
     procedure Assign(Source: TPersistent); override;
 
     property AutoHeight: Boolean
-      read FAutoHeight write SetAutoHeight default False;
+      read FAutoHeight write SetAutoHeight default True;
 
     property Count: Integer
       read FCount write SetCount default 0;
@@ -794,8 +791,6 @@ type
     property Height;
     property OnChange;
   end;
-
-{ TCustomGridFixed }
 
   TCustomGridFixed = class(TPersistent)
   private
@@ -871,8 +866,6 @@ type
     property GridFont;
     property ShowDivider;
   end;
-
-{ TGridScrollBar }
 
   TGridScrollEvent = procedure(
     Sender        : TObject;
@@ -970,8 +963,6 @@ type
 
   end;
 
-{ TGridListBox }
-
   TGridListBox = class(TCustomListBox)
   private
     FGrid       : TCustomGridView;
@@ -994,8 +985,6 @@ type
     property Grid: TCustomGridView
       read FGrid;
   end;
-
-{ TCustomGridEdit }
 
   TGridEditClass = class of TCustomGridEdit;
 
@@ -1137,8 +1126,6 @@ type
 
   TGridEdit = class(TCustomGridEdit);
 
-{ TGridTipsWindow }
-
   TGridTipsWindowClass = class of TGridTipsWindow;
 
   TGridTipsWindow = class(THintWindow)
@@ -1159,8 +1146,6 @@ type
       AData: Pointer): TRect; override;
 
   end;
-
-{ TCustomGridView }
 
 {$REGION 'Documentation'}
 {
@@ -4497,8 +4482,8 @@ end;
 constructor TCustomGridRows.Create(AGrid: TCustomGridView);
 begin
   inherited Create;
-  FGrid := AGrid;
-  FHeight := 17;
+  FGrid      := AGrid;
+  AutoHeight := True;
 end;
 
 destructor TCustomGridRows.Destroy;
