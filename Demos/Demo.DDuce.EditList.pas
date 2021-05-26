@@ -30,15 +30,12 @@ uses
 type
   TfrmEditList = class(TForm)
     chkMultiSelect : TCheckBox;
-    lblSelected    : TLabel;
     mmoData        : TMemo;
     pnlLeft        : TPanel;
     pnlRight       : TPanel;
     splVertical    : TSplitter;
-    btn1: TButton;
 
     procedure chkMultiSelectClick(Sender: TObject);
-    procedure btn1Click(Sender: TObject);
 
   private
     FEditList : TEditList;
@@ -138,15 +135,9 @@ end;
 {$ENDREGION}
 
 {$REGION 'event handlers'}
-procedure TfrmEditList.btn1Click(Sender: TObject);
-begin
-  FEditList.Refresh;
-  //FEditList.ValueList.SelectNode(FEditList.ValueList.Data.Count - 1);
-end;
-
 procedure TfrmEditList.chkMultiSelectClick(Sender: TObject);
 begin
-  //FEditList.ValueList.MultiSelect := (Sender as TCheckBox).Checked;
+  FEditList.ValueList.MultiSelect := (Sender as TCheckBox).Checked;
 end;
 
 procedure TfrmEditList.FEditListAdd(ASender: TObject; var AName: string;

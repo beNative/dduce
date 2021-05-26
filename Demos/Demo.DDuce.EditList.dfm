@@ -43,19 +43,6 @@ object frmEditList: TfrmEditList
     BevelEdges = []
     BevelOuter = bvNone
     TabOrder = 1
-    DesignSize = (
-      312
-      411)
-    object lblSelected: TLabel
-      Left = 6
-      Top = 42
-      Width = 294
-      Height = 13
-      Anchors = [akLeft, akTop, akRight]
-      AutoSize = False
-      Caption = 'Selected:'
-      ExplicitWidth = 291
-    end
     object mmoData: TMemo
       Left = 0
       Top = 58
@@ -69,15 +56,6 @@ object frmEditList: TfrmEditList
       ParentColor = True
       ReadOnly = True
       TabOrder = 0
-    end
-    object btn1: TButton
-      Left = 176
-      Top = 24
-      Width = 75
-      Height = 25
-      Caption = 'btn1'
-      TabOrder = 1
-      OnClick = btn1Click
     end
   end
   object chkMultiSelect: TCheckBox
