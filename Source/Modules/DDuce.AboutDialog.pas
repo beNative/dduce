@@ -75,11 +75,10 @@ begin
   FVersionInfoList.Align            := alClient;
   FVersionInfoList.BorderStyle      := bsNone;
   FVersionInfoList.AlignWithMargins := False;
+  UpdateVersionInfoDisplay;
   FVersionInfoList.Editable         := False;
   FVersionInfoList.ShowHeader       := False;
-//  FVersionInfoList.ShowGutter       := False;
-
-  UpdateVersionInfoDisplay;
+  FVersionInfoList.ShowGutter       := False;
 end;
 {$ENDREGION}
 

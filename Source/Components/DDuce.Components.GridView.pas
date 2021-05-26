@@ -3691,7 +3691,7 @@ begin
   FImagesLink          := TChangeLink.Create;
   FImagesLink.OnChange := ImagesChange;
   FFlat                := True;
-  AutoHeight           := True;
+  FAutoHeight          := True;
 end;
 
 destructor TCustomGridHeader.Destroy;
@@ -4483,8 +4483,8 @@ end;
 constructor TCustomGridRows.Create(AGrid: TCustomGridView);
 begin
   inherited Create;
-  FGrid      := AGrid;
-  AutoHeight := True;
+  FGrid       := AGrid;
+  FAutoHeight := True;
 end;
 
 destructor TCustomGridRows.Destroy;
