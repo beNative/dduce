@@ -24,8 +24,10 @@ In addition some lesser known but excellent open source Delphi components were p
 
 ![TValueList](https://github.com/beNative/dduce/blob/master/Wiki/dduce_valuelist_demo.png)
 
-## TVTNode<T> ##
+## TVTNode ##
  
+The TVTNode is a generic type designed to be used as the data structure where each treenode in a treeview is pointing to.
+
 ![TVTNode<T>](https://github.com/beNative/dduce/blob/master/Wiki/dduce_vtnode.png)
 
 ## TPropertyInspector ##
