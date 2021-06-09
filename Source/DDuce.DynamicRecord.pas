@@ -1819,7 +1819,7 @@ begin
                 end
                 else
                 begin
-                  raise Exception.Create('TryGetUnderlyingValue failed.');
+                  //raise Exception.Create('TryGetUnderlyingValue failed.');
                 end;
               end
               else
