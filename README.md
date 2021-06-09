@@ -11,7 +11,7 @@ The sources depend on the following libraries and components:
   * [NativeXML](http://code.google.com/p/simdesign/)
 
 In addition some lesser known but excellent open source Delphi components were ported and extended to support the latest versions of Delphi.
-Take a look at the included demo application and unit tests to get a better insight about how everything works.
+Take a look at the included demo application (´DDuce.Demos´) and unit tests (´DDuce.Tests´) to get a better insight about how everything works.
 
 ## Editor module ##
 
