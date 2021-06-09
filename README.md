@@ -26,7 +26,7 @@ In addition some lesser known but excellent open source Delphi components were p
 
 ## TVTNode ##
  
-The **TVTNode<T>** class is a generic type designed to be used as the data structure where each treenode in a virtual treeview is pointing to.
+The `TVTNode<T>` class is a generic type designed to be used as the data structure where each treenode in a virtual treeview is pointing to.
 
 ![TVTNode<T>](https://github.com/beNative/dduce/blob/master/Wiki/dduce_vtnode.png)
 
