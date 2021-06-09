@@ -24,6 +24,10 @@ In addition some lesser known but excellent open source Delphi components were p
 
 ![TValueList](https://github.com/beNative/dduce/blob/master/Wiki/dduce_valuelist_demo.png)
 
+## TVTNode<T> ##
+ 
+![TVTNode<T>](https://github.com/beNative/dduce/blob/master/Wiki/dduce_vtnode.png)
+
 ## TPropertyInspector ##
 
 This component is based on the work of **Evgeny Balabuyev**. You may obtain a copy of the original code at http://www.torry.net/vcl/packs/lite/extlib.zip.
