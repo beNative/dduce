@@ -36,10 +36,6 @@ object frmActionListView: TfrmActionListView
       TabOrder = 0
       object tsActions: TTabSheet
         Caption = 'Actions'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object pnlActions: TPanel
           Left = 0
           Top = 21

@@ -44,7 +44,7 @@ uses
 
   Spring, Spring.Collections,
 
-  BCEditor.Types, BCEditor.Search,
+  TextEditor.Types, TextEditor.Search,
 
   DDuce.Editor.Interfaces, DDuce.Editor.Search.Engine.Settings,
   DDuce.Editor.Search.Data,
@@ -56,7 +56,7 @@ type
   private
     FSearchText   : string;
     FReplaceText  : string;
-    FOptions      : TBCEditorSearchOptions;
+    FOptions      : TTextEditorSearchOptions;
     FItemGroups   : IList<TSearchResultGroup>;
     FItemList     : IList<TSearchResult>;
     FCurrentIndex : Integer;
@@ -68,7 +68,7 @@ type
     function GetItemGroups: IList<TSearchResultGroup>;
     function GetItemList: IList<TSearchResult>;
     function GetManager: IEditorManager;
-    function GetOptions: TBCEditorSearchOptions;
+    function GetOptions: TTextEditorSearchOptions;
     function GetReplaceText: string;
     function GetSearchAllViews: Boolean;
     function GetSearchText: string;
@@ -78,7 +78,7 @@ type
     function GetOnChange: IEvent<TNotifyEvent>;
     function GetOnExecute: IEvent<TNotifyEvent>;
     procedure SetCurrentIndex(AValue: Integer);
-    procedure SetOptions(AValue: TBCEditorSearchOptions);
+    procedure SetOptions(AValue: TTextEditorSearchOptions);
     procedure SetReplaceText(AValue: string);
     procedure SetSearchAllViews(AValue: Boolean);
     procedure SetSearchText(AValue: string);
@@ -114,7 +114,7 @@ type
     property View: IEditorView
       read GetView;
 
-    property Options: TBCEditorSearchOptions
+    property Options: TTextEditorSearchOptions
       read GetOptions write SetOptions;
 
     property SearchText : string
@@ -243,12 +243,12 @@ begin
   Result := FOnExecute;
 end;
 
-function TSearchEngine.GetOptions: TBCEditorSearchOptions;
+function TSearchEngine.GetOptions: TTextEditorSearchOptions;
 begin
   Result := FOptions;
 end;
 
-procedure TSearchEngine.SetOptions(AValue: TBCEditorSearchOptions);
+procedure TSearchEngine.SetOptions(AValue: TTextEditorSearchOptions);
 begin
   if AValue <> Options then
   begin
@@ -303,14 +303,14 @@ var
 begin
   N := 0;
   AView.Editor.Search.Options := AView.Editor.Search.Options -
-    [soShowStringNotFound, soShowSearchMatchNotFound];
-  Options := Options - [soShowStringNotFound, soShowSearchMatchNotFound];
+    [soShowSearchMatchNotFound];
+  Options := Options - [soShowSearchMatchNotFound];
 
   AView.Editor.Search.Options := AView.Editor.Search.Options +
     [soEntireScope, soHighlightResults];
 
   AView.Editor.Search.SearchText := SearchText;
-  B := AView.Editor.Search.Lines.Count > 0;
+  B := AView.Editor.Search.Items.Count > 0;
   if B then
   begin
     SRG := TSearchResultGroup.Create;

@@ -31,7 +31,7 @@ uses
 
   Spring, Spring.Collections,
 
-  BCEditor.Editor, BCEditor.Types, BCEditor.Editor.KeyCommands,
+  TextEditor, TextEditor.Types, TextEditor.KeyCommands,
 
   DDuce.Settings.Form,
 
@@ -120,7 +120,7 @@ type
     function GetCaretY: Integer;
     function GetCurrentChar: WideChar;
     function GetCurrentWord: string;
-    function GetEditor: TBCEditor;
+    function GetEditor: TTextEditor;
     function GetEditorFont: TFont;
     function GetEncoding: TEncoding;
     function GetFileName: string;
@@ -139,12 +139,12 @@ type
     function GetModified: Boolean;
     function GetMonitorChanges: Boolean;
     function GetOnChange: TNotifyEvent;
-    function GetOnDropFiles: TBCEditorDropFilesEvent;
+    function GetOnDropFiles: TTextEditorDropFilesEvent;
     function GetReplaceHistory: TStrings;
     function GetSearchText: string;
     function GetSelectionAvailable: Boolean;
     function GetSelectionLength: Integer;
-    function GetSelectionMode: TBCEditorSelectionMode;
+    function GetSelectionMode: TTextEditorSelectionMode;
     function GetSelEnd: Integer;
     function GetSelStart: Integer;
     function GetSelectedText: string;
@@ -172,9 +172,9 @@ type
     procedure SetModified(const AValue: Boolean);
     procedure SetMonitorChanges(const AValue: Boolean);
     procedure SetOnChange(const AValue: TNotifyEvent);
-    procedure SetOnDropFiles(const AValue: TBCEditorDropFilesEvent);
+    procedure SetOnDropFiles(const AValue: TTextEditorDropFilesEvent);
     procedure SetSearchText(const AValue: string);
-    procedure SetSelectionMode(AValue: TBCEditorSelectionMode);
+    procedure SetSelectionMode(AValue: TTextEditorSelectionMode);
     procedure SetSelEnd(const AValue: Integer);
     procedure SetSelStart(const AValue: Integer);
     procedure SetSelectedText(const AValue: string);
@@ -231,7 +231,7 @@ type
     property ReplaceHistory: TStrings
       read GetReplaceHistory;
 
-    property Editor: TBCEditor
+    property Editor: TTextEditor
       read GetEditor;
 
     property Form: TCustomForm
@@ -271,7 +271,7 @@ type
       read GetHighlighterItem write SetHighlighterItem;
 
     { Sets the current (default) selection mode.  }
-    property SelectionMode: TBCEditorSelectionMode
+    property SelectionMode: TTextEditorSelectionMode
       read GetSelectionMode write SetSelectionMode;
 
     property SelectionAvailable: Boolean
@@ -383,7 +383,7 @@ type
       read GetEditorFont write SetEditorFont;
 
     // events
-    property OnDropFiles: TBCEditorDropFilesEvent
+    property OnDropFiles: TTextEditorDropFilesEvent
       read GetOnDropFiles write SetOnDropFiles;
 
     property OnChange: TNotifyEvent
@@ -397,12 +397,12 @@ type
     function GetCurrentIndex: Integer;
     function GetItemGroups: IList<TSearchResultGroup>;
     function GetItemList: IList<TSearchResult>;
-    function GetOptions: TBCEditorSearchOptions;
+    function GetOptions: TTextEditorSearchOptions;
     function GetReplaceText: string;
     function GetSearchAllViews: Boolean;
     function GetSearchText: string;
     procedure SetCurrentIndex(AValue: Integer);
-    procedure SetOptions(AValue: TBCEditorSearchOptions);
+    procedure SetOptions(AValue: TTextEditorSearchOptions);
     procedure SetReplaceText(AValue: string);
     procedure SetSearchAllViews(AValue: Boolean);
     procedure SetSearchText(AValue: string);
@@ -418,7 +418,7 @@ type
     property CurrentIndex: Integer
       read GetCurrentIndex write SetCurrentIndex;
 
-    property Options: TBCEditorSearchOptions
+    property Options: TTextEditorSearchOptions
       read GetOptions write SetOptions;
 
     property SearchText : string
@@ -895,7 +895,7 @@ type
     function GetActiveView: IEditorView;
     procedure SetActiveView(AValue: IEditorView);
     function GetHighlighters: THighlighters;
-    function GetKeyCommands: TBCEditorKeyCommands;
+    function GetKeyCommands: TTextEditorKeyCommands;
     {$ENDREGION}
 
     procedure UpdateActions;
@@ -938,7 +938,7 @@ type
     property Commands: IEditorCommands
       read GetCommands;
 
-    property KeyCommands: TBCEditorKeyCommands
+    property KeyCommands: TTextEditorKeyCommands
       read GetKeyCommands;
 
     property Settings: IEditorSettings

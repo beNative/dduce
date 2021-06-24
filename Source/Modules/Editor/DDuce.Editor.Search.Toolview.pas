@@ -39,7 +39,7 @@ uses
   DSharp.Core.DataTemplates, DSharp.Windows.TreeViewPresenter,
   DSharp.Windows.ColumnDefinitions.ControlTemplate,
 
-  BCEditor.Types, BCEditor.Search,
+  TextEditor.Types, TextEditor.Search,
 
   DDuce.Editor.ToolView.Base, DDuce.Editor.Interfaces, DDuce.Editor.Types,
 
@@ -106,9 +106,9 @@ type
     FVST : TVirtualStringTree;
 
     function GetSearchEngine: IEditorSearchEngine;
-    function GetOptions: TBCEditorSearchOptions;
+    function GetOptions: TTextEditorSearchOptions;
     function GetSearchText: string;
-    procedure SetOptions(AValue: TBCEditorSearchOptions);
+    procedure SetOptions(AValue: TTextEditorSearchOptions);
     procedure SetSearchText(const AValue: string);
     function GetReplaceText: string;
     procedure SetReplaceText(const AValue: string);
@@ -137,7 +137,7 @@ type
     procedure UpdateActions; override;
     procedure UpdateView; override;
 
-    property Options : TBCEditorSearchOptions
+    property Options : TTextEditorSearchOptions
       read GetOptions write SetOptions;
 
     property SearchText : string
@@ -211,7 +211,7 @@ begin
   Result := Owner as IEditorSearchEngine;
 end;
 
-function TfrmSearchForm.GetOptions: TBCEditorSearchOptions;
+function TfrmSearchForm.GetOptions: TTextEditorSearchOptions;
 begin
   Result := [];
   if chkCaseSensitive.Checked then
@@ -230,7 +230,7 @@ begin
 //    Include(Result, soBackwards);
 end;
 
-procedure TfrmSearchForm.SetOptions(AValue: TBCEditorSearchOptions);
+procedure TfrmSearchForm.SetOptions(AValue: TTextEditorSearchOptions);
 begin
   chkCaseSensitive.Checked      := soCaseSensitive in AValue;
   chkWholeWordsOnly.Checked     := soWholeWordsOnly in AValue;
@@ -489,8 +489,8 @@ begin
   begin
     Manager.ActivateView(SR.ViewName);
     View.Editor.GotoLineAndCenter(SR.BlockBegin.Y);
-    View.Editor.SelectionBeginPosition := TBCEditorTextPosition(SR.BlockBegin);
-    View.Editor.SelectionEndPosition   := TBCEditorTextPosition(SR.BlockEnd);
+    View.Editor.SelectionBeginPosition := TTextEditorTextPosition(SR.BlockBegin);
+    View.Editor.SelectionEndPosition   := TTextEditorTextPosition(SR.BlockEnd);
     Modified;
     SearchEngine.CurrentIndex := SearchEngine.ItemList.IndexOf(SR);
   end;

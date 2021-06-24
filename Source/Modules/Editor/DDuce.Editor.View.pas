@@ -21,7 +21,7 @@ interface
 {$REGION'documentation'}
 {
   Form holding a complete customizable text editor based on the open source
-  TBCEditor component.
+  TTextEditor component.
   Features:
     - accepts dropped files
     - auto detect file encoding
@@ -49,9 +49,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Graphics, Vcl.Menus, Vcl.Dialogs, Vcl.StdCtrls,
   Vcl.ImgList,
 
-  BCEditor.Editor, BCEditor.Types, BCEditor.Editor.KeyCommands,
-
-  BCEditor.Highlighter,
+  TextEditor, TextEditor.Types, TextEditor.KeyCommands, TextEditor.Highlighter,
 
   DDuce.Editor.Resources, DDuce.Editor.Highlighters, DDuce.Editor.Interfaces,
 
@@ -62,32 +60,33 @@ type
   private
     procedure EditorChange(Sender: TObject);
     procedure EditorCaretChanged(
-      Sender : TObject;
-      X, Y   : Integer
+      const ASender : TObject;
+      const X, Y    : Integer;
+      const AOffset : Integer
     );
 
 //    procedure EditorCommandProcessed(
 //      Sender       : TObject;
-//      var ACommand : TBCEditorCommand;
+//      var ACommand : TTextEditorCommand;
 //      var AChar    : Char;
 //      AData        : Pointer
 //    );
     procedure EditorReplaceText(
-      Sender         : TObject;
-      const ASearch  : string;
-      const AReplace : string;
-      ALine          : Integer;
-      AColumn        : Integer;
-      ADeleteLine    : Boolean;
-      var AAction    : TBCEditorReplaceAction
+      const ASender     : TObject;
+      const ASearch     : string;
+      const AReplace    : string;
+      const ALine       : Integer;
+      const AColumn     : Integer;
+      const ADeleteLine : Boolean;
+      var AAction       : TTextEditorReplaceAction
     );
 
     procedure EditorEnter(Sender: TObject);
 
     procedure EditorDropFiles(
-      Sender : TObject;
-      Pos    : TPoint;
-      AFiles : TStrings
+      const ASender : TObject;
+      const APos    : TPoint;
+      const AFiles  : TStrings
     );
 
     procedure ApplySettings;
@@ -95,7 +94,7 @@ type
   private
     FUpdate          : Boolean;
     FLineBreakStyle  : string;
-    FEditor          : TBCEditor;
+    FEditor          : TTextEditor;
     FFindHistory     : TStringList;
     FReplaceHistory  : TStringList;
     FHighlighterItem : THighlighterItem;
@@ -117,7 +116,7 @@ type
     function GetCommands: IEditorCommands;
     function GetCurrentChar: WideChar;
     function GetCurrentWord: string;
-    function GetEditor: TBCEditor;
+    function GetEditor: TTextEditor;
     function GetEditorFont: TFont;
     function GetHighlighterName: string;
     function GetInsertMode: Boolean;
@@ -130,7 +129,7 @@ type
     function GetFoldLevel: Integer;
     function GetForm: TCustomForm;
     function GetHighlighterItem: THighlighterItem;
-    function GetHighlighter: TBCEditorHighlighter;
+    function GetHighlighter: TTextEditorHighlighter;
     function GetLineBreakStyle: string;
     function GetLines: TStrings; virtual;
     function GetLinesInWindow: Integer;
@@ -140,13 +139,13 @@ type
     function GetMonitorChanges: Boolean;
     function GetName: string;
     function GetOnChange: TNotifyEvent;
-    function GetOnDropFiles: TBCEditorDropFilesEvent;
+    function GetOnDropFiles: TTextEditorDropFilesEvent;
     function GetParent: TWinControl;
     function GetPopupMenu: TPopupMenu; reintroduce;
     function GetReplaceHistory: TStrings;
     function GetSearchText: string;
     function GetSelectionAvailable: Boolean;
-    function GetSelectionMode: TBCEditorSelectionMode;
+    function GetSelectionMode: TTextEditorSelectionMode;
     function GetSelEnd: Integer;
     function GetSelStart: Integer;
     function GetSelectedText: string;
@@ -177,10 +176,10 @@ type
     procedure SetMonitorChanges(const AValue: Boolean);
     procedure SetName(AValue: string); reintroduce;
     procedure SetOnChange(const AValue: TNotifyEvent);
-    procedure SetOnDropFiles(const AValue: TBCEditorDropFilesEvent);
+    procedure SetOnDropFiles(const AValue: TTextEditorDropFilesEvent);
     procedure SetPopupMenu(AValue: TPopupMenu);
     procedure SetSearchText(const Value: string); virtual;
-    procedure SetSelectionMode(AValue: TBCEditorSelectionMode);
+    procedure SetSelectionMode(AValue: TTextEditorSelectionMode);
     procedure SetSelEnd(const AValue: Integer);
     procedure SetSelStart(const AValue: Integer);
     procedure SetSelectedText(const AValue: string);
@@ -191,19 +190,19 @@ type
     procedure SetVisible(const AVisible: Boolean);
     {$ENDREGION}
 
-    procedure InitializeEditor(AEditor: TBCEditor);
+    procedure InitializeEditor(AEditor: TTextEditor);
 
     procedure EditorSettingsChanged(ASender: TObject);
 
     procedure EditorCustomTokenAttribute(
-      Sender               : TObject;
+      const ASender        : TObject;
       const AText          : string;
       const ALine          : Integer;
-      const APosition      : Integer;
+      const AChar          : Integer;
       var AForegroundColor : TColor;
       var ABackgroundColor : TColor;
       var AStyles          : TFontStyles;
-      var ATokenAddon      : TBCEditorTokenAddon;
+      var ATokenAddon      : TTextEditorTokenAddon;
       var ATokenAddonColor : TColor
     );
 
@@ -226,7 +225,7 @@ type
     function IEditorView.Focused = EditorViewFocused;
 
     procedure AssignHighlighterForFileType(const AFileExt: string);
-    function RowColumnToCharIndex(APosition: TBCEditorTextPosition): Integer;
+    function RowColumnToCharIndex(APosition: TTextEditorTextPosition): Integer;
 
     procedure SelectWord;
     procedure FindNextWordOccurrence(ADirectionForward: Boolean);
@@ -247,8 +246,6 @@ type
     // constructors and destructors
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
-
-
 
     // public overridden methods
     function CloseQuery: Boolean; override;
@@ -323,7 +320,7 @@ type
     property InsertMode: Boolean
       read GetInsertMode write SetInsertMode;
 
-    property SelectionMode: TBCEditorSelectionMode
+    property SelectionMode: TTextEditorSelectionMode
       read GetSelectionMode write SetSelectionMode;
 
     property ShowSpecialChars: Boolean
@@ -346,7 +343,7 @@ type
     property LinesInWindow: Integer
       read GetLinesInWindow;
 
-    property Editor: TBCEditor
+    property Editor: TTextEditor
       read GetEditor;
 
     property Form: TCustomForm
@@ -385,7 +382,7 @@ type
     property ReplaceHistory: TStrings
       read GetReplaceHistory;
 
-    property Highlighter: TBCEditorHighlighter
+    property Highlighter: TTextEditorHighlighter
       read GetHighlighter;
 
     property HighlighterName: string
@@ -458,7 +455,7 @@ uses
 procedure TEditorView.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FEditor                 := TBCEditor.Create(Self);
+  FEditor                 := TTextEditor.Create(Self);
   FFindHistory            := TStringList.Create;
   FFindHistory.Sorted     := True;
   FFindHistory.Duplicates := dupIgnore;
@@ -509,7 +506,7 @@ end;
 //end;
 
 //procedure TEditorView.EditorCommandProcessed(Sender: TObject;
-//  var ACommand: TBCEditorCommand; var AChar: Char; AData: Pointer);
+//  var ACommand: TTextEditorCommand; var AChar: Char; AData: Pointer);
 //var
 //  S: string;
 //begin
@@ -520,8 +517,8 @@ end;
 //end;
 
 
-procedure TEditorView.EditorDropFiles(Sender: TObject; Pos: TPoint;
-  AFiles: TStrings);
+procedure TEditorView.EditorDropFiles(const ASender: TObject; const APos: TPoint;
+  const AFiles: TStrings);
 begin
 // TS: TEMP!
   Editor.LoadFromFile(AFiles[0]);
@@ -533,14 +530,15 @@ begin
   Activate;
 end;
 
-procedure TEditorView.EditorReplaceText(Sender: TObject; const ASearch,
-  AReplace: string; ALine, AColumn: Integer; ADeleteLine: Boolean;
-  var AAction: TBCEditorReplaceAction);
+procedure TEditorView.EditorReplaceText(const ASender: TObject; const ASearch,
+  AReplace: string; const ALine, AColumn: Integer; const ADeleteLine: Boolean;
+  var AAction: TTextEditorReplaceAction);
 begin
 //
 end;
 
-procedure TEditorView.EditorCaretChanged(Sender: TObject; X, Y: Integer);
+procedure TEditorView.EditorCaretChanged(const ASender: TObject; const X, Y:
+  Integer; const AOffset : Integer);
 begin
   if Assigned(Events) then
     Events.DoCaretPositionChange;
@@ -553,10 +551,12 @@ begin
     Events.DoChange;
 end;
 
-procedure TEditorView.EditorCustomTokenAttribute(Sender: TObject;
-  const AText: string; const ALine, APosition: Integer; var AForegroundColor,
+
+
+procedure TEditorView.EditorCustomTokenAttribute(const ASender: TObject;
+  const AText: string; const ALine, AChar: Integer; var AForegroundColor,
   ABackgroundColor: TColor; var AStyles: TFontStyles;
-  var ATokenAddon: TBCEditorTokenAddon; var ATokenAddonColor: TColor);
+  var ATokenAddon: TTextEditorTokenAddon; var ATokenAddonColor: TColor);
 begin
 //
 end;
@@ -639,7 +639,7 @@ begin
   if AValue <> FoldLevel then
   begin
     FFoldLevel := AValue;
-    Editor.FoldAllByLevel(1, AValue);
+//    Editor.FoldAllByLevel(1, AValue);
     Events.DoModified;
   end;
 end;
@@ -648,7 +648,7 @@ function TEditorView.GetTextBetween(AStartPos,
   AEndPos: TPoint): string;
 begin
 //  Result := Editor.Lines.TextBetween[
-//    TBCEditorTextPosition(AStartPos), TBCEditorTextPosition(AEndPos)
+//    TTextEditorTextPosition(AStartPos), TTextEditorTextPosition(AEndPos)
 //  ];
 end;
 
@@ -656,7 +656,7 @@ procedure TEditorView.SetTextBetween(AStartPos, AEndPos: TPoint;
   const Value: string);
 begin
 //  Editor.TextBetween[
-//    TBCEditorTextPosition(AStartPos), TBCEditorTextPosition(AEndPos)
+//    TTextEditorTextPosition(AStartPos), TTextEditorTextPosition(AEndPos)
 //  ] := Value;
 end;
 
@@ -675,12 +675,12 @@ end;
 
 function TEditorView.GetCaretX: Integer;
 begin
-  Result := Editor.TextCaretPosition.Char;
+//  Result := Editor.TextCaretPosition.Char;
 end;
 
 procedure TEditorView.SetCaretX(const Value: Integer);
 var
-  P : TBCEditorTextPosition;
+  P : TTextEditorTextPosition;
 begin
   if Value <> CaretX then
   begin
@@ -692,12 +692,12 @@ end;
 
 function TEditorView.GetCaretY: Integer;
 begin
-  Result := Editor.TextCaretPosition.Line;
+//  Result := Editor.TextCaretPosition.Line;
 end;
 
 procedure TEditorView.SetCaretY(const Value: Integer);
 var
-  P : TBCEditorTextPosition;
+  P : TTextEditorTextPosition;
 begin
   if Value <> CaretY then
   begin
@@ -712,7 +712,7 @@ begin
   Result := Editor.Font;
 end;
 
-function TEditorView.GetHighlighter: TBCEditorHighlighter;
+function TEditorView.GetHighlighter: TTextEditorHighlighter;
 begin
   Result := Editor.Highlighter;
 end;
@@ -737,12 +737,12 @@ end;
 
 function TEditorView.GetInsertMode: Boolean;
 begin
-  Result := Editor.TextEntryMode = temInsert;
+//  Result := Editor.TextEntryMode = temInsert;
 end;
 
 procedure TEditorView.SetInsertMode(AValue: Boolean);
 begin
-  Editor.TextEntryMode := temInsert;
+//  Editor.TextEntryMode := temInsert;
 end;
 
 function TEditorView.GetIsFile: Boolean;
@@ -884,12 +884,12 @@ begin
   FOnChange := AValue;
 end;
 
-function TEditorView.GetOnDropFiles: TBCEditorDropFilesEvent;
+function TEditorView.GetOnDropFiles: TTextEditorDropFilesEvent;
 begin
   Result := Editor.OnDropFiles;
 end;
 
-procedure TEditorView.SetOnDropFiles(const AValue: TBCEditorDropFilesEvent);
+procedure TEditorView.SetOnDropFiles(const AValue: TTextEditorDropFilesEvent);
 begin
   Editor.OnDropFiles := AValue;
 end;
@@ -954,7 +954,7 @@ begin
   if SelectionAvailable then
     Result := RowColumnToCharIndex(Editor.SelectionBeginPosition)
   else
-    Result := RowColumnToCharIndex(Editor.TextCaretPosition);
+    Result := RowColumnToCharIndex(Editor.TextPosition);
 end;
 
 procedure TEditorView.SetSelStart(const AValue: Integer);
@@ -974,12 +974,12 @@ end;
 
 function TEditorView.GetCaretXY: TPoint;
 begin
-  Result := TPoint(Editor.TextCaretPosition);
+  Result := TPoint(Editor.TextPosition);
 end;
 
 procedure TEditorView.SetCaretXY(const AValue: TPoint);
 begin
-  Editor.TextCaretPosition := TBCEditorTextPosition(AValue);
+  Editor.TextPosition := TTextEditorTextPosition(AValue);
 end;
 
 function TEditorView.GetFindHistory: TStrings;
@@ -1025,7 +1025,7 @@ end;
 
 procedure TEditorView.SetBlockBegin(const AValue: TPoint);
 var
-  P : TBCEditorTextPosition;
+  P : TTextEditorTextPosition;
 begin
   P.Char := AValue.X;
   P.Line := AValue.Y;
@@ -1040,7 +1040,7 @@ end;
 
 procedure TEditorView.SetBlockEnd(const AValue: TPoint);
 var
-  P : TBCEditorTextPosition;
+  P : TTextEditorTextPosition;
 begin
   P.Char := AValue.X;
   P.Line := AValue.Y;
@@ -1059,7 +1059,7 @@ end;
 
 function TEditorView.GetLinesInWindow: Integer;
 begin
-  Result := Editor.VisibleLines;
+  Result := Editor.VisibleLineCount;
 end;
 
 function TEditorView.GetReplaceHistory: TStrings;
@@ -1080,12 +1080,12 @@ begin
     Result := 0;
 end;
 
-function TEditorView.GetSelectionMode: TBCEditorSelectionMode;
+function TEditorView.GetSelectionMode: TTextEditorSelectionMode;
 begin
   Result := Editor.Selection.Mode;
 end;
 
-procedure TEditorView.SetSelectionMode(AValue: TBCEditorSelectionMode);
+procedure TEditorView.SetSelectionMode(AValue: TTextEditorSelectionMode);
 begin
   Editor.Selection.Mode := AValue;
 end;
@@ -1125,7 +1125,7 @@ begin
   Result := Editor.CharAtCursor;
 end;
 
-function TEditorView.GetEditor: TBCEditor;
+function TEditorView.GetEditor: TTextEditor;
 begin
   Result := FEditor;
 end;
@@ -1173,7 +1173,7 @@ procedure TEditorView.ApplySettings;
 begin
   Editor.Tabs.WantTabs        := Settings.EditorOptions.WantTabs;
   Editor.Tabs.Width           := Settings.EditorOptions.TabWidth;
-  Editor.WordWrap.Enabled     := Settings.EditorOptions.WordWrapEnabled;
+  Editor.WordWrap.Active      := Settings.EditorOptions.WordWrapEnabled;
   Editor.SpecialChars.Visible := Settings.EditorOptions.ShowSpecialCharacters;
   Editor.Minimap.Visible      := Settings.EditorOptions.ShowMinimap;
 
@@ -1219,7 +1219,7 @@ begin
 
   EditorFont.Assign(Settings.EditorFont);
 
-  Editor.MatchingPair.Enabled := Settings.EditorOptions.BracketHighlight;
+  Editor.MatchingPairs.Active := Settings.EditorOptions.BracketHighlight;
   Editor.Search.Map.Visible   := Settings.EditorOptions.ShowSearchmap;
   Editor.LineSpacing          := Settings.EditorOptions.ExtraLineSpacing;
 
@@ -1306,7 +1306,7 @@ begin
   //Editor.HighlightAllColor.FrameStyle := slsSolid;
 end;
 
-procedure TEditorView.InitializeEditor(AEditor: TBCEditor);
+procedure TEditorView.InitializeEditor(AEditor: TTextEditor);
 begin
   AEditor.Parent := Self;
   AEditor.Align := alClient;
@@ -1343,11 +1343,11 @@ begin
     cfoHighlightFoldingLine,
     //cfoHighlightIndentGuides,
     cfoHighlightMatchingPair,
-    cfoShowCollapsedLine,
+    cfoShowCollapsedLine
     //cfoShowTreeLine
     //cfoShowCollapsedLine,
     //cfoShowIndentGuides,
-    cfoUncollapseByHintClick
+    //cfoUncollapseByHintClick
   ];
   AEditor.URIOpener := True;
 
@@ -1465,7 +1465,7 @@ begin
 end;
 
 function TEditorView.RowColumnToCharIndex(
-  APosition: TBCEditorTextPosition): Integer;
+  APosition: TTextEditorTextPosition): Integer;
 var
   I: Integer;
 begin
@@ -1514,16 +1514,16 @@ begin
   Editor.Search.Options := Editor.Search.Options - [soHighlightResults];
   if ADirectionForward then
   begin
-    Editor.TextCaretPosition := Editor.WordStart;
-    //Editor.Search.Options := Editor.Search.Options - [TBCEditorSearchOption.soBackwards];
+    Editor.TextPosition      := Editor.WordStart;
+    //Editor.Search.Options := Editor.Search.Options - [TTextEditorSearchOption.soBackwards];
     Editor.Search.SearchText := Editor.WordAtCursor;
     Editor.FindNext;
   end
   else
   begin
-    //Editor.Search.Options := Editor.Search.Options + [TBCEditorSearchOption.soBackwards];
+    //Editor.Search.Options := Editor.Search.Options + [TTextEditorSearchOption.soBackwards];
     Editor.Search.SearchText := Editor.WordAtCursor;
-    Editor.TextCaretPosition := Editor.WordStart;
+    Editor.TextPosition      := Editor.WordStart;
     Editor.SetCaretAndSelection(
       Editor.SelectionBeginPosition,
       Editor.SelectionBeginPosition,
@@ -1677,12 +1677,12 @@ end;
 
 function TEditorView.GetWordFromCaret(const ACaretPos: TPoint): string;
 var
-  P : TBCEditorTextPosition;
-  D : TBCEditorDisplayPosition;
+  P : TTextEditorTextPosition;
+  D : TTextEditorViewPosition;
 begin
   P.Line := ACaretPos.Y;
   P.Char := ACaretPos.X;
-  D := Editor.TextToDisplayPosition(P);
+  D := Editor.TextToViewPosition(P);
   Result := Editor.GetWordAtPixels(D.Column, D.Row);
 end;
 

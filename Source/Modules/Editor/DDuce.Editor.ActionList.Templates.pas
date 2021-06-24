@@ -22,7 +22,7 @@ uses
   System.Classes, System.SysUtils, System.Actions, System.Rtti,
   Vcl.ActnList,
 
-  BCEditor.Editor.KeyCommands,
+  TextEditor.KeyCommands,
 
   Spring.Collections,
 
@@ -90,11 +90,11 @@ end;
 function TKeyCommandTemplate.GetValue(const Item: TObject;
   const ColumnIndex: Integer): TValue;
 var
-  KC: TBCEditorKeyCommand;
+  KC: TTextEditorKeyCommand;
   CD: TColumnDefinition;
   S : string;
 begin
-  KC := Item as TBCEditorKeyCommand;
+  KC := Item as TTextEditorKeyCommand;
   CD := TColumnDefinition(ColumnDefinitions[ColumnIndex]);
   if CD.Caption = SCommand then
   begin

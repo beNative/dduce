@@ -35,7 +35,7 @@ uses
 
   DDuce.Editor.Utils, DDuce.Editor.CodeFormatters, DDuce.Editor.CodeTags,
 
-  BCEditor.Highlighter,
+  TextEditor.Highlighter,
 
   DDuce.Logger;
 

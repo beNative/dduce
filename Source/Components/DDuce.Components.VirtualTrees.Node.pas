@@ -38,11 +38,11 @@ uses
       end;
 }
 type
-  TVTNode<T:class> = class;
+  TVTNode<T> = class;
 
-  TVTNode<T:class> = class
+  TVTNode<T> = class
   public type
-    TVTNodeEnumerator<K:T> = record
+    TVTNodeEnumerator<K: T> = record
     strict private
       FCurrent : TVTNode<K>;
       FFirst   : Boolean;
@@ -115,6 +115,7 @@ type
     destructor Destroy; override;
 
     function GetEnumerator: TVTNodeEnumerator<T>;
+    function DataEquals(const AData1: T; const AData2: T): Boolean;
 
     function Add(const AData: T; AOwnsObject: Boolean = True): TVTNode<T>;
     function Find(const AData: T): TVTNode<T>;
@@ -169,7 +170,7 @@ type
 implementation
 
 uses
-  System.SysUtils;
+  System.SysUtils, System.Rtti;
 
 {$REGION 'construction and destruction'}
 constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree; const AData: T;
@@ -300,7 +301,7 @@ begin
   begin
     for I := 0 to AIndex - 1 do
     begin
-      //Guard.CheckNotNull(VN, 'VN');
+//      Guard.CheckNotNull(VN, 'VN');
       VN := VN.NextSibling;
     end;
   end;
@@ -365,11 +366,18 @@ end;
 {$ENDREGION}
 
 {$REGION 'private methods'}
+{ Works for both class and interface types. }
+
+function TVTNode<T>.DataEquals(const AData1, AData2: T): Boolean;
+begin
+  Result := TObject(Pointer(@AData1)^) = TObject(Pointer(@AData2)^);
+end;
+
 { Search with recursion. }
 
 function TVTNode<T>.SearchTree(ANode: TVTNode<T>; const AData: T): TVTNode<T>;
 var
-  I      : Integer;
+  I      : UInt32;
   LFound : Boolean;
   LItem  : TVTNode<T>;
 begin
@@ -379,7 +387,7 @@ begin
   while (I < ANode.ChildCount) and not LFound do
   begin
     LItem := ANode.Items[I];
-    if LItem.Data = AData then
+    if DataEquals(LItem.Data, AData) then
     begin
       Result := LItem;
       LFound := True;
@@ -387,7 +395,7 @@ begin
     else
     begin
       LItem  := SearchTree(LItem, AData);
-      if Assigned(LItem) and (LItem.Data = AData) then
+      if Assigned(LItem) and DataEquals(LItem.Data, AData) then
       begin
         Result := LItem;
         LFound := True;
