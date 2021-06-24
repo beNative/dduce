@@ -86,7 +86,8 @@ uses
 
   Spring, Spring.Collections,
 
-  BCEditor.Editor, BCEditor.Editor.KeyCommands,
+
+  TextEditor, TextEditor.KeyCommands,
 
   DDuce.Editor.Types, DDuce.Editor.Interfaces, DDuce.Editor.Resources,
   DDuce.Editor.View, DDuce.Editor.Highlighters, DDuce.Editor.Commands,
@@ -434,7 +435,7 @@ type
     function GetHighlighterPopupMenu: TPopupMenu;
     function GetInsertPopupMenu: TPopupMenu;
     function GetItem(AName: string): TCustomAction;
-    function GetKeyCommands: TBCEditorKeyCommands;
+    function GetKeyCommands: TTextEditorKeyCommands;
     function GetLineBreakStylePopupMenu: TPopupMenu;
     function GetMenus: IEditorMenus;
     function GetPersistSettings: Boolean;
@@ -635,7 +636,7 @@ type
     property Commands: IEditorCommands
       read GetCommands implements IEditorCommands;
 
-    property KeyCommands: TBCEditorKeyCommands
+    property KeyCommands: TTextEditorKeyCommands
       read GetKeyCommands;
 
     { Delegates the implementation of IEditorSettings to an internal object. }
@@ -828,7 +829,7 @@ begin
   end;
 end;
 
-function TdmEditorManager.GetKeyCommands: TBCEditorKeyCommands;
+function TdmEditorManager.GetKeyCommands: TTextEditorKeyCommands;
 begin
   Result := ActiveView.Editor.KeyCommands;
 end;
@@ -2233,13 +2234,19 @@ var
   V : IEditorView;
 begin
   Result := False;
-  for V in (Self as IEditorViews) do
-  begin
-    if V.Modified then
+  try
+    for V in (Self as IEditorViews) do
     begin
-      Result := True;
-      Break;
+      if V.Modified then
+      begin
+        Result := True;
+        Break;
+      end;
     end;
+  except
+    on E: Exception do
+      Logger.SendException('ViewsModified', E);
+
   end;
 end;
 
@@ -2636,6 +2643,7 @@ begin
       actStayOnTop.Checked := Settings.FormSettings.FormStyle = fsStayOnTop;
       actSingleInstance.Checked := Settings.SingleInstance;
 
+      // exception
       actSaveAll.Enabled := ViewsModified;
 
       FChanged := False;

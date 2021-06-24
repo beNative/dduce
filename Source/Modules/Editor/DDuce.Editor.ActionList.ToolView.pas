@@ -25,7 +25,7 @@ uses
 
   Spring.Collections,
 
-  BCEditor.Editor.KeyCommands,
+  TextEditor.KeyCommands,
 
   VirtualTrees,
 
@@ -181,7 +181,7 @@ procedure TfrmActionListView.AfterConstruction;
 begin
   inherited AfterConstruction;
   FActionItems    := TCollections.CreateList<TContainedAction>(False) as IObjectList;
-  FCommandItems := TCollections.CreateList<TBCEditorKeyCommand>(False) as IObjectList;
+  FCommandItems := TCollections.CreateList<TTextEditorKeyCommand>(False) as IObjectList;
   CreateActionsView;
   CreateCommandsView;
 

@@ -42,7 +42,7 @@ type
 
   TVTNode<T> = class
   public type
-    TVTNodeEnumerator<K:T> = record
+    TVTNodeEnumerator<K: T> = record
     strict private
       FCurrent : TVTNode<K>;
       FFirst   : Boolean;
@@ -67,6 +67,9 @@ type
     FCheckState : TCheckState;
     FCheckType  : TCheckType;
     FOwnsObject : Boolean;
+
+  private
+    function SearchTree(ANode: TVTNode<T>; const AData: T): TVTNode<T>;
 
   protected
     {$REGION 'property access methods'}
@@ -112,8 +115,10 @@ type
     destructor Destroy; override;
 
     function GetEnumerator: TVTNodeEnumerator<T>;
+    function DataEquals(const AData1: T; const AData2: T): Boolean;
 
     function Add(const AData: T; AOwnsObject: Boolean = True): TVTNode<T>;
+    function Find(const AData: T): TVTNode<T>;
 
     { Points to the corresponding node of the virtual treeview. }
     property VNode: PVirtualNode
@@ -165,7 +170,7 @@ type
 implementation
 
 uses
-  System.SysUtils;
+  System.SysUtils, System.Rtti;
 
 {$REGION 'construction and destruction'}
 constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree; const AData: T;
@@ -175,6 +180,7 @@ begin
   FData       := AData;
   FOwnsObject := AOwnsObject;
   FText       := AText;
+  FImageIndex := -1;
   if not Assigned(AParentVNode) then // create rootnode
     FVNode := FTree.AddChild(nil, Self);
 end;
@@ -295,7 +301,7 @@ begin
   begin
     for I := 0 to AIndex - 1 do
     begin
-      //Guard.CheckNotNull(VN, 'VN');
+//      Guard.CheckNotNull(VN, 'VN');
       VN := VN.NextSibling;
     end;
   end;
@@ -324,12 +330,20 @@ end;
 
 function TVTNode<T>.GetVisible: Boolean;
 begin
-  Result := FTree.IsVisible[VNode];
+  if Assigned(FTree) and Assigned(FVNode) then
+  begin
+    Result := FTree.IsVisible[VNode];
+  end
+  else
+    Result := False;
 end;
 
 procedure TVTNode<T>.SetVisible(const Value: Boolean);
 begin
-  FTree.IsVisible[VNode] := Value;
+  if Assigned(FTree) and Assigned(FVNode) then
+  begin
+    FTree.IsVisible[VNode] := Value;
+  end;
 end;
 
 function TVTNode<T>.GetVNode: PVirtualNode;
@@ -347,6 +361,47 @@ begin
       FVNode.CheckState := FCheckState;
       FVNode.CheckType  := FCheckType;
     end;
+  end;
+end;
+{$ENDREGION}
+
+{$REGION 'private methods'}
+{ Works for both class and interface types. }
+
+function TVTNode<T>.DataEquals(const AData1, AData2: T): Boolean;
+begin
+  Result := TObject(Pointer(@AData1)^) = TObject(Pointer(@AData2)^);
+end;
+
+{ Search with recursion. }
+
+function TVTNode<T>.SearchTree(ANode: TVTNode<T>; const AData: T): TVTNode<T>;
+var
+  I      : UInt32;
+  LFound : Boolean;
+  LItem  : TVTNode<T>;
+begin
+  I      := 0;
+  LFound := False;
+  Result := nil;
+  while (I < ANode.ChildCount) and not LFound do
+  begin
+    LItem := ANode.Items[I];
+    if DataEquals(LItem.Data, AData) then
+    begin
+      Result := LItem;
+      LFound := True;
+    end
+    else
+    begin
+      LItem  := SearchTree(LItem, AData);
+      if Assigned(LItem) and DataEquals(LItem.Data, AData) then
+      begin
+        Result := LItem;
+        LFound := True;
+      end
+    end;
+    Inc(I);
   end;
 end;
 {$ENDREGION}
@@ -374,6 +429,11 @@ begin
   LVNode := FTree.AddChild(VNode, LVTNode);
   LVTNode.VNode := LVNode;
   Result := LVTNode;
+end;
+
+function TVTNode<T>.Find(const AData: T): TVTNode<T>;
+begin
+  Result := SearchTree(Self, AData);
 end;
 {$ENDREGION}
 

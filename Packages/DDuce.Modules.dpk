@@ -30,7 +30,8 @@ package DDuce.Modules;
 requires
   BCEditor.Delphi.Runtime,
   DDuce.Core,
-  DDuce.Components;
+  DDuce.Components,
+  TextEditor.Delphi.Runtime;
 
 contains
   DDuce.ObjectInspector in '..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas' {frmComponentInspector},

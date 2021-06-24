@@ -142,7 +142,7 @@ uses
   System.Math, System.StrUtils,
   Vcl.Forms,
 
-  BCEditor.Editor.KeyCommands, BCEditor.Types,
+  TextEditor.KeyCommands, TextEditor.Types,
 
   DDuce.Editor.Highlighters, DDuce.Editor.Resources, DDuce.Editor.Utils,
   DDuce.Editor.CommentStripper;

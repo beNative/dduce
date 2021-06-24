@@ -94,7 +94,7 @@ implementation
 uses
   System.TypInfo,
 
-  BCEditor.Editor, BCEditor.Types,
+  TextEditor, TextEditor.Types,
 
   DDuce.Reflect;
 
@@ -150,12 +150,12 @@ end;
 
 procedure TfrmSelectionInfo.UpdateDisplay;
 var
-  ES : TBCEditor;
+  ES : TTextEditor;
 begin
   ES := View.Editor;
 
   lblStoredBlockSelectionModeValue.Caption :=
-    GetEnumName(TypeInfo(TBCEditorSelectionMode), Ord(View.SelectionMode));
+    GetEnumName(TypeInfo(TTextEditorSelectionMode), Ord(View.SelectionMode));
 
   lblBlockBeginValue.Caption := Format(
     '(%d, %d)', [View.BlockBegin.X, View.BlockBegin.Y]

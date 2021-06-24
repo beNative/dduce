@@ -22,12 +22,12 @@ uses
   System.Classes,
   Vcl.Forms, Vcl.Controls,
 
-  BCEditor.Editor.Search, BCEditor.Types;
+  TextEditor.Search, TextEditor.Types;
 
 type
   TSearchEngineSettings = class(TComponent)
   private
-    FOptions        : TBCEditorSearchOptions;
+    FOptions        : TTextEditorSearchOptions;
     FSearchAllViews : Boolean;
 
   public
@@ -36,7 +36,7 @@ type
 
   published
   {
-    TBCEditorSearchOption = (
+    TTextEditorSearchOption = (
     soBackwards,
     soBeepIfStringNotFound,
     soCaseSensitive,
@@ -51,7 +51,7 @@ type
   );
   }
 
-    property Options : TBCEditorSearchOptions
+    property Options : TTextEditorSearchOptions
       read FOptions write FOptions;
 
     property SearchAllViews: Boolean
