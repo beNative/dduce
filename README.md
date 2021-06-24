@@ -9,7 +9,7 @@ The sources depend on the following libraries and components:
   * [DSharp](http://bitbucket.org/sglienke/dsharp)
   * [Virtual treeview](http://github.com/Virtual-TreeView/Virtual-TreeView)
   * [NativeXML](http://code.google.com/p/simdesign/)
-  * [TBCEditor](https://github.com/beNative/TBCEditor)
+  * [TTextEditor](https://github.com/TextEditorPro/TTextEditor)  
 
 In addition some lesser known but excellent open source Delphi components were ported and extended to support the latest versions of Delphi.
 Take a look at the included demo application (´DDuce.Demos´) and unit tests (´DDuce.Tests´) to get a better insight about how everything works.
