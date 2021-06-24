@@ -9,8 +9,10 @@ The sources depend on the following libraries and components:
   * [DSharp](http://bitbucket.org/sglienke/dsharp)
   * [Virtual treeview](http://github.com/Virtual-TreeView/Virtual-TreeView)
   * [NativeXML](http://code.google.com/p/simdesign/)
+  * [TBCEditor](https://github.com/beNative/TBCEditor)
 
 In addition some lesser known but excellent open source Delphi components were ported and extended to support the latest versions of Delphi.
+Take a look at the included demo application (´DDuce.Demos´) and unit tests (´DDuce.Tests´) to get a better insight about how everything works.
 
 ## Editor module ##
 
@@ -26,7 +28,7 @@ In addition some lesser known but excellent open source Delphi components were p
 
 ## TVTNode ##
  
-The TVTNode is a generic type designed to be used as the data structure where each treenode in a treeview is pointing to.
+The `TVTNode<T>` class is a generic type designed to be used as the data structure where each treenode in a virtual treeview is pointing to.
 
 ![TVTNode<T>](https://github.com/beNative/dduce/blob/master/Wiki/dduce_vtnode.png)
 
