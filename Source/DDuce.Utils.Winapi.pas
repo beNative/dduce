@@ -22,7 +22,9 @@ interface
 
 uses
   Winapi.Windows,
-  System.Classes, System.SysUtils;
+  System.Classes, System.SysUtils,
+
+  DDuce.Logger;
 
 type
   TProcessId = DWORD;
@@ -304,21 +306,18 @@ end;
 function CheckHostExists(const AHostName: string): Boolean;
 var
   LIcmpClient : TIdIcmpClient;
-  LBytes      : Integer;
 begin
   Result := False;
   LIcmpClient := TIdIcmpClient.Create(nil);
   try
-//    try
+    try
       LIcmpClient.Host := AHostName;
       LIcmpClient.Ping;
       Sleep(2000);
-      LBytes := LIcmpClient.ReplyStatus.BytesReceived;
-      if LBytes > 0 then
-        Result := True
-//    except
-//      //Ignore exceptions
-//    end;
+      Result := LIcmpClient.ReplyStatus.ReplyStatusType = rsEcho;
+    except
+      Result := False;
+    end;
   finally
     LIcmpClient.Free;
   end;

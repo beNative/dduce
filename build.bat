@@ -1,5 +1,5 @@
 @echo off
-set rsvars="d:\Program Files (x86)\Embarcadero\Studio\19.0\bin\rsvars.bat"
+set rsvars="c:\Program Files (x86)\Embarcadero\Studio\20.0\bin\rsvars.bat"
 call %rsvars%
 call cleanup.bat
 call copyresources.bat

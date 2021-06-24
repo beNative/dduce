@@ -92,6 +92,7 @@ type
     procedure SetText(const Value: string); virtual;
     function GetOwnsObject: Boolean;
     procedure SetOwnsObject(AValue: Boolean);
+    function GetTree: TCustomVirtualStringTree;
     {$ENDREGION}
 
   public
@@ -143,11 +144,16 @@ type
     property Level: Integer
       read GetLevel;
 
+    { If Data is of a class type, this determines if Data is freed when TVTNode
+    instance is freed. }
     property OwnsObject: Boolean
       read GetOwnsObject write SetOwnsObject;
 
     property Text: string
       read GetText write SetText;
+
+    property Tree: TCustomVirtualStringTree
+      read GetTree;
 
     property Hint: string
       read GetHint write SetHint;
@@ -304,6 +310,11 @@ end;
 function TVTNode<T>.GetText: string;
 begin
   Result := FText;
+end;
+
+function TVTNode<T>.GetTree: TCustomVirtualStringTree;
+begin
+  Result := FTree;
 end;
 
 procedure TVTNode<T>.SetText(const Value: string);
