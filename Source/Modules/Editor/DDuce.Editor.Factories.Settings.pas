@@ -22,7 +22,7 @@ uses
   System.Classes, System.SysUtils,
   Vcl.Controls,
 
-  Spring.Collections,
+
 
   DDuce.Editor.Tools.Settings, DDuce.Editor.Highlighters, DDuce.Editor.Interfaces;
 
@@ -41,7 +41,7 @@ type
 implementation
 
 uses
-  System.IOUtils,
+
   Vcl.Forms,
 
   DDuce.Editor.CodeFormatters,

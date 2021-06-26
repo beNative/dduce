@@ -82,10 +82,9 @@ uses
   System.Classes, System.SysUtils, System.Variants, System.Actions,
   System.ImageList,
   Vcl.Controls, Vcl.ActnList, Vcl.Menus, Vcl.Dialogs, Vcl.Forms, Vcl.ImgList,
-  Vcl.ActnPopup,
+
 
   Spring, Spring.Collections,
-
 
   TextEditor, TextEditor.KeyCommands,
 
@@ -689,17 +688,17 @@ implementation
 
 uses
   Winapi.Windows,
-  System.StrUtils, System.TypInfo,
+  System.TypInfo,
   Vcl.Clipbrd,
 
   DDuce.Utils,
 
-  DDuce.Editor.Settings, DDuce.Editor.Utils,
+  DDuce.Editor.Settings,
   DDuce.Editor.ToolView.Manager,
   DDuce.Editor.Filter.ToolView, DDuce.Editor.Search.ToolView,
   DDuce.Editor.SortStrings.ToolView, DDuce.Editor.ViewList.ToolView,
   DDuce.Editor.ActionList.ToolView, DDuce.Editor.CharacterMap.ToolView,
-  DDuce.Editor.AlignLines.ToolView, DDuce.Editor.Test.ToolView,
+  DDuce.Editor.Test.ToolView,
   DDuce.Editor.SelectionInfo.ToolView,
   DDuce.Editor.Filter.Settings, DDuce.Editor.Search.Engine.Settings,
   DDuce.Editor.SortStrings.Settings, DDuce.Editor.Search.Engine,

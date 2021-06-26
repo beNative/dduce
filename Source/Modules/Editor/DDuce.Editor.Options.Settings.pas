@@ -65,6 +65,7 @@ type
     FShowMinimap           : Boolean;
     FShowSearchmap         : Boolean;
 
+    {$REGION 'property access methods'}
     function GetAlwaysVisibleCaret: Boolean;
     function GetAutoHideCursor: Boolean;
     function GetAutoIndent: Boolean;
@@ -125,6 +126,7 @@ type
     procedure SetShowMinimap(const Value: Boolean);
     function GetShowSearchmap: Boolean;
     procedure SetShowSearchmap(const Value: Boolean);
+    {$ENDREGION}
 
   protected
     procedure Changed;

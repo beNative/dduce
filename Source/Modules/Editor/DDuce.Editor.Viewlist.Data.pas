@@ -26,13 +26,15 @@ uses
 type
   TEditorViewInfo = class
   private
-    FView: TComponent; // TS: no interface reference here!
+    FView : TComponent; // TS: no interface reference here!
 
+    {$REGION 'property access methods'}
     function GetFileName: string;
     function GetHighlighter: string;
     function GetModified: Boolean;
     function GetPath: string;
     function GetView: IEditorView;
+    {$ENDREGION}
 
   public
     constructor Create(AView: IEditorView);

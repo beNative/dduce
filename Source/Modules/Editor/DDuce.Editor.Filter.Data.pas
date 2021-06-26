@@ -28,6 +28,7 @@ type
   strict private
     FIndex : Integer;
     FText  : string;
+
   public
     constructor Create(
       const AIndex : Integer;

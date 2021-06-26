@@ -94,9 +94,7 @@ implementation
 uses
   System.TypInfo,
 
-  TextEditor, TextEditor.Types,
-
-  DDuce.Reflect;
+  TextEditor, TextEditor.Types;
 
 {$REGION 'property access mehods'}
 function TfrmSelectionInfo.GetView: IEditorView;

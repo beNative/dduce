@@ -137,6 +137,7 @@ type
 
   public
     constructor Create(AManager: IEditorManager);
+
     procedure BeforeDestruction; override;
 
   end;

@@ -138,7 +138,7 @@ type
 implementation
 
 uses
-  Winapi.ShlObj,
+
   System.Math, System.StrUtils,
   Vcl.Forms,
 

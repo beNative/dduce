@@ -26,8 +26,7 @@ uses
 
   Spring.Collections,
 
-  DDuce.Editor.Interfaces, DDuce.Editor.Tools.Settings,
-  DDuce.Editor.ToolView.Base;
+  DDuce.Editor.Interfaces, DDuce.Editor.Tools.Settings;
 
 type
   TToolView = class(TInterfacedObject, IEditorToolView)

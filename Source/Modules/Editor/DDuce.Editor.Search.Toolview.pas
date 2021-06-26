@@ -31,7 +31,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.Actions,
-  Vcl.StdCtrls, Vcl.Forms, Vcl.Buttons, Vcl.ExtCtrls, Vcl.Grids, Vcl.ActnList,
+  Vcl.StdCtrls, Vcl.Forms, Vcl.Buttons, Vcl.ExtCtrls, Vcl.ActnList,
   Vcl.Controls,
 
   VirtualTrees,
@@ -39,7 +39,7 @@ uses
   DSharp.Core.DataTemplates, DSharp.Windows.TreeViewPresenter,
   DSharp.Windows.ColumnDefinitions.ControlTemplate,
 
-  TextEditor.Types, TextEditor.Search,
+  TextEditor.Types,
 
   DDuce.Editor.ToolView.Base, DDuce.Editor.Interfaces, DDuce.Editor.Types,
 
@@ -89,6 +89,7 @@ type
     procedure actFindExecute(Sender: TObject);
     {$ENDREGION}
 
+    {$REGION 'event handlers'}
     procedure cbxSearchTextChange(Sender: TObject);
     procedure chkClick(Sender: TObject);
     procedure FTVPSelectionChanged(Sender: TObject);
@@ -100,11 +101,13 @@ type
     procedure rbFromCursorClick(Sender: TObject);
     procedure rbActiveViewClick(Sender: TObject);
     procedure rbSelectionClick(Sender: TObject);
+    {$ENDREGION}
 
   private
     FTVP : TTreeViewPresenter;
     FVST : TVirtualStringTree;
 
+    {$REGION 'property access methods'}
     function GetSearchEngine: IEditorSearchEngine;
     function GetOptions: TTextEditorSearchOptions;
     function GetSearchText: string;
@@ -112,6 +115,7 @@ type
     procedure SetSearchText(const AValue: string);
     function GetReplaceText: string;
     procedure SetReplaceText(const AValue: string);
+    {$ENDREGION}
 
     procedure SearchEngineExecute(Sender: TObject);
     procedure SearchEngineChange(Sender: TObject);
@@ -156,10 +160,10 @@ uses
 
   Spring.Collections,
 
-  DDuce.Components.Factories, DDuce.Factories.TreeViewPresenter,
+
   DDuce.Factories.VirtualTrees,
 
-  DDuce.Editor.Search.Engine, DDuce.Editor.Search.Data,
+  DDuce.Editor.Search.Data,
   DDuce.Editor.Search.Templates;
 
 resourcestring

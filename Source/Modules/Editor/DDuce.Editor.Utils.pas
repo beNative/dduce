@@ -22,7 +22,7 @@ interface
 
 uses
   Winapi.Windows,
-  System.Classes, System.SysUtils, System.TypInfo,
+  System.Classes, System.SysUtils,
 
   DDuce.Logger,
 

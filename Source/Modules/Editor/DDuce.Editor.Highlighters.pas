@@ -31,11 +31,11 @@ interface
 }
 
 uses
-  System.SysUtils, System.Classes, System.Contnrs,
+  System.SysUtils, System.Classes,
 
-  DDuce.Editor.Utils, DDuce.Editor.CodeFormatters, DDuce.Editor.CodeTags,
+  DDuce.Editor.CodeFormatters, DDuce.Editor.CodeTags,
 
-  TextEditor.Highlighter,
+
 
   DDuce.Logger;
 
@@ -54,7 +54,7 @@ type
     FFileExtensions       : TStringList;
     FUseCommonAttributes  : Boolean;
 
-    // private property access methods
+    {$REGION 'property access methods'}
     function GetDefaultFilter: string;
     function GetFileExtensions: string;
     function GetIndex: Integer;
@@ -62,6 +62,7 @@ type
     procedure SetFileExtensions(AValue: string);
     procedure SetFormatterSupport(const AValue: Boolean);
     procedure SetSmartSelectionTags(AValue: TCodeTags);
+    {$ENDREGION}
 
   public
     // constructors and destructors
@@ -169,7 +170,7 @@ type
 implementation
 
 uses
-  System.StrUtils, System.IOUtils,
+  System.IOUtils,
   Vcl.Forms, Vcl.Dialogs;
 
 {$REGION 'THighlighterEnumerator'}

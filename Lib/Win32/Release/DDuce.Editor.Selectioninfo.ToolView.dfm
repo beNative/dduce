@@ -22,6 +22,10 @@ object frmSelectionInfo: TfrmSelectionInfo
     TabOrder = 0
     object ts1: TTabSheet
       Caption = 'ts1'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnl1: TPanel
         Left = 0
         Top = 0
@@ -288,6 +292,10 @@ object frmSelectionInfo: TfrmSelectionInfo
     object ts2: TTabSheet
       Caption = 'ts2'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object mmoReflected: TMemo
         AlignWithMargins = True
         Left = 3

@@ -120,9 +120,7 @@ implementation
 
 {$R *.dfm}
 
-uses
-  DDuce.Factories.TreeViewPresenter,
-  DDuce.Editor.Utils;
+
 
 resourcestring
   SToken = 'Token';

@@ -19,7 +19,7 @@ unit DDuce.Editor.ViewList.ToolView;
 interface
 
 uses
-  System.Classes, System.SysUtils, System.Contnrs, System.Actions,
+  System.Classes, System.SysUtils, System.Actions,
   Vcl.Forms, Vcl.ActnList, Vcl.Menus, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Controls,
 
   Spring.Collections,
@@ -41,8 +41,10 @@ type
     pnlVST                : TPanel;
     ppmMain               : TPopupMenu;
 
+    {$REGION 'action handlers'}
     procedure actCloseExecute(Sender: TObject);
     procedure actCloseSelectedViewsExecute(Sender: TObject);
+    {$ENDREGION}
 
   private
     FVST      : TVirtualStringTree;
@@ -68,7 +70,7 @@ implementation
 uses
   DSharp.Windows.ColumnDefinitions,
 
-  DDuce.Factories.TreeViewPresenter, DDuce.Factories.VirtualTrees, DDuce.Editor.ViewList.Data;
+  DDuce.Factories.VirtualTrees, DDuce.Editor.ViewList.Data;
 
 resourcestring
   SFileName    = 'Filename';

@@ -62,7 +62,7 @@ inherited frmAlignLines: TfrmAlignLines
       360
       25)
     object btnOK: TButton
-      Left = 233
+      Left = 237
       Top = 0
       Width = 120
       Height = 25

@@ -22,7 +22,7 @@ uses
   System.Classes,
   Vcl.Forms, Vcl.Controls,
 
-  TextEditor.Search, TextEditor.Types;
+  TextEditor.Types;
 
 type
   TSearchEngineSettings = class(TComponent)
@@ -35,22 +35,21 @@ type
     procedure Assign(ASource: TPersistent); override;
 
   published
-  {
-    TTextEditorSearchOption = (
-    soBackwards,
-    soBeepIfStringNotFound,
-    soCaseSensitive,
-    soEntireScope,
-    soHighlightResults,
-    soSearchOnTyping,
-    soSelectedOnly,
-    soShowStringNotFound,
-    soShowSearchMatchNotFound,
-    soWholeWordsOnly,
-    soWrapAround
-  );
-  }
-
+    {
+      TTextEditorSearchOption = (
+      soBackwards,
+      soBeepIfStringNotFound,
+      soCaseSensitive,
+      soEntireScope,
+      soHighlightResults,
+      soSearchOnTyping,
+      soSelectedOnly,
+      soShowStringNotFound,
+      soShowSearchMatchNotFound,
+      soWholeWordsOnly,
+      soWrapAround
+    );
+    }
     property Options : TTextEditorSearchOptions
       read FOptions write FOptions;
 

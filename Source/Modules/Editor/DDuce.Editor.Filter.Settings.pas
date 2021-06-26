@@ -31,11 +31,13 @@ type
   TFilterSettings = class(TComponent)
   private
     FFormSettings: TFormSettings;
+
     procedure SetFormSettings(AValue: TFormSettings);
 
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
+
     procedure AssignTo(Dest: TPersistent); override;
     procedure Assign(Source: TPersistent); override;
 

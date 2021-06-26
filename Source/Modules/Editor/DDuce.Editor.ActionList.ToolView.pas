@@ -30,7 +30,7 @@ uses
   VirtualTrees,
 
   DSharp.Windows.TreeViewPresenter, DSharp.Windows.ColumnDefinitions,
-  DSharp.Core.DataTemplates,
+
 
   DDuce.Editor.Interfaces;
 
@@ -124,14 +124,14 @@ implementation
 
 uses
   Winapi.Windows, Winapi.Messages,
-  System.TypInfo, System.StrUtils, System.Variants, System.Actions, System.Rtti,
+  System.TypInfo, System.Variants, System.Actions, System.Rtti,
   System.UITypes,
   Vcl.GraphUtil, Vcl.Menus,
 
   DSharp.Windows.ControlTemplates,
 
   DDuce.Editor.Utils, DDuce.Editor.ActionList.Templates,
-  DDuce.Factories.TreeViewPresenter, DDuce.Factories.VirtualTrees;
+  DDuce.Factories.VirtualTrees;
 
 type
   TVKSet = set of Byte;

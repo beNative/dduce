@@ -147,8 +147,7 @@ type
 
 implementation
 
-uses
-  DDuce.Editor.Utils;
+
 
 const
   MAX_RESULTS = 10000;

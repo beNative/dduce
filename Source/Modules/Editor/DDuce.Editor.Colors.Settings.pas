@@ -41,6 +41,7 @@ type
     FSelectedColor      : TSynSelectedColor;
     FRightEdgeColor     : TColor;
 
+    {$REGION 'property access methods'}
     function GetBracketMatchColor: TSynSelectedColor;
     function GetFoldedCodeColor: TSynSelectedColor;
     function GetHighlightAllColor: TSynSelectedColor;
@@ -57,6 +58,7 @@ type
     procedure SetMouseLinkColor(AValue: TSynSelectedColor);
     procedure SetRightEdgeColor(AValue: TColor);
     procedure SetSelectedColor(AValue: TSynSelectedColor);
+    {$ENDREGION}
 
   protected
     procedure AssignDefaultColors;
@@ -64,8 +66,9 @@ type
 
   public
     procedure AfterConstruction; override;
+    destructor Destroy; override;
+
     procedure Assign(ASource: TPersistent); override;
-    procedure BeforeDestruction; override;
 
     property OnChanged: TNotifyEvent
       read FOnChanged write FOnChanged;
@@ -114,7 +117,7 @@ begin
   AssignDefaultColors;
 end;
 
-procedure TEditorColorSettings.BeforeDestruction;
+destructor TEditorColorSettings.Destroy;
 begin
 //  FSelectedColor.Free;
 //  FIncrementColor.Free;
@@ -123,7 +126,8 @@ begin
 //  FMouseLinkColor.Free;
 //  FLineHighlightColor.Free;
 //  FFoldedCodeColor.Free;
-  inherited BeforeDestruction;
+
+  inherited Destroy;
 end;
 {$ENDREGION}
 
@@ -220,6 +224,7 @@ begin
 end;
 {$ENDREGION}
 
+{$REGION 'protected methods'}
 procedure TEditorColorSettings.AssignDefaultColors;
 begin
 //  BracketMatchColor.Background := clAqua;
@@ -259,6 +264,7 @@ begin
   if Assigned(OnChanged) then
     FOnChanged(Self);
 end;
+{$ENDREGION}
 
 {$REGION 'public methods'}
 procedure TEditorColorSettings.Assign(ASource: TPersistent);

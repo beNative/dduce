@@ -36,7 +36,7 @@ interface
 }
 
 uses
-  System.Classes, System.SysUtils, System.Contnrs, System.Actions,
+  System.Classes, System.SysUtils, System.Actions,
   Vcl.Forms, Vcl.Controls, Vcl.Graphics, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.ComCtrls,
   Vcl.StdCtrls, Vcl.ActnList,
 
@@ -59,6 +59,8 @@ type
     pnlMain            : TPanel;
     sbrMain            : TStatusBar;
 
+    procedure actFocusFilterTextExecute(Sender: TObject);
+
     function CCustomDraw(
       Sender           : TObject;
       ColumnDefinition : TColumnDefinition;
@@ -69,8 +71,6 @@ type
       DrawMode         : TDrawMode;
       Selected         : Boolean
     ) : Boolean;
-
-    procedure actFocusFilterTextExecute(Sender: TObject);
 
     procedure edtFilterChange(Sender: TObject);
     procedure edtFilterKeyDown(Sender: TObject; var Key: Word;

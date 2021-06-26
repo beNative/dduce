@@ -62,7 +62,7 @@ implementation
 {$R *.dfm}
 
 uses
-  DDuce.Editor.Utils, DDuce.Editor.Types;
+  DDuce.Editor.Types;
 
 procedure TfrmSortStrings.AfterConstruction;
 begin

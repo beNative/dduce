@@ -40,12 +40,14 @@ type
     FTokens               : TStringList;
     FWidth                : Integer;
 
+    {$REGION 'property access methods'}
     function GetTokens: TStrings;
     procedure SetTokens(AValue: TStrings);
+    {$ENDREGION}
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
+    destructor Destroy; override;
 
     procedure AssignTo(Dest: TPersistent); override;
     procedure Assign(Source: TPersistent); override;
@@ -93,10 +95,10 @@ begin
   FTokens.Sorted     := True;
 end;
 
-procedure TAlignLinesSettings.BeforeDestruction;
+destructor TAlignLinesSettings.Destroy;
 begin
   FTokens.Free;
-  inherited BeforeDestruction;
+  inherited Destroy;
 end;
 {$ENDREGION}
 
