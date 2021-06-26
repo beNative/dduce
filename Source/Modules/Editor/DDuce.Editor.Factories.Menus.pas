@@ -26,7 +26,7 @@ uses
 
 type
   TEditorMenusFactory = class(TInterfacedObject, IEditorMenusFactory)
-  strict private
+  private
     FActions : IEditorActions;
     FMenus   : IEditorMenus;
 
@@ -35,16 +35,16 @@ type
       AAction : TBasicAction = nil
     ): TMenuItem; overload;
     function CreateMenuItem(
-            AParent     : TMenuItem;
+      AParent           : TMenuItem;
       const AActionName : string
     ): TMenuItem; overload;
 
   public
     constructor Create(
-      AActions  : IEditorActions;
-      AMenus    : IEditorMenus
+      AActions : IEditorActions;
+      AMenus   : IEditorMenus
     );
-    procedure BeforeDestruction; override;
+    destructor Destroy; override;
 
     function CreateFileMenu(AMenu : TMenu): TMenuItem;
     function CreateEditMenu(AMenu : TMenu): TMenuItem;
@@ -57,6 +57,7 @@ type
     function CreateHighlightersMenu(AMenu: TMenu): TMenuItem;
     function CreateHelpMenu(AMenu: TMenu): TMenuItem;
     function CreateMainMenu(AOwner: TComponent): TMainMenu;
+
   end;
 
 implementation
@@ -73,11 +74,11 @@ begin
   FMenus   := AMenus;
 end;
 
-procedure TEditorMenusFactory.BeforeDestruction;
+destructor TEditorMenusFactory.Destroy;
 begin
   FActions := nil;
   FMenus   := nil;
-  inherited BeforeDestruction;
+  inherited Destroy;
 end;
 {$ENDREGION}
 

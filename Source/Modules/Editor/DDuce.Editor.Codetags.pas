@@ -23,7 +23,7 @@ uses
 
 type
   TCodeTagItem = class(TComponent)
-  strict private
+  private
     FEndTag   : string;
     FStartTag : string;
 
@@ -47,6 +47,7 @@ type
   private
     function GetItem(Index: Integer): TCodeTagItem;
     procedure SetItem(Index: Integer; AValue: TCodeTagItem);
+
   public
     function Add: TCodeTagItem;
 
@@ -56,6 +57,14 @@ type
 
 implementation
 
+{$REGION 'public methods'}
+function TCodeTags.Add: TCodeTagItem;
+begin
+  Result := TCodeTagItem.Create(Self);
+end;
+{$ENDREGION}
+
+{$REGION 'property access mehods'}
 function TCodeTags.GetItem(Index: Integer): TCodeTagItem;
 begin
   Result := Components[Index] as TCodeTagItem;
@@ -66,12 +75,6 @@ begin
   Components[Index].Assign(AValue);
 end;
 
-function TCodeTags.Add: TCodeTagItem;
-begin
-  Result := TCodeTagItem.Create(Self);
-end;
-
-{$REGION 'property access mehods'}
 procedure TCodeTagItem.SetStartTag(AValue: string);
 begin
   if FStartTag = AValue then

@@ -25,7 +25,7 @@ interface
   instances supporting one or more of these interfaces. }
 
 uses
-  System.Classes, System.Contnrs, System.Types, System.SysUtils,
+  System.Classes, System.Types, System.SysUtils,
   Vcl.ActnList, Vcl.Controls, Vcl.Forms, Vcl.Menus, Vcl.Graphics, Vcl.ComCtrls,
   Vcl.ActnPopup,
 

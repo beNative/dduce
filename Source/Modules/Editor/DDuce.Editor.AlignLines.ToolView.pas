@@ -77,8 +77,11 @@ type
     rgpSortDirection : TRadioGroup;
     sbrMain          : TScrollBox;
 
+    {$REGION 'action handlers'}
     procedure actExecuteExecute(Sender: TObject);
+    {$ENDREGION}
 
+    {$REGION 'event handlers'}
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FTVPDoubleClick(Sender: TObject);
@@ -88,6 +91,7 @@ type
     procedure pnlTokensResize(Sender: TObject);
     procedure rgpAlignAtClick(Sender: TObject);
     procedure rgpSortDirectionClick(Sender: TObject);
+    {$ENDREGION}
 
   strict private
     //FTVP    : TTreeViewPresenter;
@@ -119,10 +123,6 @@ type
 implementation
 
 {$R *.dfm}
-
-uses
-  DDuce.Factories.TreeViewPresenter,
-  DDuce.Editor.Utils;
 
 resourcestring
   SToken = 'Token';

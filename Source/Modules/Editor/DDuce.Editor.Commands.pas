@@ -33,12 +33,14 @@ uses
 
 type
   TEditorCommands = class(TComponent, IEditorCommands)
-  strict private
+  private
+    {$REGION 'property access methods'}
     function GetEvents: IEditorEvents;
     function GetManager: IEditorManager;
     function GetSearchEngine: IEditorSearchEngine;
     function GetSettings: IEditorSettings;
     function GetView: IEditorView;
+    {$ENDREGION}
 
     function StripComments(
       const AString      : string;
@@ -56,7 +58,7 @@ type
       const AString: string
     ): Boolean;
 
-  strict protected
+  protected
     procedure OpenFileAtCursor;
     procedure ToggleHighlighter;
     procedure AssignHighlighter(const AName: string);
@@ -109,10 +111,10 @@ type
     procedure SortSelectedLines;
     procedure SmartSelect;
     function SelectBlockAroundCursor(
-      const AStartTag        : string;
-      const AEndTag          : string;
-            AIncludeStartTag : Boolean;
-            AIncludeEndTag   : Boolean
+      const AStartTag  : string;
+      const AEndTag    : string;
+      AIncludeStartTag : Boolean;
+      AIncludeEndTag   : Boolean
     ): Boolean;
 
     procedure FindNext;
@@ -138,7 +140,6 @@ type
 implementation
 
 uses
-  Winapi.ShlObj,
   System.Math, System.StrUtils,
   Vcl.Forms,
 

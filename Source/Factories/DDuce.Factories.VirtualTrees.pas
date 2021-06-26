@@ -546,11 +546,19 @@ begin
           hoVisible
         ];
         PaintOptions := [
-          toHideFocusRect, {toHideSelection,} toHotTrack, toPopupMode,
-          {toShowButtons,} toShowDropmark, {toShowRoot,}
-          {toShowHorzGridLines,} {toShowVertGridLines,}
-          toThemeAware, toUseExplorerTheme,
-          toUseBlendedImages, toUseBlendedSelection,
+          toHideFocusRect,
+          {toHideSelection,}
+          toHotTrack,
+          toPopupMode,
+          {toShowButtons,}
+          toShowDropmark,
+          {toShowRoot,}
+          {toShowHorzGridLines,}
+          {toShowVertGridLines,}
+          toThemeAware,
+          toUseExplorerTheme,
+          toUseBlendedImages,
+          toUseBlendedSelection,
           toStaticBackground
         ];
         AnimationOptions := [

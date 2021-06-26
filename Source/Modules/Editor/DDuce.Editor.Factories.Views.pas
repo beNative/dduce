@@ -27,11 +27,11 @@ uses
 type
   TEditorViewFactory = class(TInterfacedObject, IEditorViewFactory)
     function CreateInstance(
-       AParent            : TWinControl;
-       AManager           : IEditorManager;
-       const AName        : string = '';
-       const AFileName    : string = '';
-       const AHighlighter : string = 'TXT'
+      AParent            : TWinControl;
+      AManager           : IEditorManager;
+      const AName        : string = '';
+      const AFileName    : string = '';
+      const AHighlighter : string = 'TXT'
     ): IEditorView;
   end;
 

@@ -24,16 +24,17 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages,
-  System.SysUtils, System.Variants, System.Classes, System.ImageList,
+  System.SysUtils, System.Variants, System.Classes,
   System.Actions, System.Rtti,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList, Vcl.ImgList,
-  Vcl.ComCtrls, Vcl.ToolWin, Vcl.ExtCtrls, Vcl.Menus,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList,
+  Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.Menus,
 
   Spring,
 
   VirtualTrees,
 
-  DDuce.DynamicRecord, DDuce.Components.ValueList, DDuce.Logger;
+  DDuce.DynamicRecord, DDuce.Components.ValueList, DDuce.Logger,
+  System.ImageList, Vcl.ImgList, Vcl.ToolWin;
 
 {$REGION 'documentation'}
 {  TODO :

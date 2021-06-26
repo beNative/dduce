@@ -31,11 +31,13 @@ type
   TFilterSettings = class(TComponent)
   private
     FFormSettings: TFormSettings;
+
     procedure SetFormSettings(AValue: TFormSettings);
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
+    destructor Destroy; override;
+
     procedure AssignTo(Dest: TPersistent); override;
     procedure Assign(Source: TPersistent); override;
 
@@ -46,29 +48,29 @@ type
 
 implementation
 
-{$region 'construction and destruction' /fold}
+{$REGION 'construction and destruction'}
 procedure TFilterSettings.AfterConstruction;
 begin
   inherited AfterConstruction;
   FFormSettings := TFormSettings.Create;
 end;
 
-procedure TFilterSettings.BeforeDestruction;
+destructor TFilterSettings.Destroy;
 begin
   FFormSettings.Free;
-  inherited BeforeDestruction;
+  inherited Destroy;
 end;
-{$endregion}
+{$ENDREGION}
 
-{$region 'property access mehods' /fold}
+{$REGION 'property access methods'}
 procedure TFilterSettings.SetFormSettings(AValue: TFormSettings);
 begin
   if FormSettings <> AValue then
     FFormSettings.Assign(AValue);
 end;
-{$endregion}
+{$ENDREGION}
 
-{$region 'public methods' /fold}
+{$REGION 'public methods'}
 procedure TFilterSettings.AssignTo(Dest: TPersistent);
 var
   S: TFilterSettings;
@@ -94,7 +96,7 @@ begin
   else
     inherited Assign(Source);
 end;
-{$endregion}
+{$ENDREGION}
 
 initialization
   RegisterClass(TFilterSettings);

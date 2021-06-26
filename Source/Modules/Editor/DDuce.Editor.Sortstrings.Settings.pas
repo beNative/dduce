@@ -37,7 +37,6 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
 
     procedure AssignTo(Dest: TPersistent); override;
     procedure Assign(Source: TPersistent); override;
@@ -66,11 +65,6 @@ procedure TSortStringsSettings.AfterConstruction;
 begin
   inherited AfterConstruction;
   FWidth := DEFAULT_WIDTH;
-end;
-
-procedure TSortStringsSettings.BeforeDestruction;
-begin
-  inherited BeforeDestruction;
 end;
 {$ENDREGION}
 

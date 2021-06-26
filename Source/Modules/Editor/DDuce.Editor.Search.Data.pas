@@ -23,7 +23,7 @@ interface
 { IEditorView -> TSearchResultGroup -> TSearchResultLine -> TSearchResult }
 
 uses
-  System.Classes, System.SysUtils, System.Contnrs, System.Types,
+  System.Classes, System.SysUtils, System.Types,
 
   Spring.Collections;
 

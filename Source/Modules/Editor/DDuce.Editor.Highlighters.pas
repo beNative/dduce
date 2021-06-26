@@ -31,16 +31,14 @@ interface
 }
 
 uses
-  System.SysUtils, System.Classes, System.Contnrs,
+  System.SysUtils, System.Classes,
 
-  DDuce.Editor.Utils, DDuce.Editor.CodeFormatters, DDuce.Editor.CodeTags,
-
-  TextEditor.Highlighter,
+  DDuce.Editor.CodeFormatters, DDuce.Editor.CodeTags,
 
   DDuce.Logger;
 
 type
-  THighlighters        = class;
+  THighlighters = class;
 
   THighlighterItem = class(TComponent)
   private
@@ -54,7 +52,7 @@ type
     FFileExtensions       : TStringList;
     FUseCommonAttributes  : Boolean;
 
-    // private property access methods
+    {$REGION 'property access methods'}
     function GetDefaultFilter: string;
     function GetFileExtensions: string;
     function GetIndex: Integer;
@@ -62,11 +60,11 @@ type
     procedure SetFileExtensions(AValue: string);
     procedure SetFormatterSupport(const AValue: Boolean);
     procedure SetSmartSelectionTags(AValue: TCodeTags);
+    {$ENDREGION}
 
   public
-    // constructors and destructors
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
+    destructor Destroy; override;
 
     procedure Assign(Source: TPersistent); override;
 
@@ -112,6 +110,7 @@ type
       FPosition     : Integer;
 
       function GetCurrent: THighlighterItem;
+
     public
       constructor Create(AHighlighters: THighlighters);
 
@@ -121,19 +120,16 @@ type
         read GetCurrent;
     end;
 
-    // property access methods
+    {$REGION 'property access methods'}
     function GetCount: Integer;
     function GetFileFilter: string;
     function GetItem(Index: Integer): THighlighterItem;
     function GetItemByName(const AName: string): THighlighterItem;
     procedure SetItem(Index: Integer; const Value: THighlighterItem);
     procedure SetItemByName(const AName: string; const AValue: THighlighterItem);
+    {$ENDREGION}
 
   public
-    // constructors and destructors
-    procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
-
     function Add: THighlighterItem;
     function Exists(const AName: string): Boolean;
 
@@ -151,6 +147,7 @@ type
       const ACodeFormatter  : ICodeFormatter = nil
     ); virtual;
 
+
     // public properties
     { Provides indexed access to the list of items. }
     property Items[Index: Integer]: THighlighterItem
@@ -164,12 +161,13 @@ type
 
     property FileFilter: string
       read GetFileFilter;
+
   end;
 
 implementation
 
 uses
-  System.StrUtils, System.IOUtils,
+  System.IOUtils,
   Vcl.Forms, Vcl.Dialogs;
 
 {$REGION 'THighlighterEnumerator'}
@@ -192,18 +190,6 @@ end;
 {$ENDREGION}
 
 {$REGION 'THighlighters'}
-{$REGION 'construction and destruction'}
-procedure THighlighters.AfterConstruction;
-begin
-  inherited AfterConstruction;
-end;
-
-procedure THighlighters.BeforeDestruction;
-begin
-  inherited BeforeDestruction;
-end;
-{$ENDREGION}
-
 {$REGION 'property access mehods'}
 function THighlighters.GetItem(Index: Integer): THighlighterItem;
 begin
@@ -349,7 +335,6 @@ end;
 {$ENDREGION}
 
 {$REGION 'THighlighterItem'}
-
 {$REGION 'construction and destruction'}
 procedure THighlighterItem.AfterConstruction;
 begin
@@ -361,12 +346,12 @@ begin
   FUseCommonAttributes       := True;
 end;
 
-procedure THighlighterItem.BeforeDestruction;
+destructor THighlighterItem.Destroy;
 begin
   FCodeFormatter := nil;
   FreeAndNil(FFileExtensions);
   FreeAndNil(FSmartSelectionTags);
-  inherited BeforeDestruction;
+  inherited Destroy;
 end;
 {$ENDREGION}
 

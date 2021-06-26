@@ -30,12 +30,10 @@ uses
   VirtualTrees,
 
   DSharp.Windows.TreeViewPresenter, DSharp.Windows.ColumnDefinitions,
-  DSharp.Core.DataTemplates,
 
   DDuce.Editor.Interfaces;
 
 type
-
   TfrmActionListView = class(TForm, IEditorToolView)
     edtFilterActions : TEdit;
     pnlActions       : TPanel;
@@ -44,6 +42,7 @@ type
     tsCommands       : TTabSheet;
     tsActions        : TTabSheet;
 
+    {$REGION 'event handlers'}
     procedure edtFilterActionsChange(Sender: TObject);
     procedure edtFilterActionsKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -64,6 +63,7 @@ type
     ): Boolean;
     procedure FTVPActionsFilter(Item: TObject; var Accepted: Boolean);
     procedure FVSTActionsKeyPress(Sender: TObject; var Key: Char);
+    {$ENDREGION}
 
   private
     FVSTActions      : TVirtualStringTree;
@@ -75,11 +75,13 @@ type
     FVKPressed       : Boolean;
     //FTextStyle       : TTextStyle;
 
+    {$REGION 'property access methods'}
     function GetFilter: string;
     procedure SetFilter(AValue: string);
     function GetForm: TForm;
     function GetManager: IEditorManager;
     function GetName: string;
+    {$ENDREGION}
 
   protected
     procedure CreateActionsView;
@@ -124,14 +126,13 @@ implementation
 
 uses
   Winapi.Windows, Winapi.Messages,
-  System.TypInfo, System.StrUtils, System.Variants, System.Actions, System.Rtti,
-  System.UITypes,
+  System.TypInfo, System.Variants, System.Actions, System.Rtti, System.UITypes,
   Vcl.GraphUtil, Vcl.Menus,
 
   DSharp.Windows.ControlTemplates,
 
   DDuce.Editor.Utils, DDuce.Editor.ActionList.Templates,
-  DDuce.Factories.TreeViewPresenter, DDuce.Factories.VirtualTrees;
+  DDuce.Factories.VirtualTrees;
 
 type
   TVKSet = set of Byte;

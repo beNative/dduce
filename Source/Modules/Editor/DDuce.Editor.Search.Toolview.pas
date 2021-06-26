@@ -31,7 +31,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.Actions,
-  Vcl.StdCtrls, Vcl.Forms, Vcl.Buttons, Vcl.ExtCtrls, Vcl.Grids, Vcl.ActnList,
+  Vcl.StdCtrls, Vcl.Forms, Vcl.Buttons, Vcl.ExtCtrls, Vcl.ActnList,
   Vcl.Controls,
 
   VirtualTrees,
@@ -39,10 +39,9 @@ uses
   DSharp.Core.DataTemplates, DSharp.Windows.TreeViewPresenter,
   DSharp.Windows.ColumnDefinitions.ControlTemplate,
 
-  TextEditor.Types, TextEditor.Search,
+  TextEditor.Types,
 
   DDuce.Editor.ToolView.Base, DDuce.Editor.Interfaces, DDuce.Editor.Types,
-
   DDuce.Logger;
 
 type
@@ -89,6 +88,7 @@ type
     procedure actFindExecute(Sender: TObject);
     {$ENDREGION}
 
+    {$REGION 'event handlers'}
     procedure cbxSearchTextChange(Sender: TObject);
     procedure chkClick(Sender: TObject);
     procedure FTVPSelectionChanged(Sender: TObject);
@@ -100,11 +100,13 @@ type
     procedure rbFromCursorClick(Sender: TObject);
     procedure rbActiveViewClick(Sender: TObject);
     procedure rbSelectionClick(Sender: TObject);
+    {$ENDREGION}
 
   private
     FTVP : TTreeViewPresenter;
     FVST : TVirtualStringTree;
 
+    {$REGION 'property access methods'}
     function GetSearchEngine: IEditorSearchEngine;
     function GetOptions: TTextEditorSearchOptions;
     function GetSearchText: string;
@@ -112,12 +114,13 @@ type
     procedure SetSearchText(const AValue: string);
     function GetReplaceText: string;
     procedure SetReplaceText(const AValue: string);
+    {$ENDREGION}
 
     procedure SearchEngineExecute(Sender: TObject);
     procedure SearchEngineChange(Sender: TObject);
     procedure ActionExecute(
-          Sender   : TObject;
-          AAction  : TBasicAction;
+      Sender       : TObject;
+      AAction      : TBasicAction;
       var AHandled : Boolean
     );
 
@@ -132,7 +135,7 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
+    destructor Destroy; override;
 
     procedure UpdateActions; override;
     procedure UpdateView; override;
@@ -156,11 +159,8 @@ uses
 
   Spring.Collections,
 
-  DDuce.Components.Factories, DDuce.Factories.TreeViewPresenter,
   DDuce.Factories.VirtualTrees,
-
-  DDuce.Editor.Search.Engine, DDuce.Editor.Search.Data,
-  DDuce.Editor.Search.Templates;
+  DDuce.Editor.Search.Data, DDuce.Editor.Search.Templates;
 
 resourcestring
   SFileName     = 'FileName';
@@ -171,15 +171,15 @@ resourcestring
 procedure TfrmSearchForm.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FVST := TVirtualStringTreeFactory.CreateGrid(Self, pnlResultList);
+    FVST := TVirtualStringTreeFactory.CreateTreeList(Self, pnlResultList);
   FVST.TreeOptions.AutoOptions :=
-    FVST.TreeOptions.AutoOptions + [toAutoSpanColumns] ;
+    FVST.TreeOptions.AutoOptions + [toAutoSpanColumns];
   FVST.Header.MainColumn := 0;
 
   FTVP := TTreeViewPresenter.Create(Self);
   FTVP.ShowHeader  := False;
   FTVP.ListMode    := False;
-  FTVP.ColumnDefinitions.Add('Text', 150);
+  FTVP.ColumnDefinitions.Add('Text', 300, taLeftJustify, 250);
   FTVP.View.ItemsSource := SearchEngine.ItemGroups as IObjectList;
   FTVP.TreeView    := FVST;
   FTVP.View.ItemTemplate := TSearchResultGroupTemplate.Create;
@@ -192,7 +192,7 @@ begin
   Manager.Events.OnActionExecute.Add(ActionExecute);
 end;
 
-procedure TfrmSearchForm.BeforeDestruction;
+destructor TfrmSearchForm.Destroy;
 begin
   if Assigned(SearchEngine) then
   begin
@@ -201,7 +201,8 @@ begin
   end;
   if Assigned(Manager) then
     Manager.Events.OnActionExecute.Remove(ActionExecute);
-  inherited BeforeDestruction;
+
+  inherited Destroy;
 end;
 {$ENDREGION}
 
@@ -384,7 +385,7 @@ var
   S : string;
 begin
   FTVP.Refresh;
-  FVST.Header.AutoFitColumns(False, smaAllColumns, 0);
+  //FVST.Header.AutoFitColumns(False, smaAllColumns, 0);
   if SearchEngine.ItemList.Count = 1 then
     S := SMatchFound
   else
@@ -405,6 +406,7 @@ begin
       cbxSearchText.SelectAll;
     end;
   end;
+  FVST.FullExpand;
 end;
 
 procedure TfrmSearchForm.SearchEngineChange(Sender: TObject);
@@ -423,35 +425,6 @@ procedure TfrmSearchForm.ActionExecute(Sender: TObject; AAction: TBasicAction;
   var AHandled: Boolean);
 begin
   Logger.Send('Executed', AAction.Name);
-end;
-{$ENDREGION}
-
-{$REGION 'protected methods'}
-procedure TfrmSearchForm.Execute;
-begin
-  SearchEngine.SearchText := cbxSearchText.Text;
-  //cbxSearchText.AddHistoryItem(SearchText, 30, True, True);
-  SearchEngine.SearchAllViews := rbAllViews.Checked;
-  SearchEngine.Options        := Options;
-//  Logger.Send(
-//    'SearchOptions',
-//    SetToString(TypeInfo(TSynSearchOptions),
-//    SearchEngine.Options)
-//  );
-  SearchEngine.Execute;
-end;
-
-procedure TfrmSearchForm.UpdateView;
-begin
-  if rbAllViews.Checked then
-  begin
-    View.BeginUpdate;
-//    View.SetHighlightSearch(
-//      SearchEngine.SearchText,
-//      SearchEngine.Options
-//    );
-    View.EndUpdate;
-  end;
 end;
 
 procedure TfrmSearchForm.SettingsChanged;
@@ -495,37 +468,66 @@ begin
     SearchEngine.CurrentIndex := SearchEngine.ItemList.IndexOf(SR);
   end;
 end;
+{$ENDREGION}
+
+{$REGION 'protected methods'}
+procedure TfrmSearchForm.Execute;
+begin
+  SearchEngine.SearchText := cbxSearchText.Text;
+  //cbxSearchText.AddHistoryItem(SearchText, 30, True, True);
+  SearchEngine.SearchAllViews := rbAllViews.Checked;
+  SearchEngine.Options        := Options;
+//  Logger.Send(
+//    'SearchOptions',
+//    SetToString(TypeInfo(TSynSearchOptions),
+//    SearchEngine.Options)
+//  );
+  SearchEngine.Execute;
+end;
+
+procedure TfrmSearchForm.UpdateView;
+begin
+  if rbAllViews.Checked then
+  begin
+    View.BeginUpdate;
+//    View.SetHighlightSearch(
+//      SearchEngine.SearchText,
+//      SearchEngine.Options
+//    );
+    View.EndUpdate;
+  end;
+end;
 
 procedure TfrmSearchForm.UpdateActions;
-//var
-//  B: Boolean;
+var
+  B : Boolean;
 begin
   inherited UpdateActions;
   { Focus the corresponding search result in the list when we do find next/
     find previous from the editor view. }
-//  B := (SearchEngine.ItemList.Count > 0) and (ReplaceText <> '');
-//  btnReplace.Visible     := B;
-//  btnReplaceAll.Visible  := B;
-//  B := not rbAllViews.Checked;
-//  grpOrigin.Enabled    := B;
-//  grpDirection.Enabled := B;
-//  grpOrigin.Visible    := B;
-//  grpDirection.Visible := B;
-//  if Update then
-//  begin
-//    SearchEngine.ReplaceText := ReplaceText;
-//    if (SearchEngine.SearchText <> SearchText)
-//      or (SearchEngine.Options <> Options) then
-//    begin
-//      SearchEngine.Options    := Options;
-//      SearchEngine.SearchText := SearchText;
-//      pnlStatus.Caption       := '';
-//      SearchEngine.ItemGroups.Clear;
-//      SearchEngine.ItemList.Clear;
-//      FTVP.Refresh;
-//    end;
-//    Updated;
-//  end;
+  B := (SearchEngine.ItemList.Count > 0) and (ReplaceText <> '');
+  btnReplace.Visible     := B;
+  btnReplaceAll.Visible  := B;
+  B := not rbAllViews.Checked;
+  grpOrigin.Enabled    := B;
+  grpDirection.Enabled := B;
+  grpOrigin.Visible    := B;
+  grpDirection.Visible := B;
+  if Change then
+  begin
+    SearchEngine.ReplaceText := ReplaceText;
+    if (SearchEngine.SearchText <> SearchText)
+      or (SearchEngine.Options <> Options) then
+    begin
+      SearchEngine.Options    := Options;
+      SearchEngine.SearchText := SearchText;
+      pnlStatus.Caption       := '';
+      SearchEngine.ItemGroups.Clear;
+      SearchEngine.ItemList.Clear;
+      FTVP.Refresh;
+    end;
+    Updated;
+  end;
 end;
 {$ENDREGION}
 

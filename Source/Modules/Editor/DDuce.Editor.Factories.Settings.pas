@@ -22,9 +22,8 @@ uses
   System.Classes, System.SysUtils,
   Vcl.Controls,
 
-  Spring.Collections,
-
-  DDuce.Editor.Tools.Settings, DDuce.Editor.Highlighters, DDuce.Editor.Interfaces;
+  DDuce.Editor.Tools.Settings, DDuce.Editor.Highlighters,
+  DDuce.Editor.Interfaces;
 
 type
   TEditorSettingsFactory = class(TInterfacedObject, IEditorSettingsFactory)
@@ -33,7 +32,7 @@ type
     procedure RegisterHighlighters(AHighlighters: THighlighters);
 
     function CreateInstance(
-            AOwner    : TComponent = nil;
+      AOwner          : TComponent = nil;
       const AFileName : string = ''
     ): IEditorSettings;
   end;
@@ -41,7 +40,6 @@ type
 implementation
 
 uses
-  System.IOUtils,
   Vcl.Forms,
 
   DDuce.Editor.CodeFormatters,

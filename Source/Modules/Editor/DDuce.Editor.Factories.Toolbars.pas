@@ -22,7 +22,7 @@ uses
   System.Classes, System.SysUtils,
   Vcl.Menus, Vcl.Controls, Vcl.ActnList, Vcl.ComCtrls, Vcl.Toolwin,
 
-  DDuce.Editor.Interfaces, DDuce.Editor.Resources;
+  DDuce.Editor.Interfaces;
 
 const
   DEFAULT_EDGE_BORDERS = [ebLeft, ebTop, ebRight, ebBottom];
@@ -32,7 +32,7 @@ const
 
 type
   TEditorToolbarsFactory = class(TInterfacedObject, IEditorToolbarsFactory)
-  strict private
+  private
     FActions : IEditorActions;
     FMenus   : IEditorMenus;
 
@@ -59,7 +59,6 @@ type
 
   public
     procedure AfterConstruction; override;
-
     constructor Create(
       AActions : IEditorActions;
       AMenus   : IEditorMenus

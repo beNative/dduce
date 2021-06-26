@@ -25,9 +25,10 @@ uses
 
 type
   TLine = class(TPersistent)
-  strict private
+  private
     FIndex : Integer;
     FText  : string;
+
   public
     constructor Create(
       const AIndex : Integer;
@@ -40,6 +41,7 @@ type
 
     property Text: string
       read FText write FText;
+
   end;
 
 implementation

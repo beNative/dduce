@@ -307,7 +307,6 @@ function CheckHostExists(const AHostName: string): Boolean;
 var
   LIcmpClient : TIdIcmpClient;
 begin
-  Result := False;
   LIcmpClient := TIdIcmpClient.Create(nil);
   try
     try

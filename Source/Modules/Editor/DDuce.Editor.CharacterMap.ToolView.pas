@@ -38,6 +38,7 @@ type
     tsUnicode          : TTabSheet;
     lblUnicodeCharInfo : TLabel;
 
+    {$REGION 'event handlers'}
     procedure cbxUnicodeRangeSelect(Sender: TObject);
     procedure grdANSIKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure grdANSIMouseDown(Sender: TObject; Button: TMouseButton;
@@ -56,6 +57,7 @@ type
       Y: Integer);
     procedure grdUnicodeSelectCell(Sender: TObject; aCol, aRow: Integer;
       var CanSelect: Boolean);
+    {$ENDREGION}
 
   protected
     procedure FillCharMap;

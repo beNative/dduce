@@ -45,9 +45,9 @@ interface
 
 uses
   Winapi.Messages,
-  System.Classes, System.SysUtils, System.Types, System.ImageList,
-  Vcl.Controls, Vcl.Forms, Vcl.Graphics, Vcl.Menus, Vcl.Dialogs, Vcl.StdCtrls,
-  Vcl.ImgList,
+  System.Classes, System.SysUtils, System.Types,
+  Vcl.Controls, Vcl.Forms, Vcl.Graphics, Vcl.Menus, Vcl.Dialogs,
+
 
   TextEditor, TextEditor.Types, TextEditor.KeyCommands, TextEditor.Highlighter,
 
@@ -442,14 +442,12 @@ implementation
 {$R *.dfm}
 
 uses
-  System.TypInfo, System.UITypes, System.IOUtils, System.Math,
+  System.UITypes, System.IOUtils, System.Math,
   Vcl.GraphUtil,
 
   //BCEditor.Editor.LineSpacing,
 
-  Spring,
-
-  DDuce.Editor.Utils;
+  Spring;
 
 {$REGION'construction and destruction'}
 procedure TEditorView.AfterConstruction;
@@ -516,7 +514,6 @@ end;
 //  Logger.Leave('TEditorView.EditorCommandProcessed');
 //end;
 
-
 procedure TEditorView.EditorDropFiles(const ASender: TObject; const APos: TPoint;
   const AFiles: TStrings);
 begin
@@ -550,8 +547,6 @@ begin
   if Assigned(Events) then
     Events.DoChange;
 end;
-
-
 
 procedure TEditorView.EditorCustomTokenAttribute(const ASender: TObject;
   const AText: string; const ALine, AChar: Integer; var AForegroundColor,
@@ -675,7 +670,7 @@ end;
 
 function TEditorView.GetCaretX: Integer;
 begin
-//  Result := Editor.TextCaretPosition.Char;
+  Result := Editor.TextPosition.Char;
 end;
 
 procedure TEditorView.SetCaretX(const Value: Integer);
@@ -692,7 +687,7 @@ end;
 
 function TEditorView.GetCaretY: Integer;
 begin
-//  Result := Editor.TextCaretPosition.Line;
+  Result := Editor.TextPosition.Line;
 end;
 
 procedure TEditorView.SetCaretY(const Value: Integer);
@@ -737,12 +732,12 @@ end;
 
 function TEditorView.GetInsertMode: Boolean;
 begin
-//  Result := Editor.TextEntryMode = temInsert;
+  Result := Editor.OvertypeMode = omInsert;
 end;
 
 procedure TEditorView.SetInsertMode(AValue: Boolean);
 begin
-//  Editor.TextEntryMode := temInsert;
+  Editor.OvertypeMode := omInsert;
 end;
 
 function TEditorView.GetIsFile: Boolean;
@@ -770,14 +765,14 @@ end;
 
 function TEditorView.GetSearchText: string;
 begin
-  //Result := Editor.SearchString;
+  Result := Editor.SearchString;
 end;
 
 procedure TEditorView.SetSearchText(const Value: string);
 begin
   if Value <> SearchText then
   begin
-//    Editor.SearchString := Value;
+    Editor.SearchString := Value;
   end;
 end;
 
@@ -830,7 +825,7 @@ end;
 function TEditorView.GetLineText: string;
 begin
   //Result := Editor.Get
-//  Result := Editor. LineText;
+
 end;
 
 procedure TEditorView.SetLineText(const AValue: string);
@@ -918,12 +913,16 @@ end;
 
 function TEditorView.GetLogicalCaretXY: TPoint;
 begin
-//  Result := Editor.LogicalCaretXY;
+  Result := Point(Editor.TextPosition.Char, Editor.TextPosition.Line);
 end;
 
 procedure TEditorView.SetLogicalCaretXY(const AValue: TPoint);
+var
+  TP : TTextEditorTextPosition;
 begin
-//  Editor.LogicalCaretXY := AValue;
+  TP.Char := AValue.X;
+  TP.Line := AValue.Y;
+  Editor.TextPosition := TP;
 end;
 
 function TEditorView.GetModified: Boolean;
@@ -999,9 +998,14 @@ begin
     FHighlighterItem := AValue;
     if Assigned(AValue) then
     begin
-      Editor.Highlighter.LoadFromFile(AValue.LayoutFileName);
-      Settings.HighlighterType := FHighlighterItem.Highlighter;
-      Actions.UpdateHighLighterActions;
+      try
+        Editor.Highlighter.LoadFromFile(AValue.LayoutFileName);
+        Settings.HighlighterType := FHighlighterItem.Highlighter;
+        Actions.UpdateHighLighterActions;
+      except
+        on E: Exception do
+          Logger.SendException('SetHighlighterItem', E);
+      end;
     end;
     Events.DoHighlighterChange;
   end;
