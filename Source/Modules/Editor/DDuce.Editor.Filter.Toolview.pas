@@ -59,6 +59,7 @@ type
     pnlMain            : TPanel;
     sbrMain            : TStatusBar;
 
+
     {$REGION 'action handlers'}
     procedure actFocusFilterTextExecute(Sender: TObject);
     {$ENDREGION}

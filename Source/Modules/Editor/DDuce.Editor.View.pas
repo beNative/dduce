@@ -920,6 +920,7 @@ procedure TEditorView.SetLogicalCaretXY(const AValue: TPoint);
 var
   TP : TTextEditorTextPosition;
 begin
+
   TP.Char := AValue.X;
   TP.Line := AValue.Y;
   Editor.TextPosition := TP;

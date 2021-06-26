@@ -22,8 +22,9 @@ uses
   System.Classes, System.SysUtils,
   Vcl.Controls,
 
-  DDuce.Editor.Tools.Settings, DDuce.Editor.Highlighters,
-  DDuce.Editor.Interfaces;
+  Spring.Collections,
+
+  DDuce.Editor.Tools.Settings, DDuce.Editor.Highlighters, DDuce.Editor.Interfaces;
 
 type
   TEditorSettingsFactory = class(TInterfacedObject, IEditorSettingsFactory)

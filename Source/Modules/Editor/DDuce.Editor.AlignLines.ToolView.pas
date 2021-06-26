@@ -124,6 +124,7 @@ implementation
 
 {$R *.dfm}
 
+
 resourcestring
   SToken = 'Token';
 

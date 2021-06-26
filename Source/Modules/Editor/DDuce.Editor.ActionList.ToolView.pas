@@ -19,7 +19,7 @@ unit DDuce.Editor.ActionList.ToolView;
 interface
 
 uses
-  System.Classes, System.SysUtils,
+  System.Classes, System.SysUtils, System.Actions,
   Vcl.Forms, Vcl.Controls, Vcl.ExtCtrls, Vcl.ActnList, Vcl.ComCtrls,
   Vcl.StdCtrls, Vcl.ImgList, Vcl.Graphics,
 
@@ -126,7 +126,6 @@ implementation
 
 uses
   Winapi.Windows, Winapi.Messages,
-  System.TypInfo, System.Variants, System.Actions, System.Rtti, System.UITypes,
   Vcl.GraphUtil, Vcl.Menus,
 
   DSharp.Windows.ControlTemplates,
@@ -181,7 +180,7 @@ var
 procedure TfrmActionListView.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FActionItems    := TCollections.CreateList<TContainedAction>(False) as IObjectList;
+  FActionItems  := TCollections.CreateList<TContainedAction>(False) as IObjectList;
   FCommandItems := TCollections.CreateList<TTextEditorKeyCommand>(False) as IObjectList;
   CreateActionsView;
   CreateCommandsView;

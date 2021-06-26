@@ -38,6 +38,7 @@ type
     procedure AfterConstruction; override;
     destructor Destroy; override;
 
+
     procedure AssignTo(Dest: TPersistent); override;
     procedure Assign(Source: TPersistent); override;
 
