@@ -356,7 +356,9 @@ implementation
 
 uses
   System.SysUtils,
-  Vcl.Forms, Vcl.Controls;
+  Vcl.Forms, Vcl.Controls,
+
+  VirtualTrees.Types, VirtualTrees.Header;
 
 const
   GUTTER_COLUMN = 0;

@@ -156,6 +156,8 @@ implementation
 uses
   Vcl.Graphics,
 
+  VirtualTrees.Types, VirtualTrees.Header,
+
   Spring.Collections,
 
   DDuce.Factories.VirtualTrees,

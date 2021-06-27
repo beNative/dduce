@@ -47,7 +47,7 @@ uses
   Spring.Collections,
   SysUtils,
   Types,
-  VirtualTrees;
+  VirtualTrees, VirtualTrees.Types, VirtualTrees.Header;
 
 {$I DSharp.Windows.CustomPresenter.Types.inc}
 

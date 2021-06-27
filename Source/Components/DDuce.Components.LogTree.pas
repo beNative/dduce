@@ -221,6 +221,8 @@ uses
   System.UITypes,
   Vcl.Dialogs, Vcl.Clipbrd,
 
+  VirtualTrees.Types, VirtualTrees.Header,
+
   DDuce.Utils;
 
 resourcestring

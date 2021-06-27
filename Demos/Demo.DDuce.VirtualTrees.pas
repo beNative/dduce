@@ -103,6 +103,8 @@ implementation
 {$R *.dfm}
 
 uses
+  VirtualTrees.Types, VirtualTrees.Header,
+
   DDuce.Factories.VirtualTrees, DDuce.Factories.zObjInspector,
 
   Demo.Factories, Demo.Contact;

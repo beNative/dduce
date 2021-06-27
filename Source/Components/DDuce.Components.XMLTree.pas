@@ -44,7 +44,7 @@ uses
 
   NativeXML,
 
-  VirtualTrees,
+  VirtualTrees, VirtualTrees.Types, VirtualTrees.Header,
 
   //DDuce.Logger,
   DDuce.Components.XMLTree.NodeAttributes;

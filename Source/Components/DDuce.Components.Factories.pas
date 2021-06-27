@@ -48,7 +48,7 @@ implementation
 uses
   Vcl.Graphics, Vcl.Forms,
 
-  VirtualTrees;
+  VirtualTrees, VirtualTrees.Types, VirtualTrees.Header;
 
 class function TDDuceComponents.CreateLogTree(AOwner: TComponent;
   AParent: TWinControl; const AName: string): TLogTree;

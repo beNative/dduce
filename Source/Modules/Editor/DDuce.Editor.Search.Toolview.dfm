@@ -7,8 +7,6 @@ inherited frmSearchForm: TfrmSearchForm
   ClientWidth = 309
   Constraints.MinHeight = 312
   Constraints.MinWidth = 300
-  DoubleBuffered = True
-  Font.Name = 'Segoe UI'
   PopupMode = pmAuto
   ShowHint = True
   OnHide = FormHide

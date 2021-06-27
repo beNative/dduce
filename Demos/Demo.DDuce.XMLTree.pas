@@ -27,7 +27,7 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.ActnList,
   Vcl.StdCtrls,
 
-  VirtualTrees,
+  VirtualTrees, VirtualTrees.Types, VirtualTrees.Header,
 
   DDuce.Components.PropertyInspector, DDuce.Components.XMLTree;
 
