@@ -59,10 +59,6 @@ object frmActionListView: TfrmActionListView
       end
       object tsCommands: TTabSheet
         Caption = 'Editor key commands'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
       end
     end
   end
