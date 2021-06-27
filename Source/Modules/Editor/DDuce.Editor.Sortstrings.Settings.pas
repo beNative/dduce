@@ -28,7 +28,7 @@ const
 
 type
   TSortStringsSettings = class(TComponent)
-  strict private
+  private
     FCaseSensitive : Boolean;
     FIgnoreSpaces  : Boolean;
     FSortDirection : TSortDirection;

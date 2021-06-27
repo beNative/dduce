@@ -28,32 +28,32 @@ type
   end;
 
   TPascalFormatter = class(TInterfacedObject, ICodeFormatter)
-  strict protected
+  protected
     function Format(const AString: string): string; virtual;
   end;
 
   TCPPFormatter = class (TInterfacedObject, ICodeFormatter)
-  strict protected
+  protected
     function Format(const AString: string): string; virtual;
   end;
 
   TJavaFormatter = class (TInterfacedObject, ICodeFormatter)
-  strict protected
+  protected
     function Format(const AString: string): string; virtual;
   end;
 
   TCSharpFormatter = class (TInterfacedObject, ICodeFormatter)
-  strict protected
+  protected
     function Format(const AString: string): string; virtual;
   end;
 
   TXMLFormatter = class(TInterfacedObject, ICodeFormatter)
-  strict protected
+  protected
     function Format(const AString: string): string; virtual;
   end;
 
   THTMLFormatter = class(TInterfacedObject, ICodeFormatter)
-  strict protected
+  protected
     function Format(const AString: string): string; virtual;
   end;
 

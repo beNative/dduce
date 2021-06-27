@@ -32,16 +32,16 @@ uses
 type
   TfrmMainMenu = class(TForm)
     aclMain           : TActionList;
+    actCenterMainForm : TAction;
     actClose          : TAction;
     actExecute        : TAction;
     actFocusFilter    : TAction;
+    btnExecute        : TButton;
     edtFilter         : TEdit;
+    imlMain           : TImageList;
     pnlTop            : TPanel;
     pnlVST            : TPanel;
     sbrMain           : TStatusBar;
-    imlMain           : TImageList;
-    btnExecute        : TButton;
-    actCenterMainForm : TAction;
     tbrMain           : TTaskbar;
 
     procedure actExecuteExecute(Sender: TObject);
@@ -55,7 +55,6 @@ type
       R            : TRect;
       var Handled  : Boolean
     );
-
     procedure FTVPFilter(Item: TObject; var Accepted: Boolean);
     procedure FTVPDoubleClick(Sender: TObject);
     function FTVPColumnDefinitionsCustomDrawColumn(

@@ -48,7 +48,6 @@ uses
 
   DDuce.Editor.Interfaces, DDuce.Editor.Search.Engine.Settings,
   DDuce.Editor.Search.Data,
-
   DDuce.Logger;
 
 type
@@ -92,7 +91,7 @@ type
     function PosToLineCol(
       const AString : string;
       const AOffset : TPoint;
-            APos    : Integer
+      APos          : Integer
     ): TPoint;
 
     { IEditorSearchEngine }
@@ -143,11 +142,10 @@ type
 
   public
     procedure AfterConstruction; override;
+
   end;
 
 implementation
-
-
 
 const
   MAX_RESULTS = 10000;
@@ -503,4 +501,3 @@ end;
 {$ENDREGION}
 
 end.
-

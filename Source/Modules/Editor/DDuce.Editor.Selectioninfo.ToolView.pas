@@ -26,10 +26,10 @@ uses
 
 type
   TfrmSelectionInfo = class(TForm, IEditorToolView)
-    pgc1                             : TPageControl;
-    ts1                              : TTabSheet;
-    ts2                              : TTabSheet;
-    pnl1                             : TPanel;
+    pgcMain: TPageControl;
+    tsSelectionInfo: TTabSheet;
+    tsReflectedProperties: TTabSheet;
+    pnlSelectionInfo: TPanel;
     lblStoredBlockBegin              : TLabel;
     lblStoredBlockEnd                : TLabel;
     lblStoredBlockBeginValue         : TLabel;
@@ -59,16 +59,13 @@ type
     lblSelEnd                        : TLabel;
     lblSelStartValue                 : TLabel;
     lblSelEndValue                   : TLabel;
-    {$ENDREGION}
 
     procedure btnRestoreClick(Sender: TObject);
     procedure btnStoreClick(Sender: TObject);
     procedure mmoBlockChange(Sender: TObject);
 
-  private
-    function GetView: IEditorView;
-
   protected
+    function GetView: IEditorView;
     function GetForm: TForm;
     function GetName: string;
     function GetVisible: Boolean;
@@ -85,6 +82,7 @@ type
 
   public
     procedure SetVisible(AValue: Boolean);
+
   end;
 
 implementation

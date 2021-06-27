@@ -5,6 +5,8 @@ inherited frmAlignLines: TfrmAlignLines
   ClientHeight = 729
   ClientWidth = 360
   Constraints.MinWidth = 170
+  DoubleBuffered = True
+  Font.Name = 'Segoe UI'
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 376
@@ -17,13 +19,19 @@ inherited frmAlignLines: TfrmAlignLines
     Width = 360
     Height = 704
     Align = alClient
+    BevelInner = bvNone
+    BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 0
+    DesignSize = (
+      360
+      704)
     object rgpSortDirection: TRadioGroup
       Left = 5
       Top = 164
       Width = 352
       Height = 54
+      Anchors = [akLeft, akTop, akRight]
       Caption = 'Sort direction:'
       Columns = 2
       ItemIndex = 0
@@ -34,10 +42,11 @@ inherited frmAlignLines: TfrmAlignLines
       OnClick = rgpSortDirectionClick
     end
     object rgpAlignAt: TRadioGroup
-      Left = 0
-      Top = 224
+      Left = 5
+      Top = 222
       Width = 352
       Height = 54
+      Anchors = [akLeft, akTop, akRight]
       Caption = 'Align at:'
       Columns = 2
       ItemIndex = 0

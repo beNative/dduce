@@ -80,6 +80,7 @@ type
 
     property Text: string
       read GetText;
+
   end;
 
   { TSearchResultLine }
@@ -102,6 +103,7 @@ type
 
     property Text: string
       read GetText;
+
   end;
 
   { TSearchResultGroup }
@@ -128,6 +130,7 @@ type
 
     property Text: string
       read GetText;
+
   end;
 
 implementation

@@ -67,7 +67,6 @@ type
     grpReplaceWith        : TGroupBox;
     grpScope              : TGroupBox;
     grpSearchText         : TGroupBox;
-    imgF2Key              : TImage;
     pnlButtons            : TPanel;
     pnlOperations         : TPanel;
     pnlResultList         : TPanel;

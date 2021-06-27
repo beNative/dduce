@@ -24,7 +24,6 @@ uses
 
   TextEditor.KeyCommands,
 
-
   DSharp.Windows.ColumnDefinitions, DSharp.Windows.ControlTemplates,
   DSharp.Core.DataTemplates, DSharp.Windows.ColumnDefinitions.ControlTemplate;
 

@@ -83,20 +83,17 @@ uses
   System.ImageList,
   Vcl.Controls, Vcl.ActnList, Vcl.Menus, Vcl.Dialogs, Vcl.Forms, Vcl.ImgList,
 
-
   Spring, Spring.Collections,
 
   TextEditor, TextEditor.KeyCommands,
 
   DDuce.Editor.Types, DDuce.Editor.Interfaces, DDuce.Editor.Resources,
   DDuce.Editor.View, DDuce.Editor.Highlighters, DDuce.Editor.Commands,
-
   DDuce.Logger;
 
 type
   TPopupMenu = DDuce.Editor.Interfaces.TPopupMenu;
 
-type
   TdmEditorManager = class(TDataModule, IEditorManager,
                                         IEditorActions,
                                         IEditorView,   // active view

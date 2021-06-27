@@ -27,8 +27,8 @@ uses
   Spring.Collections,
 
   DSharp.Windows.TreeViewPresenter, DSharp.Windows.ColumnDefinitions,
-  DSharp.Windows.ControlTemplates,
-  DSharp.Core.DataTemplates, DSharp.Windows.ColumnDefinitions.ControlTemplate,
+  DSharp.Windows.ControlTemplates, DSharp.Core.DataTemplates,
+  DSharp.Windows.ColumnDefinitions.ControlTemplate,
 
   DDuce.Editor.Search.Data;
 

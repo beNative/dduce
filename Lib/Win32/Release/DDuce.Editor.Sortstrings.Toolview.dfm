@@ -8,9 +8,10 @@ inherited frmSortStrings: TfrmSortStrings
   PixelsPerInch = 96
   TextHeight = 13
   object rgpSortDirection: TRadioGroup
-    Left = 0
-    Top = 0
-    Width = 282
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 276
     Height = 54
     Align = alTop
     Caption = 'Sort direction:'
@@ -21,6 +22,9 @@ inherited frmSortStrings: TfrmSortStrings
       'Descending')
     TabOrder = 0
     OnClick = rgpSortDirectionClick
+    ExplicitLeft = 0
+    ExplicitTop = 0
+    ExplicitWidth = 282
   end
   object pnlBottom: TPanel
     Left = 0
@@ -48,9 +52,10 @@ inherited frmSortStrings: TfrmSortStrings
     end
   end
   object rgpSortScope: TRadioGroup
-    Left = 0
-    Top = 54
-    Width = 282
+    AlignWithMargins = True
+    Left = 3
+    Top = 63
+    Width = 276
     Height = 66
     Align = alTop
     Caption = 'Scope'
@@ -62,6 +67,9 @@ inherited frmSortStrings: TfrmSortStrings
       'Paragraphs')
     TabOrder = 1
     OnClick = rgpSortScopeClick
+    ExplicitLeft = 0
+    ExplicitTop = 54
+    ExplicitWidth = 282
   end
   object aclMain: TActionList
     Left = 296

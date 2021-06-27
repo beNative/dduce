@@ -19,25 +19,24 @@ unit DDuce.Editor.SortStrings.ToolView;
 interface
 
 uses
-  System.Classes, System.SysUtils,
+  System.Classes, System.SysUtils, System.Actions,
   Vcl.Forms, Vcl.Controls, Vcl.Graphics, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.ActnList,
 
-  DDuce.Editor.SortStrings.Settings, DDuce.Editor.ToolView.Base, System.Actions;
+  DDuce.Editor.SortStrings.Settings, DDuce.Editor.ToolView.Base;
 
 type
   TfrmSortStrings = class(TCustomEditorToolView)
     aclMain          : TActionList;
     actExecute       : TAction;
     btnOK            : TButton;
-    //gbxOptions       : TCheckGroup;
     pnlBottom        : TPanel;
     rgpSortDirection : TRadioGroup;
     rgpSortScope     : TRadioGroup;
 
     procedure actExecuteExecute(Sender: TObject);
-    procedure FormResize(Sender: TObject);
 
+    procedure FormResize(Sender: TObject);
     procedure gbxOptionsItemClick(Sender: TObject; Index: Integer);
     procedure rgpSortScopeClick(Sender: TObject);
     procedure rgpSortDirectionClick(Sender: TObject);
@@ -45,12 +44,11 @@ type
   private
     function GetSettings: TSortStringsSettings;
 
-  strict protected
-    property Settings: TSortStringsSettings
-      read GetSettings;
-
   protected
     procedure UpdateActions; override;
+
+    property Settings: TSortStringsSettings
+      read GetSettings;
 
   public
     procedure AfterConstruction; override;
@@ -64,11 +62,13 @@ implementation
 uses
   DDuce.Editor.Types;
 
+{$REGION 'construction and destruction'}
 procedure TfrmSortStrings.AfterConstruction;
 begin
   inherited AfterConstruction;
   Width := Settings.Width;
 end;
+{$ENDREGION}
 
 {$REGION 'property access mehods'}
 function TfrmSortStrings.GetSettings: TSortStringsSettings;
