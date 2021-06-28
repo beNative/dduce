@@ -56,6 +56,7 @@ type
 
     property Width: Integer
       read FWidth write FWidth default DEFAULT_WIDTH;
+
   end;
 
 implementation
@@ -71,7 +72,7 @@ end;
 {$REGION 'public methods'}
 procedure TSortStringsSettings.AssignTo(Dest: TPersistent);
 var
-  S: TSortStringsSettings;
+  S : TSortStringsSettings;
 begin
   if Dest is TSortStringsSettings then
   begin

@@ -44,8 +44,6 @@ type
     procedure AfterConstruction; override;
   end;
 
-  { TSearchResultLineTemplate }
-
   TSearchResultLineTemplate = class(TControlTemplate<TSearchResultLine>)
   public
     function GetItemCount(const Item: TSearchResultLine): Integer; override;
@@ -56,8 +54,6 @@ type
     ) : TValue; override;
     procedure AfterConstruction; override;
   end;
-
-  { TSearchResultTemplate }
 
   TSearchResultTemplate = class(TControlTemplate<TSearchResult>)
     function GetValue(

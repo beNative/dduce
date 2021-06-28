@@ -180,8 +180,10 @@ var
 procedure TfrmActionListView.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FActionItems  := TCollections.CreateList<TContainedAction>(False) as IObjectList;
-  FCommandItems := TCollections.CreateList<TTextEditorKeyCommand>(False) as IObjectList;
+  FActionItems  :=
+    TCollections.CreateList<TContainedAction>(False) as IObjectList;
+  FCommandItems :=
+    TCollections.CreateList<TTextEditorKeyCommand>(False) as IObjectList;
   CreateActionsView;
   CreateCommandsView;
 
@@ -249,8 +251,8 @@ function TfrmActionListView.FTVPActionsCustomDraw(Sender: TObject;
   CellRect: TRect; ImageList: TCustomImageList; DrawMode: TDrawMode;
   Selected: Boolean): Boolean;
 var
-  A : TAction;
-  Match : string;
+  A      : TAction;
+  Match  : string;
   Margin : Integer;
   Offset : Integer;
   R      : TRect;

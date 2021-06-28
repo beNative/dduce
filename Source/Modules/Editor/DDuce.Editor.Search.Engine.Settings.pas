@@ -63,7 +63,7 @@ implementation
 {$REGION 'public methods'}
 procedure TSearchEngineSettings.AssignTo(ADest: TPersistent);
 var
-  SES: TSearchEngineSettings;
+  SES : TSearchEngineSettings;
 begin
   if ADest is TSearchEngineSettings then
   begin
@@ -77,7 +77,7 @@ end;
 
 procedure TSearchEngineSettings.Assign(ASource: TPersistent);
 var
-  SES: TSearchEngineSettings;
+  SES : TSearchEngineSettings;
 begin
   if ASource is TSearchEngineSettings then
   begin

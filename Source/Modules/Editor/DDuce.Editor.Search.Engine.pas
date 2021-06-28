@@ -83,8 +83,10 @@ type
     procedure SetSearchText(AValue: string);
     {$ENDREGION}
 
+    {$REGION 'event dispatch methods'}
     procedure DoExecute;
     procedure DoChange;
+    {$ENDREGION}
 
   protected
     procedure AddResultsForView(AView: IEditorView);

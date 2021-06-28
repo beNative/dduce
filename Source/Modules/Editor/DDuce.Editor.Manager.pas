@@ -81,6 +81,7 @@ interface
 uses
   System.Classes, System.SysUtils, System.Variants, System.Actions,
   System.ImageList,
+
   Vcl.Controls, Vcl.ActnList, Vcl.Menus, Vcl.Dialogs, Vcl.Forms, Vcl.ImgList,
 
   Spring, Spring.Collections,
@@ -547,7 +548,6 @@ type
     ): IEditorView;
     {$ENDREGION}
 
-    // properties
     property ActionList: TActionList
       read GetActionList;
 
