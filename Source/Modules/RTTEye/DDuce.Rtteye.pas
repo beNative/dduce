@@ -22,9 +22,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages,
-  System.Actions, System.Classes, System.Rtti,
+  System.Actions, System.Classes, System.Rtti, System.ImageList,
   Vcl.ActnList, Vcl.StdCtrls, Vcl.Controls, Vcl.ComCtrls, Vcl.ExtCtrls,
-  Vcl.Forms, System.ImageList, Vcl.ImgList;
+  Vcl.Forms, Vcl.ImgList;
 
 type
   TfrmRTTEye = class(TForm)

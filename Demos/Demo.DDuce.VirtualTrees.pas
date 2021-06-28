@@ -76,12 +76,10 @@ type
       Node              : PVirtualNode;
       var InitialStates : TVirtualNodeInitStates
     );
-
     procedure FVirtualStringTreeFreeNode(
       Sender : TBaseVirtualTree;
       Node   : PVirtualNode
     );
-
     procedure FVirtualStringTreeGetText(
       Sender       : TBaseVirtualTree;
       Node         : PVirtualNode;

@@ -24,10 +24,12 @@ uses
 type
   TEditorToolSettings = class(TComponent)
   private
+    {$REGION 'property access methods'}
     function GetCount: Integer;
     function GetItems(AIndex: Integer): TComponent;
     function GetItemsByClass(AClass: TComponentClass): TComponent;
     function GetItemsByName(const AName: string): TComponent;
+    {$ENDREGION}
 
   public
     function RegisterSettings(

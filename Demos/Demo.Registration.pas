@@ -23,8 +23,7 @@ procedure RegisterDemos;
 implementation
 
 uses
-  DDuce.Logger.Channels.WinIPC,
-  DDuce.Logger,
+  DDuce.Logger.Channels.WinIPC, DDuce.Logger,
 
   Demo.DDuce.XMLTree,
   Demo.DDuce.PropertyInspector,
@@ -40,14 +39,12 @@ uses
   Demo.DDuce.VTNode,
   Demo.DDuce.EditList,
   Demo.DDuce.Dialogs,
-
   Demo.Manager;
 
 {$REGION 'interfaced routines'}
 procedure RegisterDemos;
 begin
   DemoManager.Register(TfrmLogger, 'Logger');
-  //Exit;
   DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmValueListDemo, 'ValueList');

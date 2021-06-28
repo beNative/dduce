@@ -57,11 +57,11 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
     constructor Create(
       const AMsgWindowClassName : string = '';
       const AWindowName         : string = ''
     );
+    destructor Destroy; override;
 
     property Active : Boolean
       read FActive write SetActive;
@@ -77,6 +77,7 @@ type
 
     property WindowName: string
       read FWindowName write FWindowName;
+
   end;
 
 implementation
@@ -140,10 +141,10 @@ begin
   FMsgData := TBytesStream.Create;
 end;
 
-procedure TWinipcServer.BeforeDestruction;
+destructor TWinipcServer.Destroy;
 begin
   FreeAndNil(FMsgData);
-  inherited BeforeDestruction;
+  inherited Destroy;
 end;
 {$ENDREGION}
 

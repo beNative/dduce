@@ -28,7 +28,6 @@ uses
   Data.DB,
 
   DDuce.Components.GridView, DDuce.Components.DBGridView,
-
   DDuce.Components.LogTree;
 
 type
@@ -59,17 +58,21 @@ type
     chkConnectEvents         : TCheckBox;
     {$ENDREGION}
 
+    {$REGION 'action handlers'}
+    procedure actAutoSizeColumnsExecute(Sender: TObject);
+    procedure actClearLogExecute(Sender: TObject);
+    {$ENDREGION}
+
+    {$REGION 'event handlers'}
     procedure chkActiveClick(Sender: TObject);
+    procedure chkConnectEventsClick(Sender: TObject);
+    procedure chkMultiselectClick(Sender: TObject);
     procedure dscMainDataChange(Sender: TObject; Field: TField);
     procedure dscMainStateChange(Sender: TObject);
     procedure dscMainUpdateData(Sender: TObject);
     procedure grdDBGVDataActiveChanged(Sender: TObject);
     procedure grdDBGVDataChanged(Sender: TObject);
-    procedure chkMultiselectClick(Sender: TObject);
-    procedure chkConnectEventsClick(Sender: TObject);
-
-    procedure actAutoSizeColumnsExecute(Sender: TObject);
-    procedure actClearLogExecute(Sender: TObject);
+    {$ENDREGION}
 
   private
     FDBGV : TDBGridView;

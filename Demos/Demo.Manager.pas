@@ -26,7 +26,7 @@ uses
 
 type
   TDemo = class(TPersistent)
-  strict private
+  private
     FName      : string;
     FFormClass : TComponentClass;
 

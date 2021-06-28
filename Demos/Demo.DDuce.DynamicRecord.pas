@@ -34,14 +34,13 @@ uses
   Spring, // for using Nullable types.
 
   DDuce.Components.GridView, DDuce.Components.ValueList,
-
   DDuce.DynamicRecord,
 
   Demo.Contact;
 
 type
   TTestClass = class
-  strict private
+  private
     FTestBoolean          : Boolean;
     FTestChar             : Char;
     FTestDateTime         : TDateTime;
@@ -95,7 +94,7 @@ type
 
 type
   TTestRecord = record
-  strict private
+  private
     FTestBoolean          : Boolean;
     FTestChar             : Char;
     FTestDateTime         : TDateTime;
@@ -151,7 +150,7 @@ type
 
 type
   TfrmDynamicRecords = class(TForm)
-    {$REGION 'designer fields'}
+    {$REGION 'designer controls'}
     aclMain                                   : TActionList;
     actAssignFDynamicRecord1ToFDynamicRecord2 : TAction;
     actAssignFDynamicRecord1ToFRecord1        : TAction;
@@ -246,7 +245,7 @@ type
     pnlRightBottomHeader                      : TPanel;
     pnlTop                                    : TPanel;
     pnlTRecordRepresentations                 : TGridPanel;
-    splHorizontal: TSplitter;
+    splHorizontal                             : TSplitter;
     tsAssignments                             : TTabSheet;
     tsContactObject                           : TTabSheet;
     tsDataSet                                 : TTabSheet;
@@ -256,38 +255,38 @@ type
     {$ENDREGION}
 
     {$REGION 'event handlers'}
-    procedure dscTestDataChange(Sender: TObject; Field: TField);
-    procedure chkQuoteValuesClick(Sender: TObject);
-    procedure edtQuoteCharChange(Sender: TObject);
-    procedure edtDelimiterChange(Sender: TObject);
     procedure chkAlignValuesClick(Sender: TObject);
+    procedure chkQuoteValuesClick(Sender: TObject);
+    procedure dscTestDataChange(Sender: TObject; Field: TField);
+    procedure edtDelimiterChange(Sender: TObject);
+    procedure edtQuoteCharChange(Sender: TObject);
     {$ENDREGION}
 
     {$REGION 'action handlers'}
-    procedure actTestAssignExecute(Sender: TObject);
-    procedure actToStringsExecute(Sender: TObject);
-    procedure actTestDataExecute(Sender: TObject);
-    procedure actFDynamicRecord1ClearExecute(Sender: TObject);
-    procedure actFDynamicRecord2ClearExecute(Sender: TObject);
-    procedure actAssignFieldValueToFRecord1Execute(Sender: TObject);
-    procedure actAssignFRecord1ToFDynamicRecord1Execute(Sender: TObject);
-    procedure actAssignFRecord1ToFRecord2Execute(Sender: TObject);
-    procedure actFRecord1ClearExecute(Sender: TObject);
-    procedure actFRecord2ClearExecute(Sender: TObject);
-    procedure actAssignFieldValueToFRecord2Execute(Sender: TObject);
     procedure actAssignFDynamicRecord1ToFDynamicRecord2Execute(Sender: TObject);
-    procedure actAssignFieldValueToDynamicRecord2Execute(Sender: TObject);
-    procedure actCustomTestExecute(Sender: TObject);
-    procedure actAssignFieldValueToDynamicRecord1Execute(Sender: TObject);
-    procedure actAssignFRecord2ToFDynamicRecord2Execute(Sender: TObject);
-    procedure actAssignFRecord2ToFDynamicRecord1Execute(Sender: TObject);
-    procedure actAssignFRecord1ToFDynamicRecord2Execute(Sender: TObject);
-    procedure actAssignFDynamicRecord1ToFRecord2Execute(Sender: TObject);
     procedure actAssignFDynamicRecord1ToFRecord1Execute(Sender: TObject);
-    procedure actAssignFDynamicRecord2ToFRecord2Execute(Sender: TObject);
+    procedure actAssignFDynamicRecord1ToFRecord2Execute(Sender: TObject);
     procedure actAssignFDynamicRecord2ToFDynamicRecord1Execute(Sender: TObject);
     procedure actAssignFDynamicRecord2ToFRecord1Execute(Sender: TObject);
+    procedure actAssignFDynamicRecord2ToFRecord2Execute(Sender: TObject);
+    procedure actAssignFieldValueToDynamicRecord1Execute(Sender: TObject);
+    procedure actAssignFieldValueToDynamicRecord2Execute(Sender: TObject);
+    procedure actAssignFieldValueToFRecord1Execute(Sender: TObject);
+    procedure actAssignFieldValueToFRecord2Execute(Sender: TObject);
+    procedure actAssignFRecord1ToFDynamicRecord1Execute(Sender: TObject);
+    procedure actAssignFRecord1ToFDynamicRecord2Execute(Sender: TObject);
+    procedure actAssignFRecord1ToFRecord2Execute(Sender: TObject);
+    procedure actAssignFRecord2ToFDynamicRecord1Execute(Sender: TObject);
+    procedure actAssignFRecord2ToFDynamicRecord2Execute(Sender: TObject);
     procedure actAssignFRecord2ToFRecord1Execute(Sender: TObject);
+    procedure actCustomTestExecute(Sender: TObject);
+    procedure actFDynamicRecord1ClearExecute(Sender: TObject);
+    procedure actFDynamicRecord2ClearExecute(Sender: TObject);
+    procedure actFRecord1ClearExecute(Sender: TObject);
+    procedure actFRecord2ClearExecute(Sender: TObject);
+    procedure actTestAssignExecute(Sender: TObject);
+    procedure actTestDataExecute(Sender: TObject);
+    procedure actToStringsExecute(Sender: TObject);
     {$ENDREGION}
 
   private

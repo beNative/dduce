@@ -25,9 +25,9 @@ uses
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, System.Actions, System.Rtti,
   System.ImageList, System.Bindings.Outputs,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList, Vcl.Menus,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ImgList, Vcl.Bind.DBEngExt,
-  Vcl.Bind.Editors, Vcl.Menus,
+  Vcl.Bind.Editors,
   Data.Bind.EngExt, Data.Bind.Components,
 
   DDuce.Logger.Interfaces;

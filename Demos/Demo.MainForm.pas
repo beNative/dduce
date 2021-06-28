@@ -20,6 +20,7 @@ interface
 
 uses
   System.Actions, System.UITypes, System.Classes, System.ImageList,
+  System.Win.TaskbarCore,
   Vcl.ActnList, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Controls, Vcl.ExtCtrls,
   Vcl.Buttons, Vcl.Forms, Vcl.ImgList, Vcl.Taskbar,
 
@@ -27,10 +28,11 @@ uses
 
   DSharp.Windows.ColumnDefinitions, DSharp.Windows.TreeViewPresenter,
 
-  Spring.Collections, System.Win.TaskbarCore;
+  Spring.Collections;
 
 type
   TfrmMainMenu = class(TForm)
+    {$REGION 'designer conrtrols'}
     aclMain           : TActionList;
     actCenterMainForm : TAction;
     actClose          : TAction;
@@ -43,11 +45,15 @@ type
     pnlVST            : TPanel;
     sbrMain           : TStatusBar;
     tbrMain           : TTaskbar;
+    {$ENDREGION}
 
+    {$REGION 'action handlers'}
     procedure actExecuteExecute(Sender: TObject);
     procedure actFocusFilterExecute(Sender: TObject);
     procedure actCenterMainFormExecute(Sender: TObject);
+    {$ENDREGION}
 
+    {$REGION 'event handlers'}
     procedure FVSTKeyPress(Sender: TObject; var Key: Char);
     procedure FVSTPaintBackground(
       Sender       : TBaseVirtualTree;
@@ -82,6 +88,7 @@ type
     procedure edtFilterEnter(Sender: TObject);
     procedure edtFilterExit(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    {$ENDREGION}
 
   private
     FVKPressed : Boolean;
@@ -107,6 +114,7 @@ uses
   Vcl.Graphics,
 
   DDuce.Factories.TreeViewPresenter, DDuce.Factories.VirtualTrees,
+
   Demo.Factories, Demo.Manager;
 
 type

@@ -56,6 +56,7 @@ type
     FInspector         : TInspector;
     FPropertyInspector : TPropertyInspector;
 
+    {$REGION 'event handlers'}
     procedure FInspectorGetCellText(
       Sender    : TObject;
       Cell      : TGridCell;
@@ -105,6 +106,7 @@ type
       Cell        : TGridCell;
       var CanShow : Boolean
     );
+    {$ENDREGION}
 
   protected
     procedure UpdateView;

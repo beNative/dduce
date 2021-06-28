@@ -996,8 +996,8 @@ var
 function WordCount(const AString: string; const AWordDelims: TSysCharSet)
   : Integer;
 var
-  N: Integer;
-  I: Integer;
+  N : Integer;
+  I : Integer;
 begin
   Result := 0;
   I := 1;
@@ -1042,8 +1042,8 @@ end;
 function ExtractWord(const AIndex: Integer; const AString: string;
   const AWordDelims: TSysCharSet): string;
 var
-  I: Integer;
-  N: Integer;
+  I : Integer;
+  N : Integer;
 begin
   N := 0;
   I := WordPosition(AIndex, AString, AWordDelims);

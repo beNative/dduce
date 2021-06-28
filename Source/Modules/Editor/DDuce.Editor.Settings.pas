@@ -61,12 +61,10 @@ uses
   Spring,
 
   DDuce.Settings.Form,
-
   DDuce.Editor.Interfaces, DDuce.Editor.Highlighters,
   DDuce.Editor.Tools.Settings, DDuce.Editor.Colors.Settings,
-  DDuce.Editor.Options.Settings,
-
-  DDuce.Editor.CodeTags, DDuce.Logger;
+  DDuce.Editor.Options.Settings, DDuce.Editor.CodeTags,
+  DDuce.Logger;
 
 const
   DEFAULT_AUTO_GUESS_HIGHLIGHTER_TYPE = True;
@@ -81,6 +79,7 @@ const
 type
   TEditorSettings = class(TComponent, IEditorSettings)
     procedure FEditorOptionsChanged(Sender: TObject);
+
   private
     FAutoFormatXML            : Boolean;
     FReadOnly                 : Boolean;
@@ -147,7 +146,7 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
+    destructor Destroy; override;
 
     procedure Apply; // to manually force a notification
     procedure Load; virtual;
@@ -257,7 +256,7 @@ begin
   AssignDefaultColors;
 end;
 
-procedure TEditorSettings.BeforeDestruction;
+destructor TEditorSettings.Destroy;
 begin
   FFormSettings.OnChanged.Remove(FFormSettingsChanged);
   FToolSettings.Free;
@@ -266,7 +265,7 @@ begin
   FFormSettings.Free;
   FHighlighters.Free;
   FEditorFont.Free;
-  inherited BeforeDestruction;
+  inherited Destroy;
 end;
 {$ENDREGION}
 

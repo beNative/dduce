@@ -46,25 +46,34 @@ interface
 uses
   Winapi.Messages,
   System.Classes, System.SysUtils, System.Types,
-  Vcl.Controls, Vcl.Forms, Vcl.Graphics, Vcl.Menus, Vcl.Dialogs,
-
+  Vcl.Controls, Vcl.Forms, Vcl.Graphics, Vcl.Menus, Vcl.Dialogs, Vcl.AppEvnts,
 
   TextEditor, TextEditor.Types, TextEditor.KeyCommands, TextEditor.Highlighter,
 
   DDuce.Editor.Resources, DDuce.Editor.Highlighters, DDuce.Editor.Interfaces,
-
-  DDuce.Logger, Vcl.AppEvnts;
+  DDuce.Logger;
 
 type
   TEditorView = class(TForm, IEditorView)
   private
+    FUpdate          : Boolean;
+    FLineBreakStyle  : string;
+    FEditor          : TTextEditor;
+    FFindHistory     : TStringList;
+    FReplaceHistory  : TStringList;
+    FHighlighterItem : THighlighterItem;
+    FFileName        : string;
+    FFoldLevel       : Integer;
+    FIsFile          : Boolean;
+    FOnChange        : TNotifyEvent;
+
+    {$REGION 'event handlers'}
     procedure EditorChange(Sender: TObject);
     procedure EditorCaretChanged(
       const ASender : TObject;
       const X, Y    : Integer;
       const AOffset : Integer
     );
-
 //    procedure EditorCommandProcessed(
 //      Sender       : TObject;
 //      var ACommand : TTextEditorCommand;
@@ -80,28 +89,25 @@ type
       const ADeleteLine : Boolean;
       var AAction       : TTextEditorReplaceAction
     );
-
     procedure EditorEnter(Sender: TObject);
-
     procedure EditorDropFiles(
       const ASender : TObject;
       const APos    : TPoint;
       const AFiles  : TStrings
     );
-
-    procedure ApplySettings;
-
-  private
-    FUpdate          : Boolean;
-    FLineBreakStyle  : string;
-    FEditor          : TTextEditor;
-    FFindHistory     : TStringList;
-    FReplaceHistory  : TStringList;
-    FHighlighterItem : THighlighterItem;
-    FFileName        : string;
-    FFoldLevel       : Integer;
-    FIsFile          : Boolean;
-    FOnChange        : TNotifyEvent;
+    procedure EditorSettingsChanged(ASender: TObject);
+    procedure EditorCustomTokenAttribute(
+      const ASender        : TObject;
+      const AText          : string;
+      const ALine          : Integer;
+      const AChar          : Integer;
+      var AForegroundColor : TColor;
+      var ABackgroundColor : TColor;
+      var AStyles          : TFontStyles;
+      var ATokenAddon      : TTextEditorTokenAddon;
+      var ATokenAddonColor : TColor
+    );
+    {$ENDREGION}
 
     {$REGION'property access methods'}
     function GetActions: IEditorActions;
@@ -190,23 +196,10 @@ type
     procedure SetVisible(const AVisible: Boolean);
     {$ENDREGION}
 
+    procedure ApplySettings;
     procedure InitializeEditor(AEditor: TTextEditor);
 
-    procedure EditorSettingsChanged(ASender: TObject);
-
-    procedure EditorCustomTokenAttribute(
-      const ASender        : TObject;
-      const AText          : string;
-      const ALine          : Integer;
-      const AChar          : Integer;
-      var AForegroundColor : TColor;
-      var ABackgroundColor : TColor;
-      var AStyles          : TFontStyles;
-      var ATokenAddon      : TTextEditorTokenAddon;
-      var ATokenAddonColor : TColor
-    );
-
-  strict protected
+  protected
     procedure SetParent(Value: TWinControl); reintroduce;
 
     procedure BeginUpdate;
@@ -233,24 +226,25 @@ type
     procedure Clear;
     procedure SelectAll;
 
+    {$REGION 'event dispatch methods'}
     procedure DoChange; dynamic;
+    procedure DoClose(var CloseAction: TCloseAction); override;
+    {$ENDREGION}
 
-  protected
     function IsActive: Boolean;
+
     // TCustomForm overrides
     procedure Activate; override;
     procedure UpdateActions; override;
-    procedure DoClose(var CloseAction: TCloseAction); override;
 
   public
     // constructors and destructors
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
+    destructor Destroy; override;
 
-    // public overridden methods
     function CloseQuery: Boolean; override;
+    function Focused: Boolean; override;
 
-    // public methods
     function GetWordAtPosition(const APosition: TPoint): string;
     function GetWordFromCaret(const ACaretPos: TPoint): string;
 
@@ -259,7 +253,6 @@ type
     procedure SaveToStream(AStream: TStream);
     procedure Save(const AStorageName: string = '');
 
-    // public properties
     { Column and line of the start of the selected block. }
     property BlockBegin: TPoint
       read GetBlockBegin write SetBlockBegin;
@@ -277,8 +270,6 @@ type
     property LogicalCaretXY: TPoint
       read GetLogicalCaretXY write SetLogicalCaretXY;
 
-  public
-    function Focused: Boolean; override;
     { current X-coordinate of the caret on the screen. }
     property CaretX: Integer
       read GetCaretX write SetCaretX;
@@ -435,6 +426,7 @@ type
 
     property OnChange: TNotifyEvent
       read GetOnChange write SetOnChange;
+
   end;
 
 implementation
@@ -475,14 +467,14 @@ begin
   ApplySettings;
 end;
 
-procedure TEditorView.BeforeDestruction;
+destructor TEditorView.Destroy;
 begin
   if Assigned(Settings) then
     Settings.OnChanged.Remove(EditorSettingsChanged);
 
   FreeAndNil(FReplaceHistory);
   FreeAndNil(FFindHistory);
-  inherited BeforeDestruction;
+  inherited Destroy;
 end;
 {$ENDREGION}
 
@@ -594,7 +586,6 @@ end;
 //  //Logger.Send('LastLineBytePos', SynSelection.LastLineBytePos);
 //
 //end;
-
 {$ENDREGION}
 
 {$REGION'event dispatch methods'}

@@ -24,7 +24,7 @@ uses
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, System.Actions,
   System.ImageList,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Menus,
   Vcl.ActnList, Vcl.ImgList, Vcl.StdCtrls,
 
   Spring, Spring.Collections,
@@ -33,7 +33,7 @@ uses
 
   DDuce.Components.GridView,
 
-  Demo.Contact, Vcl.Menus;
+  Demo.Contact;
 
 type
   TfrmGridView = class(TForm)
@@ -53,6 +53,7 @@ type
     FObjectInspector : TzObjectInspector;
     FList            : IList<TContact>;
 
+    {$REGION 'event handlers'}
     procedure FGridViewDrawCell(
       Sender             : TObject;
       Cell               : TGridCell;
@@ -74,6 +75,7 @@ type
       Cell   : TGridCell;
       Canvas : TCanvas
     );
+    {$ENDREGION}
 
   public
     procedure AfterConstruction; override;

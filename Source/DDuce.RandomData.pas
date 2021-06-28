@@ -24,7 +24,7 @@ interface
 
 type
   RandomData = record
-  strict private
+  private
   type
     TGender = (
       gnMale,
@@ -2706,6 +2706,7 @@ type
     class function Bool: Boolean; static;
     class function Planet: string; static;
     class function Adjective: string; static;
+
   end;
 
 implementation

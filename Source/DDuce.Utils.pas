@@ -136,7 +136,7 @@ function GetTextHeight(
 ): Integer;
 
 function SetToString(
-  ATypeInfo : PTypeInfo;
+  ATypeInfo    : PTypeInfo;
   const AValue;
   AQuoteValues : Boolean = True;
   ABrackets    : Boolean = True;

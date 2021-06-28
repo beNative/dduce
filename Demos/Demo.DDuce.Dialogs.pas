@@ -32,8 +32,10 @@ type
     actRTTEye      : TAction;
     btnRTTEye      : TButton;
 
+    {$REGION 'action handlers'}
     procedure actAboutDialogExecute(Sender: TObject);
     procedure actRTTEyeExecute(Sender: TObject);
+    {$ENDREGION}
 
   end;
 

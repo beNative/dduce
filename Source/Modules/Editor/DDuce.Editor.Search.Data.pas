@@ -28,6 +28,7 @@ uses
   Spring.Collections;
 
 type
+  {$REGION 'TSearchResult'}
   TSearchResult = class(TPersistent)
   private
     FIndex      : Integer;
@@ -82,9 +83,9 @@ type
       read GetText;
 
   end;
+  {$ENDREGION}
 
-  { TSearchResultLine }
-
+  {$REGION 'TSearchResultLine'}
   TSearchResultLine = class(TPersistent)
   private
     FLine : Integer;
@@ -105,9 +106,9 @@ type
       read GetText;
 
   end;
+  {$ENDREGION}
 
-  { TSearchResultGroup }
-
+  {$REGION 'TSearchResultGroup'}
   TSearchResultGroup = class(TPersistent)
   private
     FLines    : IObjectList;
@@ -132,6 +133,7 @@ type
       read GetText;
 
   end;
+  {$ENDREGION}
 
 implementation
 

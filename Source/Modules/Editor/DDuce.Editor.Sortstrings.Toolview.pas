@@ -27,22 +27,30 @@ uses
 
 type
   TfrmSortStrings = class(TCustomEditorToolView)
+    {$REGION 'designer controls'}
     aclMain          : TActionList;
     actExecute       : TAction;
     btnOK            : TButton;
     pnlBottom        : TPanel;
     rgpSortDirection : TRadioGroup;
     rgpSortScope     : TRadioGroup;
+    {$ENDREGION}
 
+    {$REGION 'action handlers'}
     procedure actExecuteExecute(Sender: TObject);
+    {$ENDREGION}
 
+    {$REGION 'event handlers'}
     procedure FormResize(Sender: TObject);
     procedure gbxOptionsItemClick(Sender: TObject; Index: Integer);
     procedure rgpSortScopeClick(Sender: TObject);
     procedure rgpSortDirectionClick(Sender: TObject);
+    {$ENDREGION}
 
   private
+    {$REGION 'property access methods'}
     function GetSettings: TSortStringsSettings;
+    {$ENDREGION}
 
   protected
     procedure UpdateActions; override;

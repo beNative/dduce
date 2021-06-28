@@ -22,8 +22,6 @@ uses
   System.Classes, System.SysUtils,
   Vcl.Controls,
 
-  Spring.Collections,
-
   DDuce.Editor.Tools.Settings, DDuce.Editor.Highlighters, DDuce.Editor.Interfaces;
 
 type
@@ -46,7 +44,7 @@ uses
   DDuce.Editor.CodeFormatters,
 //  DDuce.Editor.CodeFormatters.SQL,
   DDuce.Editor.AlignLines.Settings,
-  //DDuce.Editor.CodeFilter.Settings,
+//  DDuce.Editor.CodeFilter.Settings,
 //  DDuce.Editor.CodeShaper.Settings,
 //  DDuce.Editor.HexEditor.Settings,
 //  DDuce.Editor.HTMLView.Settings,
@@ -61,7 +59,7 @@ procedure TEditorSettingsFactory.RegisterToolSettings(
   ASettings: TEditorToolSettings);
 begin
   ASettings.RegisterSettings(TAlignLinesSettings, 'AlignLinesSettings');
-  //ASettings.RegisterSettings(TCodeFilterSettings, 'CodeFilterSettings');
+//  ASettings.RegisterSettings(TCodeFilterSettings, 'CodeFilterSettings');
 //  ASettings.RegisterSettings(THTMLViewSettings, 'HTMLViewSettings');
 //  ASettings.RegisterSettings(TSortStringsSettings, 'SortStringsSettings');
   //ASettings.RegisterSettings(THexEditorSettings, 'HexEditorSettings');
