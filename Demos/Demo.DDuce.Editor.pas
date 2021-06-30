@@ -81,6 +81,7 @@ begin
   FOI := TzObjectInspectorFactory.Create(
     Self,
     pnlLeft,
+    //FEditor.Editor
     (FSettings as IInterfaceComponentReference).GetComponent
   );
   FOI.BorderStyle := bsNone;

@@ -56,16 +56,16 @@ uses
 type
   TEditorView = class(TForm, IEditorView)
   private
-    FUpdate          : Boolean;
-    FLineBreakStyle  : string;
-    FEditor          : TTextEditor;
-    FFindHistory     : TStringList;
-    FReplaceHistory  : TStringList;
-    FHighlighterItem : THighlighterItem;
-    FFileName        : string;
-    FFoldLevel       : Integer;
-    FIsFile          : Boolean;
-    FOnChange        : TNotifyEvent;
+    FUpdate           : Boolean;
+    FLineBreakStyle   : string;
+    FEditor           : TTextEditor;
+    FFindHistory      : TStringList;
+    FReplaceHistory   : TStringList;
+    FHighlighterItem  : THighlighterItem;
+    FFileName         : string;
+    FFoldLevel        : Integer;
+    FIsFile           : Boolean;
+    FOnChange         : TNotifyEvent;
 
     {$REGION 'event handlers'}
     procedure EditorChange(Sender: TObject);
@@ -437,6 +437,8 @@ uses
   System.UITypes, System.IOUtils, System.Math,
   Vcl.GraphUtil,
 
+  TextEditor.Utils,
+
   //BCEditor.Editor.LineSpacing,
 
   Spring;
@@ -633,17 +635,17 @@ end;
 function TEditorView.GetTextBetween(AStartPos,
   AEndPos: TPoint): string;
 begin
-//  Result := Editor.Lines.TextBetween[
-//    TTextEditorTextPosition(AStartPos), TTextEditorTextPosition(AEndPos)
-//  ];
+  Result := Editor.TextBetween[
+    GetPosition(AStartPos.X, AStartPos.Y), GetPosition(AEndPos.X, AEndPos.Y)
+  ];
 end;
 
 procedure TEditorView.SetTextBetween(AStartPos, AEndPos: TPoint;
   const Value: string);
 begin
-//  Editor.TextBetween[
-//    TTextEditorTextPosition(AStartPos), TTextEditorTextPosition(AEndPos)
-//  ] := Value;
+  Editor.TextBetween[
+    GetPosition(AStartPos.X, AStartPos.Y), GetPosition(AEndPos.X, AEndPos.Y)
+  ] := Value;
 end;
 
 function TEditorView.GetText: string;
@@ -815,13 +817,12 @@ end;
 
 function TEditorView.GetLineText: string;
 begin
-  //Result := Editor.Get
-
+  Result := Editor.Lines[Editor.TextPosition.Line];
 end;
 
 procedure TEditorView.SetLineText(const AValue: string);
 begin
-//  Editor.LineText := AValue;
+  Editor.Lines[Editor.TextPosition.Line] := AValue;
 end;
 
 { Not yet supported. }
@@ -911,7 +912,6 @@ procedure TEditorView.SetLogicalCaretXY(const AValue: TPoint);
 var
   TP : TTextEditorTextPosition;
 begin
-
   TP.Char := AValue.X;
   TP.Line := AValue.Y;
   Editor.TextPosition := TP;
@@ -937,7 +937,7 @@ end;
 
 procedure TEditorView.SetSelEnd(const AValue: Integer);
 begin
-  //Editor.SelEnd := AValue;
+  Editor.SelectionLength := AValue - Editor.SelectionStart;
 end;
 
 function TEditorView.GetSelStart: Integer;
@@ -970,7 +970,7 @@ end;
 
 procedure TEditorView.SetCaretXY(const AValue: TPoint);
 begin
-  Editor.TextPosition := TTextEditorTextPosition(AValue);
+  Editor.TextPosition := GetPosition(AValue.X, AValue.Y);
 end;
 
 function TEditorView.GetFindHistory: TStrings;
@@ -1203,12 +1203,12 @@ begin
   else
     Editor.Tabs.Options := Editor.Tabs.Options - [toPreviousLineIndent];
 
-//  if Settings.EditorOptions.ShowIndentGuides then
-//    Editor.CodeFolding.Options := Editor.CodeFolding.Options +
-//      [cfoShowIndentGuides]
-//  else
-//    Editor.CodeFolding.Options := Editor.CodeFolding.Options -
-//      [cfoShowIndentGuides];
+  if Settings.EditorOptions.ShowIndentGuides then
+    Editor.CodeFolding.Options := Editor.CodeFolding.Options +
+      [cfoShowIndentGuides]
+  else
+    Editor.CodeFolding.Options := Editor.CodeFolding.Options -
+      [cfoShowIndentGuides];
 
   Editor.RightMargin.Visible  := Settings.EditorOptions.ShowRightEdge;
   Editor.RightMargin.Position := Settings.EditorOptions.RightEdge;
@@ -1278,7 +1278,15 @@ begin
 //    Editor.Options2 := Editor.Options2 + [eoAutoHideCursor]
 //  else
 //    Editor.Options2 := Editor.Options2 - [eoAutoHideCursor];
-//
+
+   Editor.Selection.Colors.Background := Settings.Colors.SelectedColor;
+   Editor.ActiveLine.Colors.Background := Settings.Colors.LineHighlightColor;
+   Editor.RightMargin.Colors.Margin    := Settings.Colors.RightEdgeColor;
+   Editor.MatchingPairs.Colors.Matched := Settings.Colors.BracketMatchColor;
+   //Editor.CodeFolding.Colors.
+
+   Editor.Search.Highlighter.Colors.Background := Settings.Colors.HighlightAllColor;
+
 //  Editor.MouseLinkColor     := Settings.Colors.MouseLinkColor;
 //  Editor.BracketMatchColor  := Settings.Colors.BracketMatchColor;
 //  Editor.LineHighlightColor := Settings.Colors.LineHighlightColor;

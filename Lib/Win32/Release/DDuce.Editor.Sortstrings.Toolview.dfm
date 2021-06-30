@@ -22,9 +22,6 @@ inherited frmSortStrings: TfrmSortStrings
       'Descending')
     TabOrder = 0
     OnClick = rgpSortDirectionClick
-    ExplicitLeft = 0
-    ExplicitTop = 0
-    ExplicitWidth = 282
   end
   object pnlBottom: TPanel
     Left = 0
@@ -67,9 +64,6 @@ inherited frmSortStrings: TfrmSortStrings
       'Paragraphs')
     TabOrder = 1
     OnClick = rgpSortScopeClick
-    ExplicitLeft = 0
-    ExplicitTop = 54
-    ExplicitWidth = 282
   end
   object aclMain: TActionList
     Left = 296

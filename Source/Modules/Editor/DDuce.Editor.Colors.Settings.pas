@@ -26,38 +26,35 @@ const
   DEFAULT_RIGHT_EDGE_COLOR = clSilver;
 
 type
-  TSynSelectedColor = TColor;
-
-type
   TEditorColorSettings = class(TPersistent)
   private
-    FIncrementColor     : TSynSelectedColor;
-    FHighlightAllColor  : TSynSelectedColor;
-    FBracketMatchColor  : TSynSelectedColor;
-    FMouseLinkColor     : TSynSelectedColor;
-    FLineHighlightColor : TSynSelectedColor;
-    FFoldedCodeColor    : TSynSelectedColor;
-    FOnChanged          : TNotifyEvent;
-    FSelectedColor      : TSynSelectedColor;
+    FIncrementColor     : TColor;
+    FHighlightAllColor  : TColor;
+    FBracketMatchColor  : TColor;
+    FMouseLinkColor     : TColor;
+    FLineHighlightColor : TColor;
+    FFoldedCodeColor    : TColor;
+    FSelectedColor      : TColor;
     FRightEdgeColor     : TColor;
+    FOnChanged          : TNotifyEvent;
 
     {$REGION 'property access methods'}
-    function GetBracketMatchColor: TSynSelectedColor;
-    function GetFoldedCodeColor: TSynSelectedColor;
-    function GetHighlightAllColor: TSynSelectedColor;
-    function GetIncrementColor: TSynSelectedColor;
-    function GetLineHighlightColor: TSynSelectedColor;
-    function GetMouseLinkColor: TSynSelectedColor;
+    function GetBracketMatchColor: TColor;
+    function GetFoldedCodeColor: TColor;
+    function GetHighlightAllColor: TColor;
+    function GetIncrementColor: TColor;
+    function GetLineHighlightColor: TColor;
+    function GetMouseLinkColor: TColor;
     function GetRightEdgeColor: TColor;
-    function GetSelectedColor: TSynSelectedColor;
-    procedure SetBracketMatchColor(AValue: TSynSelectedColor);
-    procedure SetFoldedCodeColor(AValue: TSynSelectedColor);
-    procedure SetHighlightAllColor(AValue: TSynSelectedColor);
-    procedure SetIncrementColor(AValue: TSynSelectedColor);
-    procedure SetLineHighlightColor(AValue: TSynSelectedColor);
-    procedure SetMouseLinkColor(AValue: TSynSelectedColor);
+    function GetSelectedColor: TColor;
+    procedure SetBracketMatchColor(AValue: TColor);
+    procedure SetFoldedCodeColor(AValue: TColor);
+    procedure SetHighlightAllColor(AValue: TColor);
+    procedure SetIncrementColor(AValue: TColor);
+    procedure SetLineHighlightColor(AValue: TColor);
+    procedure SetMouseLinkColor(AValue: TColor);
     procedure SetRightEdgeColor(AValue: TColor);
-    procedure SetSelectedColor(AValue: TSynSelectedColor);
+    procedure SetSelectedColor(AValue: TColor);
     {$ENDREGION}
 
   protected
@@ -74,25 +71,25 @@ type
       read FOnChanged write FOnChanged;
 
   published
-    property IncrementColor: TSynSelectedColor
+    property IncrementColor: TColor
       read GetIncrementColor write SetIncrementColor;
 
-    property HighlightAllColor: TSynSelectedColor
+    property HighlightAllColor: TColor
       read GetHighlightAllColor write SetHighlightAllColor;
 
-    property BracketMatchColor: TSynSelectedColor
+    property BracketMatchColor: TColor
       read GetBracketMatchColor write SetBracketMatchColor;
 
-    property MouseLinkColor: TSynSelectedColor
+    property MouseLinkColor: TColor
       read GetMouseLinkColor write SetMouseLinkColor;
 
-    property LineHighlightColor: TSynSelectedColor
+    property LineHighlightColor: TColor
       read GetLineHighlightColor write SetLineHighlightColor;
 
-    property FoldedCodeColor: TSynSelectedColor
+    property FoldedCodeColor: TColor
       read GetFoldedCodeColor write SetFoldedCodeColor;
 
-    property SelectedColor: TSynSelectedColor
+    property SelectedColor: TColor
       read GetSelectedColor write SetSelectedColor;
 
     property RightEdgeColor: TColor
@@ -107,90 +104,100 @@ implementation
 procedure TEditorColorSettings.AfterConstruction;
 begin
   inherited AfterConstruction;
-//  FIncrementColor     := TSynSelectedColor.Create;
-//  FHighlightAllColor  := TSynSelectedColor.Create;
-//  FBracketMatchColor  := TSynSelectedColor.Create;
-//  FMouseLinkColor     := TSynSelectedColor.Create;
-//  FLineHighlightColor := TSynSelectedColor.Create;
-//  FFoldedCodeColor    := TSynSelectedColor.Create;
-//  FSelectedColor      := TSynSelectedColor.Create;
   AssignDefaultColors;
 end;
 
 destructor TEditorColorSettings.Destroy;
 begin
-//  FSelectedColor.Free;
-//  FIncrementColor.Free;
-//  FHighlightAllColor.Free;
-//  FBracketMatchColor.Free;
-//  FMouseLinkColor.Free;
-//  FLineHighlightColor.Free;
-//  FFoldedCodeColor.Free;
-
   inherited Destroy;
 end;
 {$ENDREGION}
 
 {$REGION 'property access mehods'}
-function TEditorColorSettings.GetBracketMatchColor: TSynSelectedColor;
+function TEditorColorSettings.GetBracketMatchColor: TColor;
 begin
   Result := FBracketMatchColor;
 end;
 
-procedure TEditorColorSettings.SetBracketMatchColor(AValue: TSynSelectedColor);
+procedure TEditorColorSettings.SetBracketMatchColor(AValue: TColor);
 begin
-  //FBracketMatchColor.Assign(AValue);
-  Changed;
+  if AValue <> BracketMatchColor then
+  begin
+    FBracketMatchColor := AValue;
+    Changed;
+  end;
 end;
 
-function TEditorColorSettings.GetFoldedCodeColor: TSynSelectedColor;
+function TEditorColorSettings.GetFoldedCodeColor: TColor;
 begin
   Result := FFoldedCodeColor;
 end;
 
-procedure TEditorColorSettings.SetFoldedCodeColor(AValue: TSynSelectedColor);
+procedure TEditorColorSettings.SetFoldedCodeColor(AValue: TColor);
 begin
-  //FFoldedCodeColor.Assign(AValue);
-  Changed;
+  if AValue <> FoldedCodeColor then
+  begin
+    FFoldedCodeColor := AValue;
+    Changed;
+  end;
 end;
 
-function TEditorColorSettings.GetHighlightAllColor: TSynSelectedColor;
+function TEditorColorSettings.GetHighlightAllColor: TColor;
 begin
   Result := FHighlightAllColor;
 end;
 
-procedure TEditorColorSettings.SetHighlightAllColor(AValue: TSynSelectedColor);
+procedure TEditorColorSettings.SetHighlightAllColor(AValue: TColor);
 begin
-  //FHighlightAllColor.Assign(AValue);
-  Changed;
+  if AValue <> HighlightAllColor then
+  begin
+    FHighlightAllColor := AValue;
+    Changed;
+  end;
 end;
 
-function TEditorColorSettings.GetIncrementColor: TSynSelectedColor;
+function TEditorColorSettings.GetIncrementColor: TColor;
 begin
   Result := FIncrementColor;
 end;
 
-procedure TEditorColorSettings.SetIncrementColor(AValue: TSynSelectedColor);
+procedure TEditorColorSettings.SetIncrementColor(AValue: TColor);
 begin
-  //FIncrementColor.Assign(AValue);
-  Changed;
+  if AValue <> IncrementColor then
+  begin
+    FIncrementColor := AValue;
+    Changed;
+  end;
 end;
 
-function TEditorColorSettings.GetLineHighlightColor: TSynSelectedColor;
+function TEditorColorSettings.GetLineHighlightColor: TColor;
 begin
   Result := FLineHighlightColor;
 end;
 
-procedure TEditorColorSettings.SetLineHighlightColor(AValue: TSynSelectedColor);
+procedure TEditorColorSettings.SetLineHighlightColor(AValue: TColor);
 begin
-  //FLineHighlightColor.Assign(AValue);
-  Changed;
+  if AValue <> LineHighlightColor then
+  begin
+    FLineHighlightColor := AValue;
+    Changed;
+  end;
 end;
 
-function TEditorColorSettings.GetMouseLinkColor: TSynSelectedColor;
+function TEditorColorSettings.GetMouseLinkColor: TColor;
 begin
   Result := FMouseLinkColor;
 end;
+
+procedure TEditorColorSettings.SetMouseLinkColor(AValue: TColor);
+begin
+  if AValue <> MouseLinkColor then
+  begin
+    FMouseLinkColor := AValue;
+    Changed;
+  end;
+end;
+
 
 function TEditorColorSettings.GetRightEdgeColor: TColor;
 begin
@@ -206,21 +213,18 @@ begin
   end;
 end;
 
-procedure TEditorColorSettings.SetMouseLinkColor(AValue: TSynSelectedColor);
-begin
-  //FMouseLinkColor.Assign(AValue);
-  Changed;
-end;
-
-function TEditorColorSettings.GetSelectedColor: TSynSelectedColor;
+function TEditorColorSettings.GetSelectedColor: TColor;
 begin
   Result := FSelectedColor;
 end;
 
-procedure TEditorColorSettings.SetSelectedColor(AValue: TSynSelectedColor);
+procedure TEditorColorSettings.SetSelectedColor(AValue: TColor);
 begin
-  //FSelectedColor.Assign(AValue);
-  Changed;
+  if AValue <> SelectedColor then
+  begin
+    FSelectedColor := AValue;
+    Changed;
+  end;
 end;
 {$ENDREGION}
 

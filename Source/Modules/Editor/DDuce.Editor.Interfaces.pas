@@ -76,6 +76,7 @@ type
 
   IControl = interface
   ['{303F3DE1-81F5-473B-812B-7DD4C306725B}']
+    {$REGION 'property access methods'}
     function GetName: string;
     function GetParent: TWinControl;
     function GetPopupMenu: TPopupMenu;
@@ -84,6 +85,7 @@ type
     procedure SetParent(AValue: TWinControl);
     procedure SetPopupMenu(AValue: TPopupMenu);
     procedure SetVisible(const AValue: Boolean);
+    {$ENDREGION}
 
     function Focused: Boolean;
     procedure SetFocus;
@@ -394,6 +396,7 @@ type
 
   IEditorSearchEngine = interface
   ['{5403336C-3E81-4A1B-B2BB-170CF0EF0B84}']
+    {$REGION 'property access methods'}
     function GetCurrentIndex: Integer;
     function GetItemGroups: IList<TSearchResultGroup>;
     function GetItemList: IList<TSearchResult>;
@@ -408,6 +411,7 @@ type
     procedure SetSearchText(AValue: string);
     function GetOnChange: IEvent<TNotifyEvent>;
     function GetOnExecute: IEvent<TNotifyEvent>;
+    {$ENDREGION}
 
     procedure Execute;
     procedure Replace;
@@ -713,9 +717,9 @@ type
     function GetEnumerator: TEditorToolViewListEnumerator;
 
     function Register(
-            AFormClass     : TComponentClass;
-            ASettingsClass : TComponentClass;
-      const AName          : string = ''
+      AFormClass     : TComponentClass;
+      ASettingsClass : TComponentClass;
+      const AName    : string = ''
     ): Boolean;
     procedure Hide;
 
@@ -733,11 +737,11 @@ type
   ['{5CB77731-425D-44FD-93BA-2137875F76B5}']
     procedure AdjustFontSize(AOffset: Integer);
     procedure AlignSelection(
-      const AToken                  : string;
-            ACompressWS             : Boolean;
-            AInsertSpaceBeforeToken : Boolean;
-            AInsertSpaceAfterToken  : Boolean;
-            AAlignInParagraphs      : Boolean
+      const AToken            : string;
+      ACompressWS             : Boolean;
+      AInsertSpaceBeforeToken : Boolean;
+      AInsertSpaceAfterToken  : Boolean;
+      AAlignInParagraphs      : Boolean
     );
     procedure AssignHighlighter(const AName: string);
     procedure Base64FromSelection(ADecode: Boolean = False);
@@ -982,8 +986,8 @@ type
   IEditorManagerFactory = interface
   ['{BE85A08D-936E-4F76-BBE1-A1999DE882B9}']
     function CreateInstance(
-            AOwner            : TComponent = nil;
-            APersistSettings  : Boolean = False;
+      AOwner                  : TComponent = nil;
+      APersistSettings        : Boolean = False;
       const ASettingsFileName : string = ''
     ): IEditorManager; overload;
 
