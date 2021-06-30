@@ -75,6 +75,9 @@ object frmXMLTree: TfrmXMLTree
         Width = 432
         Height = 516
         Align = alClient
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        BorderStyle = bsNone
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11

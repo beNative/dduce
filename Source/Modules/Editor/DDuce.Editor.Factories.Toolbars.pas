@@ -128,7 +128,7 @@ begin
   AToolbar.EdgeInner   := EdgeInner;
   AToolbar.EdgeOuter   := EdgeOuter;
   AToolbar.Transparent := Transparant;
-  AToolbar.ParentColor := True;
+  AToolbar.ParentColor := False;
   AToolbar.AutoSize    := True;
   AToolbar.ShowHint    := True;
 end;
@@ -160,7 +160,7 @@ begin
     end;
     TB.Action := AAction;
   end;
-  AParent.Realign;
+  TB.Parent := AParent;
   Result := TB;
 end;
 
@@ -209,22 +209,13 @@ begin
   CreateToolButton(TB);
   CreateToolButton(TB, 'actAutoGuessHighlighter');
   CreateToolButton(TB);
-  CreateToolButton(TB, 'actShowCodeShaper');
   CreateToolButton(TB, 'actShowCodeFilter');
-  CreateToolButton(TB, 'actShowCharacterMap');
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actSmartSelect');
-  CreateToolButton(TB, 'actFormat');
   CreateToolButton(TB);
   CreateToolButton(TB, 'actSettings');
   CreateToolButton(TB);
   CreateToolButton(TB, 'actShowSpecialCharacters');
   CreateToolButton(TB, 'actShowMinimap');
   CreateToolButton(TB, 'actToggleWordWrap');
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actCreateDesktopLink');
-  CreateToolButton(TB);
-  CreateToolButton(TB, 'actAbout');
   Result := TB;
 end;
 

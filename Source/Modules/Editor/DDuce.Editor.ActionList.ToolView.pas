@@ -419,7 +419,7 @@ procedure TfrmActionListView.CreateActionsView;
 var
   CD : IColumnDefinitions;
 begin
-  FVSTActions := TVirtualStringTreeFactory.CreateGrid(Self, pnlActions);
+  FVSTActions := TVirtualStringTreeFactory.CreateList(Self, pnlActions);
   FVSTActions.OnKeyPress := FVSTActionsKeyPress;
   FTVPActions := TTreeViewPresenter.Create(Self);
   FTVPActions.ListMode := True;
@@ -476,7 +476,7 @@ procedure TfrmActionListView.CreateCommandsView;
 var
   CD : IColumnDefinitions;
 begin
-  FVSTCommands := TVirtualStringTreeFactory.CreateGrid(Self, tsCommands);
+  FVSTCommands := TVirtualStringTreeFactory.CreateList(Self, tsCommands);
   FTVPCommands := TTreeViewPresenter.Create(Self);
   FTVPCommands.ListMode := True;
   CD := FTVPCommands.ColumnDefinitions;

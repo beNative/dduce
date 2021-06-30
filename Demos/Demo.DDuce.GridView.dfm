@@ -19,9 +19,6 @@ object frmGridView: TfrmGridView
     Top = 0
     Width = 6
     Height = 665
-    ExplicitLeft = 233
-    ExplicitTop = -113
-    ExplicitHeight = 450
   end
   object pnlLeft: TPanel
     Left = 0

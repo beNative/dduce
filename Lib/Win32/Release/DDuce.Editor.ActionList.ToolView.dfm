@@ -45,8 +45,6 @@ object frmActionListView: TfrmActionListView
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
-          ExplicitWidth = 790
-          ExplicitHeight = 475
         end
         object edtFilterActions: TEdit
           Left = 0
@@ -58,7 +56,6 @@ object frmActionListView: TfrmActionListView
           OnChange = edtFilterActionsChange
           OnKeyDown = edtFilterActionsKeyDown
           OnKeyUp = edtFilterActionsKeyUp
-          ExplicitWidth = 790
         end
       end
       object tsCommands: TTabSheet

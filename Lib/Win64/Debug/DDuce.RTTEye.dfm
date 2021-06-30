@@ -21,6 +21,7 @@ object frmRTTEye: TfrmRTTEye
     Width = 857
     Height = 489
     Align = alClient
+    BevelOuter = bvNone
     BorderWidth = 5
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
@@ -30,19 +31,19 @@ object frmRTTEye: TfrmRTTEye
     ParentFont = False
     TabOrder = 0
     object splVertical: TSplitter
-      Left = 317
-      Top = 6
-      Width = 9
-      Height = 477
-      ExplicitLeft = 0
-      ExplicitHeight = 427
+      Left = 316
+      Top = 5
+      Width = 6
+      Height = 479
     end
     object tvRtti: TTreeView
-      Left = 326
-      Top = 6
-      Width = 525
-      Height = 477
+      Left = 322
+      Top = 5
+      Width = 530
+      Height = 479
       Align = alClient
+      BevelInner = bvNone
+      BevelOuter = bvNone
       DoubleBuffered = True
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -57,13 +58,18 @@ object frmRTTEye: TfrmRTTEye
       OnChange = tvRttiChange
       OnCustomDrawItem = tvRttiCustomDrawItem
       OnDblClick = tvRttiDblClick
+      ExplicitLeft = 326
+      ExplicitTop = 6
+      ExplicitWidth = 525
+      ExplicitHeight = 477
     end
     object lvRtti: TListView
-      Left = 6
-      Top = 6
+      Left = 5
+      Top = 5
       Width = 311
-      Height = 477
+      Height = 479
       Align = alLeft
+      BevelInner = bvNone
       Color = clBtnFace
       Columns = <
         item
@@ -84,6 +90,9 @@ object frmRTTEye: TfrmRTTEye
       ParentFont = False
       TabOrder = 1
       ViewStyle = vsReport
+      ExplicitLeft = 6
+      ExplicitTop = 6
+      ExplicitHeight = 477
     end
   end
   object pnlBottom: TPanel
@@ -92,6 +101,7 @@ object frmRTTEye: TfrmRTTEye
     Width = 857
     Height = 41
     Align = alBottom
+    BevelOuter = bvNone
     BorderWidth = 5
     TabOrder = 1
     DesignSize = (
@@ -139,7 +149,7 @@ object frmRTTEye: TfrmRTTEye
     object EditSearch: TEdit
       Left = 510
       Top = 8
-      Width = 338
+      Width = 342
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 3
