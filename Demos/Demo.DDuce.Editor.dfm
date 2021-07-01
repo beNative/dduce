@@ -44,5 +44,7 @@ object frmEditor: TfrmEditor
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitLeft = 379
+    ExplicitWidth = 625
   end
 end
