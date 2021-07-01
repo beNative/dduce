@@ -55,6 +55,9 @@ uses
 
 type
   TEditorView = class(TForm, IEditorView)
+    procedure FormResize(Sender: TObject);
+    procedure FormMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     FUpdate           : Boolean;
     FLineBreakStyle   : string;
@@ -481,6 +484,22 @@ end;
 {$ENDREGION}
 
 {$REGION'event handlers'}
+{ Prevents artifacts in TTextEditor view after resizing. }
+
+procedure TEditorView.FormMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if Assigned(Editor) then
+  begin
+    Editor.Invalidate;
+  end;
+end;
+
+procedure TEditorView.FormResize(Sender: TObject);
+begin
+  FInvalidateNeeded := True;
+end;
+
 { Event triggered when MonitorChanges is True }
 
 //procedure TEditorView.DirectoryWatchNotify(const Sender: TObject;
@@ -1575,6 +1594,12 @@ begin
       ApplySettings;
       FUpdate := False;
     end;
+    if FInvalidateNeeded then
+    begin
+      Editor.Invalidate;
+      FInvalidateNeeded := False;
+    end;
+
   end;
 end;
 {$ENDREGION}
