@@ -50,10 +50,10 @@ type
     function GuessHighlighterType(
       const AText: string
     ): string; overload;
+
     function IsXML(
       const AString: string
     ): Boolean;
-
     function IsPAS(
       const AString: string
     ): Boolean;
@@ -81,18 +81,18 @@ type
     procedure SyncEditSelection;
     procedure Save;
     function SaveFile(
-      const AFileName   : string = '';
-            AShowDialog : Boolean = False
+      const AFileName : string = '';
+      AShowDialog     : Boolean = False
     ): Boolean;
     procedure SaveAll;
     procedure AdjustFontSize(AOffset: Integer);
 
     procedure AlignSelection(
-      const AToken                  : string;
-            ACompressWS             : Boolean;
-            AInsertSpaceBeforeToken : Boolean;
-            AInsertSpaceAfterToken  : Boolean;
-            AAlignInParagraphs      : Boolean
+      const AToken            : string;
+      ACompressWS             : Boolean;
+      AInsertSpaceBeforeToken : Boolean;
+      AInsertSpaceAfterToken  : Boolean;
+      AAlignInParagraphs      : Boolean
     );
     procedure MergeBlankLinesInSelection;
     procedure StripCommentsFromSelection;
@@ -140,13 +140,15 @@ type
 implementation
 
 uses
-  System.Math, System.StrUtils,
+  System.Math, System.StrUtils, System.NetEncoding,
   Vcl.Forms,
 
   TextEditor.KeyCommands, TextEditor.Types,
 
   DDuce.Editor.Highlighters, DDuce.Editor.Resources, DDuce.Editor.Utils,
-  DDuce.Editor.CommentStripper;
+  DDuce.Editor.CommentStripper,
+
+  DDuce.Logger;
 
 {$REGION'property access mehods'}
 function TEditorCommands.GetEvents: IEditorEvents;
@@ -173,6 +175,9 @@ function TEditorCommands.GetView: IEditorView;
 begin
   Result := Manager.ActiveView;
 end;
+{$ENDREGION}
+
+{$REGION 'private methods'}
 
 { TODO: Use interfaces like (cfr. ICodeFormatter) }
 
@@ -370,6 +375,7 @@ procedure TEditorCommands.CreateDesktopLink;
 //  InFolder : array[0..MAX_PATH] of Char;
 //  SL       : TShellLink;
 begin
+  Logger.Warn('Not implemented yet');
 //  PIDL := nil;
 //  SHGetSpecialFolderLocation(0, CSIDL_DESKTOPDIRECTORY, PIDL) ;
 //  SHGetPathFromIDList(PIDL, InFolder) ;
@@ -431,35 +437,29 @@ end;
 
 procedure TEditorCommands.Base64FromSelection(ADecode: Boolean);
 begin
-//  Selection.Store(True, True);
-//  if ADecode then
-//    Selection.Text := DecodeStringBase64(Selection.Text)
-//  else
-//    Selection.Text := EncodeStringBase64(Selection.Text);
-//  Selection.Restore;
-//  View.Modified := True;
+  if ADecode then
+    View.SelectedText := TNetEncoding.Base64.Decode(View.SelectedText)
+  else
+    View.SelectedText := TNetEncoding.Base64.Encode(View.SelectedText);
+  View.Modified := True;
 end;
 
 procedure TEditorCommands.URLFromSelection(ADecode: Boolean);
 begin
-//  Selection.Store(True, True);
-//  if ADecode then
-//    Selection.Text := URLDecode(Selection.Text)
-//  else
-//    Selection.Text := URLEncode(Selection.Text);
-//  Selection.Restore;
-//  View.Modified := True;
+  if ADecode then
+    View.SelectedText := TNetEncoding.URL.Decode(View.SelectedText)
+  else
+    View.SelectedText := TNetEncoding.URL.Encode(View.SelectedText);
+  View.Modified := True;
 end;
 
 procedure TEditorCommands.XMLFromSelection(ADecode: Boolean);
 begin
-//  Selection.Store(True, True);
-//  if ADecode then
-//    Selection.Text := XMLDecode(Selection.Text)
-//  else
-//    Selection.Text := XMLEncode(Selection.Text);
-//  Selection.Restore;
-//  View.Modified := True;
+  if ADecode then
+    View.SelectedText := TNetEncoding.HTML.Decode(View.SelectedText)
+  else
+    View.SelectedText := TNetEncoding.HTML.Encode(View.SelectedText);
+  View.Modified := True;
 end;
 
 procedure TEditorCommands.ConvertTabsToSpacesInSelection;
@@ -470,6 +470,9 @@ end;
 
 procedure TEditorCommands.SyncEditSelection;
 begin
+  View.Editor.SyncEdit.BlockBeginPosition := View.Editor.SelectionBeginPosition;
+  View.Editor.SyncEdit.BlockEndPosition   := View.Editor.SelectionEndPosition;
+
   //View.Editor.CommandProcessor(ecEd ecSynPSyncroEdStart, '', nil);
 end;
 
@@ -522,9 +525,10 @@ procedure TEditorCommands.AlignSelection(const AToken: string;
   ACompressWS: Boolean; AInsertSpaceBeforeToken: Boolean;
   AInsertSpaceAfterToken: Boolean; AAlignInParagraphs: Boolean);
 begin
-//  if View.SelectionAvailable then
-//  begin
-//    Selection.Store(True, True);
+  if View.SelectionAvailable then
+  begin
+    //View.Editor.Selection.
+  //  Selection.Store(True, True);
 //    AlignLines(
 //      Selection.Lines,
 //      AToken,
@@ -533,7 +537,7 @@ begin
 //      AInsertSpaceAfterToken
 //    );
 //    Selection.Restore;
-//  end;
+  end;
 end;
 
 procedure TEditorCommands.MergeBlankLinesInSelection;

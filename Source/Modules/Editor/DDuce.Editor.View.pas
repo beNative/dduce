@@ -56,16 +56,16 @@ uses
 type
   TEditorView = class(TForm, IEditorView)
   private
-    FUpdate           : Boolean;
-    FLineBreakStyle   : string;
-    FEditor           : TTextEditor;
-    FFindHistory      : TStringList;
-    FReplaceHistory   : TStringList;
-    FHighlighterItem  : THighlighterItem;
-    FFileName         : string;
-    FFoldLevel        : Integer;
-    FIsFile           : Boolean;
-    FOnChange         : TNotifyEvent;
+    FUpdate          : Boolean;
+    FLineBreakStyle  : string;
+    FEditor          : TTextEditor;
+    FFindHistory     : TStringList;
+    FReplaceHistory  : TStringList;
+    FHighlighterItem : THighlighterItem;
+    FFileName        : string;
+    FFoldLevel       : Integer;
+    FIsFile          : Boolean;
+    FOnChange        : TNotifyEvent;
 
     {$REGION 'event handlers'}
     procedure EditorChange(Sender: TObject);
@@ -1392,6 +1392,29 @@ begin
   Editor.LeftMargin.LineNumbers.AutosizeDigitCount := 3;
   Editor.LeftMargin.Visible := False;
   Editor.LeftMargin.Visible := True;
+
+  Editor.CodeFolding.Colors.CollapsedLine        := clSilver;
+  Editor.CodeFolding.Colors.FoldingLine          := clSilver;
+  Editor.CodeFolding.Colors.FoldingLineHighlight := clSilver;
+  Editor.CodeFolding.Colors.Indent               := clSilver;
+  Editor.CodeFolding.Colors.IndentHighlight      := clSilver;
+
+  Editor.CodeFolding.Hint.Colors.Border          := clSilver;
+  Editor.CodeFolding.Options := [
+   {cfoAutoPadding,}
+   {cfoAutoWidth,}
+   cfoExpandByHintClick,
+   {cfoFoldMultilineComments,}
+   {cfoHighlightFoldingLine,}
+   {cfoHighlightIndentGuides,}
+   cfoHighlightMatchingPair,
+   {cfoShowCollapsedLine,}
+   {cfoShowIndentGuides,}
+   cfoShowTreeLine
+   {cfoShowCollapseMarkAtTheEnd}
+  ];
+
+
 
   ActiveControl := Editor;
 end;

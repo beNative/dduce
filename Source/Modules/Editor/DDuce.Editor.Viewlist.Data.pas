@@ -54,6 +54,7 @@ type
 
     property Modified: Boolean
       read GetModified;
+
   end;
 
 implementation

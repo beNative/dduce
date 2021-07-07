@@ -12,6 +12,7 @@ object frmEditor: TfrmEditor
   Font.Style = []
   OldCreateOrder = False
   ShowHint = True
+  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   object splVertical: TSplitter
@@ -35,6 +36,37 @@ object frmEditor: TfrmEditor
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
+    object splHorizontal: TSplitter
+      Left = 0
+      Top = 265
+      Width = 377
+      Height = 6
+      Cursor = crVSplit
+      Align = alTop
+    end
+    object pnlLeftTop: TPanel
+      Left = 0
+      Top = 0
+      Width = 377
+      Height = 265
+      Align = alTop
+      BevelOuter = bvNone
+      TabOrder = 0
+      ExplicitTop = -6
+    end
+    object pnlLeftBottom: TPanel
+      Left = 0
+      Top = 271
+      Width = 377
+      Height = 278
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 1
+      ExplicitLeft = 136
+      ExplicitTop = 352
+      ExplicitWidth = 185
+      ExplicitHeight = 41
+    end
   end
   object pnlRight: TPanel
     Left = 383
@@ -44,7 +76,5 @@ object frmEditor: TfrmEditor
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 379
-    ExplicitWidth = 625
   end
 end

@@ -2242,7 +2242,6 @@ begin
   except
     on E: Exception do
       Logger.SendException('ViewsModified', E);
-
   end;
 end;
 

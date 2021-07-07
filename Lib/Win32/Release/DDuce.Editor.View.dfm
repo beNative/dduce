@@ -14,8 +14,6 @@ object EditorView: TEditorView
   Font.Style = []
   OldCreateOrder = False
   ShowHint = True
-  OnMouseUp = FormMouseUp
-  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
 end

@@ -32,20 +32,26 @@ uses
 
 type
   TfrmEditor = class(TForm)
-    pnlLeft     : TPanel;
-    pnlRight    : TPanel;
-    sbrMain     : TStatusBar;
-    splVertical : TSplitter;
+    pnlLeft       : TPanel;
+    pnlRight      : TPanel;
+    sbrMain       : TStatusBar;
+    splVertical   : TSplitter;
+    pnlLeftTop    : TPanel;
+    splHorizontal : TSplitter;
+    pnlLeftBottom : TPanel;
+
+    procedure FormResize(Sender: TObject);
 
   private
-    FSettings         : IEditorSettings;
-    FEditor           : IEditorView;
-    FManager          : IEditorManager;
-    FMainToolbar      : TToolbar;
+    FSettings           : IEditorSettings;
+    FEditor             : IEditorView;
+    FManager            : IEditorManager;
+    FMainToolbar        : TToolbar;
     //FSelectionToolbar : TToolbar;
     //FRightToolbar     : TToolbar;
-    FMainMenu         : TMainMenu;
-    FOI               : TzObjectInspector;
+    FMainMenu           : TMainMenu;
+    FSettingsInspector  : TzObjectInspector;
+    FEditorInspector    : TzObjectInspector;
 
   public
     procedure AfterConstruction; override;
@@ -78,13 +84,18 @@ begin
     FManager.Menus
   );
   FMainToolbar.Color := clWhite;
-  FOI := TzObjectInspectorFactory.Create(
+  FSettingsInspector := TzObjectInspectorFactory.Create(
     Self,
-    pnlLeft,
-    //FEditor.Editor
+    pnlLeftTop,
     (FSettings as IInterfaceComponentReference).GetComponent
   );
-  FOI.BorderStyle := bsNone;
+  FSettingsInspector.BorderStyle := bsNone;
+  FEditorInspector := TzObjectInspectorFactory.Create(
+    Self,
+    pnlLeftBottom,
+    FEditor.Editor
+  );
+  FEditorInspector.BorderStyle := bsNone;
 
 //  FRightToolbar := TEditorFactories.CreateTopRightToolbar(
 //    Self,
@@ -101,5 +112,10 @@ begin
   //FSelectionToolbar.Align := alRight;
 end;
 {$ENDREGION}
+
+procedure TfrmEditor.FormResize(Sender: TObject);
+begin
+  FEditor.Editor.Invalidate;
+end;
 
 end.

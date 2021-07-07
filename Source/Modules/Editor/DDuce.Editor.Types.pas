@@ -49,8 +49,8 @@ type
   ) of object;
 
   TStatusMessageEvent = procedure(
-    Sender : TObject;
-    Text   : string
+    Sender      : TObject;
+    const AText : string
   ) of object;
 
   TStorageEvent = procedure(

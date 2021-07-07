@@ -23,7 +23,14 @@ uses
   Vcl.Graphics;
 
 const
-  DEFAULT_RIGHT_EDGE_COLOR = clSilver;
+  DEFAULT_RIGHT_EDGE_COLOR     = clSilver;
+  DEFAULT_LINE_HIGHLIGHT_COLOR = clYellow;
+  DEFAULT_HIGHLIGHT_ALL_COLOR  = $000080FF; // orange
+  DEFAULT_BRACKET_MATCH_COLOR  = clAqua;
+  DEFAULT_MOUSELINK_COLOR      = clBlue;
+  DEFAULT_SELECTED_COLOR       = clMedGray;
+  DEFAULT_INCREMENT_COLOR      = clMedGray;
+  DEFAULT_FOLDED_CODE_COLOR    = clSilver;
 
 type
   TEditorColorSettings = class(TPersistent)
@@ -72,25 +79,32 @@ type
 
   published
     property IncrementColor: TColor
-      read GetIncrementColor write SetIncrementColor;
+      read GetIncrementColor write SetIncrementColor
+      default DEFAULT_INCREMENT_COLOR;
 
     property HighlightAllColor: TColor
-      read GetHighlightAllColor write SetHighlightAllColor;
+      read GetHighlightAllColor write SetHighlightAllColor
+      default DEFAULT_HIGHLIGHT_ALL_COLOR;
 
     property BracketMatchColor: TColor
-      read GetBracketMatchColor write SetBracketMatchColor;
+      read GetBracketMatchColor write SetBracketMatchColor
+      default DEFAULT_BRACKET_MATCH_COLOR;
 
     property MouseLinkColor: TColor
-      read GetMouseLinkColor write SetMouseLinkColor;
+      read GetMouseLinkColor write SetMouseLinkColor
+      default DEFAULT_MOUSELINK_COLOR;
 
     property LineHighlightColor: TColor
-      read GetLineHighlightColor write SetLineHighlightColor;
+      read GetLineHighlightColor write SetLineHighlightColor
+      default DEFAULT_LINE_HIGHLIGHT_COLOR;
 
     property FoldedCodeColor: TColor
-      read GetFoldedCodeColor write SetFoldedCodeColor;
+      read GetFoldedCodeColor write SetFoldedCodeColor
+      default DEFAULT_FOLDED_CODE_COLOR;
 
     property SelectedColor: TColor
-      read GetSelectedColor write SetSelectedColor;
+      read GetSelectedColor write SetSelectedColor
+      default DEFAULT_SELECTED_COLOR;
 
     property RightEdgeColor: TColor
       read GetRightEdgeColor write SetRightEdgeColor
@@ -247,7 +261,8 @@ begin
 //  HighlightAllColor.BackAlpha  := 128;
 //  HighlightAllColor.Foreground := clNone;
 //  HighlightAllColor.FrameColor := $00006BD7; // dark orange
-//
+
+
 //  LineHighlightColor.Background := clYellow;
 //  LineHighlightColor.BackAlpha  := 128;
 //  LineHighlightColor.Foreground := clNone;
@@ -259,8 +274,14 @@ begin
 //  FoldedCodeColor.BackAlpha  := 50;
 //  FoldedCodeColor.Foreground := clMedGray;
 //  FoldedCodeColor.FrameColor := clMedGray;
-
-  RightEdgeColor := DEFAULT_RIGHT_EDGE_COLOR;
+  BracketMatchColor  := DEFAULT_BRACKET_MATCH_COLOR;
+  HighlightAllColor  := DEFAULT_HIGHLIGHT_ALL_COLOR;
+  LineHighlightColor := DEFAULT_LINE_HIGHLIGHT_COLOR;
+  RightEdgeColor     := DEFAULT_RIGHT_EDGE_COLOR;
+  MouseLinkColor     := DEFAULT_MOUSELINK_COLOR;
+  SelectedColor      := DEFAULT_SELECTED_COLOR;
+  IncrementColor     := DEFAULT_INCREMENT_COLOR;
+  FoldedCodeColor    := DEFAULT_FOLDED_CODE_COLOR;
 end;
 
 procedure TEditorColorSettings.Changed;
