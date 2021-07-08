@@ -29,7 +29,8 @@ uses
 type
   TzObjectInspectorFactory = class sealed
   private class var
-    FDefaultBorderStyle : TBorderStyle;
+    FDefaultBorderStyle      : TBorderStyle;
+    FDefaultObjectVisibility : TMemberVisibility;
 
   public
     class constructor Create;
@@ -45,6 +46,10 @@ type
     class property DefaultBorderStyle: TBorderStyle
       read FDefaultBorderStyle write FDefaultBorderStyle default bsSingle;
 
+    class property DefaultObjectVisibility: TMemberVisibility
+      read FDefaultObjectVisibility write FDefaultObjectVisibility
+      default mvPublic;
+
   end;
 
 implementation
@@ -55,7 +60,8 @@ uses
 {$REGION 'construction and destruction'}
 class constructor TzObjectInspectorFactory.Create;
 begin
-  FDefaultBorderStyle := bsNone;
+  FDefaultBorderStyle      := bsNone;
+  FDefaultObjectVisibility := mvPublic;
 end;
 
 class function TzObjectInspectorFactory.Create(AOwner: TComponent;
@@ -70,7 +76,7 @@ begin
   OI.AlignWithMargins := False;
   OI.Name             := AName;
   OI.Component        := AObject;
-  OI.ObjectVisibility := mvPublic;
+  OI.ObjectVisibility := DefaultObjectVisibility;
   OI.SplitterPos      := OI.ClientWidth div 2;
   OI.BorderStyle      := DefaultBorderStyle;
   OI.GutterEdgeColor  := clSilver;
