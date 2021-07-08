@@ -78,6 +78,7 @@ begin
     FValueList
   );
   FObjectInspector.ObjectVisibility := mvPublished;
+  FObjectInspector.AlignWithMargins := True;
 end;
 {$ENDREGION}
 

@@ -204,6 +204,7 @@ begin
     pnlObjectInspector,
     FTree
   );
+  FObjectInspector.AlignWithMargins := True;
   BuildTree;
 end;
 {$ENDREGION}

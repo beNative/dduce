@@ -97,6 +97,8 @@ begin
   );
   FEditorInspector.BorderStyle := bsNone;
 
+
+
 //  FRightToolbar := TEditorFactories.CreateTopRightToolbar(
 //    Self,
 //    pnlRight,

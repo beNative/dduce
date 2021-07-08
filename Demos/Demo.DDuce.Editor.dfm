@@ -52,7 +52,6 @@ object frmEditor: TfrmEditor
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitTop = -6
     end
     object pnlLeftBottom: TPanel
       Left = 0
@@ -62,10 +61,6 @@ object frmEditor: TfrmEditor
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 136
-      ExplicitTop = 352
-      ExplicitWidth = 185
-      ExplicitHeight = 41
     end
   end
   object pnlRight: TPanel

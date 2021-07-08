@@ -108,6 +108,7 @@ begin
     pnlLeft,
     FGridView
   );
+  FObjectInspector.AlignWithMargins := True;
   FList := TDemoFactories.CreateContactList(1000);
   R.From(FList[0]);
   for F in R do
