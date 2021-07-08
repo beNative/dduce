@@ -20,10 +20,10 @@ unit DDuce.Editor.Highlighters;
 
 interface
 
-{ REMARKS about TBCEditorHighlighter:
-  - a TBCEditorHighlighter requires a TBCEditor component to be able to load
+{ REMARKS about TTextEditorHighlighter:
+  - a TTextEditorHighlighter requires a TTextEditor component to be able to load
     its properties from the definition file.
-  - It uses a TBCEditorHighlighterJSONImporter object to load its settings. It
+  - It uses a TTextEditorHighlighterImportJSON object to load its settings. It
     is not possible to save its settings back to JSON.
   - It is not intended as a persistable settings object, but is rather a helper
     object that works closely with the associated editor instance to render its
@@ -34,8 +34,6 @@ uses
   System.SysUtils, System.Classes,
 
   DDuce.Editor.CodeFormatters, DDuce.Editor.CodeTags,
-
-
   DDuce.Logger;
 
 type
@@ -148,8 +146,6 @@ type
       const ACodeFormatter  : ICodeFormatter = nil
     ); virtual;
 
-
-    // public properties
     { Provides indexed access to the list of items. }
     property Items[Index: Integer]: THighlighterItem
       read GetItem write SetItem; default;
@@ -204,8 +200,8 @@ end;
 
 function THighlighters.GetFileFilter: string;
 var
-  S: string;
-  HI: THighlighterItem;
+  S  : string;
+  HI : THighlighterItem;
 begin
   S := '';
   for HI in Self do

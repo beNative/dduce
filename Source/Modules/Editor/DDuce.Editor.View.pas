@@ -1400,6 +1400,9 @@ begin
   Editor.CodeFolding.Colors.IndentHighlight      := clSilver;
 
   Editor.CodeFolding.Hint.Colors.Border          := clSilver;
+
+  Editor.CodeFolding.GuideLineStyle              := lsSolid;
+
   Editor.CodeFolding.Options := [
    {cfoAutoPadding,}
    {cfoAutoWidth,}
@@ -1414,7 +1417,7 @@ begin
    {cfoShowCollapseMarkAtTheEnd}
   ];
 
-
+  Editor.Search.Highlighter.Colors.Border := clSilver;
 
   ActiveControl := Editor;
 end;

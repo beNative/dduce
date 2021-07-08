@@ -27,8 +27,7 @@ interface
   components are stored in a DFM/LFM file so there is no special code needed
   that handles the storage and retrieval of properties.
 
-  Reading qnd writing of the settings is handled completely by these methods,
-  which utilize the NativeXml object storage mechanism.
+  Reading and writing of the settings is handled completely by these methods:
     procedure Load;
     procedure Save;
 
@@ -74,7 +73,7 @@ const
   DEFAULT_SINGLE_INSTANCE             = False;
   DEFAULT_LANGUAGE_CODE               = 'en';
   DEFAULT_FONT_NAME                   = 'Consolas';
-  DEFAULT_SETTINGS_FILE               = 'settings.xml';
+  DEFAULT_SETTINGS_FILE               = 'settings.json';
 
 type
   TEditorSettings = class(TComponent, IEditorSettings)
@@ -110,16 +109,16 @@ type
     function GetDebugMode: Boolean;
     function GetDimInactiveView: Boolean;
     function GetEditorFont: TFont;
+    function GetEditorOptions: TEditorOptionsSettings;
     function GetFileName: string;
     function GetFormSettings: TFormSettings;
     function GetHighlighters: THighlighters;
     function GetHighlighterType: string;
     function GetLanguageCode: string;
-    function GetEditorOptions: TEditorOptionsSettings;
+    function GetOnChanged: IEvent<TNotifyEvent>;
     function GetReadOnly: Boolean;
     function GetSingleInstance: Boolean;
     function GetToolSettings: TEditorToolSettings;
-    function GetXML: string;
     procedure SetAutoFormatXML(const AValue: Boolean);
     procedure SetAutoGuessHighlighterType(const AValue: Boolean);
     procedure SetCloseWithESC(const AValue: Boolean);
@@ -127,16 +126,15 @@ type
     procedure SetDebugMode(AValue: Boolean);
     procedure SetDimInactiveView(const AValue: Boolean);
     procedure SetEditorFont(AValue: TFont);
+    procedure SetEditorOptions(AValue: TEditorOptionsSettings);
     procedure SetFileName(const AValue: string);
     procedure SetFormSettings(const AValue: TFormSettings);
     procedure SetHighlighters(const AValue: THighlighters);
     procedure SetHighlighterType(const AValue: string);
     procedure SetLanguageCode(AValue: string);
-    procedure SetEditorOptions(AValue: TEditorOptionsSettings);
     procedure SetReadOnly(const AValue: Boolean);
     procedure SetSingleInstance(AValue: Boolean);
     procedure SetToolSettings(AValue: TEditorToolSettings);
-    function GetOnChanged: IEvent<TNotifyEvent>;
     {$ENDREGION}
 
   protected
@@ -154,9 +152,6 @@ type
 
     property FileName: string
       read GetFileName write SetFileName;
-
-    property XML: string
-      read GetXML;
 
     property Highlighters: THighlighters
       read GetHighlighters write SetHighlighters;
@@ -219,7 +214,7 @@ implementation
 uses
   Vcl.Dialogs, Vcl.Forms,
 
-//  ts.Core.NativeXml, ts.Core.NativeXml.ObjectStorage, ts.Core.Utils,
+  JsonDataObjects,
 
   DDuce.Editor.Resources;
 
@@ -240,17 +235,17 @@ begin
   FHighlighters := THighLighters.Create(Self);
   FHighlighters.Name := 'Highlighters';
 
-  FFileName := DEFAULT_SETTINGS_FILE;
-  FHighlighterType := HL_TXT;
-  FAutoFormatXML := DEFAULT_AUTO_FORMAT_XML;
-  FAutoGuessHighlighterType := DEFAULT_AUTO_GUESS_HIGHLIGHTER_TYPE;
-  FSingleInstance := DEFAULT_SINGLE_INSTANCE;
-  FEditorFont := TFont.Create;
-  FEditorFont.Name := DEFAULT_FONT_NAME;
-  FEditorFont.Size := 11;
+  FFileName                      := DEFAULT_SETTINGS_FILE;
+  FHighlighterType               := HL_TXT;
+  FAutoFormatXML                 := DEFAULT_AUTO_FORMAT_XML;
+  FAutoGuessHighlighterType      := DEFAULT_AUTO_GUESS_HIGHLIGHTER_TYPE;
+  FSingleInstance                := DEFAULT_SINGLE_INSTANCE;
+  FEditorFont                    := TFont.Create;
+  FEditorFont.Name               := DEFAULT_FONT_NAME;
+  FEditorFont.Size               := 11;
 
-  FDimInactiveView := DEFAULT_DIM_ACTIVE_VIEW;
-  FLanguageCode    := DEFAULT_LANGUAGE_CODE;
+  FDimInactiveView               := DEFAULT_DIM_ACTIVE_VIEW;
+  FLanguageCode                  := DEFAULT_LANGUAGE_CODE;
   FOnChanged.UseFreeNotification := False; // test TS
 
   AssignDefaultColors;
@@ -270,7 +265,6 @@ end;
 {$ENDREGION}
 
 {$REGION 'event handlers'}
-
 procedure TEditorSettings.FColorsChanged(Sender: TObject);
 begin
   Changed;
@@ -496,11 +490,6 @@ begin
   FToolSettings.Assign(AValue);
   Changed;
 end;
-
-function TEditorSettings.GetXML: string;
-begin
-  //Result := ReadFileToString(FileName);
-end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
@@ -544,6 +533,28 @@ end;
 
 {$REGION 'public methods'}
 procedure TEditorSettings.Load;
+var
+  JO : TJsonObject;
+  I  : Integer;
+  S  : string;
+begin
+  Logger.Track(Self, 'Load');
+  if FileExists(FFileName) then
+  begin
+    JO := TJsonObject.Create;
+    try
+      JO.LoadFromFile(FFileName);
+      JO['FormSettings'].ObjectValue.ToSimpleObject(FFormSettings);
+      JO['Colors'].ObjectValue.ToSimpleObject(FColors);
+      JO['EditorOptions'].ObjectValue.ToSimpleObject(FEditorOptions);
+      JO['EditorFont'].ObjectValue.ToSimpleObject(FEditorFont);
+      JO.ToSimpleObject(Self);
+    finally
+      JO.Free;
+    end;
+  end;
+end;
+(* old
 //var
 //  Reader : TXmlObjectReader;
 //  Doc    : TNativeXml;
@@ -571,8 +582,30 @@ begin
 //  InitializeHighlighterAttributes;
 //  Logger.ExitMethod('TEditorSettings.Load');
 end;
+*)
 
 procedure TEditorSettings.Save;
+var
+  JO : TJsonObject;
+  I  : Integer;
+  S  : string;
+begin
+  Logger.Track(Self, 'Save');
+  JO := TJsonObject.Create;
+  try
+    JO.FromSimpleObject(Self);
+    JO['FormSettings'].ObjectValue.FromSimpleObject(FFormSettings);
+    JO['Colors'].ObjectValue.FromSimpleObject(FColors);
+    JO['EditorOptions'].ObjectValue.FromSimpleObject(FEditorOptions);
+    JO['EditorFont'].ObjectValue.FromSimpleObject(FEditorFont);
+    JO.SaveToFile(FFileName, False);
+  finally
+    JO.Free;
+  end;
+end;
+
+
+(* old
 //var
 //  Writer : TXmlObjectWriter;
 //  Doc    : TNativeXml;
@@ -596,6 +629,7 @@ begin
 //  end;
 //  Logger.ExitMethod('TEditorSettings.Save');
 end;
+*)
 
 procedure TEditorSettings.Apply;
 begin

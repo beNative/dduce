@@ -560,7 +560,6 @@ type
     function GetEditorOptions: TEditorOptionsSettings;
     function GetFileName: string;
     function GetFormSettings: TFormSettings;
-//    function GetHighlighterAttributes: THighlighterAttributes;
     function GetHighlighters: THighlighters;
     function GetHighlighterType: string;
     function GetLanguageCode: string;
@@ -568,7 +567,6 @@ type
     function GetSingleInstance: Boolean;
     function GetToolSettings: TEditorToolSettings;
     function GetOnChanged: IEvent<TNotifyEvent>;
-    function GetXML: string;
     procedure SetAutoFormatXML(const AValue: Boolean);
     procedure SetAutoGuessHighlighterType(const AValue: Boolean);
     procedure SetCloseWithESC(const AValue: Boolean);
@@ -579,7 +577,6 @@ type
     procedure SetEditorOptions(AValue: TEditorOptionsSettings);
     procedure SetFileName(const AValue: string);
     procedure SetFormSettings(const AValue: TFormSettings);
-//    procedure SetHighlighterAttributes(AValue: THighlighterAttributes);
     procedure SetHighlighterType(const AValue: string);
     procedure SetLanguageCode(AValue: string);
     procedure SetReadOnly(const AValue: Boolean);
@@ -636,9 +633,6 @@ type
 
     property SingleInstance: Boolean
       read GetSingleInstance write SetSingleInstance;
-
-    property XML: string
-      read GetXML;
 
     // Editor options
     property EditorOptions: TEditorOptionsSettings

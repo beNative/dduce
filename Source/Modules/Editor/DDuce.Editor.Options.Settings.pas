@@ -133,7 +133,6 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
     procedure Assign(ASource: TPersistent); override;
 
     property OnChanged: TNotifyEvent
@@ -270,11 +269,6 @@ begin
   FShowRightEdge      := True;
   FShowSearchmap      := True;
   FOverwriteBlock     := True;
-end;
-
-procedure TEditorOptionsSettings.BeforeDestruction;
-begin
-  inherited BeforeDestruction;
 end;
 {$ENDREGION}
 
