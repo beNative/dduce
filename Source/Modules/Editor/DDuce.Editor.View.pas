@@ -23,23 +23,9 @@ interface
   Form holding a complete customizable text editor based on the open source
   TTextEditor component.
   Features:
-    - accepts dropped files
-    - auto detect file encoding
     - dynamic editor creation
-    - synchronized edit
     - highlight selected text
     - code folding
-    - file monitor function to watch for external file changes.
-
-  TODO:
-    - configurable page setup and printing with preview
-    - customizable keystroke-function mappings
-    - configurable code completion proposal
-    - convert to another encoding (partially implemented)
-    - find a way to fold particular sections (now only levels are supported)
-
-    DEPENDENCIES:
-    - BCEditor-
 }
 {$ENDREGION}
 
@@ -57,13 +43,13 @@ type
   TEditorView = class(TForm, IEditorView)
   private
     FUpdate          : Boolean;
-    FLineBreakStyle  : string;
+    FLineBreakStyle  : string; // not supported
     FEditor          : TTextEditor;
     FFindHistory     : TStringList;
     FReplaceHistory  : TStringList;
     FHighlighterItem : THighlighterItem;
     FFileName        : string;
-    FFoldLevel       : Integer;
+    FFoldLevel       : Integer; // not supported
     FIsFile          : Boolean;
     FOnChange        : TNotifyEvent;
 
@@ -296,6 +282,7 @@ type
     property CanUndo: Boolean
       read GetCanUndo;
 
+    { not working/not supported by TTextEditor }
     property FoldLevel: Integer
       read GetFoldLevel write SetFoldLevel;
 
@@ -439,8 +426,6 @@ uses
 
   TextEditor.Utils,
 
-  //BCEditor.Editor.LineSpacing,
-
   Spring;
 
 {$REGION'construction and destruction'}
@@ -457,14 +442,8 @@ begin
   FReplaceHistory.Duplicates := dupIgnore;
 
   FIsFile         := True;
-//  FEncoding       := EncodingUTF8;
-//  FLineBreakStyle := ALineBreakStyles[Lines.TextLineBreakStyle];
 
   InitializeEditor(FEditor);
-//  FDirectoryWatch          := TDirectoryWatch.Create;
-//  FDirectoryWatch.OnNotify := DirectoryWatchNotify;
-  // TEST
-  //MonitorChanges := True;
   Settings.OnChanged.Add(EditorSettingsChanged);
   ApplySettings;
 end;
@@ -476,27 +455,12 @@ begin
 
   FreeAndNil(FReplaceHistory);
   FreeAndNil(FFindHistory);
+  FreeAndNil(FEditor);
   inherited Destroy;
 end;
 {$ENDREGION}
 
 {$REGION'event handlers'}
-{ Event triggered when MonitorChanges is True }
-
-//procedure TEditorView.DirectoryWatchNotify(const Sender: TObject;
-//  const AAction: TWatchAction; const FileName: string);
-//begin
-//  if SameText(FileName, ExtractFileName(Self.FileName)) and (AAction = waModified) then
-//  begin
-//    Load(Self.FileName);
-//    if CanFocus then
-//    begin
-//      Editor.CaretY := Editor.Lines.Count;
-//      Editor.EnsureCursorPosVisible;
-//    end;
-//  end;
-//end;
-
 //procedure TEditorView.EditorCommandProcessed(Sender: TObject;
 //  var ACommand: TTextEditorCommand; var AChar: Char; AData: Pointer);
 //var
@@ -627,7 +591,6 @@ begin
   if AValue <> FoldLevel then
   begin
     FFoldLevel := AValue;
-//    Editor.FoldAllByLevel(1, AValue);
     Events.DoModified;
   end;
 end;
@@ -663,7 +626,7 @@ end;
 
 function TEditorView.GetCaretX: Integer;
 begin
-  Result := Editor.TextPosition.Char;
+  Result := Editor.TextPosition.Char
 end;
 
 procedure TEditorView.SetCaretX(const Value: Integer);
@@ -680,7 +643,7 @@ end;
 
 function TEditorView.GetCaretY: Integer;
 begin
-  Result := Editor.TextPosition.Line;
+  Result := Editor.TextPosition.Line
 end;
 
 procedure TEditorView.SetCaretY(const Value: Integer);
@@ -836,19 +799,7 @@ end;
 
 procedure TEditorView.SetMonitorChanges(const AValue: Boolean);
 begin
-  if AValue <> MonitorChanges then
-  begin
-//    if AValue then
-//    begin
-//      if FileExists(FileName) then
-//      begin
-//        FDirectoryWatch.Directory := ExtractFileDir(FileName);
-//        FDirectoryWatch.Start;
-//      end;
-//    end
-//    else
-//      FDirectoryWatch.Stop;
-  end;
+//
 end;
 
 function TEditorView.GetName: string;
@@ -1219,95 +1170,31 @@ begin
   Editor.Search.Map.Visible   := Settings.EditorOptions.ShowSearchmap;
   Editor.LineSpacing          := Settings.EditorOptions.ExtraLineSpacing;
 
-  //  Editor.ExtraCharSpacing      := Settings.EditorOptions.ExtraCharSpacing;
-//  Editor.BlockTabIndent        := Settings.EditorOptions.BlockTabIndent;
-//  Editor.BlockIndent           := Settings.EditorOptions.BlockIndent;
-
-
-//
-//  if Settings.EditorOptions.AutoIndentOnPaste then
-//    Editor.Options := Editor.Options + [eoAutoIndentOnPaste]
-//  else                                              ;
-//    Editor.Options := Editor.Options - [eoAutoIndentOnPaste];
-
-
-//
-//  if Settings.EditorOptions.EnhanceHomeKey then
-//    Editor.Options := Editor.Options + [eoEnhanceHomeKey]
-//  else
-//    Editor.Options := Editor.Options - [eoEnhanceHomeKey];
-
-//
-
-//  if Settings.EditorOptions.EnhanceEndKey then
-//    Editor.Options2 := Editor.Options2 + [eoEnhanceEndKey]
-//  else
-//    Editor.Options2 := Editor.Options2 - [eoEnhanceEndKey];
-//
-//  if Settings.EditorOptions.CaretSkipsSelection then
-//    Editor.Options2 := Editor.Options2 + [eoCaretSkipsSelection]
-//  else
-//    Editor.Options2 := Editor.Options2 - [eoCaretSkipsSelection];
-//
-//  if Settings.EditorOptions.CaretSkipsTab then
-//    Editor.Options2 := Editor.Options2 + [eoCaretSkipTab]
-//  else
-//    Editor.Options2 := Editor.Options2 - [eoCaretSkipTab];
-//
-//  if Settings.EditorOptions.AlwaysVisibleCaret then
-//    Editor.Options2 := Editor.Options2 + [eoAlwaysVisibleCaret]
-//  else
-//    Editor.Options2 := Editor.Options2 - [eoAlwaysVisibleCaret];
-//
-//  if Settings.EditorOptions.FoldedCopyPaste then
-//    Editor.Options2 := Editor.Options2 + [eoFoldedCopyPaste]
-//  else
-//    Editor.Options2 := Editor.Options2 - [eoFoldedCopyPaste];
-//
-//  if Settings.EditorOptions.PersistentBlock then
-//    Editor.Options2 := Editor.Options2 + [eoPersistentBlock]
-//  else
-//    Editor.Options2 := Editor.Options2 - [eoPersistentBlock];
-//
-//  if Settings.EditorOptions.OverwriteBlock then
-//    Editor.Options2 := Editor.Options2 + [eoOverwriteBlock]
-//  else
-//    Editor.Options2 := Editor.Options2 - [eoOverwriteBlock];
-//
-//  if Settings.EditorOptions.AutoHideCursor then
-//    Editor.Options2 := Editor.Options2 + [eoAutoHideCursor]
-//  else
-//    Editor.Options2 := Editor.Options2 - [eoAutoHideCursor];
-
-   Editor.Selection.Colors.Background := Settings.Colors.SelectedColor;
-   Editor.ActiveLine.Colors.Background := Settings.Colors.LineHighlightColor;
-   Editor.RightMargin.Colors.Margin    := Settings.Colors.RightEdgeColor;
-   Editor.MatchingPairs.Colors.Matched := Settings.Colors.BracketMatchColor;
-   //Editor.CodeFolding.Colors.
-
-   Editor.Search.Highlighter.Colors.Background := Settings.Colors.HighlightAllColor;
-
-//  Editor.MouseLinkColor     := Settings.Colors.MouseLinkColor;
-//  Editor.BracketMatchColor  := Settings.Colors.BracketMatchColor;
-//  Editor.LineHighlightColor := Settings.Colors.LineHighlightColor;
-//  Editor.FoldedCodeColor    := Settings.Colors.FoldedCodeColor;
-//  Editor.HighlightAllColor  := Settings.Colors.HighlightAllColor;
-//  Editor.SelectedColor      := Settings.Colors.SelectedColor;
-//  Editor.IncrementColor     := Settings.Colors.IncrementColor;
-//  Editor.RightEdgeColor     := Settings.Colors.RightEdgeColor;
-//
-//  Editor.Refresh; // will repaint using the actual highlighter settings
-
-  // alternative block selection color?
-  //Editor.UseIncrementalColor := False;
-  //Editor.IncrementColor.Background := clLtGray;
-  //Editor.IncrementColor.Foreground := clNone;
-
-  // highlight all search matches after search operation
-  //Editor.HighlightAllColor.Background := $0064B1FF;  // light orange
-  //Editor.HighlightAllColor.FrameColor := $0064B1FF;
-  ////Editor.HighlightAllColor.FrameColor := $004683FF;  // dark orange
-  //Editor.HighlightAllColor.FrameStyle := slsSolid;
+  // not supported
+  { Settings.EditorOptions.ExtraCharSpacing
+    Settings.EditorOptions.BlockTabIndent
+    Settings.EditorOptions.BlockIndent
+    Settings.EditorOptions.AutoIndentOnPaste
+    Settings.EditorOptions.EnhanceHomeKey
+    Settings.EditorOptions.EnhanceEndKey
+    Settings.EditorOptions.CaretSkipsSelection
+    Settings.EditorOptions.CaretSkipsTab
+    Settings.EditorOptions.AlwaysVisibleCaret
+    Settings.EditorOptions.FoldedCopyPaste
+    Settings.EditorOptions.PersistentBlock
+    Settings.EditorOptions.OverwriteBlock
+    Settings.EditorOptions.AutoHideCursor
+    Settings.Colors.MouseLinkColor
+    Settings.Colors.IncrementColor
+  }
+  Editor.CodeFolding.Colors.CollapsedLine := Settings.Colors.FoldedCodeColor;
+  Editor.Selection.Colors.Background      := Settings.Colors.SelectedColor;
+  Editor.ActiveLine.Colors.Background     := Settings.Colors.LineHighlightColor;
+  Editor.RightMargin.Colors.Margin        := Settings.Colors.RightEdgeColor;
+  Editor.MatchingPairs.Colors.Matched     := Settings.Colors.BracketMatchColor;
+  Editor.Search.Highlighter.Colors.Background :=
+    Settings.Colors.HighlightAllColor;
+  Editor.Refresh; // will repaint using the actual highlighter settings
 end;
 
 procedure TEditorView.InitializeEditor(AEditor: TTextEditor);
@@ -1315,7 +1202,6 @@ begin
   AEditor.Parent := Self;
   AEditor.Align := alClient;
   AEditor.Font.Assign(Settings.EditorFont);
-
   AEditor.BorderStyle := bsNone;
   AEditor.DoubleBuffered := True;
   AEditor.Options := [
@@ -1326,98 +1212,45 @@ begin
   ];
   AEditor.Selection.Options := AEditor.Selection.Options + [
     soALTSetsColumnMode,
-//    soHighlightSimilarTerms,
     soTripleClickRowSelect
   ];
+  // TEMP
+  AEditor.Highlighter.Colors.LoadFromFile('tsColors.json');
 
+  AEditor.LeftMargin.Autosize := True;
+  AEditor.LeftMargin.Colors.Background := clWhite;
+  AEditor.LeftMargin.LineNumbers.AutosizeDigitCount := 3;
+  AEditor.LeftMargin.Visible := False;
+  AEditor.LeftMargin.Visible := True;
+
+  AEditor.CodeFolding.Visible                     := True;
+  AEditor.CodeFolding.Colors.CollapsedLine        := clSilver;
+  AEditor.CodeFolding.Colors.FoldingLine          := clSilver;
+  AEditor.CodeFolding.Colors.FoldingLineHighlight := clSilver;
+  AEditor.CodeFolding.Colors.Indent               := clSilver;
+  AEditor.CodeFolding.Colors.IndentHighlight      := clSilver;
+  AEditor.CodeFolding.Hint.Colors.Border          := clSilver;
+  AEditor.CodeFolding.GuideLineStyle              := lsSolid;
+  AEditor.CodeFolding.Options := [
+   cfoExpandByHintClick,
+   cfoHighlightMatchingPair,
+   cfoShowTreeLine
+  ];
   AEditor.OnChange               := EditorChange;
   AEditor.OnReplaceText          := EditorReplaceText;
   AEditor.OnCaretChanged         := EditorCaretChanged;
-  //AEditor.OnCommandProcessed     := EditorCommandProcessed;
   AEditor.OnDropFiles            := EditorDropFiles;
   AEditor.OnCustomTokenAttribute := EditorCustomTokenAttribute;
   AEditor.OnEnter                := EditorEnter;
 
-  // TEMP
-  AEditor.Highlighter.Colors.LoadFromFile('tsColors.json');
-
-  AEditor.CodeFolding.Visible := True;
-  AEditor.CodeFolding.Options :=  [
-    //cfoFoldMultilineComments,
-    cfoHighlightFoldingLine,
-    //cfoHighlightIndentGuides,
-    cfoHighlightMatchingPair,
-    cfoShowCollapsedLine
-    //cfoShowTreeLine
-    //cfoShowCollapsedLine,
-    //cfoShowIndentGuides,
-    //cfoUncollapseByHintClick
-  ];
-  AEditor.URIOpener := True;
-
-//  AEditor.Options := [
-//    eoAltSetsColumnMode,
-//    eoAutoIndent,        // Will indent the caret on new lines with the same amount of leading white space as the preceding line
-//    eoAutoIndentOnPaste,
-//    eoEnhanceHomeKey,   // home key jumps to line start if nearer, similar to visual studio
-//    eoGroupUndo,       // When undoing/redoing actions, handle all continous changes of the same kind in one call instead undoing/redoing each command separately
-//    eoHalfPageScroll,   // When scrolling with page-up and page-down commands, only scroll a half page at a time
-//    eoSmartTabs,        // When tabbing, the cursor will go to the next non-white space character of the previous line
-//    eoTabIndent,        // When active <Tab> and <Shift><Tab> act as block indent, unindent when text is selected
-//    eoTabsToSpaces,    // Converts a tab character to a specified number of space characters
-//    eoTrimTrailingSpaces,  // Spaces at the end of lines will be trimmed and not saved
-//    eoBracketHighlight, // Highlight matching bracket
-//    eoShowCtrlMouseLinks,
-//    eoScrollPastEol,         // makes column selections easier
-//    eoDragDropEditing,
-////    eoPersistentCaret,     // don't use! bug in TSynEdit
-//    eoShowScrollHint
-//  ];
-//  AEditor.OnChange             := EditorChange;
-//  AEditor.OnMouseLink          := EditorMouseLink;
-//  AEditor.OnClickLink          := EditorClickLink;
-//  AEditor.OnCutCopy            := EditorCutCopy;
-//  AEditor.OnPaste              := EditorPaste;
-//  AEditor.OnProcessCommand     := EditorProcessCommand;
-//  AEditor.OnProcessUserCommand := EditorProcessUserCommand;
-//  AEditor.OnGutterClick        := EditorGutterClick;
-//  AEditor.OnClearBookmark      := EditorClearBookmark;
-//  AEditor.OnSpecialLineMarkup  := EditorSpecialLineMarkup;
-//  AEditor.OnChangeUpdating     := EditorChangeUpdating;
-//  AEditor.OnCommandProcessed   := EditorCommandProcessed;
-//  AEditor.OnReplaceText        := EditorReplaceText;
-
-  Editor.LeftMargin.Autosize := True;
-  Editor.LeftMargin.Colors.Background := clWhite;
-  Editor.LeftMargin.LineNumbers.AutosizeDigitCount := 3;
-  Editor.LeftMargin.Visible := False;
-  Editor.LeftMargin.Visible := True;
-
-  Editor.CodeFolding.Colors.CollapsedLine        := clSilver;
-  Editor.CodeFolding.Colors.FoldingLine          := clSilver;
-  Editor.CodeFolding.Colors.FoldingLineHighlight := clSilver;
-  Editor.CodeFolding.Colors.Indent               := clSilver;
-  Editor.CodeFolding.Colors.IndentHighlight      := clSilver;
-
-  Editor.CodeFolding.Hint.Colors.Border          := clSilver;
-
-  Editor.CodeFolding.GuideLineStyle              := lsSolid;
-
-  Editor.CodeFolding.Options := [
-   {cfoAutoPadding,}
-   {cfoAutoWidth,}
-   cfoExpandByHintClick,
-   {cfoFoldMultilineComments,}
-   {cfoHighlightFoldingLine,}
-   {cfoHighlightIndentGuides,}
-   cfoHighlightMatchingPair,
-   {cfoShowCollapsedLine,}
-   {cfoShowIndentGuides,}
-   cfoShowTreeLine
-   {cfoShowCollapseMarkAtTheEnd}
-  ];
-
-  Editor.Search.Highlighter.Colors.Border := clSilver;
+  // SyncEdit does not work properly
+  AEditor.SyncEdit.Activator.Visible := False;
+  AEditor.SyncEdit.ShortCut          := 0;
+  AEditor.SyncEdit.Active            := False;
+  // MultiEdit does not work properly
+  AEditor.Caret.MultiEdit.Active := False;
+  // does not work properly
+  AEditor.URIOpener := False;
 
   ActiveControl := Editor;
 end;
@@ -1644,28 +1477,22 @@ begin
   end;
 end;
 
-{  When IsFile is true this loads the given filenameinto the editor view. When
+{ When IsFile is true this loads the given filenameinto the editor view. When
   IsFile is false, the given storagename is passed to an event which can be
   handled by the owning application to load the content from another resource
   like eg. a database table. }
 
 procedure TEditorView.Load(const AStorageName: string);
 var
-  S: string;
+  S : string;
 begin
   Events.DoLoad(AStorageName);
   if IsFile then
   begin
     if (AStorageName <> '') and FileExists(AStorageName) then
       FileName := AStorageName;
-      Editor.LoadFromFile(FileName);
 
-//    FS := TFileStream.Create(FileName, fmOpenRead + fmShareDenyNone);
-//    try
-//      LoadFromStream(FS);
-//    finally
-//      FreeAndNil(FS);
-//    end;
+    Editor.LoadFromFile(FileName);
 //    LineBreakStyle := ALineBreakStyles[GuessLineBreakStyle(Text)];
     S := TPath.GetExtension(FileName);
     S := System.Copy(S, 2, Length(S));
@@ -1715,12 +1542,6 @@ begin
   D := Editor.TextToViewPosition(P);
   Result := Editor.GetWordAtPixels(D.Column, D.Row);
 end;
-
-//function TEditorView.GetHighlighterAttriAtRowCol(APosition: TPoint;
-//  out AToken: string; out AAttri: TSynHighlighterAttributes): Boolean;
-//begin
-//  Result := Editor.GetHighlighterAttriAtRowCol(APosition, AToken, AAttri);
-//end;
 {$ENDREGION}
 
 {$REGION'Keyboard shortcuts'}

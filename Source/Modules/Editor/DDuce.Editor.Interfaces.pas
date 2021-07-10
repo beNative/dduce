@@ -217,8 +217,6 @@ type
     procedure SelectAll;
     procedure SelectWord;
 
-    // other commands
-
     // clipboard commands
     procedure Cut;
     procedure Copy;
@@ -468,8 +466,8 @@ type
     function GetOnShowEditorToolView: IEvent<TEditorToolViewEvent>;
     function GetOnNew: IEvent<TNewEvent>;
 //    function GetOnStatusChange: TStatusChangeEvent;
-      function GetOnActionExecute: IEvent<TActionExecuteEvent>;
-      function GetOnCaretPositionChange: IEvent<TCaretPositionEvent>;
+    function GetOnActionExecute: IEvent<TActionExecuteEvent>;
+    function GetOnCaretPositionChange: IEvent<TCaretPositionEvent>;
     {$ENDREGION}
 
     // event dispatch methods
@@ -644,11 +642,13 @@ type
 
   IEditorViews = interface
   ['{FBFB8DC6-7663-4EA4-935D-5B9F3CD7C753}']
+    {$REGION 'property access methods'}
     function GetView(AIndex: Integer): IEditorView;
     function GetViewByFileName(AFileName: string): IEditorView;
     function GetViewByName(AName: string): IEditorView;
     function GetCount: Integer;
     function GetViewList: IList<IEditorView>;
+    {$ENDREGION}
 
     function Add(
       const AName        : string = '';
@@ -681,10 +681,13 @@ type
 
   IEditorToolView = interface
   ['{F6BEE8F6-BA4D-4B38-8FB0-79088B615DF5}']
+    {$REGION 'property access methods'}
     function GetForm: TForm;
     function GetName: string;
     function GetVisible: Boolean;
     procedure SetVisible(AValue: Boolean);
+    {$ENDREGION}
+
     { Lets the view respond to changes. }
     procedure UpdateView;
 
@@ -704,9 +707,11 @@ type
 
   IEditorToolViews = interface
   ['{A5575878-A189-4F3C-9008-61899B739DA1}']
+    {$REGION 'property access methods'}
     function GetView(AIndex: Integer): IEditorToolView;
     function GetViewByName(AName: string): IEditorToolView;
     function GetCount: Integer;
+    {$ENDREGION}
 
     function GetEnumerator: TEditorToolViewListEnumerator;
 
@@ -860,8 +865,10 @@ type
 
   IEditorActions = interface
   ['{E42EF2E3-A7A0-4847-B299-3C35699DC708}']
+    {$REGION 'property access methods'}
     function GetActionList: TActionList;
     function GetItem(AName: string): TCustomAction;
+    {$ENDREGION}
 
     procedure UpdateActions;
     procedure UpdateHighLighterActions;
@@ -900,8 +907,8 @@ type
     function ActivateView(const AName: string): Boolean;
     function OpenFile(const AFileName: string): IEditorView;
     function NewFile(
-      const AFileName  : string;
-      const AText      : string = ''
+      const AFileName : string;
+      const AText     : string = ''
     ): IEditorView;
     function SaveFile(
       const AFileName : string = '';

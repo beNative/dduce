@@ -464,10 +464,11 @@ end;
 
 procedure TEditorCommands.SyncEditSelection;
 begin
-  View.Editor.SyncEdit.BlockBeginPosition := View.Editor.SelectionBeginPosition;
-  View.Editor.SyncEdit.BlockEndPosition   := View.Editor.SelectionEndPosition;
+  //View.Editor.SyncEdit.BlockBeginPosition := View.Editor.SelectionBeginPosition;
+  //View.Editor.SyncEdit.BlockEndPosition   := View.Editor.SelectionEndPosition;
 
-  //View.Editor.CommandProcessor(ecEd ecSynPSyncroEdStart, '', nil);
+//View.Editor.CommandProcessor(ecSynPSyncroEdStart, '', nil);
+
 end;
 
 procedure TEditorCommands.Save;

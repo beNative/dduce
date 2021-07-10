@@ -18,6 +18,20 @@ unit Demo.DDuce.Editor;
 
 { Form demonstrating the IEditorView module. }
 
+{$REGION 'Documentation'}
+{
+  Minimum requirements to add an IEditorView instance to your application:
+
+  uses
+    DDuce.Editor.Interfaces, DDuce.Editor.Factories
+
+    FSettings := TEditorFactories.CreateSettings(Owner);
+    FManager  := TEditorFactories.CreateManager(Owner, FSettings);
+    FEditor   := TEditorFactories.CreateView(Parent, FManager)
+
+}
+{$ENDREGION}
+
 interface
 
 uses
@@ -43,15 +57,15 @@ type
     procedure FormResize(Sender: TObject);
 
   private
-    FSettings           : IEditorSettings;
-    FEditor             : IEditorView;
-    FManager            : IEditorManager;
-    FMainToolbar        : TToolbar;
-    //FSelectionToolbar : TToolbar;
-    //FRightToolbar     : TToolbar;
-    FMainMenu           : TMainMenu;
-    FSettingsInspector  : TzObjectInspector;
-    FEditorInspector    : TzObjectInspector;
+    FSettings          : IEditorSettings;
+    FEditor            : IEditorView;
+    FManager           : IEditorManager;
+    FMainToolbar       : TToolbar;
+    FSelectionToolbar  : TToolbar;
+    //FRightToolbar    : TToolbar;
+    FMainMenu          : TMainMenu;
+    FSettingsInspector : TzObjectInspector;
+    FEditorInspector   : TzObjectInspector;
 
   public
     procedure AfterConstruction; override;
@@ -69,10 +83,10 @@ uses
 procedure TfrmEditor.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FSettings    := TEditorFactories.CreateSettings(Self);
-  FManager     := TEditorFactories.CreateManager(Self, FSettings);
-  FEditor      := TEditorFactories.CreateView(pnlRight, FManager);
-  FMainMenu    := TEditorFactories.CreateMainMenu(
+  FSettings := TEditorFactories.CreateSettings(Self);
+  FManager  := TEditorFactories.CreateManager(Self, FSettings);
+  FEditor   := TEditorFactories.CreateView(pnlRight, FManager);
+  FMainMenu := TEditorFactories.CreateMainMenu(
     Self,
     FManager.Actions,
     FManager.Menus
@@ -96,22 +110,19 @@ begin
     FEditor.Editor
   );
   FEditorInspector.BorderStyle := bsNone;
-
-
-
 //  FRightToolbar := TEditorFactories.CreateTopRightToolbar(
 //    Self,
 //    pnlRight,
 //    FManager.Actions,
 //    FManager.Menus
 //  );
-//  FSelectionToolbar := TEditorFactories.CreateSelectionToolbar(
-//    Self,
-//    pnlRight,
-//    FManager.Actions,
-//    FManager.Menus
-//  );
-  //FSelectionToolbar.Align := alRight;
+  FSelectionToolbar := TEditorFactories.CreateSelectionToolbar(
+    Self,
+    pnlRight,
+    FManager.Actions,
+    FManager.Menus
+  );
+  FSelectionToolbar.Align := alRight;
 end;
 {$ENDREGION}
 

@@ -2639,7 +2639,7 @@ begin
       actSingleInstance.Checked := Settings.SingleInstance;
 
       // exception
-      actSaveAll.Enabled := ViewsModified;
+      //actSaveAll.Enabled := ViewsModified;
 
       FChanged := False;
     end;
