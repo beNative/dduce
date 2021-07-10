@@ -44,12 +44,12 @@ uses
 {$REGION 'interfaced routines'}
 procedure RegisterDemos;
 begin
+  DemoManager.Register(TfrmEditor, 'Editor');
   DemoManager.Register(TfrmLogger, 'Logger');
   DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
   DemoManager.Register(TfrmValueListDemo, 'ValueList');
   DemoManager.Register(TfrmDynamicRecords, 'Dynamic record');
-  DemoManager.Register(TfrmEditor, 'Editor');
   DemoManager.Register(TfrmVirtualTrees, 'VirtualTrees factories');
   DemoManager.Register(TfrmVTNode, 'VTNode');
   DemoManager.Register(TfrmEditList, 'EditList');
