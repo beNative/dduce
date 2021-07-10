@@ -2928,30 +2928,30 @@ end;
 
 class function RandomData.AlliteratedCompanyName: string;
 var
-  List  : IList<string>;
-  A     : string;
-  S     : string;
-  C     : string;
-  I     : Integer;
-  J     : Integer;
-  List2 : IEnumerable<string>;
+  LList  : IList<string>;
+  LList2 : IEnumerable<string>;
+  A      : string;
+  S      : string;
+  C      : string;
+  I      : Integer;
+  J      : Integer;
 begin
   A := Adjective;
   C := A[1];
-  List :=  TCollections.CreateList<string>;
+  LList :=  TCollections.CreateList<string>;
   for S in CompanySuffixes do
-    List.Add(S);
-  List2 := List.Where(
+    LList.Add(S);
+  LList2 := LList.Where(
     function(const Arg: string): Boolean
     begin
       Result := StartsText(C, Arg);
     end
   );
-  I := List2.Count;
+  I := LList2.Count;
   if I > 0 then
   begin
     J := Random(I);
-    Result := A + ' ' + List2.ToArray[J] + ' ' + Str(CompanyTypes);
+    Result := A + ' ' + LList2.ToArray[J] + ' ' + Str(CompanyTypes);
   end
   else
     Result := A + ' ' + Str(CompanyTypes);

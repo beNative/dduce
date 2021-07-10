@@ -28,7 +28,7 @@ object frmPropertyInspector: TfrmPropertyInspector
       Top = 0
       Width = 6
       Height = 567
-      ResizeStyle = rsUpdate
+      ResizeStyle = rsLine
     end
     object pnlLeft: TPanel
       Left = 0

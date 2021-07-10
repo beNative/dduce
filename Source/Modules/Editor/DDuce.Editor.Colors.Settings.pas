@@ -70,7 +70,6 @@ type
 
   public
     procedure AfterConstruction; override;
-    destructor Destroy; override;
 
     procedure Assign(ASource: TPersistent); override;
 
@@ -119,11 +118,6 @@ procedure TEditorColorSettings.AfterConstruction;
 begin
   inherited AfterConstruction;
   AssignDefaultColors;
-end;
-
-destructor TEditorColorSettings.Destroy;
-begin
-  inherited Destroy;
 end;
 {$ENDREGION}
 

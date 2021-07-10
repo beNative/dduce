@@ -41,8 +41,6 @@ type
       read FEndTag write SetEndTag;
   end;
 
-  { TCodeTags }
-
   TCodeTags = class(TComponent)
   private
     function GetItem(Index: Integer): TCodeTagItem;

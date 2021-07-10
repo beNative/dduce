@@ -19,6 +19,7 @@ object frmGridView: TfrmGridView
     Top = 0
     Width = 6
     Height = 665
+    ResizeStyle = rsLine
   end
   object pnlLeft: TPanel
     Left = 0

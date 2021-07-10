@@ -85,5 +85,3 @@ contains
   DDuce.EditList in '..\Source\Modules\DDuce.EditList.pas' {EditList};
 
 end.
-
-

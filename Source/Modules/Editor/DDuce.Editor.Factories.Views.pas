@@ -28,7 +28,7 @@ type
   TEditorViewFactory = class(TInterfacedObject, IEditorViewFactory)
     function CreateInstance(
       AParent            : TWinControl;
-      AManager           : IEditorManager;
+      const AManager     : IEditorManager;
       const AName        : string = '';
       const AFileName    : string = '';
       const AHighlighter : string = 'TXT'
@@ -43,7 +43,7 @@ uses
   Spring;
 
 function TEditorViewFactory.CreateInstance(AParent: TWinControl;
-  AManager: IEditorManager; const AName: string; const AFileName: string;
+  const AManager: IEditorManager; const AName: string; const AFileName: string;
   const AHighlighter: string): IEditorView;
 var
   V: IEditorView;

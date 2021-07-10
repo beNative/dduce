@@ -19,6 +19,7 @@ object frmValueListDemo: TfrmValueListDemo
     Top = 0
     Width = 6
     Height = 540
+    ResizeStyle = rsLine
   end
   object pnlLeft: TPanel
     Left = 0

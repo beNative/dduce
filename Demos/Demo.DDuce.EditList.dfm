@@ -21,6 +21,7 @@ object frmEditList: TfrmEditList
     Height = 411
     Color = clBtnFace
     ParentColor = False
+    ResizeStyle = rsLine
   end
   object pnlLeft: TPanel
     Left = 0
@@ -43,8 +44,6 @@ object frmEditList: TfrmEditList
     BevelEdges = []
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 323
-    ExplicitWidth = 312
     object mmoData: TMemo
       Left = 0
       Top = 31
@@ -58,7 +57,6 @@ object frmEditList: TfrmEditList
       ParentColor = True
       ReadOnly = True
       TabOrder = 0
-      ExplicitWidth = 312
     end
   end
   object chkMultiSelect: TCheckBox

@@ -22,6 +22,7 @@ object frmDBGridView: TfrmDBGridView
     Height = 6
     Cursor = crVSplit
     Align = alBottom
+    ResizeStyle = rsLine
     ExplicitTop = 341
   end
   object pnlLog: TPanel
@@ -42,7 +43,6 @@ object frmDBGridView: TfrmDBGridView
     ActivePage = tsDBGridView
     Align = alClient
     TabOrder = 2
-    ExplicitHeight = 307
     object tsDBGridView: TTabSheet
       Caption = 'DBGridView'
       ImageIndex = 1
@@ -58,7 +58,6 @@ object frmDBGridView: TfrmDBGridView
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 279
         object lbxDBGridViewEvents: TCheckListBox
           AlignWithMargins = True
           Left = 3
@@ -166,7 +165,6 @@ object frmDBGridView: TfrmDBGridView
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 279
         object lbxDataSourceEvents: TCheckListBox
           AlignWithMargins = True
           Left = 3

@@ -5,8 +5,6 @@ inherited frmAlignLines: TfrmAlignLines
   ClientHeight = 729
   ClientWidth = 360
   Constraints.MinWidth = 170
-  DoubleBuffered = True
-  Font.Name = 'Segoe UI'
   OnResize = FormResize
   OnShow = FormShow
   ExplicitWidth = 376
@@ -71,7 +69,7 @@ inherited frmAlignLines: TfrmAlignLines
       360
       25)
     object btnOK: TButton
-      Left = 237
+      Left = 240
       Top = 0
       Width = 120
       Height = 25

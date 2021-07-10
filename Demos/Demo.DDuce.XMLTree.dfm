@@ -51,6 +51,7 @@ object frmXMLTree: TfrmXMLTree
       Top = 0
       Width = 6
       Height = 516
+      ResizeStyle = rsLine
     end
     object pnlXMLTree: TPanel
       Left = 0

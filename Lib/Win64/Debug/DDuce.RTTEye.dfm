@@ -6,6 +6,7 @@ object frmRTTEye: TfrmRTTEye
   ClientHeight = 530
   ClientWidth = 857
   Color = clBtnFace
+  DoubleBuffered = True
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -35,6 +36,7 @@ object frmRTTEye: TfrmRTTEye
       Top = 5
       Width = 6
       Height = 479
+      ResizeStyle = rsLine
     end
     object tvRtti: TTreeView
       Left = 322
@@ -44,6 +46,7 @@ object frmRTTEye: TfrmRTTEye
       Align = alClient
       BevelInner = bvNone
       BevelOuter = bvNone
+      BorderStyle = bsNone
       DoubleBuffered = True
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -58,10 +61,6 @@ object frmRTTEye: TfrmRTTEye
       OnChange = tvRttiChange
       OnCustomDrawItem = tvRttiCustomDrawItem
       OnDblClick = tvRttiDblClick
-      ExplicitLeft = 326
-      ExplicitTop = 6
-      ExplicitWidth = 525
-      ExplicitHeight = 477
     end
     object lvRtti: TListView
       Left = 5
@@ -70,7 +69,7 @@ object frmRTTEye: TfrmRTTEye
       Height = 479
       Align = alLeft
       BevelInner = bvNone
-      Color = clBtnFace
+      BorderStyle = bsNone
       Columns = <
         item
           Caption = 'Name'
@@ -90,9 +89,6 @@ object frmRTTEye: TfrmRTTEye
       ParentFont = False
       TabOrder = 1
       ViewStyle = vsReport
-      ExplicitLeft = 6
-      ExplicitTop = 6
-      ExplicitHeight = 477
     end
   end
   object pnlBottom: TPanel
@@ -111,7 +107,7 @@ object frmRTTEye: TfrmRTTEye
       Left = 258
       Top = 6
       Width = 120
-      Height = 25
+      Height = 26
       Action = actRefresh
       ImageMargins.Left = 4
       ImageMargins.Top = 1
@@ -124,7 +120,7 @@ object frmRTTEye: TfrmRTTEye
       Left = 6
       Top = 6
       Width = 120
-      Height = 25
+      Height = 26
       Action = actExpand
       ImageMargins.Left = 4
       ImageMargins.Top = 1
@@ -137,7 +133,7 @@ object frmRTTEye: TfrmRTTEye
       Left = 132
       Top = 6
       Width = 120
-      Height = 25
+      Height = 26
       Action = actCollapse
       ImageMargins.Left = 4
       ImageMargins.Top = 1
@@ -150,7 +146,7 @@ object frmRTTEye: TfrmRTTEye
       Left = 510
       Top = 8
       Width = 342
-      Height = 21
+      Height = 22
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 3
     end
@@ -158,7 +154,7 @@ object frmRTTEye: TfrmRTTEye
       Left = 384
       Top = 6
       Width = 120
-      Height = 25
+      Height = 26
       Action = actSearch
       Default = True
       ImageMargins.Left = 4

@@ -20,6 +20,8 @@ object frmEditor: TfrmEditor
     Top = 0
     Width = 6
     Height = 549
+    ResizeStyle = rsLine
+    ExplicitLeft = 371
   end
   object sbrMain: TStatusBar
     Left = 0
@@ -43,6 +45,7 @@ object frmEditor: TfrmEditor
       Height = 6
       Cursor = crVSplit
       Align = alTop
+      ResizeStyle = rsLine
     end
     object pnlLeftTop: TPanel
       Left = 0

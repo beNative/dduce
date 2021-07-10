@@ -324,7 +324,6 @@ type
     procedure actFindPreviousExecute(Sender: TObject);
     procedure actFindPrevWordExecute(Sender: TObject);
     procedure actFoldLevel0Execute(Sender: TObject);
-    procedure actFoldLevel10Execute(Sender: TObject);
     procedure actFoldLevel1Execute(Sender: TObject);
     procedure actFoldLevel2Execute(Sender: TObject);
     procedure actFoldLevel3Execute(Sender: TObject);
@@ -334,6 +333,7 @@ type
     procedure actFoldLevel7Execute(Sender: TObject);
     procedure actFoldLevel8Execute(Sender: TObject);
     procedure actFoldLevel9Execute(Sender: TObject);
+    procedure actFoldLevel10Execute(Sender: TObject);
     procedure actFormatExecute(Sender: TObject);
     procedure actHelpExecute(Sender: TObject);
     procedure actHighlighterExecute(Sender: TObject);
@@ -377,8 +377,11 @@ type
     procedure actShowFilterTestExecute(Sender: TObject);
     procedure actShowHexEditorExecute(Sender: TObject);
     procedure actShowHTMLViewerExecute(Sender: TObject);
+    procedure actShowIndentGuidesExecute(Sender: TObject);
+    procedure actShowMinimapExecute(Sender: TObject);
     procedure actShowPreviewExecute(Sender: TObject);
     procedure actShowScriptEditorExecute(Sender: TObject);
+    procedure actShowSearchmapExecute(Sender: TObject);
     procedure actShowSpecialCharactersExecute(Sender: TObject);
     procedure actShowStructureViewerExecute(Sender: TObject);
     procedure actShowTestExecute(Sender: TObject);
@@ -398,13 +401,10 @@ type
     procedure actToggleFoldLevelExecute(Sender: TObject);
     procedure actToggleHighlighterExecute(Sender: TObject);
     procedure actToggleMaximizedExecute(Sender: TObject);
-    procedure actShowMinimapExecute(Sender: TObject);
+    procedure actToggleWordWrapExecute(Sender: TObject);
     procedure actUndoExecute(Sender: TObject);
     procedure actUnindentExecute(Sender: TObject);
     procedure actUpperCaseSelectionExecute(Sender: TObject);
-    procedure actToggleWordWrapExecute(Sender: TObject);
-    procedure actShowIndentGuidesExecute(Sender: TObject);
-    procedure actShowSearchmapExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -726,11 +726,11 @@ begin
   { TODO -oTS : Move the construction of these objects to the outside and pass
    the instances to the constructor (dependency injection). This will allow to
    create unit tests for each module. }
-  FToolViews        := TToolViews.Create(Self);
-  FEvents           := TEditorEvents.Create(Self);
-  FCommands         := TEditorCommands.Create(Self);
-  FViewList         := TCollections.CreateInterfaceList<IEditorView>;;
-  FSearchEngine     := TSearchEngine.Create(Self);
+  FToolViews    := TToolViews.Create(Self);
+  FEvents       := TEditorEvents.Create(Self);
+  FCommands     := TEditorCommands.Create(Self);
+  FViewList     := TCollections.CreateInterfaceList<IEditorView>;;
+  FSearchEngine := TSearchEngine.Create(Self);
   RegisterToolViews;
   CreateActions;
   InitializePopupMenus;

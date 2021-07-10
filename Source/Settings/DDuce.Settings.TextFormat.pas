@@ -66,7 +66,7 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
+    destructor Destroy; override;
 
     procedure AssignTo(Dest: TPersistent); override;
     procedure Assign(Source: TPersistent); override;
@@ -119,10 +119,10 @@ begin
   FOnChanged.UseFreeNotification := False;
 end;
 
-procedure TTextFormatSettings.BeforeDestruction;
+destructor TTextFormatSettings.Destroy;
 begin
   FFont.Free;
-  inherited BeforeDestruction;
+  inherited Destroy;
 end;
 {$ENDREGION}
 

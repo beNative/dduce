@@ -19,6 +19,7 @@ object frmInspector: TfrmInspector
     Top = 0
     Width = 6
     Height = 605
+    ResizeStyle = rsLine
     ExplicitLeft = 318
   end
   object pnlLeft: TPanel
@@ -45,6 +46,7 @@ object frmInspector: TfrmInspector
       Height = 6
       Cursor = crVSplit
       Align = alBottom
+      ResizeStyle = rsLine
       ExplicitTop = 481
     end
     object pnlInspector: TPanel

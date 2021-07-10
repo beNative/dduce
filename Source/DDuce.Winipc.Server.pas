@@ -164,7 +164,6 @@ function TWinipcServer.GetMsgData: TBytesStream;
 begin
   Result := FMsgData;
 end;
-
 {$ENDREGION}
 
 {$REGION 'event dispatch methods'}

@@ -535,8 +535,6 @@ end;
 procedure TEditorSettings.Load;
 var
   JO : TJsonObject;
-  I  : Integer;
-  S  : string;
 begin
   Logger.Track(Self, 'Load');
   if FileExists(FFileName) then
@@ -554,41 +552,10 @@ begin
     end;
   end;
 end;
-(* old
-//var
-//  Reader : TXmlObjectReader;
-//  Doc    : TNativeXml;
-//  S      : string;
-begin
-//  Logger.EnterMethod('TEditorSettings.Load');
-//  S :=   GetApplicationPath + FFileName;
-//  if FileExistsUTF8(S) then
-//  begin
-//    Doc := TNativeXml.Create(nil);
-//    try
-//      Doc.LoadFromFile(S);
-//      Reader := TXmlObjectReader.Create;
-//      try
-//        Reader.ReadComponent(Doc.Root, Self, nil);
-//      finally
-//        FreeAndNil(Reader);
-//      end;
-//      Logger.Send('Settings loaded');
-//    finally
-//      FreeAndNil(Doc);
-//    end;
-//  end;
-//  InitializeHighlighters; // create higlighters if they cannot be loaded.
-//  InitializeHighlighterAttributes;
-//  Logger.ExitMethod('TEditorSettings.Load');
-end;
-*)
 
 procedure TEditorSettings.Save;
 var
   JO : TJsonObject;
-  I  : Integer;
-  S  : string;
 begin
   Logger.Track(Self, 'Save');
   JO := TJsonObject.Create;
@@ -604,33 +571,6 @@ begin
   end;
 end;
 
-
-(* old
-//var
-//  Writer : TXmlObjectWriter;
-//  Doc    : TNativeXml;
-//  S      : string;
-begin
-//  Logger.SendCallStack('Save');
-//  Logger.EnterMethod('TEditorSettings.Save');
-//  S :=   GetApplicationPath + FFileName;
-//  Doc := TNativeXml.CreateName('Root', nil);
-//  try
-//    Writer := TXmlObjectWriter.Create;
-//    try
-//      Doc.XmlFormat := xfReadable;
-//      Writer.WriteComponent(Doc.Root, Self);
-//      Doc.SaveToFile(S);
-//    finally
-//      FreeAndNil(Writer);
-//    end;
-//  finally
-//    FreeAndNil(Doc);
-//  end;
-//  Logger.ExitMethod('TEditorSettings.Save');
-end;
-*)
-
 procedure TEditorSettings.Apply;
 begin
   Changed;
@@ -643,128 +583,7 @@ end;
 
 procedure TEditorSettings.InitializeHighlighterAttributes;
 begin
-//  with FHighlighterAttributes do
-//  begin
-//    RegisterItem(
-//      SYNS_XML_AttrComment, [
-//        SYNS_XML_AttrComment,
-//        SYNS_XML_AttrDocumentation,
-//        SYNS_XML_AttrRplComment,
-//        SYNS_XML_AttrSASMComment
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrString, [
-//        SYNS_XML_AttrString
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrSymbol, [
-//        SYNS_XML_AttrSymbol,
-//        SYNS_XML_AttrBrackets,
-//        SYNS_XML_AttrSquareBracket,
-//        SYNS_XML_AttrRoundBracket
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrNumber, [
-//        SYNS_XML_AttrNumber
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrKey, [
-//        SYNS_XML_AttrKey,
-//        SYNS_XML_AttrRplKey,
-//        SYNS_XML_AttrSQLKey,
-//        SYNS_XML_AttrSQLPlus,
-//        SYNS_XML_AttrTeXCommand,
-//        SYNS_XML_AttrSASMKey
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrFloat, [
-//        SYNS_XML_AttrFloat
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrHexadecimal, [
-//        SYNS_XML_AttrHexadecimal
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrReservedWord, [
-//        SYNS_XML_AttrReservedWord,
-//        SYNS_XML_AttrPLSQL,
-//        SYNS_XML_AttrSecondReservedWord
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrDirective, [
-//        SYNS_XML_AttrIDEDirective,
-//        SYNS_XML_AttrInclude,
-//        SYNS_XML_AttrPreprocessor,
-//        SYNS_XML_AttrProcessingInstr
-//      ]
-//    );  //
-//    RegisterItem(
-//      SYNS_XML_AttrCharacter, [
-//        SYNS_XML_AttrCharacter
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrVariable, [
-//        SYNS_XML_AttrSpecialVariable
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrNull, [
-//        SYNS_XML_AttrNull
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrOperator, [
-//        SYNS_XML_AttrOperator
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrAttributeName, [
-//        SYNS_XML_AttrNamespaceAttrName,
-//        SYNS_XML_AttrElementName
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrAttributeValue, [
-//        SYNS_XML_AttrValue,
-//        SYNS_XML_AttrNamespaceAttrValue,
-//        SYNS_XML_AttrCDATA,
-//        SYNS_XML_AttrDOCTYPE
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrMacro, [
-//        SYNS_XML_AttrPragma
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrText, [
-//        SYNS_XML_AttrText,
-//        SYNS_XML_AttrEmbedText
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrSection, [
-//        SYNS_XML_AttrSection,
-//        SYNS_XML_AttrASP,
-//        SYNS_XML_AttrDOCTYPESection,
-//        SYNS_XML_AttrCDATASection
-//      ]
-//    );
-//    RegisterItem(
-//      SYNS_XML_AttrDataType, [
-//        SYNS_XML_AttrDataType
-//      ]
-//    );
-//  end;
+//
 end;
 {$ENDREGION}
 

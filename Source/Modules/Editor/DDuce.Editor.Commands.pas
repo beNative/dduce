@@ -47,16 +47,10 @@ type
       const AHighlighter : string
     ): string;
     function MergeBlankLines(const AString: string): string;
-    function GuessHighlighterType(
-      const AText: string
-    ): string; overload;
+    function GuessHighlighterType(const AText: string): string; overload;
 
-    function IsXML(
-      const AString: string
-    ): Boolean;
-    function IsPAS(
-      const AString: string
-    ): Boolean;
+    function IsXML(const AString: string): Boolean;
+    function IsPAS(const AString: string): Boolean;
 
   protected
     procedure OpenFileAtCursor;

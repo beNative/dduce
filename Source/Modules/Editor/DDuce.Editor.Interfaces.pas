@@ -995,7 +995,7 @@ type
   ['{CAEF28D5-0E70-4D4E-AEC7-07BD6E743945}']
     function CreateInstance(
       AParent            : TWinControl;
-      AManager           : IEditorManager;
+      const AManager     : IEditorManager;
       const AName        : string = '';
       const AFileName    : string = '';
       const AHighlighter : string = 'TXT'

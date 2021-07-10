@@ -86,7 +86,7 @@ end;
 function TEditorMenusFactory.CreateMenuItem(AParent: TMenuItem;
   AAction: TBasicAction): TMenuItem;
 var
-  MI: TMenuItem;
+  MI : TMenuItem;
 begin
   Guard.CheckNotNull(AParent, 'AParent');
   if not Assigned(AAction) then
@@ -229,7 +229,7 @@ end;
 
 function TEditorMenusFactory.CreateInsertMenu(AMenu: TMenu): TMenuItem;
 var
-  MI: TMenuItem;
+  MI : TMenuItem;
 begin
   Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
@@ -242,7 +242,7 @@ end;
 
 function TEditorMenusFactory.CreateSearchMenu(AMenu: TMenu): TMenuItem;
 var
-  MI: TMenuItem;
+  MI : TMenuItem;
 begin
   Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
@@ -262,7 +262,7 @@ end;
 
 function TEditorMenusFactory.CreateToolsMenu(AMenu: TMenu): TMenuItem;
 var
-  MI: TMenuItem;
+  MI : TMenuItem;
 begin
   Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
@@ -282,7 +282,7 @@ end;
 
 function TEditorMenusFactory.CreateViewsMenu(AMenu: TMenu): TMenuItem;
 var
-  MI: TMenuItem;
+  MI : TMenuItem;
 begin
   Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
@@ -299,7 +299,7 @@ end;
 
 function TEditorMenusFactory.CreateSettingsMenu(AMenu: TMenu): TMenuItem;
 var
-  MI: TMenuItem;
+  MI : TMenuItem;
 begin
   Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
@@ -341,7 +341,7 @@ end;
 
 function TEditorMenusFactory.CreateHelpMenu(AMenu: TMenu): TMenuItem;
 var
-  MI: TMenuItem;
+  MI : TMenuItem;
 begin
   Guard.CheckNotNull(AMenu, 'AMenu');
   MI := TMenuItem.Create(AMenu.Owner);
