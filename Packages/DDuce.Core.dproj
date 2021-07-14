@@ -178,6 +178,7 @@
         <DCCReference Include="..\Source\Logger\DDuce.Logger.Factories.pas"/>
         <DCCReference Include="..\Source\Logger\DDuce.Logger.Interfaces.pas"/>
         <DCCReference Include="..\Source\Logger\DDuce.Logger.pas"/>
+        <DCCReference Include="..\Source\Dependencies\JsonDataObjects\JsonDataObjects.pas"/>
         <None Include="LibSuffix.inc"/>
         <None Include="jedi.inc"/>
         <None Include="..\Source\DDuce.inc"/>
@@ -211,7 +212,7 @@
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule"/>
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\DDuce.Core.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\21.0\Bpl\DDuce.Core.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>DDuce_Core.bpl</RemoteName>
                         <Overwrite>true</Overwrite>

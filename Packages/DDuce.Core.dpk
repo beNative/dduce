@@ -90,6 +90,7 @@ contains
   DDuce.Logger.Channels.Zmq in '..\Source\Logger\DDuce.Logger.Channels.Zmq.pas',
   DDuce.Logger.Factories in '..\Source\Logger\DDuce.Logger.Factories.pas',
   DDuce.Logger.Interfaces in '..\Source\Logger\DDuce.Logger.Interfaces.pas',
-  DDuce.Logger in '..\Source\Logger\DDuce.Logger.pas';
+  DDuce.Logger in '..\Source\Logger\DDuce.Logger.pas',
+  JsonDataObjects in '..\Source\Dependencies\JsonDataObjects\JsonDataObjects.pas';
 
 end.
