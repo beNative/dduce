@@ -53,9 +53,9 @@ uses
 class constructor TTestUtils.Create;
 begin
   EnsureZMQLibExists;
-  Logger.Channels.Add(TWinIPCChannel.Create);
+//  Logger.Channels.Add(TWinIPCChannel.Create);
 //  Logger.Channels.Add(TZeroMQChannel.Create);
-  Logger.Channels[0].Enabled := True;
+//  Logger.Channels[0].Enabled := True;
   Logger.Clear;
 end;
 

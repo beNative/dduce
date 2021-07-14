@@ -51,9 +51,10 @@ uses
 procedure TfrmReflect.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FValueList        := TValueList.Create(Self);
-  FValueList.Parent := Self;
-  FValueList.Align  := alClient;
+  FValueList             := TValueList.Create(Self);
+  FValueList.Parent      := Self;
+  FValueList.Align       := alClient;
+  FValueList.BorderStyle := bsNone;
   FData.FromString(Reflect.Properties(Self).ToString);
   FValueList.Data   := FData;
 end;

@@ -128,7 +128,6 @@ type
     grpValues                 : TGroupBox;
     grpWatches                : TGroupBox;
     imlLogger                 : TImageList;
-    imltest                   : TImageList;
     lblCheckpointDescription  : TLabel;
     lblCounterValue           : TLabel;
     lblIPAddress              : TLabel;
@@ -141,7 +140,6 @@ type
     lblZeroMQPort             : TLabel;
     lblZeroMQPortCaption      : TLabel;
     ppmBind                   : TPopupMenu;
-    ppmtest                   : TPopupMenu;
     tmrSendCounter            : TTimer;
     tmrSendValue              : TTimer;
     trbLogLevel               : TTrackBar;

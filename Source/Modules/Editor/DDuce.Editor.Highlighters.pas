@@ -282,7 +282,6 @@ begin
     HI := Add;
     HI.Name        := AName;
     HI.Highlighter := AName;
-    Logger.Send('Created highlighter %s', [AName]);
   end;
   if ADescription <> '' then
     HI.Description := ADescription
@@ -295,6 +294,7 @@ begin
     HI.LayoutFileName := ALayoutFileName;
   if HI.FileExtensions = '' then
     HI.FileExtensions := AFileExtensions;
+  Logger.SendObject('Highlighter', HI);
 end;
 
 function THighlighters.Find(const AName: string): THighlighterItem;

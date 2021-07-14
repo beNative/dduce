@@ -1402,7 +1402,7 @@ end;
 
 procedure TEditorView.UpdateActions;
 var
-  B: Boolean;
+  B : Boolean;
 begin
   inherited UpdateActions;
   B := Focused;
@@ -1423,7 +1423,8 @@ begin
 //    begin
 //      if Assigned(Actions.ActionList) then
       try
-        Actions.UpdateActions; // TODO: Abstract error on releasing object if this is placed outside FUpdate condition.
+            Actions.UpdateActions;
+//        Actions.UpdateActions; // TODO: Abstract error on releasing object if this is placed outside FUpdate condition.
       except
         on E: EAbstractError do
         ;

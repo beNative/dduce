@@ -54,10 +54,9 @@ begin
   DemoManager.Register(TfrmVTNode, 'VTNode');
   DemoManager.Register(TfrmEditList, 'EditList');
   DemoManager.Register(TfrmDialogs, 'Dialogs');
-
-  //DemoManager.Register(TfrmReflect, 'Reflect');
-  //DemoManager.Register(TfrmInspector, 'Inspector');
-  //DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
+  DemoManager.Register(TfrmReflect, 'Reflect');
+//  DemoManager.Register(TfrmInspector, 'Inspector');
+//  DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
   // not working yet
   //DemoManager.Register(TfrmXMLTree, 'XMLTree');
 end;
