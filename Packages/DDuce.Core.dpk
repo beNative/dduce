@@ -9,21 +9,21 @@ package DDuce.Core;
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
-{$LOCALSYMBOLS OFF}
+{$LOCALSYMBOLS ON}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
-{$OPTIMIZATION ON}
-{$OVERFLOWCHECKS OFF}
-{$RANGECHECKS OFF}
-{$REFERENCEINFO OFF}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
+{$REFERENCEINFO ON}
 {$SAFEDIVIDE OFF}
-{$STACKFRAMES OFF}
+{$STACKFRAMES ON}
 {$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DEFINE RELEASE}
+{$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
 {$RUNONLY}
 {$IMPLICITBUILD ON}
@@ -87,7 +87,7 @@ contains
   DDuce.Logger.Channels.Base in '..\Source\Logger\DDuce.Logger.Channels.Base.pas',
   DDuce.Logger.Channels.LogFile in '..\Source\Logger\DDuce.Logger.Channels.LogFile.pas',
   DDuce.Logger.Channels.Winipc in '..\Source\Logger\DDuce.Logger.Channels.Winipc.pas',
-  DDuce.Logger.Channels.ZeroMQ in '..\Source\Logger\DDuce.Logger.Channels.ZeroMQ.pas',
+  DDuce.Logger.Channels.Zmq in '..\Source\Logger\DDuce.Logger.Channels.Zmq.pas',
   DDuce.Logger.Factories in '..\Source\Logger\DDuce.Logger.Factories.pas',
   DDuce.Logger.Interfaces in '..\Source\Logger\DDuce.Logger.Interfaces.pas',
   DDuce.Logger in '..\Source\Logger\DDuce.Logger.pas';

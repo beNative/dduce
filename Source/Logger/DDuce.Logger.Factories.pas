@@ -26,9 +26,9 @@ uses
 type
   TLoggerFactories = class sealed
     class function CreateLogger: ILogger;
-    class function CreateWinIPCChannel: IWinIPCChannel;
-    class function CreateZeroMQChannel: IZeroMQChannel;
-    class function CreateMQTTChannel: IMQTTChannel;
+    class function CreateWinipcChannel: IWinipcChannel;
+    class function CreateZmqChannel: IZmqChannel;
+    class function CreateMqttChannel: IMqttChannel;
     class function CreateLogFileChannel(AFileName: string = ''): ILogFileChannel;
 
   end;
@@ -36,27 +36,27 @@ type
 implementation
 
 uses
-  DDuce.Logger.Base, DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.ZeroMQ,
-  {DDuce.Logger.Channels.MQTT,} DDuce.Logger.Channels.LogFile;
+  DDuce.Logger.Base, DDuce.Logger.Channels.Winipc, DDuce.Logger.Channels.Zmq,
+  {DDuce.Logger.Channels.Mqtt,} DDuce.Logger.Channels.LogFile;
 
 class function TLoggerFactories.CreateLogger: ILogger;
 begin
   Result := TLogger.Create;
 end;
 
-class function TLoggerFactories.CreateMQTTChannel: IMQTTChannel;
+class function TLoggerFactories.CreateMqttChannel: IMqttChannel;
 begin
 //  Result := TMQTTChannel.Create;
 end;
 
-class function TLoggerFactories.CreateWinIPCChannel: IWinIPCChannel;
+class function TLoggerFactories.CreateWinipcChannel: IWinipcChannel;
 begin
-  Result := TWinIPCChannel.Create;
+  Result := TWinipcChannel.Create;
 end;
 
-class function TLoggerFactories.CreateZeroMQChannel: IZeroMQChannel;
+class function TLoggerFactories.CreateZmqChannel: IZmqChannel;
 begin
-  Result := TZeroMQChannel.Create;
+  Result := TZmqChannel.Create;
 end;
 
 class function TLoggerFactories.CreateLogFileChannel(AFileName: string)

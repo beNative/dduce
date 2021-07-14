@@ -181,21 +181,21 @@ type
       read GetShowDate write SetShowDate;
   end;
 
-  IZeroMQChannel = interface(ILogChannel)
+  IZmqChannel = interface(ILogChannel)
   ['{7DC63C0E-1038-4416-84C3-9D8E76C9B929}']
     {$REGION 'property access methods'}
     function GetPort: Integer;
     function GetEndPoint: string;
     procedure SetEndPoint(const Value: string);
-    function GetZMQVersion: string;
+    function GetZmqVersion: string;
     {$ENDREGION}
 
     { Endpoint string consisting of transport, host/IP, port  }
     property EndPoint : string
       read GetEndPoint write SetEndPoint;
 
-    property ZMQVersion: string
-      read GetZMQVersion;
+    property ZmqVersion: string
+      read GetZmqVersion;
 
     property Port: Integer
       read GetPort;

@@ -46,7 +46,7 @@ uses
   DataSnap.DBClient, MidasLib,
 
   DDuce.RandomData, DDuce.Logger,
-  DDuce.Logger.Channels.ZeroMQ, DDuce.Logger.Channels.WinIPC,
+  DDuce.Logger.Channels.Zmq, DDuce.Logger.Channels.Winipc,
 
   Test.Resources;
 

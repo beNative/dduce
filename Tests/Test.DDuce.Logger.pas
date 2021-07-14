@@ -280,7 +280,7 @@ uses
   Spring,
 
   DDuce.Reflect, DDuce.Utils,
-  DDuce.Logger.Channels.WinIPC, DDuce.Logger.Channels.ZeroMQ,
+  DDuce.Logger.Channels.Winipc, DDuce.Logger.Channels.Zmq,
 
   Test.Utils, Test.Resources;
 
@@ -288,8 +288,8 @@ uses
 procedure TestLogger.AfterConstruction;
 begin
   inherited AfterConstruction;
-  Logger.Channels.Add(TWinIPCChannel.Create);
-//  Logger.Channels.Add(TZeroMQChannel.Create('tcp://*:5555'));
+  Logger.Channels.Add(TWinipcChannel.Create);
+//  Logger.Channels.Add(TZmqChannel.Create('tcp://*:5555'));
   Sleep(1000);
   Logger.Clear;
   Logger.Clear;

@@ -174,7 +174,7 @@
         <DCCReference Include="..\Source\Logger\DDuce.Logger.Channels.Base.pas"/>
         <DCCReference Include="..\Source\Logger\DDuce.Logger.Channels.LogFile.pas"/>
         <DCCReference Include="..\Source\Logger\DDuce.Logger.Channels.Winipc.pas"/>
-        <DCCReference Include="..\Source\Logger\DDuce.Logger.Channels.ZeroMQ.pas"/>
+        <DCCReference Include="..\Source\Logger\DDuce.Logger.Channels.Zmq.pas"/>
         <DCCReference Include="..\Source\Logger\DDuce.Logger.Factories.pas"/>
         <DCCReference Include="..\Source\Logger\DDuce.Logger.Interfaces.pas"/>
         <DCCReference Include="..\Source\Logger\DDuce.Logger.pas"/>

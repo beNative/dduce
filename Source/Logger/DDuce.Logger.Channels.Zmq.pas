@@ -16,7 +16,7 @@
 
 {$I .\..\DDuce.inc}
 
-unit DDuce.Logger.Channels.ZeroMQ;
+unit DDuce.Logger.Channels.Zmq;
 
 interface
 
@@ -37,7 +37,7 @@ const
   DEFAULT_ENDPOINT = 'tcp://*:5555';
 
 type
-  TZeroMQChannel = class(TCustomLogChannel, ILogChannel, IZeroMQChannel)
+  TZmqChannel = class(TCustomLogChannel, ILogChannel, IZmqChannel)
   private
     FBuffer    : TStringStream;
     FZmq       : IZeroMQ;
@@ -48,7 +48,7 @@ type
 
   protected
     {$REGION 'property access methods'}
-    function GetZMQVersion: string;
+    function GetZmqVersion: string;
     function GetEnabled: Boolean; override;
     function GetEndPoint: string;
     procedure SetEndPoint(const Value: string);
@@ -64,8 +64,8 @@ type
     property EndPoint : string
       read GetEndPoint write SetEndPoint;
 
-    property ZMQVersion: string
-      read GetZMQVersion;
+    property ZmqVersion: string
+      read GetZmqVersion;
 
   public
     procedure AfterConstruction; override;
@@ -90,13 +90,13 @@ uses
   ZeroMQ.API;
 
 {$REGION 'construction and destruction'}
-constructor TZeroMQChannel.Create(const AEndPoint: string; AActive: Boolean);
+constructor TZmqChannel.Create(const AEndPoint: string; AActive: Boolean);
 begin
   inherited Create(AActive);
   FEndPoint := AEndPoint;
 end;
 
-procedure TZeroMQChannel.AfterConstruction;
+procedure TZmqChannel.AfterConstruction;
 begin
   inherited AfterConstruction;
   Guard.CheckTrue(
@@ -115,7 +115,7 @@ begin
   end;
 end;
 
-destructor TZeroMQChannel.Destroy;
+destructor TZmqChannel.Destroy;
 begin
   if Assigned(FBuffer) then
   begin
@@ -132,22 +132,22 @@ end;
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-function TZeroMQChannel.GetEnabled: Boolean;
+function TZmqChannel.GetEnabled: Boolean;
 begin
   Result := Assigned(FZmq) and inherited GetEnabled;
 end;
 
-function TZeroMQChannel.GetConnected: Boolean;
+function TZmqChannel.GetConnected: Boolean;
 begin
   Result := FBound;
 end;
 
-function TZeroMQChannel.GetEndPoint: string;
+function TZmqChannel.GetEndPoint: string;
 begin
   Result := FEndPoint;
 end;
 
-procedure TZeroMQChannel.SetEndPoint(const Value: string);
+procedure TZmqChannel.SetEndPoint(const Value: string);
 begin
   if Value <> EndPoint then
   begin
@@ -155,12 +155,12 @@ begin
   end;
 end;
 
-function TZeroMQChannel.GetPort: Integer;
+function TZmqChannel.GetPort: Integer;
 begin
   Result := FPort;
 end;
 
-function TZeroMQChannel.GetZMQVersion: string;
+function TZmqChannel.GetZmqVersion: string;
 var
   LMajor : Integer;
   LMinor : Integer;
@@ -174,7 +174,7 @@ end;
 {$REGION 'public methods'}
 { Returns true if successful. }
 
-function TZeroMQChannel.Connect: Boolean;
+function TZmqChannel.Connect: Boolean;
 var
   S : string;
   A : TStringDynArray;
@@ -203,7 +203,7 @@ end;
 
 { Returns True if successful. }
 
-function TZeroMQChannel.Disconnect: Boolean;
+function TZmqChannel.Disconnect: Boolean;
 begin
   Result := True;
   if Connected then
@@ -215,7 +215,7 @@ begin
   end;
 end;
 
-function TZeroMQChannel.Write(const AMsg: TLogMessage): Boolean;
+function TZmqChannel.Write(const AMsg: TLogMessage): Boolean;
 const
   ZeroBuf: Integer = 0;
 var
