@@ -28,7 +28,6 @@ package DDuce.Modules;
 {$IMPLICITBUILD ON}
 
 requires
-  BCEditor.Delphi.Runtime,
   DDuce.Core,
   DDuce.Components,
   TextEditor.Delphi.Runtime;

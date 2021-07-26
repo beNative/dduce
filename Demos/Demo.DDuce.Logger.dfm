@@ -351,6 +351,26 @@ object frmLogger: TfrmLogger
       Font.Style = [fsBold]
       ParentFont = False
     end
+    object lblProcessId: TLabel
+      Left = 85
+      Top = 105
+      Width = 81
+      Height = 13
+      Caption = 'Process ID (PID):'
+    end
+    object lblPIDValue: TLabel
+      Left = 172
+      Top = 105
+      Width = 79
+      Height = 13
+      AutoSize = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
     object chkLogFileChannel: TCheckBox
       Left = 17
       Top = 22

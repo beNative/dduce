@@ -135,8 +135,10 @@ type
     lblLogLevel               : TLabel;
     lblLogLevelValue          : TLabel;
     lblLogViewer              : TLabel;
+    lblPIDValue               : TLabel;
     lblPosition               : TLabel;
     lblPositionValue          : TLabel;
+    lblProcessId              : TLabel;
     lblZeroMQPort             : TLabel;
     lblZeroMQPortCaption      : TLabel;
     ppmBind                   : TPopupMenu;
@@ -647,6 +649,7 @@ end;
 procedure TfrmLogger.FormShow(Sender: TObject);
 begin
   Caption := Format('%s (%d)', [Application.ExeName, GetCurrentProcessId]);
+  lblPIDValue.Caption := GetCurrentProcessId.ToString;
   WatchZmqChannel;
 end;
 {$ENDREGION}

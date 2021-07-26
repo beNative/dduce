@@ -47,6 +47,7 @@ type
     tvRtti      : TTreeView;
     {$ENDREGION}
 
+    {$REGION 'event handlers'}
     procedure tvRttiCustomDrawItem(
       Sender          : TCustomTreeView;
       Node            : TTreeNode;
@@ -55,11 +56,14 @@ type
     );
     procedure tvRttiChange(Sender: TObject; Node: TTreeNode);
     procedure tvRttiDblClick(Sender: TObject);
+    {$ENDREGION}
 
+    {$REGION 'action handlers'}
     procedure actRefreshExecute(Sender: TObject);
     procedure actCollapseExecute(Sender: TObject);
     procedure actExpandExecute(Sender: TObject);
     procedure actSearchExecute(Sender: TObject);
+    {$ENDREGION}
 
   private
     FRttiContext: TRttiContext;

@@ -146,7 +146,7 @@ object frmRTTEye: TfrmRTTEye
       Left = 510
       Top = 8
       Width = 342
-      Height = 22
+      Height = 21
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 3
     end
