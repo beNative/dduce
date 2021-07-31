@@ -49,11 +49,11 @@ interface
     Nodes: IList<TVTNode<T>>;
        Holds children of the current node.
 
-  First we need a root node build the tree viewer. In this example this is
-  declared as follows:
+  First we need a root node in order to build the tree viewer. In this
+  example this is declared as follows:
      FVTRoot: TVTNode<TMyData>;
 
-  The tree control itself is declared as follows in this example:
+  The tree control itself is declared as follows:
      FTree: TVirtualStringTree;
 
   At least the following event handlers need to be implemented by the treeview

@@ -64,6 +64,7 @@ begin
   FValueList.Align            := alClient;
   FValueList.ShowHeader       := False;
   FValueList.ShowHint         := True;
+  FValueList.Editable         := False;
   FValueList.MultiSelect      := True;
   FValueList.AlignWithMargins := True;
   FValueList.BorderStyle      := bsNone;

@@ -403,7 +403,7 @@ end;
 
 function TValueList.GetEditable: Boolean;
 begin
-  Result := toEditable in TreeOptions.MiscOptions;
+  Result := not (toReadOnly in TreeOptions.MiscOptions);
 end;
 
 procedure TValueList.SetEditable(const Value: Boolean);
@@ -411,9 +411,9 @@ begin
   if Value <> Editable then
   begin
     if Value then
-      TreeOptions.MiscOptions := TreeOptions.MiscOptions + [toEditable]
+      TreeOptions.MiscOptions := TreeOptions.MiscOptions - [toReadOnly]
     else
-      TreeOptions.MiscOptions := TreeOptions.MiscOptions - [toEditable];
+      TreeOptions.MiscOptions := TreeOptions.MiscOptions + [toReadOnly];
   end;
 end;
 

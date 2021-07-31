@@ -1215,7 +1215,7 @@ begin
     soTripleClickRowSelect
   ];
   // TEMP
-  AEditor.Highlighter.Colors.LoadFromFile('tsColors.json');
+  //AEditor.Highlighter.Colors.LoadFromFile('tsColors.json');
 
   AEditor.LeftMargin.Autosize := True;
   AEditor.LeftMargin.Colors.Background := clWhite;
@@ -1363,7 +1363,7 @@ end;
 
 procedure TEditorView.Clear;
 begin
-  Editor.Clear;
+  //Editor.Clear;
 end;
 
 procedure TEditorView.SelectAll;
