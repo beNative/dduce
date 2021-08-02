@@ -1,7 +1,6 @@
 program DDuce.Demos;
 
 uses
-//  DDuce.CustomImageDrawHook,
   System.SysUtils,
   Vcl.Forms,
   Vcl.Themes,

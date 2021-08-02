@@ -24,8 +24,8 @@ uses
   Winapi.Windows,
   System.Classes, System.SysUtils;
 
-  { IPC using WM_COPYDATA messages. A TWinIPCClient is used to send WM_COPYDATA
-    messages to the corresponding TWinIPCServer. }
+{ IPC using WM_COPYDATA messages. A TWinIPCClient is used to send WM_COPYDATA
+  messages to the corresponding TWinIPCServer. }
 
 type
   TWinipcClient = class
@@ -71,21 +71,16 @@ type
 
     property Connected: Boolean
       read GetConnected write SetConnected;
+
   end;
 
 implementation
 
 uses
   WinApi.Messages,
-  Vcl.Forms;
+  Vcl.Forms,
 
-const
-// old name maintained for backwards compatibility
-  MSG_WND_CLASSNAME : PChar = 'FPCMsgWindowCls';
-  SERVER_WINDOWNAME : PChar = 'ipc_log_server';
-
-resourcestring
-  SServerNotActive = 'Server with ID %s is not active.';
+  DDuce.Resources;
 
 {$REGION 'construction and destruction'}
 constructor TWinipcClient.Create(const AServerMsgWindowClassName,

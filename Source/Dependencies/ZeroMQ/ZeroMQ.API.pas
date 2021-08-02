@@ -110,10 +110,14 @@ const
 (*  Context options                                                           *)
   ZMQ_IO_THREADS  = 1;
   ZMQ_MAX_SOCKETS = 2;
+//  ZMQ_IO_THREADS  = 5;
+//  ZMQ_MAX_SOCKETS = 1024;
 
 (*  Default for new contexts                                                  *)
   ZMQ_IO_THREADS_DFLT  = 1;
   ZMQ_MAX_SOCKETS_DFLT = 1024;
+//  ZMQ_IO_THREADS_DFLT  = 5;
+//  ZMQ_MAX_SOCKETS_DFLT = 1024;
 
 function zmq_ctx_new(): Pointer; cdecl; external LIBZEROMQ delayed;
 function zmq_ctx_term(context: Pointer): Integer; cdecl; external LIBZEROMQ delayed;

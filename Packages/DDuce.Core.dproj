@@ -60,7 +60,6 @@
     <PropertyGroup Condition="'$(Base)'!=''">
         <VerInfo_Build>1</VerInfo_Build>
         <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Keys>FileVersion=1.0.0.1;ProductVersion=1.0.0.0</VerInfo_Keys>
         <VerInfo_Locale>2067</VerInfo_Locale>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
@@ -74,6 +73,8 @@
         <DCC_S>false</DCC_S>
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
+        <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
+        <DllSuffix>$(Auto)</DllSuffix>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -169,7 +170,6 @@
         <DCCReference Include="..\Source\DDuce.Utils.Winapi.pas"/>
         <DCCReference Include="..\Source\DDuce.Winipc.Client.pas"/>
         <DCCReference Include="..\Source\DDuce.Winipc.Server.pas"/>
-        <DCCReference Include="..\Source\DDuce.CustomImageDrawHook.pas"/>
         <DCCReference Include="..\Source\Logger\DDuce.Logger.Base.pas"/>
         <DCCReference Include="..\Source\Logger\DDuce.Logger.Channels.Base.pas"/>
         <DCCReference Include="..\Source\Logger\DDuce.Logger.Channels.LogFile.pas"/>
@@ -179,6 +179,7 @@
         <DCCReference Include="..\Source\Logger\DDuce.Logger.Interfaces.pas"/>
         <DCCReference Include="..\Source\Logger\DDuce.Logger.pas"/>
         <DCCReference Include="..\Source\Dependencies\JsonDataObjects\JsonDataObjects.pas"/>
+        <DCCReference Include="..\Source\DDuce.Resources.pas"/>
         <None Include="LibSuffix.inc"/>
         <None Include="jedi.inc"/>
         <None Include="..\Source\DDuce.inc"/>
@@ -203,16 +204,15 @@
                     <Source Name="MainSource">DDuce.Core.dpk</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\PngComponentsDDesign260.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\PngComponentsDDesign260.bpl not found</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k250.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp250.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclDBXDriversEnt270.bpl">Embarcadero Enterprise Driver Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\DataExplorerDBXPluginEnt270.bpl">DBExpress Enterprise Data Explorer Integration</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k270.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp270.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule"/>
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\21.0\Bpl\DDuce.Core.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\21.0\Bpl\DDuce.Core270.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>DDuce_Core.bpl</RemoteName>
                         <Overwrite>true</Overwrite>

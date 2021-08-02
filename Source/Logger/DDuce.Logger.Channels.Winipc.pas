@@ -37,12 +37,13 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
+    destructor Destroy; override;
 
     function Connect: Boolean; override;
     function Disconnect: Boolean; override;
 
     function Write(const AMsg: TLogMessage): Boolean; override;
+
   end;
 
 implementation
@@ -59,11 +60,11 @@ begin
   FClient.Connect;
 end;
 
-procedure TWinipcChannel.BeforeDestruction;
+destructor TWinipcChannel.Destroy;
 begin
   FClient.Free;
   FBuffer.Free;
-  inherited BeforeDestruction;
+  inherited Destroy;
 end;
 {$ENDREGION}
 

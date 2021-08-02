@@ -217,7 +217,7 @@ end;
 
 function TZmqChannel.Write(const AMsg: TLogMessage): Boolean;
 const
-  ZeroBuf: Integer = 0;
+  ZERO_BUFFER : Integer = 0;
 var
   LTextSize : Integer;
   LDataSize : Integer;
@@ -250,7 +250,7 @@ begin
         FBuffer.CopyFrom(AMsg.Data, LDataSize);
       end
       else
-        FBuffer.WriteBuffer(ZeroBuf);
+        FBuffer.WriteBuffer(ZERO_BUFFER);
       Result := FPublisher.SendString(FBuffer.DataString) > 0;
     end
     else

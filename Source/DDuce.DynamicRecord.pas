@@ -976,18 +976,9 @@ implementation
 uses
   System.TypInfo, System.Variants, System.Math, System.StrUtils,
   System.Generics.Collections,
-  WinApi.Windows;
+  WinApi.Windows,
 
-resourcestring
-  SFieldNotFound        = 'Record does not contain a field with name %s';
-  SValueCannotBeRead    = 'Value of %s could not be read';
-  SValueConversionError =
-    'Error while trying to convert value of (%s) with type (%s)';
-  SParamIsNotRecordOrInstanceType =
-    'AInstance is not a record or instance type!';
-  SPropertyNotFound = 'Property %s not found! (%s)';
-  SArgumentTypeNotSupported =
-    'The argument type of AssignTo is not supported';
+  DDuce.Resources;
 
 var
   FContext: TRttiContext;

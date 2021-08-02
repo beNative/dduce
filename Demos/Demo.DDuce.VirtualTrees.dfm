@@ -102,6 +102,7 @@ object frmVirtualTrees: TfrmVirtualTrees
             BevelKind = bkFlat
             BevelOuter = bvNone
             Caption = 'VST'
+            Color = clWindow
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlue
             Font.Height = -11
@@ -133,6 +134,7 @@ object frmVirtualTrees: TfrmVirtualTrees
             BevelKind = bkFlat
             BevelOuter = bvNone
             Caption = 'VSTTree'
+            Color = clWindow
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlue
             Font.Height = -11
@@ -164,6 +166,7 @@ object frmVirtualTrees: TfrmVirtualTrees
             BevelKind = bkFlat
             BevelOuter = bvNone
             Caption = 'VSTGrid'
+            Color = clWindow
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlue
             Font.Height = -11
@@ -195,6 +198,7 @@ object frmVirtualTrees: TfrmVirtualTrees
             BevelKind = bkFlat
             BevelOuter = bvNone
             Caption = 'VSTList'
+            Color = clWindow
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlue
             Font.Height = -11
@@ -226,6 +230,7 @@ object frmVirtualTrees: TfrmVirtualTrees
             BevelKind = bkFlat
             BevelOuter = bvNone
             Caption = 'VSTTreeList'
+            Color = clWindow
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlue
             Font.Height = -11
@@ -257,6 +262,7 @@ object frmVirtualTrees: TfrmVirtualTrees
             BevelKind = bkFlat
             BevelOuter = bvNone
             Caption = 'VSTTreeGrid'
+            Color = clWindow
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlue
             Font.Height = -11

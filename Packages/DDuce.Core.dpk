@@ -25,8 +25,9 @@ package DDuce.Core;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
+{$LIBSUFFIX AUTO}
 {$RUNONLY}
-{$IMPLICITBUILD ON}
+{$IMPLICITBUILD OFF}
 
 requires
   rtl,
@@ -82,7 +83,6 @@ contains
   DDuce.Utils.Winapi in '..\Source\DDuce.Utils.Winapi.pas',
   DDuce.Winipc.Client in '..\Source\DDuce.Winipc.Client.pas',
   DDuce.Winipc.Server in '..\Source\DDuce.Winipc.Server.pas',
-  DDuce.CustomImageDrawHook in '..\Source\DDuce.CustomImageDrawHook.pas',
   DDuce.Logger.Base in '..\Source\Logger\DDuce.Logger.Base.pas',
   DDuce.Logger.Channels.Base in '..\Source\Logger\DDuce.Logger.Channels.Base.pas',
   DDuce.Logger.Channels.LogFile in '..\Source\Logger\DDuce.Logger.Channels.LogFile.pas',
@@ -91,6 +91,7 @@ contains
   DDuce.Logger.Factories in '..\Source\Logger\DDuce.Logger.Factories.pas',
   DDuce.Logger.Interfaces in '..\Source\Logger\DDuce.Logger.Interfaces.pas',
   DDuce.Logger in '..\Source\Logger\DDuce.Logger.pas',
-  JsonDataObjects in '..\Source\Dependencies\JsonDataObjects\JsonDataObjects.pas';
+  JsonDataObjects in '..\Source\Dependencies\JsonDataObjects\JsonDataObjects.pas',
+  DDuce.Resources in '..\Source\DDuce.Resources.pas';
 
 end.

@@ -97,7 +97,7 @@ function StartService(
 ): Boolean;
 
 function StopService(
-  const AHostName     : string;
+  const AHostName    : string;
   const AServiceName : string
 ): Boolean;
 
@@ -238,10 +238,12 @@ begin
           LProcessCpuUsage.LastProcessTimes := LProcessTimes;
           if (Int64(LSystemDiffTimes.KernelTime) +
               Int64(LSystemDiffTimes.UserTime)) > 0 then
+          begin
             Result := (Int64(LProcessDiffTimes.KernelTime) +
                 Int64(LProcessDiffTimes.UserTime)) /
               (Int64(LSystemDiffTimes.KernelTime) +
                 Int64(LSystemDiffTimes.UserTime)) * 100;
+          end;
         end;
       end;
     finally

@@ -24,8 +24,8 @@ uses
   Winapi.Windows,
   System.Classes;
 
-  { A TWinIPCServer instance is used to handle received WM_COPYDATA messages
-    from one or more TWinIPCClient instances. }
+{ A TWinIPCServer instance is used to handle received WM_COPYDATA messages
+  from one or more TWinIPCClient instances. }
 
 type
   TWinipcMessageEvent = procedure(
@@ -87,16 +87,7 @@ uses
   System.SysUtils,
   Vcl.Forms,
 
-  DDuce.Utils, DDuce.Utils.Winapi;
-
-const
-// old name maintained for backwards compatibility
-  MSG_WND_CLASSNAME : PChar = 'FPCMsgWindowCls';
-  SERVER_WINDOWNAME : PChar = 'ipc_log_server';
-
-resourcestring
-  SFailedToRegisterWindowClass = 'Failed to register message window class';
-  SFailedToCreateWindow        = 'Failed to create message window %s';
+  DDuce.Utils, DDuce.Utils.Winapi, DDuce.Resources;
 
 {$REGION 'non-interfaced routines'}
 function MsgWndProc(AWindowHandle: THandle; AMessage, WParam, LParam: LongInt):

@@ -75,6 +75,7 @@
         <DCC_S>false</DCC_S>
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
+        <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -97,11 +98,13 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <VerInfo_Build>430</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.430;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>434</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.434;ProductVersion=1.0.0.0</VerInfo_Keys>
         <Debugger_HostApplication>D:\development\delphi\libraries\dduce\Demos\Bin\Win32\DDuce.Demos.exe</Debugger_HostApplication>
         <Debugger_CWD>D:\development\delphi\libraries\dduce\Demos\Bin\Win32</Debugger_CWD>
         <DCC_MapFile>3</DCC_MapFile>
+        <VerInfo_IncludeVerInfo>false</VerInfo_IncludeVerInfo>
+        <DllSuffix>$(Auto)</DllSuffix>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -182,10 +185,10 @@
                     <Source Name="MainSource">DDuce.Components.dpk</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k250.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp250.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclDBXDriversEnt270.bpl">Embarcadero Enterprise Driver Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\DataExplorerDBXPluginEnt270.bpl">DBExpress Enterprise Data Explorer Integration</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k270.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp270.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
