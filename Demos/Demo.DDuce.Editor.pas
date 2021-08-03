@@ -86,6 +86,7 @@ begin
   FSettings := TEditorFactories.CreateSettings(Self);
   FManager  := TEditorFactories.CreateManager(Self, FSettings);
   FEditor   := TEditorFactories.CreateView(pnlRight, FManager);
+  FEditor.Editor.Highlighter.Colors.LoadFromFile('settings.texteditor.json');
   FMainMenu := TEditorFactories.CreateMainMenu(
     Self,
     FManager.Actions,

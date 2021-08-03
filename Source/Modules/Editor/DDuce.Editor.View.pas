@@ -60,12 +60,6 @@ type
       const X, Y    : Integer;
       const AOffset : Integer
     );
-//    procedure EditorCommandProcessed(
-//      Sender       : TObject;
-//      var ACommand : TTextEditorCommand;
-//      var AChar    : Char;
-//      AData        : Pointer
-//    );
     procedure EditorReplaceText(
       const ASender     : TObject;
       const ASearch     : string;
@@ -76,11 +70,6 @@ type
       var AAction       : TTextEditorReplaceAction
     );
     procedure EditorEnter(Sender: TObject);
-    procedure EditorDropFiles(
-      const ASender : TObject;
-      const APos    : TPoint;
-      const AFiles  : TStrings
-    );
     procedure EditorSettingsChanged(ASender: TObject);
     procedure EditorCustomTokenAttribute(
       const ASender        : TObject;
@@ -408,9 +397,6 @@ type
     property PopupMenu: TPopupMenu
       read GetPopupMenu write SetPopupMenu;
 
-//    property OnStatusChange: TStatusChangeEvent
-//      read GetOnStatusChange write SetOnStatusChange;
-
     property OnChange: TNotifyEvent
       read GetOnChange write SetOnChange;
 
@@ -461,25 +447,6 @@ end;
 {$ENDREGION}
 
 {$REGION'event handlers'}
-//procedure TEditorView.EditorCommandProcessed(Sender: TObject;
-//  var ACommand: TTextEditorCommand; var AChar: Char; AData: Pointer);
-//var
-//  S: string;
-//begin
-//  Logger.Enter('TEditorView.EditorCommandProcessed');
-//  EditorCommandToIdent(ACommand, S);
-//  Logger.Send('ACommand', S);
-//  Logger.Leave('TEditorView.EditorCommandProcessed');
-//end;
-
-procedure TEditorView.EditorDropFiles(const ASender: TObject; const APos: TPoint;
-  const AFiles: TStrings);
-begin
-// TS: TEMP!
-  Editor.LoadFromFile(AFiles[0]);
-  Editor.Highlighter.LoadFromFile('Object Pascal.json');
-end;
-
 procedure TEditorView.EditorEnter(Sender: TObject);
 begin
   Activate;
@@ -513,45 +480,6 @@ procedure TEditorView.EditorCustomTokenAttribute(const ASender: TObject;
 begin
 //
 end;
-
-//procedure TEditorView.EditorStatusChange(Sender: TObject;
-//  Changes: TSynStatusChanges);
-//begin
-//  if not (csDestroying in ComponentState) then
-//  begin
-//    Logger.Send(
-//      'EditorStatusChange(Changes = %s)',
-//      [SetToString(TypeInfo(TSynStatusChanges), Changes)]
-//    );
-//
-//    // we use this event to ensure that the view is activated because the OnEnter
-//    // event is not triggered when the form is undocked!
-//
-//    // but side-effects when it is docked !
-//    //if not IsActive then
-//		  //Activate;
-//
-//    if Assigned(FOnStatusChange) then
-//      FOnStatusChange(Self, Changes);
-//    Events.DoStatusChange(Changes);
-//    if (scCaretX in Changes) or (scCaretY in Changes) then
-//    begin
-//      Events.DoCaretPositionChange;
-//    end;
-//    if scModified in Changes then
-//    begin
-//      Events.DoModified;
-//    end;
-//  end;
-//  //Logger.Send('FirstLineBytePos', SynSelection.FirstLineBytePos);
-//  //Logger.Send('EndLineBytePos', SynSelection.EndLineBytePos);
-//  //Logger.Send('StartLinePos', SynSelection.StartLinePos);
-//  //Logger.Send('EndLinePos', SynSelection.EndLinePos);
-//  //Logger.Send('StartBytePos', SynSelection.StartBytePos);
-//  //Logger.Send('EndBytePos', SynSelection.EndBytePos);
-//  //Logger.Send('LastLineBytePos', SynSelection.LastLineBytePos);
-//
-//end;
 {$ENDREGION}
 
 {$REGION'event dispatch methods'}
@@ -1214,9 +1142,6 @@ begin
     soALTSetsColumnMode,
     soTripleClickRowSelect
   ];
-  // TEMP
-  //AEditor.Highlighter.Colors.LoadFromFile('tsColors.json');
-
   AEditor.LeftMargin.Autosize := True;
   AEditor.LeftMargin.Colors.Background := clWhite;
   AEditor.LeftMargin.LineNumbers.AutosizeDigitCount := 3;
@@ -1239,7 +1164,6 @@ begin
   AEditor.OnChange               := EditorChange;
   AEditor.OnReplaceText          := EditorReplaceText;
   AEditor.OnCaretChanged         := EditorCaretChanged;
-  AEditor.OnDropFiles            := EditorDropFiles;
   AEditor.OnCustomTokenAttribute := EditorCustomTokenAttribute;
   AEditor.OnEnter                := EditorEnter;
 
