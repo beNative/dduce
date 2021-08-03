@@ -128,6 +128,14 @@ type
     pnlMain            : TPanel;
     pnlObjectInspector : TPanel;
     pnlTree            : TPanel;
+    actExpandNode: TAction;
+    actCollapseNode: TAction;
+    actFullExpandNode: TAction;
+    actFullCollapseNode: TAction;
+    btnExpandNode: TButton;
+    btnFullExpandNode: TButton;
+    btnFullCollapseNode: TButton;
+    btnCollapseNode: TButton;
     {$ENDREGION}
 
     {$REGION 'action handlers'}
@@ -139,6 +147,10 @@ type
     procedure actFullCollapseExecute(Sender: TObject);
     procedure actMoveUpExecute(Sender: TObject);
     procedure actMoveDownExecute(Sender: TObject);
+    procedure actExpandNodeExecute(Sender: TObject);
+    procedure actCollapseNodeExecute(Sender: TObject);
+    procedure actFullExpandNodeExecute(Sender: TObject);
+    procedure actFullCollapseNodeExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -224,9 +236,27 @@ begin
   BuildTree;
 end;
 
+procedure TfrmVTNode.actCollapseNodeExecute(Sender: TObject);
+var
+  LVTNode : TVTNode<TMyData>;
+begin
+  LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
+  if Assigned(LVTNode) then
+    LVTNode.Collapse;
+end;
+
 procedure TfrmVTNode.actDeleteNodeExecute(Sender: TObject);
 begin
   FTree.DeleteNode(FTree.FocusedNode);
+end;
+
+procedure TfrmVTNode.actExpandNodeExecute(Sender: TObject);
+var
+  LVTNode : TVTNode<TMyData>;
+begin
+  LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
+  if Assigned(LVTNode) then
+    LVTNode.Expand;
 end;
 
 procedure TfrmVTNode.actFullCollapseExecute(Sender: TObject);
@@ -234,9 +264,27 @@ begin
   FTree.FullCollapse;
 end;
 
+procedure TfrmVTNode.actFullCollapseNodeExecute(Sender: TObject);
+var
+  LVTNode : TVTNode<TMyData>;
+begin
+  LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
+  if Assigned(LVTNode) then
+    LVTNode.FullCollapse;
+end;
+
 procedure TfrmVTNode.actFullExpandExecute(Sender: TObject);
 begin
   FTree.FullExpand;
+end;
+
+procedure TfrmVTNode.actFullExpandNodeExecute(Sender: TObject);
+var
+  LVTNode : TVTNode<TMyData>;
+begin
+  LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
+  if Assigned(LVTNode) then
+    LVTNode.FullExpand;
 end;
 
 procedure TfrmVTNode.actMoveDownExecute(Sender: TObject);

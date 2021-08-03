@@ -94,6 +94,38 @@ object frmVTNode: TfrmVTNode
       Action = actMoveDown
       TabOrder = 6
     end
+    object btnCollapseNode: TButton
+      Left = 6
+      Top = 318
+      Width = 139
+      Height = 25
+      Action = actCollapseNode
+      TabOrder = 10
+    end
+    object btnExpandNode: TButton
+      Left = 6
+      Top = 256
+      Width = 139
+      Height = 25
+      Action = actExpandNode
+      TabOrder = 8
+    end
+    object btnFullCollapseNode: TButton
+      Left = 6
+      Top = 349
+      Width = 139
+      Height = 25
+      Action = actFullCollapseNode
+      TabOrder = 11
+    end
+    object btnFullExpandNode: TButton
+      Left = 6
+      Top = 287
+      Width = 139
+      Height = 25
+      Action = actFullExpandNode
+      TabOrder = 9
+    end
   end
   object pnlObjectInspector: TPanel
     Left = 0
@@ -138,6 +170,22 @@ object frmVTNode: TfrmVTNode
     object actMoveDown: TAction
       Caption = 'Move down'
       OnExecute = actMoveDownExecute
+    end
+    object actExpandNode: TAction
+      Caption = 'Expand node'
+      OnExecute = actExpandNodeExecute
+    end
+    object actCollapseNode: TAction
+      Caption = 'Collapse node'
+      OnExecute = actCollapseNodeExecute
+    end
+    object actFullExpandNode: TAction
+      Caption = 'Fully expand node'
+      OnExecute = actFullExpandNodeExecute
+    end
+    object actFullCollapseNode: TAction
+      Caption = 'Fully collapse node'
+      OnExecute = actFullCollapseNodeExecute
     end
   end
 end
