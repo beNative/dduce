@@ -123,6 +123,8 @@ type
 
     function Add(const AData: T; AOwnsObject: Boolean = True): TVTNode<T>;
     function Find(const AData: T): TVTNode<T>;
+    procedure Select;
+    procedure SetFocus;
 
     { Points to the corresponding node of the virtual treeview. }
     property VNode: PVirtualNode
@@ -472,6 +474,16 @@ end;
 function TVTNode<T>.Find(const AData: T): TVTNode<T>;
 begin
   Result := SearchTree(Self, AData);
+end;
+
+procedure TVTNode<T>.SetFocus;
+begin
+  Focused := True;
+end;
+
+procedure TVTNode<T>.Select;
+begin
+  Selected := True;
 end;
 {$ENDREGION}
 
