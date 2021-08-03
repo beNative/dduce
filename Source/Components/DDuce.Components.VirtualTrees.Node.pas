@@ -95,6 +95,10 @@ type
     procedure SetText(const Value: string); virtual;
     function GetOwnsObject: Boolean;
     procedure SetOwnsObject(AValue: Boolean);
+    function GetSelected: Boolean;
+    procedure SetSelected(const Value: Boolean);
+    function GetFocused: Boolean;
+    procedure SetFocused(const Value: Boolean);
     function GetTree: TCustomVirtualStringTree;
     {$ENDREGION}
 
@@ -137,6 +141,9 @@ type
     property CheckType: TCheckType
       read GetCheckType write SetCheckType;
 
+    property Focused: Boolean
+      read GetFocused write SetFocused;
+
     property ImageIndex: Integer
       read GetImageIndex write SetImageIndex;
 
@@ -165,6 +172,9 @@ type
 
     property Visible: Boolean
       read GetVisible write SetVisible;
+
+    property Selected: Boolean
+      read GetSelected write SetSelected;
   end;
 
 implementation
@@ -252,6 +262,20 @@ begin
   FData := Value;
 end;
 
+function TVTNode<T>.GetFocused: Boolean;
+begin
+  Result := Assigned(FTree) and (FTree.FocusedNode = VNode);
+end;
+
+procedure TVTNode<T>.SetFocused(const Value: Boolean);
+begin
+  if Value <> Focused then
+  begin
+    if Assigned(FTree) then
+      FTree.FocusedNode := VNode;
+  end;
+end;
+
 function TVTNode<T>.GetHint: string;
 begin
   Result := FHint;
@@ -280,6 +304,20 @@ end;
 procedure TVTNode<T>.SetOwnsObject(AValue: Boolean);
 begin
   FOwnsObject := AValue;
+end;
+
+function TVTNode<T>.GetSelected: Boolean;
+begin
+  Result := Assigned(FTree) and FTree.Selected[VNode];
+end;
+
+procedure TVTNode<T>.SetSelected(const Value: Boolean);
+begin
+  if Value <> Selected then
+  begin
+    if Assigned(FTree) then
+      FTree.Selected[VNode] := True;
+  end;
 end;
 
 function TVTNode<T>.GetIndex: Integer;
