@@ -1,3 +1,5 @@
+{$SetPEFlags 1} // strip relocation info
+
 program DDuce.Tests;
 
 {$I Test.DDuce.inc}
