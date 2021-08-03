@@ -70,6 +70,8 @@ type
 
   private
     function SearchTree(ANode: TVTNode<T>; const AData: T): TVTNode<T>;
+    function GetExpanded: Boolean;
+    procedure SetExpanded(const Value: Boolean);
 
   protected
     {$REGION 'property access methods'}
@@ -125,6 +127,10 @@ type
     function Find(const AData: T): TVTNode<T>;
     procedure Select;
     procedure SetFocus;
+    procedure Expand;
+    procedure Collapse;
+    procedure FullExpand;
+    procedure FullCollapse;
 
     { Points to the corresponding node of the virtual treeview. }
     property VNode: PVirtualNode
@@ -142,6 +148,9 @@ type
 
     property CheckType: TCheckType
       read GetCheckType write SetCheckType;
+
+    property Expanded: Boolean
+      read GetExpanded write SetExpanded;
 
     property Focused: Boolean
       read GetFocused write SetFocused;
@@ -262,6 +271,20 @@ end;
 procedure TVTNode<T>.SetData(const Value: T);
 begin
   FData := Value;
+end;
+
+function TVTNode<T>.GetExpanded: Boolean;
+begin
+  Result := Assigned(FTree) and (FTree.Expanded[VNode] = True);
+end;
+
+procedure TVTNode<T>.SetExpanded(const Value: Boolean);
+begin
+  if Value <> Expanded then
+  begin
+    if Assigned(FTree) then
+      FTree.Expanded[VNode] := Value;
+  end;
 end;
 
 function TVTNode<T>.GetFocused: Boolean;
@@ -471,9 +494,35 @@ begin
   Result := LVTNode;
 end;
 
+procedure TVTNode<T>.Collapse;
+begin
+  Expanded := False;
+end;
+
+procedure TVTNode<T>.Expand;
+begin
+  Expanded := True;
+end;
+
 function TVTNode<T>.Find(const AData: T): TVTNode<T>;
 begin
   Result := SearchTree(Self, AData);
+end;
+
+{ Collapse node including children. }
+
+procedure TVTNode<T>.FullCollapse;
+begin
+  if Assigned(FTree) then
+    FTree.FullCollapse(VNode);
+end;
+
+{ Expand node including children. }
+
+procedure TVTNode<T>.FullExpand;
+begin
+  if Assigned(FTree) then
+    FTree.FullExpand(VNode);
 end;
 
 procedure TVTNode<T>.SetFocus;
