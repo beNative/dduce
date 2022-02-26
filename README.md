@@ -54,9 +54,3 @@ A `TGridView` descendant which can be linked to a `TDataSource` and can be used 
 A `TGridView` descendant that displays data in a vertical object inspector-like way. Just like its ancestor this is a virtual grid control so it does not own the data it displays.
 
 ![TInspector](https://github.com/beNative/dduce/blob/master/Wiki/dduce_inspector.png)
-
-## TXMLTree ##
-
-A `TVirtualStringTree` descendant to visualize and edit XML data.
-
-![TXMLTree](https://github.com/beNative/dduce/blob/master/Wiki/dduce_xmltree_demo.png)
