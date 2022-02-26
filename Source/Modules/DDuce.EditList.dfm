@@ -5,6 +5,7 @@ object EditList: TEditList
   ClientWidth = 197
   Color = clWhite
   TransparentColorValue = clWhite
+  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

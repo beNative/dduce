@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2021 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -49,12 +49,16 @@ interface
     Nodes: IList<TVTNode<T>>;
        Holds children of the current node.
 
-  First we need a root node in order to build the tree viewer. In this
-  example this is declared as follows:
-     FVTRoot: TVTNode<TMyData>;
+  The node type can be simplified by defining a type alias:
+    type
+      TMyNode = TVTNode<TMyData>;
+
+  First we need a root node in order to build the tree viewer.
+  In this example this is declared as follows:
+    FRootNode: TMyNode;
 
   The tree control itself is declared as follows:
-     FTree: TVirtualStringTree;
+    FTree: TVirtualStringTree;
 
   At least the following event handlers need to be implemented by the treeview
   control:
@@ -68,7 +72,7 @@ interface
   The user defined data is accessed from the event handlers using the
   GetNodeData member of TVirtualStringTree and the Sender and Node parameters
   of the tree's event handlers:
-      VTNode := Sender.GetNodeData<TVTNode<TMyData>>(Node);
+      VTNode := Sender.GetNodeData<TMyNode>(Node);
 
   This demo demonstrates how to setup the tree with data and how to manipulate
   both nodes and the corresponding data in the treeview with the following
@@ -92,7 +96,7 @@ uses
 
   zObjInspector,
 
-  DDuce.Components.VirtualTrees.Node;
+  DDuce.Components.VirtualTrees.Node,   DDuce.Components.SectionTree;
 
 type
   TMyData = class
@@ -106,56 +110,72 @@ type
       read FText write FText;
   end;
 
+type
+  TMyNode = TVTNode<TMyData>;
+
+type
   TfrmVTNode = class(TForm)
     {$REGION 'designer controls'}
-    aclMain            : TActionList;
-    actAddChild        : TAction;
-    actBuildTree       : TAction;
-    actDeleteNode      : TAction;
-    actFullCollapse    : TAction;
-    actFullExpand      : TAction;
-    actMoveDown        : TAction;
-    actMoveUp          : TAction;
-    actSetNodeText     : TAction;
-    btnAddChild        : TButton;
-    btnBuildTree       : TButton;
-    btnDeleteNode      : TButton;
-    btnFullCollapse    : TButton;
-    btnFullExpand      : TButton;
-    btnMoveDown        : TButton;
-    btnMoveUp          : TButton;
-    btnSetNodeText     : TButton;
-    pnlMain            : TPanel;
-    pnlObjectInspector : TPanel;
-    pnlTree            : TPanel;
-    actExpandNode: TAction;
-    actCollapseNode: TAction;
-    actFullExpandNode: TAction;
-    actFullCollapseNode: TAction;
-    btnExpandNode: TButton;
-    btnFullExpandNode: TButton;
-    btnFullCollapseNode: TButton;
-    btnCollapseNode: TButton;
+    aclMain             : TActionList;
+    actAddChildNode     : TAction;
+    actBuildTree        : TAction;
+    actCollapseNode     : TAction;
+    actDeleteNode       : TAction;
+    actExpandNode       : TAction;
+    actFullCollapseNode : TAction;
+    actFullCollapseTree : TAction;
+    actFullExpandNode   : TAction;
+    actFullExpandTree   : TAction;
+    actMoveDownNode     : TAction;
+    actMoveUpNode       : TAction;
+    actSetNodeText      : TAction;
+    btnAddChild         : TButton;
+    btnBuildTree        : TButton;
+    btnCollapseNode     : TButton;
+    btnDeleteNode       : TButton;
+    btnExpandNode       : TButton;
+    btnFullCollapse     : TButton;
+    btnFullCollapseNode : TButton;
+    btnFullExpand       : TButton;
+    btnFullExpandNode   : TButton;
+    btnMoveDown         : TButton;
+    btnMoveUp           : TButton;
+    btnSetNodeText      : TButton;
+    pnlMain             : TPanel;
+    pnlObjectInspector  : TPanel;
+    pnlTree             : TPanel;
+    actSelectFirstChild: TAction;
+    btnFocusFirstChild: TButton;
+    actSelectLastChild: TAction;
+    actSelectNextSibling: TAction;
+    actSelectPreviousSibling: TAction;
+    btnSelectLastChild: TButton;
+    btnSelectNextSibling: TButton;
+    btnSelectNextSibling1: TButton;
     {$ENDREGION}
 
     {$REGION 'action handlers'}
-    procedure actDeleteNodeExecute(Sender: TObject);
-    procedure actAddChildExecute(Sender: TObject);
-    procedure actSetNodeTextExecute(Sender: TObject);
+    procedure actAddChildNodeExecute(Sender: TObject);
     procedure actBuildTreeExecute(Sender: TObject);
-    procedure actFullExpandExecute(Sender: TObject);
-    procedure actFullCollapseExecute(Sender: TObject);
-    procedure actMoveUpExecute(Sender: TObject);
-    procedure actMoveDownExecute(Sender: TObject);
-    procedure actExpandNodeExecute(Sender: TObject);
     procedure actCollapseNodeExecute(Sender: TObject);
-    procedure actFullExpandNodeExecute(Sender: TObject);
+    procedure actDeleteNodeExecute(Sender: TObject);
+    procedure actExpandNodeExecute(Sender: TObject);
     procedure actFullCollapseNodeExecute(Sender: TObject);
+    procedure actFullCollapseTreeExecute(Sender: TObject);
+    procedure actFullExpandNodeExecute(Sender: TObject);
+    procedure actFullExpandTreeExecute(Sender: TObject);
+    procedure actMoveDownNodeExecute(Sender: TObject);
+    procedure actMoveUpNodeExecute(Sender: TObject);
+    procedure actSetNodeTextExecute(Sender: TObject);
+    procedure actSelectFirstChildExecute(Sender: TObject);
+    procedure actSelectLastChildExecute(Sender: TObject);
+    procedure actSelectPreviousSiblingExecute(Sender: TObject);
+    procedure actSelectNextSiblingExecute(Sender: TObject);
     {$ENDREGION}
 
   private
     FTree            : TVirtualStringTree;
-    FVTRoot          : TVTNode<TMyData>;
+    FRootNode        : TMyNode;
     FObjectInspector : TzObjectInspector;
 
     procedure FTreeFreeNode(
@@ -176,14 +196,19 @@ type
     );
 
   protected
+    function GetFocusedNode: TMyNode;
+
     function CanMoveUp: Boolean;
     function CanMoveDown: Boolean;
-
+    function GetNode(const AVNode: PVirtualNode): TMyNode;
     procedure BuildTree;
     procedure UpdateActions; override;
 
   public
     procedure AfterConstruction; override;
+
+    property FocusedNode: TMyNode
+      read GetFocusedNode;
 
   end;
 
@@ -221,14 +246,18 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION 'action handlers'}
-procedure TfrmVTNode.actAddChildExecute(Sender: TObject);
-var
-  LVTNode : TVTNode<TMyData>;
+{$REGION 'property access methods'}
+function TfrmVTNode.GetFocusedNode: TMyNode;
 begin
-  LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
-  if Assigned(LVTNode) then
-    LVTNode.Add(TMyData.Create('Child node'));
+  Result := FTree.GetNodeData<TMyNode>(FTree.FocusedNode);
+end;
+{$ENDREGION}
+
+{$REGION 'action handlers'}
+procedure TfrmVTNode.actAddChildNodeExecute(Sender: TObject);
+begin
+  if Assigned(FocusedNode) then
+    FocusedNode.Add(TMyData.Create('Child node'));
 end;
 
 procedure TfrmVTNode.actBuildTreeExecute(Sender: TObject);
@@ -237,12 +266,9 @@ begin
 end;
 
 procedure TfrmVTNode.actCollapseNodeExecute(Sender: TObject);
-var
-  LVTNode : TVTNode<TMyData>;
 begin
-  LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
-  if Assigned(LVTNode) then
-    LVTNode.Collapse;
+  if Assigned(FocusedNode) then
+    FocusedNode.Collapse;
 end;
 
 procedure TfrmVTNode.actDeleteNodeExecute(Sender: TObject);
@@ -251,43 +277,58 @@ begin
 end;
 
 procedure TfrmVTNode.actExpandNodeExecute(Sender: TObject);
-var
-  LVTNode : TVTNode<TMyData>;
 begin
-  LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
-  if Assigned(LVTNode) then
-    LVTNode.Expand;
+  if Assigned(FocusedNode) then
+    FocusedNode.Expand;
 end;
 
-procedure TfrmVTNode.actFullCollapseExecute(Sender: TObject);
+procedure TfrmVTNode.actFullCollapseTreeExecute(Sender: TObject);
 begin
   FTree.FullCollapse;
 end;
 
-procedure TfrmVTNode.actFullCollapseNodeExecute(Sender: TObject);
-var
-  LVTNode : TVTNode<TMyData>;
+procedure TfrmVTNode.actSelectFirstChildExecute(Sender: TObject);
 begin
-  LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
-  if Assigned(LVTNode) then
-    LVTNode.FullCollapse;
+  if Assigned(FocusedNode) and Assigned(FocusedNode.FirstChildNode) then
+    FocusedNode.FirstChildNode.Select;
 end;
 
-procedure TfrmVTNode.actFullExpandExecute(Sender: TObject);
+procedure TfrmVTNode.actSelectLastChildExecute(Sender: TObject);
+begin
+  if Assigned(FocusedNode) and Assigned(FocusedNode.LastChildNode) then
+    FocusedNode.LastChildNode.Select;
+end;
+
+procedure TfrmVTNode.actSelectNextSiblingExecute(Sender: TObject);
+begin
+  if Assigned(FocusedNode) and Assigned(FocusedNode.NextSiblingNode) then
+    FocusedNode.NextSiblingNode.Select;
+end;
+
+procedure TfrmVTNode.actSelectPreviousSiblingExecute(Sender: TObject);
+begin
+  if Assigned(FocusedNode) and Assigned(FocusedNode.PrevSiblingNode) then
+    FocusedNode.PrevSiblingNode.Select;
+end;
+
+procedure TfrmVTNode.actFullCollapseNodeExecute(Sender: TObject);
+begin
+  if Assigned(FocusedNode) then
+    FocusedNode.FullCollapse;
+end;
+
+procedure TfrmVTNode.actFullExpandTreeExecute(Sender: TObject);
 begin
   FTree.FullExpand;
 end;
 
 procedure TfrmVTNode.actFullExpandNodeExecute(Sender: TObject);
-var
-  LVTNode : TVTNode<TMyData>;
 begin
-  LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
-  if Assigned(LVTNode) then
-    LVTNode.FullExpand;
+  if Assigned(FocusedNode) then
+    FocusedNode.FullExpand;
 end;
 
-procedure TfrmVTNode.actMoveDownExecute(Sender: TObject);
+procedure TfrmVTNode.actMoveDownNodeExecute(Sender: TObject);
 begin
   if Assigned(FTree.FocusedNode) then
   begin
@@ -300,7 +341,7 @@ begin
   end;
 end;
 
-procedure TfrmVTNode.actMoveUpExecute(Sender: TObject);
+procedure TfrmVTNode.actMoveUpNodeExecute(Sender: TObject);
 begin
   if Assigned(FTree.FocusedNode) then
   begin
@@ -315,13 +356,13 @@ end;
 
 procedure TfrmVTNode.actSetNodeTextExecute(Sender: TObject);
 var
-  LVTNode : TVTNode<TMyData>;
+  LNode : TMyNode;
 begin
-  LVTNode := FTree.GetNodeData<TVTNode<TMyData>>(FTree.FocusedNode);
-  if Assigned(LVTNode) then
+  LNode := FocusedNode;
+  if Assigned(LNode) then
   begin
-    LVTNode.Data.Text := 'New text';
-    FTree.InvalidateNode(LVTNode.VNode);
+    LNode.Data.Text := 'New text';
+    FTree.InvalidateNode(LNode.VNode);
   end;
 end;
 {$ENDREGION}
@@ -330,63 +371,77 @@ end;
 procedure TfrmVTNode.FTreeFocusChanged(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex);
 var
-  LVTNode : TVTNode<TMyData>;
+  LNode : TMyNode;
 begin
-  LVTNode := Sender.GetNodeData<TVTNode<TMyData>>(Node);
-  if Assigned(LVTNode) then
+  LNode := GetNode(Node);
+  if Assigned(LNode) then
   begin
-    Logger.SendObject('VTNode', LVTNode);
-    Logger.SendObject('Data', LVTNode.Data);
+    Logger.SendObject('VTNode', LNode);
+    if Assigned(LNode.ParentNode) then
+      Logger.SendObject('ParentNode', LNode.ParentNode);
+    if Assigned(LNode.FirstChildNode) then
+      Logger.SendObject('FirstChildNode', LNode.FirstChildNode);
+    if Assigned(LNode.LastChildNode) then
+      Logger.SendObject('LastChildNode', LNode.LastChildNode);
+    if Assigned(LNode.NextSiblingNode) then
+      Logger.SendObject('NextSiblingNode', LNode.NextSiblingNode);
+    if Assigned(LNode.PrevSiblingNode) then
+      Logger.SendObject('PrevSiblingNode', LNode.PrevSiblingNode);
+    Logger.SendObject('Data', LNode.Data);
   end;
 end;
 
 procedure TfrmVTNode.FTreeFreeNode(Sender: TBaseVirtualTree;
   Node: PVirtualNode);
-var
-  LVTNode : TVTNode<TMyData>;
 begin
-  LVTNode := Sender.GetNodeData<TVTNode<TMyData>>(Node);
-  LVTNode.Free;
+  GetNode(Node).Free;
 end;
 
 procedure TfrmVTNode.FTreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
   Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
-var
-  LVTNode : TVTNode<TMyData>;
 begin
-  LVTNode  := Sender.GetNodeData<TVTNode<TMyData>>(Node);
-  CellText := LVTNode.Data.Text;
+  CellText :=  GetNode(Node).Data.Text;
 end;
 {$ENDREGION}
 
 {$REGION 'protected methods'}
+function TfrmVTNode.GetNode(const AVNode: PVirtualNode): TMyNode;
+begin
+  Result := FTree.GetNodeData<TMyNode>(AVNode);
+end;
+
 procedure TfrmVTNode.UpdateActions;
 begin
   inherited UpdateActions;
-  actMoveUp.Enabled   := CanMoveUp;
-  actMoveDown.Enabled := CanMoveDown;
+  actMoveUpNode.Enabled   := CanMoveUp;
+  actMoveDownNode.Enabled := CanMoveDown;
 end;
 
 procedure TfrmVTNode.BuildTree;
 var
-  LData   : TMyData;
-  LVTNode : TVTNode<TMyData>;
-  I       : Integer;
-  J       : Integer;
-  S       : string;
+  LData : TMyData;
+  LNode : TMyNode;
+  I     : Integer;
+  J     : Integer;
+  S     : string;
 begin
-  LData := TMyData.Create('Root node');
-  FVTRoot := TVTNode<TMyData>.Create(FTree, LData);
-  FVTRoot.Text := 'Root node';
-  for I := 1 to 100 do
-  begin
-    S := Format('Child %d', [I]);
-    LVTNode := FVTRoot.Add(TMyData.Create(S));
-    for J := 1 to 100 do
+  FTree.BeginUpdate;
+  try
+    LData := TMyData.Create('Root node');
+    FRootNode := TMyNode.Create(FTree, LData);
+    FRootNode.Text := 'Root node';
+    for I := 1 to 100 do
     begin
-      S := Format('Child %d.%d', [I, J]);
-      LVTNode.Add(TMyData.Create(S));
+      S := Format('Child %d', [I]);
+      LNode := FRootNode.Add(TMyData.Create(S));
+        for J := 1 to 100 do
+      begin
+        S := Format('Child %d.%d', [I, J]);
+          LNode.Add(TMyData.Create(S));
+      end;
     end;
+  finally
+    FTree.EndUpdate;
   end;
 end;
 

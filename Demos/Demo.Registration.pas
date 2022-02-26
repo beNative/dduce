@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2021 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,7 +25,9 @@ implementation
 uses
   DDuce.Logger.Channels.WinIPC, DDuce.Logger,
 
-  Demo.DDuce.XMLTree,
+  //Demo.DDuce.XMLTree,
+  Demo.DDuce.JsonTree,
+  Demo.DDuce.IniTree,
   Demo.DDuce.PropertyInspector,
   Demo.DDuce.Reflect,
   Demo.DDuce.DynamicRecord,
@@ -45,6 +47,8 @@ uses
 procedure RegisterDemos;
 begin
   DemoManager.Register(TfrmEditor, 'Editor');
+
+  //Exit;
   DemoManager.Register(TfrmLogger, 'Logger');
   DemoManager.Register(TfrmGridView, 'GridView');
   DemoManager.Register(TfrmDBGridView, 'DBGridView');
@@ -55,6 +59,8 @@ begin
   DemoManager.Register(TfrmEditList, 'EditList');
   DemoManager.Register(TfrmDialogs, 'Dialogs');
   DemoManager.Register(TfrmReflect, 'Reflect');
+  DemoManager.Register(TfrmJsonTree, 'JsonTree');
+  DemoManager.Register(TfrmIniTree, 'IniTree');
 //  DemoManager.Register(TfrmInspector, 'Inspector');
 //  DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
   // not working yet

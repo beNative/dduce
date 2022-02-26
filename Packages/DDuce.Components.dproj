@@ -98,8 +98,8 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <VerInfo_Build>437</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.437;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>478</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.478;ProductVersion=1.0.0.0</VerInfo_Keys>
         <Debugger_HostApplication>D:\development\delphi\libraries\dduce\Demos\Bin\Win32\DDuce.Demos.exe</Debugger_HostApplication>
         <Debugger_CWD>D:\development\delphi\libraries\dduce\Demos\Bin\Win32</Debugger_CWD>
         <DCC_MapFile>3</DCC_MapFile>
@@ -153,9 +153,7 @@
             <Form>StringsEditorDialog</Form>
         </DCCReference>
         <DCCReference Include="..\Source\Components\DDuce.Components.ValueList.pas"/>
-        <DCCReference Include="..\Source\Components\DDuce.Components.XMLTree.Editors.pas"/>
-        <DCCReference Include="..\Source\Components\DDuce.Components.XMLTree.NodeAttributes.pas"/>
-        <DCCReference Include="..\Source\Components\DDuce.Components.XMLTree.pas"/>
+        <DCCReference Include="..\Source\Components\DDuce.Components.SectionTree.pas"/>
         <DCCReference Include="..\Source\Factories\DDuce.Factories.GridView.pas"/>
         <DCCReference Include="..\Source\Factories\DDuce.Factories.LiveBindings.pas"/>
         <DCCReference Include="..\Source\Factories\DDuce.Factories.Toolbar.pas"/>
@@ -164,6 +162,8 @@
         <DCCReference Include="..\Source\Factories\DDuce.Factories.VirtualTrees.pas"/>
         <DCCReference Include="..\Source\Factories\DDuce.Factories.zObjInspector.pas"/>
         <DCCReference Include="..\Source\Components\DDuce.Components.VirtualTrees.Node.pas"/>
+        <DCCReference Include="..\Source\Components\DDuce.Components.JsonTree.pas"/>
+        <DCCReference Include="..\Source\Components\DDuce.Components.IniTree.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -193,7 +193,7 @@
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule"/>
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\DDuce.Components.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\21.0\Bpl\DDuce.Components270.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>DDuce_Components.bpl</RemoteName>
                         <Overwrite>true</Overwrite>

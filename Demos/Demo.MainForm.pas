@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2021 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -203,7 +203,13 @@ end;
 
 procedure TfrmMainMenu.actExecuteExecute(Sender: TObject);
 begin
+ // for some reason VST is causing the UpdateActions method on the created
+ // forms not to be called.
+ // The workaround for now is to make this form invisible when a demo form
+ // is created
+  Visible := False;
   DemoManager.Execute(FTVP.SelectedItem);
+  Visible := True;
 end;
 
 procedure TfrmMainMenu.actFocusFilterExecute(Sender: TObject);

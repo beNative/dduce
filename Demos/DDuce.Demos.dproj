@@ -161,8 +161,8 @@
         <DCCReference Include="Demo.DDuce.Reflect.pas">
             <Form>frmReflect</Form>
         </DCCReference>
-        <DCCReference Include="Demo.DDuce.XMLTree.pas">
-            <Form>frmXMLTree</Form>
+        <DCCReference Include="Demo.DDuce.IniTree.pas">
+            <Form>frmIniTree</Form>
         </DCCReference>
         <DCCReference Include="Demo.Factories.pas"/>
         <DCCReference Include="Demo.MainForm.pas">
@@ -198,6 +198,10 @@
         </DCCReference>
         <DCCReference Include="Demo.DDuce.Dialogs.pas">
             <Form>frmDialogs</Form>
+        </DCCReference>
+        <DCCReference Include="Demo.DDuce.JsonTree.pas">
+            <Form>frmJsonTree</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

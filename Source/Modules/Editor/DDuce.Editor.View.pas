@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2021 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -71,17 +71,23 @@ type
     );
     procedure EditorEnter(Sender: TObject);
     procedure EditorSettingsChanged(ASender: TObject);
-    procedure EditorCustomTokenAttribute(
-      const ASender        : TObject;
-      const AText          : string;
-      const ALine          : Integer;
-      const AChar          : Integer;
-      var AForegroundColor : TColor;
-      var ABackgroundColor : TColor;
-      var AStyles          : TFontStyles;
-      var ATokenAddon      : TTextEditorTokenAddon;
-      var ATokenAddonColor : TColor
-    );
+//    procedure EditorCustomTokenAttribute(
+//      const ASender        : TObject;
+//      const AText          : string;
+//      const ALine          : Integer;
+//      const AChar          : Integer;
+//      var AForegroundColor : TColor;
+//      var ABackgroundColor : TColor;
+//      var AStyles          : TFontStyles;
+//      var ATokenAddon      : TTextEditorTokenAddon;
+//      var ATokenAddonColor : TColor
+//    );
+
+
+//TTextEditorCustomTokenAttributeEvent = procedure(const ASender: TObject; const AText: string; const ALine: Integer;
+//const AChar: Integer; var AForegroundColor: TColor; var ABackgroundColor: TColor; var AStyles: TFontStyles;
+//var AUnderline: TTextEditorUnderline; var AUnderlineColor: TColor) of object;
+
     {$ENDREGION}
 
     {$REGION'property access methods'}
@@ -473,13 +479,13 @@ begin
     Events.DoChange;
 end;
 
-procedure TEditorView.EditorCustomTokenAttribute(const ASender: TObject;
-  const AText: string; const ALine, AChar: Integer; var AForegroundColor,
-  ABackgroundColor: TColor; var AStyles: TFontStyles;
-  var ATokenAddon: TTextEditorTokenAddon; var ATokenAddonColor: TColor);
-begin
-//
-end;
+//procedure TEditorView.EditorCustomTokenAttribute(const ASender: TObject;
+//  const AText: string; const ALine, AChar: Integer; var AForegroundColor,
+//  ABackgroundColor: TColor; var AStyles: TFontStyles;
+//  var ATokenAddon: TTextEditorTokenAddon; var ATokenAddonColor: TColor);
+//begin
+////
+//end;
 {$ENDREGION}
 
 {$REGION'event dispatch methods'}
@@ -1051,6 +1057,7 @@ begin
   Editor.WordWrap.Active      := Settings.EditorOptions.WordWrapEnabled;
   Editor.SpecialChars.Visible := Settings.EditorOptions.ShowSpecialCharacters;
   Editor.Minimap.Visible      := Settings.EditorOptions.ShowMinimap;
+  Editor.Ruler.Visible        := Settings.EditorOptions.ShowRuler;
 
   if Settings.EditorOptions.TabsToSpaces then
     Editor.Tabs.Options := Editor.Tabs.Options + [toTabsToSpaces]
@@ -1089,6 +1096,9 @@ begin
     Editor.CodeFolding.Options := Editor.CodeFolding.Options -
       [cfoShowIndentGuides];
 
+  // cfoExpandByHintClick disabled as it does not work properly
+  Editor.CodeFolding.Options :=
+    Editor.CodeFolding.Options - [cfoExpandByHintClick];
   Editor.RightMargin.Visible  := Settings.EditorOptions.ShowRightEdge;
   Editor.RightMargin.Position := Settings.EditorOptions.RightEdge;
 
@@ -1164,17 +1174,17 @@ begin
   AEditor.OnChange               := EditorChange;
   AEditor.OnReplaceText          := EditorReplaceText;
   AEditor.OnCaretChanged         := EditorCaretChanged;
-  AEditor.OnCustomTokenAttribute := EditorCustomTokenAttribute;
+  //AEditor.OnCustomTokenAttribute := EditorCustomTokenAttribute;
   AEditor.OnEnter                := EditorEnter;
 
-  // SyncEdit does not work properly
-  AEditor.SyncEdit.Activator.Visible := False;
-  AEditor.SyncEdit.ShortCut          := 0;
-  AEditor.SyncEdit.Active            := False;
-  // MultiEdit does not work properly
-  AEditor.Caret.MultiEdit.Active := False;
-  // does not work properly
-  AEditor.URIOpener := False;
+//  // SyncEdit does not work properly
+//  AEditor.SyncEdit.Activator.Visible := False;
+//  AEditor.SyncEdit.ShortCut          := 0;
+//  AEditor.SyncEdit.Active            := False;
+//  // MultiEdit does not work properly
+//  AEditor.Caret.MultiEdit.Active := False;
+//  // does not work properly
+//  AEditor.URIOpener := False;
 
   ActiveControl := Editor;
 end;
@@ -1287,7 +1297,7 @@ end;
 
 procedure TEditorView.Clear;
 begin
-  //Editor.Clear;
+  Editor.Clear;
 end;
 
 procedure TEditorView.SelectAll;
@@ -1339,7 +1349,7 @@ begin
   if B then
   begin
   {TODO -oTS -cBug : This call causes a recursive call of Activate}
-  //  Activate;
+    //Activate;
   end;
   if Assigned(Actions) then
   begin

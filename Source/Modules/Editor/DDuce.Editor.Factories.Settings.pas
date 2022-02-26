@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2021 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -114,6 +114,7 @@ begin
   Reg('JavaScript',         HL_JS,   SJSDescription,   FILE_EXTENSIONS_JS);
   Reg('JSON',               HL_JSON, SJSONDescription, FILE_EXTENSIONS_JSON);
   Reg('LaTex',              HL_TEX,  STEXDescription,  FILE_EXTENSIONS_TEX);
+  Reg('Flux', 'Flux', '', '.flux');
 //  Reg('Lisp',
   Reg('Lua',                HL_LUA,  SLUADescription,  FILE_EXTENSIONS_LUA);
 //  Reg('MATLAB',

@@ -49,9 +49,7 @@ contains
   DDuce.Components.PropertyInspector in '..\Source\Components\DDuce.Components.PropertyInspector.pas',
   DDuce.Components.PropertyInspector.StringsEditor in '..\Source\Components\DDuce.Components.PropertyInspector.StringsEditor.pas' {StringsEditorDialog},
   DDuce.Components.ValueList in '..\Source\Components\DDuce.Components.ValueList.pas',
-  DDuce.Components.XMLTree.Editors in '..\Source\Components\DDuce.Components.XMLTree.Editors.pas',
-  DDuce.Components.XMLTree.NodeAttributes in '..\Source\Components\DDuce.Components.XMLTree.NodeAttributes.pas',
-  DDuce.Components.XMLTree in '..\Source\Components\DDuce.Components.XMLTree.pas',
+  DDuce.Components.SectionTree in '..\Source\Components\DDuce.Components.SectionTree.pas',
   DDuce.Factories.GridView in '..\Source\Factories\DDuce.Factories.GridView.pas',
   DDuce.Factories.LiveBindings in '..\Source\Factories\DDuce.Factories.LiveBindings.pas',
   DDuce.Factories.Toolbar in '..\Source\Factories\DDuce.Factories.Toolbar.pas',
@@ -59,6 +57,9 @@ contains
   DDuce.Factories.ValueList in '..\Source\Factories\DDuce.Factories.ValueList.pas',
   DDuce.Factories.VirtualTrees in '..\Source\Factories\DDuce.Factories.VirtualTrees.pas',
   DDuce.Factories.zObjInspector in '..\Source\Factories\DDuce.Factories.zObjInspector.pas',
-  DDuce.Components.VirtualTrees.Node in '..\Source\Components\DDuce.Components.VirtualTrees.Node.pas';
+  DDuce.Components.VirtualTrees.Node in '..\Source\Components\DDuce.Components.VirtualTrees.Node.pas',
+  DDuce.Components.JsonTree in '..\Source\Components\DDuce.Components.JsonTree.pas',
+  DDuce.Components.IniTree in '..\Source\Components\DDuce.Components.IniTree.pas';
 
 end.
+

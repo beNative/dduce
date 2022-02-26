@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2021 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -392,12 +392,12 @@ end;
 
 procedure TEditorCommands.UpperCaseSelection;
 begin
-  View.Editor.CommandProcessor(ecUpperCaseBlock, #0, nil);
+  //View.Editor.CommandProcessor(ecUpperCaseBlock, #0, nil);
 end;
 
 procedure TEditorCommands.LowerCaseSelection;
 begin
-  View.Editor.CommandProcessor(ecLowerCaseBlock, #0, nil);
+  //View.Editor.CommandProcessor(ecLowerCaseBlock, #0, nil);
 end;
 
 procedure TEditorCommands.PascalStringFromSelection;
@@ -575,18 +575,18 @@ end;
 
 procedure TEditorCommands.Indent;
 begin
-  View.Editor.CommandProcessor(ecBlockIndent, #0, nil);
+  View.Editor.CommandProcessor(TKeyCommands.BlockIndent, #0, nil);
 end;
 
 procedure TEditorCommands.UnIndent;
 begin
-  View.Editor.CommandProcessor(ecBlockUnindent, #0, nil);
+  View.Editor.CommandProcessor(TKeyCommands.BlockUnindent, #0, nil);
 end;
 
 { Comments or uncomments selected code lines based on the active highlighter. }
 procedure TEditorCommands.ToggleLineComment;
 begin
-  View.Editor.CommandProcessor(ecLineComment, #0, nil);
+  View.Editor.CommandProcessor(TKeyCommands.LineComment, #0, nil);
 end;
 
 { Comments/uncomments the selected block with the block comment tags for the
@@ -594,7 +594,7 @@ end;
 
 procedure TEditorCommands.ToggleBlockComment;
 begin
-  View.Editor.CommandProcessor(ecBlockComment, #0, nil);
+  View.Editor.CommandProcessor(TKeyCommands.BlockComment, #0, nil);
 end;
 
 procedure TEditorCommands.InsertTextAtCaret(const AText: string);

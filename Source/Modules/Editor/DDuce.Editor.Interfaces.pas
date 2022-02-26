@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2021 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -51,6 +51,8 @@ uses
 // TPopupMenu does not work with Vcl styles! This interposer class is a work-
 // around for this issue.
 // See: https://theroadtodelphi.wordpress.com/2012/03/06/adding-vcl-styles-support-to-a-tpopupmenu-in-2-lines-of-code/
+
+// => fixed in 10.3.2
 
 type
   TPopupMenu = class(Vcl.ActnPopup.TPopupActionBar);

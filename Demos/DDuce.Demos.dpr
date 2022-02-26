@@ -15,7 +15,7 @@ uses
   Demo.DDuce.DynamicRecord in 'Demo.DDuce.DynamicRecord.pas' {frmDynamicRecords},
   Demo.DDuce.PropertyInspector in 'Demo.DDuce.PropertyInspector.pas' {frmPropertyInspector},
   Demo.DDuce.Reflect in 'Demo.DDuce.Reflect.pas' {frmReflect},
-  Demo.DDuce.XMLTree in 'Demo.DDuce.XMLTree.pas' {frmXMLTree},
+  Demo.DDuce.IniTree in 'Demo.DDuce.IniTree.pas' {frmIniTree},
   Demo.Factories in 'Demo.Factories.pas',
   Demo.MainForm in 'Demo.MainForm.pas' {frmMainMenu},
   Demo.Manager in 'Demo.Manager.pas',
@@ -30,7 +30,8 @@ uses
   Demo.Settings in 'Demo.Settings.pas',
   Demo.DDuce.VTNode in 'Demo.DDuce.VTNode.pas' {frmVTNode},
   Demo.DDuce.EditList in 'Demo.DDuce.EditList.pas' {frmEditList},
-  Demo.DDuce.Dialogs in 'Demo.DDuce.Dialogs.pas' {frmDialogs};
+  Demo.DDuce.Dialogs in 'Demo.DDuce.Dialogs.pas' {frmDialogs},
+  Demo.DDuce.JsonTree in 'Demo.DDuce.JsonTree.pas' {frmJsonTree};
 
 {$R *.res}
 

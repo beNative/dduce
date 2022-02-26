@@ -143,7 +143,7 @@
         </DelphiCompile>
         <DCCReference Include="DDuce.Core.dcp"/>
         <DCCReference Include="DDuce.Components.dcp"/>
-        <DCCReference Include="TextEditor.Delphi.Runtime.dcp"/>
+        <DCCReference Include="TextEditor.Delphi.Sydney.Runtime.dcp"/>
         <DCCReference Include="..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas">
             <Form>frmComponentInspector</Form>
         </DCCReference>

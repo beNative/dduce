@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2021 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -85,9 +85,6 @@ type
       var AName  : string;
       var AValue : TValue
     );
-
-  protected
-    procedure UpdateActions; override;
 
   public
     procedure AfterConstruction; override;
@@ -203,21 +200,6 @@ procedure TfrmEditList.FEditListItemMoveUp(ASender: TObject; var AName: string;
 begin
   Logger.Track(Self, 'FEditListItemMoveUp');
   Logger.Send(AName, AValue);
-end;
-{$ENDREGION}
-
-{$REGION 'protected methods'}
-procedure TfrmEditList.UpdateActions;
-//var
-//  F : IDynamicField;
-begin
-  inherited UpdateActions;
-//  mmoData.Lines.Text := FEditList.Data.ToString;
-//  if Assigned(FEditList.ValueList.FocusedField) then
-//  begin
-//    F := FEditList.ValueList.FocusedField;
-//    lblSelected.Caption := Format('Selected: %s: %s', [F.Name, F.Value.ToString]);
-//  end;
 end;
 {$ENDREGION}
 

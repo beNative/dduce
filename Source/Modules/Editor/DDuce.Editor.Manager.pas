@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2021 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -1745,7 +1745,7 @@ end;
 {$REGION 'event handlers'}
 procedure TdmEditorManager.EditorSettingsChanged(ASender: TObject);
 begin
-  if Assigned(ActiveView) then
+  if Assigned(ActiveView) and Assigned(ActiveView.Editor) then
     ActiveView.Editor.Refresh;
 end;
 {$ENDREGION}
@@ -2536,7 +2536,7 @@ var
   B : Boolean;
   V : IEditorView;
 begin
-  if Assigned(ActiveView) then
+  if Assigned(ActiveView) and Assigned(ActiveView.Editor) then
   begin
     aclActions.State := asNormal;
     V := ActiveView;
