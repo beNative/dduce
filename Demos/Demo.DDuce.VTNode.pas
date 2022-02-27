@@ -116,42 +116,42 @@ type
 type
   TfrmVTNode = class(TForm)
     {$REGION 'designer controls'}
-    aclMain             : TActionList;
-    actAddChildNode     : TAction;
-    actBuildTree        : TAction;
-    actCollapseNode     : TAction;
-    actDeleteNode       : TAction;
-    actExpandNode       : TAction;
-    actFullCollapseNode : TAction;
-    actFullCollapseTree : TAction;
-    actFullExpandNode   : TAction;
-    actFullExpandTree   : TAction;
-    actMoveDownNode     : TAction;
-    actMoveUpNode       : TAction;
-    actSetNodeText      : TAction;
-    btnAddChild         : TButton;
-    btnBuildTree        : TButton;
-    btnCollapseNode     : TButton;
-    btnDeleteNode       : TButton;
-    btnExpandNode       : TButton;
-    btnFullCollapse     : TButton;
-    btnFullCollapseNode : TButton;
-    btnFullExpand       : TButton;
-    btnFullExpandNode   : TButton;
-    btnMoveDown         : TButton;
-    btnMoveUp           : TButton;
-    btnSetNodeText      : TButton;
-    pnlMain             : TPanel;
-    pnlObjectInspector  : TPanel;
-    pnlTree             : TPanel;
-    actSelectFirstChild: TAction;
-    btnFocusFirstChild: TButton;
-    actSelectLastChild: TAction;
-    actSelectNextSibling: TAction;
-    actSelectPreviousSibling: TAction;
-    btnSelectLastChild: TButton;
-    btnSelectNextSibling: TButton;
-    btnSelectNextSibling1: TButton;
+    aclMain                  : TActionList;
+    actAddChildNode          : TAction;
+    actBuildTree             : TAction;
+    actCollapseNode          : TAction;
+    actDeleteNode            : TAction;
+    actExpandNode            : TAction;
+    actFullCollapseNode      : TAction;
+    actFullCollapseTree      : TAction;
+    actFullExpandNode        : TAction;
+    actFullExpandTree        : TAction;
+    actMoveDownNode          : TAction;
+    actMoveUpNode            : TAction;
+    actSelectFirstChild      : TAction;
+    actSelectLastChild       : TAction;
+    actSelectNextSibling     : TAction;
+    actSelectPreviousSibling : TAction;
+    actSetNodeText           : TAction;
+    btnAddChild              : TButton;
+    btnBuildTree             : TButton;
+    btnCollapseNode          : TButton;
+    btnDeleteNode            : TButton;
+    btnExpandNode            : TButton;
+    btnFocusFirstChild       : TButton;
+    btnFullCollapse          : TButton;
+    btnFullCollapseNode      : TButton;
+    btnFullExpand            : TButton;
+    btnFullExpandNode        : TButton;
+    btnMoveDown              : TButton;
+    btnMoveUp                : TButton;
+    btnSelectLastChild       : TButton;
+    btnSelectNextSibling     : TButton;
+    btnSelectPreviousSibling : TButton;
+    btnSetNodeText           : TButton;
+    pnlMain                  : TPanel;
+    pnlObjectInspector       : TPanel;
+    pnlTree                  : TPanel;
     {$ENDREGION}
 
     {$REGION 'action handlers'}

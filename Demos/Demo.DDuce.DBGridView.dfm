@@ -40,7 +40,7 @@ object frmDBGridView: TfrmDBGridView
     Top = 34
     Width = 867
     Height = 303
-    ActivePage = tsDBGridView
+    ActivePage = tsDBGridViewEvents
     Align = alClient
     TabOrder = 2
     object tsDBGridView: TTabSheet

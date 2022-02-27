@@ -300,14 +300,18 @@ begin
   FLogger := TLoggerFactories.CreateLogger;
   FWinipcChannel  := TWinipcChannel.Create(False);
   FLogFileChannel := TLogFileChannel.Create;
+  {$IFDEF CPUX86}
   FZmqChannel  := TZmqChannel.Create(False);
+  {$ENDIF CPUX86}
   chkZeroMQChannel.Hint := Format(SVersion, [FZmqChannel.ZmqVersion]);
 
   LoadSettings;
 
   Logger.Channels.Add(FLogFileChannel);
   Logger.Channels.Add(FWinipcChannel);
+  {$IFDEF CPUX86}
   Logger.Channels.Add(FZmqChannel);
+  {$ENDIF CPUX86}
   Randomize;
   edtLogFile.Text := FLogFileChannel.FileName;
 
@@ -790,6 +794,8 @@ end;
 {$ENDREGION}
 
 initialization
+  {$IFDEF CPUX86}
   EnsureZMQLibExists;
+  {$ENDIF CPUX86}
 
 end.

@@ -6,7 +6,7 @@
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>3</TargetedPlatforms>
         <AppType>Package</AppType>
     </PropertyGroup>
@@ -98,18 +98,17 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <VerInfo_Build>478</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.478;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>482</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.482;ProductVersion=1.0.0.0</VerInfo_Keys>
         <Debugger_HostApplication>D:\development\delphi\libraries\dduce\Demos\Bin\Win32\DDuce.Demos.exe</Debugger_HostApplication>
         <Debugger_CWD>D:\development\delphi\libraries\dduce\Demos\Bin\Win32</Debugger_CWD>
         <DCC_MapFile>3</DCC_MapFile>
-        <VerInfo_IncludeVerInfo>false</VerInfo_IncludeVerInfo>
         <DllSuffix>$(Auto)</DllSuffix>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>52</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.52;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>55</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.55;ProductVersion=1.0.0.0</VerInfo_Keys>
         <DCC_MapFile>3</DCC_MapFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
