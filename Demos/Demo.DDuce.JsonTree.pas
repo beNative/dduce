@@ -20,43 +20,56 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.Actions, System.JSON,
-
+  System.ImageList,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.ActnList,
-  Vcl.StdCtrls,
+  Vcl.StdCtrls, Vcl.ImgList, Vcl.Menus,
 
   VirtualTrees, VirtualTrees.Types, VirtualTrees.Header,
 
-  zObjInspector,
+  zObjInspector, zObjInspTypes,
 
   DDuce.Components.VirtualTrees.Node, DDuce.Components.SectionTree,
   DDuce.Editor.Interfaces, DDuce.Components.JsonTree;
 
 type
-  TJsonNode = TVTNode<TJSONAncestor>;
-
-type
   TfrmJsonTree = class(TForm)
     {$REGION 'designer controls'}
-    aclMain            : TActionList;
-    actCollapse        : TAction;
-    actExpand          : TAction;
-    actParseDocument   : TAction;
-    btnCollapse        : TButton;
-    btnExpand          : TButton;
-    btnParseDocument   : TButton;
-    mmoJson            : TMemo;
-    pnlEditor          : TPanel;
-    pnlMain            : TPanel;
-    pnlObjectInspector : TPanel;
-    pnlTop             : TPanel;
-    pnlTree            : TPanel;
-    splVertical        : TSplitter;
+    aclMain               : TActionList;
+    actCollapse           : TAction;
+    actCopy               : TAction;
+    actCreateJsonDocument : TAction;
+    actExpand             : TAction;
+    actParseDocument      : TAction;
+    btnCollapse           : TButton;
+    btnCreateJsonDocument : TButton;
+    btnExpand             : TButton;
+    btnParseDocument      : TButton;
+    imlMain               : TImageList;
+    mmoJson               : TMemo;
+    mniCopy               : TMenuItem;
+    pnlEditor             : TPanel;
+    pnlMain               : TPanel;
+    pnlObjectInspector    : TPanel;
+    pnlTop                : TPanel;
+    pnlTree               : TPanel;
+    ppmTree               : TPopupMenu;
+    splVertical           : TSplitter;
+    {$ENDREGION}
+
+    {$REGION 'event handlers'}
+    function FObjectInspectorBeforeAddItem(
+      Sender : TControl;
+      PItem  : PPropItem
+    ): Boolean;
+    procedure pnlTopClick(Sender: TObject);
     {$ENDREGION}
 
     {$REGION 'action handlers'}
     procedure actExpandExecute(Sender: TObject);
     procedure actCollapseExecute(Sender: TObject);
     procedure actParseDocumentExecute(Sender: TObject);
+    procedure actCreateJsonDocumentExecute(Sender: TObject);
+    procedure actCopyExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -78,24 +91,55 @@ implementation
 {$R *.dfm}
 
 uses
-  DDuce.Components.Factories, DDuce.Factories.VirtualTrees,
-  DDuce.Factories.zObjInspector, DDuce.Editor.Factories,
+  System.Rtti, System.StrUtils, Vcl.Clipbrd,
 
-  DDuce.Logger.Factories, DDuce.Logger.Channels.Winipc, DDuce.Logger;
+  DDuce.Components.Factories, DDuce.Factories.VirtualTrees,
+  DDuce.Factories.zObjInspector, DDuce.Editor.Factories, DDuce.Logger;
+
+const
+  VISIBLE_PROPERTIES : array of string = [
+    'Color',
+    'Colors',
+    'ColorSettings',
+    'DefaultNodeHeight',
+    'DefaultText',
+    'DragImageKind',
+    'DragKind',
+    'DragMode',
+    'DragOperations',
+    'DragType',
+    'DragWidth',
+    'DrawSelectionMode',
+    'EmptyListMessage',
+    'Enabled',
+    'Font',
+    'Header',
+    'Hint',
+    'HintMode',
+    'Indent',
+    'LineMode',
+    'LineStyle',
+    'Margin',
+    'NodeAlignment',
+    'ShowHint',
+    'TextMargin',
+    'TreeOptions',
+    'Visible'
+  ];
 
 {$REGION 'construction and destruction'}
 procedure TfrmJsonTree.AfterConstruction;
 begin
   inherited AfterConstruction;
-  Logger.Channels.Add(TWinipcChannel.Create(False));
   InitializeTree;
   FObjectInspector := TzObjectInspectorFactory.Create(
     Self,
-    pnlObjectInspector,
-    FTree
+    pnlObjectInspector
   );
-  FObjectInspector.AlignWithMargins := True;
+  FObjectInspector.AlignWithMargins       := True;
   FObjectInspector.ShowReadOnlyProperties := False;
+  FObjectInspector.OnBeforeAddItem        := FObjectInspectorBeforeAddItem;
+  FObjectInspector.Component              := FTree;
 
   FSettings := TEditorFactories.CreateSettings(Self);
   FManager  := TEditorFactories.CreateManager(Self, FSettings);
@@ -106,15 +150,64 @@ begin
 end;
 {$ENDREGION}
 
+{$REGION 'event handlers'}
+function TfrmJsonTree.FObjectInspectorBeforeAddItem(Sender: TControl;
+  PItem: PPropItem): Boolean;
+var
+  LName : string;
+begin
+  LName := PItem.QualifiedName;
+  LName := LName.Split(['.'], 2)[1];
+  Result := not LName.Contains('ComObject')
+    and (not (PItem.Prop.PropertyType is TRttiMethodType))
+    and MatchText(LName, VISIBLE_PROPERTIES);
+end;
+{$ENDREGION}
+
 {$REGION 'action handlers'}
 procedure TfrmJsonTree.actCollapseExecute(Sender: TObject);
 begin
   FTree.FullCollapse;
+  FTree.Header.AutoFitColumns;
+end;
+
+procedure TfrmJsonTree.actCopyExecute(Sender: TObject);
+begin
+  Clipboard.AsText := FTree.FocusedValue;
+end;
+
+procedure TfrmJsonTree.actCreateJsonDocumentExecute(Sender: TObject);
+var
+  LObject : TJSONObject;
+begin
+  LObject := TJSONObject.Create;
+  try
+    var LNestedObject := TJSONObject.Create;
+    LObject.AddPair('ObjectName', LNestedObject);
+    LNestedObject.AddPair('StringName', 'StringValue');
+    var LBool := TJSONBool.Create(True);
+    LNestedObject.AddPair('BoolName', LBool);
+    var LInteger := TJSONNumber.Create(42);
+    LNestedObject.AddPair('IntegerName', LInteger);
+
+    LNestedObject.AddPair('Cloned', LNestedObject.Clone as TJSONValue);
+    LObject.AddPair('Clone', LObject.Clone as TJSONValue);
+
+    var LArray := TJSONArray.Create;
+    for var I := 0 to 30 do
+      LArray.Add(LObject.Clone as TJSONObject);
+    LNestedObject.AddPair('ArrayName', LArray);
+
+    FEditor.Text := LObject.Format(2);
+  finally
+    LObject.Free;
+  end;
 end;
 
 procedure TfrmJsonTree.actExpandExecute(Sender: TObject);
 begin
   FTree.FullExpand;
+  FTree.Header.AutoFitColumns;
 end;
 
 procedure TfrmJsonTree.actParseDocumentExecute(Sender: TObject);
@@ -132,6 +225,12 @@ begin
   FTree.Align       := alClient;
   FTree.Font.Name   := 'Consolas';
   FTree.Font.Size   := 10;
+  FTree.PopupMenu   := ppmTree;
+end;
+
+procedure TfrmJsonTree.pnlTopClick(Sender: TObject);
+begin
+  FEditor.Text := FTree.JsonString;
 end;
 {$ENDREGION}
 

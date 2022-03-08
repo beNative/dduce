@@ -19,14 +19,13 @@ unit Demo.DDuce.IniTree;
 interface
 
 uses
-  System.SysUtils, System.Classes, System.Actions,
-
+  System.SysUtils, System.Classes, System.Actions, System.ImageList,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.ActnList,
-  Vcl.StdCtrls,
+  Vcl.StdCtrls, Vcl.ImgList, Vcl.Menus,
 
   VirtualTrees, VirtualTrees.Types, VirtualTrees.Header,
 
-  zObjInspector,
+  zObjInspector, zObjInspTypes,
 
   DDuce.Components.VirtualTrees.Node, DDuce.Components.SectionTree,
   DDuce.Editor.Interfaces, DDuce.Components.IniTree;
@@ -48,12 +47,24 @@ type
     pnlTop             : TPanel;
     pnlTree            : TPanel;
     splVertical        : TSplitter;
+    imlMain            : TImageList;
+    ppmTree: TPopupMenu;
+    mniCopy: TMenuItem;
+    actCopy: TAction;
+    {$ENDREGION}
+
+    {$REGION 'event handlers'}
+    function FObjectInspectorBeforeAddItem(
+      Sender : TControl;
+      PItem  : PPropItem
+    ): Boolean;
     {$ENDREGION}
 
     {$REGION 'action handlers'}
     procedure actExpandExecute(Sender: TObject);
     procedure actCollapseExecute(Sender: TObject);
     procedure actParseDocumentExecute(Sender: TObject);
+    procedure actCopyExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -75,23 +86,56 @@ implementation
 {$R *.dfm}
 
 uses
+  System.Rtti, System.StrUtils,
+  Vcl.Clipbrd,
+
   DDuce.Components.Factories, DDuce.Factories.VirtualTrees,
   DDuce.Factories.zObjInspector, DDuce.Editor.Factories,
-
   DDuce.Logger.Factories, DDuce.Logger.Channels.Winipc, DDuce.Logger;
+
+const
+  VISIBLE_PROPERTIES : array of string = [
+    'Color',
+    'Colors',
+    'DefaultNodeHeight',
+    'DefaultText',
+    'DragImageKind',
+    'DragKind',
+    'DragMode',
+    'DragOperations',
+    'DragType',
+    'DragWidth',
+    'DrawSelectionMode',
+    'EmptyListMessage',
+    'Enabled',
+    'Font',
+    'Header',
+    'Hint',
+    'HintMode',
+    'Indent',
+    'LineMode',
+    'LineStyle',
+    'Margin',
+    'NodeAlignment',
+    'ShowHint',
+    'TextMargin',
+    'TreeOptions',
+    'Visible'
+  ];
 
 {$REGION 'construction and destruction'}
 procedure TfrmIniTree.AfterConstruction;
 begin
   inherited AfterConstruction;
-  Logger.Channels.Add(TWinipcChannel.Create(False));
   InitializeTree;
   FObjectInspector := TzObjectInspectorFactory.Create(
     Self,
-    pnlObjectInspector,
-    FTree
+    pnlObjectInspector
   );
-  FObjectInspector.AlignWithMargins := True;
+  FObjectInspector.AlignWithMargins       := True;
+  FObjectInspector.ShowReadOnlyProperties := False;
+  FObjectInspector.OnBeforeAddItem        := FObjectInspectorBeforeAddItem;
+  FObjectInspector.Component              := FTree;
   FSettings := TEditorFactories.CreateSettings(Self);
   FManager  := TEditorFactories.CreateManager(Self, FSettings);
   FEditor   := TEditorFactories.CreateView(pnlEditor, FManager);
@@ -101,15 +145,36 @@ begin
 end;
 {$ENDREGION}
 
+{$REGION 'event handlers'}
+function TfrmIniTree.FObjectInspectorBeforeAddItem(Sender: TControl;
+  PItem: PPropItem): Boolean;
+var
+  LName : string;
+begin
+  LName := PItem.QualifiedName;
+  LName := LName.Split(['.'], 2)[1];
+  Result := not LName.Contains('ComObject')
+    and (not (PItem.Prop.PropertyType is TRttiMethodType))
+    and MatchText(LName, VISIBLE_PROPERTIES);
+end;
+{$ENDREGION}
+
 {$REGION 'action handlers'}
 procedure TfrmIniTree.actCollapseExecute(Sender: TObject);
 begin
   FTree.FullCollapse;
+  FTree.Header.AutoFitColumns;
+end;
+
+procedure TfrmIniTree.actCopyExecute(Sender: TObject);
+begin
+  Clipboard.AsText := FTree.FocusedValue;
 end;
 
 procedure TfrmIniTree.actExpandExecute(Sender: TObject);
 begin
   FTree.FullExpand;
+  FTree.Header.AutoFitColumns;
 end;
 
 procedure TfrmIniTree.actParseDocumentExecute(Sender: TObject);
@@ -127,6 +192,7 @@ begin
   FTree.Align       := alClient;
   FTree.Font.Name   := 'Consolas';
   FTree.Font.Size   := 10;
+  FTree.PopupMenu   := ppmTree;
 end;
 {$ENDREGION}
 

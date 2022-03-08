@@ -42,6 +42,7 @@ type
     GUTTER_COLUMN = 0;
     NAME_COLUMN   = 1;
     VALUE_COLUMN  = 2;
+
   private
     FData        : IDynamicRecord;
     FInitialized : Boolean;
@@ -602,12 +603,13 @@ begin
   end;
 end;
 
+{ Helper to find a Node by its index. }
+
 function TValueList.FindNode(AIdx: Integer;
   AParentNode: PVirtualNode): PVirtualNode;
 var
   LNode: PVirtualNode;
 begin
-  // Helper to find a Node by its index
   Result := nil;
   if Assigned(AParentNode) then
     LNode := GetFirstChild(AParentNode)
@@ -696,7 +698,7 @@ begin
   Colors.SelectionRectangleBlendColor := clGray;
   Colors.SelectionTextColor           := clBlack;
   Colors.GridLineColor                := clSilver;
-  FInitialized := True;
+  FInitialized                        := True;
 end;
 
 procedure TValueList.Refresh;
@@ -746,11 +748,12 @@ begin
   end;
 end;
 
+{ Helper to focus and highlight a node by its index. }
+
 procedure TValueList.SelectNode(AIdx: Integer; AParentNode: PVirtualNode);
 var
   LNode : PVirtualNode;
 begin
-  // Helper to focus and highlight a node by its index
   LNode := FindNode(AIdx, AParentNode);
   if Assigned(LNode) then
     SelectNode(LNode);

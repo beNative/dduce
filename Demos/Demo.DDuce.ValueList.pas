@@ -51,7 +51,7 @@ implementation
 {$R *.dfm}
 
 uses
-  DDuce.Logger, DDuce.Logger.Channels.WinIPC, DDuce.Factories.zObjInspector;
+  DDuce.Logger, DDuce.Factories.zObjInspector;
 
 {$REGION 'construction and destruction'}
 procedure TfrmValueListDemo.AfterConstruction;

@@ -13,6 +13,7 @@ object EditList: TEditList
   Font.Style = []
   OldCreateOrder = False
   PopupMenu = ppmMain
+  ShowHint = True
   PixelsPerInch = 96
   TextHeight = 13
   object pnlMain: TPanel
@@ -29,11 +30,9 @@ object EditList: TEditList
       Top = 0
       Width = 197
       Height = 25
-      Color = clWhite
       GradientEndColor = clWhite
       GradientStartColor = clWhite
       Images = imlMain
-      ParentColor = False
       TabOrder = 0
       Transparent = True
       object btnAdd: TToolButton

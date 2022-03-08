@@ -9,6 +9,7 @@ uses
   Vcl.Styles,
   Vcl.SysStyles,
   MidasLib,
+  DDuce.Logger.Channels.WinIPC, DDuce.Logger,
   Demo.Contact in 'Demo.Contact.pas',
   Demo.Data in 'Demo.Data.pas' {dmData: TDataModule},
   Demo.DDuce.DBGridView in 'Demo.DDuce.DBGridView.pas' {frmDBGridView},
@@ -36,6 +37,9 @@ uses
 {$R *.res}
 
 begin
+  Logger.Channels.Add(TWinipcChannel.Create);
+  Logger.Clear;
+  Logger.Info('DDuce.Demos started.');
   {$WARNINGS OFF}
   ReportMemoryLeaksOnShutdown := DebugHook > 0;
   {$WARNINGS ON}

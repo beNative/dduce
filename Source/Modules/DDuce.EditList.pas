@@ -625,6 +625,8 @@ begin
     Refresh;
     FUpdate := False;
   end;
+  // temp workaround for toolbar painting black in LogViewer.
+  tlbMain.Invalidate;
 end;
 {$ENDREGION}
 

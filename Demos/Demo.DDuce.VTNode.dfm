@@ -64,7 +64,7 @@ object frmVTNode: TfrmVTNode
     end
     object btnFullExpand: TButton
       Left = 6
-      Top = 381
+      Top = 398
       Width = 139
       Height = 25
       Action = actFullExpandTree

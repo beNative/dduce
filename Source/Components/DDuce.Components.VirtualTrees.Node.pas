@@ -23,8 +23,8 @@ interface
 uses
   VirtualTrees;
 
+{$REGION 'documentation'}
 {
-  Documentation
     TVTNode is a type designed to be used as the data structure where each
     treenode in a treeview is pointing to.
 
@@ -36,7 +36,11 @@ uses
       TMyData = class
         ...
       end;
+
+    TODO: non generic version where visible node content is stored in Text and
+          Hint properties.
 }
+{$ENDREGION}
 
 {
 TVirtualNode = packed record
@@ -305,6 +309,38 @@ implementation
 
 uses
   System.SysUtils, System.Rtti;
+
+{$REGION 'TVTNode<T>.TVTNodeEnumerator<K>'}
+constructor TVTNode<T>.TVTNodeEnumerator<K>.Create(AVTNode: TVTNode<K>);
+begin
+  FCurrent := AVTNode;
+  FFirst   := True;
+end;
+
+function TVTNode<T>.TVTNodeEnumerator<K>.GetCurrent: TVTNode<K>;
+begin
+  Result := FCurrent;
+end;
+
+function TVTNode<T>.TVTNodeEnumerator<K>.MoveNext: Boolean;
+var
+  LTree : TCustomVirtualStringTree;
+begin
+  if Assigned(FCurrent) then
+  begin
+    if FFirst then
+    begin
+      FFirst := False;
+    end
+    else
+    begin
+      LTree := FCurrent.FTree;
+      FCurrent := LTree.GetNodeData<TVTNode<K>>(FCurrent.VNode.NextSibling);
+    end;
+  end;
+  Result := Assigned(FCurrent);
+end;
+{$ENDREGION}
 
 {$REGION 'construction and destruction'}
 constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree; const AData: T;
@@ -789,38 +825,6 @@ end;
 procedure TVTNode<T>.Select;
 begin
   Selected := True;
-end;
-{$ENDREGION}
-
-{$REGION 'TVTNodeEnumerator<T>'}
-constructor TVTNode<T>.TVTNodeEnumerator<K>.Create(AVTNode: TVTNode<K>);
-begin
-  FCurrent := AVTNode;
-  FFirst   := True;
-end;
-
-function TVTNode<T>.TVTNodeEnumerator<K>.GetCurrent: TVTNode<K>;
-begin
-  Result := FCurrent;
-end;
-
-function TVTNode<T>.TVTNodeEnumerator<K>.MoveNext: Boolean;
-var
-  LTree : TCustomVirtualStringTree;
-begin
-  if Assigned(FCurrent) then
-  begin
-    if FFirst then
-    begin
-      FFirst := False;
-    end
-    else
-    begin
-      LTree := FCurrent.FTree;
-      FCurrent := LTree.GetNodeData<TVTNode<K>>(FCurrent.VNode.NextSibling);
-    end;
-  end;
-  Result := Assigned(FCurrent);
 end;
 {$ENDREGION}
 
