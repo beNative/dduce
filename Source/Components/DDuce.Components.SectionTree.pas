@@ -45,10 +45,10 @@ type
         mode. }
   //    toDisableDrawSelection,
       { Entries other than in the main column can be selected, edited etc. }
-      toExtendedFocus
+      toExtendedFocus,
       { Hit test as well as selection highlight are not constrained to the text
         of a node. }
-  //    toFullRowSelect,
+      toFullRowSelect
       { Constrain selection to the same level as the selection anchor. }
   //    toLevelSelectConstraint,
       { Allow selection, dragging etc. with the middle mouse button. This and
@@ -74,15 +74,15 @@ type
       { Node captions can be edited. }
   //    toEditable,
       { Fully invalidate the tree when its window is resized (CS_HREDRAW/CS_VREDRAW).}
-  //    toFullRepaintOnResize,
+      toFullRepaintOnResize,
       { Use some special enhancements to simulate and support grid behavior. }
       toGridExtensions,
       { Initialize nodes when saving a tree to a stream. }
       toInitOnSave,
       { Tree behaves like TListView in report mode. }
-      toReportMode,
+  //  toReportMode,
       { Toggle node expansion state when it is double clicked. }
-      toToggleOnDblClick,
+//      toToggleOnDblClick,
       { Support for mouse panning (wheel mice only). This option and
         toMiddleClickSelect are mutal exclusive, where panning has precedence. }
       toWheelPanning,
@@ -125,7 +125,7 @@ type
       { Display tree lines to show hierarchy of nodes. }
       toShowTreeLines,
       { Display vertical lines (depending on columns) to simulate a grid. }
-      toShowVertGridLines,
+  //    toShowVertGridLines,
       { Draw UI elements (header, tree buttons etc.) according to the current
         theme if enabled (Windows XP+ only, application must be themed). }
       toThemeAware,

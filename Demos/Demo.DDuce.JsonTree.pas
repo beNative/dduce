@@ -62,6 +62,9 @@ type
       PItem  : PPropItem
     ): Boolean;
     procedure pnlTopClick(Sender: TObject);
+
+    procedure FTreeDblClick(Sender: TObject);
+    procedure FTreeExpandedCollapsed(Sender: TBaseVirtualTree; Node: PVirtualNode);
     {$ENDREGION}
 
     {$REGION 'action handlers'}
@@ -162,6 +165,18 @@ begin
     and (not (PItem.Prop.PropertyType is TRttiMethodType))
     and MatchText(LName, VISIBLE_PROPERTIES);
 end;
+
+procedure TfrmJsonTree.FTreeDblClick(Sender: TObject);
+begin
+  FTree.Header.AutoFitColumns;
+end;
+
+procedure TfrmJsonTree.FTreeExpandedCollapsed(Sender: TBaseVirtualTree;
+  Node: PVirtualNode);
+begin
+  FTree.Header.AutoFitColumns;
+end;
+
 {$ENDREGION}
 
 {$REGION 'action handlers'}
@@ -220,12 +235,16 @@ end;
 procedure TfrmJsonTree.InitializeTree;
 begin
   FTree := TJsonTree.Create(Self);
-  FTree.Parent      := pnlTree;
-  FTree.BorderStyle := bsNone;
-  FTree.Align       := alClient;
-  FTree.Font.Name   := 'Consolas';
-  FTree.Font.Size   := 10;
-  FTree.PopupMenu   := ppmTree;
+  FTree.Parent               := pnlTree;
+  FTree.BorderStyle          := bsNone;
+  FTree.Align                := alClient;
+  FTree.Font.Name            := 'Consolas';
+  FTree.Font.Size            := 10;
+  FTree.Colors.GridLineColor := clBtnFace;
+  FTree.PopupMenu            := ppmTree;
+  FTree.OnCollapsed          := FTreeExpandedCollapsed;
+  FTree.OnExpanded           := FTreeExpandedCollapsed;
+  FTree.OnDblClick           := FTreeDblClick;
 end;
 
 procedure TfrmJsonTree.pnlTopClick(Sender: TObject);

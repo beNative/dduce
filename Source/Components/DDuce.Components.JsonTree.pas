@@ -195,73 +195,76 @@ end;
 
 procedure TJsonTree.DoGetBackColor(ANode: PVirtualNode; var ABackColor: TColor);
 begin
-//  var LNode := GetNode(ANode);
-//  if Assigned(LNode) then
-//  begin
-//    if LNode.HasChildren then
-//      ABackColor := $00EBEBEB
-//    else
-//      ABackColor := $00F8F8F8;
-//  end;
+  var LNode := GetNode(ANode);
+  if Assigned(LNode) then
+  begin
+    if LNode.HasChildren then
+      ABackColor := $00EBEBEB
+    else
+      ABackColor := $00F8F8F8;
+  end;
   inherited DoGetBackColor(ANode, ABackColor);
 end;
 
 procedure TJsonTree.DoGetText(var pEventArgs: TVSTGetCellTextEventArgs);
 var
-  LNode  : TJsonNode;
-  LValue : TJSONAncestor;
-  S      : string;
+  LNode : TJsonNode;
+  S     : string;
 begin
   with pEventArgs do
   begin
-    LNode  := GetNode(Node);
-    LValue := LNode.Data;
-    if LValue is TJSONPair then
+    LNode := GetNode(Node);
+    if LNode.Data is TJSONPair then
     begin
+      var LValue := LNode.Data as TJSONPair;
       if Column = 0 then
       begin
-        S := (LValue as TJSONPair).JsonString.Value;
+        S := LValue.JsonString.Value;
+        CellText := S;
+      end
+      else if Column = 1 then
+      begin
         if LNode.HasChildren then
         begin
-          var LParentValue := (LValue as TJSONPair).JsonValue;
-          if LParentValue is TJSONArray then
+          if LValue.JsonValue is TJSONArray then
           begin
-            CellText := Format('%s [%d]', [S, LNode.ChildCount]);
+            CellText := Format('[%d]', [LNode.ChildCount]);
           end
-          else if LParentValue is TJSONObject then
+          else if LValue.JsonValue is TJSONObject then
           begin
-            CellText := Format('%s {%d}', [S, LNode.ChildCount]);
+            CellText := Format('{%d}', [LNode.ChildCount]);
           end;
         end
         else
-        begin
-          CellText := S;
-        end;
-      end
-      else
-      begin
-        S := (LValue as TJSONPair).JsonValue.Value;
-        CellText := S;
+          CellText := LValue.JsonValue.Value;
       end;
     end
     else
     begin
+      S := LNode.Data.Value;
       if Column = 0 then
       begin
-        S := LValue.Value;
-        if S.IsEmpty then
-          S := LNode.Index.ToString;
         if LNode.HasChildren then
         begin
-          CellText := Format('%s {%d}', [S, LNode.ChildCount]);
+          if S.IsEmpty then
+            S := Format('(%d)', [LNode.Index]);
+          CellText := S;
+      //    CellText := Format('%s {%d}', [S, LNode.ChildCount]);
         end
         else
         begin
-          CellText := S;
+          CellText := Format('(%d)', [LNode.Index]);
         end;
       end
-      else
-        CellText := '';
+      else if Column = 1 then
+      begin
+        if LNode.HasChildren then
+        begin
+          CellText := Format('{%d}', [LNode.ChildCount]);
+        end
+        else
+          CellText := S;
+      end;
     end;
   end;
   inherited DoGetText(pEventArgs);
@@ -304,17 +307,36 @@ begin
     var LNode := GetNode(Node);
     if Column = 0 then
     begin
-      Canvas.Font.Assign(ColorSettings.ObjectName.Font); 
+      if LNode.Data is TJSONPair then
+        Canvas.Font.Assign(ColorSettings.ObjectName.Font)
+      else
+        Canvas.Font.Assign(ColorSettings.NullValue.Font);
     end
     else if Column = 1 then
     begin
-      var LValue := (LNode.Data as TJSONPair).JsonValue;
-      if LValue is TJSONNumber then    
-        Canvas.Font.Assign(ColorSettings.NumberValue.Font)    
-      else if LValue is TJSONBool then
-        Canvas.Font.Assign(ColorSettings.BooleanValue.Font)
-      else if LValue is TJSONString then
-        Canvas.Font.Assign(ColorSettings.StringValue.Font);
+      if LNode.Data is TJSONPair then
+      begin
+        var LValue := (LNode.Data as TJSONPair).JsonValue;
+        if LValue is TJSONNumber then
+          Canvas.Font.Assign(ColorSettings.NumberValue.Font)
+        else if LValue is TJSONBool then
+          Canvas.Font.Assign(ColorSettings.BooleanValue.Font)
+        else if LValue is TJSONString then
+          Canvas.Font.Assign(ColorSettings.StringValue.Font)
+        else
+          Canvas.Font.Assign(ColorSettings.NullValue.Font);
+      end
+      else
+      begin
+        if LNode.Data is TJSONNumber then
+          Canvas.Font.Assign(ColorSettings.NumberValue.Font)
+        else if LNode.Data is TJSONBool then
+          Canvas.Font.Assign(ColorSettings.BooleanValue.Font)
+        else if LNode.Data is TJSONString then
+          Canvas.Font.Assign(ColorSettings.StringValue.Font)
+        else
+          Canvas.Font.Assign(ColorSettings.NullValue.Font);
+      end;
     end;
   end;
   inherited DoPaintText(Node, Canvas, Column, TextType);
@@ -393,7 +415,6 @@ var
   LData  : TJSONAncestor;
 begin
   LData := ANode.Data;
-  //ANode.VNode.States := ANode.VNode.States + [vsMultiline];
   if LData is TJSONPair then
   begin
     LValue := (LData as TJSONPair).JsonValue;
@@ -471,29 +492,37 @@ procedure TJsonTree.TColorSettings.InitializeObjects;
 begin
   FObjectName   := TTextFormatSettings.Create;
   FObjectName.OnChanged.Add(FormatSettingsChanged);  
-  FObjectName.FontName  := 'Consolas';  
-  FObjectName.FontColor := clMaroon;  
-  FObjectName.FontStyle := [fsBold];  
+  FObjectName.FontName  := 'Consolas';
+  FObjectName.FontSize  := 10;
+  FObjectName.FontColor := clMaroon;
+  FObjectName.FontStyle := [fsBold];
 
   FStringValue  := TTextFormatSettings.Create;
   FStringValue.OnChanged.Add(FormatSettingsChanged);
   FStringValue.FontColor := clGreen;
-  FStringValue.FontStyle := [fsBold];  
-  FStringValue.FontName  := 'Consolas';  
+  FStringValue.FontStyle := [fsBold];
+  FStringValue.FontSize  := 10;
+  FStringValue.FontName  := 'Consolas';
 
   FBooleanValue := TTextFormatSettings.Create;
   FBooleanValue.OnChanged.Add(FormatSettingsChanged);
-  FBooleanValue.FontColor := clBlue;  
-  FBooleanValue.FontStyle := [fsBold];  
-  FBooleanValue.FontName  := 'Consolas';  
+  FBooleanValue.FontColor := clBlue;
+  FBooleanValue.FontStyle := [fsBold];
+  FBooleanValue.FontSize  := 10;
+  FBooleanValue.FontName  := 'Consolas';
 
   FNumberValue  := TTextFormatSettings.Create;
   FNumberValue.OnChanged.Add(FormatSettingsChanged);
   FNumberValue.FontColor := clRed;
-  FNumberValue.FontStyle := [fsBold];  
-  FNumberValue.FontName  := 'Consolas';    
+  FNumberValue.FontStyle := [fsBold];
+  FNumberValue.FontSize  := 10;
+  FNumberValue.FontName  := 'Consolas';
 
   FNullValue  := TTextFormatSettings.Create;
+  FNullValue.FontColor := clGray;
+  FNullValue.FontStyle := [];
+  FNullValue.FontSize  := 10;
+  FNullValue.FontName  := 'Consolas';
   FNullValue.OnChanged.Add(FormatSettingsChanged);
 end;
 {$ENDREGION}

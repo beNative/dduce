@@ -58,6 +58,12 @@ type
       Sender : TControl;
       PItem  : PPropItem
     ): Boolean;
+
+    procedure FTreeDblClick(Sender: TObject);
+    procedure FTreeExpandedCollapsed(
+      Sender : TBaseVirtualTree;
+      Node   : PVirtualNode
+    );
     {$ENDREGION}
 
     {$REGION 'action handlers'}
@@ -157,6 +163,17 @@ begin
     and (not (PItem.Prop.PropertyType is TRttiMethodType))
     and MatchText(LName, VISIBLE_PROPERTIES);
 end;
+
+procedure TfrmIniTree.FTreeDblClick(Sender: TObject);
+begin
+  FTree.Header.AutoFitColumns;
+end;
+
+procedure TfrmIniTree.FTreeExpandedCollapsed(Sender: TBaseVirtualTree;
+  Node: PVirtualNode);
+begin
+  FTree.Header.AutoFitColumns;
+end;
 {$ENDREGION}
 
 {$REGION 'action handlers'}
@@ -187,12 +204,16 @@ end;
 procedure TfrmIniTree.InitializeTree;
 begin
   FTree := TIniTree.Create(Self);
-  FTree.Parent      := pnlTree;
-  FTree.BorderStyle := bsNone;
-  FTree.Align       := alClient;
-  FTree.Font.Name   := 'Consolas';
-  FTree.Font.Size   := 10;
-  FTree.PopupMenu   := ppmTree;
+  FTree.Parent               := pnlTree;
+  FTree.BorderStyle          := bsNone;
+  FTree.Align                := alClient;
+  FTree.Font.Name            := 'Consolas';
+  FTree.Font.Size            := 10;
+  FTree.PopupMenu            := ppmTree;
+  FTree.Colors.GridLineColor := clBtnFace;
+  FTree.OnCollapsed          := FTreeExpandedCollapsed;
+  FTree.OnExpanded           := FTreeExpandedCollapsed;
+  FTree.OnDblClick           := FTreeDblClick;
 end;
 {$ENDREGION}
 
