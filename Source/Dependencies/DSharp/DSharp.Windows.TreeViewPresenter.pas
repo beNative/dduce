@@ -47,7 +47,7 @@ uses
   Spring.Collections,
   SysUtils,
   Types,
-  VirtualTrees, VirtualTrees.Types, VirtualTrees.Header;
+  VirtualTrees, VirtualTrees.BaseTree, VirtualTrees.Types, VirtualTrees.Header;
 
 {$I DSharp.Windows.CustomPresenter.Types.inc}
 
@@ -88,10 +88,10 @@ type
       Column: TColumnIndex; var Allowed: Boolean);
     procedure DoDragDrop(Sender: TBaseVirtualTree; Source: TObject;
       DataObject: IDataObject; Formats: TFormatArray; Shift: TShiftState;
-      Pt: TPoint; var Effect: Integer; Mode: VirtualTrees.TDropMode);
+      Pt: TPoint; var Effect: Integer; Mode: VirtualTrees.BaseTree.TDropMode);
     procedure DoDragOver(Sender: TBaseVirtualTree; Source: TObject;
       Shift: TShiftState; State: TDragState; Pt: TPoint;
-      Mode: VirtualTrees.TDropMode; var Effect: Integer; var Accept: Boolean);
+      Mode: VirtualTrees.BaseTree.TDropMode; var Effect: Integer; var Accept: Boolean);
     procedure DoEdited(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex);
     procedure DoEditing(Sender: TBaseVirtualTree; Node: PVirtualNode;
@@ -676,7 +676,7 @@ end;
 procedure TTreeViewPresenter.DoDragDrop(Sender: TBaseVirtualTree;
   Source: TObject; DataObject: IDataObject; Formats: TFormatArray;
   Shift: TShiftState; Pt: TPoint; var Effect: Integer;
-  Mode: VirtualTrees.TDropMode);
+  Mode: VirtualTrees.BaseTree.TDropMode);
 var
   i: Integer;
   LItem: TObject;
@@ -740,7 +740,7 @@ end;
 
 procedure TTreeViewPresenter.DoDragOver(Sender: TBaseVirtualTree;
   Source: TObject; Shift: TShiftState; State: TDragState; Pt: TPoint;
-  Mode: VirtualTrees.TDropMode; var Effect: Integer; var Accept: Boolean);
+  Mode: VirtualTrees.BaseTree.TDropMode; var Effect: Integer; var Accept: Boolean);
 var
   LItem: TObject;
   LNode: PVirtualNode;

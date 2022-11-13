@@ -11,7 +11,6 @@ object EditList: TEditList
   Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = False
   PopupMenu = ppmMain
   ShowHint = True
   PixelsPerInch = 96

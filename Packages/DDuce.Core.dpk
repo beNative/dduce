@@ -92,6 +92,7 @@ contains
   DDuce.Logger.Interfaces in '..\Source\Logger\DDuce.Logger.Interfaces.pas',
   DDuce.Logger in '..\Source\Logger\DDuce.Logger.pas',
   JsonDataObjects in '..\Source\Dependencies\JsonDataObjects\JsonDataObjects.pas',
-  DDuce.Resources in '..\Source\DDuce.Resources.pas';
+  DDuce.Resources in '..\Source\DDuce.Resources.pas',
+  DDuce.CustomImageDrawHook in '..\Source\DDuce.CustomImageDrawHook.pas';
 
 end.

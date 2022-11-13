@@ -26,7 +26,7 @@ uses
 
   Spring,
 
-  VirtualTrees.Types, VirtualTrees.Header, VirtualTrees,
+  VirtualTrees.Types, VirtualTrees.Header, VirtualTrees, VirtualTrees.BaseTree,
 
   DDuce.DynamicRecord, DDuce.Settings.TextFormat, DDuce.Components.SectionTree,
   DDuce.Components.VirtualTrees.Node;

@@ -31,7 +31,7 @@ uses
   System.Classes, System.SysUtils, System.Types,
   Vcl.Graphics, Vcl.ImgList, Vcl.Menus,
 
-  VirtualTrees;
+  VirtualTrees, VirtualTrees.BaseTree, VirtualTrees.Types;
 
 const
   DEFAULT_DATETIMEFORMAT = 'dd-mm-yyyy hh:nn:ss.zzz';
@@ -221,7 +221,7 @@ uses
   System.UITypes,
   Vcl.Dialogs, Vcl.Clipbrd,
 
-  VirtualTrees.Types, VirtualTrees.Header,
+  VirtualTrees.Header,
 
   DDuce.Utils;
 

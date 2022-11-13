@@ -631,7 +631,7 @@ end;
 procedure TEditorCommands.SortSelectedLines;
 begin
   View.Editor.BeginUndoBlock;
-  View.Editor.Sort(soRandom);
+  View.Editor.Sort([soRandom]);
   View.Editor.EndUndoBlock;
 end;
 

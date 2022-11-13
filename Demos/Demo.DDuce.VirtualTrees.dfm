@@ -10,7 +10,6 @@ object frmVirtualTrees: TfrmVirtualTrees
   Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   PixelsPerInch = 96
   TextHeight = 13

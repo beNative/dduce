@@ -13,7 +13,6 @@ object frmMainMenu: TfrmMainMenu
   Font.Height = -13
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
   ShowHint = True
   OnShow = FormShow

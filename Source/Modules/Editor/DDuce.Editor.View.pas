@@ -61,13 +61,9 @@ type
       const AOffset : Integer
     );
     procedure EditorReplaceText(
-      const ASender     : TObject;
-      const ASearch     : string;
-      const AReplace    : string;
-      const ALine       : Integer;
-      const AColumn     : Integer;
-      const ADeleteLine : Boolean;
-      var AAction       : TTextEditorReplaceAction
+      const ASender: TObject;
+      const AParams: TTextEditorReplaceTextParams;
+      var AAction: TTextEditorReplaceAction
     );
     procedure EditorEnter(Sender: TObject);
     procedure EditorSettingsChanged(ASender: TObject);
@@ -458,8 +454,8 @@ begin
   Activate;
 end;
 
-procedure TEditorView.EditorReplaceText(const ASender: TObject; const ASearch,
-  AReplace: string; const ALine, AColumn: Integer; const ADeleteLine: Boolean;
+procedure TEditorView.EditorReplaceText(const ASender: TObject;
+  const AParams: TTextEditorReplaceTextParams;
   var AAction: TTextEditorReplaceAction);
 begin
 //
@@ -571,7 +567,7 @@ begin
   begin
     P.Char := Value;
     P.Line := CaretY;
-    Editor.SetCaretAndSelection(P, P, P);
+    Editor.SetTextPositionAndSelection(P, P, P);
   end;
 end;
 
@@ -588,13 +584,13 @@ begin
   begin
     P.Char := CaretX;
     P.Line := Value;
-    Editor.SetCaretAndSelection(P, P, P);
+    Editor.SetTextPositionAndSelection(P, P, P);
   end;
 end;
 
 function TEditorView.GetEditorFont: TFont;
 begin
-  Result := Editor.Font;
+  Result := Editor.Fonts.Text;
 end;
 
 function TEditorView.GetHighlighter: TTextEditorHighlighter;
@@ -642,9 +638,9 @@ end;
 
 procedure TEditorView.SetEditorFont(AValue: TFont);
 begin
-  if not Editor.Font.Equals(AValue) then
+  if not Editor.Fonts.Text.Equals(AValue) then
   begin
-    Editor.Font.Assign(AValue);
+    Editor.Fonts.Text.Assign(AValue);
   end;
 end;
 
@@ -1125,12 +1121,12 @@ begin
     Settings.Colors.MouseLinkColor
     Settings.Colors.IncrementColor
   }
-  Editor.CodeFolding.Colors.CollapsedLine := Settings.Colors.FoldedCodeColor;
-  Editor.Selection.Colors.Background      := Settings.Colors.SelectedColor;
-  Editor.ActiveLine.Colors.Background     := Settings.Colors.LineHighlightColor;
-  Editor.RightMargin.Colors.Margin        := Settings.Colors.RightEdgeColor;
-  Editor.MatchingPairs.Colors.Matched     := Settings.Colors.BracketMatchColor;
-  Editor.Search.Highlighter.Colors.Background :=
+  Editor.Colors.CodeFoldingCollapsedLine := Settings.Colors.FoldedCodeColor;
+  Editor.Colors.SelectionBackground      := Settings.Colors.SelectedColor;
+  Editor.Colors.ActiveLineBackground     := Settings.Colors.LineHighlightColor;
+  Editor.Colors.RightMargin              := Settings.Colors.RightEdgeColor;
+  Editor.Colors.MatchingPairMatched      := Settings.Colors.BracketMatchColor;
+  Editor.Colors.EditorHighlightedBlockBackground :=
     Settings.Colors.HighlightAllColor;
   Editor.Refresh; // will repaint using the actual highlighter settings
 end;
@@ -1139,7 +1135,7 @@ procedure TEditorView.InitializeEditor(AEditor: TTextEditor);
 begin
   AEditor.Parent := Self;
   AEditor.Align := alClient;
-  AEditor.Font.Assign(Settings.EditorFont);
+  AEditor.Fonts.Text.Assign(Settings.EditorFont);
   AEditor.BorderStyle := bsNone;
   AEditor.DoubleBuffered := True;
   AEditor.Options := [
@@ -1153,19 +1149,19 @@ begin
     soTripleClickRowSelect
   ];
   AEditor.LeftMargin.Autosize := True;
-  AEditor.LeftMargin.Colors.Background := clWhite;
+  AEditor.Colors.LeftMarginBackground := clWhite;
   AEditor.LeftMargin.LineNumbers.AutosizeDigitCount := 3;
   AEditor.LeftMargin.Visible := False;
   AEditor.LeftMargin.Visible := True;
 
   AEditor.CodeFolding.Visible                     := True;
-  AEditor.CodeFolding.Colors.CollapsedLine        := clSilver;
-  AEditor.CodeFolding.Colors.FoldingLine          := clSilver;
-  AEditor.CodeFolding.Colors.FoldingLineHighlight := clSilver;
-  AEditor.CodeFolding.Colors.Indent               := clSilver;
-  AEditor.CodeFolding.Colors.IndentHighlight      := clSilver;
-  AEditor.CodeFolding.Hint.Colors.Border          := clSilver;
-  AEditor.CodeFolding.GuideLineStyle              := lsSolid;
+  AEditor.Colors.CodeFoldingCollapsedLine         := clSilver;
+  AEditor.Colors.CodeFoldingFoldingLine           := clSilver;
+  AEditor.Colors.CodeFoldingFoldingLineHighlight  := clSilver;
+  AEditor.Colors.CodeFoldingIndent                := clSilver;
+  AEditor.Colors.CodeFoldingIndentHighlight       := clSilver;
+  AEditor.Colors.CodeFoldingHintBorder            := clSilver;
+  //AEditor.Colors.CodeFoldingActiveLineBackground .GuideLineStyle              := lsSolid;
   AEditor.CodeFolding.Options := [
    cfoExpandByHintClick,
    cfoHighlightMatchingPair,
@@ -1321,7 +1317,7 @@ begin
     //Editor.Search.Options := Editor.Search.Options + [TTextEditorSearchOption.soBackwards];
     Editor.Search.SearchText := Editor.WordAtCursor;
     Editor.TextPosition      := Editor.WordStart;
-    Editor.SetCaretAndSelection(
+    Editor.SetTextPositionAndSelection(
       Editor.SelectionBeginPosition,
       Editor.SelectionBeginPosition,
       Editor.SelectionEndPosition

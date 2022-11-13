@@ -24,7 +24,7 @@ uses
   Vcl.ActnList, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Controls, Vcl.ExtCtrls,
   Vcl.Buttons, Vcl.Forms, Vcl.ImgList, Vcl.Taskbar,
 
-  VirtualTrees,
+  VirtualTrees, VirtualTrees.BaseTree,
 
   DSharp.Windows.ColumnDefinitions, DSharp.Windows.TreeViewPresenter,
 

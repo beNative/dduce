@@ -28,7 +28,7 @@ uses
   System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ImgList,
 
-  VirtualTrees, VirtualTrees.Types, VirtualTrees.Header;
+  VirtualTrees, VirtualTrees.BaseTree, VirtualTrees.Types, VirtualTrees.Header;
 
 type
   TSectionTree = class(TCustomVirtualStringTree)

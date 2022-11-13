@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2018 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
   limitations under the License.
 }
 
-{$DEFINE TESTINSIGHT}
+{.$DEFINE TESTINSIGHT}
 //NOTE : Memory leak tracking does not work very well at the moment, as it's
 //reporting leaks when logging information during tests (calls to .Status etc).
 {.$DEFINE LEAKCHECK}  // enables LeakCheck support

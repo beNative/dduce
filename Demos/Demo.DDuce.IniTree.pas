@@ -23,7 +23,7 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.ActnList,
   Vcl.StdCtrls, Vcl.ImgList, Vcl.Menus,
 
-  VirtualTrees, VirtualTrees.Types, VirtualTrees.Header,
+  VirtualTrees, VirtualTrees.Types, VirtualTrees.Header, VirtualTrees.BaseTree,
 
   zObjInspector, zObjInspTypes,
 

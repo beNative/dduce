@@ -220,7 +220,7 @@ begin
   with FTVP.ColumnDefinitions.Add('Text', 600) do
   begin
     ValuePropertyName := 'Text';
-    Font.Assign(View.Editor.Font);
+    Font.Assign(View.Editor.Fonts.Text);
     Font.Size := 8;
   end;
   InitializeComponents;

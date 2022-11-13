@@ -249,6 +249,8 @@ type
 implementation
 
 uses
+  VirtualTrees.BaseTree,
+
   DDuce.Utils;
 
 {$R *.dfm}

@@ -26,7 +26,7 @@ uses
   System.Classes, System.Types,
   Vcl.Graphics,
 
-  VirtualTrees,
+  VirtualTrees, VirtualTrees.BaseTree,
 
   Spring, Spring.Collections,
 

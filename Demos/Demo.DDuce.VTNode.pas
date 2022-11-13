@@ -92,7 +92,7 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
   Vcl.ActnList, Vcl.StdCtrls,
 
-  VirtualTrees,
+  VirtualTrees, VirtualTrees.BaseTree,
 
   zObjInspector,
 

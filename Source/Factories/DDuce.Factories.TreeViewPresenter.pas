@@ -44,7 +44,7 @@ uses
   DSharp.Windows.TreeViewPresenter, DSharp.Core.DataTemplates,
   DSharp.Bindings.Collections, DSharp.Windows.ColumnDefinitions,
 
-  VirtualTrees;
+  VirtualTrees, VirtualTrees.BaseTree;
 
 type
   TFactories = class sealed

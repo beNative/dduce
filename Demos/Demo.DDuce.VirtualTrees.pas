@@ -28,7 +28,7 @@ uses
 
   zObjInspector,
 
-  VirtualTrees;
+  VirtualTrees, VirtualTrees.BaseTree;
 
 type
   TfrmVirtualTrees = class(TForm)

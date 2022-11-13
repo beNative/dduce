@@ -26,7 +26,7 @@ uses
 
   Spring,
 
-  VirtualTrees, VirtualTrees.Types, VirtualTrees.Header;
+  VirtualTrees, VirtualTrees.BaseTree, VirtualTrees.Types, VirtualTrees.Header;
 
 { TVSTOptions is a settings container which holds the most commonly adjusted
   properties of the TVirtualStringTree component.
