@@ -576,7 +576,7 @@ end;
 procedure TSectionTree.DoMeasureItem(TargetCanvas: TCanvas; Node: PVirtualNode;
   var NodeHeight: Integer);
 var
-  N : Cardinal;
+  N : Integer;
 begin
   N := ComputeNodeHeight(TargetCanvas, Node, 0);
   if N > (DefaultNodeHeight + 5) then
@@ -699,7 +699,7 @@ begin
   begin
     if AColumn = Header.MainColumn then
     begin
-      LIndent := GetNodeLevel(ANode) * Indent;
+      LIndent := Integer(GetNodeLevel(ANode)) * Indent;
       Inc(ACellRect.Left, LIndent);
       LIndent := -Integer(Indent);
     end

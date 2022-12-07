@@ -32,7 +32,9 @@ package DDuce.Modules;
 requires
   DDuce.Core,
   DDuce.Components,
-  TextEditor.Delphi.Alexandria.Runtime;
+{  TextEditor.Delphi.Alexandria.Runtime}
+  TextEditor.Delphi.Sydney.Runtime;
+
 
 contains
   DDuce.ObjectInspector in '..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas' {frmComponentInspector},
