@@ -31,7 +31,7 @@ uses
 
   Spring,
 
-  VirtualTrees,
+  VirtualTrees, VirtualTrees.Types,
 
   DDuce.DynamicRecord, DDuce.Components.ValueList, DDuce.Logger;
 

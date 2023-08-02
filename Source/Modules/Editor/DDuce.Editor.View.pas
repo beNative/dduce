@@ -1085,12 +1085,12 @@ begin
   else
     Editor.Tabs.Options := Editor.Tabs.Options - [toPreviousLineIndent];
 
-  if Settings.EditorOptions.ShowIndentGuides then
-    Editor.CodeFolding.Options := Editor.CodeFolding.Options +
-      [cfoShowIndentGuides]
-  else
-    Editor.CodeFolding.Options := Editor.CodeFolding.Options -
-      [cfoShowIndentGuides];
+//  if Settings.EditorOptions.ShowIndentGuides then
+//    Editor.CodeFolding.Options := Editor.CodeFolding.Options +
+//      [cfoShowIndentGuides]
+//  else
+//    Editor.CodeFolding.Options := Editor.CodeFolding.Options -
+//      [cfoShowIndentGuides];
 
   // cfoExpandByHintClick disabled as it does not work properly
   Editor.CodeFolding.Options :=

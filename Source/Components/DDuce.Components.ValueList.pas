@@ -26,7 +26,7 @@ uses
   System.Classes, System.Types,
   Vcl.Graphics,
 
-  VirtualTrees, VirtualTrees.BaseTree,
+  VirtualTrees, VirtualTrees.Types, VirtualTrees.BaseTree,
 
   Spring, Spring.Collections,
 
@@ -358,7 +358,7 @@ uses
   System.SysUtils,
   Vcl.Forms, Vcl.Controls,
 
-  VirtualTrees.Types, VirtualTrees.Header;
+  VirtualTrees.Header;
 
 {$REGION 'construction and destruction'}
 destructor TValueList.Destroy;

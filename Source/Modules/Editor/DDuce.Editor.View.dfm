@@ -13,6 +13,5 @@ object EditorView: TEditorView
   Font.Name = 'Tahoma'
   Font.Style = []
   ShowHint = True
-  PixelsPerInch = 96
   TextHeight = 13
 end

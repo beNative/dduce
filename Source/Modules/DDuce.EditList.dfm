@@ -1,8 +1,8 @@
 object EditList: TEditList
   Left = 0
   Top = 0
-  ClientHeight = 320
-  ClientWidth = 197
+  ClientHeight = 319
+  ClientWidth = 193
   Color = clWhite
   TransparentColorValue = clWhite
   DoubleBuffered = True
@@ -13,17 +13,18 @@ object EditList: TEditList
   Font.Style = []
   PopupMenu = ppmMain
   ShowHint = True
-  PixelsPerInch = 96
   TextHeight = 13
   object pnlMain: TPanel
     Left = 0
     Top = 0
-    Width = 197
-    Height = 320
+    Width = 193
+    Height = 319
     Align = alClient
     BevelOuter = bvNone
     Color = clWhite
     TabOrder = 0
+    ExplicitWidth = 197
+    ExplicitHeight = 320
     object tlbMain: TToolBar
       Left = 0
       Top = 0

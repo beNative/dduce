@@ -87,7 +87,9 @@ implementation
 uses
   Spring, Spring.Helpers, Spring.SystemUtils,
 
-  ZeroMQ.API;
+  ZeroMQ.API,
+
+  DDuce.Logger;
 
 {$REGION 'construction and destruction'}
 constructor TZmqChannel.Create(const AEndPoint: string; AActive: Boolean);
@@ -221,6 +223,18 @@ const
 var
   LTextSize : Integer;
   LDataSize : Integer;
+  S: string;
+
+  function ToHexString(const S: string): string;
+  var
+    I: Integer;
+  begin
+    Result := '';
+    for I := 1 to Length(S) do
+      Result := Result + IntToHex(Ord(S[I]), 2);
+  end;
+
+
 begin
   if Enabled then
   begin
@@ -252,6 +266,8 @@ begin
       else
         FBuffer.WriteBuffer(ZERO_BUFFER);
       Result := FPublisher.SendString(FBuffer.DataString) > 0;
+      S := ToHexString(FBuffer.DataString);
+      Logger.Send(S);
     end
     else
     begin

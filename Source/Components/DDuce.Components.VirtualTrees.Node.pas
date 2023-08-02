@@ -21,7 +21,7 @@ unit DDuce.Components.VirtualTrees.Node;
 interface
 
 uses
-  VirtualTrees, VirtualTrees.BaseTree;
+  VirtualTrees, VirtualTrees.Types, VirtualTrees.BaseTree;
 
 {$REGION 'documentation'}
 {
