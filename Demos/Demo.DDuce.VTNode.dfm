@@ -1,8 +1,8 @@
 object frmVTNode: TfrmVTNode
   Left = 0
   Top = 0
-  ClientHeight = 798
-  ClientWidth = 791
+  ClientHeight = 797
+  ClientWidth = 787
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -10,25 +10,28 @@ object frmVTNode: TfrmVTNode
   Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
-  PixelsPerInch = 96
   TextHeight = 13
   object pnlTree: TPanel
     Left = 353
     Top = 0
-    Width = 281
-    Height = 798
+    Width = 277
+    Height = 797
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 281
+    ExplicitHeight = 798
   end
   object pnlMain: TPanel
-    Left = 634
+    Left = 630
     Top = 0
     Width = 157
-    Height = 798
+    Height = 797
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitLeft = 634
+    ExplicitHeight = 798
     object btnDeleteNode: TButton
       Left = 6
       Top = 118
@@ -162,10 +165,11 @@ object frmVTNode: TfrmVTNode
     Left = 0
     Top = 0
     Width = 353
-    Height = 798
+    Height = 797
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitHeight = 798
   end
   object aclMain: TActionList
     Left = 208

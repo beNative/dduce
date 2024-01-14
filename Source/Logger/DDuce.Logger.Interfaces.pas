@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2024 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -328,8 +328,8 @@ type
     function SendPointer(AValue: Pointer): ILogger; overload;
     function SendException(const AName: string; AValue: Exception): ILogger; overload;
     function SendException(AValue: Exception): ILogger; overload;
-    function SendBitmap(const AName: string; AValue: TBitmap; ASendCompressed: Boolean = True): ILogger; overload;
-    function SendBitmap(AValue: TBitmap; ASendCompressed: Boolean = True): ILogger; overload;
+    function SendBitmap(const AName: string; AValue: TBitmap; ASendCompressed: Boolean = False): ILogger; overload;
+    function SendBitmap(AValue: TBitmap; ASendCompressed: Boolean = False): ILogger; overload;
     function SendScreenShot(const AName: string; AForm: TCustomForm): ILogger; overload;
     function SendScreenShot(AForm: TCustomForm): ILogger; overload;
     function SendDataSet(const AName: string; AValue: TDataSet): ILogger; overload;

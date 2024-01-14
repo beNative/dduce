@@ -13,13 +13,11 @@ object frmLogger: TfrmLogger
   Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = False
   PopupMode = pmAuto
   Position = poMainFormCenter
   ShowHint = True
   OnClose = FormClose
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object grpWatches: TGroupBox
     AlignWithMargins = True
@@ -30,6 +28,7 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Watches'
     TabOrder = 0
+    ExplicitWidth = 634
     DesignSize = (
       638
       50)
@@ -62,7 +61,7 @@ object frmLogger: TfrmLogger
     object trbMain: TTrackBar
       Left = 119
       Top = 15
-      Width = 363
+      Width = 359
       Height = 29
       Anchors = [akLeft, akTop, akRight]
       Max = 100
@@ -73,6 +72,7 @@ object frmLogger: TfrmLogger
       ShowSelRange = False
       TabOrder = 0
       OnChange = trbMainChange
+      ExplicitWidth = 355
     end
     object chkSendRandomValueTimer: TCheckBox
       Left = 492
@@ -93,6 +93,7 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Method tracing'
     TabOrder = 1
+    ExplicitWidth = 634
     object btnEnterMethod1: TButton
       Left = 12
       Top = 22
@@ -140,7 +141,7 @@ object frmLogger: TfrmLogger
       Height = 21
       Alignment = taCenter
       EditLabel.Width = 81
-      EditLabel.Height = 13
+      EditLabel.Height = 21
       EditLabel.Caption = 'Method1 name:'
       LabelPosition = lpLeft
       TabOrder = 1
@@ -153,7 +154,7 @@ object frmLogger: TfrmLogger
       Height = 21
       Alignment = taCenter
       EditLabel.Width = 81
-      EditLabel.Height = 13
+      EditLabel.Height = 21
       EditLabel.Caption = 'Method2 name:'
       LabelPosition = lpLeft
       TabOrder = 4
@@ -169,6 +170,7 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Notification messages'
     TabOrder = 2
+    ExplicitWidth = 634
     object btnSendInfo: TButton
       Left = 17
       Top = 21
@@ -224,6 +226,7 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Counters'
     TabOrder = 3
+    ExplicitWidth = 634
     object lblCounterValue: TLabel
       Left = 85
       Top = 18
@@ -291,6 +294,7 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Logger channels'
     TabOrder = 4
+    ExplicitWidth = 634
     DesignSize = (
       638
       134)
@@ -404,7 +408,7 @@ object frmLogger: TfrmLogger
     object edtLogFile: TButtonedEdit
       Left = 85
       Top = 20
-      Width = 545
+      Width = 541
       Height = 21
       Hint = 'Database (server or path).'
       Anchors = [akLeft, akTop, akRight]
@@ -412,16 +416,17 @@ object frmLogger: TfrmLogger
       RightButton.ImageIndex = 23
       RightButton.Visible = True
       TabOrder = 1
+      ExplicitWidth = 537
     end
     object edtEndPoint: TLabeledEdit
       Left = 235
       Top = 47
-      Width = 142
+      Width = 138
       Height = 21
       Alignment = taCenter
       Anchors = [akLeft, akTop, akRight]
       EditLabel.Width = 51
-      EditLabel.Height = 13
+      EditLabel.Height = 21
       EditLabel.Caption = 'Endpoint:'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -432,6 +437,7 @@ object frmLogger: TfrmLogger
       ParentFont = False
       TabOrder = 3
       Text = 'tcp://*:*'
+      ExplicitWidth = 134
     end
     object btnZMQBind: TButton
       Left = 85
@@ -463,12 +469,12 @@ object frmLogger: TfrmLogger
     object edtMQTTBroker: TLabeledEdit
       Left = 235
       Top = 74
-      Width = 142
+      Width = 138
       Height = 21
       Alignment = taCenter
       Anchors = [akLeft, akTop, akRight]
       EditLabel.Width = 36
-      EditLabel.Height = 13
+      EditLabel.Height = 21
       EditLabel.Caption = 'Broker:'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -479,6 +485,7 @@ object frmLogger: TfrmLogger
       ParentFont = False
       TabOrder = 8
       Text = 'localhost'
+      ExplicitWidth = 134
     end
     object btnMQTTConnect: TButton
       Left = 85
@@ -491,12 +498,12 @@ object frmLogger: TfrmLogger
     object edtMQTTPort: TLabeledEdit
       Left = 411
       Top = 74
-      Width = 54
+      Width = 50
       Height = 21
       Alignment = taCenter
       Anchors = [akLeft, akTop, akRight]
       EditLabel.Width = 24
-      EditLabel.Height = 13
+      EditLabel.Height = 21
       EditLabel.Caption = 'Port:'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -507,6 +514,7 @@ object frmLogger: TfrmLogger
       ParentFont = False
       TabOrder = 10
       Text = '1883'
+      ExplicitWidth = 46
     end
   end
   object grpCheckpoints: TGroupBox
@@ -518,6 +526,7 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Checkpoints'
     TabOrder = 5
+    ExplicitWidth = 634
     object lblCheckpointDescription: TLabel
       Left = 12
       Top = 19
@@ -557,6 +566,7 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Log values'
     TabOrder = 6
+    ExplicitWidth = 634
     object btnSendObject: TButton
       Left = 324
       Top = 23
@@ -676,6 +686,7 @@ object frmLogger: TfrmLogger
     Align = alTop
     Caption = 'Custom'
     TabOrder = 7
+    ExplicitWidth = 634
     object btnSendObject1: TButton
       Left = 325
       Top = 16
@@ -692,7 +703,7 @@ object frmLogger: TfrmLogger
       Height = 21
       Alignment = taRightJustify
       EditLabel.Width = 81
-      EditLabel.Height = 13
+      EditLabel.Height = 21
       EditLabel.Caption = 'Message count:'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -729,6 +740,7 @@ object frmLogger: TfrmLogger
     Height = 39
     Align = alTop
     TabOrder = 8
+    ExplicitWidth = 640
     DesignSize = (
       644
       39)
@@ -770,7 +782,7 @@ object frmLogger: TfrmLogger
     object trbLogLevel: TTrackBar
       Left = 271
       Top = 7
-      Width = 362
+      Width = 358
       Height = 25
       Anchors = [akLeft, akTop, akRight]
       Max = 31
@@ -778,6 +790,7 @@ object frmLogger: TfrmLogger
       ShowSelRange = False
       TabOrder = 1
       OnChange = trbLogLevelChange
+      ExplicitWidth = 354
     end
   end
   object aclMain: TActionList

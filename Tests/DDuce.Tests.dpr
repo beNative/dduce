@@ -5,7 +5,7 @@ program DDuce.Tests;
 {$I Test.DDuce.inc}
 
 {$IFNDEF TESTINSIGHT}
-{$APPTYPE CONSOLE}
+//{$APPTYPE CONSOLE}
 {$ENDIF}{$STRONGLINKTYPES ON}
 
 {$R *.dres}
@@ -23,9 +23,21 @@ uses
   TestInsight.DUnitX,
   {$ENDIF }
   Vcl.Forms,
-  //DUnitX.Loggers.GUI.VCL,
+  DUnitX.Loggers.GUI.VCL,
   DUnitX.Windows.Console,
   DUnitX.TestFramework,
+  DUnitX.Generics,
+  DUnitX.InternalInterfaces,
+  DUnitX.WeakReference,
+  DUnitX.FixtureResult,
+  DUnitX.RunResults,
+  DUnitX.Test,
+  DUnitX.TestFixture,
+  DUnitX.TestResult,
+  DUnitX.TestRunner,
+  DUnitX.Utils,
+  DUnitX.IoC,
+  DUnitX.MemoryLeakMonitor.Default,
   System.SysUtils,
   Test.Registration in 'Test.Registration.pas',
   Test.Data in 'Test.Data.pas',
@@ -40,10 +52,11 @@ uses
 begin
   Application.Initialize;
   RegisterTests;
+  Application.CreateForm(TGUIVCLTestRunner, GUIVCLTestRunner);
+  Application.Run;
   {$IFDEF TESTINSIGHT}
   RunRegisteredTests;
   Exit;
   {$ENDIF}
-//  DUnitX.Loggers.GUI.VCL.Run;
 end.
 

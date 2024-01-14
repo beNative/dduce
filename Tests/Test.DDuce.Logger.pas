@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2024 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -288,12 +288,6 @@ uses
 procedure TestLogger.AfterConstruction;
 begin
   inherited AfterConstruction;
-  Logger.Channels.Add(TWinipcChannel.Create);
-//  Logger.Channels.Add(TZmqChannel.Create('tcp://*:5555'));
-  Sleep(1000);
-  Logger.Clear;
-  Logger.Clear;
-  Logger.Clear;
 end;
 {$ENDREGION}
 
@@ -1364,6 +1358,14 @@ begin
   Assert.Pass;
 end;
 {$ENDREGION}
+
+initialization
+  Logger.Channels.Add(TWinipcChannel.Create);
+//  Logger.Channels.Add(TZmqChannel.Create('tcp://*:5555'));
+  Sleep(1000);
+  Logger.Clear;
+  Logger.Clear;
+  Logger.Clear;
 
 end.
 

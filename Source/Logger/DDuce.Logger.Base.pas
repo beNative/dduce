@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2024 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -60,6 +60,7 @@ type
       FLogger : ILogger;
       FName   : string;
       FSender : TObject;
+
     public
       constructor Create(
         const ALogger: ILogger;
@@ -67,6 +68,7 @@ type
         const AName  : string
         );
       destructor Destroy; override;
+
     end;
 
   var
@@ -112,7 +114,7 @@ type
     { Sends a dedicated message to clear content in the receiver (LogViewer). }
     function Clear: ILogger;
 
-    // Send procedures
+    // Send functions
     function Send(const AName: string; const AArgs: array of const): ILogger; overload;
 
     function Send(const AName: string; const AValue: string): ILogger; overload;
@@ -121,21 +123,22 @@ type
     function Send(const AName: string; const AValue: ShortString): ILogger; overload;
 
     // Overloads for builtin integer types
-    function Send(const AName: string; const AValue: Cardinal): ILogger; overload;
-    function Send(const AName: string; const AValue: Word): ILogger; overload;
-    function Send(const AName: string; const AValue: SmallInt): ILogger; overload;
     function Send(const AName: string; const AValue: Byte): ILogger; overload;
-    function Send(const AName: string; const AValue: ShortInt): ILogger; overload;
+    function Send(const AName: string; const AValue: Word): ILogger; overload;
+    function Send(const AName: string; const AValue: Cardinal): ILogger; overload;
     function Send(const AName: string; const AValue: UInt64): ILogger; overload;
+    function Send(const AName: string; const AValue: ShortInt): ILogger; overload;
+    function Send(const AName: string; const AValue: SmallInt): ILogger; overload;
     function Send(const AName: string; const AValue: FixedInt): ILogger; overload;
 
     // no need to define overloads which have an implicit cast to TValue
     function Send(const AName: string; const AValue: TValue): ILogger; overload;
+    function Send(const AValue: TValue): ILogger; overload;
 
+    function Send(const AValue: string): ILogger; overload;
     function Send(const AValue: AnsiString): ILogger; overload;
     function Send(const AValue: WideString): ILogger; overload;
     function Send(const AValue: ShortString): ILogger; overload;
-    function Send(const AValue: string): ILogger; overload;
 
     function Send(const AValue: Byte): ILogger; overload;
     function Send(const AValue: Word): ILogger; overload;
@@ -144,8 +147,6 @@ type
     function Send(const AValue: ShortInt): ILogger; overload;
     function Send(const AValue: SmallInt): ILogger; overload;
     function Send(const AValue: FixedInt): ILogger; overload;
-
-    function Send(const AValue: TValue): ILogger; overload;
 
     function SendDateTime(const AName: string; AValue: TDateTime): ILogger; overload;
     function SendDateTime(AValue: TDateTime): ILogger; overload;
@@ -179,12 +180,13 @@ type
     { Will send the component as a dfm-stream. }
     function SendComponent(const AName: string; AValue: TComponent): ILogger; overload;
     function SendComponent(AValue: TComponent): ILogger; overload;
+
     function SendPointer(const AName: string; AValue: Pointer): ILogger; overload;
     function SendPointer(AValue: Pointer): ILogger; overload;
     function SendException(const AName: string; AValue: Exception): ILogger; overload;
     function SendException(AValue: Exception): ILogger; overload;
-    function SendBitmap(const AName: string; AValue: TBitmap; ASendCompressed: Boolean = True): ILogger; overload;
-    function SendBitmap(AValue: TBitmap; ASendCompressed: Boolean = True): ILogger; overload;
+    function SendBitmap(const AName: string; AValue: TBitmap; ASendCompressed: Boolean = False): ILogger; overload;
+    function SendBitmap(AValue: TBitmap; ASendCompressed: Boolean = False): ILogger; overload;
     function SendGraphic(const AName: string; AValue: TGraphic): ILogger; overload;
     function SendGraphic(AValue: TGraphic): ILogger; overload;
     function SendScreenShot(const AName: string; AForm: TCustomForm): ILogger; overload;
@@ -336,7 +338,7 @@ const
   DEFAULT_CHECKPOINTNAME = 'CheckPoint';
 
 {$REGION 'non-interfaced routines'}
-function GetInterfaceTypeName(AIntf: IInterface): Tuple<string,string>;
+function GetInterfaceTypeName(AIntf: IInterface): Tuple<string, string>;
 var
   O        : TObject;
   LType    : TRttiInterfaceType;
