@@ -1,22 +1,23 @@
 inherited frmFilter: TfrmFilter
   Left = 579
   Top = 257
-  ClientHeight = 455
-  ClientWidth = 530
+  ClientHeight = 454
+  ClientWidth = 526
   OnCloseQuery = FormCloseQuery
   OnShow = FormShow
-  ExplicitWidth = 546
-  ExplicitHeight = 494
-  PixelsPerInch = 96
+  ExplicitWidth = 542
+  ExplicitHeight = 493
   TextHeight = 13
   object pnlMain: TPanel
     Left = 0
     Top = 0
-    Width = 530
-    Height = 432
+    Width = 526
+    Height = 431
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 530
+    ExplicitHeight = 432
     object pnlHeader: TPanel
       Left = 0
       Top = 0
@@ -53,10 +54,12 @@ inherited frmFilter: TfrmFilter
   end
   object sbrMain: TStatusBar
     Left = 0
-    Top = 432
-    Width = 530
+    Top = 431
+    Width = 526
     Height = 23
     Panels = <>
+    ExplicitTop = 432
+    ExplicitWidth = 530
   end
   object aclMain: TActionList
     Left = 158

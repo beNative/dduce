@@ -3,47 +3,48 @@ inherited frmSearchForm: TfrmSearchForm
   Top = 33
   BorderIcons = [biSystemMenu]
   Caption = 'Find'
-  ClientHeight = 645
-  ClientWidth = 309
+  ClientHeight = 644
+  ClientWidth = 305
   Constraints.MinHeight = 312
   Constraints.MinWidth = 300
   PopupMode = pmAuto
   ShowHint = True
   OnHide = FormHide
   OnShow = FormShow
-  ExplicitWidth = 325
-  ExplicitHeight = 684
-  PixelsPerInch = 96
+  ExplicitWidth = 321
+  ExplicitHeight = 683
   TextHeight = 13
   object pnlOperations: TPanel
     Left = 0
     Top = 0
-    Width = 309
+    Width = 305
     Height = 372
     Align = alTop
     AutoSize = True
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 309
     DesignSize = (
-      309
+      305
       372)
     object grpSearchText: TGroupBox
       Left = 0
       Top = 0
-      Width = 301
+      Width = 293
       Height = 51
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Text to find:'
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
+      ExplicitWidth = 301
       DesignSize = (
-        301
+        293
         51)
       object cbxSearchText: TComboBox
         Left = 14
         Top = 20
-        Width = 277
+        Width = 269
         Height = 21
         Anchors = [akLeft, akTop, akRight]
         Font.Charset = DEFAULT_CHARSET
@@ -59,18 +60,19 @@ inherited frmSearchForm: TfrmSearchForm
     object grpReplaceWith: TGroupBox
       Left = 0
       Top = 55
-      Width = 301
+      Width = 293
       Height = 51
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Replace with:'
       TabOrder = 1
+      ExplicitWidth = 301
       DesignSize = (
-        301
+        293
         51)
       object cbxReplaceWith: TComboBox
         Left = 14
         Top = 20
-        Width = 277
+        Width = 269
         Height = 21
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
@@ -79,11 +81,12 @@ inherited frmSearchForm: TfrmSearchForm
     object grpOptions: TGroupBox
       Left = 0
       Top = 112
-      Width = 301
+      Width = 293
       Height = 71
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Options'
       TabOrder = 2
+      ExplicitWidth = 301
       object chkWholeWordsOnly: TCheckBox
         Left = 20
         Top = 12
@@ -137,11 +140,12 @@ inherited frmSearchForm: TfrmSearchForm
     object grpScope: TGroupBox
       Left = 0
       Top = 182
-      Width = 301
+      Width = 293
       Height = 56
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Scope'
       TabOrder = 3
+      ExplicitWidth = 301
       object rbSelection: TRadioButton
         Left = 20
         Top = 24
@@ -179,11 +183,12 @@ inherited frmSearchForm: TfrmSearchForm
     object grpOrigin: TGroupBox
       Left = 0
       Top = 236
-      Width = 301
+      Width = 293
       Height = 56
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Origin'
       TabOrder = 4
+      ExplicitWidth = 301
       object rbFromCursor: TRadioButton
         Left = 20
         Top = 24
@@ -210,11 +215,12 @@ inherited frmSearchForm: TfrmSearchForm
     object grpDirection: TGroupBox
       Left = 0
       Top = 292
-      Width = 301
+      Width = 293
       Height = 56
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Direction'
       TabOrder = 5
+      ExplicitWidth = 301
       object rbBackward: TRadioButton
         Left = 14
         Top = 24
@@ -302,18 +308,19 @@ inherited frmSearchForm: TfrmSearchForm
   object pnlResultList: TPanel
     Left = 0
     Top = 372
-    Width = 309
-    Height = 250
+    Width = 305
+    Height = 249
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
     ExplicitTop = 411
+    ExplicitWidth = 309
     ExplicitHeight = 211
   end
   object pnlStatus: TPanel
     Left = 0
-    Top = 622
-    Width = 309
+    Top = 621
+    Width = 305
     Height = 23
     Align = alBottom
     BevelOuter = bvNone
@@ -324,6 +331,8 @@ inherited frmSearchForm: TfrmSearchForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 2
+    ExplicitTop = 622
+    ExplicitWidth = 309
   end
   object aclMain: TActionList
     Left = 16
