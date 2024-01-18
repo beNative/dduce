@@ -61,7 +61,7 @@ type
   TNotifyPropertyChanged = class sealed(TComponent, INotifyPropertyChanged)
   private
     FOnPropertyChanged: Event<TPropertyChangedEvent>;
-    function GetOnPropertyChanged: IEvent<TPropertyChangedEvent>;
+    function GetOnPropertyChanged: IPropertyChangedEvent;
   public
     procedure NotifyOfPropertyChange(const APropertyName: string;
       AUpdateTrigger: TUpdateTrigger = utPropertyChanged);
@@ -91,7 +91,7 @@ end;
 
 { TNotifiyPropertyChanged }
 
-function TNotifyPropertyChanged.GetOnPropertyChanged: IEvent<TPropertyChangedEvent>;
+function TNotifyPropertyChanged.GetOnPropertyChanged: IPropertyChangedEvent;
 begin
   Result := FOnPropertyChanged;
 end;

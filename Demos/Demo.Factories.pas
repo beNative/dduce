@@ -133,7 +133,7 @@ end;
 class function TDemoFactories.CreateContactList(const ACount: Integer):
   IList<TContact>;
 begin
-  Result := TObjectList<TContact>.Create;
+  Result := TCollections.CreateObjectList<TContact>;
   FillListWithContacts(Result, ACount);
 end;
 
