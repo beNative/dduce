@@ -76,6 +76,7 @@ type
         read GetOnChanged;      
 
     end;
+
   private
     FRootNode      : TJsonNode;
     FJson          : TJSONValue;

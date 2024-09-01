@@ -36,7 +36,7 @@ uses
   DDuce.Components.GridView, DDuce.Components.ValueList,
   DDuce.DynamicRecord,
 
-  Demo.Contact;
+  Demo.Contact, Vcl.Mask;
 
 type
   TTestClass = class

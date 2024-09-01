@@ -98,8 +98,8 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <VerInfo_Build>509</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.509;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>511</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.511;ProductVersion=1.0.0.0</VerInfo_Keys>
         <Debugger_HostApplication>D:\development\delphi\libraries\dduce\Demos\Bin\Win32\DDuce.Demos.exe</Debugger_HostApplication>
         <Debugger_CWD>D:\development\delphi\libraries\dduce\Demos\Bin\Win32</Debugger_CWD>
         <DCC_MapFile>3</DCC_MapFile>
@@ -140,6 +140,8 @@
         <DCCReference Include="bindcomp.dcp"/>
         <DCCReference Include="zControls_R.dcp"/>
         <DCCReference Include="DDuce.Core.dcp"/>
+        <DCCReference Include="SVGIconImageList.dcp"/>
+        <DCCReference Include="SVGImage32Package.dcp"/>
         <DCCReference Include="..\Source\Components\DDuce.Components.DBGridView.pas"/>
         <DCCReference Include="..\Source\Components\DDuce.Components.Factories.pas"/>
         <DCCReference Include="..\Source\Components\DDuce.Components.GridView.pas"/>
@@ -196,6 +198,12 @@
                 <DeployFile LocalName="$(BDS)\Redist\iossim32\libcgunwind.1.0.dylib" Class="DependencyModule"/>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule"/>
                 <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\21.0\Bpl\DDuce.Components270.bpl" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\DDuce.Components290.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>DDuce_Components.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="OSX32">
                         <Operation>1</Operation>

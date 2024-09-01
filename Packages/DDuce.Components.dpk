@@ -37,7 +37,9 @@ requires
   bindengine,
   bindcomp,
   zControls_R,
-  DDuce.Core;
+  DDuce.Core,
+  SVGIconImageList,
+  SVGImage32Package;
 
 contains
   DDuce.Components.DBGridView in '..\Source\Components\DDuce.Components.DBGridView.pas',

@@ -1,31 +1,42 @@
 object frmDialogs: TfrmDialogs
   Left = 0
   Top = 0
+  Margins.Left = 5
+  Margins.Top = 5
+  Margins.Right = 5
+  Margins.Bottom = 5
   Caption = 'Dialogs'
-  ClientHeight = 69
-  ClientWidth = 169
+  ClientHeight = 104
+  ClientWidth = 253
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -17
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = False
-  PixelsPerInch = 96
-  TextHeight = 13
+  PixelsPerInch = 144
+  TextHeight = 23
   object btnAboutDialog: TButton
-    Left = 8
-    Top = 8
-    Width = 150
-    Height = 25
+    Left = 12
+    Top = 12
+    Width = 225
+    Height = 38
+    Margins.Left = 5
+    Margins.Top = 5
+    Margins.Right = 5
+    Margins.Bottom = 5
     Action = actAboutDialog
     TabOrder = 0
   end
   object btnRTTEye: TButton
-    Left = 8
-    Top = 39
-    Width = 150
-    Height = 25
+    Left = 12
+    Top = 59
+    Width = 225
+    Height = 37
+    Margins.Left = 5
+    Margins.Top = 5
+    Margins.Right = 5
+    Margins.Bottom = 5
     Action = actRTTEye
     TabOrder = 1
   end

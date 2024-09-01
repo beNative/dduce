@@ -28,7 +28,8 @@ uses
   zObjInspector, zObjInspTypes,
 
   DDuce.Components.VirtualTrees.Node, DDuce.Components.SectionTree,
-  DDuce.Editor.Interfaces, DDuce.Components.IniTree;
+  DDuce.Editor.Interfaces, DDuce.Components.IniTree, Vcl.VirtualImageList,
+  Vcl.BaseImageCollection, Vcl.ImageCollection;
 
 type
   TfrmIniTree = class(TForm)
@@ -47,10 +48,11 @@ type
     pnlTop             : TPanel;
     pnlTree            : TPanel;
     splVertical        : TSplitter;
-    imlMain            : TImageList;
     ppmTree: TPopupMenu;
     mniCopy: TMenuItem;
     actCopy: TAction;
+    imcMain: TImageCollection;
+    imlMain: TVirtualImageList;
     {$ENDREGION}
 
     {$REGION 'event handlers'}

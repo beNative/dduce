@@ -21,11 +21,12 @@ interface
 uses
   System.Classes, System.ImageList,
   Vcl.ImgList, Vcl.Controls,
-  Data.DB, Datasnap.DBClient;
+  Data.DB, Datasnap.DBClient, Vcl.BaseImageCollection, Vcl.ImageCollection;
 
 type
   TdmData = class(TDataModule)
     imlMain : TImageList;
+    imcMain: TImageCollection;
 
   private
     function GetImageList: TImageList;

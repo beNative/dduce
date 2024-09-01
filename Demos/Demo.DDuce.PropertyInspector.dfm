@@ -1,49 +1,68 @@
 object frmPropertyInspector: TfrmPropertyInspector
   Left = 0
   Top = 0
+  Margins.Left = 5
+  Margins.Top = 5
+  Margins.Right = 5
+  Margins.Bottom = 5
   Caption = 'PropertyInspector Demo'
-  ClientHeight = 586
-  ClientWidth = 830
+  ClientHeight = 879
+  ClientWidth = 1254
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -17
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = False
   ShowHint = True
-  PixelsPerInch = 96
-  TextHeight = 13
+  PixelsPerInch = 144
+  TextHeight = 23
   object pnlMain: TPanel
     Left = 0
     Top = 0
-    Width = 830
-    Height = 586
+    Width = 1254
+    Height = 879
+    Margins.Left = 5
+    Margins.Top = 5
+    Margins.Right = 5
+    Margins.Bottom = 5
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     object splSplitter: TSplitter
-      Left = 313
+      Left = 470
       Top = 0
-      Width = 6
-      Height = 567
+      Width = 9
+      Height = 851
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      MinSize = 45
       ResizeStyle = rsLine
     end
     object pnlLeft: TPanel
       Left = 0
       Top = 0
-      Width = 313
-      Height = 567
+      Width = 470
+      Height = 851
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
       object cbxControls: TComboBox
         AlignWithMargins = True
-        Left = 3
-        Top = 3
-        Width = 307
-        Height = 21
+        Left = 5
+        Top = 5
+        Width = 460
+        Height = 31
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
         Margins.Bottom = 0
         Align = alTop
         Style = csDropDownList
@@ -53,21 +72,28 @@ object frmPropertyInspector: TfrmPropertyInspector
       end
     end
     object pnlRight: TPanel
-      Left = 319
+      Left = 479
       Top = 0
-      Width = 511
-      Height = 567
+      Width = 775
+      Height = 851
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
       DesignSize = (
-        511
-        567)
+        775
+        851)
       object lblLabel: TLabel
-        Left = 6
-        Top = 3
-        Width = 500
-        Height = 62
+        Left = 9
+        Top = 5
+        Width = 749
+        Height = 93
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
         Alignment = taCenter
         Anchors = [akLeft, akTop, akRight]
         AutoSize = False
@@ -77,73 +103,100 @@ object frmPropertyInspector: TfrmPropertyInspector
         EllipsisPosition = epWordEllipsis
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
+        Font.Height = -17
         Font.Name = 'Segoe UI'
         Font.Style = []
         ParentFont = False
         Layout = tlCenter
         WordWrap = True
-        ExplicitWidth = 245
+        ExplicitWidth = 750
       end
       object btnButton: TButton
-        Left = 225
-        Top = 66
-        Width = 109
-        Height = 25
+        Left = 338
+        Top = 99
+        Width = 163
+        Height = 38
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
         Caption = 'TButton'
         ImageIndex = 0
-        ImageMargins.Left = 3
-        ImageMargins.Top = 3
-        ImageMargins.Right = 3
-        ImageMargins.Bottom = 3
+        ImageMargins.Left = 5
+        ImageMargins.Top = 5
+        ImageMargins.Right = 5
+        ImageMargins.Bottom = 5
         TabOrder = 1
       end
       object chkCheckBox: TCheckBox
-        Left = 6
-        Top = 132
-        Width = 251
-        Height = 17
+        Left = 9
+        Top = 198
+        Width = 376
+        Height = 26
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
         Anchors = [akLeft, akTop, akRight]
         Caption = 'TCheckBox'
         State = cbGrayed
         TabOrder = 2
       end
       object edtEdit: TEdit
-        Left = 8
-        Top = 68
-        Width = 107
-        Height = 21
+        Left = 12
+        Top = 102
+        Width = 161
+        Height = 31
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
         TabOrder = 0
         Text = 'TEdit'
       end
       object bgMain: TButtonGroup
-        Left = 6
-        Top = 155
-        Width = 500
-        Height = 406
+        Left = 9
+        Top = 233
+        Width = 749
+        Height = 609
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
         Anchors = [akLeft, akTop, akRight, akBottom]
         BevelInner = bvNone
         BevelKind = bkFlat
         BorderStyle = bsNone
+        ButtonHeight = 36
+        ButtonWidth = 36
         ButtonOptions = [gboAllowReorder, gboShowCaptions]
         Items = <>
         TabOrder = 3
       end
       object trbTrackBar: TTrackBar
-        Left = 6
-        Top = 100
-        Width = 500
-        Height = 26
+        Left = 9
+        Top = 150
+        Width = 749
+        Height = 39
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
         Anchors = [akLeft, akTop, akRight]
         PositionToolTip = ptTop
         ShowSelRange = False
         TabOrder = 4
+        ThumbLength = 30
       end
       object edtButtonedEdit: TButtonedEdit
-        Left = 121
-        Top = 68
-        Width = 98
-        Height = 21
+        Left = 182
+        Top = 102
+        Width = 147
+        Height = 31
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
         RightButton.Hint = 'Hint'
         RightButton.HotImageIndex = 114
         RightButton.ImageIndex = 115
@@ -155,9 +208,13 @@ object frmPropertyInspector: TfrmPropertyInspector
     end
     object sbrStatusBar: TStatusBar
       Left = 0
-      Top = 567
-      Width = 830
-      Height = 19
+      Top = 851
+      Width = 1254
+      Height = 28
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
       Panels = <>
       ParentFont = True
       ParentShowHint = False

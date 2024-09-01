@@ -1,47 +1,59 @@
 object frmGridView: TfrmGridView
   Left = 0
   Top = 0
+  Margins.Left = 5
+  Margins.Top = 5
+  Margins.Right = 5
+  Margins.Bottom = 5
   Caption = 'GridView demo'
-  ClientHeight = 665
-  ClientWidth = 1008
+  ClientHeight = 998
+  ClientWidth = 1521
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -17
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = False
-  PixelsPerInch = 96
-  TextHeight = 13
+  PixelsPerInch = 144
+  TextHeight = 23
   object splVertical: TSplitter
-    Left = 345
+    Left = 518
     Top = 0
-    Width = 6
-    Height = 665
+    Width = 9
+    Height = 998
+    Margins.Left = 5
+    Margins.Top = 5
+    Margins.Right = 5
+    Margins.Bottom = 5
+    MinSize = 45
     ResizeStyle = rsLine
   end
   object pnlLeft: TPanel
     Left = 0
     Top = 0
-    Width = 345
-    Height = 665
+    Width = 518
+    Height = 998
+    Margins.Left = 5
+    Margins.Top = 5
+    Margins.Right = 5
+    Margins.Bottom = 5
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
   end
   object pnlRight: TPanel
-    Left = 351
+    Left = 527
     Top = 0
-    Width = 657
-    Height = 665
+    Width = 994
+    Height = 998
+    Margins.Left = 5
+    Margins.Top = 5
+    Margins.Right = 5
+    Margins.Bottom = 5
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-  end
-  object imlMain: TImageList
-    Left = 88
-    Top = 24
   end
   object aclMain: TActionList
     Left = 24

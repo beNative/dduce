@@ -24,7 +24,8 @@ uses
   Winapi.Windows,
   System.SysUtils, System.Classes, System.Actions, System.ImageList,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ComCtrls, Vcl.ImgList,
-  Vcl.StdCtrls, Vcl.ActnList, Vcl.ExtCtrls, Vcl.CheckLst,
+  Vcl.StdCtrls, Vcl.ActnList, Vcl.ExtCtrls, Vcl.CheckLst, Vcl.VirtualImageList,
+  Vcl.BaseImageCollection, Vcl.ImageCollection,
   Data.DB,
 
   DDuce.Components.GridView, DDuce.Components.DBGridView,
@@ -44,7 +45,6 @@ type
     chkConnectEvents         : TCheckBox;
     chkMultiselect           : TCheckBox;
     dscMain                  : TDataSource;
-    imlMain                  : TImageList;
     lbxDataSourceEvents      : TCheckListBox;
     lbxDBGridViewEvents      : TCheckListBox;
     pgcMain                  : TPageControl;
@@ -56,6 +56,8 @@ type
     tsDataSourceEvents       : TTabSheet;
     tsDBGridView             : TTabSheet;
     tsDBGridViewEvents       : TTabSheet;
+    imcMain                  : TImageCollection;
+    imlMain                  : TVirtualImageList;
     {$ENDREGION}
 
     {$REGION 'action handlers'}
@@ -80,6 +82,34 @@ type
 
     function GetDataSet: TDataSet;
 
+    procedure ConnectEvents;
+    procedure DisconnectEvents;
+
+  protected
+    procedure AddToLog(
+      const AString : string;
+      AColor        : TColor = clBlack;
+      AObject       : TObject = nil
+      ); overload;
+    procedure AddToLog(
+      const AString : string;
+      const AInfo   : string;
+      AColor        : TColor = clBlack;
+      AObject       : TObject = nil
+      ); overload;
+    function IsChecked(
+      const AName : string;
+      AListBox    : TCheckListBox
+      ) : Boolean;
+    procedure CreateDBGridView;
+
+  public
+    procedure AfterConstruction; override;
+
+    property DataSet: TDataSet
+      read GetDataSet;
+
+  published
     {$REGION 'event handlers'}
     procedure grdDBGVCellAcceptCursor(Sender: TObject; Cell: TGridCell;
       var Accept: Boolean);
@@ -213,33 +243,6 @@ type
       var Select: Boolean);
     {$ENDREGION}
 
-    procedure ConnectEvents;
-    procedure DisconnectEvents;
-
-  protected
-    procedure AddToLog(
-      const AString : string;
-      AColor        : TColor = clBlack;
-      AObject       : TObject = nil
-      ); overload;
-    procedure AddToLog(
-      const AString : string;
-      const AInfo   : string;
-      AColor        : TColor = clBlack;
-      AObject       : TObject = nil
-      ); overload;
-    function IsChecked(
-      const AName : string;
-      AListBox    : TCheckListBox
-      ) : Boolean;
-    procedure CreateDBGridView;
-
-  public
-    procedure AfterConstruction; override;
-
-    property DataSet: TDataSet
-      read GetDataSet;
-
   end;
 
 implementation
@@ -247,14 +250,73 @@ implementation
 {$R *.dfm}
 
 uses
-  System.TypInfo,
+  System.TypInfo, Vcl.Dialogs, System.StrUtils,
 
   DDuce.Factories.GridView,
 
   Demo.Data, Demo.Factories;
 
+
+// Get address of currently executed code
+function GetCurrentAddress: Pointer;
+begin
+  Result := ReturnAddress;
+end;
+
+// Get name of class method that contains the given address.
+// Note that it has to utilize some internals
+function GetMethodName(AClass: TClass; Address: Pointer): string; overload;
+type   // copy declaration from System's impl section
+  PMethRec = ^MethRec;
+  MethRec = packed record
+    recSize: Word;
+    methAddr: Pointer;
+    nameLen: Byte;
+    { nameChars[nameLen]: AnsiChar }
+  end;
 var
-  ProcByLevel: string;
+  LMethTablePtr: Pointer;
+  LMethCount: Word;
+  LMethEntry, LResultMethEntry: PMethRec;
+begin
+  Result := '';
+
+  { Obtain the method table and count }
+  LMethTablePtr := PPointer(PByte(AClass) + vmtMethodTable)^;
+  if LMethTablePtr = nil then // no methods...
+    Exit;
+  LMethCount := PWord(LMethTablePtr)^;
+  if LMethCount = 0 then // no methods...
+    Exit;
+
+  Inc(PWord(LMethTablePtr));
+  // Get all method entries and find max method entry addr that is less (or equal - very unlikely tho) than Address
+  LMethEntry := LMethTablePtr;
+  LResultMethEntry := nil;
+  while LMethCount > 0 do
+  begin
+    // Only consider methods starting before the Address
+    if PByte(LMethEntry.methAddr) <= PByte(Address) then
+    begin
+      // Not assigned yet
+      if (LResultMethEntry = nil) or
+        // Current entry is closer to Address, reassign the variable
+        (PByte(LMethEntry.methAddr) > PByte(LResultMethEntry.methAddr)) then
+        LResultMethEntry := LMethEntry;
+    end;
+    Dec(LMethCount);
+    LMethEntry := Pointer(PByte(LMethEntry) + LMethEntry.recSize); // get next
+  end;
+
+  if LResultMethEntry <> nil then
+    Result := string(PShortString(@LResultMethEntry.nameLen)^);
+end;
+
+// Get name of object's method that contains the given address
+function GetMethodName(AObject: TObject; Address: Pointer): string; overload;
+begin
+  Result := GetMethodName(AObject.ClassType, Address);
+end;
 
 {$REGION 'construction and destruction'}
 procedure TfrmDBGridView.AfterConstruction;
@@ -295,7 +357,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, BoolToStr(Accept)]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVCellClick(Sender: TObject; Cell: TGridCell;
@@ -304,7 +366,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d)', [Cell.Col, Cell.Row]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVCellTips(Sender: TObject; Cell: TGridCell;
@@ -313,7 +375,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, BoolToStr(AllowTips)]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVChange(Sender: TObject; Cell: TGridCell;
@@ -322,32 +384,32 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, BoolToStr(Selected)]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVChangeColumns(Sender: TObject);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVChangeEditing(Sender: TObject);
 begin
- AddToLog(ProcByLevel);
+ AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVChangeEditMode(Sender: TObject);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVChangeFixed(Sender: TObject);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVChangeRows(Sender: TObject);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVChanging(Sender: TObject; var Cell: TGridCell;
@@ -356,7 +418,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, BoolToStr(Selected)]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVCheckClick(Sender: TObject; Cell: TGridCell);
@@ -364,17 +426,17 @@ var
   S : string;
 begin
   S := Format('(%d, %d)', [Cell.Col, Cell.Row]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVClearMultiSelect(Sender: TObject);
 begin
- AddToLog(ProcByLevel);
+ AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVClick(Sender: TObject);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVColumnAutoSize(Sender: TObject; Column: Integer;
@@ -383,7 +445,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d)', [Column, Width]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVColumnResize(Sender: TObject; Column: Integer;
@@ -392,7 +454,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d)', [Column, Width]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVColumnResizing(Sender: TObject; Column: Integer;
@@ -401,17 +463,17 @@ var
   S : string;
 begin
   S := Format('(%d, %d)', [Column, Width]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVDataActiveChanged(Sender: TObject);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVDataChanged(Sender: TObject);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVDataDeleteRecord(Sender: TObject;
@@ -420,13 +482,13 @@ var
   S : string;
 begin
   S := Format('(%s)', [BoolToStr(AllowDelete)]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVDataEditError(Sender: TObject; E: Exception;
   var Action: TDBGridDataAction);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVDataInsertRecord(Sender: TObject;
@@ -435,18 +497,18 @@ var
   S : string;
 begin
   S := Format('(%s)', [BoolToStr(AllowInsert)]);
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVDataLayoutChanged(Sender: TObject);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVDataUpdateError(Sender: TObject; E: Exception;
   var Action: TDBGridDataAction);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVDataUpdateField(Sender: TObject; Field: TField);
@@ -455,23 +517,23 @@ var
 begin
   if Assigned(Field) then
     S := Format('(%s)', [Field.FieldName]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVDblClick(Sender: TObject);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVDragDrop(Sender, Source: TObject; X, Y: Integer);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVDragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVDraw(Sender: TObject; var DefaultDrawing: Boolean);
@@ -479,7 +541,7 @@ var
   S : string;
 begin
   S := Format('(%s)', [BoolToStr(DefaultDrawing)]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVDrawCell(Sender: TObject; Cell: TGridCell;
@@ -488,13 +550,13 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, BoolToStr(DefaultDrawing)]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVDrawHeader(Sender: TObject; Section: TGridHeaderSection;
   Rect: TRect; var DefaultDrawing: Boolean);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVEditAcceptKey(Sender: TObject; Cell: TGridCell;
@@ -503,7 +565,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s, %s)', [Cell.Col, Cell.Row, Key, BoolToStr(Accept)]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVEditButtonPress(Sender: TObject; Cell: TGridCell);
@@ -511,7 +573,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d)', [Cell.Col, Cell.Row]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVEditCanceled(Sender: TObject; Cell: TGridCell);
@@ -519,7 +581,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d)', [Cell.Col, Cell.Row]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVEditCanModify(Sender: TObject; Cell: TGridCell;
@@ -528,7 +590,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, BoolToStr(CanModify)]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVEditCanShow(Sender: TObject; Cell: TGridCell;
@@ -537,7 +599,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, BoolToStr(CanShow)]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVEditChange(Sender: TObject; Cell: TGridCell);
@@ -545,13 +607,13 @@ var
   S : string;
 begin
   S := Format('(%d, %d)', [Cell.Col, Cell.Row]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVEditCloseUp(Sender: TObject; Cell: TGridCell;
   ItemIndex: Integer; var Accept: Boolean);
 begin
-   AddToLog(ProcByLevel);
+   AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVEditSelectNext(Sender: TObject; Cell: TGridCell;
@@ -560,22 +622,22 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, Value]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVEndDrag(Sender, Target: TObject; X, Y: Integer);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVEnter(Sender: TObject);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVExit(Sender: TObject);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVGetCellColors(Sender: TObject; Cell: TGridCell;
@@ -584,7 +646,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, '<Canvas>']);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVGetCellHintRect(Sender: TObject; Cell: TGridCell;
@@ -593,7 +655,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, '<Rect>']);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVGetCellImage(Sender: TObject; Cell: TGridCell;
@@ -602,7 +664,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %d)', [Cell.Col, Cell.Row, ImageIndex]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVGetCellImageIndent(Sender: TObject; Cell: TGridCell;
@@ -611,7 +673,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %d, %d)', [Cell.Col, Cell.Row, Indent.X, Indent.Y]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVGetCellReadOnly(Sender: TObject; Cell: TGridCell;
@@ -620,7 +682,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, BoolToStr(CellReadOnly)]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVGetCellText(Sender: TObject; Cell: TGridCell;
@@ -629,7 +691,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, Value]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVGetCellTextIndent(Sender: TObject; Cell: TGridCell;
@@ -638,13 +700,13 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %d, %d)', [Cell.Col, Cell.Row, Indent.X, Indent.Y]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVGetCheckAlignment(Sender: TObject; Cell: TGridCell;
   var CheckAlignment: TAlignment);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVGetCheckImage(Sender: TObject; Cell: TGridCell;
@@ -653,7 +715,7 @@ var
   S : string;
 begin
   S := Format('(%d, %d, <CheckImage>)', [Cell.Col, Cell.Row]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVGetCheckIndent(Sender: TObject; Cell: TGridCell;
@@ -662,31 +724,31 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %d, %d)', [Cell.Col, Cell.Row, Indent.X, Indent.Y]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVGetCheckKind(Sender: TObject; Cell: TGridCell;
   var CheckKind: TGridCheckKind);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVGetCheckState(Sender: TObject; Cell: TGridCell;
   var CheckState: TCheckBoxState);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVGetEditList(Sender: TObject; Cell: TGridCell;
   Items: TStrings);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVGetEditListBounds(Sender: TObject; Cell: TGridCell;
   var Rect: TRect);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVGetEditMask(Sender: TObject; Cell: TGridCell;
@@ -695,13 +757,13 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, Value]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVGetEditStyle(Sender: TObject; Cell: TGridCell;
   var Style: TGridEditStyle);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVGetEditText(Sender: TObject; Cell: TGridCell;
@@ -710,43 +772,43 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, Value]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVGetHeaderColors(Sender: TObject;
   Section: TGridHeaderSection; Canvas: TCanvas);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVGetHeaderImage(Sender: TObject;
   Section: TGridHeaderSection; var ImageIndex: Integer);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVGetIndicatorImage(Sender: TObject; DataRow: Integer;
   var ImageIndex: Integer);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVGetSortDirection(Sender: TObject;
   Section: TGridHeaderSection; var SortDirection: TGridSortDirection);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVGetSortImage(Sender: TObject;
   Section: TGridHeaderSection; SortImage: TBitmap);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVGetTipsRect(Sender: TObject; Cell: TGridCell;
   var Rect: TRect);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVGetTipsText(Sender: TObject; Cell: TGridCell;
@@ -755,77 +817,77 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, Value]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVHeaderClick(Sender: TObject;
   Section: TGridHeaderSection);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVHeaderClicking(Sender: TObject;
   Section: TGridHeaderSection; var AllowClick: Boolean);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVKeyPress(Sender: TObject; var Key: Char);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVMouseWheelDown(Sender: TObject; Shift: TShiftState;
   MousePos: TPoint; var Handled: Boolean);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVMouseWheelUp(Sender: TObject; Shift: TShiftState;
   MousePos: TPoint; var Handled: Boolean);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVResize(Sender: TObject);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVRowMultiSelect(Sender: TObject; Row: Integer;
   var Select: Boolean);
 begin
- AddToLog(ProcByLevel);
+ AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.grdDBGVSetEditText(Sender: TObject; Cell: TGridCell;
@@ -834,12 +896,12 @@ var
   S : string;
 begin
   S := Format('(%d, %d, %s)', [Cell.Col, Cell.Row, Value]);
-  AddToLog(ProcByLevel, S);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S);
 end;
 
 procedure TfrmDBGridView.grdDBGVStartDrag(Sender: TObject; var DragObject: TDragObject);
 begin
-  AddToLog(ProcByLevel);
+  AddToLog(GetMethodName(Self, GetCurrentAddress));
 end;
 
 procedure TfrmDBGridView.dscMainDataChange(Sender: TObject; Field: TField);
@@ -848,7 +910,7 @@ var
 begin
   if Assigned(Field) then
     S := S + Format('(%s)', [Field.FieldName]);
-  AddToLog(ProcByLevel, S, clBlack, Sender);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S, clBlack, Sender);
 end;
 
 procedure TfrmDBGridView.dscMainStateChange(Sender: TObject);
@@ -856,12 +918,12 @@ var
   S : string;
 begin
   S := ' [' + GetEnumName(TypeInfo(TDataSetState), Integer(DataSet.State)) + ']';
-  AddToLog(ProcByLevel, S, clBlack, Sender);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), S, clBlack, Sender);
 end;
 
 procedure TfrmDBGridView.dscMainUpdateData(Sender: TObject);
 begin
-  AddToLog(ProcByLevel, clBlack, Sender);
+  AddToLog(GetMethodName(Self, GetCurrentAddress), clBlack, Sender);
 end;
 
 procedure TfrmDBGridView.chkActiveClick(Sender: TObject);
@@ -1104,7 +1166,7 @@ var
 begin
 //  T := ExtractMethodName(AString);
 //  T := StrAfter('.', T);
-
+  T := AString;
   if not Assigned(AObject) then
   begin
 //    T := StrAfter('grdDBGV', T);
@@ -1120,7 +1182,6 @@ begin
   end;
 
   T := T + AInfo;
-
   if B then
   begin
     S := Format('<font-color=%s><b> %s',

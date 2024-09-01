@@ -37,7 +37,6 @@ uses
 
 type
   TfrmGridView = class(TForm)
-    imlMain         : TImageList;
     aclMain         : TActionList;
     pnlLeft         : TPanel;
     splVertical     : TSplitter;

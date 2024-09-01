@@ -1,110 +1,153 @@
 object frmJsonTree: TfrmJsonTree
   Left = 0
   Top = 0
-  ClientHeight = 933
-  ClientWidth = 1440
+  Margins.Left = 5
+  Margins.Top = 5
+  Margins.Right = 5
+  Margins.Bottom = 5
+  ClientHeight = 1400
+  ClientWidth = 2169
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -17
   Font.Name = 'Segoe UI'
   Font.Style = []
   ShowHint = True
-  PixelsPerInch = 96
-  TextHeight = 13
+  PixelsPerInch = 144
+  TextHeight = 23
   object pnlTop: TPanel
     Left = 0
     Top = 0
-    Width = 1440
-    Height = 32
+    Width = 2169
+    Height = 48
+    Margins.Left = 5
+    Margins.Top = 5
+    Margins.Right = 5
+    Margins.Bottom = 5
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     OnClick = pnlTopClick
     object btnExpand: TButton
-      Left = 8
-      Top = 3
-      Width = 150
-      Height = 25
+      Left = 12
+      Top = 5
+      Width = 225
+      Height = 37
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
       Action = actExpand
       Images = imlMain
       TabOrder = 0
     end
     object btnCollapse: TButton
-      Left = 164
-      Top = 3
-      Width = 150
-      Height = 25
+      Left = 246
+      Top = 5
+      Width = 225
+      Height = 37
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
       Action = actCollapse
       Images = imlMain
       TabOrder = 1
     end
     object btnParseDocument: TButton
-      Left = 320
-      Top = 3
-      Width = 150
-      Height = 25
+      Left = 480
+      Top = 5
+      Width = 225
+      Height = 37
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
       Action = actParseDocument
       Caption = 'Parse document'
       Images = imlMain
       TabOrder = 2
     end
     object btnCreateJsonDocument: TButton
-      Left = 476
-      Top = 3
-      Width = 157
-      Height = 25
+      Left = 714
+      Top = 5
+      Width = 236
+      Height = 37
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
       Action = actCreateJsonDocument
       TabOrder = 3
     end
   end
   object pnlMain: TPanel
     Left = 0
-    Top = 32
-    Width = 1440
-    Height = 901
+    Top = 48
+    Width = 2169
+    Height = 1352
+    Margins.Left = 5
+    Margins.Top = 5
+    Margins.Right = 5
+    Margins.Bottom = 5
     Align = alClient
     BevelOuter = bvNone
     Caption = 'pnlMain'
     TabOrder = 1
     object splVertical: TSplitter
-      Left = 481
+      Left = 722
       Top = 0
-      Width = 6
-      Height = 901
+      Width = 9
+      Height = 1352
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      MinSize = 45
       ResizeStyle = rsLine
-      ExplicitLeft = 361
-      ExplicitHeight = 516
     end
     object pnlTree: TPanel
       Left = 0
       Top = 0
-      Width = 481
-      Height = 901
+      Width = 722
+      Height = 1352
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
     end
     object pnlEditor: TPanel
-      Left = 487
+      Left = 731
       Top = 0
-      Width = 953
-      Height = 901
+      Width = 1438
+      Height = 1352
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
       object mmoJson: TMemo
         Left = 0
         Top = 0
-        Width = 560
-        Height = 901
+        Width = 848
+        Height = 1352
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
         BorderStyle = bsNone
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
+        Font.Height = -17
         Font.Name = 'Consolas'
         Font.Style = []
         Lines.Strings = (
@@ -477,10 +520,14 @@ object frmJsonTree: TfrmJsonTree
         WordWrap = False
       end
       object pnlObjectInspector: TPanel
-        Left = 560
+        Left = 848
         Top = 0
-        Width = 393
-        Height = 901
+        Width = 590
+        Height = 1352
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1

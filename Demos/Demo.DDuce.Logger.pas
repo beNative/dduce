@@ -30,7 +30,8 @@ uses
   Vcl.Bind.Editors,
   Data.Bind.EngExt, Data.Bind.Components,
 
-  DDuce.Logger.Interfaces, Vcl.Mask;
+  DDuce.Logger.Interfaces, Vcl.Mask, Vcl.BaseImageCollection,
+  Vcl.ImageCollection, Vcl.VirtualImageList;
 
 type
   TfrmLogger = class(TForm)
@@ -127,7 +128,6 @@ type
     grpNotificationMessages   : TGroupBox;
     grpValues                 : TGroupBox;
     grpWatches                : TGroupBox;
-    imlLogger                 : TImageList;
     lblCheckpointDescription  : TLabel;
     lblCounterValue           : TLabel;
     lblIPAddress              : TLabel;
@@ -146,6 +146,8 @@ type
     tmrSendValue              : TTimer;
     trbLogLevel               : TTrackBar;
     trbMain                   : TTrackBar;
+    imcMain: TImageCollection;
+    imlLogger: TVirtualImageList;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
