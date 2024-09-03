@@ -636,8 +636,7 @@ begin
   TreeOptions.PaintOptions := [
     toHideFocusRect, toHotTrack, toPopupMode, toShowBackground, toShowButtons,
     toShowDropmark, toStaticBackground, toShowRoot, toShowVertGridLines,
-    toThemeAware, toUseBlendedImages, toUseBlendedSelection, toStaticBackground,
-    toUseExplorerTheme
+    toThemeAware, toUseBlendedImages, toUseBlendedSelection, toStaticBackground
   ];
   TreeOptions.AnimationOptions := [];
   TreeOptions.AutoOptions := [
