@@ -65,4 +65,12 @@
   {$LIBSUFFIX '.Delphi10Sydney'}
 {$ENDIF VER340}
 
+{$IFDEF VER350}
+  {$LIBSUFFIX '.Delphi11Alexandria'}
+{$ENDIF VER350}
+
+{$IFDEF VER360}
+  {$LIBSUFFIX '.Delphi12Athens'}
+{$ENDIF VER350}
+
 {$ENDIF ~LIBSUFFIX_INC}
