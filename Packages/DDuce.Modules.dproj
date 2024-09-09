@@ -116,7 +116,7 @@
         </DelphiCompile>
         <DCCReference Include="DDuce.Core.dcp"/>
         <DCCReference Include="DDuce.Components.dcp"/>
-        <DCCReference Include="TextEditor.Delphi.Alexandria.Runtime.dcp"/>
+        <DCCReference Include="TextEditor.Delphi.Athens.Runtime.dcp"/>
         <DCCReference Include="..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas">
             <Form>frmComponentInspector</Form>
         </DCCReference>
