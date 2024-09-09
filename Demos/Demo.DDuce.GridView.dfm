@@ -1,56 +1,38 @@
 object frmGridView: TfrmGridView
-  Left = 0
-  Top = 0
-  Margins.Left = 5
-  Margins.Top = 5
-  Margins.Right = 5
-  Margins.Bottom = 5
+  Left = 38
+  Top = 38
   Caption = 'GridView demo'
-  ClientHeight = 998
-  ClientWidth = 1521
+  ClientHeight = 665
+  ClientWidth = 1014
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -17
+  Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
-  PixelsPerInch = 144
-  TextHeight = 23
+  TextHeight = 13
   object splVertical: TSplitter
-    Left = 518
+    Left = 345
     Top = 0
-    Width = 9
-    Height = 998
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
-    MinSize = 45
+    Width = 6
+    Height = 665
     ResizeStyle = rsLine
   end
   object pnlLeft: TPanel
     Left = 0
     Top = 0
-    Width = 518
-    Height = 998
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Width = 345
+    Height = 665
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
   end
   object pnlRight: TPanel
-    Left = 527
+    Left = 351
     Top = 0
-    Width = 994
-    Height = 998
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Width = 663
+    Height = 665
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
@@ -64,8 +46,8 @@ object frmGridView: TfrmGridView
     end
   end
   object ppmGridView: TPopupMenu
-    Left = 583
-    Top = 120
+    Left = 199
+    Top = 36
     object mniAutoSizeCols: TMenuItem
       Action = actAutoSizeCols
     end

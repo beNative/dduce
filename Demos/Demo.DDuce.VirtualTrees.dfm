@@ -1,50 +1,34 @@
 object frmVirtualTrees: TfrmVirtualTrees
   Left = 0
   Top = 0
-  Margins.Left = 5
-  Margins.Top = 5
-  Margins.Right = 5
-  Margins.Bottom = 5
-  ClientHeight = 1097
-  ClientWidth = 1485
+  ClientHeight = 731
+  ClientWidth = 984
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -17
+  Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
   Position = poOwnerFormCenter
-  PixelsPerInch = 144
-  TextHeight = 23
+  PixelsPerInch = 96
+  TextHeight = 13
   object pgcMain: TPageControl
     Left = 0
     Top = 0
-    Width = 1485
-    Height = 1097
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Width = 984
+    Height = 731
     ActivePage = tsSettings
     Align = alClient
     TabOrder = 0
     object tsSettings: TTabSheet
-      Margins.Left = 5
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
       Caption = 'Options'
       ImageIndex = 6
       object pnlOptions: TGridPanel
         Left = 0
         Top = 0
-        Width = 1477
-        Height = 1059
-        Margins.Left = 5
-        Margins.Top = 5
-        Margins.Right = 5
-        Margins.Bottom = 5
+        Width = 976
+        Height = 703
         Align = alClient
         BevelOuter = bvNone
         ColumnCollection = <
@@ -99,12 +83,8 @@ object frmVirtualTrees: TfrmVirtualTrees
         object pnlVST: TPanel
           Left = 0
           Top = 0
-          Width = 492
-          Height = 530
-          Margins.Left = 5
-          Margins.Top = 5
-          Margins.Right = 5
-          Margins.Bottom = 5
+          Width = 325
+          Height = 352
           Align = alClient
           BevelEdges = []
           BevelOuter = bvNone
@@ -114,12 +94,8 @@ object frmVirtualTrees: TfrmVirtualTrees
           object pnlVSTHeader: TPanel
             Left = 0
             Top = 0
-            Width = 492
-            Height = 30
-            Margins.Left = 5
-            Margins.Top = 5
-            Margins.Right = 5
-            Margins.Bottom = 5
+            Width = 325
+            Height = 20
             Align = alTop
             BevelEdges = []
             BevelKind = bkFlat
@@ -128,7 +104,7 @@ object frmVirtualTrees: TfrmVirtualTrees
             Color = clWindow
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlue
-            Font.Height = -17
+            Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
             ParentBackground = False
@@ -137,14 +113,10 @@ object frmVirtualTrees: TfrmVirtualTrees
           end
         end
         object pnlVSTTree: TPanel
-          Left = 492
+          Left = 325
           Top = 0
-          Width = 493
-          Height = 530
-          Margins.Left = 5
-          Margins.Top = 5
-          Margins.Right = 5
-          Margins.Bottom = 5
+          Width = 326
+          Height = 352
           Align = alClient
           BevelEdges = []
           BevelOuter = bvNone
@@ -154,12 +126,8 @@ object frmVirtualTrees: TfrmVirtualTrees
           object pnlVSTTreeHeader: TPanel
             Left = 0
             Top = 0
-            Width = 493
-            Height = 30
-            Margins.Left = 5
-            Margins.Top = 5
-            Margins.Right = 5
-            Margins.Bottom = 5
+            Width = 326
+            Height = 20
             Align = alTop
             BevelEdges = []
             BevelKind = bkFlat
@@ -168,7 +136,7 @@ object frmVirtualTrees: TfrmVirtualTrees
             Color = clWindow
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlue
-            Font.Height = -17
+            Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
             ParentBackground = False
@@ -177,14 +145,10 @@ object frmVirtualTrees: TfrmVirtualTrees
           end
         end
         object pnlVSTGrid: TPanel
-          Left = 985
+          Left = 651
           Top = 0
-          Width = 492
-          Height = 530
-          Margins.Left = 5
-          Margins.Top = 5
-          Margins.Right = 5
-          Margins.Bottom = 5
+          Width = 325
+          Height = 352
           Align = alClient
           BevelEdges = []
           BevelOuter = bvNone
@@ -194,12 +158,8 @@ object frmVirtualTrees: TfrmVirtualTrees
           object pnlVSTGridHeader: TPanel
             Left = 0
             Top = 0
-            Width = 492
-            Height = 30
-            Margins.Left = 5
-            Margins.Top = 5
-            Margins.Right = 5
-            Margins.Bottom = 5
+            Width = 325
+            Height = 20
             Align = alTop
             BevelEdges = []
             BevelKind = bkFlat
@@ -208,7 +168,7 @@ object frmVirtualTrees: TfrmVirtualTrees
             Color = clWindow
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlue
-            Font.Height = -17
+            Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
             ParentBackground = False
@@ -218,13 +178,9 @@ object frmVirtualTrees: TfrmVirtualTrees
         end
         object pnlVSTList: TPanel
           Left = 0
-          Top = 530
-          Width = 492
-          Height = 529
-          Margins.Left = 5
-          Margins.Top = 5
-          Margins.Right = 5
-          Margins.Bottom = 5
+          Top = 352
+          Width = 325
+          Height = 351
           Align = alClient
           BevelEdges = []
           BevelOuter = bvNone
@@ -234,12 +190,8 @@ object frmVirtualTrees: TfrmVirtualTrees
           object pnlVSTListHeader: TPanel
             Left = 0
             Top = 0
-            Width = 492
-            Height = 30
-            Margins.Left = 5
-            Margins.Top = 5
-            Margins.Right = 5
-            Margins.Bottom = 5
+            Width = 325
+            Height = 20
             Align = alTop
             BevelEdges = []
             BevelKind = bkFlat
@@ -248,7 +200,7 @@ object frmVirtualTrees: TfrmVirtualTrees
             Color = clWindow
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlue
-            Font.Height = -17
+            Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
             ParentBackground = False
@@ -257,14 +209,10 @@ object frmVirtualTrees: TfrmVirtualTrees
           end
         end
         object pnlVSTTreeList: TPanel
-          Left = 492
-          Top = 530
-          Width = 493
-          Height = 529
-          Margins.Left = 5
-          Margins.Top = 5
-          Margins.Right = 5
-          Margins.Bottom = 5
+          Left = 325
+          Top = 352
+          Width = 326
+          Height = 351
           Align = alClient
           BevelEdges = []
           BevelOuter = bvNone
@@ -274,12 +222,8 @@ object frmVirtualTrees: TfrmVirtualTrees
           object pnlVSTTreeListHeader: TPanel
             Left = 0
             Top = 0
-            Width = 493
-            Height = 30
-            Margins.Left = 5
-            Margins.Top = 5
-            Margins.Right = 5
-            Margins.Bottom = 5
+            Width = 326
+            Height = 20
             Align = alTop
             BevelEdges = []
             BevelKind = bkFlat
@@ -288,7 +232,7 @@ object frmVirtualTrees: TfrmVirtualTrees
             Color = clWindow
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlue
-            Font.Height = -17
+            Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
             ParentBackground = False
@@ -297,14 +241,10 @@ object frmVirtualTrees: TfrmVirtualTrees
           end
         end
         object pnlVSTTreeGrid: TPanel
-          Left = 985
-          Top = 530
-          Width = 492
-          Height = 529
-          Margins.Left = 5
-          Margins.Top = 5
-          Margins.Right = 5
-          Margins.Bottom = 5
+          Left = 651
+          Top = 352
+          Width = 325
+          Height = 351
           Align = alClient
           BevelEdges = []
           BevelOuter = bvNone
@@ -314,12 +254,8 @@ object frmVirtualTrees: TfrmVirtualTrees
           object pnlVSTTreeGridHeader: TPanel
             Left = 0
             Top = 0
-            Width = 492
-            Height = 30
-            Margins.Left = 5
-            Margins.Top = 5
-            Margins.Right = 5
-            Margins.Bottom = 5
+            Width = 325
+            Height = 20
             Align = alTop
             BevelEdges = []
             BevelKind = bkFlat
@@ -328,7 +264,7 @@ object frmVirtualTrees: TfrmVirtualTrees
             Color = clWindow
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlue
-            Font.Height = -17
+            Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
             ParentBackground = False
@@ -339,49 +275,25 @@ object frmVirtualTrees: TfrmVirtualTrees
       end
     end
     object tsVST: TTabSheet
-      Margins.Left = 5
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
       Caption = 'VST'
       ImageIndex = 5
     end
     object tsVSTTree: TTabSheet
-      Margins.Left = 5
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
       Caption = 'Tree'
     end
     object tsVSTGrid: TTabSheet
-      Margins.Left = 5
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
       Caption = 'Grid'
       ImageIndex = 1
     end
     object tsVSTList: TTabSheet
-      Margins.Left = 5
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
       Caption = 'List'
       ImageIndex = 2
     end
     object tsVSTTreeList: TTabSheet
-      Margins.Left = 5
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
       Caption = 'TreeList'
       ImageIndex = 3
     end
     object tsVSTTreeGrid: TTabSheet
-      Margins.Left = 5
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
       Caption = 'TreeGrid'
       ImageIndex = 4
     end

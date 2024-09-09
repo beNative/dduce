@@ -1,20 +1,27 @@
 inherited frmAlignLines: TfrmAlignLines
-  Left = -521
-  Top = 253
+  Left = 76
+  Top = 76
+  Margins.Left = 5
+  Margins.Top = 5
+  Margins.Right = 5
+  Margins.Bottom = 5
   Caption = 'Align selection'
   ClientHeight = 729
-  ClientWidth = 360
+  ClientWidth = 366
+  Color = clBtnFace
   Constraints.MinWidth = 170
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -17
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   OnResize = FormResize
   OnShow = FormShow
-  ExplicitWidth = 376
-  ExplicitHeight = 768
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 23
   object sbrMain: TScrollBox
     Left = 0
     Top = 0
-    Width = 360
+    Width = 366
     Height = 704
     Align = alClient
     BevelInner = bvNone
@@ -22,7 +29,7 @@ inherited frmAlignLines: TfrmAlignLines
     BorderStyle = bsNone
     TabOrder = 0
     DesignSize = (
-      360
+      366
       704)
     object rgpSortDirection: TRadioGroup
       Left = 5
@@ -59,14 +66,14 @@ inherited frmAlignLines: TfrmAlignLines
   object pnlBottom: TPanel
     Left = 0
     Top = 704
-    Width = 360
+    Width = 366
     Height = 25
     Align = alBottom
     AutoSize = True
     BevelOuter = bvNone
     TabOrder = 1
     DesignSize = (
-      360
+      366
       25)
     object btnOK: TButton
       Left = 240

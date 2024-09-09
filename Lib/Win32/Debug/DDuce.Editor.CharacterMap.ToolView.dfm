@@ -1,22 +1,27 @@
 inherited frmCharacterMap: TfrmCharacterMap
-  Left = -750
-  Top = 249
+  Left = 38
+  Top = 38
+  Margins.Left = 5
+  Margins.Top = 5
+  Margins.Right = 5
+  Margins.Bottom = 5
   ActiveControl = pcMain
   BorderStyle = bsSingle
   ClientHeight = 649
-  ClientWidth = 369
-  DoubleBuffered = True
+  ClientWidth = 375
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -17
   Font.Name = 'Segoe UI'
+  Font.Style = []
   PopupMode = pmAuto
   Position = poDefault
-  ExplicitWidth = 375
-  ExplicitHeight = 678
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 23
   object pcMain: TPageControl
     Left = 0
     Top = 0
-    Width = 369
+    Width = 375
     Height = 404
     ActivePage = tsANSI
     Align = alClient
@@ -24,17 +29,19 @@ inherited frmCharacterMap: TfrmCharacterMap
     object tsANSI: TTabSheet
       Caption = 'ANSI'
       DesignSize = (
-        361
-        376)
+        367
+        366)
       object lblCharInfo: TLabel
         Left = 6
-        Top = 345
-        Width = 58
-        Height = 13
+        Top = 350
+        Width = 84
+        Height = 23
+        Margins.Bottom = 2
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'lblCharInfo'
         Color = clBtnFace
         ParentColor = False
+        ExplicitTop = 337
       end
       object grdANSI: TStringGrid
         Left = 0
@@ -57,18 +64,21 @@ inherited frmCharacterMap: TfrmCharacterMap
         OnMouseDown = grdANSIMouseDown
         OnMouseMove = grdANSIMouseMove
         OnSelectCell = grdANSISelectCell
+        ExplicitWidth = 360
+        ExplicitHeight = 343
       end
     end
     object tsUnicode: TTabSheet
       Caption = 'Unicode'
       DesignSize = (
-        361
-        376)
+        367
+        366)
       object lblUnicodeCharInfo: TLabel
         Left = 6
         Top = 342
-        Width = 101
-        Height = 13
+        Width = 147
+        Height = 23
+        Margins.Bottom = 2
         Caption = 'lblUnicodeCharInfo'
         Color = clBtnFace
         ParentColor = False
@@ -95,6 +105,8 @@ inherited frmCharacterMap: TfrmCharacterMap
         OnMouseDown = grdUnicodeMouseDown
         OnMouseMove = grdUnicodeMouseMove
         OnSelectCell = grdUnicodeSelectCell
+        ExplicitWidth = 360
+        ExplicitHeight = 336
       end
       object cbxUnicodeRange: TComboBox
         Left = 162
@@ -112,7 +124,7 @@ inherited frmCharacterMap: TfrmCharacterMap
   object pnlChar: TPanel
     Left = 0
     Top = 404
-    Width = 369
+    Width = 375
     Height = 245
     Align = alBottom
     BevelOuter = bvNone
@@ -121,30 +133,22 @@ inherited frmCharacterMap: TfrmCharacterMap
     object shpChar: TShape
       Left = 0
       Top = 0
-      Width = 369
+      Width = 375
       Height = 245
       Align = alClient
       Brush.Style = bsClear
       Pen.Color = clSilver
       Pen.Width = 2
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 357
-      ExplicitHeight = 241
     end
     object imgChar: TImage
       Left = 0
       Top = 0
-      Width = 369
+      Width = 375
       Height = 245
       Align = alClient
       AutoSize = True
       Center = True
       Transparent = True
-      ExplicitLeft = 6
-      ExplicitTop = 6
-      ExplicitWidth = 349
-      ExplicitHeight = 233
     end
   end
 end

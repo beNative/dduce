@@ -1,45 +1,31 @@
 object frmEditList: TfrmEditList
-  Left = 0
-  Top = 0
-  Margins.Left = 5
-  Margins.Top = 5
-  Margins.Right = 5
-  Margins.Bottom = 5
+  Left = 152
+  Top = 152
   Caption = 'TEditList module demo'
-  ClientHeight = 617
-  ClientWidth = 962
+  ClientHeight = 411
+  ClientWidth = 641
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -17
+  Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
-  PixelsPerInch = 144
-  TextHeight = 23
+  TextHeight = 13
   object splVertical: TSplitter
-    Left = 482
+    Left = 321
     Top = 0
-    Width = 9
-    Height = 617
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Width = 6
+    Height = 411
     Color = clBtnFace
-    MinSize = 45
     ParentColor = False
     ResizeStyle = rsLine
   end
   object pnlLeft: TPanel
     Left = 0
     Top = 0
-    Width = 482
-    Height = 617
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Width = 321
+    Height = 411
     Align = alLeft
     BevelEdges = []
     BevelOuter = bvNone
@@ -48,27 +34,19 @@ object frmEditList: TfrmEditList
     TabOrder = 0
   end
   object pnlRight: TPanel
-    Left = 491
+    Left = 327
     Top = 0
-    Width = 471
-    Height = 617
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Width = 314
+    Height = 411
     Align = alClient
     BevelEdges = []
     BevelOuter = bvNone
     TabOrder = 1
     object mmoData: TMemo
       Left = 0
-      Top = 47
-      Width = 471
-      Height = 570
-      Margins.Left = 5
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
+      Top = 31
+      Width = 314
+      Height = 380
       Align = alBottom
       Anchors = [akLeft, akTop, akRight, akBottom]
       BevelInner = bvNone
@@ -80,14 +58,10 @@ object frmEditList: TfrmEditList
     end
   end
   object chkMultiSelect: TCheckBox
-    Left = 498
-    Top = 12
-    Width = 146
-    Height = 26
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Left = 332
+    Top = 8
+    Width = 97
+    Height = 17
     Caption = 'MultiSelect'
     TabOrder = 2
     OnClick = chkMultiSelectClick

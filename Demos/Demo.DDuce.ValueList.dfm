@@ -1,57 +1,41 @@
 object frmValueListDemo: TfrmValueListDemo
   Left = 0
   Top = 0
-  Margins.Left = 5
-  Margins.Top = 5
-  Margins.Right = 5
-  Margins.Bottom = 5
-  ClientHeight = 810
-  ClientWidth = 1001
+  ClientHeight = 540
+  ClientWidth = 661
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -17
+  Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OldCreateOrder = False
   Position = poMainFormCenter
-  PixelsPerInch = 144
-  TextHeight = 23
+  PixelsPerInch = 96
+  TextHeight = 13
   object splVertical: TSplitter
-    Left = 482
+    Left = 321
     Top = 0
-    Width = 9
-    Height = 810
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
-    MinSize = 45
+    Width = 6
+    Height = 540
     ResizeStyle = rsLine
   end
   object pnlLeft: TPanel
     Left = 0
     Top = 0
-    Width = 482
-    Height = 810
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Width = 321
+    Height = 540
     Align = alLeft
     BevelEdges = []
     BevelOuter = bvNone
     TabOrder = 0
   end
   object pnlRight: TPanel
-    Left = 491
+    Left = 327
     Top = 0
-    Width = 510
-    Height = 810
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Width = 334
+    Height = 540
     Align = alClient
     BevelEdges = []
     BevelOuter = bvNone

@@ -1,48 +1,38 @@
 object StringsEditorDialog: TStringsEditorDialog
   Left = 245
   Top = 177
-  Margins.Left = 5
-  Margins.Top = 5
-  Margins.Right = 5
-  Margins.Bottom = 5
   BorderStyle = bsSizeToolWin
   Caption = 'Text editor'
-  ClientHeight = 408
-  ClientWidth = 636
+  ClientHeight = 272
+  ClientWidth = 418
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
-  Font.Height = -17
+  Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = False
   Position = poScreenCenter
   ScreenSnap = True
-  PixelsPerInch = 144
   DesignSize = (
-    636
-    408)
-  TextHeight = 21
+    418
+    272)
+  PixelsPerInch = 96
+  TextHeight = 13
   object lbLineCount: TLabel
-    Left = 12
-    Top = 366
-    Width = 254
-    Height = 26
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
+    Left = 8
+    Top = 244
+    Width = 169
+    Height = 17
     Anchors = [akLeft, akBottom]
     AutoSize = False
     Caption = '0 lines'
   end
   object btnOk: TButton
-    Left = 381
-    Top = 357
-    Width = 113
-    Height = 38
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Left = 254
+    Top = 238
+    Width = 75
+    Height = 25
     Anchors = [akRight, akBottom]
     Caption = '&OK'
     Default = True
@@ -52,14 +42,10 @@ object StringsEditorDialog: TStringsEditorDialog
     TabOrder = 0
   end
   object btnCancel: TButton
-    Left = 503
-    Top = 357
-    Width = 112
-    Height = 38
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Left = 335
+    Top = 238
+    Width = 75
+    Height = 25
     Anchors = [akRight, akBottom]
     Cancel = True
     Caption = 'Cancel'
@@ -69,14 +55,10 @@ object StringsEditorDialog: TStringsEditorDialog
     TabOrder = 1
   end
   object memMain: TRichEdit
-    Left = 12
-    Top = 12
-    Width = 603
-    Height = 336
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Left = 8
+    Top = 8
+    Width = 402
+    Height = 224
     Anchors = [akLeft, akTop, akRight, akBottom]
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
@@ -89,6 +71,7 @@ object StringsEditorDialog: TStringsEditorDialog
     ScrollBars = ssBoth
     TabOrder = 2
     WordWrap = False
+    Zoom = 100
     OnChange = memMainChange
   end
   object ppmMain: TPopupMenu

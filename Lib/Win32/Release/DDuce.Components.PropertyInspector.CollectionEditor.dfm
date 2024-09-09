@@ -1,42 +1,32 @@
 object frmCollectionEditor: TfrmCollectionEditor
   Left = 401
   Top = 326
-  Margins.Left = 5
-  Margins.Top = 5
-  Margins.Right = 5
-  Margins.Bottom = 5
   BorderStyle = bsSizeToolWin
-  ClientHeight = 686
-  ClientWidth = 735
+  ClientHeight = 457
+  ClientWidth = 484
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -17
+  Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = False
   Position = poOwnerFormCenter
-  PixelsPerInch = 144
-  TextHeight = 21
+  PixelsPerInch = 96
+  TextHeight = 13
   object splVertical: TSplitter
-    Left = 303
+    Left = 202
     Top = 0
-    Width = 9
-    Height = 686
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
-    MinSize = 45
+    Width = 6
+    Height = 457
+    ExplicitLeft = 162
+    ExplicitHeight = 318
   end
   object pnlRight: TPanel
-    Left = 312
+    Left = 208
     Top = 0
-    Width = 423
-    Height = 686
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Width = 276
+    Height = 457
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -44,27 +34,19 @@ object frmCollectionEditor: TfrmCollectionEditor
   object pnlLeft: TPanel
     Left = 0
     Top = 0
-    Width = 303
-    Height = 686
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Width = 202
+    Height = 457
     Align = alLeft
     BevelOuter = bvNone
-    Constraints.MinWidth = 243
+    Constraints.MinWidth = 162
     TabOrder = 1
     object tlbMain: TToolBar
       Left = 0
       Top = 0
-      Width = 303
-      Height = 54
-      Margins.Left = 5
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
-      ButtonHeight = 44
-      ButtonWidth = 56
+      Width = 202
+      Height = 36
+      ButtonHeight = 36
+      ButtonWidth = 38
       Images = imlMain
       ShowCaptions = True
       TabOrder = 1
@@ -72,60 +54,36 @@ object frmCollectionEditor: TfrmCollectionEditor
       object btnAdd: TToolButton
         Left = 0
         Top = 0
-        Margins.Left = 5
-        Margins.Top = 5
-        Margins.Right = 5
-        Margins.Bottom = 5
         Action = actAdd
       end
       object btnDelete: TToolButton
-        Left = 56
+        Left = 38
         Top = 0
-        Margins.Left = 5
-        Margins.Top = 5
-        Margins.Right = 5
-        Margins.Bottom = 5
         Action = actDelete
       end
       object btnSeperator: TToolButton
-        Left = 112
+        Left = 76
         Top = 0
-        Width = 12
-        Margins.Left = 5
-        Margins.Top = 5
-        Margins.Right = 5
-        Margins.Bottom = 5
+        Width = 8
         ImageIndex = 2
         Style = tbsSeparator
       end
       object btnUp: TToolButton
-        Left = 124
+        Left = 84
         Top = 0
-        Margins.Left = 5
-        Margins.Top = 5
-        Margins.Right = 5
-        Margins.Bottom = 5
         Action = actUp
       end
       object btnDown: TToolButton
-        Left = 180
+        Left = 122
         Top = 0
-        Margins.Left = 5
-        Margins.Top = 5
-        Margins.Right = 5
-        Margins.Bottom = 5
         Action = actDown
       end
     end
     object lvCollectionItems: TListView
       Left = 0
-      Top = 54
-      Width = 303
-      Height = 632
-      Margins.Left = 5
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
+      Top = 36
+      Width = 202
+      Height = 421
       Align = alClient
       Columns = <
         item
@@ -159,8 +117,8 @@ object frmCollectionEditor: TfrmCollectionEditor
   end
   object aclMain: TActionList
     Images = imlMain
-    Left = 528
-    Top = 408
+    Left = 312
+    Top = 272
     object actAdd: TAction
       Caption = 'Add'
       ImageIndex = 0
@@ -484,27 +442,5 @@ object frmCollectionEditor: TfrmCollectionEditor
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000}
-  end
-  object ImageCollection1: TImageCollection
-    Images = <>
-    Left = 516
-    Top = 156
-  end
-  object SVGIconImageCollection1: TSVGIconImageCollection
-    SVGIconItems = <>
-    Left = 576
-    Top = 324
-  end
-  object VirtualImageList1: TVirtualImageList
-    Images = <>
-    ImageCollection = SVGIconImageCollection1
-    Left = 480
-    Top = 492
-  end
-  object SVGIconImageList1: TSVGIconImageList
-    SVGIconItems = <>
-    Scaled = True
-    Left = 348
-    Top = 384
   end
 end

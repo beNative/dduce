@@ -1,108 +1,73 @@
 object frmEditor: TfrmEditor
-  Left = 0
-  Top = 0
-  Margins.Left = 5
-  Margins.Top = 5
-  Margins.Right = 5
-  Margins.Bottom = 5
-  ClientHeight = 852
-  ClientWidth = 1515
+  Left = 114
+  Top = 114
+  ClientHeight = 568
+  ClientWidth = 1010
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -17
+  Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
   ShowHint = True
   OnResize = FormResize
-  PixelsPerInch = 144
-  TextHeight = 23
+  TextHeight = 13
   object splVertical: TSplitter
-    Left = 566
+    Left = 377
     Top = 0
-    Width = 9
-    Height = 824
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
-    MinSize = 45
+    Width = 6
+    Height = 549
     ResizeStyle = rsLine
   end
   object sbrMain: TStatusBar
     Left = 0
-    Top = 824
-    Width = 1515
-    Height = 28
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Top = 549
+    Width = 1010
+    Height = 19
     Panels = <>
   end
   object pnlLeft: TPanel
     Left = 0
     Top = 0
-    Width = 566
-    Height = 824
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Width = 377
+    Height = 549
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
     object splHorizontal: TSplitter
       Left = 0
-      Top = 398
-      Width = 566
-      Height = 9
+      Top = 265
+      Width = 377
+      Height = 6
       Cursor = crVSplit
-      Margins.Left = 5
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
       Align = alTop
-      MinSize = 45
       ResizeStyle = rsLine
     end
     object pnlLeftTop: TPanel
       Left = 0
       Top = 0
-      Width = 566
-      Height = 398
-      Margins.Left = 5
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
+      Width = 377
+      Height = 265
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
     end
     object pnlLeftBottom: TPanel
       Left = 0
-      Top = 407
-      Width = 566
-      Height = 417
-      Margins.Left = 5
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
+      Top = 271
+      Width = 377
+      Height = 278
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
     end
   end
   object pnlRight: TPanel
-    Left = 575
+    Left = 383
     Top = 0
-    Width = 940
-    Height = 824
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
+    Width = 627
+    Height = 549
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
