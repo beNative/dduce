@@ -9,7 +9,8 @@ uses
   Vcl.Styles,
   Vcl.SysStyles,
   MidasLib,
-  DDuce.Logger.Channels.WinIPC, DDuce.Logger,
+  DDuce.Logger.Channels.WinIPC,
+  DDuce.Logger,
   Demo.Contact in 'Demo.Contact.pas',
   Demo.Data in 'Demo.Data.pas' {dmData: TDataModule},
   Demo.DDuce.DBGridView in 'Demo.DDuce.DBGridView.pas' {frmDBGridView},
@@ -44,6 +45,7 @@ begin
   ReportMemoryLeaksOnShutdown := DebugHook > 0;
   {$WARNINGS ON}
   Application.Initialize;
+    Application.CreateForm(TdmData, dmData);
   if CheckWin32Version(6) then // at least Vista
   begin
    Application.DefaultFont.Name := 'Segoe UI';

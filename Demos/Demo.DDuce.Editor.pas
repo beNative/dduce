@@ -127,9 +127,11 @@ begin
 end;
 {$ENDREGION}
 
+{$REGION 'event handlers'}
 procedure TfrmEditor.FormResize(Sender: TObject);
 begin
   FEditor.Editor.Invalidate;
 end;
+{$ENDREGION}
 
 end.

@@ -56,8 +56,7 @@ type
     tsDataSourceEvents       : TTabSheet;
     tsDBGridView             : TTabSheet;
     tsDBGridViewEvents       : TTabSheet;
-    imcMain                  : TImageCollection;
-    imlMain                  : TVirtualImageList;
+    imlMain: TImageList;
     {$ENDREGION}
 
     {$REGION 'action handlers'}

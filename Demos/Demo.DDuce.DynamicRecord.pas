@@ -351,7 +351,7 @@ type
 
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
+    destructor Destroy; override;
 
   end;
 
@@ -391,7 +391,7 @@ begin
   Changed;
 end;
 
-procedure TfrmDynamicRecords.BeforeDestruction;
+destructor TfrmDynamicRecords.Destroy;
 begin
   FreeAndNil(FDataSet);
   FreeAndNil(FStrings);
@@ -399,7 +399,7 @@ begin
   FreeAndNil(FTestClass);
   FIntf1 := nil;
   FIntf2 := nil;
-  inherited BeforeDestruction;
+  inherited Destroy;
 end;
 {$ENDREGION}
 

@@ -507,8 +507,8 @@ object frmDynamicRecords: TfrmDynamicRecords
         object pnlAssignments: TGridPanel
           Left = 0
           Top = 0
-          Width = 713
-          Height = 234
+          Width = 715
+          Height = 237
           Align = alClient
           BevelOuter = bvNone
           Color = clWhite

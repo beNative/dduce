@@ -40,7 +40,6 @@ type
     actFocusFilter    : TAction;
     btnExecute        : TButton;
     edtFilter         : TEdit;
-    imlMain           : TImageList;
     pnlTop            : TPanel;
     pnlVST            : TPanel;
     sbrMain           : TStatusBar;
@@ -115,7 +114,7 @@ uses
 
   DDuce.Factories.TreeViewPresenter, DDuce.Factories.VirtualTrees,
 
-  Demo.Factories, Demo.Manager;
+  Demo.Factories, Demo.Manager, Demo.Data;
 
 type
   TVKSet = set of Byte;

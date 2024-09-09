@@ -50,14 +50,6 @@ implementation
 uses
   Vcl.Forms;
 
-
-{
-  Don't forget also the importance of TVirtualImageList.PreserveItems when you
-  have a large ImageCollection with many linked Actions. Without setting this
-  property to "True", everytime you add or remove an icon in the collection,
-  you have to check and change the ImageIndex of all the Actions.
-}
-
 {$REGION 'interfaced routines'}
 function Data: TdmData;
 begin

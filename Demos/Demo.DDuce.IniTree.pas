@@ -21,15 +21,15 @@ interface
 uses
   System.SysUtils, System.Classes, System.Actions, System.ImageList,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.ActnList,
-  Vcl.StdCtrls, Vcl.ImgList, Vcl.Menus,
+  Vcl.StdCtrls, Vcl.ImgList, Vcl.Menus, Vcl.VirtualImageList,
+  Vcl.BaseImageCollection, Vcl.ImageCollection,
 
   VirtualTrees, VirtualTrees.Types, VirtualTrees.Header, VirtualTrees.BaseTree,
 
   zObjInspector, zObjInspTypes,
 
   DDuce.Components.VirtualTrees.Node, DDuce.Components.SectionTree,
-  DDuce.Editor.Interfaces, DDuce.Components.IniTree, Vcl.VirtualImageList,
-  Vcl.BaseImageCollection, Vcl.ImageCollection;
+  DDuce.Editor.Interfaces, DDuce.Components.IniTree;
 
 type
   TfrmIniTree = class(TForm)
@@ -51,8 +51,7 @@ type
     ppmTree: TPopupMenu;
     mniCopy: TMenuItem;
     actCopy: TAction;
-    imcMain: TImageCollection;
-    imlMain: TVirtualImageList;
+    imlMain: TImageList;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -99,7 +98,9 @@ uses
 
   DDuce.Components.Factories, DDuce.Factories.VirtualTrees,
   DDuce.Factories.zObjInspector, DDuce.Editor.Factories,
-  DDuce.Logger.Factories, DDuce.Logger.Channels.Winipc, DDuce.Logger;
+  DDuce.Logger.Factories, DDuce.Logger.Channels.Winipc, DDuce.Logger,
+
+  Demo.Data;
 
 const
   VISIBLE_PROPERTIES : array of string = [

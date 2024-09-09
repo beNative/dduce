@@ -29,7 +29,7 @@ uses
   zObjInspector, zObjInspTypes,
 
   DDuce.Components.VirtualTrees.Node, DDuce.Components.SectionTree,
-  DDuce.Editor.Interfaces, DDuce.Components.JsonTree;
+  DDuce.Editor.Interfaces, DDuce.Components.JsonTree, Vcl.VirtualImageList;
 
 type
   TfrmJsonTree = class(TForm)
@@ -44,7 +44,6 @@ type
     btnCreateJsonDocument : TButton;
     btnExpand             : TButton;
     btnParseDocument      : TButton;
-    imlMain               : TImageList;
     mmoJson               : TMemo;
     mniCopy               : TMenuItem;
     pnlEditor             : TPanel;
@@ -54,6 +53,7 @@ type
     pnlTree               : TPanel;
     ppmTree               : TPopupMenu;
     splVertical           : TSplitter;
+    imlMain: TImageList;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -97,7 +97,9 @@ uses
   System.Rtti, System.StrUtils, Vcl.Clipbrd,
 
   DDuce.Components.Factories, DDuce.Factories.VirtualTrees,
-  DDuce.Factories.zObjInspector, DDuce.Editor.Factories, DDuce.Logger;
+  DDuce.Factories.zObjInspector, DDuce.Editor.Factories, DDuce.Logger,
+
+  Demo.Data;
 
 const
   VISIBLE_PROPERTIES : array of string = [

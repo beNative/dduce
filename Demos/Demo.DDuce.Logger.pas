@@ -146,8 +146,7 @@ type
     tmrSendValue              : TTimer;
     trbLogLevel               : TTrackBar;
     trbMain                   : TTrackBar;
-    imcMain: TImageCollection;
-    imlLogger: TVirtualImageList;
+    imlLogger: TImageList;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
