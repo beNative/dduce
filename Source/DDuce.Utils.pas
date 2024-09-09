@@ -1149,7 +1149,7 @@ end;
 
 function AddMenuItem(AParent: TMenuItem; AAction: TBasicAction): TMenuItem;
 var
-  MI: TMenuItem;
+  MI : TMenuItem;
 begin
   if not Assigned(AAction) then
   begin

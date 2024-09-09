@@ -55,13 +55,13 @@ class function TDDuceComponents.CreateLogTree(AOwner: TComponent;
 var
   VLT : TLogTree;
 begin
-  VLT                    := TLogTree.Create(AOwner);
-  VLT.AlignWithMargins   := True;
-  VLT.BorderStyle        := bsNone;
-  VLT.Parent             := AParent;
-  VLT.Align              := alClient;
-  VLT.ShowImages         := True;
-  VLT.Header.Options     := VLT.Header.Options + [hoAutoSpring];
+  VLT                  := TLogTree.Create(AOwner);
+  VLT.AlignWithMargins := True;
+  VLT.BorderStyle      := bsNone;
+  VLT.Parent           := AParent;
+  VLT.Align            := alClient;
+  VLT.ShowImages       := True;
+  VLT.Header.Options   := VLT.Header.Options + [hoAutoSpring];
   Result := VLT;
 end;
 

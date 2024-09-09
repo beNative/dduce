@@ -303,7 +303,7 @@ type
 
     property CurrentWord: string
       read GetCurrentWord;
-    //------------------------------------------
+
     property Lines: TStrings
       read GetLines;
 
@@ -762,7 +762,7 @@ type
     procedure LowerCaseSelection;
     procedure OpenFileAtCursor;
     procedure PascalStringFromSelection;
-    procedure QuoteLinesInSelection(ADelimit : Boolean = False);
+    procedure QuoteLinesInSelection(ADelimit: Boolean = False);
     procedure QuoteSelection;
     procedure SortSelectedLines;
     procedure SyncEditSelection;

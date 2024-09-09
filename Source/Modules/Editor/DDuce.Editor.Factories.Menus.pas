@@ -46,9 +46,9 @@ type
     );
     destructor Destroy; override;
 
-    function CreateFileMenu(AMenu : TMenu): TMenuItem;
-    function CreateEditMenu(AMenu : TMenu): TMenuItem;
-    function CreateSelectionMenu(AMenu : TMenu): TMenuItem;
+    function CreateFileMenu(AMenu: TMenu): TMenuItem;
+    function CreateEditMenu(AMenu: TMenu): TMenuItem;
+    function CreateSelectionMenu(AMenu: TMenu): TMenuItem;
     function CreateInsertMenu(AMenu: TMenu): TMenuItem;
     function CreateSearchMenu(AMenu: TMenu): TMenuItem;
     function CreateToolsMenu(AMenu: TMenu): TMenuItem;
