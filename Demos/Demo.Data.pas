@@ -20,21 +20,26 @@ interface
 
 uses
   System.Classes, System.ImageList,
-  Vcl.ImgList, Vcl.Controls,
-  Data.DB, Datasnap.DBClient, Vcl.BaseImageCollection, Vcl.ImageCollection;
+  Vcl.ImgList, Vcl.Controls, Vcl.BaseImageCollection, Vcl.ImageCollection,
+  Vcl.VirtualImageList,
+
+  SVGIconImageCollection;
 
 type
   TdmData = class(TDataModule)
-    imlMain : TImageList;
-    imcMain: TImageCollection;
+    imlMain : TVirtualImageList;
+    imcMain : TSVGIconImageCollection;
 
   private
-    function GetImageList: TImageList;
+    function GetImageList: TVirtualImageList;
 
   public
-    property ImageList: TImageList
+    property ImageList: TVirtualImageList
       read GetImageList;
   end;
+
+var
+  dmData : TdmData;
 
 function Data: TdmData;
 
@@ -45,20 +50,23 @@ implementation
 uses
   Vcl.Forms;
 
-var
-  FData: TdmData;
+
+{
+  Don't forget also the importance of TVirtualImageList.PreserveItems when you
+  have a large ImageCollection with many linked Actions. Without setting this
+  property to "True", everytime you add or remove an icon in the collection,
+  you have to check and change the ImageIndex of all the Actions.
+}
 
 {$REGION 'interfaced routines'}
 function Data: TdmData;
 begin
-  if not Assigned(FData) then
-    FData := TdmData.Create(Application);
-  Result := FData;
+  Result := dmData;
 end;
 {$ENDREGION}
 
 {$REGION 'property access methods'}
-function TdmData.GetImageList: TImageList;
+function TdmData.GetImageList: TVirtualImageList;
 begin
   Result := imlMain;
 end;
