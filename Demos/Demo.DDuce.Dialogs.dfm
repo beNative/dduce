@@ -1,9 +1,9 @@
 object frmDialogs: TfrmDialogs
-  Left = 342
-  Top = 342
+  Left = 266
+  Top = 266
   Caption = 'Dialogs'
   ClientHeight = 69
-  ClientWidth = 182
+  ClientWidth = 176
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

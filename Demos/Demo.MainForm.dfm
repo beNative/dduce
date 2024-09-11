@@ -1,10 +1,10 @@
 object frmMainMenu: TfrmMainMenu
-  Left = 38
-  Top = 38
+  Left = 304
+  Top = 304
   ActiveControl = pnlVST
   Caption = 'DDuce demos'
   ClientHeight = 355
-  ClientWidth = 375
+  ClientWidth = 393
   Color = clWhite
   DefaultMonitor = dmMainForm
   DoubleBuffered = True
@@ -20,7 +20,7 @@ object frmMainMenu: TfrmMainMenu
   object pnlVST: TPanel
     Left = 0
     Top = 18
-    Width = 375
+    Width = 393
     Height = 286
     Align = alClient
     BevelOuter = bvNone
@@ -30,7 +30,7 @@ object frmMainMenu: TfrmMainMenu
   object pnlTop: TPanel
     Left = 0
     Top = 0
-    Width = 375
+    Width = 393
     Height = 18
     Align = alTop
     BevelOuter = bvNone
@@ -38,7 +38,7 @@ object frmMainMenu: TfrmMainMenu
     object edtFilter: TEdit
       Left = 0
       Top = 0
-      Width = 375
+      Width = 393
       Height = 18
       Align = alClient
       Alignment = taCenter
@@ -63,7 +63,7 @@ object frmMainMenu: TfrmMainMenu
   object sbrMain: TStatusBar
     Left = 0
     Top = 336
-    Width = 375
+    Width = 393
     Height = 19
     Panels = <>
     SimplePanel = True
@@ -72,7 +72,7 @@ object frmMainMenu: TfrmMainMenu
     AlignWithMargins = True
     Left = 3
     Top = 307
-    Width = 369
+    Width = 387
     Height = 26
     Action = actExecute
     Align = alBottom

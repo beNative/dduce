@@ -2095,6 +2095,8 @@ object dmData: TdmData
         Name = 'zoom-scan'
       end>
     ImageCollection = imcMain
+    Width = 24
+    Height = 24
     Left = 101
     Top = 85
   end

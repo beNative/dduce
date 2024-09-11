@@ -608,7 +608,7 @@ end;
 function TValueList.FindNode(AIdx: Integer;
   AParentNode: PVirtualNode): PVirtualNode;
 var
-  LNode: PVirtualNode;
+  LNode : PVirtualNode;
 begin
   Result := nil;
   if Assigned(AParentNode) then
@@ -634,7 +634,7 @@ begin
     hoDisableAnimatedResize
   ];
   TreeOptions.PaintOptions := [
-    toHideFocusRect, toHotTrack, toPopupMode, toShowBackground, toShowButtons,
+    toHideFocusRect, toPopupMode, toShowBackground, toShowButtons,
     toShowDropmark, toStaticBackground, toShowRoot, toShowVertGridLines,
     toThemeAware, toUseBlendedImages, toUseBlendedSelection, toStaticBackground
   ];

@@ -3,7 +3,7 @@ object frmDBGridView: TfrmDBGridView
   Top = 380
   Caption = 'TDBGridView testbench'
   ClientHeight = 652
-  ClientWidth = 873
+  ClientWidth = 885
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -16,7 +16,7 @@ object frmDBGridView: TfrmDBGridView
   object splMain: TSplitter
     Left = 0
     Top = 337
-    Width = 873
+    Width = 885
     Height = 6
     Cursor = crVSplit
     Align = alBottom
@@ -25,7 +25,7 @@ object frmDBGridView: TfrmDBGridView
   object pnlLog: TPanel
     Left = 0
     Top = 343
-    Width = 873
+    Width = 885
     Height = 309
     Align = alBottom
     BevelOuter = bvNone
@@ -35,9 +35,9 @@ object frmDBGridView: TfrmDBGridView
   object pgcMain: TPageControl
     Left = 0
     Top = 34
-    Width = 873
+    Width = 885
     Height = 303
-    ActivePage = tsDBGridViewEvents
+    ActivePage = tsDBGridView
     Align = alClient
     TabOrder = 2
     object tsDBGridView: TTabSheet
@@ -50,18 +50,18 @@ object frmDBGridView: TfrmDBGridView
       object pnlDBGridViewEvents: TPanel
         Left = 0
         Top = 0
-        Width = 865
+        Width = 877
         Height = 275
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 868
+        ExplicitWidth = 880
         ExplicitHeight = 278
         object lbxDBGridViewEvents: TCheckListBox
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 859
+          Width = 871
           Height = 269
           Align = alClient
           BevelInner = bvNone
@@ -159,25 +159,25 @@ object frmDBGridView: TfrmDBGridView
       object pnlDataSourceEvents: TPanel
         Left = 0
         Top = 0
-        Width = 865
+        Width = 877
         Height = 275
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 868
+        ExplicitWidth = 880
         ExplicitHeight = 278
         object lbxDataSourceEvents: TCheckListBox
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 859
+          Width = 871
           Height = 269
           Align = alClient
           BevelInner = bvNone
           BevelOuter = bvNone
           BorderStyle = bsNone
           Columns = 4
-          ItemHeight = 13
+          ItemHeight = 17
           Items.Strings = (
             'OnDataChange'
             'OnStateChange'
@@ -190,13 +190,13 @@ object frmDBGridView: TfrmDBGridView
   object pnlHeader: TPanel
     Left = 0
     Top = 0
-    Width = 873
+    Width = 885
     Height = 34
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
     DesignSize = (
-      873
+      885
       34)
     object chkActive: TCheckBox
       Left = 763

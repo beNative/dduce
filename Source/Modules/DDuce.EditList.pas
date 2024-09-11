@@ -33,7 +33,9 @@ uses
 
   VirtualTrees, VirtualTrees.Types,
 
-  DDuce.DynamicRecord, DDuce.Components.ValueList, DDuce.Logger;
+  DDuce.DynamicRecord, DDuce.Components.ValueList, DDuce.Logger,
+  Vcl.VirtualImageList, Vcl.BaseImageCollection, Vcl.ImageCollection,
+  SVGIconImageCollection;
 
 {$REGION 'documentation'}
 {  TODO :
@@ -71,7 +73,6 @@ type
     btnRefresh   : TToolButton;
     btnSpacer1   : TToolButton;
     btnSpacer2   : TToolButton;
-    imlMain      : TImageList;
     mniAdd       : TMenuItem;
     mniDelete    : TMenuItem;
     mniDuplicate : TMenuItem;
@@ -85,6 +86,8 @@ type
     pnlMain      : TPanel;
     ppmMain      : TPopupMenu;
     tlbMain      : TToolBar;
+    imcMain: TSVGIconImageCollection;
+    imlMain: TVirtualImageList;
     {$ENDREGION}
 
     {$REGION 'action handlers'}

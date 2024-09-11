@@ -24,7 +24,8 @@ uses
   Winapi.Windows, Winapi.Messages,
   System.Actions, System.Classes, System.Rtti, System.ImageList,
   Vcl.ActnList, Vcl.StdCtrls, Vcl.Controls, Vcl.ComCtrls, Vcl.ExtCtrls,
-  Vcl.Forms, Vcl.ImgList;
+  Vcl.Forms, Vcl.ImgList, Vcl.VirtualImageList, Vcl.BaseImageCollection,
+  SVGIconImageCollection;
 
 type
   TfrmRTTEye = class(TForm)
@@ -38,13 +39,14 @@ type
     btnExpand   : TButton;
     btnLoad     : TButton;
     btnSearch   : TButton;
-    EditSearch  : TEdit;
-    imlMain     : TImageList;
+    edtSearch: TEdit;
     lvRtti      : TListView;
     pnlBottom   : TPanel;
     pnlMain     : TPanel;
     splVertical : TSplitter;
     tvRtti      : TTreeView;
+    imcMain: TSVGIconImageCollection;
+    imlMain: TVirtualImageList;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -131,16 +133,16 @@ procedure TfrmRTTEye.actSearchExecute(Sender: TObject);
 var
   Node: TTreeNode;
 begin
-  if Trim(EditSearch.Text) <> '' then
+  if Trim(edtSearch.Text) <> '' then
   begin
-    Node := FindTreeViewText(Trim(EditSearch.Text), tvRTTI);
+    Node := FindTreeViewText(Trim(edtSearch.Text), tvRTTI);
     if Node <> nil then
     begin
       Node.MakeVisible;
       tvRTTI.Selected := Node
     end
     else
-      ShowMessage(Format(SNotFound, [Trim(EditSearch.Text)]));
+      ShowMessage(Format(SNotFound, [Trim(edtSearch.Text)]));
   end;
 end;
 {$ENDREGION}

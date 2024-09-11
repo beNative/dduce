@@ -1,9 +1,9 @@
 object frmInspector: TfrmInspector
-  Left = 38
-  Top = 38
+  Left = 266
+  Top = 266
   Caption = 'Inspector demo'
   ClientHeight = 605
-  ClientWidth = 990
+  ClientWidth = 996
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -31,7 +31,7 @@ object frmInspector: TfrmInspector
   object pnlRight: TPanel
     Left = 327
     Top = 0
-    Width = 663
+    Width = 669
     Height = 605
     Align = alClient
     BevelOuter = bvNone
@@ -39,7 +39,7 @@ object frmInspector: TfrmInspector
     object splHorizontal: TSplitter
       Left = 0
       Top = 482
-      Width = 663
+      Width = 669
       Height = 6
       Cursor = crVSplit
       Align = alBottom
@@ -48,7 +48,7 @@ object frmInspector: TfrmInspector
     object pnlInspector: TPanel
       Left = 0
       Top = 488
-      Width = 663
+      Width = 669
       Height = 117
       Align = alBottom
       BevelOuter = bvNone
@@ -58,7 +58,7 @@ object frmInspector: TfrmInspector
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 656
+      Width = 662
       Height = 476
       Align = alClient
       DataSource = dscMain
@@ -78,16 +78,16 @@ object frmInspector: TfrmInspector
     Top = 8
   end
   object pmMain: TPopupMenu
-    Left = 64
-    Top = 8
+    Left = 120
+    Top = 12
     object mniHideEmptyFields: TMenuItem
       Action = actHideEmptyFields
       AutoCheck = True
     end
   end
   object aclMain: TActionList
-    Left = 120
-    Top = 8
+    Left = 216
+    Top = 12
     object actHideEmptyFields: TAction
       AutoCheck = True
       Caption = 'Hide empty fields'

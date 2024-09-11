@@ -37,10 +37,11 @@ uses
   TextEditor, TextEditor.Types, TextEditor.KeyCommands, TextEditor.Highlighter,
 
   DDuce.Editor.Resources, DDuce.Editor.Highlighters, DDuce.Editor.Interfaces,
-  DDuce.Logger;
+  DDuce.Logger, System.ImageList, Vcl.ImgList, Vcl.VirtualImageList;
 
 type
   TEditorView = class(TForm, IEditorView)
+    imlMain: TVirtualImageList;
   private
     FUpdate          : Boolean;
     FLineBreakStyle  : string; // not supported
@@ -67,23 +68,6 @@ type
     );
     procedure EditorEnter(Sender: TObject);
     procedure EditorSettingsChanged(ASender: TObject);
-//    procedure EditorCustomTokenAttribute(
-//      const ASender        : TObject;
-//      const AText          : string;
-//      const ALine          : Integer;
-//      const AChar          : Integer;
-//      var AForegroundColor : TColor;
-//      var ABackgroundColor : TColor;
-//      var AStyles          : TFontStyles;
-//      var ATokenAddon      : TTextEditorTokenAddon;
-//      var ATokenAddonColor : TColor
-//    );
-
-
-//TTextEditorCustomTokenAttributeEvent = procedure(const ASender: TObject; const AText: string; const ALine: Integer;
-//const AChar: Integer; var AForegroundColor: TColor; var ABackgroundColor: TColor; var AStyles: TFontStyles;
-//var AUnderline: TTextEditorUnderline; var AUnderlineColor: TColor) of object;
-
     {$ENDREGION}
 
     {$REGION'property access methods'}
@@ -414,7 +398,9 @@ uses
 
   TextEditor.Utils,
 
-  Spring;
+  Spring,
+
+  DDuce.Editor.Manager;
 
 {$REGION'construction and destruction'}
 procedure TEditorView.AfterConstruction;
@@ -429,7 +415,7 @@ begin
   FReplaceHistory.Sorted     := True;
   FReplaceHistory.Duplicates := dupIgnore;
 
-  FIsFile         := True;
+  FIsFile := True;
 
   InitializeEditor(FEditor);
   Settings.OnChanged.Add(EditorSettingsChanged);
@@ -474,14 +460,6 @@ begin
   if Assigned(Events) then
     Events.DoChange;
 end;
-
-//procedure TEditorView.EditorCustomTokenAttribute(const ASender: TObject;
-//  const AText: string; const ALine, AChar: Integer; var AForegroundColor,
-//  ABackgroundColor: TColor; var AStyles: TFontStyles;
-//  var ATokenAddon: TTextEditorTokenAddon; var ATokenAddonColor: TColor);
-//begin
-////
-//end;
 {$ENDREGION}
 
 {$REGION'event dispatch methods'}
@@ -593,6 +571,18 @@ begin
   Result := Editor.Fonts.Text;
 end;
 
+procedure TEditorView.SetEditorFont(AValue: TFont);
+begin
+  if not Editor.Fonts.Text.Equals(AValue) then
+  begin
+    Editor.Fonts.Text.Assign(AValue);
+    Editor.Fonts.CodeFoldingHint.Name := AValue.Name;
+    Editor.Fonts.Minimap.Name         := AValue.Name;
+    Editor.Fonts.Ruler.Name           := AValue.Name;
+    Editor.Fonts.LineNumbers.Name     := AValue.Name;
+  end;
+end;
+
 function TEditorView.GetHighlighter: TTextEditorHighlighter;
 begin
   Result := Editor.Highlighter;
@@ -634,14 +624,6 @@ end;
 procedure TEditorView.SetIsFile(AValue: Boolean);
 begin
   FIsFile := AValue;
-end;
-
-procedure TEditorView.SetEditorFont(AValue: TFont);
-begin
-  if not Editor.Fonts.Text.Equals(AValue) then
-  begin
-    Editor.Fonts.Text.Assign(AValue);
-  end;
 end;
 
 function TEditorView.GetLines: TStrings;
@@ -1092,9 +1074,6 @@ begin
 //    Editor.CodeFolding.Options := Editor.CodeFolding.Options -
 //      [cfoShowIndentGuides];
 
-  // cfoExpandByHintClick disabled as it does not work properly
-  Editor.CodeFolding.Options :=
-    Editor.CodeFolding.Options - [cfoExpandByHintClick];
   Editor.RightMargin.Visible  := Settings.EditorOptions.ShowRightEdge;
   Editor.RightMargin.Position := Settings.EditorOptions.RightEdge;
 
@@ -1136,6 +1115,10 @@ begin
   AEditor.Parent := Self;
   AEditor.Align := alClient;
   AEditor.Fonts.Text.Assign(Settings.EditorFont);
+  AEditor.Fonts.CodeFoldingHint.Name := AEditor.Fonts.Text.Name;
+  AEditor.Fonts.Minimap.Name         := AEditor.Fonts.Text.Name;
+  AEditor.Fonts.Ruler.Name           := AEditor.Fonts.Text.Name;
+  AEditor.Fonts.LineNumbers.Name     := AEditor.Fonts.Text.Name;
   AEditor.BorderStyle := bsNone;
   AEditor.DoubleBuffered := True;
   AEditor.Options := [
@@ -1161,26 +1144,19 @@ begin
   AEditor.Colors.CodeFoldingIndent                := clSilver;
   AEditor.Colors.CodeFoldingIndentHighlight       := clSilver;
   AEditor.Colors.CodeFoldingHintBorder            := clSilver;
-  //AEditor.Colors.CodeFoldingActiveLineBackground .GuideLineStyle              := lsSolid;
   AEditor.CodeFolding.Options := [
    cfoExpandByHintClick,
    cfoHighlightMatchingPair,
    cfoShowTreeLine
   ];
+
   AEditor.OnChange               := EditorChange;
   AEditor.OnReplaceText          := EditorReplaceText;
   AEditor.OnCaretChanged         := EditorCaretChanged;
-  //AEditor.OnCustomTokenAttribute := EditorCustomTokenAttribute;
   AEditor.OnEnter                := EditorEnter;
 
-//  // SyncEdit does not work properly
-//  AEditor.SyncEdit.Activator.Visible := False;
-//  AEditor.SyncEdit.ShortCut          := 0;
-//  AEditor.SyncEdit.Active            := False;
-//  // MultiEdit does not work properly
-//  AEditor.Caret.MultiEdit.Active := False;
-//  // does not work properly
-//  AEditor.URIOpener := False;
+  AEditor.Caret.MultiEdit.Active := True;
+  AEditor.URIOpener := True;
 
   ActiveControl := Editor;
 end;
@@ -1260,7 +1236,7 @@ end;
 function TEditorView.RowColumnToCharIndex(
   APosition: TTextEditorTextPosition): Integer;
 var
-  I: Integer;
+  I : Integer;
 begin
   Result := 0;
   APosition.Line := Min(Lines.Count, APosition.Line) - 1;
@@ -1372,9 +1348,9 @@ end;
 {$REGION'public methods'}
 function TEditorView.CloseQuery: Boolean;
 var
-  MR: TModalResult;
-  S : string;
-  V : IEditorView;
+  MR : TModalResult;
+  S  : string;
+  V  : IEditorView;
 begin
   V := nil;
   Result := inherited CloseQuery;

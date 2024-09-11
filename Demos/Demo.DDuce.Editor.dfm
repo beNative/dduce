@@ -1,8 +1,8 @@
 object frmEditor: TfrmEditor
-  Left = 114
-  Top = 114
+  Left = 38
+  Top = 38
   ClientHeight = 568
-  ClientWidth = 1010
+  ClientWidth = 1016
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@ object frmEditor: TfrmEditor
   object sbrMain: TStatusBar
     Left = 0
     Top = 549
-    Width = 1010
+    Width = 1016
     Height = 19
     Panels = <>
   end
@@ -66,7 +66,7 @@ object frmEditor: TfrmEditor
   object pnlRight: TPanel
     Left = 383
     Top = 0
-    Width = 627
+    Width = 633
     Height = 549
     Align = alClient
     BevelOuter = bvNone

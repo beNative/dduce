@@ -51,7 +51,7 @@ type
     ppmTree: TPopupMenu;
     mniCopy: TMenuItem;
     actCopy: TAction;
-    imlMain: TImageList;
+    imlMain: TVirtualImageList;
     {$ENDREGION}
 
     {$REGION 'event handlers'}

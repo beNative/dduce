@@ -1,9 +1,9 @@
 object frmGridView: TfrmGridView
-  Left = 38
-  Top = 38
+  Left = 494
+  Top = 494
   Caption = 'GridView demo'
   ClientHeight = 665
-  ClientWidth = 1014
+  ClientWidth = 1020
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -31,7 +31,7 @@ object frmGridView: TfrmGridView
   object pnlRight: TPanel
     Left = 351
     Top = 0
-    Width = 663
+    Width = 669
     Height = 665
     Align = alClient
     BevelOuter = bvNone

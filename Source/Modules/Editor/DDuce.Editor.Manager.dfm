@@ -4,8 +4,8 @@ object dmEditorManager: TdmEditorManager
   object aclActions: TActionList
     Images = imlMain
     OnExecute = aclActionsExecute
-    Left = 352
-    Top = 32
+    Left = 64
+    Top = 37
     object actSettings: TAction
       Category = 'Settings'
       Caption = 'Settings'
@@ -1065,34 +1065,34 @@ object dmEditorManager: TdmEditorManager
   end
   object ppmExport: TPopupMenu
     Images = imlMain
-    Left = 40
-    Top = 248
+    Left = 235
+    Top = 123
     object MenuItem1: TMenuItem
     end
   end
   object ppmHighLighters: TPopupMenu
     Images = imlMain
-    Left = 40
-    Top = 200
+    Left = 64
+    Top = 208
   end
   object ppmClipboard: TPopupMenu
     Images = imlMain
-    Left = 40
-    Top = 144
+    Left = 405
+    Top = 37
   end
   object dlgSave: TSaveDialog
     Options = [ofOverwritePrompt, ofHideReadOnly, ofShowHelp, ofPathMustExist, ofCreatePrompt, ofShareAware, ofEnableSizing]
-    Left = 285
-    Top = 32
+    Left = 64
+    Top = 379
   end
   object dlgOpen: TOpenDialog
-    Left = 285
-    Top = 88
+    Left = 320
+    Top = 37
   end
   object ppmFold: TPopupMenu
     Images = imlMain
-    Left = 40
-    Top = 88
+    Left = 405
+    Top = 123
     object MenuItem43: TMenuItem
       Action = actFoldLevel0
       AutoCheck = True
@@ -1527,74 +1527,74 @@ object dmEditorManager: TdmEditorManager
       'ColorS=F0FBFF'
       'ColorT=A4A0A0')
     Options = [cdFullOpen, cdAnyColor]
-    Left = 285
-    Top = 144
+    Left = 149
+    Top = 37
   end
   object ppmEncoding: TPopupMenu
     Images = imlMain
-    Left = 40
-    Top = 315
+    Left = 149
+    Top = 123
   end
   object ppmLineBreakStyle: TPopupMenu
     Images = imlMain
-    Left = 117
-    Top = 88
+    Left = 235
+    Top = 208
   end
   object ppmSelectionMode: TPopupMenu
     Images = imlMain
-    Left = 117
-    Top = 32
+    Left = 320
+    Top = 293
   end
   object ppmSelection: TPopupMenu
     Images = imlMain
-    Left = 117
-    Top = 144
+    Left = 64
+    Top = 293
   end
   object ppmEditor: TPopupMenu
     Images = imlMain
-    Left = 40
-    Top = 32
+    Left = 64
+    Top = 123
   end
   object ppmInsert: TPopupMenu
     Images = imlMain
-    Left = 121
-    Top = 215
+    Left = 149
+    Top = 208
   end
   object ppmSearch: TPopupMenu
     Images = imlMain
-    Left = 117
-    Top = 280
+    Left = 320
+    Top = 208
   end
   object ppmSettings: TPopupMenu
     Images = imlMain
-    Left = 200
-    Top = 280
+    Left = 405
+    Top = 293
   end
   object ppmSelect: TPopupMenu
     Images = imlMain
-    Left = 200
-    Top = 215
+    Left = 405
+    Top = 208
   end
   object ppmFile: TPopupMenu
     Images = imlMain
-    Left = 280
-    Top = 224
+    Left = 320
+    Top = 123
   end
   object ppmSelectionEncode: TPopupMenu
     Images = imlMain
-    Left = 120
-    Top = 336
+    Left = 235
+    Top = 293
   end
   object ppmSelectionDecode: TPopupMenu
     Images = imlMain
-    Left = 208
-    Top = 344
+    Left = 149
+    Top = 293
   end
   object imlMain_old: TImageList
     ColorDepth = cd32Bit
     DrawingStyle = dsTransparent
-    Left = 320
-    Top = 272
+    Left = 235
+    Top = 37
     Bitmap = {
       494C010179007D00040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000F0010000010020000000000000F0
@@ -6529,8 +6529,8 @@ object dmEditorManager: TdmEditorManager
           '<path d="M9 9h1a1 1 0 1 1 -1 1v-2.5a2 2 0 0 1 2 -2" />'#10'  <path d' +
           '="M3 9h1a1 1 0 1 1 -1 1v-2.5a2 2 0 0 1 2 -2" />'#10'</svg>'#10#10#10
       end>
-    Left = 379
-    Top = 149
+    Left = 149
+    Top = 379
   end
   object imlMain: TVirtualImageList
     Images = <
@@ -6885,7 +6885,9 @@ object dmEditorManager: TdmEditorManager
         Name = 'blockquote'
       end>
     ImageCollection = imcMain
-    Left = 416
-    Top = 384
+    Width = 24
+    Height = 24
+    Left = 235
+    Top = 379
   end
 end

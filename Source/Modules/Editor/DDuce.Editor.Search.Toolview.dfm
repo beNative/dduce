@@ -1,55 +1,71 @@
 inherited frmSearchForm: TfrmSearchForm
-  Left = 498
-  Top = 33
+  Left = 266
+  Top = 266
+  Margins.Left = 1
+  Margins.Top = 1
+  Margins.Right = 1
+  Margins.Bottom = 1
   BorderIcons = [biSystemMenu]
   Caption = 'Find'
-  ClientHeight = 644
-  ClientWidth = 305
-  Constraints.MinHeight = 312
-  Constraints.MinWidth = 300
+  ClientHeight = 413
+  ClientWidth = 298
+  Color = clBtnFace
+  Constraints.MinHeight = 139
+  Constraints.MinWidth = 133
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   PopupMode = pmAuto
-  ShowHint = True
   OnHide = FormHide
   OnShow = FormShow
-  ExplicitWidth = 321
-  ExplicitHeight = 683
-  TextHeight = 13
+  TextHeight = 15
   object pnlOperations: TPanel
     Left = 0
     Top = 0
-    Width = 305
-    Height = 372
+    Width = 298
+    Height = 167
+    Margins.Left = 1
+    Margins.Top = 1
+    Margins.Right = 1
+    Margins.Bottom = 1
     Align = alTop
-    AutoSize = True
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 309
     DesignSize = (
-      305
-      372)
+      298
+      167)
     object grpSearchText: TGroupBox
       Left = 0
       Top = 0
       Width = 293
-      Height = 51
+      Height = 27
+      Margins.Left = 1
+      Margins.Top = 1
+      Margins.Right = 1
+      Margins.Bottom = 1
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Text to find:'
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
-      ExplicitWidth = 301
       DesignSize = (
         293
-        51)
+        27)
       object cbxSearchText: TComboBox
-        Left = 14
-        Top = 20
-        Width = 269
-        Height = 21
+        Left = 9
+        Top = 11
+        Width = 282
+        Height = 16
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Anchors = [akLeft, akTop, akRight]
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
+        Font.Height = -5
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
@@ -59,78 +75,104 @@ inherited frmSearchForm: TfrmSearchForm
     end
     object grpReplaceWith: TGroupBox
       Left = 0
-      Top = 55
+      Top = 25
       Width = 293
-      Height = 51
+      Height = 22
+      Margins.Left = 1
+      Margins.Top = 1
+      Margins.Right = 1
+      Margins.Bottom = 1
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Replace with:'
       TabOrder = 1
-      ExplicitWidth = 301
       DesignSize = (
         293
-        51)
+        22)
       object cbxReplaceWith: TComboBox
-        Left = 14
-        Top = 20
-        Width = 269
-        Height = 21
+        Left = 6
+        Top = 9
+        Width = 282
+        Height = 33
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
       end
     end
     object grpOptions: TGroupBox
       Left = 0
-      Top = 112
+      Top = 50
       Width = 293
-      Height = 71
+      Height = 31
+      Margins.Left = 1
+      Margins.Top = 1
+      Margins.Right = 1
+      Margins.Bottom = 1
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Options'
       TabOrder = 2
-      ExplicitWidth = 301
       object chkWholeWordsOnly: TCheckBox
-        Left = 20
-        Top = 12
-        Width = 120
-        Height = 30
+        Left = 9
+        Top = 5
+        Width = 53
+        Height = 14
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Caption = 'Whole words only'
-        Constraints.MinHeight = 30
-        Constraints.MinWidth = 120
+        Constraints.MinHeight = 13
+        Constraints.MinWidth = 53
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
         OnClick = chkClick
       end
       object chkCaseSensitive: TCheckBox
-        Left = 20
-        Top = 44
-        Width = 120
-        Height = 18
+        Left = 9
+        Top = 19
+        Width = 53
+        Height = 8
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Caption = 'Case sensitive'
-        Constraints.MinWidth = 120
+        Constraints.MinWidth = 53
         ParentShowHint = False
         ShowHint = True
         TabOrder = 1
         OnClick = chkClick
       end
       object chkRegularExpressions: TCheckBox
-        Left = 138
-        Top = 12
-        Width = 135
-        Height = 30
+        Left = 61
+        Top = 5
+        Width = 60
+        Height = 14
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Caption = 'Regular expressions'
-        Constraints.MinWidth = 120
+        Constraints.MinWidth = 53
         ParentShowHint = False
         ShowHint = True
         TabOrder = 2
         OnClick = chkClick
       end
       object chkMultiLine: TCheckBox
-        Left = 138
-        Top = 44
-        Width = 135
-        Height = 18
+        Left = 61
+        Top = 19
+        Width = 60
+        Height = 8
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Caption = 'Multiline'
-        Constraints.MinWidth = 120
+        Constraints.MinWidth = 53
         ParentShowHint = False
         ShowHint = True
         TabOrder = 3
@@ -139,42 +181,57 @@ inherited frmSearchForm: TfrmSearchForm
     end
     object grpScope: TGroupBox
       Left = 0
-      Top = 182
+      Top = 81
       Width = 293
-      Height = 56
+      Height = 26
+      Margins.Left = 1
+      Margins.Top = 1
+      Margins.Right = 1
+      Margins.Bottom = 1
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Scope'
       TabOrder = 3
-      ExplicitWidth = 301
       object rbSelection: TRadioButton
-        Left = 20
-        Top = 24
-        Width = 90
-        Height = 18
+        Left = 9
+        Top = 11
+        Width = 40
+        Height = 8
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Caption = '&Selection'
-        Constraints.MinWidth = 90
+        Constraints.MinWidth = 40
         TabOrder = 0
         OnClick = rbSelectionClick
       end
       object rbActiveView: TRadioButton
-        Left = 109
-        Top = 24
-        Width = 90
-        Height = 18
+        Left = 49
+        Top = 11
+        Width = 40
+        Height = 8
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Caption = 'Active &view'
-        Constraints.MinWidth = 90
+        Constraints.MinWidth = 40
         TabOrder = 1
         OnClick = rbActiveViewClick
       end
       object rbAllViews: TRadioButton
-        Left = 201
-        Top = 24
-        Width = 90
-        Height = 18
+        Left = 89
+        Top = 11
+        Width = 40
+        Height = 8
         Hint = 'Search in all views.'
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Caption = '&All views'
         Checked = True
-        Constraints.MinWidth = 90
+        Constraints.MinWidth = 40
         TabOrder = 2
         TabStop = True
         OnClick = rbActiveViewClick
@@ -182,31 +239,42 @@ inherited frmSearchForm: TfrmSearchForm
     end
     object grpOrigin: TGroupBox
       Left = 0
-      Top = 236
+      Top = 105
       Width = 293
-      Height = 56
+      Height = 40
+      Margins.Left = 1
+      Margins.Top = 1
+      Margins.Right = 1
+      Margins.Bottom = 1
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Origin'
       TabOrder = 4
-      ExplicitWidth = 301
       object rbFromCursor: TRadioButton
-        Left = 20
-        Top = 24
-        Width = 127
-        Height = 18
+        Left = 9
+        Top = 11
+        Width = 56
+        Height = 8
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Caption = '&From cursor'
-        Constraints.MinWidth = 120
+        Constraints.MinWidth = 53
         TabOrder = 0
         OnClick = rbFromCursorClick
       end
       object rbEntireScope: TRadioButton
-        Left = 147
-        Top = 24
-        Width = 126
-        Height = 18
+        Left = 65
+        Top = 11
+        Width = 56
+        Height = 8
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Caption = '&Entire scope'
         Checked = True
-        Constraints.MinWidth = 120
+        Constraints.MinWidth = 53
         TabOrder = 1
         TabStop = True
         OnClick = rbEntireScopeClick
@@ -214,30 +282,41 @@ inherited frmSearchForm: TfrmSearchForm
     end
     object grpDirection: TGroupBox
       Left = 0
-      Top = 292
+      Top = 130
       Width = 293
-      Height = 56
+      Height = 35
+      Margins.Left = 1
+      Margins.Top = 1
+      Margins.Right = 1
+      Margins.Bottom = 1
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Direction'
       TabOrder = 5
-      ExplicitWidth = 301
       object rbBackward: TRadioButton
-        Left = 14
-        Top = 24
-        Width = 127
-        Height = 18
+        Left = 6
+        Top = 15
+        Width = 57
+        Height = 8
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Caption = 'Backward'
-        Constraints.MinWidth = 120
+        Constraints.MinWidth = 53
         TabOrder = 0
       end
       object rbForward: TRadioButton
-        Left = 147
-        Top = 24
-        Width = 126
-        Height = 18
+        Left = 65
+        Top = 11
+        Width = 56
+        Height = 8
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Caption = 'Forward'
         Checked = True
-        Constraints.MinWidth = 120
+        Constraints.MinWidth = 53
         TabOrder = 1
         TabStop = True
         OnClick = rbForwardClick
@@ -245,24 +324,32 @@ inherited frmSearchForm: TfrmSearchForm
     end
     object pnlButtons: TPanel
       Left = 0
-      Top = 349
-      Width = 297
-      Height = 23
+      Top = 155
+      Width = 167
+      Height = 12
+      Margins.Left = 1
+      Margins.Top = 1
+      Margins.Right = 1
+      Margins.Bottom = 1
       AutoSize = True
       BevelOuter = bvNone
       TabOrder = 6
       object btnFind: TBitBtn
         Left = 0
         Top = 0
-        Width = 98
-        Height = 23
+        Width = 43
+        Height = 10
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Action = actFind
         Caption = 'Find'
-        Constraints.MinWidth = 90
+        Constraints.MinWidth = 40
         Default = True
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
+        Font.Height = -8
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
@@ -270,16 +357,20 @@ inherited frmSearchForm: TfrmSearchForm
         TabOrder = 0
       end
       object btnReplace: TBitBtn
-        Left = 101
+        Left = 45
         Top = 0
-        Width = 98
-        Height = 23
+        Width = 44
+        Height = 10
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Action = actReplace
         Caption = 'Replace'
-        Constraints.MinWidth = 90
+        Constraints.MinWidth = 40
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
+        Font.Height = -8
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
@@ -287,16 +378,20 @@ inherited frmSearchForm: TfrmSearchForm
         TabOrder = 1
       end
       object btnReplaceAll: TBitBtn
-        Left = 200
-        Top = 0
-        Width = 97
-        Height = 23
+        Left = 111
+        Top = 2
+        Width = 56
+        Height = 10
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Action = actReplaceAll
         Caption = 'Replace all'
-        Constraints.MinWidth = 90
+        Constraints.MinWidth = 40
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
+        Font.Height = -8
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
@@ -307,32 +402,35 @@ inherited frmSearchForm: TfrmSearchForm
   end
   object pnlResultList: TPanel
     Left = 0
-    Top = 372
-    Width = 305
-    Height = 249
+    Top = 167
+    Width = 298
+    Height = 236
+    Margins.Left = 1
+    Margins.Top = 1
+    Margins.Right = 1
+    Margins.Bottom = 1
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 411
-    ExplicitWidth = 309
-    ExplicitHeight = 211
   end
   object pnlStatus: TPanel
     Left = 0
-    Top = 621
-    Width = 305
-    Height = 23
+    Top = 403
+    Width = 298
+    Height = 10
+    Margins.Left = 1
+    Margins.Top = 1
+    Margins.Right = 1
+    Margins.Bottom = 1
     Align = alBottom
     BevelOuter = bvNone
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
+    Font.Height = -5
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 2
-    ExplicitTop = 622
-    ExplicitWidth = 309
   end
   object aclMain: TActionList
     Left = 16

@@ -83,10 +83,13 @@ uses
   System.ImageList,
 
   Vcl.Controls, Vcl.ActnList, Vcl.Menus, Vcl.Dialogs, Vcl.Forms, Vcl.ImgList,
+  Vcl.VirtualImageList, Vcl.BaseImageCollection,
 
   Spring, Spring.Collections,
 
   TextEditor, TextEditor.KeyCommands,
+
+  SVGIconImageCollection,
 
   DDuce.Editor.Types, DDuce.Editor.Interfaces, DDuce.Editor.Resources,
   DDuce.Editor.View, DDuce.Editor.Highlighters, DDuce.Editor.Commands,
@@ -247,7 +250,7 @@ type
     dlgColor                          : TColorDialog;
     dlgOpen                           : TOpenDialog;
     dlgSave                           : TSaveDialog;
-    imlMain                           : TImageList;
+    imlMain_old: TImageList;
     MenuItem1                         : TMenuItem;
     MenuItem43                        : TMenuItem;
     MenuItem44                        : TMenuItem;
@@ -275,6 +278,8 @@ type
     ppmSelectionEncode                : TPopupMenu;
     ppmSelectionMode                  : TPopupMenu;
     ppmSettings                       : TPopupMenu;
+    imcMain: TSVGIconImageCollection;
+    imlMain: TVirtualImageList;
     {$ENDREGION}
 
     {$REGION 'action handlers'}

@@ -1,9 +1,9 @@
 object frmEditList: TfrmEditList
-  Left = 152
-  Top = 152
+  Left = 114
+  Top = 114
   Caption = 'TEditList module demo'
   ClientHeight = 411
-  ClientWidth = 641
+  ClientWidth = 647
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -36,7 +36,7 @@ object frmEditList: TfrmEditList
   object pnlRight: TPanel
     Left = 327
     Top = 0
-    Width = 314
+    Width = 320
     Height = 411
     Align = alClient
     BevelEdges = []
@@ -45,7 +45,7 @@ object frmEditList: TfrmEditList
     object mmoData: TMemo
       Left = 0
       Top = 31
-      Width = 314
+      Width = 320
       Height = 380
       Align = alBottom
       Anchors = [akLeft, akTop, akRight, akBottom]

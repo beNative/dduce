@@ -2,7 +2,7 @@ object frmValueListDemo: TfrmValueListDemo
   Left = 0
   Top = 0
   ClientHeight = 540
-  ClientWidth = 661
+  ClientWidth = 667
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -10,9 +10,7 @@ object frmValueListDemo: TfrmValueListDemo
   Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
-  PixelsPerInch = 96
   TextHeight = 13
   object splVertical: TSplitter
     Left = 321
@@ -34,7 +32,7 @@ object frmValueListDemo: TfrmValueListDemo
   object pnlRight: TPanel
     Left = 327
     Top = 0
-    Width = 334
+    Width = 340
     Height = 540
     Align = alClient
     BevelEdges = []

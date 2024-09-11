@@ -220,6 +220,7 @@
                     <Source Name="MainSource">DDuce.Demos.dpr</Source>
                 </Source>
                 <Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\DFMScaling290.bpl">DFM Scaling Package</Excluded_Packages>
                     <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\KControls_D10_1.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\KControls_D10_1.bpl not found</Excluded_Packages>
                     <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\ChromeTabs_D.350.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\ChromeTabs_D.350.bpl not found</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\bcboffice2k290.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>

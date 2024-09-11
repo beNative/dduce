@@ -130,7 +130,7 @@ type
         theme if enabled (Windows XP+ only, application must be themed). }
       toThemeAware,
       { Use the explorer theme if run under Windows Vista or later. }
-      toUseExplorerTheme,
+//      toUseExplorerTheme,
       { Enable alpha blending for ghosted nodes or those which are being
         cut/copied. }
       toUseBlendedImages,

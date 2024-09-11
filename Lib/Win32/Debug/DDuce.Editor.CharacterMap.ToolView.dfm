@@ -1,6 +1,6 @@
 inherited frmCharacterMap: TfrmCharacterMap
-  Left = 38
-  Top = 38
+  Left = 114
+  Top = 114
   Margins.Left = 5
   Margins.Top = 5
   Margins.Right = 5
@@ -12,12 +12,12 @@ inherited frmCharacterMap: TfrmCharacterMap
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -17
+  Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
   PopupMode = pmAuto
   Position = poDefault
-  TextHeight = 23
+  TextHeight = 15
   object pcMain: TPageControl
     Left = 0
     Top = 0
@@ -30,24 +30,24 @@ inherited frmCharacterMap: TfrmCharacterMap
       Caption = 'ANSI'
       DesignSize = (
         367
-        366)
+        374)
       object lblCharInfo: TLabel
         Left = 6
-        Top = 350
-        Width = 84
-        Height = 23
+        Top = 365
+        Width = 59
+        Height = 15
         Margins.Bottom = 2
         Anchors = [akLeft, akRight, akBottom]
         Caption = 'lblCharInfo'
         Color = clBtnFace
         ParentColor = False
-        ExplicitTop = 337
+        ExplicitTop = 355
       end
       object grdANSI: TStringGrid
         Left = 0
         Top = 0
         Width = 357
-        Height = 339
+        Height = 348
         Anchors = [akLeft, akTop, akRight, akBottom]
         BorderStyle = bsNone
         ColCount = 17
@@ -65,19 +65,19 @@ inherited frmCharacterMap: TfrmCharacterMap
         OnMouseMove = grdANSIMouseMove
         OnSelectCell = grdANSISelectCell
         ExplicitWidth = 360
-        ExplicitHeight = 343
+        ExplicitHeight = 351
       end
     end
     object tsUnicode: TTabSheet
       Caption = 'Unicode'
       DesignSize = (
         367
-        366)
+        374)
       object lblUnicodeCharInfo: TLabel
         Left = 6
         Top = 342
-        Width = 147
-        Height = 23
+        Width = 103
+        Height = 15
         Margins.Bottom = 2
         Caption = 'lblUnicodeCharInfo'
         Color = clBtnFace
@@ -87,7 +87,7 @@ inherited frmCharacterMap: TfrmCharacterMap
         Left = 0
         Top = 0
         Width = 357
-        Height = 332
+        Height = 340
         Anchors = [akLeft, akTop, akRight, akBottom]
         ColCount = 16
         DefaultColWidth = 25
@@ -106,13 +106,13 @@ inherited frmCharacterMap: TfrmCharacterMap
         OnMouseMove = grdUnicodeMouseMove
         OnSelectCell = grdUnicodeSelectCell
         ExplicitWidth = 360
-        ExplicitHeight = 336
+        ExplicitHeight = 343
       end
       object cbxUnicodeRange: TComboBox
         Left = 162
-        Top = 338
+        Top = 346
         Width = 189
-        Height = 21
+        Height = 33
         Style = csDropDownList
         Anchors = [akRight]
         DropDownCount = 30

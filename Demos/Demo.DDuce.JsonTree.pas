@@ -53,7 +53,7 @@ type
     pnlTree               : TPanel;
     ppmTree               : TPopupMenu;
     splVertical           : TSplitter;
-    imlMain: TImageList;
+    imlMain: TVirtualImageList;
     {$ENDREGION}
 
     {$REGION 'event handlers'}

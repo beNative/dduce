@@ -3,7 +3,7 @@ object frmAboutDialog: TfrmAboutDialog
   Top = 0
   Caption = 'About'
   ClientHeight = 342
-  ClientWidth = 555
+  ClientWidth = 561
   Color = clWindow
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -11,9 +11,7 @@ object frmAboutDialog: TfrmAboutDialog
   Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = False
   PopupMode = pmAuto
   Position = poMainFormCenter
-  PixelsPerInch = 96
   TextHeight = 13
 end

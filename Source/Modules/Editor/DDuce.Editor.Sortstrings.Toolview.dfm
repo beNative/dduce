@@ -1,18 +1,31 @@
 inherited frmSortStrings: TfrmSortStrings
+  Left = 38
+  Top = 38
+  Margins.Left = 1
+  Margins.Top = 1
+  Margins.Right = 1
+  Margins.Bottom = 1
   Caption = 'Sort strings'
-  ClientHeight = 394
-  ClientWidth = 282
+  ClientHeight = 536
+  ClientWidth = 430
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   OnResize = FormResize
-  ExplicitWidth = 298
-  ExplicitHeight = 433
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object rgpSortDirection: TRadioGroup
     AlignWithMargins = True
-    Left = 3
-    Top = 3
-    Width = 276
-    Height = 54
+    Left = 1
+    Top = 1
+    Width = 428
+    Height = 34
+    Margins.Left = 1
+    Margins.Top = 1
+    Margins.Right = 1
+    Margins.Bottom = 1
     Align = alTop
     Caption = 'Sort direction:'
     Columns = 2
@@ -25,21 +38,29 @@ inherited frmSortStrings: TfrmSortStrings
   end
   object pnlBottom: TPanel
     Left = 0
-    Top = 369
-    Width = 282
-    Height = 25
+    Top = 531
+    Width = 430
+    Height = 5
+    Margins.Left = 1
+    Margins.Top = 1
+    Margins.Right = 1
+    Margins.Bottom = 1
     Align = alBottom
     AutoSize = True
     BevelOuter = bvNone
     TabOrder = 2
     DesignSize = (
-      282
-      25)
+      430
+      5)
     object btnOK: TButton
-      Left = 161
+      Left = 405
       Top = 0
-      Width = 120
-      Height = 25
+      Width = 24
+      Height = 5
+      Margins.Left = 1
+      Margins.Top = 1
+      Margins.Right = 1
+      Margins.Bottom = 1
       Action = actExecute
       Anchors = [akRight, akBottom]
       Caption = 'Sort selection'
@@ -50,10 +71,14 @@ inherited frmSortStrings: TfrmSortStrings
   end
   object rgpSortScope: TRadioGroup
     AlignWithMargins = True
-    Left = 3
-    Top = 63
-    Width = 276
-    Height = 66
+    Left = 1
+    Top = 37
+    Width = 428
+    Height = 43
+    Margins.Left = 1
+    Margins.Top = 1
+    Margins.Right = 1
+    Margins.Bottom = 1
     Align = alTop
     Caption = 'Scope'
     Columns = 3

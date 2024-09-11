@@ -1,25 +1,21 @@
 object EditorView: TEditorView
-  Left = 590
-  Top = 268
-  Margins.Left = 5
-  Margins.Top = 5
-  Margins.Right = 5
-  Margins.Bottom = 5
+  Left = 0
+  Top = 0
   AlphaBlendValue = 128
   BorderIcons = []
   BorderStyle = bsNone
-  ClientHeight = 632
-  ClientWidth = 945
+  ClientHeight = 357
+  ClientWidth = 519
   Color = clWindow
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -17
+  Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
   ShowHint = True
-  PixelsPerInch = 144
-  TextHeight = 21
+  TextHeight = 13
   object imlMain: TVirtualImageList
+    DisabledGrayscale = True
     Images = <
       item
         CollectionIndex = 0
@@ -371,6 +367,10 @@ object EditorView: TEditorView
         CollectionName = 'blockquote'
         Name = 'blockquote'
       end>
+    ImageCollection = dmEditorManager.imcMain
+    PreserveItems = True
+    Width = 11
+    Height = 11
     Left = 228
     Top = 96
   end
