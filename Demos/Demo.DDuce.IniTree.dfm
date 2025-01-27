@@ -19,6 +19,7 @@ object frmIniTree: TfrmIniTree
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 1452
     object btnExpand: TButton
       Left = 8
       Top = 4
@@ -56,6 +57,8 @@ object frmIniTree: TfrmIniTree
     BevelOuter = bvNone
     Caption = 'pnlMain'
     TabOrder = 1
+    ExplicitWidth = 1452
+    ExplicitHeight = 884
     object splVertical: TSplitter
       Left = 481
       Top = 0
@@ -71,6 +74,7 @@ object frmIniTree: TfrmIniTree
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitHeight = 884
     end
     object pnlEditor: TPanel
       Left = 487
@@ -80,6 +84,8 @@ object frmIniTree: TfrmIniTree
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 965
+      ExplicitHeight = 884
       object mmoJson: TMemo
         Left = 0
         Top = 0
@@ -1620,6 +1626,8 @@ object frmIniTree: TfrmIniTree
         ParentFont = False
         TabOrder = 0
         WordWrap = False
+        ExplicitWidth = 571
+        ExplicitHeight = 884
       end
       object pnlObjectInspector: TPanel
         Left = 577
@@ -1629,6 +1637,8 @@ object frmIniTree: TfrmIniTree
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitLeft = 571
+        ExplicitHeight = 884
       end
     end
   end

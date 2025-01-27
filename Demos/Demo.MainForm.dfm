@@ -25,7 +25,7 @@ object frmMainMenu: TfrmMainMenu
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitHeight = 285
+    ExplicitTop = 15
   end
   object pnlTop: TPanel
     Left = 0

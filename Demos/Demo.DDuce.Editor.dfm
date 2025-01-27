@@ -26,6 +26,8 @@ object frmEditor: TfrmEditor
     Width = 1016
     Height = 19
     Panels = <>
+    ExplicitTop = 532
+    ExplicitWidth = 1010
   end
   object pnlLeft: TPanel
     Left = 0
@@ -35,6 +37,7 @@ object frmEditor: TfrmEditor
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitHeight = 532
     object splHorizontal: TSplitter
       Left = 0
       Top = 265
@@ -61,6 +64,7 @@ object frmEditor: TfrmEditor
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitHeight = 261
     end
   end
   object pnlRight: TPanel
@@ -71,5 +75,7 @@ object frmEditor: TfrmEditor
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 627
+    ExplicitHeight = 532
   end
 end

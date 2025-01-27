@@ -167,6 +167,8 @@ function AddMenuItem(
   AMenu   : TMenu
 ): TMenuItem; overload;
 
+function ScaleSize(const ASize: Integer): Integer;
+
 implementation
 
 uses
@@ -1197,6 +1199,11 @@ begin
   end;
   MI.Enabled := True;
   Result := MI;
+end;
+
+function ScaleSize(const ASize: Integer): Integer;
+begin
+  Result := MulDiv(ASize, Screen.PixelsPerInch, 96)
 end;
 
 end.
