@@ -3,8 +3,6 @@ inherited frmFilter: TfrmFilter
   Top = 257
   ClientHeight = 455
   ClientWidth = 530
-  DoubleBuffered = True
-  Font.Name = 'Segoe UI'
   OnCloseQuery = FormCloseQuery
   OnShow = FormShow
   ExplicitWidth = 546

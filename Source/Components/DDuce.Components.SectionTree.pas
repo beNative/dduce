@@ -649,7 +649,7 @@ end;
 procedure TSectionTree.DoAfterItemErase(Canvas: TCanvas; Node: PVirtualNode;
   ItemRect: TRect);
 begin
-  inherited;
+  inherited DoAfterItemErase(Canvas, Node, ItemRect);
 //
 end;
 
