@@ -462,7 +462,7 @@ begin
   if Assigned(SR) then
   begin
     Manager.ActivateView(SR.ViewName);
-    View.Editor.GotoLineAndCenter(SR.BlockBegin.Y);
+    View.Editor.GoToLineAndSetPosition(SR.BlockBegin.Y);
     View.Editor.SelectionBeginPosition := TTextEditorTextPosition(SR.BlockBegin);
     View.Editor.SelectionEndPosition   := TTextEditorTextPosition(SR.BlockEnd);
     Modified;

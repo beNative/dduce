@@ -573,8 +573,7 @@ begin
   begin
     L := TLine(FTVP.SelectedItem);
     if Assigned(L) then
-      //View.SearchAndSelectLine(L.Index, L.Text);
-      View.Editor.GotoLineAndCenter(L.Index);
+      View.Editor.GoToLineAndSetPosition(L.Index);
     FUpdateEditorView := False;
   end;
 end;

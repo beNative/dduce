@@ -244,7 +244,7 @@ end;
 class constructor TDependencyProperty.Create;
 begin
   FLock := TCriticalSection.Create;
-  FRegister := TObjectDictionary<TDependencyProperty, TDictionary<TComponent, TValue>>.Create([doOwnsKeys, doOwnsValues]);
+  FRegister := TObjectDictionary<TDependencyProperty, TDictionary<TComponent, TValue>>.Create([Generics.Collections.doOwnsKeys, Generics.Collections.doOwnsValues]);
 end;
 
 class destructor TDependencyProperty.Destroy;

@@ -25,14 +25,14 @@ package DDuce.Modules;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$LIBSUFFIX AUTO}
+{$LIBSUFFIX '$(Auto)'}
 {$RUNONLY}
 {$IMPLICITBUILD ON}
 
 requires
   DDuce.Core,
   DDuce.Components,
-  TextEditor.Delphi.Alexandria.Runtime;
+  TextEditor.Delphi.Sydney.Runtime;
 
 contains
   DDuce.ObjectInspector in '..\Source\Modules\ObjectInspector\DDuce.ObjectInspector.pas' {frmComponentInspector},

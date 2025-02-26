@@ -25,7 +25,6 @@ package DDuce.Components;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$LIBSUFFIX AUTO}
 {$RUNONLY}
 {$IMPLICITBUILD ON}
 
@@ -57,9 +56,7 @@ contains
   DDuce.Factories.ValueList in '..\Source\Factories\DDuce.Factories.ValueList.pas',
   DDuce.Factories.VirtualTrees in '..\Source\Factories\DDuce.Factories.VirtualTrees.pas',
   DDuce.Factories.zObjInspector in '..\Source\Factories\DDuce.Factories.zObjInspector.pas',
-  DDuce.Components.VirtualTrees.Node in '..\Source\Components\DDuce.Components.VirtualTrees.Node.pas',
-  DDuce.Components.JsonTree in '..\Source\Components\DDuce.Components.JsonTree.pas',
-  DDuce.Components.IniTree in '..\Source\Components\DDuce.Components.IniTree.pas';
+  DDuce.Components.VirtualTrees.Node in '..\Source\Components\DDuce.Components.VirtualTrees.Node.pas';
 
 end.
 

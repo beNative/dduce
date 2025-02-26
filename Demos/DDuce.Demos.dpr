@@ -9,7 +9,8 @@ uses
   Vcl.Styles,
   Vcl.SysStyles,
   MidasLib,
-  DDuce.Logger.Channels.WinIPC, DDuce.Logger,
+  DDuce.Logger.Channels.WinIPC,
+  DDuce.Logger,
   Demo.Contact in 'Demo.Contact.pas',
   Demo.Data in 'Demo.Data.pas' {dmData: TDataModule},
   Demo.DDuce.DBGridView in 'Demo.DDuce.DBGridView.pas' {frmDBGridView},
@@ -31,8 +32,7 @@ uses
   Demo.Settings in 'Demo.Settings.pas',
   Demo.DDuce.VTNode in 'Demo.DDuce.VTNode.pas' {frmVTNode},
   Demo.DDuce.EditList in 'Demo.DDuce.EditList.pas' {frmEditList},
-  Demo.DDuce.Dialogs in 'Demo.DDuce.Dialogs.pas' {frmDialogs},
-  Demo.DDuce.JsonTree in 'Demo.DDuce.JsonTree.pas' {frmJsonTree};
+  Demo.DDuce.Dialogs in 'Demo.DDuce.Dialogs.pas' {frmDialogs};
 
 {$R *.res}
 

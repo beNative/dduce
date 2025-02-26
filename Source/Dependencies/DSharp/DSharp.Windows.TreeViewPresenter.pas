@@ -1538,7 +1538,7 @@ begin
           Refresh;
       end;
 
-      caReseted:
+      caReset:
       begin
         ResetRootNodeCount;
       end;

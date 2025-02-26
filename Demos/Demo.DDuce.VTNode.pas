@@ -218,7 +218,9 @@ implementation
 
 uses
   DDuce.Factories.VirtualTrees, DDuce.Factories.zObjInspector,
-  DDuce.Logger, DDuce.Logger.Interfaces;
+  DDuce.Logger, DDuce.Logger.Interfaces,
+
+  VirtualTrees.Types;
 
 {$REGION 'TMyData'}
 constructor TMyData.Create(const AText: string);

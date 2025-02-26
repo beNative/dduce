@@ -10,6 +10,7 @@ object frmVTNode: TfrmVTNode
   Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object pnlTree: TPanel

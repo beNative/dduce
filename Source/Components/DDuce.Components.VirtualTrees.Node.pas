@@ -581,7 +581,7 @@ end;
 
 procedure TVTNode<T>.SetNodeHeight(const Value: Word);
 begin
-  VNode.NodeHeight := Value;
+  //VNode.NodeHeight := Value;
 end;
 
 function TVTNode<T>.GetText: string;

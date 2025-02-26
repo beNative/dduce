@@ -24,7 +24,7 @@ implementation
 
 uses
   //Demo.DDuce.XMLTree,
-  Demo.DDuce.JsonTree,
+  //Demo.DDuce.JsonTree,
   Demo.DDuce.IniTree,
   Demo.DDuce.PropertyInspector,
   Demo.DDuce.Reflect,
@@ -57,7 +57,7 @@ begin
   DemoManager.Register(TfrmEditList, 'EditList');
   DemoManager.Register(TfrmDialogs, 'Dialogs');
   DemoManager.Register(TfrmReflect, 'Reflect');
-  DemoManager.Register(TfrmJsonTree, 'JsonTree');
+  //DemoManager.Register(TfrmJsonTree, 'JsonTree');
   DemoManager.Register(TfrmIniTree, 'IniTree');
 //  DemoManager.Register(TfrmInspector, 'Inspector');
 //  DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
