@@ -17,7 +17,6 @@ uses
   Demo.DDuce.DynamicRecord in 'Demo.DDuce.DynamicRecord.pas' {frmDynamicRecords},
   Demo.DDuce.PropertyInspector in 'Demo.DDuce.PropertyInspector.pas' {frmPropertyInspector},
   Demo.DDuce.Reflect in 'Demo.DDuce.Reflect.pas' {frmReflect},
-  Demo.DDuce.IniTree in 'Demo.DDuce.IniTree.pas' {frmIniTree},
   Demo.Factories in 'Demo.Factories.pas',
   Demo.MainForm in 'Demo.MainForm.pas' {frmMainMenu},
   Demo.Manager in 'Demo.Manager.pas',

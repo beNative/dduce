@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2025 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -134,7 +134,6 @@ type
     function GetIndex: Integer;
     function GetNode(AIndex: UInt32): TVTNode<T>;
     function GetNodeHeight: Word;
-    procedure SetNodeHeight(const Value: Word);
     function GetOwnsObject: Boolean;
     procedure SetOwnsObject(AValue: Boolean);
     function GetSelected: Boolean;
@@ -236,7 +235,7 @@ type
       read GetNode;
 
     property NodeHeight: Word
-      read GetNodeHeight write SetNodeHeight;
+      read GetNodeHeight;
 
     { If Data is of a class type, this determines if Data is freed when TVTNode
     instance is freed. }
@@ -332,7 +331,7 @@ begin
     begin
       FFirst := False;
     end
-    else
+    else if Assigned(FCurrent.VNode.NextSibling) then
     begin
       LTree := FCurrent.FTree;
       FCurrent := LTree.GetNodeData<TVTNode<K>>(FCurrent.VNode.NextSibling);
@@ -577,11 +576,6 @@ end;
 function TVTNode<T>.GetNodeHeight: Word;
 begin
   Result := VNode.NodeHeight;
-end;
-
-procedure TVTNode<T>.SetNodeHeight(const Value: Word);
-begin
-  //VNode.NodeHeight := Value;
 end;
 
 function TVTNode<T>.GetText: string;

@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2025 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ implementation
 uses
   //Demo.DDuce.XMLTree,
   //Demo.DDuce.JsonTree,
-  Demo.DDuce.IniTree,
+  //Demo.DDuce.IniTree,
   Demo.DDuce.PropertyInspector,
   Demo.DDuce.Reflect,
   Demo.DDuce.DynamicRecord,
@@ -58,7 +58,7 @@ begin
   DemoManager.Register(TfrmDialogs, 'Dialogs');
   DemoManager.Register(TfrmReflect, 'Reflect');
   //DemoManager.Register(TfrmJsonTree, 'JsonTree');
-  DemoManager.Register(TfrmIniTree, 'IniTree');
+  //DemoManager.Register(TfrmIniTree, 'IniTree');
 //  DemoManager.Register(TfrmInspector, 'Inspector');
 //  DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
   // not working yet

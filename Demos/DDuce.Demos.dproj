@@ -161,9 +161,6 @@
         <DCCReference Include="Demo.DDuce.Reflect.pas">
             <Form>frmReflect</Form>
         </DCCReference>
-        <DCCReference Include="Demo.DDuce.IniTree.pas">
-            <Form>frmIniTree</Form>
-        </DCCReference>
         <DCCReference Include="Demo.Factories.pas"/>
         <DCCReference Include="Demo.MainForm.pas">
             <Form>frmMainMenu</Form>
