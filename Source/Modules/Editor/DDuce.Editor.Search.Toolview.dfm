@@ -9,23 +9,20 @@ inherited frmSearchForm: TfrmSearchForm
   Caption = 'Find'
   ClientHeight = 413
   ClientWidth = 298
-  Color = clBtnFace
   Constraints.MinHeight = 139
   Constraints.MinWidth = 133
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -12
-  Font.Name = 'Segoe UI'
-  Font.Style = []
   PopupMode = pmAuto
+  StyleElements = [seFont, seClient, seBorder]
   OnHide = FormHide
   OnShow = FormShow
+  ExplicitWidth = 314
+  ExplicitHeight = 452
   TextHeight = 15
   object pnlOperations: TPanel
     Left = 0
     Top = 0
     Width = 298
-    Height = 167
+    Height = 241
     Margins.Left = 1
     Margins.Top = 1
     Margins.Right = 1
@@ -35,7 +32,7 @@ inherited frmSearchForm: TfrmSearchForm
     TabOrder = 0
     DesignSize = (
       298
-      167)
+      241)
     object grpSearchText: TGroupBox
       Left = 0
       Top = 0
@@ -50,6 +47,7 @@ inherited frmSearchForm: TfrmSearchForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
+      ExplicitWidth = 287
       DesignSize = (
         293
         27)
@@ -57,7 +55,7 @@ inherited frmSearchForm: TfrmSearchForm
         Left = 9
         Top = 11
         Width = 282
-        Height = 16
+        Height = 14
         Margins.Left = 1
         Margins.Top = 1
         Margins.Right = 1
@@ -71,6 +69,7 @@ inherited frmSearchForm: TfrmSearchForm
         ParentFont = False
         TabOrder = 0
         OnChange = cbxSearchTextChange
+        ExplicitWidth = 276
       end
     end
     object grpReplaceWith: TGroupBox
@@ -85,6 +84,7 @@ inherited frmSearchForm: TfrmSearchForm
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Replace with:'
       TabOrder = 1
+      ExplicitWidth = 287
       DesignSize = (
         293
         22)
@@ -92,13 +92,14 @@ inherited frmSearchForm: TfrmSearchForm
         Left = 6
         Top = 9
         Width = 282
-        Height = 33
+        Height = 23
         Margins.Left = 1
         Margins.Top = 1
         Margins.Right = 1
         Margins.Bottom = 1
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
+        ExplicitWidth = 276
       end
     end
     object grpOptions: TGroupBox
@@ -113,6 +114,7 @@ inherited frmSearchForm: TfrmSearchForm
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Options'
       TabOrder = 2
+      ExplicitWidth = 287
       object chkWholeWordsOnly: TCheckBox
         Left = 9
         Top = 5
@@ -191,6 +193,7 @@ inherited frmSearchForm: TfrmSearchForm
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Scope'
       TabOrder = 3
+      ExplicitWidth = 287
       object rbSelection: TRadioButton
         Left = 9
         Top = 11
@@ -249,6 +252,7 @@ inherited frmSearchForm: TfrmSearchForm
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Origin'
       TabOrder = 4
+      ExplicitWidth = 287
       object rbFromCursor: TRadioButton
         Left = 9
         Top = 11
@@ -282,19 +286,20 @@ inherited frmSearchForm: TfrmSearchForm
     end
     object grpDirection: TGroupBox
       Left = 0
-      Top = 130
-      Width = 293
-      Height = 35
+      Top = 180
+      Width = 298
+      Height = 61
       Margins.Left = 1
       Margins.Top = 1
       Margins.Right = 1
       Margins.Bottom = 1
-      Anchors = [akLeft, akTop, akRight]
+      Align = alBottom
       Caption = 'Direction'
       TabOrder = 5
+      ExplicitTop = 179
       object rbBackward: TRadioButton
         Left = 6
-        Top = 15
+        Top = 30
         Width = 57
         Height = 8
         Margins.Left = 1
@@ -402,9 +407,9 @@ inherited frmSearchForm: TfrmSearchForm
   end
   object pnlResultList: TPanel
     Left = 0
-    Top = 167
+    Top = 241
     Width = 298
-    Height = 236
+    Height = 162
     Margins.Left = 1
     Margins.Top = 1
     Margins.Right = 1
@@ -412,6 +417,8 @@ inherited frmSearchForm: TfrmSearchForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 256
+    ExplicitHeight = 147
   end
   object pnlStatus: TPanel
     Left = 0
@@ -431,6 +438,8 @@ inherited frmSearchForm: TfrmSearchForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 2
+    ExplicitTop = 386
+    ExplicitWidth = 292
   end
   object aclMain: TActionList
     Left = 16

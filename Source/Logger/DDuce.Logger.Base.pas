@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2024 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2025 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -213,16 +213,16 @@ type
     ): ILogger; overload;
     function SendText(const AText: string): ILogger; overload;
 
-    function SendSQL(const AName: string; const AValue: string): ILogger; overload;
-    function SendSQL(const AValue: string): ILogger; overload;
-    function SendXML(const AName: string; const AValue: string): ILogger; overload;
-    function SendXML(const AValue: string): ILogger; overload;
-    function SendHTML(const AName: string; const AValue: string): ILogger; overload;
-    function SendHTML(const AValue: string): ILogger; overload;
-    function SendINI(const AName: string; const AValue: string): ILogger; overload;
-    function SendINI(const AValue: string): ILogger; overload;
-    function SendJSON(const AName: string; const AValue: string): ILogger; overload;
-    function SendJSON(const AValue: string): ILogger; overload;
+    function SendSql(const AName: string; const AValue: string): ILogger; overload;
+    function SendSql(const AValue: string): ILogger; overload;
+    function SendXml(const AName: string; const AValue: string): ILogger; overload;
+    function SendXml(const AValue: string): ILogger; overload;
+    function SendHtml(const AName: string; const AValue: string): ILogger; overload;
+    function SendHtml(const AValue: string): ILogger; overload;
+    function SendIni(const AName: string; const AValue: string): ILogger; overload;
+    function SendIni(const AValue: string): ILogger; overload;
+    function SendJson(const AName: string; const AValue: string): ILogger; overload;
+    function SendJson(const AValue: string): ILogger; overload;
 
     function SendIf(
       const AText : string;
@@ -1128,24 +1128,24 @@ begin
 end;
 
 {$REGION 'specialized SendText methods'}
-function TLogger.SendINI(const AValue: string): ILogger;
+function TLogger.SendIni(const AValue: string): ILogger;
 begin
-  Result := SendINI('', AValue);
+  Result := SendIni('', AValue);
 end;
 
-function TLogger.SendINI(const AName, AValue: string): ILogger;
+function TLogger.SendIni(const AName, AValue: string): ILogger;
 begin
   Result := SendText(AName, AValue, 'INI');
 end;
 
-function TLogger.SendXML(const AName, AValue: string): ILogger;
+function TLogger.SendXml(const AName, AValue: string): ILogger;
 begin
   Result := SendText(AName, AValue, 'XML');
 end;
 
-function TLogger.SendXML(const AValue: string): ILogger;
+function TLogger.SendXml(const AValue: string): ILogger;
 begin
-  Result := SendXML('', AValue);
+  Result := SendXml('', AValue);
 end;
 
 function TLogger.SendJSON(const AName, AValue: string): ILogger;
@@ -1153,29 +1153,29 @@ begin
   Result := SendText(AName, AValue, 'JSON');
 end;
 
-function TLogger.SendJSON(const AValue: string): ILogger;
+function TLogger.SendJson(const AValue: string): ILogger;
 begin
-  Result := SendJSON('', AValue);
+  Result := SendJson('', AValue);
 end;
 
-function TLogger.SendHTML(const AName, AValue: string): ILogger;
+function TLogger.SendHtml(const AName, AValue: string): ILogger;
 begin
   Result := SendText(AName, AValue, 'HTML');
 end;
 
-function TLogger.SendHTML(const AValue: string): ILogger;
+function TLogger.SendHtml(const AValue: string): ILogger;
 begin
-  Result := SendHTML('', AValue);
+  Result := SendHtml('', AValue);
 end;
 
-function TLogger.SendSQL(const AName, AValue: string): ILogger;
+function TLogger.SendSql(const AName, AValue: string): ILogger;
 begin
   Result := SendText(AName, AValue, 'SQL');
 end;
 
-function TLogger.SendSQL(const AValue: string): ILogger;
+function TLogger.SendSql(const AValue: string): ILogger;
 begin
-  Result := SendSQL('', AValue);
+  Result := SendSql('', AValue);
 end;
 {$ENDREGION}
 

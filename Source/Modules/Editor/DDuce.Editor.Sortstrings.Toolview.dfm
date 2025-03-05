@@ -8,20 +8,17 @@ inherited frmSortStrings: TfrmSortStrings
   Caption = 'Sort strings'
   ClientHeight = 536
   ClientWidth = 430
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -12
-  Font.Name = 'Segoe UI'
-  Font.Style = []
+  StyleElements = [seFont, seClient, seBorder]
   OnResize = FormResize
+  ExplicitWidth = 446
+  ExplicitHeight = 575
   TextHeight = 15
   object rgpSortDirection: TRadioGroup
     AlignWithMargins = True
     Left = 1
     Top = 1
     Width = 428
-    Height = 34
+    Height = 42
     Margins.Left = 1
     Margins.Top = 1
     Margins.Right = 1
@@ -49,6 +46,8 @@ inherited frmSortStrings: TfrmSortStrings
     AutoSize = True
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitTop = 514
+    ExplicitWidth = 424
     DesignSize = (
       430
       5)
@@ -67,14 +66,15 @@ inherited frmSortStrings: TfrmSortStrings
       Default = True
       ModalResult = 1
       TabOrder = 0
+      ExplicitLeft = 399
     end
   end
   object rgpSortScope: TRadioGroup
     AlignWithMargins = True
     Left = 1
-    Top = 37
+    Top = 45
     Width = 428
-    Height = 43
+    Height = 46
     Margins.Left = 1
     Margins.Top = 1
     Margins.Right = 1

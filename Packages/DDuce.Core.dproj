@@ -170,13 +170,6 @@
         <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Windows.TreeViewPresenter.pas"/>
         <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.API.pas"/>
         <DCCReference Include="..\Source\Dependencies\ZeroMQ\ZeroMQ.pas"/>
-        <DCCReference Include="..\Source\Dependencies\NativeXml\NativeXml.pas"/>
-        <DCCReference Include="..\Source\Dependencies\NativeXml\NativeXmlCodepages.pas"/>
-        <DCCReference Include="..\Source\Dependencies\NativeXml\NativeXmlNodes.pas"/>
-        <DCCReference Include="..\Source\Dependencies\NativeXml\NativeXmlObjectStorage.pas"/>
-        <DCCReference Include="..\Source\Dependencies\NativeXml\sdDebug.pas"/>
-        <DCCReference Include="..\Source\Dependencies\NativeXml\sdStreams.pas"/>
-        <DCCReference Include="..\Source\Dependencies\NativeXml\sdStringTable.pas"/>
         <DCCReference Include="..\Source\DDuce.DynamicRecord.pas"/>
         <DCCReference Include="..\Source\DDuce.RandomData.pas"/>
         <DCCReference Include="..\Source\DDuce.Reflect.pas"/>

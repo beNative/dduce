@@ -1,22 +1,15 @@
 inherited frmCharacterMap: TfrmCharacterMap
   Left = 114
   Top = 114
-  Margins.Left = 5
-  Margins.Top = 5
-  Margins.Right = 5
-  Margins.Bottom = 5
   ActiveControl = pcMain
   BorderStyle = bsSingle
   ClientHeight = 649
   ClientWidth = 375
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -12
-  Font.Name = 'Segoe UI'
-  Font.Style = []
   PopupMode = pmAuto
   Position = poDefault
+  StyleElements = [seFont, seClient, seBorder]
+  ExplicitWidth = 391
+  ExplicitHeight = 688
   TextHeight = 15
   object pcMain: TPageControl
     Left = 0
@@ -26,6 +19,8 @@ inherited frmCharacterMap: TfrmCharacterMap
     ActivePage = tsANSI
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 369
+    ExplicitHeight = 387
     object tsANSI: TTabSheet
       Caption = 'ANSI'
       DesignSize = (
@@ -33,7 +28,7 @@ inherited frmCharacterMap: TfrmCharacterMap
         374)
       object lblCharInfo: TLabel
         Left = 6
-        Top = 365
+        Top = 357
         Width = 59
         Height = 15
         Margins.Bottom = 2
@@ -41,7 +36,6 @@ inherited frmCharacterMap: TfrmCharacterMap
         Caption = 'lblCharInfo'
         Color = clBtnFace
         ParentColor = False
-        ExplicitTop = 355
       end
       object grdANSI: TStringGrid
         Left = 0
@@ -64,8 +58,8 @@ inherited frmCharacterMap: TfrmCharacterMap
         OnMouseDown = grdANSIMouseDown
         OnMouseMove = grdANSIMouseMove
         OnSelectCell = grdANSISelectCell
-        ExplicitWidth = 360
-        ExplicitHeight = 351
+        ExplicitWidth = 351
+        ExplicitHeight = 331
       end
     end
     object tsUnicode: TTabSheet
@@ -105,14 +99,12 @@ inherited frmCharacterMap: TfrmCharacterMap
         OnMouseDown = grdUnicodeMouseDown
         OnMouseMove = grdUnicodeMouseMove
         OnSelectCell = grdUnicodeSelectCell
-        ExplicitWidth = 360
-        ExplicitHeight = 343
       end
       object cbxUnicodeRange: TComboBox
         Left = 162
         Top = 346
         Width = 189
-        Height = 33
+        Height = 23
         Style = csDropDownList
         Anchors = [akRight]
         DropDownCount = 30
@@ -130,6 +122,8 @@ inherited frmCharacterMap: TfrmCharacterMap
     BevelOuter = bvNone
     Color = clWhite
     TabOrder = 1
+    ExplicitTop = 387
+    ExplicitWidth = 369
     object shpChar: TShape
       Left = 0
       Top = 0

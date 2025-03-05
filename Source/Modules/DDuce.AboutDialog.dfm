@@ -3,7 +3,7 @@ object frmAboutDialog: TfrmAboutDialog
   Top = 0
   Caption = 'About'
   ClientHeight = 342
-  ClientWidth = 561
+  ClientWidth = 555
   Color = clWindow
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
