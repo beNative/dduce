@@ -61,7 +61,9 @@ contains
   DDuce.Factories.zObjInspector in '..\Source\Factories\DDuce.Factories.zObjInspector.pas',
   DDuce.Components.VirtualTrees.Node in '..\Source\Components\DDuce.Components.VirtualTrees.Node.pas',
   DDuce.Components.JsonTree in '..\Source\Components\DDuce.Components.JsonTree.pas',
-  DDuce.Components.IniTree in '..\Source\Components\DDuce.Components.IniTree.pas';
+  DDuce.Components.IniTree in '..\Source\Components\DDuce.Components.IniTree.pas',
+  DDuce.Components.XmlTree in '..\Source\Components\DDuce.Components.XmlTree.pas',
+  DDuce.Components.RttiTree in '..\Source\Components\DDuce.Components.RttiTree.pas';
 
 end.
 

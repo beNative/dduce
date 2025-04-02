@@ -22,6 +22,7 @@ interface
 
 uses
   System.IniFiles, System.Classes, System.Generics.Collections, System.Rtti,
+  System.Types,
   Vcl.Graphics,
 
   Spring,
@@ -80,6 +81,8 @@ type
     FIniString     : string;
     FColorSettings : TColorSettings;
 
+    procedure FColorSettingsChanged(Sender: TObject);
+
   protected
     {$REGION 'property access methods'}
     function GetFocusedIniNode: TIniNode;
@@ -103,6 +106,14 @@ type
       Column       : TColumnIndex;
       TextType     : TVSTTextType
     ); override;
+    procedure DoBeforeCellPaint(
+      Canvas          : TCanvas;
+      Node            : PVirtualNode;
+      Column          : TColumnIndex;
+      CellPaintMode   : TVTCellPaintMode;
+      CellRect        : TRect;
+      var ContentRect : TRect
+    ); override;
     {$ENDREGION}
 
     procedure BuildTree; override;
@@ -121,6 +132,9 @@ type
 
     property IniString: string
       read GetIniString write SetIniString;
+
+    property ColorSettings: TColorSettings
+      read FColorSettings;
   end;
 
 implementation
@@ -130,11 +144,19 @@ uses
 
   DDuce.Logger, DDuce.Logger.Interfaces;
 
+function IsSectionString(const AString: string): Boolean;
+begin
+  Result := (Length(AString) >= 3) and
+            (AString[1] = '[') and
+            (AString[Length(AString)] = ']');
+end;
+
 {$REGION 'construction and destruction'}
 procedure TIniTree.AfterConstruction;
 begin
   inherited AfterConstruction;
   FColorSettings := TColorSettings.Create;
+  FColorSettings.OnChanged.Add(FColorSettingsChanged);
   FIniStream := TStringStream.Create;
   Header.Options := Header.Options + [hoAutoResize];
   with Header.Columns.Add do
@@ -214,7 +236,54 @@ begin
 end;
 {$ENDREGION}
 
+{$REGION 'event handlers'}
+procedure TIniTree.FColorSettingsChanged(Sender: TObject);
+begin
+  Invalidate;
+end;
+{$ENDREGION}
+
 {$REGION 'event dispatch methods'}
+procedure TIniTree.DoBeforeCellPaint(
+  Canvas        : TCanvas;
+  Node          : PVirtualNode;
+  Column        : TColumnIndex;
+  CellPaintMode : TVTCellPaintMode;
+  CellRect      : TRect;
+  var ContentRect: TRect);
+var
+  LNode  : TIniNode;
+  LColor : TColor;
+begin
+  inherited DoBeforeCellPaint(
+    Canvas, Node, Column, CellPaintMode, CellRect, ContentRect
+  );
+
+  if CellPaintMode <> cpmPaint then
+    Exit;
+
+  LNode := GetNode(Node);
+  LColor := clWhite; // default fallback
+
+  if Column = 0 then
+  begin
+    if LNode.Level = 0 then
+      LColor := ColorSettings.Section.BackgroundColor
+    else
+      LColor := ColorSettings.Name.BackgroundColor;
+  end
+  else if Column = 1 then
+  begin
+    if not LNode.Data.Value.IsEmpty then
+      LColor := ColorSettings.Value.BackgroundColor
+    else
+      LColor := ColorSettings.NullValue.BackgroundColor;
+  end;
+
+  Canvas.Brush.Color := LColor;
+  Canvas.FillRect(CellRect);
+end;
+
 procedure TIniTree.DoFreeNode(Node: PVirtualNode);
 begin
   GetNode(Node).Free;
@@ -278,8 +347,25 @@ end;
 
 procedure TIniTree.DoPaintText(Node: PVirtualNode; const Canvas: TCanvas;
   Column: TColumnIndex; TextType: TVSTTextType);
+var
+  LValue : TValue;
+  LNode  : TIniNode;
 begin
-
+  if TextType = ttNormal then
+  begin
+    LNode := GetNode(Node);
+    if Column = 0 then
+    begin
+      if LNode.Level = 0 then // section
+        Canvas.Font.Assign(ColorSettings.Section.Font)
+      else
+        Canvas.Font.Assign(ColorSettings.Name.Font)
+    end
+    else if Column = 1 then
+    begin
+      Canvas.Font.Assign(ColorSettings.Value.Font)
+    end;
+  end;
   inherited DoPaintText(Node, Canvas, Column, TextType);
 end;
 {$ENDREGION}
@@ -365,21 +451,25 @@ begin
   FSection.FontName  := 'Consolas';
   FSection.FontColor := clMaroon;
   FSection.FontStyle := [fsBold];
+  FSection.BackgroundColor := clWhite;
 
   FName := TTextFormatSettings.Create;
   FName.OnChanged.Add(FormatSettingsChanged);
   FName.FontName  := 'Consolas';
   FName.FontColor := clBlue;
   FName.FontStyle := [fsBold];
+  FName.BackgroundColor := clWhite;
 
   FValue := TTextFormatSettings.Create;
   FValue.OnChanged.Add(FormatSettingsChanged);
   FValue.FontName  := 'Consolas';
   FValue.FontColor := clGreen;
   FValue.FontStyle := [fsBold];
+  FValue.BackgroundColor := clWhite;
 
   FNullValue := TTextFormatSettings.Create;
   FNullValue.OnChanged.Add(FormatSettingsChanged);
+  FNullValue.BackgroundColor := clWhite;
 end;
 {$ENDREGION}
 {$ENDREGION}

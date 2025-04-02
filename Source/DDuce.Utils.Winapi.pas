@@ -29,6 +29,12 @@ uses
 type
   TProcessId = DWORD;
 
+function GetComputerName: string;
+
+function GetProcessName: string;
+
+function GetProcessID: UInt32;
+
 function GetTotalCpuUsagePct : Double;
 
 function GetProcessCpuUsagePct(AProcessId: TProcessId): Double;
@@ -439,6 +445,18 @@ begin
   Result := ExtractFileName(Result)
 end;
 
+function GetComputerName: string;
+var
+  Buffer: array[0..MAX_COMPUTERNAME_LENGTH + 1] of Char;
+  Size: DWORD;
+begin
+  Size := MAX_COMPUTERNAME_LENGTH + 1;
+  if Winapi.Windows.GetComputerName(Buffer, Size) then
+    Result := StrPas(Buffer)
+  else
+    RaiseLastOSError;
+end;
+
 function GetExenameForWindow(AWndHandle: HWND): string;
 var
   LProcessID : TProcessId;
@@ -450,6 +468,21 @@ begin
     if LProcessID <> 0 then
       Result := GetExenameForProcess(LProcessID);
   end;
+end;
+
+function GetProcessName: string;
+var
+  Buffer: array[0..MAX_PATH] of Char;
+begin
+  if GetModuleFileName(0, Buffer, MAX_PATH) > 0 then
+    Result := ExtractFileName(StrPas(Buffer))
+  else
+    RaiseLastOSError;
+end;
+
+function GetProcessID: UInt32;
+begin
+  Result := GetCurrentProcessId;
 end;
 
 procedure GetIPAddresses(AStrings: TStrings);

@@ -29,7 +29,7 @@ uses
 
   VirtualTrees, VirtualTrees.Types, VirtualTrees.Header,
 
-  DDuce.Components.PropertyInspector, DDuce.Components.XMLTree;
+  DDuce.Components.PropertyInspector, DDuce.Components.XmlTree;
 
 type
   TfrmXMLTree = class(TForm)
@@ -98,7 +98,7 @@ uses
 
 {$REGION 'XML string'}
 const
-  // example XML document to show in the XML-viewer
+   //example XML document to show in the XML-viewer
   XML_STRING =
     '<?xml version="1.0" encoding="utf-8"?>'                                                                                                                                                              + #13#10 +
     '<document version="3.0">'                                                                                                                                                                            + #13#10 +
@@ -270,7 +270,7 @@ begin
   inherited;
   FXMLTree := TXMLTree.Create(Self);
   FXMLTree.Parent := pnlXMLTree;
-  FXML := XML_STRING;
+  //FXML := XML_STRING;
   mmoXML.Text := FXML;
   InitializeTree;
   FPI := TDDuceComponents.CreatePropertyInspector(Self, pnlInspector, FXMLTree);
@@ -303,7 +303,7 @@ end;
 procedure TfrmXMLTree.XMLTreeEdited(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex);
 begin
-  FXML := FXMLTree.XML;
+  FXML := FXMLTree.XmlString;
 end;
 
 procedure TfrmXMLTree.XMLTreeEditing(Sender: TBaseVirtualTree;
@@ -325,7 +325,7 @@ end;
 procedure TfrmXMLTree.mmoXMLChange(Sender: TObject);
 begin
   FXML := mmoXML.Text;
-  FXMLTree.XML := FXML;
+  FXMLTree.XmlString := FXML;
 end;
 {$ENDREGION}
 
@@ -382,7 +382,7 @@ begin
   FXMLTree.TreeOptions.AutoOptions := [
     toAutoSpanColumns
   ];
-  FXMLTree.XML := FXML;
+  FXMLTree.XmlString := FXML;
   FXMLTree.Colors.GridLineColor := clSilver;
   FXMLTree.Colors.UnfocusedSelectionColor := clGray;
   FXMLTree.DrawSelectionMode := smBlendedRectangle;

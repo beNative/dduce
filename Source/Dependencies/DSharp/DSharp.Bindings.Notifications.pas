@@ -79,7 +79,7 @@ procedure NotifyPropertyChanged(AObject, ASender: TObject; const APropertyName: 
   AUpdateTrigger: TUpdateTrigger = utPropertyChanged);
 var
   LNotifyPropertyChanged: INotifyPropertyChanged;
-  LPropertyChanged: IEvent<TPropertyChangedEvent>;
+  LPropertyChanged: IInvokableEvent<TPropertyChangedEvent>;
 begin
   if Supports(AObject, INotifyPropertyChanged, LNotifyPropertyChanged) then
   begin

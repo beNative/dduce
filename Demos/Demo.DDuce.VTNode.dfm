@@ -19,8 +19,8 @@ object frmVTNode: TfrmVTNode
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 281
-    ExplicitHeight = 798
+    ExplicitWidth = 271
+    ExplicitHeight = 780
   end
   object pnlMain: TPanel
     Left = 630
@@ -30,8 +30,8 @@ object frmVTNode: TfrmVTNode
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 634
-    ExplicitHeight = 798
+    ExplicitLeft = 624
+    ExplicitHeight = 780
     object btnDeleteNode: TButton
       Left = 6
       Top = 118
@@ -169,7 +169,7 @@ object frmVTNode: TfrmVTNode
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitHeight = 798
+    ExplicitHeight = 780
   end
   object aclMain: TActionList
     Left = 208

@@ -94,7 +94,8 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Rtti, System.StrUtils, Vcl.Clipbrd,
+  System.Rtti, System.StrUtils,
+  Vcl.Clipbrd,
 
   DDuce.Components.Factories, DDuce.Factories.VirtualTrees,
   DDuce.Factories.zObjInspector, DDuce.Editor.Factories, DDuce.Logger,

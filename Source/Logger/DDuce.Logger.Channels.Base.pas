@@ -31,7 +31,6 @@ type
 
   protected
     {$REGION 'property access methods'}
-    function GetPort: Integer; virtual;
     function GetEnabled: Boolean; virtual;
     procedure SetEnabled(const Value: Boolean); virtual;
     function GetConnected: Boolean; virtual;
@@ -52,9 +51,6 @@ type
     { True when the channel is connected with the receiver instance.  }
     property Connected: Boolean
       read GetConnected;
-
-    property Port: Integer
-      read GetPort;
 
   public
     constructor Create(AEnabled: Boolean = True); virtual;
@@ -100,11 +96,6 @@ end;
 function TCustomLogChannel.GetConnected: Boolean;
 begin
   Result := False; // to be overridden in descendants
-end;
-
-function TCustomLogChannel.GetPort: Integer;
-begin
-  Result := 0;  // to be overridden in descendants
 end;
 {$ENDREGION}
 

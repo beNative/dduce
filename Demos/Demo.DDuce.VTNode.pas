@@ -96,7 +96,7 @@ uses
 
   zObjInspector,
 
-  DDuce.Components.VirtualTrees.Node,   DDuce.Components.SectionTree;
+  DDuce.Components.VirtualTrees.Node, DDuce.Components.SectionTree;
 
 type
   TMyData = class

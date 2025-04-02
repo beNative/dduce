@@ -52,7 +52,7 @@ type
     function GetEnabled: Boolean; override;
     function GetEndPoint: string;
     procedure SetEndPoint(const Value: string);
-    function GetPort: Integer; override;
+    function GetPort: Integer; virtual;
     function GetConnected: Boolean; override;
     {$ENDREGION}
 

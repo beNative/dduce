@@ -201,19 +201,9 @@ type
       read GetPort;
   end;
 
-  IMqttChannel = interface(ILogChannel)
-  ['{5D482099-AB68-462B-8EE8-CCE4DBB60C44}']
-    {$REGION 'property access methods'}
-    function GetPort: Integer;
-    function GetBroker: string;
-    procedure SetBroker(const Value: string);
-    {$ENDREGION}
-    { Hostname/IP of the MQTT broker }
-    property Broker: string
-      read GetBroker write SetBroker;
+  INatsChannel = interface(ILogChannel)
+  ['{C94C5937-D11D-43B0-BCE4-2C98F70A6040}']
 
-    property Port: Integer
-      read GetPort;
   end;
 
   IWinipcChannel = interface(ILogChannel)

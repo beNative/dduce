@@ -116,6 +116,8 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <BT_BuildType>Debug</BT_BuildType>
         <Icon_MainIcon>DDuce.Demos_Icon.ico</Icon_MainIcon>
+        <VerInfo_Build>2</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=Tim Sinaeve;FileVersion=1.2.1.2;ProductVersion=1.2</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <BT_BuildType>Debug</BT_BuildType>
@@ -200,6 +202,14 @@
             <Form>frmJsonTree</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Demo.DDuce.XMLTree.pas">
+            <Form>frmXMLTree</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Demo.DDuce.RttiTree.pas">
+            <Form>frmRttiTree</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -232,7 +242,19 @@
             </Delphi.Personality>
             <Deployment Version="5">
                 <DeployFile LocalName="Bin\Win32\DDuce.Demos.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="Bin\Win32\DDuce.Demos.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>DDuce.Demos.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Bin\Win32\DDuce.Demos.rsm" Configuration="Debug" Class="DebugSymbols"/>
+                <DeployFile LocalName="Bin\Win32\DDuce.Demos.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win32">
+                        <RemoteName>DDuce.Demos.rsm</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Win32\Debug\DDuce.Demos.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="Win32\Release\DDuce.Demos.exe" Configuration="Release" Class="ProjectOutput"/>
                 <DeployFile LocalName="Win64\Debug\DDuce.Demos.exe" Configuration="Debug" Class="ProjectOutput"/>

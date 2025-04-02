@@ -74,8 +74,8 @@ type
     function GetSettings: TSearchEngineSettings;
     function GetView: IEditorView;
     function GetViews: IEditorViews;
-    function GetOnChange: IEvent<TNotifyEvent>;
-    function GetOnExecute: IEvent<TNotifyEvent>;
+    function GetOnChange: IInvokableEvent<TNotifyEvent>;
+    function GetOnExecute: IInvokableEvent<TNotifyEvent>;
     procedure SetCurrentIndex(AValue: Integer);
     procedure SetOptions(AValue: TTextEditorSearchOptions);
     procedure SetReplaceText(AValue: string);
@@ -136,10 +136,10 @@ type
     property ItemList: IList<TSearchResult>
       read GetItemList;
 
-    property OnChange: IEvent<TNotifyEvent>
+    property OnChange: IInvokableEvent<TNotifyEvent>
       read GetOnChange;
 
-    property OnExecute: IEvent<TNotifyEvent>
+    property OnExecute: IInvokableEvent<TNotifyEvent>
       read GetOnExecute;
 
   public
@@ -232,12 +232,12 @@ begin
   Result := Owner as IEditorViews;
 end;
 
-function TSearchEngine.GetOnChange: IEvent<TNotifyEvent>;
+function TSearchEngine.GetOnChange: IInvokableEvent<TNotifyEvent>;
 begin
   Result := FOnChange;
 end;
 
-function TSearchEngine.GetOnExecute: IEvent<TNotifyEvent>;
+function TSearchEngine.GetOnExecute: IInvokableEvent<TNotifyEvent>;
 begin
   Result := FOnExecute;
 end;

@@ -147,6 +147,7 @@
         <DCCReference Include="FireDACCommon.dcp"/>
         <DCCReference Include="IndySystem.dcp"/>
         <DCCReference Include="IndyCore.dcp"/>
+        <DCCReference Include="RESTComponents.dcp"/>
         <DCCReference Include="..\Source\Settings\DDuce.Settings.Form.pas"/>
         <DCCReference Include="..\Source\Settings\DDuce.Settings.TextFormat.pas"/>
         <DCCReference Include="..\Source\Dependencies\DSharp\DSharp.Bindings.Collections.pas"/>
@@ -188,6 +189,7 @@
         <DCCReference Include="..\Source\Dependencies\JsonDataObjects\JsonDataObjects.pas"/>
         <DCCReference Include="..\Source\DDuce.Resources.pas"/>
         <DCCReference Include="..\Source\DDuce.CustomImageDrawHook.pas"/>
+        <DCCReference Include="..\Source\Logger\DDuce.Logger.Channels.Nats.pas"/>
         <None Include="LibSuffix.inc"/>
         <None Include="jedi.inc"/>
         <None Include="..\Source\DDuce.inc"/>
@@ -226,6 +228,18 @@
                 <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\DDuce.Core.bpl" Configuration="Release" Class="ProjectOutput"/>
                 <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\Win64\DDuce.Core.bpl" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\DDuce.Core280.bpl" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\DDuce.Core290.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>DDuce.Core.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\Win64\DDuce.Core290.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>DDuce.Core.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Win32\Debug\DDuce.Core.bpl" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="OSX32">

@@ -9,8 +9,6 @@ object frmXMLTree: TfrmXMLTree
   Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = False
-  PixelsPerInch = 96
   TextHeight = 13
   object pnlTop: TPanel
     Left = 0
@@ -84,6 +82,35 @@ object frmXMLTree: TfrmXMLTree
         Font.Height = -11
         Font.Name = 'Consolas'
         Font.Style = []
+        Lines.Strings = (
+          
+            '<?xml version="1.0" encoding="UTF-8"?>'#10'<library>'#10'    <book id="1' +
+            '01">'#10'       '
+          ' <title>The Great Gatsby</title>'#10'        <author>F. Scott '
+          'Fitzgerald</author>'#10'        <genre>Fiction</genre>'#10'        '
+          '<publishedYear>1925</publishedYear>'#10'        '
+          
+            '<publisher>Scribner</publisher>'#10'        <isbn>9780743273565</isb' +
+            'n>'#10'    '
+          
+            '</book>'#10'    <book id="102">'#10'        <title>To Kill a Mockingbird' +
+            '</title>'#10'   '
+          
+            '     <author>Harper Lee</author>'#10'        <genre>Fiction</genre>'#10 +
+            '        '
+          
+            '<publishedYear>1960</publishedYear>'#10'        <publisher>J.B. Lipp' +
+            'incott & '
+          
+            'Co.</publisher>'#10'        <isbn>9780061120084</isbn>'#10'    </book>'#10' ' +
+            '   <book '
+          'id="103">'#10'        <title>1984</title>'#10'        <author>George '
+          'Orwell</author>'#10'        <genre>Dystopian</genre>'#10'        '
+          '<publishedYear>1949</publishedYear>'#10'        <publisher>Secker & '
+          
+            'Warburg</publisher>'#10'        <isbn>9780451524935</isbn>'#10'    </boo' +
+            'k>'
+          '</library>')
         ParentFont = False
         TabOrder = 0
         OnChange = mmoXMLChange

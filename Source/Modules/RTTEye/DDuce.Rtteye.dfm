@@ -62,10 +62,6 @@ object frmRTTEye: TfrmRTTEye
       OnChange = tvRttiChange
       OnCustomDrawItem = tvRttiCustomDrawItem
       OnDblClick = tvRttiDblClick
-      ExplicitLeft = 320
-      ExplicitTop = 3
-      ExplicitWidth = 540
-      ExplicitHeight = 483
     end
     object lvRtti: TListView
       Left = 5
@@ -94,9 +90,6 @@ object frmRTTEye: TfrmRTTEye
       ParentFont = False
       TabOrder = 1
       ViewStyle = vsReport
-      ExplicitLeft = 3
-      ExplicitTop = 3
-      ExplicitHeight = 483
     end
   end
   object pnlBottom: TPanel

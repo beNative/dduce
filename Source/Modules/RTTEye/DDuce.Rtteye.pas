@@ -39,14 +39,14 @@ type
     btnExpand   : TButton;
     btnLoad     : TButton;
     btnSearch   : TButton;
-    edtSearch: TEdit;
+    edtSearch   : TEdit;
     lvRtti      : TListView;
     pnlBottom   : TPanel;
     pnlMain     : TPanel;
     splVertical : TSplitter;
     tvRtti      : TTreeView;
-    imcMain: TSVGIconImageCollection;
-    imlMain: TVirtualImageList;
+    imcMain     : TSVGIconImageCollection;
+    imlMain     : TVirtualImageList;
     {$ENDREGION}
 
     {$REGION 'event handlers'}

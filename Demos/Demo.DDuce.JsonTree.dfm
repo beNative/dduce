@@ -20,6 +20,7 @@ object frmJsonTree: TfrmJsonTree
     BevelOuter = bvNone
     TabOrder = 0
     OnClick = pnlTopClick
+    ExplicitWidth = 1446
     object btnExpand: TButton
       Left = 8
       Top = 3
@@ -67,6 +68,8 @@ object frmJsonTree: TfrmJsonTree
     BevelOuter = bvNone
     Caption = 'pnlMain'
     TabOrder = 1
+    ExplicitWidth = 1446
+    ExplicitHeight = 884
     object splVertical: TSplitter
       Left = 481
       Top = 0
@@ -82,6 +85,7 @@ object frmJsonTree: TfrmJsonTree
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitHeight = 884
     end
     object pnlEditor: TPanel
       Left = 487
@@ -91,6 +95,8 @@ object frmJsonTree: TfrmJsonTree
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 959
+      ExplicitHeight = 884
       object mmoJson: TMemo
         Left = 0
         Top = 0
@@ -473,6 +479,8 @@ object frmJsonTree: TfrmJsonTree
         ParentFont = False
         TabOrder = 0
         WordWrap = False
+        ExplicitWidth = 565
+        ExplicitHeight = 884
       end
       object pnlObjectInspector: TPanel
         Left = 571
@@ -482,6 +490,8 @@ object frmJsonTree: TfrmJsonTree
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitLeft = 565
+        ExplicitHeight = 884
       end
     end
   end

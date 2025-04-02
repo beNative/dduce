@@ -43,7 +43,8 @@ requires
   FireDACCommonDriver,
   FireDACCommon,
   IndySystem,
-  IndyCore;
+  IndyCore,
+  RESTComponents;
 
 contains
   DDuce.Settings.Form in '..\Source\Settings\DDuce.Settings.Form.pas',
@@ -86,6 +87,7 @@ contains
   DDuce.Logger in '..\Source\Logger\DDuce.Logger.pas',
   JsonDataObjects in '..\Source\Dependencies\JsonDataObjects\JsonDataObjects.pas',
   DDuce.Resources in '..\Source\DDuce.Resources.pas',
-  DDuce.CustomImageDrawHook in '..\Source\DDuce.CustomImageDrawHook.pas';
+  DDuce.CustomImageDrawHook in '..\Source\DDuce.CustomImageDrawHook.pas',
+  DDuce.Logger.Channels.Nats in '..\Source\Logger\DDuce.Logger.Channels.Nats.pas';
 
 end.

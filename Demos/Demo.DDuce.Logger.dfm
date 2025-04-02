@@ -478,16 +478,16 @@ object frmLogger: TfrmLogger
       Action = actZMQCloseSocket
       TabOrder = 6
     end
-    object chkMQTTChannel: TCheckBox
+    object chkNatsChannel: TCheckBox
       Left = 17
       Top = 76
       Width = 53
       Height = 17
-      Hint = 'Enables or disables MQTT channel.'
-      Caption = 'MQTT'
+      Hint = 'Enables or disables NATS channel.'
+      Caption = 'NATS'
       TabOrder = 7
     end
-    object edtMQTTBroker: TLabeledEdit
+    object edtNatsBroker: TLabeledEdit
       Left = 235
       Top = 74
       Width = 125
@@ -512,15 +512,15 @@ object frmLogger: TfrmLogger
       Text = 'localhost'
       ExplicitWidth = 119
     end
-    object btnMQTTConnect: TButton
+    object btnNatsConnect: TButton
       Left = 85
       Top = 72
       Width = 92
       Height = 25
-      Action = actMQTTConnect
+      Action = actNatsConnect
       TabOrder = 9
     end
-    object edtMQTTPort: TLabeledEdit
+    object edtNatsPort: TLabeledEdit
       Left = 411
       Top = 74
       Width = 37
@@ -542,7 +542,7 @@ object frmLogger: TfrmLogger
       LabelPosition = lpLeft
       ParentFont = False
       TabOrder = 10
-      Text = '1883'
+      Text = '4222'
       ExplicitWidth = 31
     end
   end
@@ -1031,10 +1031,10 @@ object frmLogger: TfrmLogger
       Caption = 'Bind to default port (5555)'
       OnExecute = actZMQBindToDefaultPortExecute
     end
-    object actMQTTConnect: TAction
+    object actNatsConnect: TAction
       Caption = 'Connect'
-      Hint = 'Connect to MQTT broker instance.'
-      OnExecute = actMQTTConnectExecute
+      Hint = 'Connect to Nats broker [B]instance[/B].'
+      OnExecute = actNatsConnectExecute
     end
   end
   object tmrSendCounter: TTimer

@@ -1,6 +1,7 @@
 object dmData: TdmData
-  Height = 215
-  Width = 235
+  Height = 323
+  Width = 353
+  PixelsPerInch = 144
   object imlMain: TVirtualImageList
     AutoFill = True
     Images = <
@@ -2097,8 +2098,8 @@ object dmData: TdmData
     ImageCollection = imcMain
     Width = 24
     Height = 24
-    Left = 101
-    Top = 85
+    Left = 152
+    Top = 128
   end
   object imcMain: TSVGIconImageCollection
     SVGIconItems = <
@@ -7241,7 +7242,7 @@ object dmData: TdmData
           'th d="M16 20h2a2 2 0 0 0 2 -2v-2" />'#10'  <path d="M8 11a3 3 0 1 0 ' +
           '6 0a3 3 0 0 0 -6 0" />'#10'  <path d="M16 16l-2.5 -2.5" />'#10'</svg>'
       end>
-    Left = 101
-    Top = 11
+    Left = 152
+    Top = 17
   end
 end

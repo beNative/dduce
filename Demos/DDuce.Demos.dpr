@@ -33,7 +33,9 @@ uses
   Demo.DDuce.VTNode in 'Demo.DDuce.VTNode.pas' {frmVTNode},
   Demo.DDuce.EditList in 'Demo.DDuce.EditList.pas' {frmEditList},
   Demo.DDuce.Dialogs in 'Demo.DDuce.Dialogs.pas' {frmDialogs},
-  Demo.DDuce.JsonTree in 'Demo.DDuce.JsonTree.pas' {frmJsonTree};
+  Demo.DDuce.JsonTree in 'Demo.DDuce.JsonTree.pas' {frmJsonTree},
+  Demo.DDuce.XMLTree in 'Demo.DDuce.XMLTree.pas' {frmXMLTree},
+  Demo.DDuce.RttiTree in 'Demo.DDuce.RttiTree.pas' {frmRttiTree};
 
 {$R *.res}
 

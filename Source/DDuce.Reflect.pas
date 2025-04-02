@@ -133,7 +133,6 @@ begin
 end;
 }
 
-
 {$REGION 'private methods'}
 class function Reflect.GetOrdValue(AInfo: PTypeInfo; const ASetParam): Integer;
 begin

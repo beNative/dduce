@@ -370,14 +370,14 @@ end;
 procedure TLogger.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FChannels                  := TCollections.CreateInterfaceList<ILogChannel>;
-  FMaxStackCount             := DEFAULT_MAXSTACKCOUNT;
-  FLogStack                  := TStringList.Create;
-  FCheckList                 := TStringList.Create;
-  FCheckList.CaseSensitive   := False;
-  FCheckList.Sorted          := True;
-  FEnabled                   := True;
-  FCounterList               := TCollections.CreateDictionary<string, Int64>;
+  FChannels                := TCollections.CreateInterfaceList<ILogChannel>;
+  FMaxStackCount           := DEFAULT_MAXSTACKCOUNT;
+  FLogStack                := TStringList.Create;
+  FCheckList               := TStringList.Create;
+  FCheckList.CaseSensitive := False;
+  FCheckList.Sorted        := True;
+  FEnabled                 := True;
+  FCounterList             := TCollections.CreateDictionary<string, Int64>;
 end;
 
 procedure TLogger.BeforeDestruction;

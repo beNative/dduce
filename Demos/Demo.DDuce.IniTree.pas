@@ -48,10 +48,10 @@ type
     pnlTop             : TPanel;
     pnlTree            : TPanel;
     splVertical        : TSplitter;
-    ppmTree: TPopupMenu;
-    mniCopy: TMenuItem;
-    actCopy: TAction;
-    imlMain: TVirtualImageList;
+    ppmTree            : TPopupMenu;
+    mniCopy            : TMenuItem;
+    actCopy            : TAction;
+    imlMain            : TVirtualImageList;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -106,6 +106,7 @@ const
   VISIBLE_PROPERTIES : array of string = [
     'Color',
     'Colors',
+    'ColorSettings',
     'DefaultNodeHeight',
     'DefaultText',
     'DragImageKind',

@@ -309,7 +309,8 @@ var
 begin
   TFramework.NotifyPropertyChanged(Sender, EventArgs.Prop.Name);
 
-  FDefaultMetadata.OnPropertyChanged.Invoke(Sender, EventArgs);
+  //FDefaultMetadata.OnPropertyChanged.Invoke(Sender, EventArgs);
+  //FDefaultMetadata.OnPropertyChanged(Sender, EventArgs);
 
   if FDefaultMetadata.Inherits then
   begin

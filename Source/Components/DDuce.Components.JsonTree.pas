@@ -21,7 +21,7 @@ unit DDuce.Components.JsonTree;
 interface
 
 uses
-  System.JSON, System.Classes,
+  System.JSON, System.Classes, System.Types,
   Vcl.Graphics,
 
   Spring,
@@ -44,7 +44,7 @@ type
       FBooleanValue : TTextFormatSettings;
       FNumberValue  : TTextFormatSettings;
       FNullValue    : TTextFormatSettings;
-      FOnChanged    : Event<TNotifyEvent>;      
+      FOnChanged    : Event<TNotifyEvent>;
 
     protected
       function GetOnChanged: IEvent<TNotifyEvent>;
@@ -73,7 +73,7 @@ type
         read FNullValue;
 
       property OnChanged: IEvent<TNotifyEvent>
-        read GetOnChanged;      
+        read GetOnChanged;
 
     end;
 
@@ -81,6 +81,8 @@ type
     FRootNode      : TJsonNode;
     FJson          : TJSONValue;
     FColorSettings : TColorSettings;
+
+    procedure FColorSettingsChanged(Sender: TObject);
 
   protected
     procedure BuildTree; override;
@@ -102,16 +104,20 @@ type
       Column     : TColumnIndex;
       const Text : string
     ); override;
-    procedure DoGetBackColor(
-      ANode          : PVirtualNode;
-      var ABackColor : TColor
-    ); override;
     procedure DoNodeDblClick(const HitInfo: THitInfo); override;
     procedure DoPaintText(
-      Node         : PVirtualNode; 
-      const Canvas : TCanvas; 
-      Column       : TColumnIndex; 
+      Node         : PVirtualNode;
+      const Canvas : TCanvas;
+      Column       : TColumnIndex;
       TextType     : TVSTTextType
+    ); override;
+    procedure DoBeforeCellPaint(
+      Canvas        : TCanvas;
+      Node          : PVirtualNode;
+      Column        : TColumnIndex;
+      CellPaintMode : TVTCellPaintMode;
+      CellRect      : TRect;
+      var ContentRect: TRect
     ); override;
     {$ENDREGION}
 
@@ -146,6 +152,7 @@ procedure TJsonTree.AfterConstruction;
 begin
   inherited AfterConstruction;
   FColorSettings := TColorSettings.Create;
+  FColorSettings.OnChanged.Add(FColorSettingsChanged);
   Header.Options := Header.Options + [hoAutoResize];
   with Header.Columns.Add do
   begin
@@ -188,23 +195,54 @@ end;
 {$ENDREGION}
 
 {$REGION 'event dispatch methods'}
+procedure TJsonTree.DoBeforeCellPaint(Canvas: TCanvas; Node: PVirtualNode;
+  Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect;
+  var ContentRect: TRect);
+var
+  LJsonNode : TJsonNode;
+  LValue    : TJSONAncestor;
+  LColor    : TColor;
+begin
+  inherited DoBeforeCellPaint(Canvas, Node, Column, CellPaintMode, CellRect, ContentRect);
+
+  if CellPaintMode = cpmPaint then
+  begin
+    LJsonNode := GetNode(Node);
+    LColor := clWhite; // default fallback color
+
+    if Column = 0 then
+    begin
+      if LJsonNode.Data is TJSONPair then
+        LColor := ColorSettings.ObjectName.BackgroundColor
+      else
+        LColor := ColorSettings.NullValue.BackgroundColor;
+    end
+    else if Column = 1 then
+    begin
+      if LJsonNode.Data is TJSONPair then
+        LValue := (LJsonNode.Data as TJSONPair).JsonValue
+      else
+        LValue := LJsonNode.Data;
+
+      if LValue is TJSONNumber then
+        LColor := ColorSettings.NumberValue.BackgroundColor
+      else if LValue is TJSONBool then
+        LColor := ColorSettings.BooleanValue.BackgroundColor
+      else if LValue is TJSONString then
+        LColor := ColorSettings.StringValue.BackgroundColor
+      else
+        LColor := ColorSettings.NullValue.BackgroundColor;
+    end;
+
+    Canvas.Brush.Color := LColor;
+    Canvas.FillRect(CellRect); // Fill cell with background color
+  end;
+end;
+
 procedure TJsonTree.DoFreeNode(Node: PVirtualNode);
 begin
   GetNode(Node).Free;
   inherited DoFreeNode(Node);
-end;
-
-procedure TJsonTree.DoGetBackColor(ANode: PVirtualNode; var ABackColor: TColor);
-begin
-  var LNode := GetNode(ANode);
-  if Assigned(LNode) then
-  begin
-    if LNode.HasChildren then
-      ABackColor := $00EBEBEB
-    else
-      ABackColor := $00F8F8F8;
-  end;
-  inherited DoGetBackColor(ANode, ABackColor);
 end;
 
 procedure TJsonTree.DoGetText(var pEventArgs: TVSTGetCellTextEventArgs);
@@ -250,7 +288,6 @@ begin
           if S.IsEmpty then
             S := Format('(%d)', [LNode.Index]);
           CellText := S;
-      //    CellText := Format('%s {%d}', [S, LNode.ChildCount]);
         end
         else
         begin
@@ -388,6 +425,13 @@ begin
 end;
 {$ENDREGION}
 
+{$REGION 'event handlers'}
+procedure TJsonTree.FColorSettingsChanged(Sender: TObject);
+begin
+  Invalidate;
+end;
+{$ENDREGION}
+
 {$REGION 'protected methods'}
 procedure TJsonTree.BuildTree;
 begin
@@ -492,11 +536,12 @@ end;
 procedure TJsonTree.TColorSettings.InitializeObjects;
 begin
   FObjectName   := TTextFormatSettings.Create;
-  FObjectName.OnChanged.Add(FormatSettingsChanged);  
+  FObjectName.OnChanged.Add(FormatSettingsChanged);
   FObjectName.FontName  := 'Consolas';
   FObjectName.FontSize  := 10;
   FObjectName.FontColor := clMaroon;
   FObjectName.FontStyle := [fsBold];
+  FObjectName.BackgroundColor := clWhite;
 
   FStringValue  := TTextFormatSettings.Create;
   FStringValue.OnChanged.Add(FormatSettingsChanged);
@@ -504,6 +549,7 @@ begin
   FStringValue.FontStyle := [fsBold];
   FStringValue.FontSize  := 10;
   FStringValue.FontName  := 'Consolas';
+  FStringValue.BackgroundColor := clWhite;
 
   FBooleanValue := TTextFormatSettings.Create;
   FBooleanValue.OnChanged.Add(FormatSettingsChanged);
@@ -511,6 +557,7 @@ begin
   FBooleanValue.FontStyle := [fsBold];
   FBooleanValue.FontSize  := 10;
   FBooleanValue.FontName  := 'Consolas';
+  FBooleanValue.BackgroundColor := clWhite;
 
   FNumberValue  := TTextFormatSettings.Create;
   FNumberValue.OnChanged.Add(FormatSettingsChanged);
@@ -518,13 +565,15 @@ begin
   FNumberValue.FontStyle := [fsBold];
   FNumberValue.FontSize  := 10;
   FNumberValue.FontName  := 'Consolas';
+  FNumberValue.BackgroundColor := clWhite;
 
   FNullValue  := TTextFormatSettings.Create;
+  FNullValue.OnChanged.Add(FormatSettingsChanged);
   FNullValue.FontColor := clGray;
   FNullValue.FontStyle := [];
   FNullValue.FontSize  := 10;
   FNullValue.FontName  := 'Consolas';
-  FNullValue.OnChanged.Add(FormatSettingsChanged);
+  FNullValue.BackgroundColor := clWhite;
 end;
 {$ENDREGION}
 {$ENDREGION}

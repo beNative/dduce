@@ -575,14 +575,14 @@ end;
 
 procedure TSectionTree.DoMeasureItem(TargetCanvas: TCanvas; Node: PVirtualNode;
   var NodeHeight: Integer);
-var
-  N : Integer;
+//var
+//  N : Integer;
 begin
-  N := ComputeNodeHeight(TargetCanvas, Node, 0);
-  if N > (DefaultNodeHeight + 5) then
-  begin
-    NodeHeight := N;
-  end;
+//  N := ComputeNodeHeight(TargetCanvas, Node, 0);
+//  if N > (DefaultNodeHeight + 5) then
+//  begin
+//    NodeHeight := N;
+//  end;
   inherited DoMeasureItem(TargetCanvas, Node, NodeHeight);
 end;
 
@@ -721,8 +721,6 @@ begin
         // fill vertical band
         ACanvas.Brush.Color := LColor;
         ACanvas.FillRect(ACellRect);
-
-
         ANode := ANode.Parent;
         if not Assigned(ANode) or (ANode = RootNode) then
           Break;
@@ -734,7 +732,6 @@ begin
     end;
   end;
 end;
-
 {$ENDREGION}
 
 end.

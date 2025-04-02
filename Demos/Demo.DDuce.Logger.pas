@@ -27,11 +27,11 @@ uses
   System.ImageList, System.Bindings.Outputs,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ActnList, Vcl.Menus,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ImgList, Vcl.Bind.DBEngExt,
-  Vcl.Bind.Editors,
+  Vcl.Bind.Editors, Vcl.Mask, Vcl.BaseImageCollection, Vcl.ImageCollection,
+  Vcl.VirtualImageList,
   Data.Bind.EngExt, Data.Bind.Components,
 
-  DDuce.Logger.Interfaces, Vcl.Mask, Vcl.BaseImageCollection,
-  Vcl.ImageCollection, Vcl.VirtualImageList;
+  DDuce.Logger.Interfaces;
 
 type
   TfrmLogger = class(TForm)
@@ -44,7 +44,7 @@ type
     actIncCounter             : TAction;
     actLeaveMethod1           : TAction;
     actLeaveMethod2           : TAction;
-    actMQTTConnect            : TAction;
+    actNatsConnect            : TAction;
     actResetCheckpoint        : TAction;
     actResetCounter           : TAction;
     actSendBitmap             : TAction;
@@ -81,7 +81,7 @@ type
     btnExitMethod1            : TButton;
     btnExitMethod2            : TButton;
     btnIncCounter             : TButton;
-    btnMQTTConnect            : TButton;
+    btnNatsConnect            : TButton;
     btnResetCheckpoint        : TButton;
     btnResetCounter           : TButton;
     btnSendBitmap             : TButton;
@@ -108,7 +108,7 @@ type
     chkActions                : TCheckBox;
     chkEnableCountTimer       : TCheckBox;
     chkLogFileChannel         : TCheckBox;
-    chkMQTTChannel            : TCheckBox;
+    chkNatsChannel            : TCheckBox;
     chkSendRandomValueTimer   : TCheckBox;
     chkWinIPCChannel          : TCheckBox;
     chkZeroMQChannel          : TCheckBox;
@@ -117,8 +117,8 @@ type
     edtMessageCount           : TLabeledEdit;
     edtMethod1                : TLabeledEdit;
     edtMethod2                : TLabeledEdit;
-    edtMQTTBroker             : TLabeledEdit;
-    edtMQTTPort               : TLabeledEdit;
+    edtNatsBroker             : TLabeledEdit;
+    edtNatsPort               : TLabeledEdit;
     grpActions                : TGroupBox;
     grpCheckpoints            : TGroupBox;
     grpCounters               : TGroupBox;
@@ -146,8 +146,8 @@ type
     tmrSendValue              : TTimer;
     trbLogLevel               : TTrackBar;
     trbMain                   : TTrackBar;
-    imcMain: TImageCollection;
-    imlLogger: TVirtualImageList;
+    imcMain                   : TImageCollection;
+    imlLogger                 : TVirtualImageList;
     {$ENDREGION}
 
     {$REGION 'event handlers'}
@@ -198,7 +198,7 @@ type
     procedure actZMQBindToEphemeralPortExecute(Sender: TObject);
     procedure actZMQCloseSocketExecute(Sender: TObject);
     procedure actZMQBindToDefaultPortExecute(Sender: TObject);
-    procedure actMQTTConnectExecute(Sender: TObject);
+    procedure actNatsConnectExecute(Sender: TObject);
     {$ENDREGION}
 
   private
@@ -207,7 +207,7 @@ type
     FLogFileChannel : ILogFileChannel;
     FWinipcChannel  : IWinipcChannel;
     FZmqChannel     : IZmqChannel;
-    FMqttChannel    : IMqttChannel;
+    FNatsChannel    : INatsChannel;
     FLogger         : ILogger;
 
     procedure LoadSettings;
@@ -241,7 +241,7 @@ uses
   DDuce.Utils.Winapi,
   DDuce.Logger.Factories,
   DDuce.Logger.Channels.Winipc, DDuce.Logger.Channels.LogFile,
-  DDuce.Logger.Channels.Zmq,
+  DDuce.Logger.Channels.Zmq, DDuce.Logger.Channels.Nats,
 
   Demo.Data, Demo.Resources, Demo.Settings, Demo.Factories;
 
@@ -302,18 +302,19 @@ begin
   FLogger := TLoggerFactories.CreateLogger;
   FWinipcChannel  := TWinipcChannel.Create(False);
   FLogFileChannel := TLogFileChannel.Create;
-  {$IFDEF CPUX86}
+  FNatsChannel    := TNatsChannel.Create;
+  //{$IFDEF CPUX86}
   FZmqChannel  := TZmqChannel.Create(False);
-  {$ENDIF CPUX86}
+  //{$ENDIF CPUX86}
   chkZeroMQChannel.Hint := Format(SVersion, [FZmqChannel.ZmqVersion]);
 
   LoadSettings;
 
   Logger.Channels.Add(FLogFileChannel);
   Logger.Channels.Add(FWinipcChannel);
-  {$IFDEF CPUX86}
+  //{$IFDEF CPUX86}
   Logger.Channels.Add(FZmqChannel);
-  {$ENDIF CPUX86}
+  //{$ENDIF CPUX86}
   Randomize;
   edtLogFile.Text := FLogFileChannel.FileName;
 
@@ -475,9 +476,9 @@ begin
   Logger.Leave(edtMethod2.Text);
 end;
 
-procedure TfrmLogger.actMQTTConnectExecute(Sender: TObject);
+procedure TfrmLogger.actNatsConnectExecute(Sender: TObject);
 begin
- //
+  FNatsChannel.Enabled := True;
 end;
 
 procedure TfrmLogger.actSendObjectExecute(Sender: TObject);
@@ -671,10 +672,10 @@ begin
   chkZeroMQChannel.Checked :=
     Settings.ReadBool(UnitName, 'ZeroMQChannel.Enabled');
   edtEndPoint.Text := Settings.ReadString(UnitName, 'ZeroMQChannel.EndPoint');
-  chkMQTTChannel.Checked :=
-    Settings.ReadBool(UnitName, 'MQTTChannel.Enabled');
-  edtMQTTBroker.Text :=
-    Settings.ReadString(UnitName, 'MQTTChannel.Broker');
+  chkNatsChannel.Checked :=
+    Settings.ReadBool(UnitName, 'NatsChannel.Enabled');
+  edtNatsBroker.Text :=
+    Settings.ReadString(UnitName, 'NatsChannel.Broker');
   edtMethod1.Text := Settings.ReadString(
     UnitName, 'edtMethod1.Text', 'MyObject.Execute'
   );
@@ -704,10 +705,10 @@ begin
       WriteBool(UnitName, 'ZeroMQChannel.Enabled', FZmqChannel.Enabled);
       WriteString(UnitName, 'ZeroMQChannel.EndPoint', edtEndPoint.Text);
     end;
-    if Assigned(FMQTTChannel) then
+    if Assigned(FNatsChannel) then
     begin
-      WriteBool(UnitName, 'MQTTChannel.Enabled', FMQTTChannel.Enabled);
-      WriteString(UnitName, 'MQTTChannel.Broker', edtMQTTBroker.Text);
+//      WriteBool(UnitName, 'MQTTChannel.Enabled', FMQTTChannel.Enabled);
+//      WriteString(UnitName, 'MQTTChannel.Broker', edtMQTTBroker.Text);
     end;
     WriteString(UnitName, 'edtMethod1.Text', edtMethod1.Text);
     WriteString(UnitName, 'edtMethod2.Text', edtMethod2.Text);
@@ -785,10 +786,10 @@ begin
   lblIPAddress.Enabled      := B and FZmqChannel.Connected;
   lblZeroMQPort.Caption     := FZmqChannel.Port.ToString;
 
-  B := chkMQTTChannel.Checked and Assigned(FMQTTChannel);
-  edtMQTTBroker.Enabled  := B;
-  edtMQTTPort.Enabled    := B;
-  actMQTTConnect.Enabled := B;
+  B := chkNatsChannel.Checked and Assigned(FNatsChannel);
+  edtNatsBroker.Enabled  := B;
+  edtNatsPort.Enabled    := B;
+  actNatsConnect.Enabled := B;
 
   edtLogFile.Enabled := chkLogFileChannel.Checked;
   lblLogLevelValue.Caption := trbLogLevel.Position.ToString;
