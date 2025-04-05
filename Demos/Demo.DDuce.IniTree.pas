@@ -65,6 +65,11 @@ type
       Sender : TBaseVirtualTree;
       Node   : PVirtualNode
     );
+    procedure FTreeEdited(
+      Sender : TBaseVirtualTree;
+      Node   : PVirtualNode;
+      Column : TColumnIndex
+    );
     {$ENDREGION}
 
     {$REGION 'action handlers'}
@@ -123,6 +128,7 @@ const
     'Hint',
     'HintMode',
     'Indent',
+    'IniString',
     'LineMode',
     'LineStyle',
     'Margin',
@@ -152,6 +158,7 @@ begin
   FEditor.Editor.Highlighter.Colors.LoadFromFile('settings.texteditor.json');
   FEditor.HighlighterName := 'INI';
   FEditor.Text := mmoJson.Lines.Text;
+  FTree.IniString := FEditor.Text;
 end;
 {$ENDREGION}
 
@@ -171,6 +178,12 @@ end;
 procedure TfrmIniTree.FTreeDblClick(Sender: TObject);
 begin
   FTree.Header.AutoFitColumns;
+end;
+
+procedure TfrmIniTree.FTreeEdited(Sender: TBaseVirtualTree; Node: PVirtualNode;
+  Column: TColumnIndex);
+begin
+  FEditor.Text := FTree.IniString;
 end;
 
 procedure TfrmIniTree.FTreeExpandedCollapsed(Sender: TBaseVirtualTree;
@@ -200,7 +213,9 @@ end;
 
 procedure TfrmIniTree.actParseDocumentExecute(Sender: TObject);
 begin
-  FTree.IniString:= FEditor.Text;
+  FTree.BeginUpdate;
+  FTree.IniString := FEditor.Text;
+  FTree.EndUpdate;
 end;
 {$ENDREGION}
 
@@ -218,6 +233,7 @@ begin
   FTree.OnCollapsed          := FTreeExpandedCollapsed;
   FTree.OnExpanded           := FTreeExpandedCollapsed;
   FTree.OnDblClick           := FTreeDblClick;
+  FTree.OnEdited             := FTreeEdited;
 end;
 {$ENDREGION}
 

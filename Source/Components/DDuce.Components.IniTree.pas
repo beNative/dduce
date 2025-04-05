@@ -166,7 +166,7 @@ begin
     MinWidth := 100;
     Options  := [coAllowClick, coDraggable, coEnabled, coParentBidiMode,
       coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize,
-      coAllowFocus, coFixed{, coEditable}];
+      coAllowFocus, coFixed, coEditable];
     Position := 0;
     Width    := 400;
     Text     := 'Name';
@@ -177,7 +177,7 @@ begin
     MinWidth := 100;
     Options  := [coAllowClick, coDraggable, coEnabled, coParentBidiMode,
       coParentColor, coResizable, coShowDropMark, coVisible, coAutoSpring,
-      coSmartResize, coAllowFocus{, coEditable}];
+      coSmartResize, coAllowFocus, coEditable];
     Position := 1;
     Width    := 400;
     Text     := 'Value';
@@ -185,7 +185,7 @@ begin
   Header.AutoSizeIndex := 1;
   TreeOptions.MiscOptions := [
     toCheckSupport, toInitOnSave, toWheelPanning, toVariableNodeHeight,
-    {toEditable,} toEditOnDblClick, toGridExtensions
+    toEditable, toEditOnDblClick, toGridExtensions
   ];
   TreeOptions.EditOptions := toVerticalEdit;
 end;
@@ -318,22 +318,70 @@ end;
 procedure TIniTree.DoNewText(Node: PVirtualNode; Column: TColumnIndex;
   const Text: string);
 var
-  LNode    : TIniNode;
-  LStrings : IShared<TStringList>;
+  LNode        : TIniNode;
+  OldSection   : string;
+  NewSection   : string;
+  ParentSection: string;
+  OldKey       : string;
+  OldValue     : string;
+  LStrings     : TStringList;
 begin
+  inherited;
+
   LNode := GetNode(Node);
-  if LNode.HasParent then
+  if Column = 0 then
   begin
-    FIniFile.WriteString(LNode.ParentData.Key, LNode.Data.Key, Text);
+    // Editing Name (Section or Key)
+    if LNode.Level = 0 then
+    begin
+      // Rename Section
+      OldSection := LNode.Data.Key;
+      NewSection := Text;
+      if OldSection <> NewSection then
+      begin
+        LStrings := TStringList.Create;
+        try
+          // Read all keys from the old section
+          FIniFile.ReadSectionValues(OldSection, LStrings);
+          // Delete the old section
+          FIniFile.EraseSection(OldSection);
+          // Write keys to the new section
+          for var I := 0 to LStrings.Count - 1 do
+          begin
+            FIniFile.WriteString(
+              NewSection,
+              LStrings.Names[I],
+              LStrings.ValueFromIndex[I]
+            );
+          end;
+        finally
+          LStrings.Free;
+        end;
+      end;
+    end
+    else
+    begin
+      // Rename Key
+      ParentSection := LNode.ParentData.Key;
+      OldKey := LNode.Data.Key;
+      OldValue := LNode.Data.Value.ToString;
+      FIniFile.DeleteKey(ParentSection, OldKey);
+      FIniFile.WriteString(ParentSection, Text, OldValue);
+    end;
+  end
+  else if Column = 1 then
+  begin
+    // Editing Value
+    ParentSection := LNode.ParentData.Key;
+    FIniFile.WriteString(ParentSection, LNode.Data.Key, Text);
   end;
+
   FIniFile.UpdateFile;
-  LStrings := Shared.Make(TStringList.Create);
-  FIniFile.GetStrings(LStrings);
-  //Logger.SendStrings('FIniFile', LStrings);
-  //InitNode(Node);
+    // Persist changes to the stream and update FIniString
+  FIniFile.UpdateFile;
+  FIniString := FIniStream.DataString; // Sync FIniString with the latest data
   Clear;
   BuildTree;
-  inherited DoNewText(Node, Column, Text);
 end;
 
 procedure TIniTree.DoNodeDblClick(const HitInfo: THitInfo);
