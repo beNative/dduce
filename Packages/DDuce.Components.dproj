@@ -127,8 +127,8 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>101</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.101;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>232</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.232;ProductVersion=1.0.0.0</VerInfo_Keys>
         <DCC_MapFile>3</DCC_MapFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64x)'!=''">
@@ -194,6 +194,7 @@
         <DCCReference Include="..\Source\Components\DDuce.Components.IniTree.pas"/>
         <DCCReference Include="..\Source\Components\DDuce.Components.XmlTree.pas"/>
         <DCCReference Include="..\Source\Components\DDuce.Components.RttiTree.pas"/>
+        <DCCReference Include="..\Source\Components\DDuce.Components.LogTree.LogItem.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -226,6 +227,12 @@
                 <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\DDuce.Components290.bpl" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\DDuce.Components290.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
+                        <RemoteName>DDuce.Components.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\Win64\DDuce.Components290.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
                         <RemoteName>DDuce.Components.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>

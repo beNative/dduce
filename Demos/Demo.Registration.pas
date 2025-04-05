@@ -59,10 +59,9 @@ begin
   DemoManager.Register(TfrmJsonTree, 'JsonTree');
   DemoManager.Register(TfrmIniTree, 'IniTree');
   DemoManager.Register(TfrmRttiTree, 'RttiTree');
+  DemoManager.Register(TfrmXmlTree, 'XmlTree');
 //  DemoManager.Register(TfrmInspector, 'Inspector');
 //  DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
-  // not working yet
-  DemoManager.Register(TfrmXMLTree, 'XMLTree');
 end;
 {$ENDREGION}
 

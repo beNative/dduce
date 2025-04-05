@@ -22,7 +22,7 @@ uses
   System.Actions, System.UITypes, System.Classes, System.ImageList,
   System.Win.TaskbarCore,
   Vcl.ActnList, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Controls, Vcl.ExtCtrls,
-  Vcl.Buttons, Vcl.Forms, Vcl.ImgList, Vcl.Taskbar,
+  Vcl.Buttons, Vcl.Forms, Vcl.ImgList, Vcl.Taskbar, Vcl.Graphics,
 
   VirtualTrees, VirtualTrees.BaseTree,
 
@@ -110,7 +110,6 @@ implementation
 uses
   Winapi.Windows, WinApi.Messages,
   System.StrUtils, System.SysUtils,
-  Vcl.Graphics,
 
   DDuce.Factories.TreeViewPresenter, DDuce.Factories.VirtualTrees,
 
@@ -202,10 +201,10 @@ end;
 
 procedure TfrmMainMenu.actExecuteExecute(Sender: TObject);
 begin
- // for some reason VST is causing the UpdateActions method on the created
- // forms not to be called.
- // The workaround for now is to make this form invisible when a demo form
- // is created
+  // For some reason VST is causing the UpdateActions method on the created
+  // forms not to be called.
+  // The workaround for now is to make this form invisible when a demo form
+  // is created.
   Visible := False;
   DemoManager.Execute(FTVP.SelectedItem);
   Visible := True;
@@ -213,8 +212,11 @@ end;
 
 procedure TfrmMainMenu.actFocusFilterExecute(Sender: TObject);
 begin
-  edtFilter.SetFocus;
-  edtFilter.SelectAll;
+  if Visible and edtFilter.CanFocus then
+  begin
+    edtFilter.SetFocus;
+    edtFilter.SelectAll;
+  end;
 end;
 {$ENDREGION}
 
@@ -277,7 +279,8 @@ procedure TfrmMainMenu.edtFilterChange(Sender: TObject);
 begin
   ApplyFilter;
   FVST.FocusedNode := FVST.GetFirstVisible;
-  FVST.Selected[FVST.FocusedNode] := True;
+  if Assigned(FVST.FocusedNode) then
+    FVST.Selected[FVST.FocusedNode] := True;
 end;
 
 procedure TfrmMainMenu.edtFilterEnter(Sender: TObject);

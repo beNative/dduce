@@ -63,7 +63,8 @@ contains
   DDuce.Components.JsonTree in '..\Source\Components\DDuce.Components.JsonTree.pas',
   DDuce.Components.IniTree in '..\Source\Components\DDuce.Components.IniTree.pas',
   DDuce.Components.XmlTree in '..\Source\Components\DDuce.Components.XmlTree.pas',
-  DDuce.Components.RttiTree in '..\Source\Components\DDuce.Components.RttiTree.pas';
+  DDuce.Components.RttiTree in '..\Source\Components\DDuce.Components.RttiTree.pas',
+  DDuce.Components.LogTree.LogItem in '..\Source\Components\DDuce.Components.LogTree.LogItem.pas';
 
 end.
 

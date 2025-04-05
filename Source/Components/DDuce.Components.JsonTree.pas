@@ -179,8 +179,8 @@ begin
   end;
   Header.AutoSizeIndex := 1;
   TreeOptions.MiscOptions := [
-    toCheckSupport, toInitOnSave, toWheelPanning, toVariableNodeHeight,
-    {toEditable, toEditOnDblClick,} toGridExtensions
+    toCheckSupport, toInitOnSave, toWheelPanning, toVariableNodeHeight
+    {toEditable, toEditOnDblClick,} //toGridExtensions
   ];
   // After VK_RETURN switch to next column.
   TreeOptions.EditOptions := toVerticalEdit;

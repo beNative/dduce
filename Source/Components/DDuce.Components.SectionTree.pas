@@ -32,12 +32,6 @@ uses
 
 type
   TSectionTree = class(TCustomVirtualStringTree)
-  private type
-    TGetBackColorEvent = procedure(
-      ASender        : TBaseVirtualTree;
-      AParentNode    : PVirtualNode;
-      var ABackColor : TColor
-    ) of object;
   private const
     {$REGION 'default VST options'}
     DEFAULT_VST_SELECTIONOPTIONS = [
@@ -76,13 +70,13 @@ type
       { Fully invalidate the tree when its window is resized (CS_HREDRAW/CS_VREDRAW).}
       toFullRepaintOnResize,
       { Use some special enhancements to simulate and support grid behavior. }
-      toGridExtensions,
+      //toGridExtensions,
       { Initialize nodes when saving a tree to a stream. }
       toInitOnSave,
       { Tree behaves like TListView in report mode. }
   //  toReportMode,
       { Toggle node expansion state when it is double clicked. }
-//      toToggleOnDblClick,
+  //  toToggleOnDblClick,
       { Support for mouse panning (wheel mice only). This option and
         toMiddleClickSelect are mutal exclusive, where panning has precedence. }
       toWheelPanning,
@@ -130,7 +124,7 @@ type
         theme if enabled (Windows XP+ only, application must be themed). }
       toThemeAware,
       { Use the explorer theme if run under Windows Vista or later. }
-//      toUseExplorerTheme,
+      toUseExplorerTheme,
       { Enable alpha blending for ghosted nodes or those which are being
         cut/copied. }
       toUseBlendedImages,
@@ -207,7 +201,7 @@ type
   //    toAutoSort,
       { Large entries continue into next column(s) if there's no text in them
         (no clipping). }
-      toAutoSpanColumns,
+      //toAutoSpanColumns,
       { Checkstates are automatically propagated for tri state check boxes. }
       toAutoTristateTracking,
       { Node buttons are hidden when there are child nodes, but all are invisible.}
@@ -231,8 +225,6 @@ type
     ];
   {$ENDREGION}
   private
-    FOnGetBackColor : TGetBackColorEvent;
-
     {$REGION 'property access methods'}
     function GetOptions: TStringTreeOptions;
     procedure SetOptions(const AValue: TStringTreeOptions);
@@ -290,10 +282,6 @@ type
       ItemRect : TRect
     ); override;
     {$ENDREGION}
-    procedure DoGetBackColor(
-      ANode          : PVirtualNode;
-      var ABackColor : TColor
-    ); virtual;
     {$ENDREGION}
 
   public
@@ -504,9 +492,6 @@ type
     property OnStructureChange;
     property OnUpdating;
 
-    property OnGetBackColor: TGetBackColorEvent
-      read FOnGetBackColor write FOnGetBackColor;
-
     property TreeOptions : TStringTreeOptions
       read GetOptions write SetOptions;
     {$ENDREGION}
@@ -564,32 +549,13 @@ end;
 procedure TSectionTree.DoInitNode(Parent, ANode: PVirtualNode;
   var InitStates: TVirtualNodeInitStates);
 begin
-//  Include(ANode.States, vsInitialized);
-//  Include(ANode.States, vsMultiline);
-  //Include(ANode.States, vsHeightMeasured);
-//  if not Assigned(Parent) then
-//    Include(InitStates, ivsExpanded);
-
   inherited DoInitNode(Parent, ANode, InitStates);
 end;
 
 procedure TSectionTree.DoMeasureItem(TargetCanvas: TCanvas; Node: PVirtualNode;
   var NodeHeight: Integer);
-//var
-//  N : Integer;
 begin
-//  N := ComputeNodeHeight(TargetCanvas, Node, 0);
-//  if N > (DefaultNodeHeight + 5) then
-//  begin
-//    NodeHeight := N;
-//  end;
   inherited DoMeasureItem(TargetCanvas, Node, NodeHeight);
-end;
-
-procedure TSectionTree.DoGetBackColor(ANode: PVirtualNode; var ABackColor: TColor);
-begin
-  if Assigned(FOnGetBackColor) then
-    FOnGetBackColor(Self, ANode, ABackColor);
 end;
 
 procedure TSectionTree.DoAfterCellPaint(Canvas: TCanvas; Node: PVirtualNode;
@@ -640,17 +606,14 @@ begin
 //        until False;
 //      end;
 //    end;
-//
-//
 //  end;
-  inherited;
+  inherited DoAfterCellPaint(Canvas, Node, Column, CellRect);
 end;
 
 procedure TSectionTree.DoAfterItemErase(Canvas: TCanvas; Node: PVirtualNode;
   ItemRect: TRect);
 begin
-  inherited;
-//
+  inherited DoAfterItemErase(Canvas, Node, ItemRect);
 end;
 
 procedure TSectionTree.DoAfterItemPaint(Canvas: TCanvas; Node: PVirtualNode;
@@ -667,14 +630,15 @@ begin
   begin
 //    CustomPaint(Canvas, ANode, Column, CellRect);
   end;
-  inherited;
+  inherited DoBeforeCellPaint(
+    Canvas, ANode, Column, CellPaintMode, CellRect, ContentRect
+  );
 end;
 
 procedure TSectionTree.DoBeforeItemErase(Canvas: TCanvas; Node: PVirtualNode;
   ItemRect: TRect; var Color: TColor; var EraseAction: TItemEraseAction);
 begin
-  inherited;
-  //
+  inherited DoBeforeItemErase(Canvas, Node, ItemRect, Color, EraseAction);
 end;
 
 {$REGION 'protected methods'}
@@ -708,8 +672,6 @@ begin
       LIndent := 0;
     end;
 
-//      DoGetBackColor(ANode, LColor);
-
     ACanvas.Brush.Color := LColor;
     ACanvas.FillRect(ACellRect);
 
@@ -727,7 +689,6 @@ begin
 
         Inc(ACellRect.Left, LIndent);
         Inc(ACellRect.Right, LIndent);
-        //DoGetBackColor(ANode, LColor);
       until False;
     end;
   end;

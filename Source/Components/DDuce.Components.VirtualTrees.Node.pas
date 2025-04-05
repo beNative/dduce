@@ -39,41 +39,41 @@ uses
 
     TODO: non generic version where visible node content is stored in Text and
           Hint properties.
+
+  The TVirtualNode record for reference:
+
+  TVirtualNode = packed record
+    Index,                   // index of node with regard to its parent
+    ChildCount: Cardinal;    // number of child nodes
+    NodeHeight: Word;        // height in pixels
+    States: TVirtualNodeStates; // states describing various properties of the node (expanded, initialized etc.)
+    Align: Byte;             // line/button alignment
+    CheckState: TCheckState; // indicates the current check state (e.g. checked, pressed etc.)
+    CheckType: TCheckType;   // indicates which check type shall be used for this node
+    Dummy: Byte;             // dummy value to fill DWORD boundary       TODO: Is this still necessary?
+    TotalCount,              // sum of this node, all of its child nodes and their child nodes etc.
+    TotalHeight: Cardinal;   // height in pixels this node covers on screen including the height of all of its
+                             // children
+    // Note: Some copy routines require that all pointers (as well as the data area) in a node are
+    //       located at the end of the node! Hence if you want to add new member fields (except pointers to internal
+    //       data) then put them before field Parent.
+    Parent,                  // reference to the node's parent (for the root this contains the treeview)
+    PrevSibling,             // link to the node's previous sibling or nil if it is the first node
+    NextSibling,             // link to the node's next sibling or nil if it is the last node
+    FirstChild,              // link to the node's first child...
+    LastChild: PVirtualNode; // link to the node's last child...
+  private
+    Data: record end;        // this is a placeholder, each node gets extra data determined by NodeDataSize
+  public
+    function IsAssigned(): Boolean; inline;
+    function GetData(): Pointer; overload; inline;
+    function GetData<T>(): T; overload; inline;
+    procedure SetData(pUserData: Pointer); overload;
+    procedure SetData<T>(pUserData: T); overload;
+    procedure SetData(const pUserData: IInterface); overload;
+  end;
 }
 {$ENDREGION}
-
-{
-TVirtualNode = packed record
-  Index,                   // index of node with regard to its parent
-  ChildCount: Cardinal;    // number of child nodes
-  NodeHeight: Word;        // height in pixels
-  States: TVirtualNodeStates; // states describing various properties of the node (expanded, initialized etc.)
-  Align: Byte;             // line/button alignment
-  CheckState: TCheckState; // indicates the current check state (e.g. checked, pressed etc.)
-  CheckType: TCheckType;   // indicates which check type shall be used for this node
-  Dummy: Byte;             // dummy value to fill DWORD boundary       TODO: Is this still necessary?
-  TotalCount,              // sum of this node, all of its child nodes and their child nodes etc.
-  TotalHeight: Cardinal;   // height in pixels this node covers on screen including the height of all of its
-                           // children
-  // Note: Some copy routines require that all pointers (as well as the data area) in a node are
-  //       located at the end of the node! Hence if you want to add new member fields (except pointers to internal
-  //       data) then put them before field Parent.
-  Parent,                  // reference to the node's parent (for the root this contains the treeview)
-  PrevSibling,             // link to the node's previous sibling or nil if it is the first node
-  NextSibling,             // link to the node's next sibling or nil if it is the last node
-  FirstChild,              // link to the node's first child...
-  LastChild: PVirtualNode; // link to the node's last child...
-private
-  Data: record end;        // this is a placeholder, each node gets extra data determined by NodeDataSize
-public
-  function IsAssigned(): Boolean; inline;
-  function GetData(): Pointer; overload; inline;
-  function GetData<T>(): T; overload; inline;
-  procedure SetData(pUserData: Pointer); overload;
-  procedure SetData<T>(pUserData: T); overload;
-  procedure SetData(const pUserData: IInterface); overload;
-end;
-}
 
 type
   TVTNode<T> = class;
@@ -357,13 +357,11 @@ begin
   FOwnsObject := AOwnsObject;
   FText       := AText;
   FImageIndex := -1;
-  // Corrected: Always add the child, AddChild handles AParentVNode = nil correctly
   FVNode := FTree.AddChild(AParentVNode, Self);
-  // Initialize CheckState/Type on the actual PVirtualNode if needed after creation
   if Assigned(FVNode) then
   begin
-    FVNode.CheckState := FCheckState; // Assuming FCheckState is initialized elsewhere if needed
-    FVNode.CheckType := FCheckType;   // Assuming FCheckType is initialized elsewhere if needed
+    FVNode.CheckState := FCheckState;
+    FVNode.CheckType  := FCheckType;
   end;
 end;
 
@@ -375,13 +373,11 @@ begin
   FOwnsObject := AOwnsObject;
   FText       := AText;
   FImageIndex := -1;
-  // Corrected: Always add the child, AddChild handles AParentVNode = nil correctly
   FVNode := FTree.AddChild(AParentVNode, Self);
-  // Initialize CheckState/Type on the actual PVirtualNode if needed after creation
-   if Assigned(FVNode) then
+  if Assigned(FVNode) then
   begin
-    FVNode.CheckState := FCheckState; // Assuming FCheckState is initialized elsewhere if needed
-    FVNode.CheckType := FCheckType;   // Assuming FCheckType is initialized elsewhere if needed
+    FVNode.CheckState := FCheckState;
+    FVNode.CheckType  := FCheckType;
   end;
 end;
 
@@ -389,8 +385,7 @@ destructor TVTNode<T>.Destroy;
 begin
   if (GetTypekind(T) = tkClass) and OwnsObject then
     TObject(Pointer(@FData)^).Free;
-  FTree  := nil;
-  // FVNode is managed by the tree, do not free it here
+  FTree := nil;
   inherited Destroy;
 end;
 {$ENDREGION}
@@ -459,7 +454,8 @@ end;
 procedure TVTNode<T>.SetData(const Value: T);
 begin
   // Consider freeing old data if OwnsObject is true and data is a class
-  if (GetTypekind(T) = tkClass) and OwnsObject and Assigned(TObject(Pointer(@FData)^)) then
+  if (GetTypekind(T) = tkClass) and OwnsObject
+    and Assigned(TObject(Pointer(@FData)^)) then
       TObject(Pointer(@FData)^).Free;
   FData := Value;
 end;
@@ -506,10 +502,10 @@ begin
     begin
       if Value then
         FTree.FocusedNode := VNode
-      else if Focused then // Only change if this node IS currently focused
-        FTree.FocusedNode := nil; // Or set to another node if needed
+      else if Focused then
+        FTree.FocusedNode := nil;
 
-      FTree.InvalidateNode(VNode); // Update visual state
+      FTree.InvalidateNode(VNode);
     end;
   end;
 end;
@@ -539,13 +535,12 @@ begin
   end;
 end;
 
-
 function TVTNode<T>.GetIndex: Integer;
 begin
   if Assigned(VNode) then
     Result := VNode.Index
   else
-    Result := -1; // More conventional than 0 for not found/invalid
+    Result := -1;
 end;
 
 function TVTNode<T>.GetItem(AIndex: UInt32): T;
@@ -574,7 +569,7 @@ begin
   if Assigned(FTree) and Assigned(VNode) then
     Result := FTree.GetNodeLevel(VNode)
   else
-    Result := -1; // Indicate invalid or root level depending on convention
+    Result := -1;
 end;
 
 function TVTNode<T>.GetNextSiblingData: T;
@@ -615,13 +610,12 @@ begin
   end;
 end;
 
-
 function TVTNode<T>.GetNodeHeight: Word;
 begin
   if Assigned(VNode) then
     Result := VNode.NodeHeight
   else
-    Result := 0; // Or default height
+    Result := 0;
 end;
 
 
@@ -629,10 +623,8 @@ procedure TVTNode<T>.SetNodeHeight(const Value: Word);
 begin
   if Assigned(FVNode) and Assigned(FTree) then
   begin
-     // Setting NodeHeight directly might interfere with auto-height calculation.
-     // Consider using Tree.NodeHeight[FVNode] := Value; if direct manipulation is needed.
-     // Or invalidate the node and let OnMeasureItem handle it if using variable heights.
-     FTree.InvalidateNode(FVNode); // Trigger remeasure if needed
+    FTree.NodeHeight[FVNode] := Value;
+    FTree.InvalidateNode(FVNode); // Trigger remeasure if needed
   end;
 end;
 
@@ -720,7 +712,6 @@ begin
   end;
 end;
 
-
 function TVTNode<T>.GetTotalCount: Cardinal;
 begin
   if Assigned(VNode) then
@@ -795,29 +786,20 @@ begin
   if LTypeKind = tkInterface then
     Result := TObject(Pointer(@AData1)^) = TObject(Pointer(@AData2)^) // Compare interface references directly
   else if LTypeKind = tkClass then
-    Result := TObject(Pointer(@AData1)^) = TObject(Pointer(@AData2)^); // Compare object references
-//  else
-//    Result := System.Rtti.TValue.From<T>(AData1).Equals(System.Rtti.TValue.From<T>(AData2)); // Use TValue for other types
+    Result := TObject(Pointer(@AData1)^) = TObject(Pointer(@AData2)^) // Compare object references
+  else
+    raise Exception.Create('Type not supported');
 end;
 
 { Search with recursion. }
 
 function TVTNode<T>.SearchTree(ANode: TVTNode<T>; const AData: T): TVTNode<T>;
 var
-  I      : UInt32;
-  LFound : Boolean;
-  LChildNode  : TVTNode<T>;
+  LChildNode : TVTNode<T>;
 begin
   Result := nil;
-  if not Assigned(ANode) then Exit; // Guard against nil input node
-
-  // Check the current node first (although typically Find starts from root's children)
-  // If ANode itself matches, return it (depends on how Find is intended to be used)
-  // if DataEquals(ANode.Data, AData) then
-  // begin
-  //   Result := ANode;
-  //   Exit;
-  // end;
+  if not Assigned(ANode) then
+    Exit; // Guard against nil input node
 
   // Iterate through children
   LChildNode := ANode.FirstChildNode;
@@ -837,9 +819,7 @@ begin
     end;
     LChildNode := LChildNode.NextSiblingNode; // Move to the next sibling
   end;
-  // Not found in this subtree
 end;
-
 
 function TVTNode<T>.VTNodeFromVNode(const AVNode: PVirtualNode): TVTNode<T>;
 begin
@@ -859,21 +839,15 @@ end;
 
 {$REGION 'public methods'}
 function TVTNode<T>.Add(const AData: T; AOwnsObject: Boolean): TVTNode<T>;
-var
-  LVNode : PVirtualNode;
 begin
   // Ensure the current node's VNode exists. If not (e.g., adding to a detached TVTNode),
-  // this operation is invalid. You might want to raise an exception or handle it.
+  // this operation is invalid.
   if not Assigned(VNode) then
      raise Exception.Create('Cannot add child to a node without a valid VNode.');
 
   // Create the new TVTNode instance, passing the current VNode as the parent
   Result := TVTNode<T>.Create(FTree, AData, AOwnsObject, VNode);
-
-  // Note: The VNode for the new child is created and assigned inside the
-  // TVTNode<T>.Create constructor now. No need to call AddChild here again.
 end;
-
 
 procedure TVTNode<T>.Collapse;
 begin
@@ -885,7 +859,8 @@ begin
   Expanded := True;
 end;
 
-// Find should typically start searching from the children of the current node
+{ Find should typically start searching from the children of the current node. }
+
 function TVTNode<T>.Find(const AData: T): TVTNode<T>;
 begin
   Result := SearchTree(Self, AData);
@@ -915,7 +890,8 @@ end;
 function TVTNode<T>.HasParent: Boolean;
 begin
   // Check if the VNode has a parent AND if that parent is not the hidden root
-  Result := Assigned(VNode) and Assigned(VNode.Parent) and (VNode.Parent <> FTree.RootNode);
+  Result := Assigned(VNode) and Assigned(VNode.Parent)
+    and (VNode.Parent <> FTree.RootNode);
 end;
 
 procedure TVTNode<T>.SetFocus;

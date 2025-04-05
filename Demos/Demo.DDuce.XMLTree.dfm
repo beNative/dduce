@@ -1,8 +1,8 @@
 object frmXMLTree: TfrmXMLTree
   Left = 0
   Top = 0
-  ClientHeight = 548
-  ClientWidth = 1097
+  ClientHeight = 1035
+  ClientWidth = 1719
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,12 +13,12 @@ object frmXMLTree: TfrmXMLTree
   object pnlTop: TPanel
     Left = 0
     Top = 0
-    Width = 1097
+    Width = 1719
     Height = 32
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1091
+    ExplicitWidth = 1713
     object btnExpand: TButton
       Left = 8
       Top = 4
@@ -39,46 +39,48 @@ object frmXMLTree: TfrmXMLTree
   object pnlMain: TPanel
     Left = 0
     Top = 32
-    Width = 1097
-    Height = 516
+    Width = 1719
+    Height = 1003
     Align = alClient
     BevelOuter = bvNone
     Caption = 'pnlMain'
     TabOrder = 1
-    ExplicitWidth = 1091
-    ExplicitHeight = 499
+    ExplicitWidth = 1713
+    ExplicitHeight = 986
     object splVertical: TSplitter
-      Left = 361
+      Left = 473
       Top = 0
       Width = 6
-      Height = 516
+      Height = 1003
       ResizeStyle = rsLine
+      ExplicitLeft = 361
+      ExplicitHeight = 516
     end
-    object pnlXMLTree: TPanel
+    object pnlTree: TPanel
       Left = 0
       Top = 0
-      Width = 361
-      Height = 516
+      Width = 473
+      Height = 1003
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 499
+      ExplicitHeight = 986
     end
     object pnlEditor: TPanel
-      Left = 367
+      Left = 479
       Top = 0
-      Width = 730
-      Height = 516
+      Width = 1240
+      Height = 1003
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 724
-      ExplicitHeight = 499
+      ExplicitWidth = 1234
+      ExplicitHeight = 986
       object mmoXml: TMemo
         Left = 0
         Top = 0
-        Width = 432
-        Height = 516
+        Width = 745
+        Height = 1003
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
@@ -89,50 +91,75 @@ object frmXMLTree: TfrmXMLTree
         Font.Name = 'Consolas'
         Font.Style = []
         Lines.Strings = (
+          '<?xml version="1.0" encoding="UTF-8"?>'
           
-            '<?xml version="1.0" encoding="UTF-8"?>'#10'<library>'#10'    <book id="1' +
-            '01">'#10'       '
-          ' <title>The Great Gatsby</title>'#10'        <author>F. Scott '
-          'Fitzgerald</author>'#10'        <genre>Fiction</genre>'#10'        '
-          '<publishedYear>1925</publishedYear>'#10'        '
+            '<!-- Voorbeeld van een generiek XML-document met verschillende f' +
+            'eatures -->'
+          '<Library xmlns:meta="http://example.org/metadata"'
+          '         version="2.1"'
+          '         created="2025-04-05"'
+          '         language="en">'
+          ''
+          '  <meta:Info>'
+          '    <meta:Author id="1234" active="true">Tim</meta:Author>'
+          '    <meta:License type="MIT"/>'
+          '  </meta:Info>'
+          ''
+          '  <Collection name="TechBooks" category="Technology">'
+          '    <Book id="B001" published="2023-05-12" available="true">'
+          '      <Title>Artificial Intelligence Demystified</Title>'
+          '      <Author>Jane Doe</Author>'
+          '      <Pages>358</Pages>'
+          '      <Tags>'
+          '        <Tag>AI</Tag>'
+          '        <Tag>Machine Learning</Tag>'
+          '        <Tag>Neural Networks</Tag>'
+          '      </Tags>'
           
-            '<publisher>Scribner</publisher>'#10'        <isbn>9780743273565</isb' +
-            'n>'#10'    '
+            '      <Summary><![CDATA[This book offers a deep dive into modern' +
+            ' AI techniques, including deep learning, reinforcement '
+          'learning, and LLMs.'
+          ']]></Summary>'
+          '    </Book>'
+          ''
+          '    <Book id="B002" published="2022-11-20" available="false">'
+          '      <Title>Embedded Systems with Python</Title>'
+          '      <Author>John Smith</Author>'
+          '      <Pages>290</Pages>'
+          '      <Tags>'
+          '        <Tag>Python</Tag>'
+          '        <Tag>Hardware</Tag>'
+          '        <Tag>IoT</Tag>'
+          '      </Tags>'
+          '      <Rating score="4.5" reviewers="128"/>'
+          '    </Book>'
+          '  </Collection>'
+          ''
+          '  <Settings>'
           
-            '</book>'#10'    <book id="102">'#10'        <title>To Kill a Mockingbird' +
-            '</title>'#10'   '
-          
-            '     <author>Harper Lee</author>'#10'        <genre>Fiction</genre>'#10 +
-            '        '
-          
-            '<publishedYear>1960</publishedYear>'#10'        <publisher>J.B. Lipp' +
-            'incott & '
-          
-            'Co.</publisher>'#10'        <isbn>9780061120084</isbn>'#10'    </book>'#10' ' +
-            '   <book '
-          'id="103">'#10'        <title>1984</title>'#10'        <author>George '
-          'Orwell</author>'#10'        <genre>Dystopian</genre>'#10'        '
-          '<publishedYear>1949</publishedYear>'#10'        <publisher>Secker & '
-          
-            'Warburg</publisher>'#10'        <isbn>9780451524935</isbn>'#10'    </boo' +
-            'k>'
-          '</library>')
+            '    <AutoSave enabled="true" interval="15"/> <!-- interval in mi' +
+            'nutes -->'
+          '    <Display theme="dark" fontSize="12" showLineNumbers="true"/>'
+          '    <Logging level="debug" output="logs/app.log"/>'
+          '  </Settings>'
+          ''
+          '</Library>')
         ParentFont = False
         TabOrder = 0
         OnChange = mmoXmlChange
-        ExplicitWidth = 426
-        ExplicitHeight = 499
+        ExplicitWidth = 739
+        ExplicitHeight = 986
       end
       object pnlObjectInspector: TPanel
-        Left = 432
+        Left = 745
         Top = 0
-        Width = 298
-        Height = 516
+        Width = 495
+        Height = 1003
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 426
-        ExplicitHeight = 499
+        ExplicitLeft = 739
+        ExplicitHeight = 986
       end
     end
   end

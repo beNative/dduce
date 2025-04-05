@@ -9,7 +9,7 @@ uses
   Vcl.Styles,
   Vcl.SysStyles,
   MidasLib,
-  DDuce.Logger.Channels.WinIPC,
+  DDuce.Logger.Channels.WinIpc,
   DDuce.Logger,
   Demo.Contact in 'Demo.Contact.pas',
   Demo.Data in 'Demo.Data.pas' {dmData: TDataModule},
@@ -34,7 +34,7 @@ uses
   Demo.DDuce.EditList in 'Demo.DDuce.EditList.pas' {frmEditList},
   Demo.DDuce.Dialogs in 'Demo.DDuce.Dialogs.pas' {frmDialogs},
   Demo.DDuce.JsonTree in 'Demo.DDuce.JsonTree.pas' {frmJsonTree},
-  Demo.DDuce.XMLTree in 'Demo.DDuce.XMLTree.pas' {frmXMLTree},
+  Demo.DDuce.XmlTree in 'Demo.DDuce.XmlTree.pas' {frmXmlTree},
   Demo.DDuce.RttiTree in 'Demo.DDuce.RttiTree.pas' {frmRttiTree};
 
 {$R *.res}
@@ -47,7 +47,7 @@ begin
   ReportMemoryLeaksOnShutdown := DebugHook > 0;
   {$WARNINGS ON}
   Application.Initialize;
-    Application.CreateForm(TdmData, dmData);
+  Application.CreateForm(TdmData, dmData);
   if CheckWin32Version(6) then // at least Vista
   begin
    Application.DefaultFont.Name := 'Segoe UI';

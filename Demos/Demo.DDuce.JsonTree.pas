@@ -98,7 +98,8 @@ uses
   Vcl.Clipbrd,
 
   DDuce.Components.Factories, DDuce.Factories.VirtualTrees,
-  DDuce.Factories.zObjInspector, DDuce.Editor.Factories, DDuce.Logger,
+  DDuce.Factories.zObjInspector, DDuce.Editor.Factories,
+  DDuce.Logger,
 
   Demo.Data;
 

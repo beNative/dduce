@@ -46,7 +46,7 @@ type
       FElement               : TTextFormatSettings;
       FAttribute             : TTextFormatSettings;
       FTextNode              : TTextFormatSettings;
-      FValueNode             : TTextFormatSettings; // For attribute/text/cdata values
+      FValue             : TTextFormatSettings; // For attribute/text/cdata values
       FComment               : TTextFormatSettings;
       FCData                 : TTextFormatSettings;
       FProcessingInstruction : TTextFormatSettings;
@@ -76,8 +76,8 @@ type
       property Attribute: TTextFormatSettings
         read FAttribute;
 
-      property ValueNode: TTextFormatSettings // Styling for values in column 1
-        read FValueNode;
+      property Value: TTextFormatSettings
+        read FValue;
 
       property TextNode: TTextFormatSettings
         read FTextNode;
@@ -193,8 +193,8 @@ type
 implementation
 
 uses
-  System.Variants, System.Math, System.Character, // For TCharHelper
   Winapi.Windows,    // For DrawText and DT_ constants
+  System.Variants, System.Math, System.Character, // For TCharHelper
   Vcl.Graphics,      // For TBitmap, TColor, TCanvas, TFont
   Xml.XMLDoc,        // For LoadXMLData
 
@@ -212,7 +212,7 @@ begin
   FreeAndNil(FElement);
   FreeAndNil(FAttribute);
   FreeAndNil(FTextNode);
-  FreeAndNil(FValueNode);
+  FreeAndNil(FValue);
   FreeAndNil(FComment);
   FreeAndNil(FCData);
   FreeAndNil(FProcessingInstruction);
@@ -246,12 +246,12 @@ begin
   FAttribute.BackgroundColor := clWhite;
   FAttribute.OnChanged.Add(FormatSettingsChanged);
 
-  FValueNode := TTextFormatSettings.Create;
-  FValueNode.FontColor := clGreen;
-  FValueNode.FontName  := DefaultFontName;
-  FValueNode.FontSize  := DefaultFontSize;
-  FValueNode.BackgroundColor := clWhite;
-  FValueNode.OnChanged.Add(FormatSettingsChanged);
+  FValue := TTextFormatSettings.Create;
+  FValue.FontColor := clGreen;
+  FValue.FontName  := DefaultFontName;
+  FValue.FontSize  := DefaultFontSize;
+  FValue.BackgroundColor := clWhite;
+  FValue.OnChanged.Add(FormatSettingsChanged);
 
   FTextNode := TTextFormatSettings.Create;
   FTextNode.FontColor := clGray;
@@ -354,7 +354,6 @@ end;
 procedure TXmlTree.AfterConstruction;
 begin
   inherited;
-  FXmlDocument := nil;
   FColorSettings := TColorSettings.Create;
   FColorSettings.OnChanged.Add(FColorSettingsChanged);
   Header.Options := Header.Options + [hoAutoResize];
@@ -382,8 +381,11 @@ begin
     Text     := 'Value';
   end;
   Header.AutoSizeIndex := 1;
-  TreeOptions.MiscOptions := TreeOptions.MiscOptions + [toVariableNodeHeight, toEditable, toEditOnDblClick];
-  TreeOptions.EditOptions := toVerticalEdit;
+    TreeOptions.MiscOptions := [
+    toCheckSupport, toInitOnSave, toWheelPanning, toVariableNodeHeight
+    {toEditable, toEditOnDblClick,}
+  ];
+  //TreeOptions.EditOptions := toVerticalEdit;
 end;
 
 destructor TXmlTree.Destroy;
@@ -560,7 +562,7 @@ begin
     begin
       if LXmlNode.NodeType in [ntAttribute, ntText, ntCData, ntComment,
         ntProcessingInstr] then
-        LColor := ColorSettings.ValueNode.BackgroundColor
+        LColor := ColorSettings.Value.BackgroundColor
       else if LXmlNode.NodeType = ntElement then
         LColor := ColorSettings.Element.BackgroundColor;
     end;
@@ -572,9 +574,9 @@ end;
 
 procedure TXmlTree.DoGetText(var pEventArgs: TVSTGetCellTextEventArgs);
 var
-  LNode        : TXmlNode;
-  LXmlNode     : IXMLNode;
-  LNodeNameStr : string;
+  LNode       : TXmlNode;
+  LXmlNode    : IXMLNode;
+  LNodeNameStr: string;
 begin
   LNode    := GetNode(pEventArgs.Node);
   LXmlNode := LNode.Data;
@@ -586,9 +588,11 @@ begin
     ntElement, ntAttribute, ntProcessingInstr, ntEntity, ntNotation:
       LNodeNameStr := LXmlNode.NodeName; // Use actual name for these types
     ntDocType:
-      LNodeNameStr := LNodeNameStr + ' ' + LXmlNode.NodeName; // Append name for DocType
+      LNodeNameStr := LNodeNameStr + ' ' + LXmlNode.NodeName;
+      // Append name for DocType
     ntEntityRef:
-      LNodeNameStr := LNodeNameStr + LXmlNode.NodeName + ';'; // Append name and ; for EntityRef
+      LNodeNameStr := LNodeNameStr + LXmlNode.NodeName + ';';
+      // Append name and ; for EntityRef
   end;
 
   // Assign text based on column
@@ -600,17 +604,22 @@ begin
   begin
     case LXmlNode.NodeType of
       ntElement:
-        if LXmlNode.IsTextElement then pEventArgs.CellText := LXmlNode.Text
-        else if LXmlNode.HasChildNodes then pEventArgs.CellText := Format('{%d}', [LXmlNode.ChildNodes.Count])
-        else pEventArgs.CellText := '';
+        if LXmlNode.IsTextElement then
+          pEventArgs.CellText := LXmlNode.Text
+        else if LXmlNode.HasChildNodes then
+          pEventArgs.CellText := Format('{%d}', [LXmlNode.ChildNodes.Count])
+        else
+          pEventArgs.CellText := '';
       ntAttribute:
         pEventArgs.CellText := VarToStrDef(LXmlNode.NodeValue, '');
       ntText, ntCData, ntComment:
-        pEventArgs.CellText := VarToStrDef(LXmlNode.NodeValue, LXmlNode.Text); // Use NodeValue or Text
+        pEventArgs.CellText := VarToStrDef(LXmlNode.NodeValue, LXmlNode.Text);
+        // Use NodeValue or Text
       ntProcessingInstr:
         pEventArgs.CellText := LXmlNode.NodeValue; // Data
       ntDocType, ntEntity, ntNotation:
-        pEventArgs.CellText := VarToStrDef(LXmlNode.NodeValue, ''); // Value is less common here
+        pEventArgs.CellText := VarToStrDef(LXmlNode.NodeValue, '');
+        // Value is less common here
       ntDocument, ntEntityRef, ntDocFragment:
         pEventArgs.CellText := ''; // Usually no direct value in column 1
     else // Fallback
@@ -676,18 +685,18 @@ procedure TXmlTree.DoMeasureItem(
   Node          : PVirtualNode;
   var NodeHeight: Integer);
 var
-  I          : Integer;
-  H, MaxH    : Integer;
-  S          : string;
-  LNode      : TXmlNode;
-  LXmlNode   : IXMLNode;
-  R          : TRect;
-  LDrawFormat: Cardinal;
-  LCol       : TVirtualTreeColumn;
-  LBitmap    : TBitmap;
-  LCanvas    : TCanvas;
-  LFontStyles: TFontStyles;
-  NodeNameStr: string; // To store calculated node name
+  I            : Integer;
+  H, MaxH      : Integer;
+  S            : string;
+  LNode        : TXmlNode;
+  LXmlNode     : IXMLNode;
+  R            : TRect;
+  LDrawFormat  : Cardinal;
+  LCol         : TVirtualTreeColumn;
+  LBitmap      : TBitmap;
+  LCanvas      : TCanvas;
+  LFontStyles  : TFontStyles;
+  LNodeNameStr : string; // To store calculated node name
 begin
   MaxH := DefaultNodeHeight;
 
@@ -719,16 +728,16 @@ begin
         S := '';
         if I = 0 then // Name Column
         begin
-          NodeNameStr := GetNodeTypeName(LXmlNode.NodeType); // Get base name
+          LNodeNameStr := GetNodeTypeName(LXmlNode.NodeType); // Get base name
           case LXmlNode.NodeType of
             ntElement, ntAttribute, ntProcessingInstr, ntEntity, ntNotation:
-              NodeNameStr := LXmlNode.NodeName;
+              LNodeNameStr := LXmlNode.NodeName;
             ntDocType:
-              NodeNameStr := NodeNameStr + ' ' + LXmlNode.NodeName;
+              LNodeNameStr := LNodeNameStr + ' ' + LXmlNode.NodeName;
             ntEntityRef:
-              NodeNameStr := NodeNameStr + LXmlNode.NodeName + ';';
+              LNodeNameStr := LNodeNameStr + LXmlNode.NodeName + ';';
           end;
-          S := NodeNameStr;
+          S := LNodeNameStr;
         end
         else // Value Column (I = 1)
         begin
@@ -795,10 +804,10 @@ begin
           begin
             case LXmlNode.NodeType of
               ntAttribute, ntText, ntCData, ntComment, ntProcessingInstr:
-                LFontStyles := ColorSettings.ValueNode.Font.Style;
+                LFontStyles := ColorSettings.Value.Font.Style;
               ntElement:
                 if LXmlNode.IsTextElement then
-                  LFontStyles := ColorSettings.ValueNode.Font.Style
+                  LFontStyles := ColorSettings.Value.Font.Style
                 else
                   LFontStyles := [];
             else
@@ -872,14 +881,14 @@ begin
     begin
       case LXmlNode.NodeType of
         ntAttribute, ntText, ntCData, ntComment, ntProcessingInstr:
-          Canvas.Font.Assign(ColorSettings.ValueNode.Font);
+          Canvas.Font.Assign(ColorSettings.Value.Font);
         ntElement:
           if LXmlNode.IsTextElement then
-            Canvas.Font.Assign(ColorSettings.ValueNode.Font)
+            Canvas.Font.Assign(ColorSettings.Value.Font)
           else if LXmlNode.HasChildNodes then
             Canvas.Font.Color := clGray
           else
-            Canvas.Font.Color := ColorSettings.ValueNode.FontColor;
+            Canvas.Font.Color := ColorSettings.Value.FontColor;
         ntDocType, ntEntityRef, ntEntity, ntDocFragment, ntNotation, ntDocument:
           Canvas.Font.Assign(ColorSettings.Other.Font);
       else
