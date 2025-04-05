@@ -118,8 +118,8 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <VerInfo_Build>535</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.535;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>536</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.536;ProductVersion=1.0.0.0</VerInfo_Keys>
         <Debugger_HostApplication>D:\development\delphi\libraries\dduce\Demos\Bin\Win32\DDuce.Demos.exe</Debugger_HostApplication>
         <Debugger_CWD>D:\development\delphi\libraries\dduce\Demos\Bin\Win32</Debugger_CWD>
         <DCC_MapFile>3</DCC_MapFile>
@@ -127,8 +127,8 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>61</VerInfo_Build>
-        <VerInfo_Keys>FileVersion=1.0.0.61;ProductVersion=1.0.0.0</VerInfo_Keys>
+        <VerInfo_Build>101</VerInfo_Build>
+        <VerInfo_Keys>FileVersion=1.0.0.101;ProductVersion=1.0.0.0</VerInfo_Keys>
         <DCC_MapFile>3</DCC_MapFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64x)'!=''">

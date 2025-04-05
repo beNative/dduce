@@ -22,14 +22,14 @@ uses
   System.SysUtils, System.Classes, System.Actions, System.JSON,
   System.ImageList,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.ActnList,
-  Vcl.StdCtrls, Vcl.ImgList, Vcl.Menus,
+  Vcl.StdCtrls, Vcl.ImgList, Vcl.Menus, Vcl.VirtualImageList,
 
   VirtualTrees, VirtualTrees.Types, VirtualTrees.Header, VirtualTrees.BaseTree,
 
   zObjInspector, zObjInspTypes,
 
   DDuce.Components.VirtualTrees.Node, DDuce.Components.SectionTree,
-  DDuce.Editor.Interfaces, DDuce.Components.JsonTree, Vcl.VirtualImageList;
+  DDuce.Editor.Interfaces, DDuce.Components.JsonTree;
 
 type
   TfrmJsonTree = class(TForm)

@@ -1,5 +1,5 @@
 {
-  Copyright (C) 2013-2022 Tim Sinaeve tim.sinaeve@gmail.com
+  Copyright (C) 2013-2025 Tim Sinaeve tim.sinaeve@gmail.com
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
   limitations under the License.
 }
 
-unit Demo.DDuce.XMLTree;
+unit Demo.DDuce.XmlTree;
 
-{ Form demonstrating the TXMLTree component which is a TVirtualStringTree
+{ Form demonstrating the TXmlTree component which is a TVirtualStringTree
   descendant. }
 
 interface
@@ -29,33 +29,40 @@ uses
 
   VirtualTrees, VirtualTrees.Types, VirtualTrees.Header,
 
+  zObjInspector, zObjInspTypes,
+
   DDuce.Components.PropertyInspector, DDuce.Components.XmlTree;
 
 type
   TfrmXMLTree = class(TForm)
-    aclMain      : TActionList;
-    actCollapse  : TAction;
-    actExpand    : TAction;
-    btnCollapse  : TButton;
-    btnExpand    : TButton;
-    mmoXML       : TMemo;
-    pnlEditor    : TPanel;
-    pnlInspector : TPanel;
-    pnlMain      : TPanel;
-    pnlTop       : TPanel;
-    pnlXMLTree   : TPanel;
-    splVertical  : TSplitter;
+    aclMain            : TActionList;
+    actCollapse        : TAction;
+    actExpand          : TAction;
+    btnCollapse        : TButton;
+    btnExpand          : TButton;
+    mmoXml             : TMemo;
+    pnlEditor          : TPanel;
+    pnlObjectInspector : TPanel;
+    pnlMain            : TPanel;
+    pnlTop             : TPanel;
+    pnlXMLTree         : TPanel;
+    splVertical        : TSplitter;
 
     procedure actExpandExecute(Sender: TObject);
     procedure actCollapseExecute(Sender: TObject);
-    procedure mmoXMLChange(Sender: TObject);
+    procedure mmoXmlChange(Sender: TObject);
 
   private
-    FXMLTree: TXMLTree;
-    FXML    : string;
-    FPI     : TPropertyInspector;
+    FTree            : TXmlTree;
+    FXml             : string;
+    FObjectInspector : TzObjectInspector;
 
     procedure InitializeTree;
+
+    function FObjectInspectorBeforeAddItem(
+      Sender : TControl;
+      PItem  : PPropItem
+    ): Boolean;
 
     procedure XMLTreeEditing(
       Sender      : TBaseVirtualTree;
@@ -94,7 +101,41 @@ implementation
 {$R *.dfm}
 
 uses
-  DDuce.Components.Factories;
+  System.Rtti, System.StrUtils,
+
+  DDuce.Components.Factories, DDuce.Factories.zObjInspector;
+
+const
+  VISIBLE_PROPERTIES : array of string = [
+    'Color',
+    'Colors',
+    'ColorSettings',
+    'DefaultNodeHeight',
+    'DefaultText',
+    'DragImageKind',
+    'DragKind',
+    'DragMode',
+    'DragOperations',
+    'DragType',
+    'DragWidth',
+    'DrawSelectionMode',
+    'EmptyListMessage',
+    'Enabled',
+    'Font',
+    'Header',
+    'Hint',
+    'HintMode',
+    'Indent',
+    'LineMode',
+    'LineStyle',
+    'Margin',
+    'NodeAlignment',
+    'ShowHint',
+    'TextMargin',
+    'TreeOptions',
+    'Visible'
+  ];
+
 
 {$REGION 'XML string'}
 const
@@ -268,28 +309,47 @@ const
 procedure TfrmXMLTree.AfterConstruction;
 begin
   inherited;
-  FXMLTree := TXMLTree.Create(Self);
-  FXMLTree.Parent := pnlXMLTree;
-  //FXML := XML_STRING;
-  mmoXML.Text := FXML;
+  FTree := TXmlTree.Create(Self);
+  FTree.Parent := pnlXMLTree;
+  FXml := XML_STRING;
+  mmoXml.Text := XML_STRING;
   InitializeTree;
-  FPI := TDDuceComponents.CreatePropertyInspector(Self, pnlInspector, FXMLTree);
+  FObjectInspector := TzObjectInspectorFactory.Create(
+    Self,
+    pnlObjectInspector
+  );
+  FObjectInspector.AlignWithMargins       := True;
+  FObjectInspector.ShowReadOnlyProperties := False;
+  FObjectInspector.OnBeforeAddItem        := FObjectInspectorBeforeAddItem;
+  FObjectInspector.Component              := FTree;
 end;
 {$ENDREGION}
 
 {$REGION 'action handlers'}
 procedure TfrmXMLTree.actCollapseExecute(Sender: TObject);
 begin
-  FXMLTree.FullCollapse;
+  FTree.FullCollapse;
 end;
 
 procedure TfrmXMLTree.actExpandExecute(Sender: TObject);
 begin
-  FXMLTree.FullExpand;
+  FTree.FullExpand;
 end;
 {$ENDREGION}
 
 {$REGION 'event handlers'}
+function TfrmXMLTree.FObjectInspectorBeforeAddItem(Sender: TControl;
+  PItem: PPropItem): Boolean;
+var
+  LName : string;
+begin
+  LName := PItem.QualifiedName;
+  LName := LName.Split(['.'], 2)[1];
+  Result := not LName.Contains('ComObject')
+    and (not (PItem.Prop.PropertyType is TRttiMethodType))
+    and MatchText(LName, VISIBLE_PROPERTIES);
+end;
+
 procedure TfrmXMLTree.XMLTreeColumnDblClick(Sender: TBaseVirtualTree;
   Column: TColumnIndex; Shift: TShiftState);
 var
@@ -303,7 +363,7 @@ end;
 procedure TfrmXMLTree.XMLTreeEdited(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex);
 begin
-  FXML := FXMLTree.XmlString;
+  FXml := FTree.XmlString;
 end;
 
 procedure TfrmXMLTree.XMLTreeEditing(Sender: TBaseVirtualTree;
@@ -322,72 +382,71 @@ begin
   end;
 end;
 
-procedure TfrmXMLTree.mmoXMLChange(Sender: TObject);
+procedure TfrmXMLTree.mmoXmlChange(Sender: TObject);
 begin
-  FXML := mmoXML.Text;
-  FXMLTree.XmlString := FXML;
+  FXml := mmoXML.Text;
+  FTree.XmlString := FXml;
 end;
 {$ENDREGION}
 
 {$REGION 'private methods'}
 procedure TfrmXMLTree.InitializeTree;
 begin
-  FXMLTree.Parent           := pnlXMLTree;
-  FXMLTree.BevelKind        := bkFlat;
-  FXMLTree.BevelInner       := bvNone;
-  FXMLTree.BevelOuter       := bvLowered;
-  FXMLTree.BorderStyle      := bsNone;
+  FTree.Parent           := pnlXMLTree;
+  FTree.BevelKind        := bkFlat;
+  FTree.BevelInner       := bvNone;
+  FTree.BevelOuter       := bvLowered;
+  FTree.BorderStyle      := bsNone;
 
-  FXMLTree.Align            := alClient;
-  FXMLTree.AlignWithMargins := True;
-  FXMLTree.Header.Options   := FXMLTree.Header.Options + [hoVisible];
-  with FXMLTree.Header do
+  FTree.Align            := alClient;
+  FTree.AlignWithMargins := True;
+  FTree.Header.Options   := FTree.Header.Options + [hoVisible];
+  with FTree.Header do
   begin
     Style := hsPlates;
     AutoSizeIndex := 0;
     Options := Options + [hoAutoResize, hoVisible];
   end;
-  FXMLTree.OnEditing        := XMLTreeEditing;
-  FXMLTree.OnPaintText      := XMLTreePaintText;
-  FXMLTree.OnColumnDblClick := XMLTreeColumnDblClick;
-  FXMLTree.OnEdited         := XMLTreeEdited;
-  FXMLTree.LineMode := lmBands;
-  FXMLTree.Header.Options := [
+//  FTree.OnEditing        := XMLTreeEditing;
+//  FTree.OnPaintText      := XMLTreePaintText;
+//  FTree.OnColumnDblClick := XMLTreeColumnDblClick;
+//  FTree.OnEdited         := XMLTreeEdited;
+  FTree.LineMode := lmBands;
+  FTree.Header.Options := [
     hoAutoResize,
     hoColumnResize,
     hoDrag,
     hoShowSortGlyphs,
     hoVisible
   ];
-  FXMLTree.TreeOptions.MiscOptions := [
+  FTree.TreeOptions.MiscOptions := [
     toAcceptOLEDrop,
     toEditable,
     toFullRepaintOnResize,
     toGridExtensions,
     toInitOnSave,
-    toReportMode,
     toToggleOnDblClick,
     toWheelPanning
   ];
-  FXMLTree.TreeOptions.PaintOptions := [
-    toShowButtons,
-    toShowDropmark,
-    toShowHorzGridLines,
-    toShowRoot,
-    toShowTreeLines,
-    toShowVertGridLines,
-    toUseBlendedImages,
-    toUseBlendedSelection
-  ];
-  FXMLTree.TreeOptions.AutoOptions := [
-    toAutoSpanColumns
-  ];
-  FXMLTree.XmlString := FXML;
-  FXMLTree.Colors.GridLineColor := clSilver;
-  FXMLTree.Colors.UnfocusedSelectionColor := clGray;
-  FXMLTree.DrawSelectionMode := smBlendedRectangle;
-  FXMLTree.ButtonStyle := bsTriangle;
-  FXMLTree.Header.AutoFitColumns;
+//  FTree.TreeOptions.PaintOptions := [
+//    toShowButtons,
+//    toShowDropmark,
+//    toShowHorzGridLines,
+//    toShowRoot,
+//    toShowTreeLines,
+//    toShowVertGridLines,
+//    toUseBlendedImages,
+//    toUseBlendedSelection
+//  ];
+//  FTree.TreeOptions.AutoOptions := [
+//    toAutoSpanColumns
+//  ];
+  FTree.XmlString := FXml;
+  FTree.Colors.GridLineColor := clSilver;
+  FTree.Colors.UnfocusedSelectionColor := clGray;
+  FTree.DrawSelectionMode := smBlendedRectangle;
+  FTree.ButtonStyle := bsTriangle;
+  FTree.Header.AutoFitColumns;
 end;
 {$ENDREGION}
 
@@ -395,7 +454,7 @@ end;
 procedure TfrmXMLTree.UpdateActions;
 begin
   inherited;
-  mmoXML.Text := FXML;
+  mmoXML.Text := FXml;
 end;
 {$ENDREGION}
 

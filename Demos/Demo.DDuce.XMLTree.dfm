@@ -18,6 +18,7 @@ object frmXMLTree: TfrmXMLTree
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 1091
     object btnExpand: TButton
       Left = 8
       Top = 4
@@ -44,6 +45,8 @@ object frmXMLTree: TfrmXMLTree
     BevelOuter = bvNone
     Caption = 'pnlMain'
     TabOrder = 1
+    ExplicitWidth = 1091
+    ExplicitHeight = 499
     object splVertical: TSplitter
       Left = 361
       Top = 0
@@ -59,6 +62,7 @@ object frmXMLTree: TfrmXMLTree
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitHeight = 499
     end
     object pnlEditor: TPanel
       Left = 367
@@ -68,7 +72,9 @@ object frmXMLTree: TfrmXMLTree
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      object mmoXML: TMemo
+      ExplicitWidth = 724
+      ExplicitHeight = 499
+      object mmoXml: TMemo
         Left = 0
         Top = 0
         Width = 432
@@ -113,9 +119,11 @@ object frmXMLTree: TfrmXMLTree
           '</library>')
         ParentFont = False
         TabOrder = 0
-        OnChange = mmoXMLChange
+        OnChange = mmoXmlChange
+        ExplicitWidth = 426
+        ExplicitHeight = 499
       end
-      object pnlInspector: TPanel
+      object pnlObjectInspector: TPanel
         Left = 432
         Top = 0
         Width = 298
@@ -123,6 +131,8 @@ object frmXMLTree: TfrmXMLTree
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitLeft = 426
+        ExplicitHeight = 499
       end
     end
   end
