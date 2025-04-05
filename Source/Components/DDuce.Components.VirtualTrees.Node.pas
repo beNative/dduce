@@ -335,7 +335,13 @@ begin
     else
     begin
       LTree := FCurrent.FTree;
-      FCurrent := LTree.GetNodeData<TVTNode<K>>(FCurrent.VNode.NextSibling);
+      // Get the PVirtualNode of the next sibling
+      var NextVNode := FCurrent.VNode.NextSibling;
+      // Get the TVTNode data associated with that PVirtualNode
+      if Assigned(NextVNode) then
+        FCurrent := LTree.GetNodeData<TVTNode<K>>(NextVNode)
+      else
+        FCurrent := nil; // No more siblings
     end;
   end;
   Result := Assigned(FCurrent);
@@ -351,8 +357,14 @@ begin
   FOwnsObject := AOwnsObject;
   FText       := AText;
   FImageIndex := -1;
-  if not Assigned(AParentVNode) then // create rootnode
-    FVNode := FTree.AddChild(nil, Self);
+  // Corrected: Always add the child, AddChild handles AParentVNode = nil correctly
+  FVNode := FTree.AddChild(AParentVNode, Self);
+  // Initialize CheckState/Type on the actual PVirtualNode if needed after creation
+  if Assigned(FVNode) then
+  begin
+    FVNode.CheckState := FCheckState; // Assuming FCheckState is initialized elsewhere if needed
+    FVNode.CheckType := FCheckType;   // Assuming FCheckType is initialized elsewhere if needed
+  end;
 end;
 
 constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree;
@@ -362,8 +374,15 @@ begin
   FData       := Default(T);
   FOwnsObject := AOwnsObject;
   FText       := AText;
-  if not Assigned(AParentVNode) then // create rootnode
-    FVNode := FTree.AddChild(nil, Self);
+  FImageIndex := -1;
+  // Corrected: Always add the child, AddChild handles AParentVNode = nil correctly
+  FVNode := FTree.AddChild(AParentVNode, Self);
+  // Initialize CheckState/Type on the actual PVirtualNode if needed after creation
+   if Assigned(FVNode) then
+  begin
+    FVNode.CheckState := FCheckState; // Assuming FCheckState is initialized elsewhere if needed
+    FVNode.CheckType := FCheckType;   // Assuming FCheckType is initialized elsewhere if needed
+  end;
 end;
 
 destructor TVTNode<T>.Destroy;
@@ -371,6 +390,7 @@ begin
   if (GetTypekind(T) = tkClass) and OwnsObject then
     TObject(Pointer(@FData)^).Free;
   FTree  := nil;
+  // FVNode is managed by the tree, do not free it here
   inherited Destroy;
 end;
 {$ENDREGION}
@@ -393,12 +413,14 @@ end;
 function TVTNode<T>.GetCheckState: TCheckState;
 begin
   if Assigned(VNode) then
-    FCheckState := VNode.CheckState;
-  Result := FCheckState;
+    Result := VNode.CheckState // Read directly from VNode
+  else
+    Result := csUncheckedNormal; // Or some default
 end;
 
 procedure TVTNode<T>.SetCheckState(const Value: TCheckState);
 begin
+  // Store locally if needed, but primarily set on VNode
   FCheckState := Value;
   if Assigned(VNode) then
     VNode.CheckState := Value;
@@ -407,16 +429,19 @@ end;
 function TVTNode<T>.GetCheckType: TCheckType;
 begin
   if Assigned(VNode) then
-    FCheckType := VNode.CheckType;
-  Result := FCheckType;
+    Result := VNode.CheckType // Read directly from VNode
+  else
+    Result := ctNone; // Or some default
 end;
 
 procedure TVTNode<T>.SetCheckType(const Value: TCheckType);
 begin
+  // Store locally if needed, but primarily set on VNode
   FCheckType := Value;
   if Assigned(VNode) then
     VNode.CheckType := Value;
 end;
+
 
 function TVTNode<T>.GetChildCount: UInt32;
 begin
@@ -433,19 +458,21 @@ end;
 
 procedure TVTNode<T>.SetData(const Value: T);
 begin
+  // Consider freeing old data if OwnsObject is true and data is a class
+  if (GetTypekind(T) = tkClass) and OwnsObject and Assigned(TObject(Pointer(@FData)^)) then
+      TObject(Pointer(@FData)^).Free;
   FData := Value;
 end;
 
 function TVTNode<T>.GetExpanded: Boolean;
 begin
-  Result := Assigned(FTree) and (FTree.Expanded[VNode] = True);
+  Result := Assigned(FTree) and Assigned(FVNode) and (vsExpanded in FVNode.States);
 end;
 
 procedure TVTNode<T>.SetExpanded(const Value: Boolean);
 begin
-  if Value <> Expanded then
+  if Assigned(FTree) and Assigned(FVNode) and (Value <> Expanded) then
   begin
-    if Assigned(FTree) then
       FTree.Expanded[VNode] := Value;
   end;
 end;
@@ -468,17 +495,21 @@ end;
 
 function TVTNode<T>.GetFocused: Boolean;
 begin
-  Result := Assigned(FTree) and (FTree.FocusedNode = VNode);
+  Result := Assigned(FTree) and Assigned(FVNode) and (FTree.FocusedNode = VNode);
 end;
 
 procedure TVTNode<T>.SetFocused(const Value: Boolean);
 begin
   if Value <> Focused then
   begin
-    if Assigned(FTree) then
+    if Assigned(FTree) and Assigned(FVNode) then
     begin
-      FTree.FocusedNode := VNode;
-      FTree.InvalidateNode(VNode);
+      if Value then
+        FTree.FocusedNode := VNode
+      else if Focused then // Only change if this node IS currently focused
+        FTree.FocusedNode := nil; // Or set to another node if needed
+
+      FTree.InvalidateNode(VNode); // Update visual state
     end;
   end;
 end;
@@ -500,15 +531,21 @@ end;
 
 procedure TVTNode<T>.SetImageIndex(const Value: Integer);
 begin
-  FImageIndex := Value;
+  if FImageIndex <> Value then
+  begin
+    FImageIndex := Value;
+    if Assigned(FVNode) and Assigned(FTree) then
+      FTree.InvalidateNode(FVNode); // Update visual if image changes
+  end;
 end;
+
 
 function TVTNode<T>.GetIndex: Integer;
 begin
   if Assigned(VNode) then
     Result := VNode.Index
   else
-    Result := 0;
+    Result := -1; // More conventional than 0 for not found/invalid
 end;
 
 function TVTNode<T>.GetItem(AIndex: UInt32): T;
@@ -537,7 +574,7 @@ begin
   if Assigned(FTree) and Assigned(VNode) then
     Result := FTree.GetNodeLevel(VNode)
   else
-    Result := 0;
+    Result := -1; // Indicate invalid or root level depending on convention
 end;
 
 function TVTNode<T>.GetNextSiblingData: T;
@@ -561,27 +598,42 @@ var
   I	 : UInt32;
 	VN : PVirtualNode;
 begin
-  //Guard.CheckIndex(VNode.ChildCount, AIndex);
-	VN := VNode.FirstChild;
-  if AIndex > 0 then
+  Result := nil; // Default to nil
+  if Assigned(VNode) and (AIndex < VNode.ChildCount) then
   begin
-    for I := 0 to AIndex - 1 do
+    VN := VNode.FirstChild;
+    if AIndex > 0 then
     begin
-//      Guard.CheckNotNull(VN, 'VN');
-      VN := VN.NextSibling;
+      for I := 1 to AIndex do // Iterate AIndex times to get to the right sibling
+      begin
+        if not Assigned(VN) then Break; // Should not happen if AIndex is valid
+        VN := VN.NextSibling;
+      end;
     end;
+    if Assigned(VN) then
+      Result := FTree.GetNodeData<TVTNode<T>>(VN);
   end;
-	Result := FTree.GetNodeData<TVTNode<T>>(VN);
 end;
+
 
 function TVTNode<T>.GetNodeHeight: Word;
 begin
-  Result := VNode.NodeHeight;
+  if Assigned(VNode) then
+    Result := VNode.NodeHeight
+  else
+    Result := 0; // Or default height
 end;
+
 
 procedure TVTNode<T>.SetNodeHeight(const Value: Word);
 begin
-//  VNode.NodeHeight := Value;
+  if Assigned(FVNode) and Assigned(FTree) then
+  begin
+     // Setting NodeHeight directly might interfere with auto-height calculation.
+     // Consider using Tree.NodeHeight[FVNode] := Value; if direct manipulation is needed.
+     // Or invalidate the node and let OnMeasureItem handle it if using variable heights.
+     FTree.InvalidateNode(FVNode); // Trigger remeasure if needed
+  end;
 end;
 
 function TVTNode<T>.GetText: string;
@@ -595,8 +647,14 @@ begin
 end;
 
 function TVTNode<T>.GetParentData: T;
+var
+  LParentNode: TVTNode<T>;
 begin
-  Result := ParentNode.Data;
+  LParentNode := ParentNode;
+  if Assigned(LParentNode) then
+    Result := LParentNode.Data
+  else
+    Result := Default(T);
 end;
 
 function TVTNode<T>.GetParentNode: TVTNode<T>;
@@ -608,8 +666,14 @@ begin
 end;
 
 function TVTNode<T>.GetPrevSiblingData: T;
+var
+  LPrevNode: TVTNode<T>;
 begin
-  Result := PrevSiblingNode.Data;
+  LPrevNode := PrevSiblingNode;
+  if Assigned(LPrevNode) then
+    Result := LPrevNode.Data
+  else
+    Result := Default(T);
 end;
 
 function TVTNode<T>.GetPrevSiblingNode: TVTNode<T>;
@@ -627,27 +691,35 @@ end;
 
 function TVTNode<T>.GetSelected: Boolean;
 begin
-  Result := Assigned(FTree) and FTree.Selected[VNode];
+  Result := Assigned(FTree) and Assigned(FVNode) and (vsSelected in FVNode.States);
 end;
 
 procedure TVTNode<T>.SetSelected(const Value: Boolean);
 begin
-  if Value <> Selected then
+  if Assigned(FTree) and Assigned(FVNode) and (Value <> Selected) then
   begin
-    if Assigned(FTree) then
-      FTree.Selected[VNode] := True;
+      FTree.Selected[VNode] := Value;
   end;
 end;
 
 function TVTNode<T>.GetStates: TVirtualNodeStates;
 begin
-  Result := VNode.States;
+  if Assigned(VNode) then
+    Result := VNode.States
+  else
+    Result := [];
 end;
 
 procedure TVTNode<T>.SetText(const Value: string);
 begin
-  FText := Value;
+  if FText <> Value then
+  begin
+    FText := Value;
+    if Assigned(FVNode) and Assigned(FTree) then
+      FTree.InvalidateNode(FVNode); // Update visual if text changes
+  end;
 end;
+
 
 function TVTNode<T>.GetTotalCount: Cardinal;
 begin
@@ -695,13 +767,18 @@ end;
 
 procedure TVTNode<T>.SetVNode(const Value: PVirtualNode);
 begin
+  // This should generally not be set manually after creation.
+  // The VNode is assigned during the AddChild call in the constructor.
+  // If it needs to be changed, careful management is required.
   if Value <> VNode then
   begin
     FVNode := Value;
+    // Re-apply properties if VNode changes
     if Assigned(FVNode) then
     begin
       FVNode.CheckState := FCheckState;
       FVNode.CheckType  := FCheckType;
+      // May need to update other VNode properties here
     end;
   end;
 end;
@@ -711,8 +788,16 @@ end;
 { Works for both class and interface types. }
 
 function TVTNode<T>.DataEquals(const AData1, AData2: T): Boolean;
+var
+  LTypeKind: TTypeKind;
 begin
-  Result := TObject(Pointer(@AData1)^) = TObject(Pointer(@AData2)^);
+  LTypeKind := GetTypeKind(T);
+  if LTypeKind = tkInterface then
+    Result := TObject(Pointer(@AData1)^) = TObject(Pointer(@AData2)^) // Compare interface references directly
+  else if LTypeKind = tkClass then
+    Result := TObject(Pointer(@AData1)^) = TObject(Pointer(@AData2)^); // Compare object references
+//  else
+//    Result := System.Rtti.TValue.From<T>(AData1).Equals(System.Rtti.TValue.From<T>(AData2)); // Use TValue for other types
 end;
 
 { Search with recursion. }
@@ -721,35 +806,47 @@ function TVTNode<T>.SearchTree(ANode: TVTNode<T>; const AData: T): TVTNode<T>;
 var
   I      : UInt32;
   LFound : Boolean;
-  LNode  : TVTNode<T>;
+  LChildNode  : TVTNode<T>;
 begin
-  I      := 0;
-  LFound := False;
   Result := nil;
-  while (I < ANode.ChildCount) and not LFound do
+  if not Assigned(ANode) then Exit; // Guard against nil input node
+
+  // Check the current node first (although typically Find starts from root's children)
+  // If ANode itself matches, return it (depends on how Find is intended to be used)
+  // if DataEquals(ANode.Data, AData) then
+  // begin
+  //   Result := ANode;
+  //   Exit;
+  // end;
+
+  // Iterate through children
+  LChildNode := ANode.FirstChildNode;
+  while Assigned(LChildNode) do
   begin
-    LNode := ANode.Nodes[I];
-    if DataEquals(LNode.Data, AData) then
+    if DataEquals(LChildNode.Data, AData) then
     begin
-      Result := LNode;
-      LFound := True;
+      Result := LChildNode;
+      Exit; // Found it
     end
     else
     begin
-      LNode := SearchTree(LNode, AData);
-      if Assigned(LNode) and DataEquals(LNode.Data, AData) then
-      begin
-        Result := LNode;
-        LFound := True;
-      end
+      // Recursively search in the child's subtree
+      Result := SearchTree(LChildNode, AData);
+      if Assigned(Result) then
+        Exit; // Found in subtree
     end;
-    Inc(I);
+    LChildNode := LChildNode.NextSiblingNode; // Move to the next sibling
   end;
+  // Not found in this subtree
 end;
+
 
 function TVTNode<T>.VTNodeFromVNode(const AVNode: PVirtualNode): TVTNode<T>;
 begin
-  Result := FTree.GetNodeData<TVTNode<T>>(AVNode);
+  if Assigned(AVNode) and Assigned(FTree) then
+    Result := FTree.GetNodeData<TVTNode<T>>(AVNode)
+  else
+    Result := nil;
 end;
 {$ENDREGION}
 
@@ -763,18 +860,20 @@ end;
 {$REGION 'public methods'}
 function TVTNode<T>.Add(const AData: T; AOwnsObject: Boolean): TVTNode<T>;
 var
-  LVTNode : TVTNode<T>;
-  LVNode  : PVirtualNode;
+  LVNode : PVirtualNode;
 begin
-  if not Assigned(VNode) then // create root node if it does not exist
-  begin
-    VNode := FTree.AddChild(nil, Self);
-  end;
-  LVTNode := TVTNode<T>.Create(FTree, AData, AOwnsObject, VNode);
-  LVNode := FTree.AddChild(VNode, LVTNode);
-  LVTNode.VNode := LVNode;
-  Result := LVTNode;
+  // Ensure the current node's VNode exists. If not (e.g., adding to a detached TVTNode),
+  // this operation is invalid. You might want to raise an exception or handle it.
+  if not Assigned(VNode) then
+     raise Exception.Create('Cannot add child to a node without a valid VNode.');
+
+  // Create the new TVTNode instance, passing the current VNode as the parent
+  Result := TVTNode<T>.Create(FTree, AData, AOwnsObject, VNode);
+
+  // Note: The VNode for the new child is created and assigned inside the
+  // TVTNode<T>.Create constructor now. No need to call AddChild here again.
 end;
+
 
 procedure TVTNode<T>.Collapse;
 begin
@@ -786,6 +885,7 @@ begin
   Expanded := True;
 end;
 
+// Find should typically start searching from the children of the current node
 function TVTNode<T>.Find(const AData: T): TVTNode<T>;
 begin
   Result := SearchTree(Self, AData);
@@ -795,7 +895,7 @@ end;
 
 procedure TVTNode<T>.FullCollapse;
 begin
-  if Assigned(FTree) then
+  if Assigned(FTree) and Assigned(FVNode) then
     FTree.FullCollapse(VNode);
 end;
 
@@ -803,7 +903,7 @@ end;
 
 procedure TVTNode<T>.FullExpand;
 begin
-  if Assigned(FTree) then
+  if Assigned(FTree) and Assigned(FVNode) then
     FTree.FullExpand(VNode);
 end;
 
@@ -814,7 +914,8 @@ end;
 
 function TVTNode<T>.HasParent: Boolean;
 begin
-  Result := Assigned(ParentNode);
+  // Check if the VNode has a parent AND if that parent is not the hidden root
+  Result := Assigned(VNode) and Assigned(VNode.Parent) and (VNode.Parent <> FTree.RootNode);
 end;
 
 procedure TVTNode<T>.SetFocus;
