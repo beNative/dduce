@@ -88,7 +88,6 @@ type
       constructor Create(AVTNode: TVTNode<K>);
 
       function GetCurrent: TVTNode<K>;
-
       function MoveNext: Boolean;
 
       property Current: TVTNode<K>
@@ -159,6 +158,10 @@ type
     function GetParentNode: TVTNode<T>;
     function GetPrevSiblingData: T;
     function GetPrevSiblingNode: TVTNode<T>;
+    function GetNextData: T;
+    function GetPrevData: T;
+    function GetNextNode: TVTNode<T>;
+    function GetPrevNode: TVTNode<T>;
     {$ENDREGION}
 
   public
@@ -176,6 +179,11 @@ type
       const AText  : string = ''
     ); overload; virtual;
     destructor Destroy; override;
+
+    class function FindTVTNode(
+      ATree       : TCustomVirtualStringTree;
+      const AData : T
+    ): TVTNode<T>;
 
     function GetEnumerator: TVTNodeEnumerator<T>;
     function DataEquals(const AData1: T; const AData2: T): Boolean;
@@ -288,6 +296,12 @@ type
     property LastChildNode: TVTNode<T>
       read GetLastChildNode;
 
+    property NextNode: TVTNode<T>
+      read GetNextNode;
+
+    property PrevNode: TVTNode<T>
+      read GetPrevNode;
+
     property ParentData: T
       read GetParentData;
 
@@ -302,6 +316,12 @@ type
 
     property LastChildData: T
       read GetLastChildData;
+
+    property NextData: T
+      read GetNextData;
+
+    property PrevData: T
+      read GetPrevData;
 
   end;
 
@@ -346,6 +366,33 @@ begin
   end;
   Result := Assigned(FCurrent);
 end;
+{$ENDREGION}
+
+{$REGION 'class methods'}
+class function TVTNode<T>.FindTVTNode(ATree: TCustomVirtualStringTree;
+  const AData: T): TVTNode<T>;
+var
+  LVNode    : PVirtualNode;
+  LNodeData : TVTNode<T>;
+begin
+  Result := nil;
+  if not Assigned(ATree) then
+    Exit;
+
+  LVNode := ATree.GetFirst;
+  while Assigned(LVNode) do
+  begin
+    // Retrieve the node's associated TVTNode<T> object
+    LNodeData := ATree.GetNodeData<TVTNode<T>>(LVNode);
+
+    // Compare the data
+    if Assigned(LNodeData) and LNodeData.DataEquals(LNodeData.Data, AData) then
+      Exit(LNodeData);
+
+    LVNode := ATree.GetNext(LVNode);
+  end;
+end;
+
 {$ENDREGION}
 
 {$REGION 'construction and destruction'}
@@ -572,6 +619,23 @@ begin
     Result := -1;
 end;
 
+function TVTNode<T>.GetNextData: T;
+begin
+  Result := NextNode.Data;
+end;
+
+function TVTNode<T>.GetNextNode: TVTNode<T>;
+begin
+  if Assigned(NextSiblingNode) then
+    Result := NextSiblingNode
+  else if Assigned(PrevSiblingNode) then
+    Result := PrevSiblingNode
+  else if Assigned(ParentNode) then
+    Result := ParentNode
+  else
+    Result := nil;
+end;
+
 function TVTNode<T>.GetNextSiblingData: T;
 begin
   if Assigned(NextSiblingNode) then
@@ -653,6 +717,23 @@ function TVTNode<T>.GetParentNode: TVTNode<T>;
 begin
   if Assigned(VNode) then
     Result := VTNodeFromVNode(VNode.Parent)
+  else
+    Result := nil;
+end;
+
+function TVTNode<T>.GetPrevData: T;
+begin
+  Result := PrevNode.Data;
+end;
+
+function TVTNode<T>.GetPrevNode: TVTNode<T>;
+begin
+  if Assigned(PrevSiblingNode) then
+    Result := PrevSiblingNode
+  else if Assigned(ParentNode) then
+    Result := ParentNode
+  else if Assigned(NextSiblingNode) then
+    Result := NextSiblingNode
   else
     Result := nil;
 end;
@@ -758,18 +839,13 @@ end;
 
 procedure TVTNode<T>.SetVNode(const Value: PVirtualNode);
 begin
-  // This should generally not be set manually after creation.
-  // The VNode is assigned during the AddChild call in the constructor.
-  // If it needs to be changed, careful management is required.
   if Value <> VNode then
   begin
     FVNode := Value;
-    // Re-apply properties if VNode changes
     if Assigned(FVNode) then
     begin
       FVNode.CheckState := FCheckState;
       FVNode.CheckType  := FCheckType;
-      // May need to update other VNode properties here
     end;
   end;
 end;
@@ -839,14 +915,18 @@ end;
 
 {$REGION 'public methods'}
 function TVTNode<T>.Add(const AData: T; AOwnsObject: Boolean): TVTNode<T>;
+var
+  LVTNode : TVTNode<T>;
+  LVNode  : PVirtualNode;
 begin
-  // Ensure the current node's VNode exists. If not (e.g., adding to a detached TVTNode),
-  // this operation is invalid.
-  if not Assigned(VNode) then
-     raise Exception.Create('Cannot add child to a node without a valid VNode.');
-
-  // Create the new TVTNode instance, passing the current VNode as the parent
-  Result := TVTNode<T>.Create(FTree, AData, AOwnsObject, VNode);
+  if not Assigned(VNode) then // create root node if it does not exist
+  begin
+    VNode := FTree.AddChild(nil, Self);
+  end;
+  LVTNode := TVTNode<T>.Create(FTree, AData, AOwnsObject, VNode);
+  LVNode := FTree.AddChild(VNode, LVTNode);
+  LVTNode.VNode := LVNode;
+  Result := LVTNode;
 end;
 
 procedure TVTNode<T>.Collapse;
