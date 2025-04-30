@@ -1370,7 +1370,10 @@ end;
 
 function TDynamicRecord.GetItem(Index: Integer): IDynamicField;
 begin
-  Result := inherited Items[Index] as TDynamicField;
+  if (Count > 0) and InRange(Index, 0, Count - 1) then
+    Result := inherited Items[Index] as TDynamicField
+  else
+    Result := nil;
 end;
 
 function TDynamicRecord.GetItemValue(const AName: string): TValue;
@@ -1666,8 +1669,152 @@ end;
 procedure TDynamicRecord.AssignTo(const AInstance: TValue;
   const AAssignProperties, AAssignFields, AAssignNulls: Boolean;
   const ANames: array of string);
+var
+  LType             : TRttiType;
+  LProp             : TRttiProperty;
+  LField            : TRttiField;
+  LSourceValue      : TValue;
+  LTargetPtr        : Pointer;
+  LNamesList        : TList<string>;
+  LUseNamesList     : Boolean;
+  LTargetName       : string;
+  LTargetValue      : TValue; // Used specifically for handling nullable targets
+  LIsNullableTarget : Boolean;
+  LInnerTypeInfo    : PTypeInfo;
 begin
-// TODO
+  if AInstance.IsEmpty or not (AInstance.IsObject or (AInstance.Kind = tkRecord)) then
+    Exit; // Cannot assign to empty or unsupported types
+
+  LType := FRttiContext.GetType(AInstance.TypeInfo);
+  if not Assigned(LType) then
+    Exit; // No RTTI available
+
+  // Determine target pointer type
+  if AInstance.IsObject then
+    LTargetPtr := AInstance.AsObject
+  else // IsRecord
+    LTargetPtr := AInstance.GetReferenceToRawData;
+
+  // Setup names filter list if needed
+  LUseNamesList := Length(ANames) > 0;
+  LNamesList := nil;
+  if LUseNamesList then
+  begin
+    LNamesList := TList<string>.Create;
+    LNamesList.AddRange(ANames);
+  end;
+
+  try
+    // --- Assign Properties ---
+    if AAssignProperties then
+    begin
+      for LProp in LType.GetProperties do
+      begin
+        LTargetName := LProp.Name;
+        // Optional: Use LTargetName.ToUpper if LNamesList was uppercased
+        if LProp.IsWritable then
+        begin
+          // Apply filters: Names list OR list is empty
+          if not LUseNamesList or LNamesList.Contains(LTargetName) then
+          begin
+            // Check if the source field exists in this DynamicRecord
+            if Self.ContainsField(LTargetName) then
+            begin
+              LSourceValue := Self.Values[LTargetName];
+
+              // Apply AAssignNulls filter
+              if (not LSourceValue.IsEmpty) or AAssignNulls then
+              begin
+                // Handle Nullable<T> style targets
+                LIsNullableTarget := TryGetUnderlyingTypeInfo(LProp.PropertyType.Handle, LInnerTypeInfo);
+
+                if LIsNullableTarget then
+                begin
+                   // 1. Get the current Nullable<T> value from the target
+                   LTargetValue := LProp.GetValue(LTargetPtr);
+                   // 2. Try to set the inner value of the Nullable<T> wrapper
+                   if TrySetUnderlyingValue(LTargetValue, LSourceValue) then
+                   begin
+                     // 3. Set the modified Nullable<T> wrapper back
+                     LProp.SetValue(LTargetPtr, LTargetValue);
+                   end
+                   else
+                   begin
+                     // Handle potential failure?
+                     // Or potentially try a direct assignment if TrySetUnderlyingValue fails
+                     // try LProp.SetValue(LTargetPtr, LSourceValue); except end;
+                   end;
+                end
+                else // Target is not Nullable<T> like
+                begin
+                  try
+                    // Direct assignment for non-nullable types
+                    LProp.SetValue(LTargetPtr, LSourceValue);
+                  except
+                    // Handle or log potential assignment errors (e.g., type mismatch)
+                    // On EInvalidCast do ...
+                  end;
+                end;
+              end; // if (not LSourceValue.IsEmpty) or AAssignNulls
+            end; // if Self.ContainsField(LTargetName)
+          end; // if not LUseNamesList or LNamesList.Contains(LTargetName)
+        end; // if LProp.IsWritable
+      end; // for LProp
+    end; // if AAssignProperties
+
+    // --- Assign Fields ---
+    if AAssignFields then
+    begin
+      // Note: GetFields typically returns public fields. RTTI level might affect visibility.
+      for LField in LType.GetFields do
+      begin
+        LTargetName := LField.Name;
+        // Optional: Use LTargetName.ToUpper if LNamesList was uppercased
+
+        // Apply filters: Names list OR list is empty
+        if not LUseNamesList or LNamesList.Contains(LTargetName) then
+        begin
+          // Check if the source field exists in this DynamicRecord
+          if Self.ContainsField(LTargetName) then
+          begin
+            LSourceValue := Self.Values[LTargetName];
+
+            // Apply AAssignNulls filter
+            if (not LSourceValue.IsEmpty) or AAssignNulls then
+            begin
+              // Handle Nullable<T> style targets
+              LIsNullableTarget := TryGetUnderlyingTypeInfo(LField.FieldType.Handle, LInnerTypeInfo);
+
+              if LIsNullableTarget then
+              begin
+                 LTargetValue := LField.GetValue(LTargetPtr);
+                 if TrySetUnderlyingValue(LTargetValue, LSourceValue) then
+                 begin
+                   LField.SetValue(LTargetPtr, LTargetValue);
+                 end
+                 else
+                 begin
+                   // Handle potential failure if needed
+                 end;
+              end
+              else // Target is not Nullable<T> like
+              begin
+                try
+                  // Direct assignment for non-nullable types
+                  LField.SetValue(LTargetPtr, LSourceValue);
+                except
+                  // Handle or log potential assignment errors
+                end;
+              end;
+            end; // if (not LSourceValue.IsEmpty) or AAssignNulls
+          end; // if Self.ContainsField(LTargetName)
+        end; // if not LUseNamesList or LNamesList.Contains(LTargetName)
+      end; // for LField
+    end; // if AAssignFields
+
+  finally
+    FreeAndNil(LNamesList);
+  end;
 end;
 
 { Assigns the record values to the corresponding (writable) properties of the
