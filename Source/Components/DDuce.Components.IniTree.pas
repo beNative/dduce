@@ -279,7 +279,6 @@ begin
     else
       LColor := ColorSettings.NullValue.BackgroundColor;
   end;
-
   Canvas.Brush.Color := LColor;
   Canvas.FillRect(CellRect);
 end;

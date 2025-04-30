@@ -22,7 +22,7 @@ interface
 
 uses
   System.Classes, System.SysUtils, System.Types, System.Rtti,
-  Xml.XMLIntf, // Keep IXMLNode, IXMLDocument here
+  Xml.XMLIntf,
 
   Spring,
 
@@ -46,7 +46,7 @@ type
       FElement               : TTextFormatSettings;
       FAttribute             : TTextFormatSettings;
       FTextNode              : TTextFormatSettings;
-      FValue             : TTextFormatSettings; // For attribute/text/cdata values
+      FValue                 : TTextFormatSettings; // For attribute/text/cdata values
       FComment               : TTextFormatSettings;
       FCData                 : TTextFormatSettings;
       FProcessingInstruction : TTextFormatSettings;
@@ -62,8 +62,11 @@ type
 
     protected
       function GetOnChanged: IEvent<TNotifyEvent>;
+
       procedure InitializeObjects;
+
       procedure Changed;
+
       procedure FormatSettingsChanged(Sender: TObject);
 
     public
@@ -127,7 +130,12 @@ type
   protected
     procedure BuildTree; override;
     function GetNode(const AVNode: PVirtualNode): TXmlNode;
-    procedure ParseNode(AParentNode: TXmlNode; AXmlNode: IXMLNode);
+    // Renamed and logic adjusted: This now processes children/attributes OF AXmlNode
+    // and adds them UNDER AParentTreeNode
+    procedure ProcessXmlNodeChildren(
+      AParentTreeNode : TXmlNode;
+      AXmlNode        : IXMLNode
+    );
 
     {$REGION 'event dispatch methods'}
     procedure DoFreeNode(Node: PVirtualNode); override;
@@ -201,9 +209,10 @@ uses
   DDuce.Logger;
 
 {$REGION 'TXmlTree.TColorSettings'}
+{$REGION 'construction and destruction'}
 procedure TXmlTree.TColorSettings.AfterConstruction;
 begin
-  inherited;
+  inherited AfterConstruction;
   InitializeObjects;
 end;
 
@@ -223,137 +232,148 @@ begin
   FreeAndNil(FDocFragment);
   FreeAndNil(FNotation);
   FreeAndNil(FOther);
-  inherited;
+  inherited Destroy;
 end;
+{$ENDREGION}
 
+{$REGION 'protected methods'}
 procedure TXmlTree.TColorSettings.InitializeObjects;
 const
-  DefaultFontName = 'Consolas';
-  DefaultFontSize = 10;
+  DEFAULT_FONT_NAME = 'Consolas';
+  DEFAULT_FONT_SIZE = 10;
 begin
   FElement := TTextFormatSettings.Create;
   FElement.FontColor := clNavy;
-  FElement.FontName  := DefaultFontName;
-  FElement.FontSize  := DefaultFontSize;
+  FElement.FontName  := DEFAULT_FONT_NAME;
+  FElement.FontSize  := DEFAULT_FONT_SIZE;
   FElement.FontStyle := [fsBold];
   FElement.BackgroundColor := clWhite;
   FElement.OnChanged.Add(FormatSettingsChanged);
 
   FAttribute := TTextFormatSettings.Create;
   FAttribute.FontColor := clPurple;
-  FAttribute.FontName  := DefaultFontName;
-  FAttribute.FontSize  := DefaultFontSize;
+  FAttribute.FontName  := DEFAULT_FONT_NAME;
+  FAttribute.FontSize  := DEFAULT_FONT_SIZE;
   FAttribute.BackgroundColor := clWhite;
   FAttribute.OnChanged.Add(FormatSettingsChanged);
 
   FValue := TTextFormatSettings.Create;
   FValue.FontColor := clGreen;
-  FValue.FontName  := DefaultFontName;
-  FValue.FontSize  := DefaultFontSize;
+  FValue.FontName  := DEFAULT_FONT_NAME;
+  FValue.FontSize  := DEFAULT_FONT_SIZE;
   FValue.BackgroundColor := clWhite;
   FValue.OnChanged.Add(FormatSettingsChanged);
 
   FTextNode := TTextFormatSettings.Create;
   FTextNode.FontColor := clGray;
-  FTextNode.FontName  := DefaultFontName;
-  FTextNode.FontSize  := DefaultFontSize;
+  FTextNode.FontName  := DEFAULT_FONT_NAME;
+  FTextNode.FontSize  := DEFAULT_FONT_SIZE;
   FTextNode.BackgroundColor := clWhite;
   FTextNode.OnChanged.Add(FormatSettingsChanged);
 
   FComment := TTextFormatSettings.Create;
   FComment.FontColor := clGray;
-  FComment.FontName  := DefaultFontName;
-  FComment.FontSize  := DefaultFontSize;
+  FComment.FontName  := DEFAULT_FONT_NAME;
+  FComment.FontSize  := DEFAULT_FONT_SIZE;
   FComment.FontStyle := [fsItalic];
   FComment.BackgroundColor := clWhite;
   FComment.OnChanged.Add(FormatSettingsChanged);
 
   FCData := TTextFormatSettings.Create;
   FCData.FontColor := clTeal;
-  FCData.FontName  := DefaultFontName;
-  FCData.FontSize  := DefaultFontSize;
+  FCData.FontName  := DEFAULT_FONT_NAME;
+  FCData.FontSize  := DEFAULT_FONT_SIZE;
   FCData.BackgroundColor := clWhite;
   FCData.OnChanged.Add(FormatSettingsChanged);
 
   FProcessingInstruction := TTextFormatSettings.Create;
   FProcessingInstruction.FontColor := clOlive;
-  FProcessingInstruction.FontName  := DefaultFontName;
-  FProcessingInstruction.FontSize  := DefaultFontSize;
+  FProcessingInstruction.FontName  := DEFAULT_FONT_NAME;
+  FProcessingInstruction.FontSize  := DEFAULT_FONT_SIZE;
   FProcessingInstruction.FontStyle := [fsItalic];
   FProcessingInstruction.BackgroundColor := clWhite;
   FProcessingInstruction.OnChanged.Add(FormatSettingsChanged);
 
   FDocType := TTextFormatSettings.Create;
   FDocType.FontColor := clMaroon;
-  FDocType.FontName  := DefaultFontName;
-  FDocType.FontSize  := DefaultFontSize;
+  FDocType.FontName  := DEFAULT_FONT_NAME;
+  FDocType.FontSize  := DEFAULT_FONT_SIZE;
   FDocType.FontStyle := [fsBold];
   FDocType.BackgroundColor := clWhite;
   FDocType.OnChanged.Add(FormatSettingsChanged);
 
   FDocument := TTextFormatSettings.Create;
   FDocument.FontColor := clGray;
-  FDocument.FontName  := DefaultFontName;
-  FDocument.FontSize  := DefaultFontSize;
+  FDocument.FontName  := DEFAULT_FONT_NAME;
+  FDocument.FontSize  := DEFAULT_FONT_SIZE;
   FDocument.BackgroundColor := clWhite;
   FDocument.OnChanged.Add(FormatSettingsChanged);
 
   FEntityRef := TTextFormatSettings.Create;
   FEntityRef.FontColor := clGray;
-  FEntityRef.FontName  := DefaultFontName;
-  FEntityRef.FontSize  := DefaultFontSize;
+  FEntityRef.FontName  := DEFAULT_FONT_NAME;
+  FEntityRef.FontSize  := DEFAULT_FONT_SIZE;
   FEntityRef.BackgroundColor := clWhite;
   FEntityRef.OnChanged.Add(FormatSettingsChanged);
 
   FEntity := TTextFormatSettings.Create;
   FEntity.FontColor := clGray;
-  FEntity.FontName  := DefaultFontName;
-  FEntity.FontSize  := DefaultFontSize;
+  FEntity.FontName  := DEFAULT_FONT_NAME;
+  FEntity.FontSize  := DEFAULT_FONT_SIZE;
   FEntity.BackgroundColor := clWhite;
   FEntity.OnChanged.Add(FormatSettingsChanged);
 
   FDocFragment := TTextFormatSettings.Create;
   FDocFragment.FontColor := clGray;
-  FDocFragment.FontName  := DefaultFontName;
-  FDocFragment.FontSize  := DefaultFontSize;
+  FDocFragment.FontName  := DEFAULT_FONT_NAME;
+  FDocFragment.FontSize  := DEFAULT_FONT_SIZE;
   FDocFragment.BackgroundColor := clWhite;
   FDocFragment.OnChanged.Add(FormatSettingsChanged);
 
   FNotation := TTextFormatSettings.Create;
   FNotation.FontColor := clGray;
-  FNotation.FontName  := DefaultFontName;
-  FNotation.FontSize  := DefaultFontSize;
+  FNotation.FontName  := DEFAULT_FONT_NAME;
+  FNotation.FontSize  := DEFAULT_FONT_SIZE;
   FNotation.BackgroundColor := clWhite;
   FNotation.OnChanged.Add(FormatSettingsChanged);
 
   FOther := TTextFormatSettings.Create;
   FOther.FontColor := clGray;
-  FOther.FontName  := DefaultFontName;
-  FOther.FontSize  := DefaultFontSize;
+  FOther.FontName  := DEFAULT_FONT_NAME;
+  FOther.FontSize  := DEFAULT_FONT_SIZE;
   FOther.BackgroundColor := clWhite;
   FOther.OnChanged.Add(FormatSettingsChanged);
 end;
+{$ENDREGION}
 
+{$REGION 'property access methods'}
 function TXmlTree.TColorSettings.GetOnChanged: IEvent<TNotifyEvent>;
 begin
   Result := FOnChanged;
 end;
+{$ENDREGION}
 
+{$REGION 'event dispatch methods'}
 procedure TXmlTree.TColorSettings.Changed;
 begin
   FOnChanged.Invoke(Self);
 end;
+{$ENDREGION}
 
+{$REGION 'event handlers'}
 procedure TXmlTree.TColorSettings.FormatSettingsChanged(Sender: TObject);
 begin
   Changed;
 end;
 {$ENDREGION}
+{$ENDREGION}
 
 {$REGION 'TXmlTree'}
+{$REGION 'construction and destruction'}
 procedure TXmlTree.AfterConstruction;
 begin
-  inherited;
+  inherited AfterConstruction;
+  NodeDataSize := SizeOf(Pointer); // Store pointer to TXmlNode
   FColorSettings := TColorSettings.Create;
   FColorSettings.OnChanged.Add(FColorSettingsChanged);
   Header.Options := Header.Options + [hoAutoResize];
@@ -382,136 +402,33 @@ begin
   end;
   Header.AutoSizeIndex := 1;
     TreeOptions.MiscOptions := [
-    toCheckSupport, toInitOnSave, toWheelPanning, toVariableNodeHeight
+    toCheckSupport, toInitOnSave, toWheelPanning, toVariableNodeHeight,
+    toToggleOnDblClick // Added to allow expand/collapse on dblclick
     {toEditable, toEditOnDblClick,}
   ];
+  TreeOptions.PaintOptions := TreeOptions.PaintOptions + [toShowTreeLines, toShowButtons]; // Ensure hierarchy visuals are on
   //TreeOptions.EditOptions := toVerticalEdit;
 end;
 
 destructor TXmlTree.Destroy;
 begin
-  Clear;
+  Clear; // This should trigger DoFreeNode for all nodes
   FXmlDocument := nil;
   FreeAndNil(FColorSettings);
   inherited;
 end;
+{$ENDREGION}
 
-procedure TXmlTree.BuildTree;
-begin
-  BeginUpdate;
-  try
-    Clear;
-    if Assigned(FXmlDocument) and Assigned(FXmlDocument.DocumentElement) then
-      ParseNode(nil, FXmlDocument.DocumentElement);
-    FullExpand;
-    Header.AutoFitColumns;
-  finally
-    EndUpdate;
-  end;
-end;
-
-function TXmlTree.IsWhitespaceNode(const AXmlNode: IXMLNode): Boolean;
-var
-  S : string;
-  C : Char;
-begin
-  Result := False;
-  if Assigned(AXmlNode) and (AXmlNode.NodeType = ntText) then
-  begin
-    S := VarToStrDef(AXmlNode.NodeValue, '');
-    Result := True;
-    for C in S do
-    begin
-      if not C.IsWhiteSpace then
-      begin
-        Result := False;
-        Break;
-      end;
-    end;
-  end;
-end;
-
-// Helper function to get a display name for node types
-function TXmlTree.GetNodeTypeName(ANodeType: TNodeType): string;
-begin
-  case ANodeType of
-    ntText:
-      Result := '#text';
-    ntCData:
-      Result := '#cdata-section';
-    ntComment:
-      Result := '#comment';
-    ntDocument:
-      Result := '#document';
-    ntDocType:
-      Result := '!DOCTYPE'; // NodeName will be appended later
-    ntEntityRef:
-      Result := '&'; // NodeName and ';' will be appended later
-    ntEntity:
-      Result := '#entity';
-    ntDocFragment:
-      Result := '#document-fragment';
-    ntNotation:
-      Result := '#notation';
-    ntProcessingInstr:
-      Result := ''; // Use NodeName (target)
-    ntAttribute:
-      Result := ''; // Use NodeName
-    ntElement:
-      Result := ''; // Use NodeName
-  else
-    Result := '#unknown';
-  end;
-end;
-
-procedure TXmlTree.ParseNode(AParentNode: TXmlNode; AXmlNode: IXMLNode);
-var
-  LNode         : TXmlNode;
-  LParentVNode  : PVirtualNode;
-  I             : Integer;
-  LChildXmlNode : IXMLNode;
-begin
-  if (AXmlNode.NodeType = ntText) and IsWhitespaceNode(AXmlNode) then
-  begin
-    Exit;
-  end;
-
-  if Assigned(AParentNode) then
-    LParentVNode := AParentNode.VNode
-  else
-    LParentVNode := nil;
-
-  LNode := TXmlNode.Create(Self, AXmlNode, False, LParentVNode);
-
-  if AXmlNode.NodeType = ntElement then
-  begin
-    if Assigned(AXmlNode.AttributeNodes) then
-      for I := 0 to AXmlNode.AttributeNodes.Count - 1 do
-        TXmlNode.Create(Self, AXmlNode.AttributeNodes[I], False, LNode.VNode);
-  end;
-
-  if Assigned(AXmlNode.ChildNodes) then
-    for I := 0 to AXmlNode.ChildNodes.Count - 1 do
-    begin
-      LChildXmlNode := AXmlNode.ChildNodes[I];
-      ParseNode(LNode, LChildXmlNode);
-    end;
-end;
-
-function TXmlTree.GetNode(const AVNode: PVirtualNode): TXmlNode;
-begin
-  Result := GetNodeData<TXmlNode>(AVNode);
-end;
-
+{$REGION 'event dispatch methods'}
 procedure TXmlTree.DoFreeNode(Node: PVirtualNode);
 var
   LNode : TXmlNode;
 begin
-  LNode := GetNodeData<TXmlNode>(Node);
+  LNode := GetNodeData<TXmlNode>(Node); // Use the generic GetNodeData directly
   if Assigned(LNode) then
   begin
-    InitNode(Node);
-    LNode.Free;
+    SetNodeData(Node, nil); // Clear the data pointer in the VST node
+    LNode.Free; // Free the TXmlNode object
   end;
   inherited DoFreeNode(Node);
 end;
@@ -520,16 +437,19 @@ procedure TXmlTree.DoBeforeCellPaint(Canvas: TCanvas; Node: PVirtualNode;
   Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect;
   var ContentRect: TRect);
 var
-  LXmlNode: IXMLNode;
-  LColor  : TColor;
+  LTreeNode: TXmlNode;
+  LXmlNode : IXMLNode;
+  LColor   : TColor;
 begin
-  inherited DoBeforeCellPaint(Canvas, Node, Column, CellPaintMode, CellRect,
-    ContentRect);
-
   if CellPaintMode = cpmPaint then
   begin
-    LXmlNode := GetNode(Node).Data;
-    LColor   := ColorSettings.Other.BackgroundColor;
+    LTreeNode := GetNode(Node);
+    if not Assigned(LTreeNode) or not Assigned(LTreeNode.Data) then
+      Exit; // Safety check
+    LXmlNode := LTreeNode.Data;
+
+    // Determine background color based on Node Type (Default to White or Other)
+    LColor := ColorSettings.Other.BackgroundColor; // Default
 
     case LXmlNode.NodeType of
       ntElement:
@@ -558,348 +478,420 @@ begin
         LColor := ColorSettings.Notation.BackgroundColor;
     end;
 
+    // Override background for Value column based on Node Type
     if Column = 1 then
     begin
-      if LXmlNode.NodeType in [ntAttribute, ntText, ntCData, ntComment,
-        ntProcessingInstr] then
-        LColor := ColorSettings.Value.BackgroundColor
-      else if LXmlNode.NodeType = ntElement then
-        LColor := ColorSettings.Element.BackgroundColor;
+      case LXmlNode.NodeType of
+        ntAttribute, ntText, ntCData, ntComment, ntProcessingInstr:
+          LColor := ColorSettings.Value.BackgroundColor; // Use Value style background
+        ntElement:
+           // Elements don't have a "value" in col 1, keep element bg
+          LColor := ColorSettings.Element.BackgroundColor;
+        // For other types in col 1, keep their specific background or 'Other'
+      end;
     end;
 
+    // Fill the cell background
     Canvas.Brush.Color := LColor;
     Canvas.FillRect(CellRect);
   end;
+
+  // Call inherited *after* filling background to allow VST to draw selection etc. over it
+  inherited DoBeforeCellPaint(Canvas, Node, Column, CellPaintMode, CellRect, ContentRect);
 end;
 
 procedure TXmlTree.DoGetText(var pEventArgs: TVSTGetCellTextEventArgs);
 var
-  LNode       : TXmlNode;
-  LXmlNode    : IXMLNode;
-  LNodeNameStr: string;
+  LNode        : TXmlNode;
+  LXmlNode     : IXMLNode;
+  LNodeNameStr : UnicodeString; // Ensure it's UnicodeString
+  LValueStr    : UnicodeString; // Ensure it's UnicodeString
+  LNodeValue   : OleVariant;
 begin
-  LNode    := GetNode(pEventArgs.Node);
+  pEventArgs.CellText := ''; // Default to empty
+
+  LNode := GetNode(pEventArgs.Node);
+  if not Assigned(LNode) or not Assigned(LNode.Data) then
+    Exit;
+
   LXmlNode := LNode.Data;
 
-  // Get the base name representation
+  // --- Get Name String (Direct Assignment) ---
   LNodeNameStr := GetNodeTypeName(LXmlNode.NodeType);
-
   case LXmlNode.NodeType of
     ntElement, ntAttribute, ntProcessingInstr, ntEntity, ntNotation:
-      LNodeNameStr := LXmlNode.NodeName; // Use actual name for these types
+      LNodeNameStr := LXmlNode.NodeName; // REMOVED + ''
     ntDocType:
-      LNodeNameStr := LNodeNameStr + ' ' + LXmlNode.NodeName;
-      // Append name for DocType
+      LNodeNameStr := LNodeNameStr + ' ' + LXmlNode.NodeName; // REMOVED + ''
     ntEntityRef:
-      LNodeNameStr := LNodeNameStr + LXmlNode.NodeName + ';';
-      // Append name and ; for EntityRef
+      if LXmlNode.NodeName <> '' then
+        LNodeNameStr := '&' + LXmlNode.NodeName + ';' // REMOVED + ''
+      else
+        LNodeNameStr := '&;';
   end;
 
   // Assign text based on column
-  if pEventArgs.Column = 0 then
+  if pEventArgs.Column = 0 then // Name Column
   begin
     pEventArgs.CellText := LNodeNameStr;
   end
-  else if pEventArgs.Column = 1 then
+  else if pEventArgs.Column = 1 then // Value Column
   begin
+    LValueStr := ''; // Default value to empty
+    try
+      case LXmlNode.NodeType of
+        ntAttribute, ntText, ntCData, ntComment, ntProcessingInstr, ntDocType, ntEntity, ntNotation:
+           LNodeValue := LXmlNode.NodeValue;
+      else
+           LNodeValue := Null;
+      end;
+    except
+      LNodeValue := Null;
+    end;
+
     case LXmlNode.NodeType of
       ntElement:
-        if LXmlNode.IsTextElement then
-          pEventArgs.CellText := LXmlNode.Text
-        else if LXmlNode.HasChildNodes then
-          pEventArgs.CellText := Format('{%d}', [LXmlNode.ChildNodes.Count])
+        if LXmlNode.HasChildNodes then
+           if LXmlNode.ChildNodes.Count > 0 then
+             LValueStr := Format('(%d items)', [LXmlNode.ChildNodes.Count])
+           else
+             LValueStr := ''
         else
-          pEventArgs.CellText := '';
+           LValueStr := '';
+
       ntAttribute:
-        pEventArgs.CellText := VarToStrDef(LXmlNode.NodeValue, '');
+         LValueStr := VarToStrDef(LNodeValue, '');
       ntText, ntCData, ntComment:
-        pEventArgs.CellText := VarToStrDef(LXmlNode.NodeValue, LXmlNode.Text);
-        // Use NodeValue or Text
+         LValueStr := VarToStrDef(LNodeValue, '').Trim;
       ntProcessingInstr:
-        pEventArgs.CellText := LXmlNode.NodeValue; // Data
+        LValueStr := VarToStrDef(LNodeValue, '');
       ntDocType, ntEntity, ntNotation:
-        pEventArgs.CellText := VarToStrDef(LXmlNode.NodeValue, '');
-        // Value is less common here
+        LValueStr := VarToStrDef(LNodeValue, '');
       ntDocument, ntEntityRef, ntDocFragment:
-        pEventArgs.CellText := ''; // Usually no direct value in column 1
-    else // Fallback
-      pEventArgs.CellText := VarToStrDef(LXmlNode.NodeValue, LXmlNode.Text);
+        LValueStr := '';
+    else
+      LValueStr := VarToStrDef(LNodeValue, '');
     end;
+    pEventArgs.CellText := LValueStr;
   end;
+  // NOTE: No inherited call needed here if we handle all columns.
+  // If you rely on inherited for something, add it back conditionally.
+  // inherited DoGetText(pEventArgs);
 end;
 
 procedure TXmlTree.DoNewText(Node: PVirtualNode; Column: TColumnIndex;
   const Text: string);
 var
-  LXmlNode : IXMLNode;
+  LTreeNode : TXmlNode;
+  LXmlNode  : IXMLNode;
 begin
-  LXmlNode := GetNode(Node).Data;
+  // Editing is currently disabled by commented-out options, but if enabled:
+  LTreeNode := GetNode(Node);
+  if not Assigned(LTreeNode) or not Assigned(LTreeNode.Data) then Exit;
 
+  LXmlNode := LTreeNode.Data;
+
+  // Only allow editing values in column 1 for specific node types
   if Column = 1 then
   begin
     case LXmlNode.NodeType of
-      ntAttribute:         LXmlNode.NodeValue := Text;
-      ntText, ntCData, ntComment: LXmlNode.NodeValue := Text;
-      ntProcessingInstr:   LXmlNode.NodeValue := Text;
+      ntAttribute:
+        LXmlNode.NodeValue := Text;
+      ntText, ntCData, ntComment:
+        LXmlNode.NodeValue := Text;
+      ntProcessingInstr:
+        LXmlNode.NodeValue := Text; // Edit PI data
     else
-      Exit;
+      Exit; // Don't allow editing value for other types like elements
     end;
-    InvalidateNode(Node);
+    InvalidateNode(Node); // Refresh the node visually
   end
-  else if Column = 0 then
+  else if Column = 0 then // Editing Name column
   begin
-//     case LXmlNode.NodeType of
-//       ntAttribute:          LXmlNode.NodeName := Text;
-//       ntProcessingInstr:    LXmlNode.NodeName := Text;
-//     else
-//       Exit;
-//     end;
-     InvalidateNode(Node);
+     // Generally, editing node names (elements, attributes) is complex
+     // as it affects structure and might require DOM manipulation beyond simple assignment.
+     // For now, disallow editing names.
+     // If needed, implement renaming logic carefully.
+     // Example (use with caution):
+     // case LXmlNode.NodeType of
+     //   ntAttribute: LXmlNode.NodeName := Text; // Requires care with DOM owner document
+     //   ntElement: // Renaming elements is very tricky, often requires recreating node
+     // else Exit;
+     // end;
+     Exit; // Disallow name editing for now
+     // InvalidateNode(Node);
   end;
 
-  inherited DoNewText(Node, Column, Text);
+  inherited DoNewText(Node, Column, Text); // Call inherited if needed
 end;
 
 procedure TXmlTree.DoNodeDblClick(const HitInfo: THitInfo);
 var
   LNode : TXmlNode;
 begin
-  LNode := GetNode(HitInfo.HitNode);
-  if Assigned(LNode) then
-    LNode.Expanded := not LNode.Expanded;
-  inherited DoNodeDblClick(HitInfo);
+  // Use the built-in VST toggle mechanism if toToggleOnDblClick is set
+  // LNode := GetNode(HitInfo.HitNode);
+  // if Assigned(LNode) then
+  //   LNode.Expanded := not LNode.Expanded;
+  inherited DoNodeDblClick(HitInfo); // This will handle expand/collapse if option is set
 end;
 
-procedure TXmlTree.DoInitNode(
-  Parent         : PVirtualNode;
-  ANode          : PVirtualNode;
-  var InitStates : TVirtualNodeInitStates
-);
+procedure TXmlTree.DoInitNode(Parent: PVirtualNode; ANode: PVirtualNode;
+  var InitStates: TVirtualNodeInitStates);
+var
+  LTreeNode           : TXmlNode;
+  LXmlNode            : IXMLNode;
+  LHasVisibleChildren : Boolean;
+  I                   : Integer;
+  LChildXmlNode       : IXMLNode;
 begin
-  inherited;
-  Include(InitStates, ivsMultiline);
+  inherited DoInitNode(Parent, ANode, InitStates);
+  Include(InitStates, ivsMultiline); // Enable multiline support
+
+  LTreeNode := GetNode(ANode);
+
+  // Default to NOT showing an expand button
+  Exclude(InitStates, ivsHasChildren);
+
+  if Assigned(LTreeNode) and Assigned(LTreeNode.Data) then
+  begin
+    LXmlNode            := LTreeNode.Data;
+
+     // If this node represents an XML attribute, it NEVER gets an expand button.
+    if LXmlNode.NodeType = ntAttribute then
+      Exit; // Stop processing for attributes, button remains hidden.
+
+    LHasVisibleChildren := False; // Now, check for children/attributes for non-attribute nodes
+
+    // Check if the node has attributes (Only relevant for elements now)
+    if (LXmlNode.NodeType = ntElement) and Assigned(LXmlNode.AttributeNodes) and
+       (LXmlNode.AttributeNodes.Count > 0) then
+    begin
+      LHasVisibleChildren := True;
+    end;
+
+    // Check if the node has actual child nodes (skipping whitespace)
+    if not LHasVisibleChildren and Assigned(LXmlNode.ChildNodes) then
+    begin
+      for I := 0 to LXmlNode.ChildNodes.Count - 1 do
+      begin
+        LChildXmlNode := LXmlNode.ChildNodes[I];
+        // Check if the child is NOT a whitespace-only text node
+        if not IsWhitespaceNode(LChildXmlNode) then
+        begin
+          LHasVisibleChildren := True; // Found a significant child
+          Break; // No need to check further children
+        end;
+      end;
+      // --- End of actual loop logic ---
+    end;
+
+    // Set the HasChildren flag ONLY IF needed (and it's not an attribute)
+    if LHasVisibleChildren then
+      Include(InitStates, ivsHasChildren);
+   // else: it remains excluded from the start
+  end;
+ // else: Node has no data, button remains hidden
 end;
 
-procedure TXmlTree.DoMeasureItem(
-  TargetCanvas  : TCanvas;
-  Node          : PVirtualNode;
+procedure TXmlTree.DoMeasureItem(TargetCanvas: TCanvas; Node: PVirtualNode;
   var NodeHeight: Integer);
 var
-  I            : Integer;
-  H, MaxH      : Integer;
-  S            : string;
-  LNode        : TXmlNode;
-  LXmlNode     : IXMLNode;
-  R            : TRect;
-  LDrawFormat  : Cardinal;
-  LCol         : TVirtualTreeColumn;
-  LBitmap      : TBitmap;
-  LCanvas      : TCanvas;
-  LFontStyles  : TFontStyles;
-  LNodeNameStr : string; // To store calculated node name
+  LHeight       : Integer;
+  LMaxHeight    : Integer;
+  S             : UnicodeString; // Use UnicodeString
+  LNode         : TXmlNode;
+  LXmlNode      : IXMLNode;
+  R             : TRect;
+  LDrawFormat   : Cardinal;
+  LCol          : TVirtualTreeColumn;
+  LTempBitmap   : TBitmap;
+  LTempCanvas   : TCanvas;
+  LOriginalFont : TFont;
+  LValueColIdx  : TColumnIndex;
+  LNodeValue    : OleVariant; // Variable to hold node value
+  LSettings     : TTextFormatSettings;
 begin
-  MaxH := DefaultNodeHeight;
+  LMaxHeight := DefaultNodeHeight; // Start with default height
 
   if not Assigned(Node) then
   begin
-    NodeHeight := MaxH;
+    NodeHeight := LMaxHeight;
     Exit;
   end;
 
   LNode := GetNode(Node);
   if not Assigned(LNode) or not Assigned(LNode.Data) then
   begin
-    NodeHeight := MaxH;
+    NodeHeight := LMaxHeight;
     Exit;
   end;
   LXmlNode := LNode.Data;
 
-  LBitmap := Vcl.Graphics.TBitmap.Create;
-  try
-    LCanvas := LBitmap.Canvas;
-    LCanvas.Font.Assign(Self.Font);
+  // --- Find the index of the 'Value' column (CRITICAL: Assumes index 1) ---
+  // If your columns can be reordered, you need a more robust way to find it.
+  LValueColIdx := -1;
+  if Header.Columns.Count > 1 then // Basic check
+     LValueColIdx := 1; // Assuming 'Value' is the second column
 
-    for I := 0 to Header.Columns.Count - 1 do
-    begin
-      LCol := Header.Columns[I];
-      if Assigned(LCol) and (coVisible in LCol.Options) then
-      begin
-        // --- Get text based on column ---
-        S := '';
-        if I = 0 then // Name Column
+  // --- Get Value String ONLY (Mimicking DoGetText logic for column 1) ---
+  S := ''; // Default value
+  if LValueColIdx <> -1 then // Only proceed if Value column exists
+  begin
+    // Only calculate value string if needed for measurement (text/cdata/comment nodes mostly)
+    case LXmlNode.NodeType of
+      ntText, ntCData, ntComment: // These are most likely to wrap
         begin
-          LNodeNameStr := GetNodeTypeName(LXmlNode.NodeType); // Get base name
-          case LXmlNode.NodeType of
-            ntElement, ntAttribute, ntProcessingInstr, ntEntity, ntNotation:
-              LNodeNameStr := LXmlNode.NodeName;
-            ntDocType:
-              LNodeNameStr := LNodeNameStr + ' ' + LXmlNode.NodeName;
-            ntEntityRef:
-              LNodeNameStr := LNodeNameStr + LXmlNode.NodeName + ';';
+          try
+            LNodeValue := LXmlNode.NodeValue;
+          except
+            LNodeValue := Null; // Handle potential exceptions
           end;
-          S := LNodeNameStr;
-        end
-        else // Value Column (I = 1)
-        begin
-          case LXmlNode.NodeType of
-            ntElement:
-              if LXmlNode.IsTextElement then
-                S := LXmlNode.Text
-              else if LXmlNode.HasChildNodes then
-                S := Format('{%d}', [LXmlNode.ChildNodes.Count])
-              else
-                S := '';
-            ntAttribute:
-              S := VarToStrDef(LXmlNode.NodeValue, '');
-            ntText, ntCData, ntComment:
-              S := VarToStrDef(LXmlNode.NodeValue, LXmlNode.Text);
-            ntProcessingInstr:
-              S := LXmlNode.NodeValue;
-            ntDocType, ntEntity, ntNotation:
-              S := VarToStrDef(LXmlNode.NodeValue, '');
-            ntDocument, ntEntityRef, ntDocFragment:
-              S := '';
-          else
-            S := VarToStrDef(LXmlNode.NodeValue, LXmlNode.Text);
-          end;
+          S := VarToStrDef(LNodeValue, '').Trim;
         end;
-        // --- End Get text ---
-
-        if S <> '' then
-        begin
-          // Apply appropriate font style for measurement
-          LFontStyles := [];
-          if I = 0 then // Name column
-          begin
-            case LXmlNode.NodeType of
-              ntElement:
-                LFontStyles := ColorSettings.Element.Font.Style;
-              ntAttribute:
-                LFontStyles := ColorSettings.Attribute.Font.Style;
-              ntText:
-                LFontStyles := ColorSettings.TextNode.Font.Style;
-              ntCData:
-                LFontStyles := ColorSettings.CData.Font.Style;
-              ntProcessingInstr:
-                LFontStyles := ColorSettings.ProcessingInstruction.Font.Style;
-              ntComment:
-                LFontStyles := ColorSettings.Comment.Font.Style;
-              ntDocument:
-                LFontStyles := ColorSettings.Document.Font.Style;
-              ntDocType:
-                LFontStyles := ColorSettings.DocType.Font.Style;
-              ntEntityRef:
-                LFontStyles := ColorSettings.EntityRef.Font.Style;
-              ntEntity:
-                LFontStyles := ColorSettings.Entity.Font.Style;
-              ntDocFragment:
-                LFontStyles := ColorSettings.DocFragment.Font.Style;
-              ntNotation:
-                LFontStyles := ColorSettings.Notation.Font.Style;
-            else
-              LFontStyles := ColorSettings.Other.Font.Style;
-            end;
-          end
-          else // Value column (Column 1)
-          begin
-            case LXmlNode.NodeType of
-              ntAttribute, ntText, ntCData, ntComment, ntProcessingInstr:
-                LFontStyles := ColorSettings.Value.Font.Style;
-              ntElement:
-                if LXmlNode.IsTextElement then
-                  LFontStyles := ColorSettings.Value.Font.Style
-                else
-                  LFontStyles := [];
-            else
-              LFontStyles := ColorSettings.Other.Font.Style;
-            end;
-          end;
-          LCanvas.Font.Style := LFontStyles; // Assign the correct SET of styles
-
-          R           := Rect(0, 0, LCol.Width - TextMargin * 2, 32767);
-          LDrawFormat := DT_CALCRECT or DT_WORDBREAK or DT_NOPREFIX or
-            DT_EDITCONTROL;
-
-          H := Winapi.Windows.DrawText(LCanvas.Handle, PChar(S), Length(S), R,
-            LDrawFormat);
-          H    := H + GetSystemMetrics(SM_CYBORDER) * 2 + 2;
-          MaxH := Max(MaxH, H);
-        end;
-      end;
+      // Add other types here ONLY if their value column text can wrap and affect height.
+      // For example, attribute values are usually short, but if they *can* be long and wrap:
+      // ntAttribute: S := VarToStrDef(LXmlNode.NodeValue, '');
+      // Avoid calculating for element structure text like "(x items)" as it usually doesn't wrap significantly
     end;
-  finally
-    LBitmap.Free;
   end;
+  // --- End Get Value String ---
 
-  NodeHeight := Max(MaxH, DefaultNodeHeight);
+
+  // --- Measure ONLY the value string if it's not empty and relevant ---
+  if (S <> '') and (LValueColIdx <> -1) then
+  begin
+    LCol := Header.Columns.Items[LValueColIdx]; // Get the value column object
+    if Assigned(LCol) and (coVisible in LCol.Options) and (LCol.Width > TextMargin * 2) then
+    begin
+      LTempBitmap := Vcl.Graphics.TBitmap.Create;
+      try
+        LTempCanvas := LTempBitmap.Canvas;
+        LOriginalFont := TFont.Create;
+        try
+          LOriginalFont.Assign(TargetCanvas.Font); // Save original font
+          LTempCanvas.Font.Assign(LOriginalFont);  // Start with base font
+
+          // --- Apply specific font style for the VALUE column ---
+          LSettings := nil; // Default
+          // Replicate the logic from DoPaintText specifically for Column = LValueColIdx
+          case LXmlNode.NodeType of
+            ntAttribute, ntText, ntCData, ntComment, ntProcessingInstr:
+              LSettings := ColorSettings.Value;
+            ntElement: // Value col for element shows structure or text content
+              if LXmlNode.IsTextElement then LSettings := ColorSettings.Value
+              else LSettings := ColorSettings.Other; // Font for "(x items)"
+            // Add cases for other node types as needed based on DoPaintText's logic for col 1
+            else
+              LSettings := ColorSettings.Other; // Fallback
+          end;
+
+          if Assigned(LSettings) then
+             LTempCanvas.Font.Assign(LSettings.Font);
+          // --- End Apply font style ---
+
+          // Prepare rect and flags for DrawText calculation
+          R := Rect(0, 0, LCol.Width - (TextMargin * 2), 32767); // Max height
+          LDrawFormat := DT_CALCRECT or DT_WORDBREAK or DT_NOPREFIX or
+                         DT_EDITCONTROL or DT_LEFT or DT_TOP;
+
+          // Calculate required height
+          LHeight := Winapi.Windows.DrawText(LTempCanvas.Handle, PChar(S), Length(S), R, LDrawFormat);
+
+          // Add some padding (adjust as needed)
+          LHeight := LHeight + 4;
+
+          // Update the maximum height found so far
+          LMaxHeight := Max(LMaxHeight, LHeight);
+
+        finally
+          LOriginalFont.Free;
+        end;
+      finally
+        LTempBitmap.Free;
+      end;
+    end; // if Assigned(LCol) and Width > Margin...
+  end; // if S <> ''
+
+  // Ensure minimum height is DefaultNodeHeight and assign to output
+  NodeHeight := Max(LMaxHeight, DefaultNodeHeight);
 end;
 
-procedure TXmlTree.DoPaintText(
-  Node        : PVirtualNode;
-  const Canvas: TCanvas;
-  Column      : TColumnIndex;
-  TextType    : TVSTTextType);
+procedure TXmlTree.DoPaintText(Node: PVirtualNode; const Canvas: TCanvas;
+  Column: TColumnIndex; TextType: TVSTTextType);
 var
-  LXmlNode: IXMLNode;
+  LTreeNode  : TXmlNode;
+  LXmlNode   : IXMLNode;
+  LSettings  : TTextFormatSettings;
 begin
+  // Apply font settings based on node type and column
   if TextType = ttNormal then
   begin
-    LXmlNode := GetNode(Node).Data;
-
-    if Column = 0 then
+    LTreeNode := GetNode(Node);
+    if not Assigned(LTreeNode) or not Assigned(LTreeNode.Data) then
     begin
-      case LXmlNode.NodeType of
-        ntElement:
-          Canvas.Font.Assign(ColorSettings.Element.Font);
-        ntAttribute:
-          Canvas.Font.Assign(ColorSettings.Attribute.Font);
-        ntText:
-          Canvas.Font.Assign(ColorSettings.TextNode.Font);
-        ntCData:
-          Canvas.Font.Assign(ColorSettings.CData.Font);
-        ntProcessingInstr:
-          Canvas.Font.Assign(ColorSettings.ProcessingInstruction.Font);
-        ntComment:
-          Canvas.Font.Assign(ColorSettings.Comment.Font);
-        ntDocument:
-          Canvas.Font.Assign(ColorSettings.Document.Font);
-        ntDocType:
-          Canvas.Font.Assign(ColorSettings.DocType.Font);
-        ntEntityRef:
-          Canvas.Font.Assign(ColorSettings.EntityRef.Font);
-        ntEntity:
-          Canvas.Font.Assign(ColorSettings.Entity.Font);
-        ntDocFragment:
-          Canvas.Font.Assign(ColorSettings.DocFragment.Font);
-        ntNotation:
-          Canvas.Font.Assign(ColorSettings.Notation.Font);
-      else
-        Canvas.Font.Assign(ColorSettings.Other.Font);
-      end;
-    end
-    else if Column = 1 then
+      inherited DoPaintText(Node, Canvas, Column, TextType); // Fallback
+      Exit;
+    end;
+    LXmlNode := LTreeNode.Data;
+
+    // Determine base settings based on node type
+    case LXmlNode.NodeType of
+      ntElement:
+        LSettings := ColorSettings.Element;
+      ntAttribute:
+        LSettings := ColorSettings.Attribute;
+      ntText:
+        LSettings := ColorSettings.TextNode;
+      ntCData:
+        LSettings := ColorSettings.CData;
+      ntProcessingInstr:
+        LSettings := ColorSettings.ProcessingInstruction;
+      ntComment:
+        LSettings := ColorSettings.Comment;
+      ntDocument:
+        LSettings := ColorSettings.Document;
+      ntDocType:
+        LSettings := ColorSettings.DocType;
+      ntEntityRef:
+        LSettings := ColorSettings.EntityRef;
+      ntEntity:
+        LSettings := ColorSettings.Entity;
+      ntDocFragment:
+        LSettings := ColorSettings.DocFragment;
+      ntNotation:
+        LSettings := ColorSettings.Notation;
+    else
+      LSettings := ColorSettings.Other;
+    end;
+
+    // Override for Value column
+    if Column = 1 then
     begin
       case LXmlNode.NodeType of
         ntAttribute, ntText, ntCData, ntComment, ntProcessingInstr:
-          Canvas.Font.Assign(ColorSettings.Value.Font);
+          LSettings := ColorSettings.Value; // Use Value style for these in col 1
         ntElement:
           if LXmlNode.IsTextElement then
-            Canvas.Font.Assign(ColorSettings.Value.Font)
+             LSettings := ColorSettings.Value // Text content of element uses Value style
           else if LXmlNode.HasChildNodes then
-            Canvas.Font.Color := clGray
+             LSettings := ColorSettings.Other // Use 'Other' (e.g., gray) for item count display
           else
-            Canvas.Font.Color := ColorSettings.Value.FontColor;
-        ntDocType, ntEntityRef, ntEntity, ntDocFragment, ntNotation, ntDocument:
-          Canvas.Font.Assign(ColorSettings.Other.Font);
-      else
-        Canvas.Font.Assign(ColorSettings.Other.Font);
+             LSettings := ColorSettings.Element; // Keep element style if empty
+        // Other node types keep their base style in col 1
       end;
     end;
+
+    // Apply the determined font settings
+    Canvas.Font.Assign(LSettings.Font);
   end;
 
+  // Let the default VST painting occur (draws the actual text)
   inherited DoPaintText(Node, Canvas, Column, TextType);
 end;
+{$ENDREGION}
 
+{$REGION 'property access methods'}
 function TXmlTree.GetFocusedXmlNode: TXmlNode;
 begin
   Result := GetNode(FocusedNode);
@@ -907,13 +899,15 @@ end;
 
 function TXmlTree.GetFocusedValue: string;
 var
+  LTreeNode    : TXmlNode;
   LXmlNode     : IXMLNode;
   LNodeNameStr : string;
 begin
   Result := '';
-  if Assigned(FocusedXmlNode) then
+  LTreeNode := GetNode(FocusedNode); // Use the GetNode helper
+  if Assigned(LTreeNode) and Assigned(LTreeNode.Data) then
   begin
-    LXmlNode := FocusedXmlNode.Data;
+    LXmlNode := LTreeNode.Data;
 
     // Get the base name representation (consistent with DoGetText)
     LNodeNameStr := GetNodeTypeName(LXmlNode.NodeType);
@@ -923,27 +917,30 @@ begin
       ntDocType:
         LNodeNameStr := LNodeNameStr + ' ' + LXmlNode.NodeName;
       ntEntityRef:
-        LNodeNameStr := LNodeNameStr + LXmlNode.NodeName + ';';
+         if LXmlNode.NodeName <> '' then
+           LNodeNameStr := '&' + LXmlNode.NodeName + ';'
+         else
+           LNodeNameStr := '&;';
     end;
 
-    if FocusedColumn = 0 then
+    if FocusedColumn = 0 then // Name Column
     begin
       Result := LNodeNameStr;
     end
-    else if FocusedColumn = 1 then
+    else if FocusedColumn = 1 then // Value Column
     begin
       case LXmlNode.NodeType of
         ntElement:
           if LXmlNode.IsTextElement then
             Result := LXmlNode.Text
           else if LXmlNode.HasChildNodes then
-            Result := Format('{%d}', [LXmlNode.ChildNodes.Count])
+            Result := Format('(%d items)', [LXmlNode.ChildNodes.Count])
           else
             Result := '';
         ntAttribute:
           Result := VarToStrDef(LXmlNode.NodeValue, '');
         ntText, ntCData, ntComment:
-          Result := VarToStrDef(LXmlNode.NodeValue, LXmlNode.Text);
+          Result := VarToStrDef(LXmlNode.NodeValue, LXmlNode.Text).Trim;
         ntProcessingInstr:
           Result := LXmlNode.NodeValue;
         ntDocType, ntEntity, ntNotation:
@@ -957,46 +954,211 @@ begin
   end;
 end;
 
-procedure TXmlTree.FColorSettingsChanged(Sender: TObject);
-begin
-  Invalidate;
-end;
-
 function TXmlTree.GetXmlString: string;
 begin
   if Assigned(FXmlDocument) then
-    Result := FXmlDocument.XML.Text
+    Result := FXmlDocument.XML.Text // Or FXmlDocument.SaveToXML() for potentially better formatting control
   else
     Result := '';
 end;
 
 procedure TXmlTree.SetXmlString(const Value: string);
 begin
-  if Value <> XmlString then
-  begin
-    BeginUpdate;
-    try
-      Clear;
-      FXmlDocument := nil;
-      if Trim(Value) <> '' then
-      begin
-        try
-          FXmlDocument := LoadXMLData(Value);
-        except
-          on E: Exception do
-          begin
-            Logger.SendException('Failed to load XML data', E);
-            FXmlDocument := nil;
-          end;
+  // Optimization: Check if the new value is actually different
+  if Assigned(FXmlDocument) and (FXmlDocument.XML.Text = Value) then
+    Exit;
+  if not Assigned(FXmlDocument) and (Trim(Value) = '') then
+    Exit;
+
+  BeginUpdate;
+  try
+    Clear; // Clear existing nodes, triggers DoFreeNode
+    FXmlDocument := nil; // Release previous document interface
+
+    if Trim(Value) <> '' then
+    begin
+      try
+        FXmlDocument := LoadXMLData(Value);
+        FXmlDocument.Options := FXmlDocument.Options + [doNodeAutoIndent];
+      except
+        on E: Exception do
+        begin
+          Logger.SendException('Failed to load XML data', E);
+          FXmlDocument := nil; // Ensure it's nil on error
         end;
       end;
-      if Assigned(FXmlDocument) then
-        BuildTree;
-    finally
-      EndUpdate;
+    end;
+
+    // Rebuild the tree only if loading was successful
+    if Assigned(FXmlDocument) then
+      BuildTree;
+
+  finally
+    EndUpdate;
+  end;
+end;
+{$ENDREGION}
+
+{$REGION 'private methods'}
+// Helper function to get a display name for node types
+function TXmlTree.GetNodeTypeName(ANodeType: TNodeType): string;
+begin
+  case ANodeType of
+    ntText:
+      Result := '#text';
+    ntCData:
+      Result := '#cdata-section';
+    ntComment:
+      Result := '#comment';
+    ntDocument:
+      Result := '#document';
+    ntDocType:
+      Result := '!DOCTYPE'; // NodeName will be appended later in DoGetText
+    ntEntityRef:
+      Result := ''; // Special handling in DoGetText ('&...;')
+    ntEntity:
+      Result := '#entity';
+    ntDocFragment:
+      Result := '#document-fragment';
+    ntNotation:
+      Result := '#notation';
+    // Let DoGetText use NodeName for these:
+    ntProcessingInstr:
+      Result := '?'; // Prefix for PI Name
+    ntAttribute:
+      Result := ''; // Use NodeName directly
+    ntElement:
+      Result := ''; // Use NodeName directly
+  else
+    Result := '#unknown';
+  end;
+end;
+
+function TXmlTree.IsWhitespaceNode(const AXmlNode: IXMLNode): Boolean;
+var
+  S : string;
+  C : Char;
+begin
+  Result := False;
+  if Assigned(AXmlNode) and (AXmlNode.NodeType = ntText) then
+  begin
+    S := VarToStrDef(AXmlNode.NodeValue, '');
+    // Consider a node whitespace if it's empty or contains only whitespace chars
+    if S = '' then
+    begin
+      Result := True;
+    end
+    else
+    begin
+      Result := True; // Assume whitespace until proven otherwise
+      for C in S do
+      begin
+        if not C.IsWhiteSpace then
+        begin
+          Result := False;
+          Break; // Found non-whitespace, stop checking
+        end;
+      end;
     end;
   end;
 end;
+{$ENDREGION}
+
+{$REGION 'protected methods'}
+procedure TXmlTree.BuildTree;
+var
+  RootXmlNode : IXMLNode;
+  RootTreeNode: TXmlNode;
+begin
+  BeginUpdate;
+  try
+    Clear; // Make sure tree is empty before building
+    if Assigned(FXmlDocument) then
+    begin
+      // You might want to show the document node itself, or just the root element
+      // Option 1: Show Document node (useful for PIs/Comments outside root element)
+      // RootXmlNode := FXmlDocument;
+      // Option 2: Show Root Element (most common)
+      RootXmlNode := FXmlDocument.DocumentElement;
+
+      if Assigned(RootXmlNode) then
+      begin
+        // Create the TXmlNode for the root. It has no TXmlNode parent.
+        // The Create constructor handles adding the PVirtualNode if parent VNode is nil.
+        RootTreeNode := TXmlNode.Create(Self, RootXmlNode, False, nil); // nil parent VNode signals root
+
+        // Now, process the children and attributes of this root XML node,
+        // adding them *under* the RootTreeNode
+        ProcessXmlNodeChildren(RootTreeNode, RootXmlNode);
+      end;
+    end;
+
+    FullExpand; // Expand all nodes
+
+    Header.AutoFitColumns;
+  finally
+    EndUpdate;
+  end;
+end;
+
+// Processes Attributes and Child Nodes OF AXmlNode, adding them AS CHILDREN of AParentTreeNode
+procedure TXmlTree.ProcessXmlNodeChildren(AParentTreeNode: TXmlNode; AXmlNode: IXMLNode);
+var
+  LAttributeTreeNode : TXmlNode; // TXmlNode for the attribute
+  LChildTreeNode     : TXmlNode; // TXmlNode for the child element/text/etc.
+  LChildXmlNode      : IXMLNode; // The actual XML child node interface
+  i                  : Integer;
+begin
+  // --- Add Attributes as children in the tree ---
+  // Attributes are added *before* child nodes for typical display order
+  if (AXmlNode.NodeType = ntElement) and Assigned(AXmlNode.AttributeNodes) then
+  begin
+    for i := 0 to AXmlNode.AttributeNodes.Count - 1 do
+    begin
+      // Use the Add method of the PARENT TXmlNode (AParentTreeNode)
+      // This creates the child TXmlNode AND adds it to the VST hierarchy
+      LAttributeTreeNode := AParentTreeNode.Add(AXmlNode.AttributeNodes[i], False);
+      // Attributes don't have children themselves in XML, so no recursive call needed for them.
+    end;
+  end;
+
+  // --- Add Child Nodes recursively ---
+  if Assigned(AXmlNode.ChildNodes) then
+  begin
+    for i := 0 to AXmlNode.ChildNodes.Count - 1 do
+    begin
+      LChildXmlNode := AXmlNode.ChildNodes[i];
+
+      // Skip insignificant whitespace text nodes
+      if IsWhitespaceNode(LChildXmlNode) then
+        Continue;
+
+      // Use the Add method of the PARENT TXmlNode (AParentTreeNode)
+      LChildTreeNode := AParentTreeNode.Add(LChildXmlNode, False);
+
+      // Recursively process the children/attributes of THIS child node,
+      // adding them under the newly created LChildTreeNode
+      ProcessXmlNodeChildren(LChildTreeNode, LChildXmlNode);
+    end;
+  end;
+end;
+
+function TXmlTree.GetNode(const AVNode: PVirtualNode): TXmlNode;
+begin
+  // Retrieve the TXmlNode pointer stored in the node data
+  if Assigned(AVNode) then
+    Result := GetNodeData<TXmlNode>(AVNode) // Use the generic version
+  else
+    Result := nil;
+end;
+{$ENDREGION}
+
+{$REGION 'event handlers'}
+procedure TXmlTree.FColorSettingsChanged(Sender: TObject);
+begin
+  Invalidate; // Redraw the tree when color settings change
+end;
+{$ENDREGION}
 {$ENDREGION}
 
 end.

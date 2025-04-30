@@ -404,12 +404,8 @@ begin
   FOwnsObject := AOwnsObject;
   FText       := AText;
   FImageIndex := -1;
-  FVNode := FTree.AddChild(AParentVNode, Self);
-  if Assigned(FVNode) then
-  begin
-    FVNode.CheckState := FCheckState;
-    FVNode.CheckType  := FCheckType;
-  end;
+  if not Assigned(AParentVNode) then // create rootnode
+    FVNode := FTree.AddChild(nil, Self);
 end;
 
 constructor TVTNode<T>.Create(ATree: TCustomVirtualStringTree;
@@ -419,19 +415,15 @@ begin
   FData       := Default(T);
   FOwnsObject := AOwnsObject;
   FText       := AText;
-  FImageIndex := -1;
-  FVNode := FTree.AddChild(AParentVNode, Self);
-  if Assigned(FVNode) then
-  begin
-    FVNode.CheckState := FCheckState;
-    FVNode.CheckType  := FCheckType;
-  end;
+  if not Assigned(AParentVNode) then // create rootnode
+    FVNode := FTree.AddChild(nil, Self);
 end;
 
 destructor TVTNode<T>.Destroy;
 begin
   if (GetTypekind(T) = tkClass) and OwnsObject then
     TObject(Pointer(@FData)^).Free;
+
   FTree := nil;
   inherited Destroy;
 end;

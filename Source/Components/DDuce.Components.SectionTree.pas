@@ -232,12 +232,13 @@ type
 
   protected
     procedure BuildTree; virtual;
+
     procedure CustomPaint(
       ACanvas   : TCanvas;
       ANode     : PVirtualNode;
       AColumn   : TColumnIndex;
       ACellRect : TRect
-    );
+    ); virtual;
     {$REGION 'event dispatch methods'}
     {$REGION 'TVirtualStringTree overrides'}
     function GetOptionsClass: TTreeOptionsClass; override;
@@ -560,53 +561,7 @@ end;
 
 procedure TSectionTree.DoAfterCellPaint(Canvas: TCanvas; Node: PVirtualNode;
   Column: TColumnIndex; CellRect: TRect);
-//var
-//  LColor  : TColor;
-//  LIndent : Integer;
 begin
-//  //if vsSelected in Node.States then
-//  begin
-//    LColor := clWhite;
-//    if LineMode = lmBands then
-//    begin
-//      if Column = Header.MainColumn then
-//      begin
-//        LIndent := GetNodeLevel(Node) * Indent;
-//        Inc(CellRect.Left, LIndent);
-//        LIndent := -Integer(Indent);
-//      end
-//      else
-//      begin
-//        LIndent := 0;
-//      end;
-//
-//      if LColor <> Color then
-//      begin // fill cell
-//        Canvas.Brush.Color := LColor;
-//        Canvas.FillRect(CellRect);
-//      end;
-//
-//      if Column = Header.MainColumn then
-//      begin
-//        CellRect.Right := CellRect.Left + Integer(Indent);
-//        Inc(CellRect.Bottom);
-//        repeat
-//          if LColor <> Color then
-//          begin // fill vertical band
-//            Canvas.Brush.Color := LColor;
-//            Canvas.FillRect(CellRect);
-//          end;
-//
-//          Node := Node.Parent;
-//          if not Assigned(Node) or (Node = RootNode) then
-//            Break;
-//
-//          Inc(CellRect.Left, LIndent);
-//          Inc(CellRect.Right, LIndent);
-//        until False;
-//      end;
-//    end;
-//  end;
   inherited DoAfterCellPaint(Canvas, Node, Column, CellRect);
 end;
 
@@ -628,7 +583,7 @@ procedure TSectionTree.DoBeforeCellPaint(Canvas: TCanvas; ANode: PVirtualNode;
 begin
   if CellPaintMode = cpmPaint then
   begin
-//    CustomPaint(Canvas, ANode, Column, CellRect);
+    CustomPaint(Canvas, ANode, Column, CellRect);
   end;
   inherited DoBeforeCellPaint(
     Canvas, ANode, Column, CellPaintMode, CellRect, ContentRect
