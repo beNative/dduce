@@ -8,7 +8,7 @@
         <AppType>Application</AppType>
         <FrameworkType>VCL</FrameworkType>
         <ProjectVersion>20.2</ProjectVersion>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <ProjectName Condition="'$(ProjectName)'==''">DDuce.Tests</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
@@ -121,8 +121,8 @@
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.51;ProductName=$(MSBuildProjectName);ProductVersion=2.6;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
-        <VerInfo_Build>51</VerInfo_Build>
+        <VerInfo_Keys>FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.52;ProductName=$(MSBuildProjectName);ProductVersion=2.6;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>52</VerInfo_Build>
         <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
         <DCC_RangeChecking>true</DCC_RangeChecking>
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
@@ -134,8 +134,9 @@
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppEnableHighDPI>true</AppEnableHighDPI>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.4;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Build>4</VerInfo_Build>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

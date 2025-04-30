@@ -35,6 +35,7 @@ type
     FTestDouble           : Double;
     FTestInteger          : Integer;
     FTestString           : string;
+    FTestObject           : TTestClass;
 {$IFDEF NULLABLE}
     FTestNullableBoolean  : Nullable<Boolean>;
     FTestNullableDateTime : Nullable<TDateTime>;
