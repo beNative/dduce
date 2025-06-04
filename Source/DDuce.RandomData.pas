@@ -22,13 +22,15 @@ unit DDuce.RandomData;
 
 interface
 
+{$SCOPEDENUMS ON}
+
 type
   RandomData = record
   private
   type
     TGender = (
-      gnMale,
-      gnFemale
+      Male,
+      Female
     );
 
   const
@@ -2564,7 +2566,7 @@ type
     {$ENDREGION}
 
     {$REGION 'Planets'}
-    Planets: array[0..8] of string = (
+    Planets: array[0..7] of string = (
       'Mercury',
       'Venus',
       'Earth',
@@ -2572,8 +2574,7 @@ type
       'Jupiter',
       'Saturn',
       'Uranus',
-      'Neptune',
-      'Pluto'
+      'Neptune'
     );
     {$ENDREGION}
 
@@ -2857,8 +2858,8 @@ end;
 class function RandomData.FullName: string;
 begin
   case Random(2) of
-    0: Result := FullName(gnMale);
-    1: Result := FullName(gnFemale);
+    0: Result := FullName(TGender.Male);
+    1: Result := FullName(TGender.Female);
   end;
 end;
 

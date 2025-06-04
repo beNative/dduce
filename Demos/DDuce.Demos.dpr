@@ -3,7 +3,6 @@
 program DDuce.Demos;
 
 uses
-  //FastMM4,
   System.SysUtils,
   Vcl.Forms,
   Vcl.Themes,
@@ -36,7 +35,8 @@ uses
   Demo.DDuce.Dialogs in 'Demo.DDuce.Dialogs.pas' {frmDialogs},
   Demo.DDuce.JsonTree in 'Demo.DDuce.JsonTree.pas' {frmJsonTree},
   Demo.DDuce.XmlTree in 'Demo.DDuce.XmlTree.pas' {frmXmlTree},
-  Demo.DDuce.RttiTree in 'Demo.DDuce.RttiTree.pas' {frmRttiTree};
+  Demo.DDuce.RttiTree in 'Demo.DDuce.RttiTree.pas' {frmRttiTree},
+  Demo.DDuce.LogTree in 'Demo.DDuce.LogTree.pas' {frmLogTree};
 
 {$R *.res}
 

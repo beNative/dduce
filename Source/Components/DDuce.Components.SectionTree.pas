@@ -224,6 +224,7 @@ type
       toAutoBidiColumnOrdering
     ];
   {$ENDREGION}
+
   private
     {$REGION 'property access methods'}
     function GetOptions: TStringTreeOptions;
@@ -232,6 +233,7 @@ type
 
   protected
     procedure BuildTree; virtual;
+    function GetFocusedValue: string; virtual;
 
     procedure CustomPaint(
       ACanvas   : TCanvas;
@@ -239,6 +241,7 @@ type
       AColumn   : TColumnIndex;
       ACellRect : TRect
     ); virtual;
+
     {$REGION 'event dispatch methods'}
     {$REGION 'TVirtualStringTree overrides'}
     function GetOptionsClass: TTreeOptionsClass; override;
@@ -495,6 +498,10 @@ type
 
     property TreeOptions : TStringTreeOptions
       read GetOptions write SetOptions;
+
+    { Return value in selected cell. }
+    property FocusedValue: string
+      read GetFocusedValue;
     {$ENDREGION}
   end;
 
@@ -535,6 +542,13 @@ end;
 {$ENDREGION}
 
 {$REGION 'property access mehods'}
+{ Intended to be overridden. }
+
+function TSectionTree.GetFocusedValue: string;
+begin
+  Result := '';
+end;
+
 function TSectionTree.GetOptions: TStringTreeOptions;
 begin
   Result := inherited TreeOptions as TStringTreeOptions;
@@ -595,6 +609,7 @@ procedure TSectionTree.DoBeforeItemErase(Canvas: TCanvas; Node: PVirtualNode;
 begin
   inherited DoBeforeItemErase(Canvas, Node, ItemRect, Color, EraseAction);
 end;
+{$ENDREGION}
 
 {$REGION 'protected methods'}
 function TSectionTree.GetOptionsClass: TTreeOptionsClass;

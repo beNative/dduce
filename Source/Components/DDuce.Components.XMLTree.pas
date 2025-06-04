@@ -176,7 +176,7 @@ type
     function GetXmlString: string;
     procedure SetXmlString(const Value: string);
     function GetFocusedXmlNode: TXmlNode;
-    function GetFocusedValue: string;
+    function GetFocusedValue: string; override;
     {$ENDREGION}
 
     procedure FColorSettingsChanged(Sender: TObject);
@@ -191,11 +191,9 @@ type
     property FocusedXmlNode: TXmlNode
       read GetFocusedXmlNode;
 
-    property FocusedValue: string
-      read GetFocusedValue;
-
     property XmlString: string
       read GetXmlString write SetXmlString;
+
   end;
 
 implementation
@@ -574,9 +572,7 @@ begin
     end;
     pEventArgs.CellText := LValueStr;
   end;
-  // NOTE: No inherited call needed here if we handle all columns.
-  // If you rely on inherited for something, add it back conditionally.
-  // inherited DoGetText(pEventArgs);
+  inherited DoGetText(pEventArgs);
 end;
 
 procedure TXmlTree.DoNewText(Node: PVirtualNode; Column: TColumnIndex;
@@ -587,7 +583,8 @@ var
 begin
   // Editing is currently disabled by commented-out options, but if enabled:
   LTreeNode := GetNode(Node);
-  if not Assigned(LTreeNode) or not Assigned(LTreeNode.Data) then Exit;
+  if not Assigned(LTreeNode) or not Assigned(LTreeNode.Data) then
+    Exit;
 
   LXmlNode := LTreeNode.Data;
 
@@ -705,8 +702,8 @@ var
   R             : TRect;
   LDrawFormat   : Cardinal;
   LCol          : TVirtualTreeColumn;
-  LTempBitmap   : TBitmap;
-  LTempCanvas   : TCanvas;
+  LBitmap       : TBitmap;
+  LCanvas       : TCanvas;
   LOriginalFont : TFont;
   LValueColIdx  : TColumnIndex;
   LNodeValue    : OleVariant; // Variable to hold node value
@@ -728,15 +725,12 @@ begin
   end;
   LXmlNode := LNode.Data;
 
-  // --- Find the index of the 'Value' column (CRITICAL: Assumes index 1) ---
-  // If your columns can be reordered, you need a more robust way to find it.
   LValueColIdx := -1;
-  if Header.Columns.Count > 1 then // Basic check
-     LValueColIdx := 1; // Assuming 'Value' is the second column
+  if Header.Columns.Count > 1 then
+     LValueColIdx := 1;
 
-  // --- Get Value String ONLY (Mimicking DoGetText logic for column 1) ---
-  S := ''; // Default value
-  if LValueColIdx <> -1 then // Only proceed if Value column exists
+  S := '';
+  if LValueColIdx <> -1 then
   begin
     // Only calculate value string if needed for measurement (text/cdata/comment nodes mostly)
     case LXmlNode.NodeType of
@@ -755,39 +749,37 @@ begin
       // Avoid calculating for element structure text like "(x items)" as it usually doesn't wrap significantly
     end;
   end;
-  // --- End Get Value String ---
 
-
-  // --- Measure ONLY the value string if it's not empty and relevant ---
   if (S <> '') and (LValueColIdx <> -1) then
   begin
     LCol := Header.Columns.Items[LValueColIdx]; // Get the value column object
     if Assigned(LCol) and (coVisible in LCol.Options) and (LCol.Width > TextMargin * 2) then
     begin
-      LTempBitmap := Vcl.Graphics.TBitmap.Create;
+      LBitmap := Vcl.Graphics.TBitmap.Create;
       try
-        LTempCanvas := LTempBitmap.Canvas;
+        LCanvas := LBitmap.Canvas;
         LOriginalFont := TFont.Create;
         try
           LOriginalFont.Assign(TargetCanvas.Font); // Save original font
-          LTempCanvas.Font.Assign(LOriginalFont);  // Start with base font
+          LCanvas.Font.Assign(LOriginalFont);  // Start with base font
 
-          // --- Apply specific font style for the VALUE column ---
-          LSettings := nil; // Default
+          LSettings := nil;
           // Replicate the logic from DoPaintText specifically for Column = LValueColIdx
           case LXmlNode.NodeType of
             ntAttribute, ntText, ntCData, ntComment, ntProcessingInstr:
               LSettings := ColorSettings.Value;
             ntElement: // Value col for element shows structure or text content
-              if LXmlNode.IsTextElement then LSettings := ColorSettings.Value
-              else LSettings := ColorSettings.Other; // Font for "(x items)"
+              if LXmlNode.IsTextElement then
+                LSettings := ColorSettings.Value
+              else
+                LSettings := ColorSettings.Other; // Font for "(x items)"
             // Add cases for other node types as needed based on DoPaintText's logic for col 1
             else
               LSettings := ColorSettings.Other; // Fallback
           end;
 
           if Assigned(LSettings) then
-             LTempCanvas.Font.Assign(LSettings.Font);
+             LCanvas.Font.Assign(LSettings.Font);
           // --- End Apply font style ---
 
           // Prepare rect and flags for DrawText calculation
@@ -796,7 +788,7 @@ begin
                          DT_EDITCONTROL or DT_LEFT or DT_TOP;
 
           // Calculate required height
-          LHeight := Winapi.Windows.DrawText(LTempCanvas.Handle, PChar(S), Length(S), R, LDrawFormat);
+          LHeight := Winapi.Windows.DrawText(LCanvas.Handle, PChar(S), Length(S), R, LDrawFormat);
 
           // Add some padding (adjust as needed)
           LHeight := LHeight + 4;
@@ -808,7 +800,7 @@ begin
           LOriginalFont.Free;
         end;
       finally
-        LTempBitmap.Free;
+        LBitmap.Free;
       end;
     end; // if Assigned(LCol) and Width > Margin...
   end; // if S <> ''
@@ -1067,8 +1059,8 @@ end;
 {$REGION 'protected methods'}
 procedure TXmlTree.BuildTree;
 var
-  RootXmlNode : IXMLNode;
-  RootTreeNode: TXmlNode;
+  LRootXmlNode  : IXMLNode;
+  LRootTreeNode : TXmlNode;
 begin
   BeginUpdate;
   try
@@ -1079,17 +1071,17 @@ begin
       // Option 1: Show Document node (useful for PIs/Comments outside root element)
       // RootXmlNode := FXmlDocument;
       // Option 2: Show Root Element (most common)
-      RootXmlNode := FXmlDocument.DocumentElement;
+      LRootXmlNode := FXmlDocument.DocumentElement;
 
-      if Assigned(RootXmlNode) then
+      if Assigned(LRootXmlNode) then
       begin
         // Create the TXmlNode for the root. It has no TXmlNode parent.
         // The Create constructor handles adding the PVirtualNode if parent VNode is nil.
-        RootTreeNode := TXmlNode.Create(Self, RootXmlNode, False, nil); // nil parent VNode signals root
+        LRootTreeNode := TXmlNode.Create(Self, LRootXmlNode, False, nil); // nil parent VNode signals root
 
         // Now, process the children and attributes of this root XML node,
         // adding them *under* the RootTreeNode
-        ProcessXmlNodeChildren(RootTreeNode, RootXmlNode);
+        ProcessXmlNodeChildren(LRootTreeNode, LRootXmlNode);
       end;
     end;
 

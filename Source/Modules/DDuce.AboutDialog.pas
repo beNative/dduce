@@ -74,7 +74,7 @@ begin
   FVersionInfoList.Parent           := Self;
   FVersionInfoList.Align            := alClient;
   FVersionInfoList.BorderStyle      := bsNone;
-  FVersionInfoList.AlignWithMargins := False;
+  FVersionInfoList.AlignWithMargins := True;
   UpdateVersionInfoDisplay;
   FVersionInfoList.Editable         := False;
   FVersionInfoList.ShowHeader       := False;

@@ -203,7 +203,9 @@ var
   LValue    : TJSONAncestor;
   LColor    : TColor;
 begin
-  inherited DoBeforeCellPaint(Canvas, Node, Column, CellPaintMode, CellRect, ContentRect);
+  inherited DoBeforeCellPaint(
+    Canvas, Node, Column, CellPaintMode, CellRect, ContentRect
+  );
 
   if CellPaintMode = cpmPaint then
   begin

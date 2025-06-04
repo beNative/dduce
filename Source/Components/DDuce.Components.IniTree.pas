@@ -86,7 +86,7 @@ type
   protected
     {$REGION 'property access methods'}
     function GetFocusedIniNode: TIniNode;
-    function GetFocusedValue: string;
+    function GetFocusedValue: string; override;
     function GetIniString: string;
     procedure SetIniString(const Value: string);
     {$ENDREGION}
@@ -126,10 +126,6 @@ type
     property FocusedIniNode: TIniNode
       read GetFocusedIniNode;
 
-    { Return value in selected cell. }
-    property FocusedValue: string
-      read GetFocusedValue;
-
     property IniString: string
       read GetIniString write SetIniString;
 
@@ -143,13 +139,6 @@ uses
   System.SysUtils,
 
   DDuce.Logger, DDuce.Logger.Interfaces;
-
-function IsSectionString(const AString: string): Boolean;
-begin
-  Result := (Length(AString) >= 3) and
-            (AString[1] = '[') and
-            (AString[Length(AString)] = ']');
-end;
 
 {$REGION 'construction and destruction'}
 procedure TIniTree.AfterConstruction;
@@ -213,7 +202,9 @@ begin
       Result := FocusedIniNode.Data.Key
     else
       Result := FocusedIniNode.Data.Value.ToString;
-  end;
+  end
+  else
+    Result := inherited GetFocusedValue;
 end;
 
 function TIniTree.GetIniString: string;

@@ -14,12 +14,6 @@
   limitations under the License.
 }
 
-{
-  The Original Code is VirtualLogTree.pas. The Initial Developer of the Original
-  Code is Paul Thornton. Portions created by the Initial Developer are
-  Copyright (C), All Rights Reserved.
-}
-
 {$I DDuce.inc}
 
 unit DDuce.Components.LogTree;
@@ -33,7 +27,7 @@ uses
 
   VirtualTrees, VirtualTrees.BaseTree, VirtualTrees.Types,
 
-  DDuce.Components.LogTree.LogItem;
+  DDuce.Components.VirtualTrees.Node, DDuce.Components.LogTree.LogItem;
 
 const
   DEFAULT_DATETIMEFORMAT = 'dd-mm-yyyy hh:nn:ss.zzz';
@@ -45,32 +39,34 @@ type
     var ACancelEntry : Boolean;
     ALogLevel        : TLogLevel
   ) of object;
+
   TOnPopupMenuItemClickEvent = procedure(
     Sender    : TObject;
     AMenuItem : TMenuItem
   ) of object;
 
+  TLogNode = TVTNode<TLogItem>;
 
   TLogTree = class(TVirtualStringTree)
   private
-    FOnBeforeLog             : TOnLogEvent;
-    FOnAfterLog              : TNotifyEvent;
-    FAutoScroll              : Boolean;
-    FAutoLogLevelColors      : Boolean;
-    FShowDateColumn          : Boolean;
-    FShowImages              : Boolean;
-    FMaximumLines            : Cardinal;
-    FDateTimeFormat          : string;
+    FOnBeforeLog        : TOnLogEvent;
+    FOnAfterLog         : TNotifyEvent;
+    FAutoScroll         : Boolean;
+    FAutoLogLevelColors : Boolean;
+    FShowDateColumn     : Boolean;
+    FShowImages         : Boolean;
+    FMaximumLines       : Cardinal;
+    FDateTimeFormat     : string;
 
     function GetCellText(
-      const Node   : PVirtualNode;
-      const Column : TColumnIndex
+      const ANode   : PVirtualNode;
+      const AColumn : TColumnIndex
     ) : string;
-    procedure SetShowDateColumn(const Value : Boolean);
-    procedure SetShowImages(const Value : Boolean);
+    procedure SetShowDateColumn(const Value: Boolean);
+    procedure SetShowImages(const Value: Boolean);
     procedure AddDefaultColumns(
-      const ColumnNames  : array of string;
-      const ColumnWidths : array of Integer
+      const AColumnNames  : array of string;
+      const AColumnWidths : array of Integer
     );
     function IfThen(
       Condition : Boolean;
@@ -90,32 +86,32 @@ type
     procedure DoAfterCellPaint(
       ACanvas  : TCanvas;
       ANode    : PVirtualNode;
-      Column   : TColumnIndex;
+      AColumn   : TColumnIndex;
       CellRect : TRect
     ); override;
-    procedure DoFreeNode(Node : PVirtualNode); override;
+    procedure DoFreeNode(ANode : PVirtualNode); override;
     function DoGetImageIndex(
-      Node        : PVirtualNode;
+      ANode        : PVirtualNode;
       Kind        : TVTImageKind;
-      Column      : TColumnIndex;
+      AColumn      : TColumnIndex;
       var Ghosted : Boolean;
       var Index   : TImageIndex
     ): TCustomImageList; override;
     procedure DoPaintText(
-      Node         : PVirtualNode;
+      ANode         : PVirtualNode;
       const Canvas : TCanvas;
-      Column       : TColumnIndex;
+      AColumn       : TColumnIndex;
       TextType     : TVSTTextType
     ); override;
     procedure Loaded; override;
     procedure DoMeasureItem(
       TargetCanvas   : TCanvas;
-      Node           : PVirtualNode;
+      ANode           : PVirtualNode;
       var NodeHeight : Integer
     ); override;
     procedure DoInitNode(
       Parent         : PVirtualNode;
-      Node           : PVirtualNode;
+      ANode          : PVirtualNode;
       var InitStates : TVirtualNodeInitStates
     ); override;
 
@@ -124,16 +120,18 @@ type
 
     procedure Log(
       AValue     : string;
-      ALogLevel  : TLogLevel = llInfo;
+      ALogLevel  : TLogLevel = TLogLevel.Info;
       ATimestamp : TDateTime = 0
-    );
-    procedure LogFmt(
+    ); overload;
+    procedure Log(
       AValue      : string;
       const AArgs : array of const;
-      ALogLevel   : TLogLevel = llInfo;
+      ALogLevel   : TLogLevel = TLogLevel.Info;
       ATimestamp  : TDateTime = 0
-    );
+    ); overload;
     procedure Init;
+
+    function GetNode(const AVNode: PVirtualNode): TLogNode;
 
   published
     property OnBeforeLog: TOnLogEvent
@@ -180,33 +178,33 @@ resourcestring
 constructor TLogTree.Create(AOwner: TComponent);
 begin
   inherited;
-  FDateTimeFormat          := DEFAULT_DATETIMEFORMAT;
-  FAutoScroll              := True;
-  FShowDateColumn          := True;
-  FShowImages              := True;
+  FDateTimeFormat := DEFAULT_DATETIMEFORMAT;
+  FAutoScroll     := True;
+  FShowDateColumn := True;
+  FShowImages     := True;
   Loaded;
 end;
 
 procedure TLogTree.DoAfterCellPaint(ACanvas: TCanvas; ANode: PVirtualNode;
-  Column: TColumnIndex; CellRect: TRect);
+  AColumn: TColumnIndex; CellRect: TRect);
 var
-  ColWidth: Integer;
+  LColWidth : Integer;
 begin
   inherited;
 
-  if Column = 1 then
+  if AColumn = 1 then
   begin
-    ColWidth := ACanvas.TextWidth(GetCellText(ANode, Column));
+    LColWidth := ACanvas.TextWidth(GetCellText(ANode, AColumn));
 
     if not FShowDateColumn then
-      ColWidth := ColWidth + 32; // Width of image
+      LColWidth := LColWidth + 32; // Width of image
 
-    if ColWidth > Header.Columns[1].MinWidth then
-      Header.Columns[1].MinWidth := ColWidth;
+    if LColWidth > Header.Columns[1].MinWidth then
+      Header.Columns[1].MinWidth := LColWidth;
   end;
 end;
 
-procedure TLogTree.DoFreeNode(Node: PVirtualNode);
+procedure TLogTree.DoFreeNode(ANode: PVirtualNode);
 begin
   inherited;
 
@@ -216,8 +214,8 @@ begin
 //    NodeData.LogText := '';
 end;
 
-function TLogTree.DoGetImageIndex(Node: PVirtualNode; Kind: TVTImageKind;
-  Column: TColumnIndex; var Ghosted: Boolean;
+function TLogTree.DoGetImageIndex(ANode: PVirtualNode; Kind: TVTImageKind;
+  AColumn: TColumnIndex; var Ghosted: Boolean;
   var Index: TImageIndex): TCustomImageList;
 //var
 //  NodeData: PLogNodeData;
@@ -245,10 +243,10 @@ begin
 //        end;
 //    end;
 //  end;
-  Result := inherited DoGetImageIndex(Node, Kind, Column, Ghosted, Index);
+  Result := inherited DoGetImageIndex(ANode, Kind, AColumn, Ghosted, Index);
 end;
 
-procedure TLogTree.DoInitNode(Parent, Node: PVirtualNode;
+procedure TLogTree.DoInitNode(Parent, ANode: PVirtualNode;
   var InitStates: TVirtualNodeInitStates);
 begin
   inherited;
@@ -256,19 +254,19 @@ begin
 end;
 
 procedure TLogTree.DoMeasureItem(TargetCanvas: TCanvas;
-  Node: PVirtualNode; var NodeHeight: Integer);
+  ANode: PVirtualNode; var NodeHeight: Integer);
 var
   I  : Integer;
   H  : Integer;
 begin
   inherited;
-  if MultiLine[Node] then
+  if MultiLine[ANode] then
   begin
     TargetCanvas.Font := Font;
     NodeHeight := DefaultNodeHeight;
     for I := 0 to Header.Columns.Count - 1 do
     begin
-      H := ComputeNodeHeight(TargetCanvas, Node, I);
+      H := ComputeNodeHeight(TargetCanvas, ANode, I);
       if H > NodeHeight then
         NodeHeight := H;
     end;
@@ -290,15 +288,15 @@ begin
     FOnBeforeLog(Self, ALogText, ACancelEntry, ALogLevel);
 end;
 
-procedure TLogTree.DoPaintText(Node: PVirtualNode; const Canvas: TCanvas;
-  Column: TColumnIndex; TextType: TVSTTextType);
+procedure TLogTree.DoPaintText(ANode: PVirtualNode; const Canvas: TCanvas;
+  AColumn: TColumnIndex; TextType: TVSTTextType);
 begin
   inherited;
   Canvas.Font.Color := clBlack;
 end;
 
-function TLogTree.GetCellText(const Node: PVirtualNode; const
-  Column: TColumnIndex): string;
+function TLogTree.GetCellText(const ANode: PVirtualNode; const
+  AColumn: TColumnIndex): string;
 //var
 //  NodeData: PLogNodeData;
 begin
@@ -318,28 +316,33 @@ begin
   Result := FDateTimeFormat;
 end;
 
+function TLogTree.GetNode(const AVNode: PVirtualNode): TLogNode;
+begin
+  Result := GetNodeData<TLogNode>(AVNode);
+end;
+
 procedure TLogTree.AddDefaultColumns(
-  const ColumnNames: array of string; const ColumnWidths: array of Integer);
+  const AColumnNames: array of string; const AColumnWidths: array of Integer);
 var
-  I     : Integer;
-  Column: TVirtualTreeColumn;
+  I       : Integer;
+  LColumn : TVirtualTreeColumn;
 begin
   Header.Columns.Clear;
 
-  if High(ColumnNames) <> High(ColumnWidths) then
+  if High(AColumnNames) <> High(AColumnWidths) then
     raise Exception.Create
       ('Number of column names must match the number of column widths.')
   else
   begin
-    for I := Low(ColumnNames) to High(ColumnNames) do
+    for I := Low(AColumnNames) to High(AColumnNames) do
     begin
-      Column := Header.Columns.Add;
-      Column.Text := ColumnNames[I];
-      if ColumnWidths[I] > 0 then
-        Column.Width := ColumnWidths[I]
+      LColumn := Header.Columns.Add;
+      LColumn.Text := AColumnNames[I];
+      if AColumnWidths[I] > 0 then
+        LColumn.Width := AColumnWidths[I]
       else
       begin
-        Header.AutoSizeIndex := Column.Index;
+        Header.AutoSizeIndex := LColumn.Index;
         Header.Options := Header.Options + [hoAutoResize];
       end;
     end;
@@ -380,24 +383,27 @@ end;
 
 procedure TLogTree.Log(AValue: string; ALogLevel: TLogLevel;
   ATimestamp: TDateTime);
-//var
-//  ACancelEntry: Boolean;
-//  Node       : PVirtualNode;
+var
+  ACancelEntry: Boolean;
+  ANode       : PVirtualNode;
   //NodeData   : PLogNodeData;
-  //DoScroll   : Boolean;
+  NodeData : TLogNode;
+  DoScroll   : Boolean;
 begin
-//  ACancelEntry := False;
-//  DoOnBeforeLog(AValue, ACancelEntry, ALogLevel);
-//  if not ACancelEntry then
-//  begin
-//    DoScroll := ((not Focused) or (GetLast = FocusedNode)) and FAutoScroll;
-//    Node := AddChild(nil);
-//    NodeData := GetNodeData(Node);
-//
-//    if Assigned(NodeData) then
-//    begin
-//      NodeData.LogLevel := ALogLevel;
-//
+  ACancelEntry := False;
+  DoOnBeforeLog(AValue, ACancelEntry, ALogLevel);
+  if not ACancelEntry then
+  begin
+    DoScroll := ((not Focused) or (GetLast = FocusedNode)) and FAutoScroll;
+    ANode := AddChild(nil);
+
+    NodeData := GetNodeData<TLogNode>(ANode);
+    //NodeData := Getn NodeData(Node);
+
+    if Assigned(NodeData) then
+    begin
+      NodeData.Data.Level := ALogLevel;
+
 //      if ATimestamp = 0 then
 //        NodeData.Timestamp := now
 //      else
@@ -435,10 +441,11 @@ begin
 //    begin
 //      ScrollIntoView(GetLast, False);
 //    end;
-//  end;
+  end;
+  end;
 end;
 
-procedure TLogTree.LogFmt(AValue: string; const AArgs: Array of
+procedure TLogTree.Log(AValue: string; const AArgs: Array of
   const; ALogLevel: TLogLevel; ATimestamp: TDateTime);
 begin
   Log(Format(AValue, AArgs), ALogLevel, ATimestamp);

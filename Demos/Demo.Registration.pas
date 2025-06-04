@@ -40,6 +40,7 @@ uses
   Demo.DDuce.VTNode,
   Demo.DDuce.EditList,
   Demo.DDuce.Dialogs,
+  Demo.DDuce.LogTree,
   Demo.Manager;
 
 {$REGION 'interfaced routines'}
@@ -60,6 +61,7 @@ begin
   DemoManager.Register(TfrmIniTree, 'IniTree');
   DemoManager.Register(TfrmRttiTree, 'RttiTree');
   DemoManager.Register(TfrmXmlTree, 'XmlTree');
+  DemoManager.Register(TfrmLogTree, 'LogTree');
 //  DemoManager.Register(TfrmInspector, 'Inspector');
 //  DemoManager.Register(TfrmPropertyInspector, 'Property Inspector');
 end;

@@ -13,39 +13,46 @@ object frmEditList: TfrmEditList
   Font.Style = []
   TextHeight = 13
   object splVertical: TSplitter
-    Left = 321
+    Left = 327
     Top = 0
     Width = 6
     Height = 411
     Color = clBtnFace
     ParentColor = False
     ResizeStyle = rsLine
+    ExplicitLeft = 321
   end
   object pnlLeft: TPanel
-    Left = 0
-    Top = 0
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
     Width = 321
-    Height = 411
+    Height = 405
     Align = alLeft
     BevelEdges = []
     BevelOuter = bvNone
     Color = clWhite
     ParentBackground = False
     TabOrder = 0
+    ExplicitLeft = 0
+    ExplicitTop = 0
+    ExplicitHeight = 394
   end
   object pnlRight: TPanel
-    Left = 327
+    Left = 333
     Top = 0
-    Width = 320
+    Width = 314
     Height = 411
     Align = alClient
     BevelEdges = []
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitLeft = 327
+    ExplicitHeight = 394
     object mmoData: TMemo
       Left = 0
       Top = 31
-      Width = 320
+      Width = 314
       Height = 380
       Align = alBottom
       Anchors = [akLeft, akTop, akRight, akBottom]
@@ -55,6 +62,7 @@ object frmEditList: TfrmEditList
       ParentColor = True
       ReadOnly = True
       TabOrder = 0
+      ExplicitHeight = 363
     end
   end
   object chkMultiSelect: TCheckBox

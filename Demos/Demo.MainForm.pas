@@ -108,7 +108,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Winapi.Windows, WinApi.Messages,
+  Winapi.Windows, Winapi.Messages,
   System.StrUtils, System.SysUtils,
 
   DDuce.Factories.TreeViewPresenter, DDuce.Factories.VirtualTrees,

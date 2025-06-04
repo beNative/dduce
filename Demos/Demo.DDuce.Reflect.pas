@@ -45,18 +45,20 @@ implementation
 
 uses
   Vcl.Dialogs,
+
   DDuce.Reflect;
 
 {$REGION 'construction and destruction'}
 procedure TfrmReflect.AfterConstruction;
 begin
   inherited AfterConstruction;
-  FValueList             := TValueList.Create(Self);
-  FValueList.Parent      := Self;
-  FValueList.Align       := alClient;
-  FValueList.BorderStyle := bsNone;
   FData.FromString(Reflect.Properties(Self).ToString);
-  FValueList.Data   := FData;
+  FValueList                  := TValueList.Create(Self);
+  FValueList.Parent           := Self;
+  FValueList.Align            := alClient;
+  FValueList.AlignWithMargins := True;
+  FValueList.BorderStyle      := bsNone;
+  FValueList.Data             := FData;
 end;
 {$ENDREGION}
 
