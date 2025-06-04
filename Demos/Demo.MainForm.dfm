@@ -26,7 +26,7 @@ object frmMainMenu: TfrmMainMenu
     BevelOuter = bvNone
     TabOrder = 1
     ExplicitWidth = 387
-    ExplicitHeight = 269
+    ExplicitHeight = 475
   end
   object pnlTop: TPanel
     Left = 0
@@ -70,7 +70,7 @@ object frmMainMenu: TfrmMainMenu
     Height = 19
     Panels = <>
     SimplePanel = True
-    ExplicitTop = 319
+    ExplicitTop = 525
     ExplicitWidth = 387
   end
   object btnExecute: TButton
@@ -87,7 +87,7 @@ object frmMainMenu: TfrmMainMenu
     ImageMargins.Right = 3
     ImageMargins.Bottom = 3
     TabOrder = 0
-    ExplicitTop = 290
+    ExplicitTop = 496
     ExplicitWidth = 381
   end
   object aclMain: TActionList

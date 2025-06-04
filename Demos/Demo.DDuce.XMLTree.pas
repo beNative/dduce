@@ -32,30 +32,33 @@ uses
   zObjInspector, zObjInspTypes,
 
   DDuce.Components.PropertyInspector, DDuce.Editor.Interfaces,
-  DDuce.Components.XmlTree;
+  DDuce.Components.XmlTree, System.ImageList, Vcl.ImgList, Vcl.VirtualImageList;
 
 type
   TfrmXMLTree = class(TForm)
+    {$REGION 'designer controls'}
     aclMain            : TActionList;
     actCollapse        : TAction;
     actExpand          : TAction;
     btnCollapse        : TButton;
     btnExpand          : TButton;
-    mmoXml             : TMemo;
     pnlEditor          : TPanel;
     pnlObjectInspector : TPanel;
     pnlMain            : TPanel;
     pnlTop             : TPanel;
     pnlTree            : TPanel;
     splVertical        : TSplitter;
+    actParseDocument   : TAction;
+    imlMain            : TVirtualImageList;
+    btnParseDocument   : TButton;
+    {$ENDREGION}
 
     procedure actExpandExecute(Sender: TObject);
     procedure actCollapseExecute(Sender: TObject);
-    procedure mmoXmlChange(Sender: TObject);
+    procedure actParseDocumentExecute(Sender: TObject);
 
   private
     FTree            : TXmlTree;
-    FXml             : string;
     FObjectInspector : TzObjectInspector;
     FSettings        : IEditorSettings;
     FEditor          : IEditorView;
@@ -70,9 +73,6 @@ type
 
     procedure FTreeExpandedCollapsed(Sender: TBaseVirtualTree; Node: PVirtualNode);
 
-  protected
-    procedure UpdateActions; override;
-
   public
     procedure AfterConstruction; override;
 
@@ -83,48 +83,18 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Rtti, System.StrUtils,
+  System.Rtti, System.StrUtils, System.IOUtils,
 
   DDuce.Components.Factories, DDuce.Factories.zObjInspector,
-  DDuce.Editor.Factories;
+  DDuce.Editor.Factories,
 
-const
-  VISIBLE_PROPERTIES : array of string = [
-    'Color',
-    'Colors',
-    'ColorSettings',
-    'DefaultNodeHeight',
-    'DefaultText',
-    'DragImageKind',
-    'DragKind',
-    'DragMode',
-    'DragOperations',
-    'DragType',
-    'DragWidth',
-    'DrawSelectionMode',
-    'EmptyListMessage',
-    'Enabled',
-    'Font',
-    'Header',
-    'Hint',
-    'HintMode',
-    'Indent',
-    'LineMode',
-    'LineStyle',
-    'Margin',
-    'NodeAlignment',
-    'ShowHint',
-    'TextMargin',
-    'TreeOptions',
-    'Visible'
-  ];
+  Demo.Resources;
 
 {$REGION 'construction and destruction'}
 procedure TfrmXMLTree.AfterConstruction;
 begin
   inherited AfterConstruction;
   InitializeTree;
-  FTree.XmlString := mmoXml.Lines.Text;
   FObjectInspector := TzObjectInspectorFactory.Create(
     Self,
     pnlObjectInspector
@@ -137,9 +107,11 @@ begin
   FSettings := TEditorFactories.CreateSettings(Self);
   FManager  := TEditorFactories.CreateManager(Self, FSettings);
   FEditor   := TEditorFactories.CreateView(pnlEditor, FManager);
-  FEditor.Editor.Highlighter.Colors.LoadFromFile('settings.texteditor.json');
+  if TFile.Exists(TEXTEDITOR_SETTINGS_FILE) then
+    FEditor.Editor.Highlighter.Colors.LoadFromFile(TEXTEDITOR_SETTINGS_FILE);
   FEditor.HighlighterName := 'XML';
-  FEditor.Text := mmoXml.Lines.Text;
+  FEditor.Text := EXAMPLE_XML_DOCUMENT;
+  FTree.XmlString := FEditor.Text;
 end;
 {$ENDREGION}
 
@@ -152,6 +124,12 @@ end;
 procedure TfrmXMLTree.actExpandExecute(Sender: TObject);
 begin
   FTree.FullExpand;
+  FTree.Header.AutoFitColumns;
+end;
+
+procedure TfrmXMLTree.actParseDocumentExecute(Sender: TObject);
+begin
+  FTree.XmlString := FEditor.Text;
 end;
 {$ENDREGION}
 
@@ -165,19 +143,13 @@ begin
   LName := LName.Split(['.'], 2)[1];
   Result := not LName.Contains('ComObject')
     and (not (PItem.Prop.PropertyType is TRttiMethodType))
-    and MatchText(LName, VISIBLE_PROPERTIES);
+    and MatchText(LName, VT_VISIBLE_PROPERTIES);
 end;
 
 procedure TfrmXMLTree.FTreeExpandedCollapsed(Sender: TBaseVirtualTree;
   Node: PVirtualNode);
 begin
   FTree.Header.AutoFitColumns;
-end;
-
-procedure TfrmXMLTree.mmoXmlChange(Sender: TObject);
-begin
-  //FXml := mmoXML.Text;
-  //FTree.XmlString := FXml;
 end;
 {$ENDREGION}
 
@@ -204,14 +176,6 @@ begin
   FTree.Header.AutoFitColumns;
   FTree.OnCollapsed          := FTreeExpandedCollapsed;
   FTree.OnExpanded           := FTreeExpandedCollapsed;
-end;
-{$ENDREGION}
-
-{$REGION 'protected methods'}
-procedure TfrmXMLTree.UpdateActions;
-begin
-  inherited;
-  mmoXML.Text := FXml;
 end;
 {$ENDREGION}
 

@@ -329,11 +329,11 @@ begin
   FVLT.BorderStyle        := bsNone;
   FVLT.Align              := alClient;
   FVLT.AlignWithMargins   := True;
-  FVLT.HTMLSupport        := True;
-  FVLT.AutoLogLevelColors := True;
+  //FVLT.HTMLSupport        := True;
+  //FVLT.AutoLogLevelColors := True;
   FVLT.Init;
   FVLT.Images := imlMain;
-  FVLT.Log('Application started', llDebug);
+  //FVLT.Log('Application started', llDebug);
 end;
 {$ENDREGION}
 

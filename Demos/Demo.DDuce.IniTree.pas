@@ -41,7 +41,6 @@ type
     btnCollapse        : TButton;
     btnExpand          : TButton;
     btnParseDocument   : TButton;
-    mmoJson            : TMemo;
     pnlEditor          : TPanel;
     pnlMain            : TPanel;
     pnlObjectInspector : TPanel;
@@ -98,46 +97,14 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Rtti, System.StrUtils,
+  System.Rtti, System.StrUtils,System.IOUtils,
   Vcl.Clipbrd,
 
   DDuce.Components.Factories, DDuce.Factories.VirtualTrees,
   DDuce.Factories.zObjInspector, DDuce.Editor.Factories,
   DDuce.Logger.Factories, DDuce.Logger.Channels.Winipc, DDuce.Logger,
 
-  Demo.Data;
-
-const
-  VISIBLE_PROPERTIES : array of string = [
-    'Color',
-    'Colors',
-    'ColorSettings',
-    'DefaultNodeHeight',
-    'DefaultText',
-    'DragImageKind',
-    'DragKind',
-    'DragMode',
-    'DragOperations',
-    'DragType',
-    'DragWidth',
-    'DrawSelectionMode',
-    'EmptyListMessage',
-    'Enabled',
-    'Font',
-    'Header',
-    'Hint',
-    'HintMode',
-    'Indent',
-    'IniString',
-    'LineMode',
-    'LineStyle',
-    'Margin',
-    'NodeAlignment',
-    'ShowHint',
-    'TextMargin',
-    'TreeOptions',
-    'Visible'
-  ];
+  Demo.Data, Demo.Resources;
 
 {$REGION 'construction and destruction'}
 procedure TfrmIniTree.AfterConstruction;
@@ -155,9 +122,10 @@ begin
   FSettings := TEditorFactories.CreateSettings(Self);
   FManager  := TEditorFactories.CreateManager(Self, FSettings);
   FEditor   := TEditorFactories.CreateView(pnlEditor, FManager);
-  FEditor.Editor.Highlighter.Colors.LoadFromFile('settings.texteditor.json');
+  if TFile.Exists(TEXTEDITOR_SETTINGS_FILE) then
+    FEditor.Editor.Highlighter.Colors.LoadFromFile(TEXTEDITOR_SETTINGS_FILE);
   FEditor.HighlighterName := 'INI';
-  FEditor.Text := mmoJson.Lines.Text;
+  FEditor.Text := EXAMPLE_INI_DOCUMENT;
   FTree.IniString := FEditor.Text;
 end;
 {$ENDREGION}
@@ -172,7 +140,7 @@ begin
   LName := LName.Split(['.'], 2)[1];
   Result := not LName.Contains('ComObject')
     and (not (PItem.Prop.PropertyType is TRttiMethodType))
-    and MatchText(LName, VISIBLE_PROPERTIES);
+    and MatchText(LName, VT_VISIBLE_PROPERTIES);
 end;
 
 procedure TfrmIniTree.FTreeDblClick(Sender: TObject);
@@ -213,9 +181,7 @@ end;
 
 procedure TfrmIniTree.actParseDocumentExecute(Sender: TObject);
 begin
-  FTree.BeginUpdate;
   FTree.IniString := FEditor.Text;
-  FTree.EndUpdate;
 end;
 {$ENDREGION}
 

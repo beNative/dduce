@@ -75,7 +75,11 @@ type
 implementation
 
 uses
-  DDuce.Factories.zObjInspector, DDuce.Editor.Factories;
+  System.IOUtils,
+
+  DDuce.Factories.zObjInspector, DDuce.Editor.Factories,
+
+  Demo.Resources;
 
 {$R *.dfm}
 
@@ -86,7 +90,8 @@ begin
   FSettings := TEditorFactories.CreateSettings(Self);
   FManager  := TEditorFactories.CreateManager(Self, FSettings);
   FEditor   := TEditorFactories.CreateView(pnlRight, FManager);
-  FEditor.Editor.Highlighter.Colors.LoadFromFile('settings.texteditor.json');
+  if TFile.Exists(TEXTEDITOR_SETTINGS_FILE) then
+    FEditor.Editor.Highlighter.Colors.LoadFromFile(TEXTEDITOR_SETTINGS_FILE);
   FMainMenu := TEditorFactories.CreateMainMenu(
     Self,
     FManager.Actions,

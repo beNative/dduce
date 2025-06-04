@@ -1,8 +1,9 @@
-{$SetPEFlags 1} // strip relocation info
+//{$SetPEFlags 1} // strip relocation info
 
 program DDuce.Demos;
 
 uses
+  //FastMM4,
   System.SysUtils,
   Vcl.Forms,
   Vcl.Themes,
@@ -47,6 +48,7 @@ begin
   ReportMemoryLeaksOnShutdown := DebugHook > 0;
   {$WARNINGS ON}
   Application.Initialize;
+
   Application.CreateForm(TdmData, dmData);
   if CheckWin32Version(6) then // at least Vista
   begin
